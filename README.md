@@ -7,6 +7,8 @@ This software includes simulation models for an induction motor, a synchronous r
 
 More detailed configuration can be done by editing the config files. There are separate config files for a drive system and for its controller. For example, pulse-width modulation (PWM) can be enabled in the drive system config file. The example control algorithms aim to be simple yet feasible. They have not been optimized at all.
 
+<img src="pwm.png" alt="PWM waveforms" width="320"/><img src="pmsm.png" alt="Speed and torque waveforms" width="320"/>
+
 Usage
 -----
 The main folder includes two example scripts to run the simulation:
@@ -18,4 +20,4 @@ The folder `config` contains example configuration files that can be modified or
 
 Notes
 -----
-This is the very first version. No detailed testing has been carried out. There can be bugs and misleading comments. Many interfaces will change in the later versions.
+This is the very first experimental version. No testing has been carried out yet. There can be bugs and misleading comments. Many interfaces will change in the later versions.
