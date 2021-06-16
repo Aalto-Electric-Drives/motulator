@@ -11,10 +11,10 @@ Usage
 -----
 The main folder includes two example scripts to run the simulation:
 
-simulate_sensoless.py (for motion sensorless control)
-simulate_sensored.py (for control with rotor speed or position feedback)
+- `simulate_sensoless.py` (for motion sensorless control)
+- `simulate_sensored.py` (for control with rotor speed or position feedback)
 
-The folder config contains example configuration files that can be modified or used as templates for new ones.
+The folder `config` contains example configuration files that can be modified or used as templates for new ones.
 
 Notes
 -----
