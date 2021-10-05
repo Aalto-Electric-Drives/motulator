@@ -16,6 +16,26 @@ from helpers import LUT, Sequence  # , Step
 from config.mdl_pmsm_2kW import mdl
 
 
+# %%
+@dataclass
+class BaseValues:
+    """
+    This data class contains the base values computed from the rated values.
+    These are used for plotting the results.
+
+    """
+    # pylint: disable=too-many-instance-attributes
+    w: float = 2*np.pi*75
+    i: float = np.sqrt(2)*4.3
+    u: float = np.sqrt(2/3)*370
+    p: int = 3
+    psi: float = u/w
+    P: float = 1.5*u*i
+    Z: float = u/i
+    L: float = Z/w
+    T: float = p*P/w
+
+
 # %% Define the controller parameters
 @dataclass
 class CtrlParameters:
@@ -47,6 +67,7 @@ class CtrlParameters:
 
 
 # %% Optimal references
+base = BaseValues()
 pars = CtrlParameters()
 opt_refs = OptimalLoci(pars)
 i_mtpa = opt_refs.mtpa(2*pars.i_max)
@@ -55,7 +76,7 @@ pars.i_d_mtpa = LUT(T_M_mtpa, i_mtpa.real)
 i_mtpv = opt_refs.mtpv(2*pars.i_max)
 pars.i_q_mtpv = LUT(i_mtpv.real, i_mtpv.imag)
 # Plot the control loci
-opt_refs.plot(2*pars.i_max)
+opt_refs.plot(2*pars.i_max, base)
 
 # %% Choose controller
 speed_ctrl = SpeedCtrl(pars)
@@ -67,11 +88,11 @@ ctrl = VectorCtrl(pars, speed_ctrl, current_ref, current_ctrl, datalog)
 # %% Profiles
 # Speed reference
 times = np.array([0, .5, 1, 1.5, 2, 2.5,  3, 3.5, 4])
-values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*2*np.pi*40*3
+values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*base.w
 mdl.speed_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])
-values = np.array([0, 0, 1, 1, 0, 0])*14.6
+values = np.array([0, 0, 1, 1, 0, 0])*14
 mdl.mech.T_L_ext = Sequence(times, values)  # T_L_ext = Step(1, 14.6)
 # Stop time of the simulation
 mdl.t_stop = mdl.speed_ref.times[-1]

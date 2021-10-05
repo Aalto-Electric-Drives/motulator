@@ -15,7 +15,7 @@ from model.converter import Inverter, FrequencyConverter
 
 # %% Selectors
 delay_length = 1            # Computational delay
-pwm_modeled = not True          # Enable the carrier comparison
+pwm_modeled = not True      # Enable the carrier comparison
 saturated = not True        # Enable the magnetic saturation model
 constant_dc_voltage = True  # Enable constant DC-bus voltage
 

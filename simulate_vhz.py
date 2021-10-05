@@ -9,11 +9,11 @@ motulator: Open-Source Simulator for Motor Drives and Power Converters
 from time import time
 from model.interfaces import solve
 
-# %% Import configuration data for the controller and the model
-# You can use the existing config files as templates and modify them
-from config.ctrl_sensored_vector_im_2kW import ctrl, mdl, base
-# from config.ctrl_sensored_vector_pmsm_2kW import ctrl, mdl, base
-# from config.ctrl_sensored_vector_syrm_7kW import ctrl, mdl, base
+# %%
+# Import the controller and the model. The base values are imported for
+# plotting the results.
+from config.ctrl_vhz_im_2kW import ctrl, mdl, base
+# from config.ctrl_vhz_im_45kW import ctrl, mdl, base
 
 
 # %%
@@ -26,14 +26,10 @@ def main():
         # Sample the phase currents and the DC-bus voltage
         i_abc_meas = mdl.motor.meas_currents()
         u_dc_meas = mdl.converter.meas_dc_voltage()
-        # Measure the rotor position
-        theta_M_meas = mdl.mech.meas_position()
-        w_M_meas = mdl.mech.meas_speed()
         # Get the speed reference
         w_m_ref = mdl.speed_ref(mdl.t0)
         # Run the digital controller
-        d_abc_ref, T_s = ctrl(w_m_ref, w_M_meas, theta_M_meas,
-                              i_abc_meas, u_dc_meas)
+        d_abc_ref, T_s = ctrl(w_m_ref, i_abc_meas, u_dc_meas)
         # Model the computational delay
         d_abc = mdl.delay(d_abc_ref)
         # Simulate the continuous-time system model over the sampling period
@@ -52,3 +48,4 @@ if __name__ == '__main__':
     mdl.datalog.post_process(mdl)
     ctrl.datalog.post_process()
     ctrl.datalog.plot(mdl, base)
+    # ctrl.datalog.plot_simple(mdl, base)

@@ -16,6 +16,26 @@ from helpers import Sequence  # , Step
 from config.mdl_im_2kW import mdl
 
 
+# %%
+@dataclass
+class BaseValues:
+    """
+    This data class contains the base values computed from the rated values.
+    These are used for plotting the results.
+
+    """
+    # pylint: disable=too-many-instance-attributes
+    w: float = 2*np.pi*50
+    i: float = np.sqrt(2)*5
+    u: float = np.sqrt(2/3)*400
+    p: int = 2
+    psi: float = u/w
+    P: float = 1.5*u*i
+    Z: float = u/i
+    L: float = Z/w
+    T: float = p*P/w
+
+
 # %% Define the controller parameters
 @dataclass
 class CtrlParameters:
@@ -46,6 +66,7 @@ class CtrlParameters:
 
 
 # %% Choose controller
+base = BaseValues()
 pars = CtrlParameters()
 speed_ctrl = SpeedCtrl(pars)
 current_ref = CurrentRef(pars)
@@ -59,7 +80,7 @@ ctrl = SensorlessVectorCtrl(pars, speed_ctrl, current_ref, current_ctrl,
 # %% Profiles
 # Speed reference
 times = np.array([0, .5, 1, 1.5, 2, 2.5,  3, 3.5, 4])
-values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*2*np.pi*50
+values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*base.w
 mdl.speed_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])

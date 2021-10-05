@@ -9,13 +9,18 @@ This software includes simulation models for an induction motor, a synchronous r
 
 Usage
 -----
-The main folder includes two example scripts to run the simulation:
+The main folder includes three example scripts to run the simulation:
 
 - `simulate_sensoless.py` (for motion sensorless control)
 - `simulate_sensored.py` (for control with rotor speed or position feedback)
+- `simulate_vhz.py` (for V/Hz control)
 
-The folder `config` contains example configuration files that can be modified or used as templates for new ones. There are separate config files for a drive system and for its controller. For example, pulse-width modulation (PWM) can be enabled in the drive system config file. 
+The folder `config` contains example configuration files that can be modified or used as templates for new ones. There are separate config files for the drive system and for its controller. For example, pulse-width modulation (PWM) can be enabled in the drive system config file. 
 
 Notes
 -----
-This is the very first experimental version. No testing has been carried out yet. There can be bugs and misleading comments. Many interfaces will change in the later versions. The example control algorithms aim to be simple yet feasible, and they have not been optimized at all.
+Some interfaces may change in the later versions. The example control algorithms aim to be simple yet feasible, and they have not been optimized at all.
+
+Acknowledgement
+---------------
+This open-source project has been sponsored by ABB Oy. The example control methods included in this repository are based on published algorithms (available in textbooks and scientific articles). They do not present any proprietary control software.

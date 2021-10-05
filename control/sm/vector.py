@@ -429,8 +429,8 @@ class SensorlessObserver:
         self.psi_f = pars.psi_f
         self.k_p = 2*pars.w_o
         self.k_i = pars.w_o**2
-        self.b_p = pars.b_p
-        self.zeta = pars.zeta
+        self.b_p = .5*pars.R*(pars.L_d + pars.L_q)/(pars.L_d*pars.L_q)
+        self.zeta_inf = .7
         # Initial states
         self.theta_m, self.w_m, self.psi = 0, 0, pars.psi_f
 
@@ -454,11 +454,9 @@ class SensorlessObserver:
 
         """
         def corr_vector(w_m):
-            # Choose pole location according to (36)
-            b = self.b_p + 2*self.zeta*np.abs(w_m)
-            c_per_w_m = .5*b/self.zeta*np.sign(w_m)
-            # Gain (30), implemented using the complex quantities
-            k = b + (c_per_w_m - w_m)*1j
+            # Pole locations are chosend according to (36), with c = w_m**2
+            # and w_inf = inf. Hence, the gain in (30) with complex quantities:
+            k = self.b_p + 2*self.zeta_inf*np.abs(w_m)
             if psi_a.real != 0:
                 beta = -psi_a.imag/psi_a.real
             else:
@@ -562,86 +560,148 @@ class Datalogger:
         self.u_s = np.exp(1j*self.theta_m)*self.u
         self.i_s = np.exp(1j*self.theta_m)*self.i
 
-    def plot(self, mdl):
+    def plot_simple(self, mdl, base):
         """
-        Plots some example figures.
+        Plots an example figures.
 
         Parameters
         ----------
-        t : ndarray
-            Discrete time.
-        mdl : instance of a class
+        mdl : object
             Continuous-time solution.
+        base : object
+            Base values.
 
         """
-        # Continuous-time data
-        data = mdl.datalog
-        # Time spans
-        t_range = (0, self.t[-1])
+        data = mdl.datalog          # Continuous-time data
+        t_range = (0, self.t[-1])   # Time span
+
+        # Plotting parameters
         plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
         plt.rcParams['lines.linewidth'] = 1.
+        plt.rcParams['axes.grid'] = True
         plt.rcParams.update({"text.usetex": True,
                              "font.family": "serif",
                              "font.sans-serif": ["Computer Modern Roman"]})
-        # Plots speeds and torques
-        fig1, (ax1, ax2) = plt.subplots(2, 1)
-        ax1.step(self.t, self.w_m_ref, '--', where='post')
-        ax1.plot(data.t, data.w_m)
-        ax1.step(self.t, self.w_m, where='post')
+
+        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(3, 7.5))
+
+        ax1.step(self.t, self.w_m_ref/base.w, '--', where='post')
+        ax1.plot(data.t, data.w_m/base.w)
         ax1.legend([r'$\omega_\mathrm{m,ref}$',
-                    r'$\omega_\mathrm{m}$',
-                    r'$\hat \omega_\mathrm{m}$'])
+                    r'$\omega_\mathrm{m}$'])
         ax1.set_xlim(t_range)
-        ax1.set_ylabel('Angular speed (rad/s)')
-        ax2.plot(data.t, data.T_L, '--')
-        ax2.plot(data.t, data.T_M)
-        ax2.plot(self.t, self.T_M)  # Limited torque reference
+        ax1.set_ylim(-1.2, 1.2)
+        ax1.set_xticklabels([])
+        ax1.set_ylabel('Speed (p.u.)')
+
+        ax2.plot(data.t, data.T_L/base.T, '--')
+        ax2.plot(data.t, data.T_M/base.T)
+        ax2.set_xlim(t_range)
+        ax2.set_ylim(-.2, 1.5)
+        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{m}$'])
+        ax2.set_ylabel('Torque (p.u.)')
+        ax2.set_xticklabels([])
+
+        ax3.step(self.t, self.i.real/base.i, where='post')
+        ax3.step(self.t, self.i.imag/base.i, where='post')
+        ax3.set_ylabel('Current (p.u.)')
+        ax3.legend([r'$i_\mathrm{d}$',  r'$i_\mathrm{q}$'])
+        ax3.set_xlim(t_range)
+        ax3.set_ylim(-1.5, 1.5)
+        ax3.set_xticklabels([])
+
+        ax4.step(self.t, np.abs(self.u_s)/base.u, where='post')
+        ax4.step(self.t, self.u_dc/np.sqrt(3)/base.u, '--', where='post')
+        ax4.set_ylabel('Voltage (p.u.)')
+        ax4.set_xlim(t_range)
+        ax4.set_ylim(0, 1.2)
+        ax4.legend([r'$u_\mathrm{s}$', r'$u_\mathrm{dc}/\sqrt{3}$'])
+        ax4.set_xticklabels([])
+
+        ax5.plot(data.t, np.abs(data.psi)/base.psi)
+        ax5.step(self.t, np.abs(self.psi)/base.psi, '--', where='post')
+        ax5.set_xlim(t_range)
+        ax5.set_ylim(0, 1.2)
+        ax5.legend([r'$|\psi|$', r'$|\hat\psi|$'])
+        ax5.set_ylabel('Flux (p.u.)')
+        ax5.set_xlabel('Time (s)')
+
+        fig.align_ylabels()
+        plt.tight_layout()
+        plt.show()
+        plt.savefig('fig.pdf')
+
+    def plot(self, mdl, base):
+        """
+        Plots more waveforms.
+
+        Parameters
+        ----------
+        mdl : object
+            Continuous-time solution.
+        base : object
+            Base values.
+
+        """
+        data = mdl.datalog          # Continuous-time data
+        t_range = (0, self.t[-1])   # Time span
+
+        # Plotting parameters
+        plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
+        plt.rcParams['lines.linewidth'] = 1.
+        plt.rcParams['axes.grid'] = True
+        plt.rcParams.update({"text.usetex": True,
+                             "font.family": "serif",
+                             "font.sans-serif": ["Computer Modern Roman"]})
+
+        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(8, 10))
+
+        ax1.step(self.t, self.w_m_ref/base.w, '--', where='post')
+        ax1.step(self.t, self.w_m/base.w, where='post')
+        ax1.plot(data.t, data.w_m/base.w)
+        ax1.legend([r'$\omega_\mathrm{m,ref}$',
+                    r'$\hat \omega_\mathrm{m}$',
+                    r'$\omega_\mathrm{m}$'])
+        ax1.set_xlim(t_range)
+        ax1.set_xticklabels([])
+        ax1.set_ylabel('Speed (p.u.)')
+
+        ax2.plot(data.t, data.T_L/base.T, '--')
+        ax2.plot(data.t, data.T_M/base.T)
+        ax2.step(self.t, self.T_M/base.T)  # Limited torque reference
         ax2.set_xlim(t_range)
         ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{m}$',
                     r'$\tau_\mathrm{m,ref}$'])
-        ax2.set_ylabel('Torque (Nm)')
-        ax2.set_xlabel('Time (s)')
-        # Plots currents, fluxes, and voltages
-        fig2, (ax1, ax2, ax3) = plt.subplots(3, 1)
-        ax1.step(self.t, self.i_ref.real, '--', where='post')
-        ax1.step(self.t, self.i.real, where='post')
-        ax1.step(self.t, self.i_ref.imag, '--', where='post')
-        ax1.step(self.t, self.i.imag, where='post')
-        ax1.set_ylabel('Current (A)')
-        ax1.legend([r'$i_\mathrm{d,ref}$', r'$i_\mathrm{d}$',
+        ax2.set_ylabel('Torque (p.u.)')
+        ax2.set_xticklabels([])
+
+        ax3.step(self.t, self.i_ref.real/base.i, '--', where='post')
+        ax3.step(self.t, self.i.real/base.i, where='post')
+        ax3.step(self.t, self.i_ref.imag/base.i, '--', where='post')
+        ax3.step(self.t, self.i.imag/base.i, where='post')
+        ax3.set_ylabel('Current (p.u.)')
+        ax3.legend([r'$i_\mathrm{d,ref}$', r'$i_\mathrm{d}$',
                     r'$i_\mathrm{q,ref}$', r'$i_\mathrm{q}$'])
-        ax1.set_xlim(t_range)
-        ax2.plot(data.t, data.psi.real)
-        ax2.step(self.t, self.psi.real, '--', where='post')
-        ax2.plot(data.t, data.psi.imag)
-        ax2.step(self.t, self.psi.imag, '--', where='post')
-        ax2.set_xlim(t_range)
-        ax2.legend([r'$\psi_\mathrm{d}$', r'$\hat\psi_\mathrm{d}$',
-                    r'$\psi_\mathrm{q}$', r'$\hat\psi_\mathrm{q}$'])
-        ax2.set_ylabel('Flux linkage (Vs)')
-        ax2.set_xlabel('Time (s)')
-        # ax3.step(self.t, self.u.real, where='post')
-        # ax3.step(self.t, self.u.imag, where='post')
-        ax3.step(self.t, np.abs(self.u), where='post')
-        ax3.step(self.t, self.u_dc/np.sqrt(3), '--', where='post')
         ax3.set_xlim(t_range)
-        ax3.legend([r'$u$', r'$u_\mathrm{dc}/\sqrt{3}$'])
-        # ax3.legend([r'$u_\mathrm{d}$', r'$u_\mathrm{q}$', r'$u$'])
-        ax3.set_ylabel('Voltage (V)')
-        ax3.set_xlabel('Time (s)')
-        # Flux estimation
-        fig3, (ax1, ax2) = plt.subplots(2, 1)
-        ax1.plot(data.t, data.theta_m)
-        ax1.step(self.t, self.theta_m, '--', where='post')
-        ax1.set_ylabel('Angle (rad)')
-        ax1.legend([r'$\vartheta_\mathrm{m}$', r'$\hat \vartheta_\mathrm{m}$'])
-        ax1.set_xlim(t_range)
-        ax2.plot(data.t, np.abs(data.psi))
-        ax2.step(self.t, np.abs(self.psi), '--', where='post')
-        ax2.set_xlim(t_range)
-        ax2.legend([r'$|\psi|$', r'$|\hat\psi|$'])
-        ax2.set_ylabel('Flux linkage (Vs)')
-        ax2.set_xlabel('Time (s)')
+        ax3.set_xticklabels([])
+
+        ax4.step(self.t, np.abs(self.u)/base.u, where='post')
+        ax4.step(self.t, self.u_dc/np.sqrt(3)/base.u, '--', where='post')
+        ax4.set_ylabel('Voltage (p.u.)')
+        ax4.set_xlim(t_range)
+        ax4.set_ylim(0, 1.2)
+        ax4.legend([r'$|u|$', r'$u_\mathrm{dc}/\sqrt{3}$'])
+        ax4.set_xticklabels([])
+
+        ax5.plot(data.t, np.abs(data.psi)/base.psi)
+        ax5.step(self.t, np.abs(self.psi)/base.psi, '--', where='post')
+        ax5.set_xlim(t_range)
+        ax5.set_ylim(0, 1.2)
+        ax5.legend([r'$\psi_\mathrm{s}$'])
+        ax5.legend([r'$|\psi|$', r'$|\hat\psi|$'])
+        ax5.set_ylabel('Flux (p.u.)')
+        ax5.set_xlabel('Time (s)')
+
+        fig.align_ylabels()
+        plt.tight_layout()
         plt.show()
-        # plt.savefig('test.pdf')
-        return fig1, fig2, fig3
