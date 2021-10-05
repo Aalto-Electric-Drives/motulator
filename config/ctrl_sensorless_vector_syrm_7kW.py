@@ -15,6 +15,26 @@ from helpers import LUT, Sequence  # , Step
 from config.mdl_syrm_7kW import mdl
 
 
+# %%
+@dataclass
+class BaseValues:
+    """
+    This data class contains the base values computed from the rated values.
+    These are used for plotting the results.
+
+    """
+    # pylint: disable=too-many-instance-attributes
+    w: float = 2*np.pi*105.8
+    i: float = np.sqrt(2)*15.5
+    u: float = np.sqrt(2/3)*370
+    p: int = 2
+    psi: float = u/w
+    P: float = 1.5*u*i
+    Z: float = u/i
+    L: float = Z/w
+    T: float = p*P/w
+
+
 # %% Define the controller parameters
 @dataclass
 class CtrlParameters:
@@ -32,11 +52,9 @@ class CtrlParameters:
     alpha_s: float = 2*np.pi*4
     # Observer
     w_o: float = 2*np.pi*40
-    zeta: float = .4
-    b_p: float = 2*np.pi*20
     # Maximum values
-    T_M_max: float = 1.5*20.1
-    i_max: float = 1.5*np.sqrt(2)*15.5
+    T_M_max: float = 2*20.1
+    i_max: float = 2*np.sqrt(2)*15.5
     i_d_min: float = .25*np.sqrt(2)*15.5
     # Nominal values
     u_dc_nom: float = 540
@@ -51,6 +69,7 @@ class CtrlParameters:
 
 
 # %% Optimal references
+base = BaseValues()
 pars = CtrlParameters()
 opt_refs = OptimalLoci(pars)
 i_mtpa = opt_refs.mtpa(2*pars.i_max)
@@ -59,7 +78,7 @@ pars.i_d_mtpa = LUT(T_M_mtpa, i_mtpa.real)
 i_mtpv = opt_refs.mtpv(2*pars.i_max)
 pars.i_q_mtpv = LUT(i_mtpv.real, i_mtpv.imag)
 # Plot the control loci
-opt_refs.plot(2*pars.i_max)
+opt_refs.plot(2*pars.i_max, base)
 
 # %% Choose controller
 speed_ctrl = SpeedCtrl(pars)
@@ -73,7 +92,7 @@ ctrl = SensorlessVectorCtrl(pars, speed_ctrl, current_ref,
 # %% Profiles
 # Speed reference
 times = np.array([0, .5, 1, 1.5, 2, 2.5,  3, 3.5, 4])
-values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*2*np.pi*105.8
+values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*base.w
 mdl.speed_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])

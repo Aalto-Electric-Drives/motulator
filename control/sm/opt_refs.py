@@ -107,14 +107,17 @@ class OptimalLoci:
             i = i_d + 1j*i_q
         return i
 
-    def plot(self, i_max, N=20):
+    def plot(self, i_max, base, N=20):
         """
-        Plots some typical figures as example figures.
+        Plots some typical figures as example figures. Per-unit quantities
+        are used in the plots.
 
         Parameters
         ----------
         i_max : float
             Maximum current at which the loci are evaluated.
+        base : object
+            Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
 
@@ -132,48 +135,48 @@ class OptimalLoci:
             T_M_mtpv = None     # No MTPV in finite speed drives
         # Plot the i_d--i_q current plane
         fig1, ax = plt.subplots(1, 1)
-        ax.plot(i_mtpa.real, i_mtpa.imag)
+        ax.plot(i_mtpa.real/base.i, i_mtpa.imag/base.i)
         try:
-            ax.plot(i_mtpv.real, i_mtpv.imag)
+            ax.plot(i_mtpv.real/base.i, i_mtpv.imag/base.i)
         except AttributeError:
             pass
-        ax.plot(-i_lim.real, i_lim.imag)
-        ax.set_xlabel(r'$i_\mathrm{d}$ (A)')
-        ax.set_ylabel(r'$i_\mathrm{q}$ (A)')
+        ax.plot(-i_lim.real/base.i, i_lim.imag/base.i)
+        ax.set_xlabel(r'$i_\mathrm{d}$ (p.u.)')
+        ax.set_ylabel(r'$i_\mathrm{q}$ (p.u.)')
         ax.legend(['MTPA', 'MTPV'])
         if self.psi_f == 0:
             # SyRM
-            ax.axis([0, i_max, 0, i_max])
+            ax.axis([0, i_max/base.i, 0, i_max/base.i])
         else:
-            ax.axis([-i_max, 0, 0, i_max])
+            ax.axis([-i_max/base.i, 0, 0, i_max/base.i])
         ax.set_aspect('equal', 'box')
         # Plot i_d vs. T_M
         fig2, ax = plt.subplots(1, 1)
-        ax.plot(T_M_mtpa, np.real(i_mtpa))
+        ax.plot(T_M_mtpa/base.T, np.real(i_mtpa)/base.i)
         try:
-            ax.plot(T_M_mtpv, i_mtpv.real)
+            ax.plot(T_M_mtpv/base.T, i_mtpv.real/base.i)
         except AttributeError:
             pass
         ax.legend(['MTPA', 'MTPV'])
-        ax.set_xlabel(r'$\tau_\mathrm{M}$ (Nm)')
-        ax.set_ylabel(r'$i_\mathrm{d}$ (A)')
+        ax.set_xlabel(r'$\tau_\mathrm{M}$ (p.u.)')
+        ax.set_ylabel(r'$i_\mathrm{d}$ (p.u.)')
         ax.set_xlim(0, None)
         if self.psi_f == 0:
             # SyRM
             ax.set_ylim(0, None)
         else:
             ax.set_ylim(None, 0)
-        ax.set_xlim(0, np.max(T_M_mtpa))
+        ax.set_xlim(0, np.max(T_M_mtpa)/base.T)
         # Plot T_M vs. abs(i)
         fig3, ax = plt.subplots(1, 1)
-        ax.plot(np.abs(i_mtpa), T_M_mtpa)
+        ax.plot(np.abs(i_mtpa)/base.i, T_M_mtpa/base.T)
         try:
-            ax.plot(np.abs(i_mtpv), T_M_mtpv)
+            ax.plot(np.abs(i_mtpv)/base.i, T_M_mtpv/base.T)
         except TypeError:
             pass
         ax.legend(['MTPA', 'MTPV'])
-        ax.set_xlabel(r'$i$ (A)')
-        ax.set_ylabel(r'$\tau_\mathrm{M}$ (Nm)')
-        ax.set_xlim(0, i_max)
+        ax.set_xlabel(r'$i$ (p.u.)')
+        ax.set_ylabel(r'$\tau_\mathrm{M}$ (p.u.)')
+        ax.set_xlim(0, i_max//base.i)
         ax.set_ylim(0, None)
         return fig1, fig2, fig3

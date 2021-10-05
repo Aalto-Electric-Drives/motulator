@@ -16,6 +16,26 @@ from helpers import Sequence  # , Step
 from config.mdl_im_45kW import mdl
 
 
+# %%
+@dataclass
+class BaseValues:
+    """
+    This data class contains the base values computed from the rated values.
+    These are used for plotting the results.
+
+    """
+    # pylint: disable=too-many-instance-attributes
+    w: float = 2*np.pi*50
+    i: float = np.sqrt(2)*81
+    u: float = np.sqrt(2/3)*400
+    p: int = 2
+    psi: float = u/w
+    P: float = 1.5*u*i
+    Z: float = u/i
+    L: float = Z/w
+    T: float = p*P/w
+
+
 # %% Define the controller parameters
 @dataclass
 class CtrlParameters:
@@ -46,6 +66,7 @@ class CtrlParameters:
 
 
 # %% Choose controller
+base = BaseValues()
 pars = CtrlParameters()
 speed_ctrl = SpeedCtrl(pars)
 current_ref = CurrentRef(pars)
