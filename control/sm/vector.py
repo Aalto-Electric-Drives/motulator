@@ -8,7 +8,7 @@ This module contains vector control for PMSM drives.
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
-from helpers import abc2complex
+from helpers import abc2complex, complex2abc
 from control.common import PWM
 
 
@@ -445,13 +445,6 @@ class SensorlessObserver:
         i : complex
             Stator current in estimated rotor coordinates.
 
-        Returns
-        -------
-        w_m : float
-            Angular rotor speed.
-        dpsi : float
-            Increment of the flux magnitude for the state update.
-
         """
         def corr_vector(w_m):
             # Pole locations are chosend according to (36), with c = w_m**2
@@ -560,9 +553,83 @@ class Datalogger:
         self.u_s = np.exp(1j*self.theta_m)*self.u
         self.i_s = np.exp(1j*self.theta_m)*self.i
 
-    def plot_simple(self, mdl, base):
+    def plot(self, mdl, base):
         """
-        Plots an example figures.
+        Plots example figures.
+
+        Parameters
+        ----------
+        mdl : object
+            Continuous-time solution.
+        base : object
+            Base values.
+
+        """
+        data = mdl.datalog          # Continuous-time data
+        t_range = (0, self.t[-1])   # Time span
+
+        # Plotting parameters
+        plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
+        plt.rcParams['lines.linewidth'] = 1.
+        plt.rcParams['axes.grid'] = True
+        plt.rcParams.update({"text.usetex": False})
+
+        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(8, 10))
+
+        ax1.step(self.t, self.w_m_ref/base.w, '--', where='post')
+        ax1.step(self.t, self.w_m/base.w, where='post')
+        ax1.plot(data.t, data.w_m/base.w)
+        ax1.legend([r'$\omega_\mathrm{m,ref}$',
+                    r'$\hat \omega_\mathrm{m}$',
+                    r'$\omega_\mathrm{m}$'])
+        ax1.set_xlim(t_range)
+        ax1.set_xticklabels([])
+        ax1.set_ylabel('Speed (p.u.)')
+
+        ax2.plot(data.t, data.T_L/base.T, '--')
+        ax2.plot(data.t, data.T_M/base.T)
+        ax2.step(self.t, self.T_M/base.T)  # Limited torque reference
+        ax2.set_xlim(t_range)
+        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{m}$',
+                    r'$\tau_\mathrm{m,ref}$'])
+        ax2.set_ylabel('Torque (p.u.)')
+        ax2.set_xticklabels([])
+
+        ax3.step(self.t, self.i_ref.real/base.i, '--', where='post')
+        ax3.step(self.t, self.i.real/base.i, where='post')
+        ax3.step(self.t, self.i_ref.imag/base.i, '--', where='post')
+        ax3.step(self.t, self.i.imag/base.i, where='post')
+        ax3.set_ylabel('Current (p.u.)')
+        ax3.legend([r'$i_\mathrm{d,ref}$', r'$i_\mathrm{d}$',
+                    r'$i_\mathrm{q,ref}$', r'$i_\mathrm{q}$'])
+        ax3.set_xlim(t_range)
+        ax3.set_xticklabels([])
+
+        ax4.step(self.t, np.abs(self.u)/base.u, where='post')
+        ax4.step(self.t, self.u_dc/np.sqrt(3)/base.u, '--', where='post')
+        ax4.set_ylabel('Voltage (p.u.)')
+        ax4.set_xlim(t_range)
+        ax4.set_ylim(0, 1.2)
+        ax4.legend([r'$|u|$', r'$u_\mathrm{dc}/\sqrt{3}$'])
+        ax4.set_xticklabels([])
+
+        ax5.plot(data.t, np.abs(data.psi)/base.psi)
+        ax5.step(self.t, np.abs(self.psi)/base.psi, '--', where='post')
+        ax5.set_xlim(t_range)
+        ax5.set_ylim(0, 1.2)
+        ax5.legend([r'$\psi_\mathrm{s}$'])
+        ax5.legend([r'$|\psi|$', r'$|\hat\psi|$'])
+        ax5.set_ylabel('Flux (p.u.)')
+        ax5.set_xlabel('Time (s)')
+
+        fig.align_ylabels()
+        plt.tight_layout()
+        plt.show()
+
+    def plot_latex(self, mdl, base):
+        """
+        Plots example figures using LaTeX in a format suitable for two-column
+        articles. This method requires that LaTeX is installed.
 
         Parameters
         ----------
@@ -629,79 +696,80 @@ class Datalogger:
         fig.align_ylabels()
         plt.tight_layout()
         plt.show()
-        plt.savefig('fig.pdf')
+        # plt.savefig('fig.pdf')
 
-    def plot(self, mdl, base):
+    def plot_extra(self, mdl, base):
         """
-        Plots more waveforms.
+        Plots extra waveforms if the PWM is enabled or if the DC-bus dynamics
+        are modeled.
 
         Parameters
         ----------
+        t : ndarray
+            Discrete time.
         mdl : object
             Continuous-time solution.
         base : object
             Base values.
 
         """
-        data = mdl.datalog          # Continuous-time data
-        t_range = (0, self.t[-1])   # Time span
+        # Continuous-time data
+        data = mdl.datalog
+        # Time span
+        t_zoom = (.9, .925)
 
         # Plotting parameters
         plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
         plt.rcParams['lines.linewidth'] = 1.
-        plt.rcParams['axes.grid'] = True
-        plt.rcParams.update({"text.usetex": True,
-                             "font.family": "serif",
-                             "font.sans-serif": ["Computer Modern Roman"]})
+        plt.rcParams.update({"text.usetex": False})
 
-        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(8, 10))
+        if mdl.pwm is not None:
+            # Plots a zoomed view of voltages and currents
+            fig1, (ax1, ax2) = plt.subplots(2, 1)
+            ax1.plot(data.t, data.u_s.real/base.u)
+            ax1.plot(self.t, self.u_s.real/base.u)
+            ax1.set_xlim(t_zoom)
+            ax1.set_ylim(-1.5, 1.5)
+            ax1.legend([r'$u_\mathrm{sa}$', r'$\hat u_\mathrm{sa}$'])
+            ax1.set_ylabel('Voltage (p.u.)')
+            ax1.set_xticklabels([])
+            ax2.plot(data.t,
+                     complex2abc(data.i*np.exp(1j*data.theta_m)).T/base.i)
+            ax2.step(self.t, self.i_s.real/base.i, where='post')
+            ax2.set_xlim(t_zoom)
+            ax2.legend([r'$i_\mathrm{a}$', r'$i_\mathrm{b}$',
+                        r'$i_\mathrm{c}$'])
+            ax2.set_ylabel('Current (p.u.)')
+            ax2.set_xlabel('Time (s)')
+            fig1.align_ylabels()
 
-        ax1.step(self.t, self.w_m_ref/base.w, '--', where='post')
-        ax1.step(self.t, self.w_m/base.w, where='post')
-        ax1.plot(data.t, data.w_m/base.w)
-        ax1.legend([r'$\omega_\mathrm{m,ref}$',
-                    r'$\hat \omega_\mathrm{m}$',
-                    r'$\omega_\mathrm{m}$'])
-        ax1.set_xlim(t_range)
-        ax1.set_xticklabels([])
-        ax1.set_ylabel('Speed (p.u.)')
+        # Plots the DC bus and grid-side variables (if data exists)
+        try:
+            data.i_L
+        except AttributeError:
+            data.i_L = None
+        if data.i_L is not None:
+            fig2, (ax1, ax2) = plt.subplots(2, 1)
+            ax1.plot(data.t, data.u_di/base.u)
+            ax1.plot(data.t, data.u_dc/base.u)
+            ax1.plot(data.t, complex2abc(data.u_g).T/base.u)
+            ax1.set_xlim(t_zoom)
+            ax1.set_ylim(-1.5, 2)
+            ax1.set_xticklabels([])
+            ax1.legend([r'$u_\mathrm{di}$',
+                        r'$u_\mathrm{dc}$',
+                        r'$u_\mathrm{ga}$'])
+            ax1.set_ylabel('Voltage (p.u.)')
+            ax2.plot(data.t, data.i_L/base.i)
+            ax2.plot(data.t, data.i_dc/base.i)
+            ax2.plot(data.t, data.i_g.real/base.i)
+            ax2.set_xlim(t_zoom)
+            ax2.legend([r'$i_\mathrm{L}$',
+                        r'$i_\mathrm{dc}$',
+                        r'$i_\mathrm{ga}$'])
+            ax2.set_ylabel('Current (p.u.)')
+            ax2.set_xlabel('Time (s)')
+            fig2.align_ylabels()
 
-        ax2.plot(data.t, data.T_L/base.T, '--')
-        ax2.plot(data.t, data.T_M/base.T)
-        ax2.step(self.t, self.T_M/base.T)  # Limited torque reference
-        ax2.set_xlim(t_range)
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{m}$',
-                    r'$\tau_\mathrm{m,ref}$'])
-        ax2.set_ylabel('Torque (p.u.)')
-        ax2.set_xticklabels([])
-
-        ax3.step(self.t, self.i_ref.real/base.i, '--', where='post')
-        ax3.step(self.t, self.i.real/base.i, where='post')
-        ax3.step(self.t, self.i_ref.imag/base.i, '--', where='post')
-        ax3.step(self.t, self.i.imag/base.i, where='post')
-        ax3.set_ylabel('Current (p.u.)')
-        ax3.legend([r'$i_\mathrm{d,ref}$', r'$i_\mathrm{d}$',
-                    r'$i_\mathrm{q,ref}$', r'$i_\mathrm{q}$'])
-        ax3.set_xlim(t_range)
-        ax3.set_xticklabels([])
-
-        ax4.step(self.t, np.abs(self.u)/base.u, where='post')
-        ax4.step(self.t, self.u_dc/np.sqrt(3)/base.u, '--', where='post')
-        ax4.set_ylabel('Voltage (p.u.)')
-        ax4.set_xlim(t_range)
-        ax4.set_ylim(0, 1.2)
-        ax4.legend([r'$|u|$', r'$u_\mathrm{dc}/\sqrt{3}$'])
-        ax4.set_xticklabels([])
-
-        ax5.plot(data.t, np.abs(data.psi)/base.psi)
-        ax5.step(self.t, np.abs(self.psi)/base.psi, '--', where='post')
-        ax5.set_xlim(t_range)
-        ax5.set_ylim(0, 1.2)
-        ax5.legend([r'$\psi_\mathrm{s}$'])
-        ax5.legend([r'$|\psi|$', r'$|\hat\psi|$'])
-        ax5.set_ylabel('Flux (p.u.)')
-        ax5.set_xlabel('Time (s)')
-
-        fig.align_ylabels()
         plt.tight_layout()
         plt.show()
