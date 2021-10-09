@@ -48,6 +48,6 @@ if __name__ == '__main__':
     # Post-process and plot
     mdl.datalog.post_process(mdl)
     ctrl.datalog.post_process()
-    # ctrl.datalog.plot(mdl, base)
-    ctrl.datalog.plot_simple(mdl, base)
+    ctrl.datalog.plot(mdl, base)
+    # ctrl.datalog.plot_latex(mdl, base)
     # ctrl.datalog.plot_extra(mdl, base)

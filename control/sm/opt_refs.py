@@ -109,8 +109,7 @@ class OptimalLoci:
 
     def plot(self, i_max, base, N=20):
         """
-        Plots some typical figures as example figures. Per-unit quantities
-        are used in the plots.
+        Plots control loci using per-unit quantities.
 
         Parameters
         ----------
@@ -122,9 +121,13 @@ class OptimalLoci:
             Amount of points to be evaluated. The default is 20.
 
         """
+        # Disable LaTeX in plots
+        plt.rcParams.update({"text.usetex": False})
+
         # Compute the current limit for plotting
         theta = np.linspace(0, np.pi, 2*N)
         i_lim = i_max*np.exp(1j*theta)
+
         # Compute the characteristics
         i_mtpa = self.mtpa(i_max, N)
         T_M_mtpa = self.torque(i_mtpa)
@@ -133,6 +136,7 @@ class OptimalLoci:
             T_M_mtpv = self.torque(i_mtpv)
         else:
             T_M_mtpv = None     # No MTPV in finite speed drives
+
         # Plot the i_d--i_q current plane
         fig1, ax = plt.subplots(1, 1)
         ax.plot(i_mtpa.real/base.i, i_mtpa.imag/base.i)
@@ -150,6 +154,7 @@ class OptimalLoci:
         else:
             ax.axis([-i_max/base.i, 0, 0, i_max/base.i])
         ax.set_aspect('equal', 'box')
+
         # Plot i_d vs. T_M
         fig2, ax = plt.subplots(1, 1)
         ax.plot(T_M_mtpa/base.T, np.real(i_mtpa)/base.i)
@@ -167,6 +172,7 @@ class OptimalLoci:
         else:
             ax.set_ylim(None, 0)
         ax.set_xlim(0, np.max(T_M_mtpa)/base.T)
+
         # Plot T_M vs. abs(i)
         fig3, ax = plt.subplots(1, 1)
         ax.plot(np.abs(i_mtpa)/base.i, T_M_mtpa/base.T)
