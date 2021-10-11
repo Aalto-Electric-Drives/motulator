@@ -20,10 +20,10 @@ pwm_modeled = not True  # Enable the carrier comparison
 # Define the external load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])
 values = np.array([0, 0, 1, 1, 0, 0])*14.6
-T_L_ext = Sequence(times, values)  # T_L_ext = Step(1, 14.6)
+tau_L_ext = Sequence(times, values)  # tau_L_ext = Step(1, 14.6)
 mech_data = {'J': 0.015,
              'B': 0,
-             'T_L_ext': T_L_ext}
+             'tau_L_ext': tau_L_ext}
 mech = Mechanics(**mech_data)
 
 # %% Computational delay and PWM
@@ -34,7 +34,7 @@ else:
     pwm = None
 
 # %% Motor model
-motor_data = {'R': 3.6,
+motor_data = {'R_s': 3.6,
               'L_d': 0.036,
               'L_q': 0.051,
               'psi_f': 0.545,

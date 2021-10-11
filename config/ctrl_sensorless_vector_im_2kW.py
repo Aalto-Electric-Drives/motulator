@@ -33,7 +33,7 @@ class BaseValues:
     P: float = 1.5*u*i
     Z: float = u/i
     L: float = Z/w
-    T: float = p*P/w
+    tau: float = p*P/w
 
 
 # %% Define the controller parameters
@@ -51,7 +51,7 @@ class CtrlParameters:
     alpha_o: float = 2*np.pi*40
     alpha_s: float = 2*np.pi*4
     # Maximum values
-    T_M_max: float = 1.5*14.6
+    tau_M_max: float = 1.5*14.6
     i_s_max: float = 1.5*np.sqrt(2)*5
     # Nominal values
     psi_R_nom: float = .9
@@ -85,7 +85,7 @@ mdl.speed_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])
 values = np.array([0, 0, 1, 1, 0, 0])*14.6
-mdl.mech.T_L_ext = Sequence(times, values)  # T_L_ext = Step(1, 14.6)
+mdl.mech.tau_L_ext = Sequence(times, values)  # tau_L_ext = Step(1, 14.6)
 # Stop time of the simulation
 mdl.t_stop = mdl.speed_ref.times[-1]
 
@@ -110,4 +110,4 @@ with np.printoptions(precision=1, suppress=True):
     print('    {}'.format(mdl.speed_ref))
 print('External load torque:')
 with np.printoptions(precision=1, suppress=True):
-    print('    {}'.format(mdl.mech.T_L_ext))
+    print('    {}'.format(mdl.mech.tau_L_ext))

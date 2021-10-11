@@ -25,7 +25,7 @@ else:
     pwm = None
 
 # %% Motor model
-motor_data = {'R': .54,
+motor_data = {'R_s': .54,
               'L_d': 41.5e-3,
               'L_q': 6.2e-3,
               'psi_f': 0,

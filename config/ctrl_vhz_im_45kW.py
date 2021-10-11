@@ -30,7 +30,7 @@ class BaseValues:
     P: float = 1.5*u*i
     Z: float = u/i
     L: float = Z/w
-    T: float = p*P/w
+    tau: float = p*P/w
 
 
 # %% Define the controller parameters
@@ -66,7 +66,7 @@ ctrl = VHzCtrl(pars, datalog)
 # Speed reference
 mdl.speed_ref = Step(2, .8*base.w)
 # External load torque
-mdl.mech.T_L_ext = Step(5, 291)
+mdl.mech.tau_L_ext = Step(5, 291)
 # Stop time of the simulation
 mdl.t_stop = 7
 # %% Profile: Speed reversals with constant load torque
@@ -77,7 +77,7 @@ mdl.t_stop = 7
 # External load torque
 # times = np.array([0, .5, .5, 3.5, 3.5, 4])*5
 # values = np.array([0, 0, 1, 1, 0, 0])*291*.3
-# mdl.mech.T_L_ext = Sequence(times, values)
+# mdl.mech.tau_L_ext = Sequence(times, values)
 # Stop time of the simulation
 # mdl.t_stop = mdl.freq_ref.times[-1]
 
@@ -96,4 +96,4 @@ with np.printoptions(precision=1, suppress=True):
     print('    {}'.format(mdl.speed_ref))
 print('External load torque:')
 with np.printoptions(precision=1, suppress=True):
-    print('    {}'.format(mdl.mech.T_L_ext))
+    print('    {}'.format(mdl.mech.tau_L_ext))

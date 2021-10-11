@@ -33,7 +33,7 @@ class BaseValues:
     P: float = 1.5*u*i
     Z: float = u/i
     L: float = Z/w
-    T: float = p*P/w
+    tau: float = p*P/w
 
 
 # %% Define the controller parameters
@@ -54,13 +54,13 @@ class CtrlParameters:
     # Observer
     w_o: float = 2*np.pi*40
     # Maximum values
-    T_M_max: float = 1.5*14.0
-    i_max: float = 2*np.sqrt(2)*4.3
+    tau_M_max: float = 1.5*14.0
+    i_s_max: float = 2*np.sqrt(2)*4.3
     # Nominal values
     u_dc_nom: float = 540
     w_nom: float = 2*np.pi*75
     # Motor parameter estimates
-    R: float = 3.6
+    R_s: float = 3.6
     L_d: float = .036
     L_q: float = .051
     psi_f: float = .545
@@ -72,13 +72,13 @@ class CtrlParameters:
 base = BaseValues()
 pars = CtrlParameters()
 opt_refs = OptimalLoci(pars)
-i_mtpa = opt_refs.mtpa(2*pars.i_max)
-T_M_mtpa = opt_refs.torque(i_mtpa)
-pars.i_d_mtpa = LUT(T_M_mtpa, i_mtpa.real)
-i_mtpv = opt_refs.mtpv(2*pars.i_max)
-pars.i_q_mtpv = LUT(i_mtpv.real, i_mtpv.imag)
+i_s_mtpa = opt_refs.mtpa(2*pars.i_s_max)
+tau_M_mtpa = opt_refs.torque(i_s_mtpa)
+pars.i_sd_mtpa = LUT(tau_M_mtpa, i_s_mtpa.real)
+i_s_mtpv = opt_refs.mtpv(2*pars.i_s_max)
+pars.i_sq_mtpv = LUT(i_s_mtpv.real, i_s_mtpv.imag)
 # Plot the control loci
-opt_refs.plot(2*pars.i_max, base)
+opt_refs.plot(2*pars.i_s_max, base)
 
 # %% Choose controller
 speed_ctrl = SpeedCtrl(pars)
@@ -97,7 +97,7 @@ mdl.speed_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])
 values = np.array([0, 0, 1, 1, 0, 0])*14.0  # *.5
-mdl.mech.T_L_ext = Sequence(times, values)  # T_L_ext = Step(1, 14.6)
+mdl.mech.tau_L_ext = Sequence(times, values)  # tau_L_ext = Step(1, 14.6)
 # Stop time of the simulation
 mdl.t_stop = mdl.speed_ref.times[-1]
 
@@ -107,8 +107,8 @@ print('-------------------------')
 print('Sampling period:')
 print('    T_s={}'.format(pars.T_s))
 print('Motor parameter estimates:')
-print(('    p={}  R={}  L_d={}  L_q={}  psi_f={}'
-       ).format(pars.p, pars.R, pars.L_d, pars.L_q, pars.psi_f))
+print(('    p={}  R_s={}  L_d={}  L_q={}  psi_f={}'
+       ).format(pars.p, pars.R_s, pars.L_d, pars.L_q, pars.psi_f))
 print(current_ref)
 print(current_ctrl)
 print(observer)
@@ -122,4 +122,4 @@ with np.printoptions(precision=1, suppress=True):
     print('    {}'.format(mdl.speed_ref))
 print('External load torque:')
 with np.printoptions(precision=1, suppress=True):
-    print('    {}'.format(mdl.mech.T_L_ext))
+    print('    {}'.format(mdl.mech.tau_L_ext))

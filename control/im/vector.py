@@ -68,23 +68,22 @@ class VectorCtrl:
         i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
 
         # Outputs
-        T_M_ref, T_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
-        i_s_ref, T_M = self.current_ref.output(T_M_ref, psi_R)
+        tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_M)
+        i_s_ref, tau_M = self.current_ref.output(tau_M_ref, psi_R)
         w_s = self.observer.output(i_s, w_m)
-        # u_s_ref = self.current_ctrl.output(i_s_ref, i_s, psi_R, w_s, w_m)
         u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
 
         # Update the states
         self.pwm.update(u_s_ref_lim)
-        self.speed_ctrl.update(T_M, T_L)
+        self.speed_ctrl.update(tau_M, tau_L)
         self.current_ref.update(u_s_ref, u_dc)
         self.current_ctrl.update(e, u_s_ref, u_s_ref_lim, w_s)
         self.observer.update(i_s, w_s)
 
         # Data logging
         self.datalog.save([i_s_ref, i_s, u_s, w_m_ref, w_m, w_s, psi_R,
-                           theta_s, u_dc, T_M, self.pwm.T_s])
+                           theta_s, u_dc, tau_M, self.pwm.T_s])
 
         return d_abc_ref, self.pwm.T_s
 
@@ -146,22 +145,22 @@ class SensorlessVectorCtrl:
         i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
 
         # Outputs
-        T_M_ref, T_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
-        i_s_ref, T_M = self.current_ref.output(T_M_ref, psi_R)
-        w_s, w_r, d_psi_R = self.observer.output(u_s, i_s)
+        tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
+        i_s_ref, tau_M = self.current_ref.output(tau_M_ref, psi_R)
+        w_s, w_r, dpsi_R = self.observer.output(u_s, i_s)
         u_s_ref = self.current_ctrl.output(i_s_ref, i_s, psi_R, w_s, w_m)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
 
         # Update the states
         self.pwm.update(u_s_ref_lim)
-        self.speed_ctrl.update(T_M, T_L)
+        self.speed_ctrl.update(tau_M, tau_L)
         self.current_ref.update(u_s_ref, u_dc)
         self.current_ctrl.update(i_s_ref, i_s, u_s_ref, u_s_ref_lim)
-        self.observer.update(i_s, w_s, w_r, d_psi_R)
+        self.observer.update(i_s, w_s, w_r, dpsi_R)
 
         # Data logging
         self.datalog.save([i_s_ref, i_s, u_s, w_m_ref, w_m, w_s, psi_R,
-                           theta_s, u_dc, T_M, self.pwm.T_s])
+                           theta_s, u_dc, tau_M, self.pwm.T_s])
 
         return d_abc_ref, self.pwm.T_s
 
@@ -209,13 +208,13 @@ class CurrentRef:
         # State variable
         self.i_sd_ref = self.i_sd_nom
 
-    def output(self, T_M_ref, psi_R):
+    def output(self, tau_M_ref, psi_R):
         """
         Compute the stator current reference.
 
         Parameters
         ----------
-        T_M_ref : float
+        tau_M_ref : float
             Torque reference.
         psi_R : float
             Rotor flux magnitude.
@@ -224,8 +223,8 @@ class CurrentRef:
         -------
         i_s_ref : complex
             Stator current reference.
-        T_M : float
-            Limited torque reference (i.e. torque estimate).
+        tau_M : float
+            Limited torque reference.
 
         """
         def q_axis_current_limit(i_sd_ref, psi_R):
@@ -238,7 +237,7 @@ class CurrentRef:
             return i_sq_max
 
         # To improve the robustness, we keep the torque gain constant
-        i_sq_ref = self.gain_tq*T_M_ref
+        i_sq_ref = self.gain_tq*tau_M_ref
         # Limit the current
         i_sq_max = q_axis_current_limit(self.i_sd_ref, psi_R)
         if np.abs(i_sq_ref) > i_sq_max:
@@ -246,8 +245,8 @@ class CurrentRef:
         # Current reference
         i_s_ref = self.i_sd_ref + 1j*i_sq_ref
         # Limited torque (for the speed controller)
-        T_M = 1.5*self.p*psi_R*i_sq_ref
-        return i_s_ref, T_M
+        tau_M = 1.5*self.p*psi_R*i_sq_ref
+        return i_s_ref, tau_M
 
     def update(self, u_s_ref, u_dc):
         """
@@ -383,7 +382,7 @@ class CurrentCtrl2DOFPI:
 
         Returns
         -------
-        u_ref : complex
+        u_s_ref : complex
             Unlimited voltage reference.
 
         """
@@ -472,7 +471,7 @@ class SensorlessObserver:
             Angular frequency of the rotor flux.
         w_r : float
             Angular slip frequency.
-        d_psi_R : float
+        dpsi_R : float
             Increment of the flux magnitude for the state update.
 
         """
@@ -502,9 +501,9 @@ class SensorlessObserver:
             w_r = 0
 
         # Increment of the flux magnitude
-        d_psi_R = e_s.real + g.real*(e_r - e_s).real
+        dpsi_R = e_s.real + g.real*(e_r - e_s).real
 
-        return w_s, w_r, d_psi_R
+        return w_s, w_r, dpsi_R
 
     def update(self, i_s, w_s, w_r, d_psi_R):
         """
@@ -613,7 +612,7 @@ class Datalogger:
         self.psi_R = []
         self.theta_s = []
         self.u_dc = []
-        self.T_M = []
+        self.tau_M = []
         self.u_ss, self.i_ss = 0j, 0j
 
     def save(self, data):
@@ -627,7 +626,7 @@ class Datalogger:
 
         """
         (i_s_ref, i_s, u_s, w_m_ref, w_m, w_s, psi_R,
-         theta_s, u_dc, T_M, T_s) = data
+         theta_s, u_dc, tau_M, T_s) = data
         try:
             t_new = self.t[-1] + T_s
         except IndexError:
@@ -642,7 +641,7 @@ class Datalogger:
         self.psi_R.extend([psi_R])
         self.theta_s.extend([theta_s])
         self.u_dc.extend([u_dc])
-        self.T_M.extend([T_M])
+        self.tau_M.extend([tau_M])
 
     def post_process(self):
         """
@@ -659,7 +658,7 @@ class Datalogger:
         self.psi_R = np.asarray(self.psi_R)
         self.theta_s = np.asarray(self.theta_s)
         self.u_dc = np.asarray(self.u_dc)
-        self.T_M = np.asarray(self.T_M)
+        self.tau_M = np.asarray(self.tau_M)
         # Additional variables
         self.u_ss = np.exp(1j*self.theta_s)*self.u_s
         self.i_ss = np.exp(1j*self.theta_s)*self.i_s
@@ -697,10 +696,10 @@ class Datalogger:
         ax1.set_xticklabels([])
         ax1.set_ylabel('Speed (p.u.)')
 
-        ax2.plot(data.t, data.T_L/base.T, '--')
-        ax2.plot(data.t, data.T_M/base.T)
+        ax2.plot(data.t, data.tau_L/base.tau, '--')
+        ax2.plot(data.t, data.tau_M/base.tau)
         ax2.set_xlim(t_range)
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{m}$'])
+        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$'])
         ax2.set_ylabel('Torque (p.u.)')
         ax2.set_xticklabels([])
 
@@ -769,11 +768,11 @@ class Datalogger:
         ax1.set_xticklabels([])
         ax1.set_ylabel('Speed (p.u.)')
 
-        ax2.plot(data.t, data.T_L/base.T, '--')
-        ax2.plot(data.t, data.T_M/base.T)
+        ax2.plot(data.t, data.tau_L/base.tau, '--')
+        ax2.plot(data.t, data.tau_M/base.tau)
         ax2.set_xlim(t_range)
         ax2.set_ylim(-.2, 1)
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{m}$'])
+        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$'])
         ax2.set_ylabel('Torque (p.u.)')
         ax2.set_xticklabels([])
 
@@ -844,8 +843,8 @@ class Datalogger:
             ax2.plot(data.t, complex2abc(data.i_ss).T/base.i)
             ax2.step(self.t, self.i_ss.real/base.i, where='post')
             ax2.set_xlim(t_zoom)
-            ax2.legend([r'$i_\mathrm{a}$', r'$i_\mathrm{b}$',
-                        r'$i_\mathrm{c}$'])
+            ax2.legend([r'$i_\mathrm{sa}$', r'$i_\mathrm{sb}$',
+                        r'$i_\mathrm{sc}$'])
             ax2.set_ylabel('Current (p.u.)')
             ax2.set_xlabel('Time (s)')
             fig1.align_ylabels()

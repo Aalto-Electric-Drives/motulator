@@ -15,7 +15,7 @@ def ac_voltage(q, u_dc):
     Parameters
     ----------
     q : complex
-        Switching state.
+        Switching state vector (in stator coordinates).
     u_dc : float
         DC-Bus voltage.
 
@@ -36,7 +36,7 @@ def dc_current(q, i_ac):
     Parameters
     ----------
     q : complex
-        Switching state.
+        Switching state vector (in stator coordinates).
     i_ac : complex
         AC-side current.
 

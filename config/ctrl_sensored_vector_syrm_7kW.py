@@ -33,7 +33,7 @@ class BaseValues:
     P: float = 1.5*u*i
     Z: float = u/i
     L: float = Z/w
-    T: float = p*P/w
+    tau: float = p*P/w
 
 
 # %% Define the controller parameters
@@ -52,14 +52,14 @@ class CtrlParameters:
     alpha_fw: float = 2*np.pi*20
     alpha_s: float = 2*np.pi*4
     # Maximum values
-    T_M_max: float = 1.5*20.1
-    i_max: float = 1.5*np.sqrt(2)*15.5
-    i_d_min: float = .01*np.sqrt(2)*15.5
+    tau_M_max: float = 1.5*20.1
+    i_s_max: float = 1.5*np.sqrt(2)*15.5
+    i_sd_min: float = .01*np.sqrt(2)*15.5
     # Nominal values
     u_dc_nom: float = 540
     w_nom: float = 2*np.pi*105.8
     # Motor parameter estimates
-    R: float = 0.54
+    R_s: float = 0.54
     L_d: float = 41.5e-3
     L_q: float = 6.2e-3
     psi_f: float = 0
@@ -71,13 +71,13 @@ class CtrlParameters:
 base = BaseValues()
 pars = CtrlParameters()
 opt_refs = OptimalLoci(pars)
-i_mtpa = opt_refs.mtpa(2*pars.i_max)
-T_M_mtpa = opt_refs.torque(i_mtpa)
-pars.i_d_mtpa = LUT(T_M_mtpa, i_mtpa.real)
-i_mtpv = opt_refs.mtpv(2*pars.i_max)
-pars.i_q_mtpv = LUT(i_mtpv.real, i_mtpv.imag)
+i_s_mtpa = opt_refs.mtpa(2*pars.i_s_max)
+tau_M_mtpa = opt_refs.torque(i_s_mtpa)
+pars.i_sd_mtpa = LUT(tau_M_mtpa, i_s_mtpa.real)
+i_s_mtpv = opt_refs.mtpv(2*pars.i_s_max)
+pars.i_sq_mtpv = LUT(i_s_mtpv.real, i_s_mtpv.imag)
 # Plot the control loci
-opt_refs.plot(2*pars.i_max, base)
+opt_refs.plot(2*pars.i_s_max, base)
 
 # %% Choose controller
 speed_ctrl = SpeedCtrl(pars)
@@ -89,12 +89,12 @@ ctrl = VectorCtrl(pars, speed_ctrl, current_ref, current_ctrl, datalog)
 # %% Profiles
 # Speed reference
 times = np.array([0, .5, 1, 1.5, 2, 2.5,  3, 3.5, 4])
-values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*2*np.pi*105.8
+values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*base.w
 mdl.speed_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])
 values = np.array([0, 0, 1, 1, 0, 0])*20.1
-mdl.mech.T_L_ext = Sequence(times, values)  # T_L_ext = Step(1, 20.1)
+mdl.mech.tau_L_ext = Sequence(times, values)  # tau_L_ext = Step(1, 20.1)
 # Stop time of the simulation
 mdl.t_stop = mdl.speed_ref.times[-1]
 
@@ -104,8 +104,8 @@ print('-----------------------')
 print('Sampling period:')
 print('    T_s={}'.format(pars.T_s))
 print('Motor parameter estimates:')
-print(('    p={}  R={}  L_d={}  L_q={}'
-       ).format(pars.p, pars.R, pars.L_d, pars.L_q))
+print(('    p={}  R_s={}  L_d={}  L_q={}'
+       ).format(pars.p, pars.R_s, pars.L_d, pars.L_q))
 print(current_ref)
 print(current_ctrl)
 print(speed_ctrl)
@@ -118,4 +118,4 @@ with np.printoptions(precision=1, suppress=True):
     print('    {}'.format(mdl.speed_ref))
 print('External load torque:')
 with np.printoptions(precision=1, suppress=True):
-    print('    {}'.format(mdl.mech.T_L_ext))
+    print('    {}'.format(mdl.mech.tau_L_ext))

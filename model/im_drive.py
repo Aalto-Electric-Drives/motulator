@@ -1,8 +1,7 @@
 # pylint: disable=C0103
 """
 This module includes a continuous-time model for an induction motor drive. The
-space vector models are implemented in stator coordinates, but this is not
-shown in the variable naming for simplicity.
+space vector models are implemented in stator coordinates.
 
 """
 import numpy as np
@@ -38,68 +37,69 @@ class Motor:
         """
         self.R_s, self.R_R, self.L_sgm, self.L_M = R_s, R_R, L_sgm, L_M
         self.p = p
-        self.psi_s0, self.psi_R0 = 0j, 0j
+        self.psi_ss0, self.psi_Rs0 = 0j, 0j
 
-    def currents(self, psi_s, psi_R):
+    def currents(self, psi_ss, psi_Rs):
         """
         Computes the stator and rotor currents.
 
         Parameters
         ----------
-        psi_s : complex
-            Stator flux linkage.
-        psi_R : complex
-            Rotor flux linkage.
+        psi_ss : complex
+            Stator flux linkage in stator coordinates.
+        psi_Rs : complex
+            Rotor flux linkage in stator coordinates.
 
         Returns
         -------
-        i_s : complex
-            Stator current.
-        i_R : complex
-            Rotor current.
+        i_ss : complex
+            Stator current in stator coordinates.
+        i_Rs : complex
+            Rotor current in stator coordinates.
 
         """
-        i_s = (psi_s - psi_R)/self.L_sgm
-        i_R = psi_R/self.L_M - i_s
-        return i_s, i_R
+        i_ss = (psi_ss - psi_Rs)/self.L_sgm
+        i_Rs = psi_Rs/self.L_M - i_ss
+        return i_ss, i_Rs
 
-    def torque(self, psi_s, i_s):
+    def torque(self, psi_ss, i_ss):
         """
         Computes the electromagnetic torque.
 
         Parameters
         ----------
-        psi_s : complex
+        psi_ss : complex
             Stator flux linkage.
-        i_s : complex
+        i_ss : complex
             Stator current.
 
         Returns
         -------
-        T_M : float
+        tau_M : float
             Electromagnetic torque.
 
         """
-        T_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
-        return T_M
+        tau_M = 1.5*self.p*np.imag(i_ss*np.conj(psi_ss))
+        return tau_M
 
-    def f(self, psi_R, i_s, i_R, u_s, w_M):
+    def f(self, psi_Rs, i_ss, i_Rs, u_ss, w_M):
         # pylint: disable=R0913
         # To avoid overlapping computations, i_s and i_R are the inputs.
         """
-        Computes the state derivatives.
+        Computes the state derivatives. All space vectors are in stator
+        coordinates.
 
         Parameters
         ----------
-        psi_s : complex
+        psi_ss : complex
             Stator flux linkage.
-        psi_R : complex
+        psi_Rs : complex
             Rotor flux linkage.
-        i_s : complex
+        i_ss : complex
             Stator current.
-        i_R : complex
+        i_Rs : complex
             Rotor current.
-        u_s : complex
+        u_ss : complex
             Stator voltage.
         w_M : float
             Rotor speed (in mechanical rad/s).
@@ -107,12 +107,12 @@ class Motor:
         Returns
         -------
         complex list, length 2
-            Time derivative of the state vector, [dpsi_s, dpsi_R]
+            Time derivative of the state vector, [dpsi_ss, dpsi_Rs]
 
         """
-        dpsi_s = u_s - self.R_s*i_s
-        dpsi_R = -self.R_R*i_R + 1j*self.p*w_M*psi_R
-        return [dpsi_s, dpsi_R]
+        dpsi_ss = u_ss - self.R_s*i_ss
+        dpsi_Rs = -self.R_R*i_Rs + 1j*self.p*w_M*psi_Rs
+        return [dpsi_ss, dpsi_Rs]
 
     def meas_currents(self):
         """
@@ -124,8 +124,10 @@ class Motor:
             Phase currents.
 
         """
-        i_s, _ = self.currents(self.psi_s0, self.psi_R0)
-        i_s_abc = complex2abc(i_s)  # + noise + offset ...
+        # Stator current space vector in stator coordinates
+        i_ss, _ = self.currents(self.psi_ss0, self.psi_Rs0)
+        # Phase currents
+        i_s_abc = complex2abc(i_ss)  # + noise + offset ...
         return i_s_abc
 
     def __str__(self):
@@ -201,15 +203,15 @@ class MotorSaturated(Motor):
         """
         super().__init__(R_s=R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, p=p)
 
-    def currents(self, psi_s, psi_R):
+    def currents(self, psi_ss, psi_Rs):
         """
         This method overrides the base class method.
 
         """
-        L_M = self.L_M(psi_s)
-        i_R = (psi_R - psi_s)/self.L_sgm
-        i_s = psi_s/L_M - i_R
-        return i_s, i_R
+        L_M = self.L_M(psi_ss)
+        i_Rs = (psi_Rs - psi_ss)/self.L_sgm
+        i_ss = psi_ss/L_M - i_Rs
+        return i_ss, i_Rs
 
     def __str__(self):
         desc = ('Saturated induction motor (Gamma model):\n'
@@ -249,7 +251,7 @@ class Drive:
             Initial values of the state variables.
 
         """
-        x0 = [self.motor.psi_s0, self.motor.psi_R0,
+        x0 = [self.motor.psi_ss0, self.motor.psi_Rs0,
               self.mech.theta_M0, self.mech.w_M0]
         return x0
 
@@ -262,8 +264,8 @@ class Drive:
 
         """
         self.t0 = t0
-        self.motor.psi_s0 = x0[0]
-        self.motor.psi_R0 = x0[1]
+        self.motor.psi_ss0 = x0[0]
+        self.motor.psi_Rs0 = x0[1]
         # x0[2].imag and x0[3].imag are always zero
         self.mech.theta_M0 = x0[2].real
         self.mech.w_M0 = x0[3].real
@@ -288,14 +290,14 @@ class Drive:
 
         """
         # Unpack the states
-        psi_s, psi_R, _, w_M = x
+        psi_ss, psi_Rs, _, w_M = x
         # Interconnections: outputs for computing the state derivatives
-        u_s = self.converter.ac_voltage(self.q, self.converter.u_dc0)
-        i_s, i_R = self.motor.currents(psi_s, psi_R)
-        T_M = self.motor.torque(psi_s, i_s)
+        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
+        i_ss, i_Rs = self.motor.currents(psi_ss, psi_Rs)
+        tau_M = self.motor.torque(psi_ss, i_ss)
         # State derivatives
-        motor_f = self.motor.f(psi_R, i_s, i_R, u_s, w_M)
-        mech_f = self.mech.f(t, w_M, T_M)
+        motor_f = self.motor.f(psi_Rs, i_ss, i_Rs, u_ss, w_M)
+        mech_f = self.mech.f(t, w_M, tau_M)
         # List of state derivatives
         return motor_f + mech_f
 
@@ -303,9 +305,7 @@ class Drive:
 # %%
 class Datalogger:
     """
-    This class contains a default datalogger. Here, stator coordinates are
-    marked with extra s, e.g. i_ss is the stator current in stator
-    coordinates.
+    This class contains a default datalogger.
 
     """
 
@@ -358,8 +358,8 @@ class Datalogger:
         self.theta_m = mdl.motor.p*self.theta_M
         self.theta_m = np.mod(self.theta_m, 2*np.pi)
         self.w_m = mdl.motor.p*self.w_M
-        self.T_M = mdl.motor.torque(self.psi_ss, self.i_ss)
-        self.T_L = mdl.mech.T_L_ext(self.t) + mdl.mech.B*self.w_M
+        self.tau_M = mdl.motor.torque(self.psi_ss, self.i_ss)
+        self.tau_L = mdl.mech.tau_L_ext(self.t) + mdl.mech.B*self.w_M
         self.u_ss = mdl.converter.ac_voltage(self.q, mdl.converter.u_dc0)
 
 
@@ -395,15 +395,15 @@ class DriveWithDiodeBridge(Drive):
 
         """
         # Unpack the states for better readability
-        psi_s, psi_R, _, w_M, u_dc, i_L = x
+        psi_ss, psi_Rs, _, w_M, u_dc, i_L = x
         # Interconnections: outputs for computing the state derivatives
-        i_s, i_R = self.motor.currents(psi_s, psi_R)
-        u_s = self.converter.ac_voltage(self.q, u_dc)
-        i_dc = self.converter.dc_current(self.q, i_s)
-        T_M = self.motor.torque(psi_s, i_s)
+        i_ss, i_Rs = self.motor.currents(psi_ss, psi_Rs)
+        u_ss = self.converter.ac_voltage(self.q, u_dc)
+        i_dc = self.converter.dc_current(self.q, i_ss)
+        tau_M = self.motor.torque(psi_ss, i_ss)
         # Returns the list of state derivatives
-        return (self.motor.f(psi_R, i_s, i_R, u_s, w_M) +
-                self.mech.f(t, w_M, T_M) +
+        return (self.motor.f(psi_Rs, i_ss, i_Rs, u_ss, w_M) +
+                self.mech.f(t, w_M, tau_M) +
                 self.converter.f(t, u_dc, i_L, i_dc))
 
 

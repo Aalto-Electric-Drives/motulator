@@ -254,10 +254,10 @@ class Datalogger:
         ax1.set_xticklabels([])
         ax1.set_ylabel('Speed (p.u.)')
 
-        ax2.plot(data.t, data.T_L/base.T, '--')
-        ax2.plot(data.t, data.T_M/base.T)
+        ax2.plot(data.t, data.tau_L/base.tau, '--')
+        ax2.plot(data.t, data.tau_M/base.tau)
         ax2.set_xlim(t_range)
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{m}$'])
+        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$'])
         ax2.set_ylabel('Torque (p.u.)')
         ax2.set_xticklabels([])
 
@@ -326,11 +326,11 @@ class Datalogger:
         ax1.set_xticklabels([])
         ax1.set_ylabel('Speed (p.u.)')
 
-        ax2.plot(data.t, data.T_L/base.T, '--')
-        ax2.plot(data.t, data.T_M/base.T)
+        ax2.plot(data.t, data.tau_L/base.tau, '--')
+        ax2.plot(data.t, data.tau_M/base.tau)
         ax2.set_xlim(t_range)
         ax2.set_ylim(-.2, 1)
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{m}$'])
+        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$'])
         ax2.set_ylabel('Torque (p.u.)')
         ax2.set_xticklabels([])
 
@@ -401,8 +401,8 @@ class Datalogger:
             ax2.plot(data.t, complex2abc(data.i_ss).T/base.i)
             ax2.step(self.t, self.i_ss.real/base.i, where='post')
             ax2.set_xlim(t_zoom)
-            ax2.legend([r'$i_\mathrm{a}$', r'$i_\mathrm{b}$',
-                        r'$i_\mathrm{c}$'])
+            ax2.legend([r'$i_\mathrm{sa}$', r'$i_\mathrm{sb}$',
+                        r'$i_\mathrm{sc}$'])
             ax2.set_ylabel('Current (p.u.)')
             ax2.set_xlabel('Time (s)')
             fig1.align_ylabels()

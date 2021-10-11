@@ -16,6 +16,26 @@ from helpers import Sequence  # , Step
 from config.mdl_im_45kW import mdl
 
 
+# %%
+@dataclass
+class BaseValues:
+    """
+    This data class contains the base values computed from the rated values.
+    These are used for plotting the results.
+
+    """
+    # pylint: disable=too-many-instance-attributes
+    w: float = 2*np.pi*50
+    i: float = np.sqrt(2)*81
+    u: float = np.sqrt(2/3)*400
+    p: int = 2
+    psi: float = u/w
+    P: float = 1.5*u*i
+    Z: float = u/i
+    L: float = Z/w
+    tau: float = p*P/w
+
+
 # %% Define the controller parameters
 @dataclass
 class CtrlParameters:
@@ -30,7 +50,7 @@ class CtrlParameters:
     alpha_c: float = 2*np.pi*200
     alpha_s: float = 2*np.pi*1
     # Maximum values
-    T_M_max: float = 1.5*291
+    tau_M_max: float = 1.5*291
     i_s_max: float = 1.5*np.sqrt(2)*81
     # Nominal values
     psi_R_nom: float = .95
@@ -45,6 +65,7 @@ class CtrlParameters:
 
 
 # %% Choose controller
+base = BaseValues()
 pars = CtrlParameters()
 speed_ctrl = SpeedCtrl(pars)
 current_ref = CurrentRef(pars)
@@ -62,7 +83,7 @@ mdl.speed_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])*5
 values = np.array([0, 0, 1, 1, 0, 0])*291
-mdl.mech.T_L_ext = Sequence(times, values)  # T_L_ext = Step(1, 14.6)
+mdl.mech.tau_L_ext = Sequence(times, values)  # tau_L_ext = Step(1, 14.6)
 # Stop time of the simulation
 mdl.t_stop = mdl.speed_ref.times[-1]
 
@@ -87,4 +108,4 @@ with np.printoptions(precision=1, suppress=True):
     print('    {}'.format(mdl.speed_ref))
 print('External load torque:')
 with np.printoptions(precision=1, suppress=True):
-    print('    {}'.format(mdl.mech.T_L_ext))
+    print('    {}'.format(mdl.mech.tau_L_ext))

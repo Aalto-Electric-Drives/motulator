@@ -24,16 +24,17 @@ def main():
     """
     while mdl.t0 <= mdl.t_stop:
         # Sample the phase currents and the DC-bus voltage
-        i_abc_meas = mdl.motor.meas_currents()
+        i_s_abc_meas = mdl.motor.meas_currents()
         u_dc_meas = mdl.converter.meas_dc_voltage()
-        # Measure the rotor position
+        # Measure the rotor position (not used in the case of an IM)
         theta_M_meas = mdl.mech.meas_position()
+        # Measure the rotor speed
         w_M_meas = mdl.mech.meas_speed()
         # Get the speed reference
         w_m_ref = mdl.speed_ref(mdl.t0)
         # Run the digital controller
         d_abc_ref, T_s = ctrl(w_m_ref, w_M_meas, theta_M_meas,
-                              i_abc_meas, u_dc_meas)
+                              i_s_abc_meas, u_dc_meas)
         # Model the computational delay
         d_abc = mdl.delay(d_abc_ref)
         # Simulate the continuous-time system model over the sampling period

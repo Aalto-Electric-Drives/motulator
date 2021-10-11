@@ -13,7 +13,7 @@ class Mechanics:
 
     """
 
-    def __init__(self, J=.015, B=0, T_L_ext=Step(.8, 14.6)):
+    def __init__(self, J=.015, B=0, tau_L_ext=Step(.8, 14.6)):
         """
         Parameters
         ----------
@@ -21,17 +21,17 @@ class Mechanics:
             Total moment of inertia. The default is .015.
         B : float, optional
             Viscous damping coefficient. The default is 0.
-        T_L_ext : function, optional
-            External load torque as a function of time, T_L_ext(t). The
+        tau_L_ext : function, optional
+            External load torque as a function of time, tau_L_ext(t). The
             default is Step(.8, 14.6).
 
         """
-        self.J, self.B, self.T_L_ext = J, B, T_L_ext
+        self.J, self.B, self.tau_L_ext = J, B, tau_L_ext
         # Initial state
         self.w_M0 = 0
         self.theta_M0 = 0
 
-    def f(self, t, w_M, T_M):
+    def f(self, t, w_M, tau_M):
         """
         Computes the state derivative.
 
@@ -41,7 +41,7 @@ class Mechanics:
             Time.
         w_M : float
             Rotor speed (in mechanical rad/s).
-        T_M : float
+        tau_M : float
             Electromagnetic torque.
 
         Returns
@@ -51,14 +51,14 @@ class Mechanics:
 
         """
         dtheta_M = w_M
-        dw_M = (T_M - self.B*w_M - self.T_L_ext(t))/self.J
+        dw_M = (tau_M - self.B*w_M - self.tau_L_ext(t))/self.J
         return [dtheta_M, dw_M]
 
     def meas_speed(self):
         """
         Returns
         -------
-        WM : float
+        w_M0 : float
             Rotor speed (in mechanical rad/s) at the end of the integration
             period.
 

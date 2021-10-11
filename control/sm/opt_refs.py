@@ -1,5 +1,4 @@
 # pylint: disable=C0103
-
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
@@ -7,9 +6,7 @@ from cycler import cycler
 # %%
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
 plt.rcParams['lines.linewidth'] = 1.
-plt.rcParams.update({"text.usetex": True,
-                     "font.family": "serif",
-                     "font.sans-serif": ["Computer Modern Roman"]})
+plt.rcParams.update({"text.usetex": False})  # Disable LaTeX in plots
 
 
 # %%
@@ -34,86 +31,87 @@ class OptimalLoci:
         self.L_q = pars.L_q
         self.psi_f = pars.psi_f
         try:
-            self.i_d_min = pars.i_d_min
+            self.i_sd_min = pars.i_sd_min
         except AttributeError:
             pass
 
-    def torque(self, i):
+    def torque(self, i_s):
         """
         Computes the torque.
 
         Parameters
         ----------
-        i : complex
+        i_s : complex
             Stator current space vector.
 
         Returns
         -------
-        T_M : float
+        tau_M : float
             Electromagnetic torque.
 
         """
-        psi = self.L_d*i.real + 1j*self.L_q*i.imag + self.psi_f
-        T_M = 1.5*self.p*np.imag(i*np.conj(psi))
-        return T_M
+        psi_s = self.L_d*i_s.real + 1j*self.L_q*i_s.imag + self.psi_f
+        tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
+        return tau_M
 
-    def mtpa(self, i_max, N=20):
+    def mtpa(self, i_s_max, N=20):
         """
         Compute the MTPA locus.
 
         Parameters
         ----------
-        i_max : float
+        i_s_max : float
             Maximum current at which the locus is computed.
         N : int, optional
             Amount of points. The default is 20.
 
         Returns
         -------
-        i : complex
+        i_s : complex
             Current space vectors at the MTPA locus.
 
         """
         if self.psi_f == 0:
             # Magnetically linear SyRM
-            i_d = np.linspace(0, i_max/np.sqrt(2), N)
-            i_q = i_d
+            i_sd = np.linspace(0, i_s_max/np.sqrt(2), N)
+            i_sq = i_sd
             # Minimum d-axis current
-            i_d = (i_d < self.i_d_min)*self.i_d_min + (i_d >= self.i_d_min)*i_d
-            i = i_d + 1j*i_q
+            i_sd = ((i_sd < self.i_sd_min)*self.i_sd_min
+                    + (i_sd >= self.i_sd_min)*i_sd)
+            i_s = i_sd + 1j*i_sq
         else:
             # IPMSM
-            abs_i = np.linspace(0, i_max, N)
+            abs_i_s = np.linspace(0, i_s_max, N)
             i_a = self.psi_f/(self.L_d - self.L_q)
-            i_d = -i_a/4 - np.sqrt((i_a**2)/16 + (abs_i**2)/2)
-            i_q = np.sqrt(abs_i**2 - i_d**2)
-            i = i_d + 1j*i_q
-        return i
+            i_sd = -i_a/4 - np.sqrt((i_a**2)/16 + (abs_i_s**2)/2)
+            i_sq = np.sqrt(abs_i_s**2 - i_sd**2)
+            i_s = i_sd + 1j*i_sq
+        return i_s
 
-    def mtpv(self, i_max, N=20):
+    def mtpv(self, i_s_max, N=20):
         if self.psi_f == 0:
             # Magnetically linear SyRM
-            abs_i = np.linspace(0, i_max, N)
-            i = abs_i*np.exp(1j*(np.arctan(self.L_d/self.L_q)))
-        elif self.psi_f/self.L_d < i_max:
+            abs_i_s = np.linspace(0, i_s_max, N)
+            i_s = abs_i_s*np.exp(1j*(np.arctan(self.L_d/self.L_q)))
+        elif self.psi_f/self.L_d < i_s_max:
             # IPMSM
-            abs_i = np.linspace(self.psi_f/self.L_d, i_max, N)
+            abs_i_s = np.linspace(self.psi_f/self.L_d, i_s_max, N)
             k = self.L_q/(self.L_d - self.L_q)
             a = self.L_d**2 + self.L_q**2
             b = (2 + k)*self.psi_f*self.L_d
-            c = (1 + k)*self.psi_f**2 - (self.L_q*abs_i)**2
-            i_d = (-b - np.sqrt(b**2 - 4*a*c))/(2*a)
-            i_q = np.sqrt(abs_i**2 - i_d**2)
-            i = i_d + 1j*i_q
-        return i
+            c = (1 + k)*self.psi_f**2 - (self.L_q*abs_i_s)**2
+            i_sd = .5*(-b - np.sqrt(b**2 - 4*a*c))/a
+            i_sq = np.sqrt(abs_i_s**2 - i_sd**2)
+            i_s = i_sd + 1j*i_sq
+        return i_s
 
-    def plot(self, i_max, base, N=20):
+    def plot(self, i_s_max, base, N=20):
         """
         Plots control loci using per-unit quantities.
 
         Parameters
         ----------
-        i_max : float
+        i_s_max : float
             Maximum current at which the loci are evaluated.
         base : object
             Base values.
@@ -121,68 +119,64 @@ class OptimalLoci:
             Amount of points to be evaluated. The default is 20.
 
         """
-        # Disable LaTeX in plots
-        plt.rcParams.update({"text.usetex": False})
-
         # Compute the current limit for plotting
         theta = np.linspace(0, np.pi, 2*N)
-        i_lim = i_max*np.exp(1j*theta)
+        i_s_lim = i_s_max*np.exp(1j*theta)
 
         # Compute the characteristics
-        i_mtpa = self.mtpa(i_max, N)
-        T_M_mtpa = self.torque(i_mtpa)
-        i_mtpv = self.mtpv(i_max, N)
-        if i_mtpv.any():  # is not None:
-            T_M_mtpv = self.torque(i_mtpv)
+        i_s_mtpa = self.mtpa(i_s_max, N)
+        tau_M_mtpa = self.torque(i_s_mtpa)
+        i_s_mtpv = self.mtpv(i_s_max, N)
+        if i_s_mtpv.any():  # is not None:
+            tau_M_mtpv = self.torque(i_s_mtpv)
         else:
-            T_M_mtpv = None     # No MTPV in finite speed drives
+            tau_M_mtpv = None     # No MTPV in finite speed drives
 
-        # Plot the i_d--i_q current plane
+        # Plot the i_sd--i_sq current plane
         fig1, ax = plt.subplots(1, 1)
-        ax.plot(i_mtpa.real/base.i, i_mtpa.imag/base.i)
+        ax.plot(i_s_mtpa.real/base.i, i_s_mtpa.imag/base.i)
         try:
-            ax.plot(i_mtpv.real/base.i, i_mtpv.imag/base.i)
+            ax.plot(i_s_mtpv.real/base.i, i_s_mtpv.imag/base.i)
         except AttributeError:
             pass
-        ax.plot(-i_lim.real/base.i, i_lim.imag/base.i)
-        ax.set_xlabel(r'$i_\mathrm{d}$ (p.u.)')
-        ax.set_ylabel(r'$i_\mathrm{q}$ (p.u.)')
+        ax.plot(-i_s_lim.real/base.i, i_s_lim.imag/base.i)
+        ax.set_xlabel(r'$i_\mathrm{sd}$ (p.u.)')
+        ax.set_ylabel(r'$i_\mathrm{sq}$ (p.u.)')
         ax.legend(['MTPA', 'MTPV'])
         if self.psi_f == 0:
             # SyRM
-            ax.axis([0, i_max/base.i, 0, i_max/base.i])
+            ax.axis([0, i_s_max/base.i, 0, i_s_max/base.i])
         else:
-            ax.axis([-i_max/base.i, 0, 0, i_max/base.i])
+            ax.axis([-i_s_max/base.i, 0, 0, i_s_max/base.i])
         ax.set_aspect('equal', 'box')
 
-        # Plot i_d vs. T_M
+        # Plot i_sd vs. tau_M
         fig2, ax = plt.subplots(1, 1)
-        ax.plot(T_M_mtpa/base.T, np.real(i_mtpa)/base.i)
+        ax.plot(tau_M_mtpa/base.tau, np.real(i_s_mtpa)/base.i)
         try:
-            ax.plot(T_M_mtpv/base.T, i_mtpv.real/base.i)
+            ax.plot(tau_M_mtpv/base.tau, i_s_mtpv.real/base.i)
         except AttributeError:
             pass
         ax.legend(['MTPA', 'MTPV'])
         ax.set_xlabel(r'$\tau_\mathrm{M}$ (p.u.)')
-        ax.set_ylabel(r'$i_\mathrm{d}$ (p.u.)')
+        ax.set_ylabel(r'$i_\mathrm{sd}$ (p.u.)')
         ax.set_xlim(0, None)
         if self.psi_f == 0:
             # SyRM
             ax.set_ylim(0, None)
         else:
             ax.set_ylim(None, 0)
-        ax.set_xlim(0, np.max(T_M_mtpa)/base.T)
+        ax.set_xlim(0, np.max(tau_M_mtpa)/base.tau)
 
-        # Plot T_M vs. abs(i)
+        # Plot tau_M vs. abs(i_s)
         fig3, ax = plt.subplots(1, 1)
-        ax.plot(np.abs(i_mtpa)/base.i, T_M_mtpa/base.T)
+        ax.plot(np.abs(i_s_mtpa)/base.i, tau_M_mtpa/base.tau)
         try:
-            ax.plot(np.abs(i_mtpv)/base.i, T_M_mtpv/base.T)
+            ax.plot(np.abs(i_s_mtpv)/base.i, tau_M_mtpv/base.tau)
         except TypeError:
             pass
         ax.legend(['MTPA', 'MTPV'])
-        ax.set_xlabel(r'$i$ (p.u.)')
+        ax.set_xlabel(r'$i_\mathrm{s}$ (p.u.)')
         ax.set_ylabel(r'$\tau_\mathrm{M}$ (p.u.)')
-        ax.set_xlim(0, i_max//base.i)
+        ax.set_xlim(0, i_s_max//base.i)
         ax.set_ylim(0, None)
-        return fig1, fig2, fig3
