@@ -80,5 +80,5 @@ class Mechanics:
 
     def __str__(self):
         desc = ('Mechanics:\n'
-                '    J={:.4f}  B={}')
-        return desc.format(self.J, self.B)
+                '    J={:.4f}  B={}  w_M0={}  theta_M0={}')
+        return desc.format(self.J, self.B, self.w_M0, self.theta_M0)
