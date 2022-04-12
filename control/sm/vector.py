@@ -140,6 +140,7 @@ class CurrentCtrl2DOFPI:
         psi_s = self.L_d*i_s.real + 1j*self.L_q*i_s.imag
         u_s_ref = k_t*psi_s_ref - k*psi_s + self.u_i
         e = psi_s_ref - psi_s
+
         return u_s_ref, e
 
     def update(self, e, u_s_ref, u_s_ref_lim, w_m):
@@ -165,6 +166,7 @@ class CurrentCtrl2DOFPI:
     def __str__(self):
         desc = ('2DOF PI current control:\n'
                 '    alpha_c=2*pi*{:.1f}')
+
         return desc.format(self.alpha_c/(2*np.pi))
 
 
@@ -305,14 +307,18 @@ class CurrentRef:
             i_sq_ref = tau_M_ref/(1.5*self.p*psi_t)
         else:
             i_sq_ref = 0
+
         # Limit the current
         i_sq_max = q_axis_current_limit(self.i_sd_ref)
         if np.abs(i_sq_ref) > i_sq_max:
             i_sq_ref = np.sign(i_sq_ref)*i_sq_max
+
         # Current reference
         i_s_ref = self.i_sd_ref + 1j*i_sq_ref
+
         # Limited torque (for the speed controller)
         tau_M = 1.5*self.p*psi_t*i_sq_ref
+
         return i_s_ref, tau_M
 
     def update(self, tau_M, u_s_ref, u_dc):
@@ -340,6 +346,7 @@ class CurrentRef:
     def __str__(self):
         desc = ('Current reference computation and field weakening:\n'
                 '    i_s_max={:.1f}')
+
         return desc.format(self.i_s_max)
 
 
@@ -389,6 +396,7 @@ class CurrentCtrl:
         err = self.L_d*(i_s_ref - i_s).real + 1j*self.L_q*(i_s_ref - i_s).imag
         # Voltage reference in rotor coordinates
         u_s_ref = self.R_s*i_s + 1j*w_m*psi_s + self.alpha_c*err
+
         return u_s_ref
 
     def update(self, *_):
@@ -400,6 +408,7 @@ class CurrentCtrl:
     def __str__(self):
         desc = ('State-feedback current control (without integral action):\n'
                 '    alpha_c=2*pi*{:.1f}')
+
         return desc.format(self.alpha_c/(2*np.pi))
 
 
@@ -450,12 +459,12 @@ class SensorlessObserver:
 
         """
         # Auxiliary flux (12)
-        psi_a = self.psi_s - self.L_q*i_s.real - 1j*self.L_d*i_s.imag
+        psi_a = self.psi_f + (self.L_d - self.L_q)*np.conj(i_s)
 
         # Estimation error (6)
         e = self.L_d*i_s.real + 1j*self.L_q*i_s.imag + self.psi_f - self.psi_s
 
-        # Pole locations are chosend according to (36), with c = w_m**2
+        # Pole locations are chosen according to (36), with c = w_m**2
         # and w_inf = inf, and the gain corresponding to (30) is used
         k = self.b_p + 2*self.zeta_inf*np.abs(self.w_m)
         psi_a_sqr = np.abs(psi_a)**2
@@ -479,6 +488,7 @@ class SensorlessObserver:
     def __str__(self):
         desc = ('Sensorless observer:\n'
                 '    w_o=2*pi*{:.1f}')
+
         return desc.format(.5*self.k_p/(2*np.pi))
 
 
