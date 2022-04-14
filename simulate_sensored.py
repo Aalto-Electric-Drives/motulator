@@ -11,9 +11,9 @@ from model.interfaces import solve
 
 # %% Import configuration data for the controller and the model
 # You can use the existing config files as templates and modify them
-from config.ctrl_sensored_vector_im_2kW import ctrl, mdl, base
 # from config.ctrl_sensored_vector_pmsm_2kW import ctrl, mdl, base
-# from config.ctrl_sensored_vector_syrm_7kW import ctrl, mdl, base
+from config.ctrl_sensored_vector_syrm_7kW import ctrl, mdl, base
+# from config.ctrl_sensored_vector_im_2kW import ctrl, mdl, base
 
 
 # %%

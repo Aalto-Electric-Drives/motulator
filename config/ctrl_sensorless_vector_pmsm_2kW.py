@@ -11,7 +11,7 @@ import numpy as np
 from control.common import SpeedCtrl
 from control.sm.vector import CurrentRef, CurrentCtrl, SensorlessObserver
 from control.sm.vector import SensorlessVectorCtrl, Datalogger
-from control.sm.opt_refs import OptimalLoci
+from control.sm.torque import TorqueCharacteristics
 from helpers import LUT, Sequence  # , Step
 from config.mdl_pmsm_2kW import mdl
 
@@ -66,19 +66,33 @@ class CtrlParameters:
     psi_f: float = .545
     p: int = 3
     J: float = .015
+    # LUTs to be dedined subsequently
+    i_sd_mtpa: float = None
+    i_sq_mtpv: float = None
 
 
-# %% Optimal references
+# %%
 base = BaseValues()
 pars = CtrlParameters()
-opt_refs = OptimalLoci(pars)
-i_s_mtpa = opt_refs.mtpa(2*pars.i_s_max)
-tau_M_mtpa = opt_refs.torque(i_s_mtpa)
+tq = TorqueCharacteristics(pars)
+
+# %% Generate LUTs
+i_s_max_lut = 2*pars.i_s_max  # LUTs are computed up to this current
+i_s_mtpa = tq.mtpa_locus(i_s_max_lut)
+psi_s_mtpa = tq.flux(i_s_mtpa)
+tau_M_mtpa = tq.torque(psi_s_mtpa)
 pars.i_sd_mtpa = LUT(tau_M_mtpa, i_s_mtpa.real)
-i_s_mtpv = opt_refs.mtpv(2*pars.i_s_max)
+psi_s_max_lut = tq.flux(tq.mtpv_current(i_s_max_lut))
+# psi_s_max_lut = 2*base.psi  # Simpler version
+psi_s_mtpv = tq.mtpv_locus(np.abs(psi_s_max_lut))
+i_s_mtpv = tq.current(psi_s_mtpv)
 pars.i_sq_mtpv = LUT(i_s_mtpv.real, i_s_mtpv.imag)
-# Plot the control loci
-opt_refs.plot(2*pars.i_s_max, base)
+
+# Plot loci and characteristics
+tq.plot_current_loci(i_s_max_lut, base)
+tq.plot_flux_loci(i_s_max_lut, base)
+tq.plot_torque_current(i_s_max_lut, base)
+# tq.plot_angle_torque(base.psi, base)
 
 # %% Choose controller
 speed_ctrl = SpeedCtrl(pars)
