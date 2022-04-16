@@ -7,11 +7,12 @@ This script configures sensorless vector control for an synchronous motor.
 from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
+from scipy.interpolate import interp1d
 from control.common import SpeedCtrl
 from control.sm.vector import CurrentRef, CurrentCtrl, SensorlessObserver
 from control.sm.vector import SensorlessVectorCtrl, Datalogger
 from control.sm.torque import TorqueCharacteristics
-from helpers import LUT, Sequence  # , Step
+from helpers import Sequence  # , Step
 from config.mdl_syrm_7kW import mdl
 
 
@@ -81,12 +82,12 @@ i_s_max_lut = 2*pars.i_s_max  # LUTs are computed up to this current
 i_s_mtpa = tq.mtpa_locus(i_s_max_lut)
 psi_s_mtpa = tq.flux(i_s_mtpa)
 tau_M_mtpa = tq.torque(psi_s_mtpa)
-pars.i_sd_mtpa = LUT(tau_M_mtpa, i_s_mtpa.real)
+pars.i_sd_mtpa = interp1d(tau_M_mtpa, i_s_mtpa.real)
 psi_s_max_lut = tq.flux(tq.mtpv_current(i_s_max_lut))
 # psi_s_max_lut = 2*base.psi  # Simpler version
 psi_s_mtpv = tq.mtpv_locus(np.abs(psi_s_max_lut))
 i_s_mtpv = tq.current(psi_s_mtpv)
-pars.i_sq_mtpv = LUT(i_s_mtpv.real, i_s_mtpv.imag)
+pars.i_sq_mtpv = interp1d(i_s_mtpv.real, i_s_mtpv.imag, bounds_error=False)
 
 # Plot loci and characteristics
 tq.plot_current_loci(i_s_max_lut, base)
