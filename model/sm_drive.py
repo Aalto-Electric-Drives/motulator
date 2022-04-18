@@ -30,6 +30,10 @@ class Drive:
         self.datalog = datalog
         self.q = 0                  # Switching-state space vector
         self.t0 = 0                 # Initial simulation time
+        self.desc = ('\nSystem: Synchronous motor drive\n'
+                     '-------------------------------\n')
+        self.desc += (self.delay.desc + self.pwm.desc + self.converter.desc
+                      + self.motor.desc + self.mech.desc)
 
     def get_initial_values(self):
         """
@@ -88,6 +92,9 @@ class Drive:
         # List of state derivatives
         return motor_f + mech_f
 
+    def __str__(self):
+        return self.desc
+
 
 # %%
 class Motor:
@@ -121,6 +128,9 @@ class Motor:
         self.p = p
         self.mech = mech
         self.psi_s0 = psi_f + 0j
+        self.desc = (('Synchronous motor:\n'
+                      '    p={}  R_s={}  L_d={}  L_q={}  psi_f={}\n')
+                     .format(self.p, self.R_s, self.L_d, self.L_q, self.psi_f))
 
     def current(self, psi_s):
         """
@@ -198,15 +208,7 @@ class Motor:
         return i_s_abc
 
     def __str__(self):
-        if self.psi_f == 0:
-            desc = ('Synchronous reluctance motor:\n'
-                    '    p={}  R_s={}  L_d={}  L_q={}')
-            return desc.format(self.p, self.R_s, self.L_d, self.L_q)
-        else:
-            desc = ('Permanent-magnet synchronous motor:\n'
-                    '    p={}  R_s={}  L_d={}  L_q={}  psi_f={}')
-            return desc.format(self.p, self.R_s, self.L_d, self.L_q,
-                               self.psi_f)
+        return self.desc
 
 
 # %%

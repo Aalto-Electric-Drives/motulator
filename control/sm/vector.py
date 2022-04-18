@@ -31,6 +31,16 @@ class VectorCtrl:
         self.current_ref = current_ref
         self.pwm = PWM(pars)
         self.datalog = datalog
+        self.desc = (('Sensored vector control for synchronous motors\n'
+                      '----------------------------------------------\n'
+                      'Sampling period:\n'
+                      '    T_s={}\n'
+                      'Motor parameter estimates:\n'
+                      '    p={}  R_s={}  L_d={}  L_q={}  psi_f={}\n')
+                     .format(pars.T_s, pars.p, pars.R_s, pars.L_d, pars.L_q,
+                             pars.psi_f))
+        self.desc += (self.current_ref.desc + self.current_ctrl.desc
+                      + self.speed_ctrl.desc)
 
     def __call__(self, w_m_ref, w_M, theta_M, i_s_abc, u_dc):
         """
@@ -67,7 +77,7 @@ class VectorCtrl:
 
         # Outputs
         tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_M)
-        i_s_ref, tau_M = self.current_ref.output(tau_M_ref)
+        i_s_ref, tau_M = self.current_ref.output(tau_M_ref, w_m, u_dc)
         u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
@@ -78,96 +88,13 @@ class VectorCtrl:
         self.pwm.update(u_s_ref_lim)
 
         # Data logging
-        self.datalog.save([i_s_ref, i_s, u_s, 0, w_m_ref, w_m, theta_m, u_dc,
-                           tau_M, self.pwm.T_s])
+        self.datalog.save([i_s_ref, i_s, u_s, np.nan, w_m_ref, w_m, theta_m,
+                           u_dc, tau_M, self.pwm.T_s])
 
         return d_abc_ref, self.pwm.T_s
 
-
-# %%
-class CurrentCtrl2DOFPI:
-    """
-    A current controller corresponding to the paper "Flux-linkage-based current
-    control of saturated synchronous motors":
-
-        https://doi.org/10.1109/TIA.2019.291925
-
-    The continuous-time complex-vector design corresponding to (13) is used
-    here. This design could be equivalently presented as a 2DOF PI controller.
-    For better performance at high speeds with low sampling frequencies, the
-    discrete-time design in (18) is recommended.
-
-    """
-
-    def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Controller parameters.
-
-        """
-        self.T_s = pars.T_s
-        self.L_d = pars.L_d
-        self.L_q = pars.L_q
-        self.alpha_c = pars.alpha_c
-        # Integral state
-        self.u_i = 0
-
-    def output(self, i_s_ref, i_s):
-        """
-        Computes the unlimited voltage reference.
-
-        Parameters
-        ----------
-        i_s_ref : complex
-            Current reference.
-        i_s : complex
-            Measured current.
-
-        Returns
-        -------
-        u_s_ref : complex
-            Unlimited voltage reference.
-        e : complex
-            Error signal (scaled, corresponds to the stator flux linkage).
-        """
-        # Gains
-        k_t = self.alpha_c
-        k = 2*self.alpha_c
-        # PM-flux linkage cancels out
-        psi_s_ref = self.L_d*i_s_ref.real + 1j*self.L_q*i_s_ref.imag
-        psi_s = self.L_d*i_s.real + 1j*self.L_q*i_s.imag
-        u_s_ref = k_t*psi_s_ref - k*psi_s + self.u_i
-        e = psi_s_ref - psi_s
-
-        return u_s_ref, e
-
-    def update(self, e, u_s_ref, u_s_ref_lim, w_m):
-        """
-        Updates the integral state.
-
-        Parameters
-        ----------
-        e : complex
-            Error signal (scaled, corresponds to the stator flux linkage).
-        u_s_ref : complex
-            Unlimited voltage reference.
-        u_s_ref_lim : complex
-            Limited voltage reference.
-        w_m : float
-            Angular rotor speed.
-
-        """
-        k_t = self.alpha_c
-        k_i = self.alpha_c*(self.alpha_c + 1j*w_m)
-        self.u_i += self.T_s*k_i*(e + (u_s_ref_lim - u_s_ref)/k_t)
-
     def __str__(self):
-        desc = ('2DOF PI current control:\n'
-                '    alpha_c=2*pi*{:.1f}')
-
-        return desc.format(self.alpha_c/(2*np.pi))
+        return self.desc
 
 
 # %%
@@ -191,6 +118,16 @@ class SensorlessVectorCtrl:
         self.observer = observer
         self.pwm = PWM(pars)
         self.datalog = datalog
+        self.desc = (('Sensorless vector control for synchronous motors\n'
+                      '------------------------------------------------\n'
+                      'Sampling period:\n'
+                      '    T_s={}\n'
+                      'Motor parameter estimates:\n'
+                      '    p={}  R_s={}  L_d={}  L_q={}  psi_f={}\n')
+                     .format(pars.T_s, pars.p, pars.R_s, pars.L_d, pars.L_q,
+                             pars.psi_f))
+        self.desc += (self.current_ref.desc + self.current_ctrl.desc
+                      + self.speed_ctrl.desc)
 
     def __call__(self, w_m_ref, i_s_abc, u_dc):
         """
@@ -224,14 +161,16 @@ class SensorlessVectorCtrl:
 
         # Outputs
         tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
-        i_s_ref, tau_M = self.current_ref.output(tau_M_ref)
-        u_s_ref = self.current_ctrl.output(i_s_ref, i_s, psi_s, w_m)
-        d_abc_ref = self.pwm(u_s_ref, u_dc, theta_m, w_m)
+        i_s_ref, tau_M = self.current_ref.output(tau_M_ref, w_m, u_dc)
+        u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s, psi_s, w_m)
+        d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Update all the states
-        self.speed_ctrl.update(tau_M, tau_L)
         self.observer.update(u_s, i_s)
+        self.speed_ctrl.update(tau_M, tau_L)
         self.current_ref.update(tau_M, u_s_ref, u_dc)
+        self.current_ctrl.update(e, u_s_ref, u_s_ref_lim, w_m)
+        self.pwm.update(u_s_ref_lim)
 
         # Data logging
         self.datalog.save([i_s_ref, i_s, u_s, psi_s, w_m_ref, w_m, theta_m,
@@ -239,19 +178,175 @@ class SensorlessVectorCtrl:
 
         return d_abc_ref, self.pwm.T_s
 
+    def __str__(self):
+        return self.desc
+
+
+# %%
+class CurrentCtrl2DOFPI:
+    """
+    A current controller corresponding to the paper "Flux-linkage-based current
+    control of saturated synchronous motors":
+
+        https://doi.org/10.1109/TIA.2019.291925
+
+    The continuous-time complex-vector design corresponding to (13) is used
+    here. This design could be equivalently presented as a 2DOF PI controller.
+    For better performance at high speeds with low sampling frequencies, the
+    discrete-time design in (18) is recommended.
+
+    """
+
+    def __init__(self, pars):
+        """
+        Parameters
+        ----------
+        pars : data object
+            Controller parameters.
+
+        """
+        self.T_s = pars.T_s
+        self.L_d = pars.L_d
+        self.L_q = pars.L_q
+        self.alpha_c = pars.alpha_c
+        self.u_i = 0  # Integral state
+        self.desc = (('2DOF PI current control:\n'
+                      '    alpha_c=2*pi*{:.1f}\n')
+                     .format(pars.alpha_c/(2*np.pi)))
+
+    def output(self, i_s_ref, i_s, *_):
+        """
+        Compute the unlimited voltage reference.
+
+        Parameters
+        ----------
+        i_s_ref : complex
+            Current reference.
+        i_s : complex
+            Measured current.
+        *_ : not used
+            Just for compatibility.
+
+        Returns
+        -------
+        u_s_ref : complex
+            Unlimited voltage reference.
+        e : complex
+            Error signal (scaled, corresponds to the stator flux linkage).
+
+        """
+        # Gains
+        k_t = self.alpha_c
+        k = 2*self.alpha_c
+        # PM-flux linkage cancels out
+        psi_s_ref = self.L_d*i_s_ref.real + 1j*self.L_q*i_s_ref.imag
+        psi_s = self.L_d*i_s.real + 1j*self.L_q*i_s.imag
+        u_s_ref = k_t*psi_s_ref - k*psi_s + self.u_i
+        e = psi_s_ref - psi_s
+
+        return u_s_ref, e
+
+    def update(self, e, u_s_ref, u_s_ref_lim, w_m):
+        """
+        Updates the integral state.
+
+        Parameters
+        ----------
+        e : complex
+            Error signal (scaled, corresponds to the stator flux linkage).
+        u_s_ref : complex
+            Unlimited voltage reference.
+        u_s_ref_lim : complex
+            Limited voltage reference.
+        w_m : float
+            Angular rotor speed.
+
+        """
+        k_t = self.alpha_c
+        k_i = self.alpha_c*(self.alpha_c + 1j*w_m)
+        self.u_i += self.T_s*k_i*(e + (u_s_ref_lim - u_s_ref)/k_t)
+
+    def __str__(self):
+        return self.desc
+
+
+# %%
+class CurrentCtrl:
+    """
+    This class represents a state-feedback current controller, with reference
+    feedforward, without integral action.
+
+    """
+
+    def __init__(self, pars):
+        """
+        Parameters
+        ----------
+        pars : data object
+            Controller parameters.
+
+        """
+        self.alpha_c = pars.alpha_c
+        self.L_d = pars.L_d
+        self.L_q = pars.L_q
+        self.R_s = pars.R_s
+        self.desc = (('State-feedback current control (no integral action):\n'
+                      '    alpha_c=2*pi*{:.1f}\n')
+                     .format(self.alpha_c/(2*np.pi)))
+
+    def output(self, i_s_ref, i_s, psi_s, w_m):
+        """
+        State-feedback current controller.
+
+        Parameters
+        ----------
+        i_s_ref : complex
+            Stator current reference.
+        i_s : complex
+            Stator current.
+        psi_s : complex
+            Stator flux linkage.
+        w_m : float
+            Rotor speed (in electrical rad/s).
+
+        Returns
+        -------
+        u_s_ref : complex
+            Voltage reference.
+        e : complex
+            Flux linkage error (not needed, just for compatibility).
+
+        """
+        # Map current error to the flux linkage error
+        e = self.L_d*(i_s_ref - i_s).real + 1j*self.L_q*(i_s_ref - i_s).imag
+        # Voltage reference in rotor coordinates
+        u_s_ref = self.R_s*i_s + 1j*w_m*psi_s + self.alpha_c*e
+
+        return u_s_ref, e
+
+    def update(self, *_):
+        """
+        No states, nothing to update. This method is just for compatibility.
+
+        """
+
+    def __str__(self):
+        return self.desc
+
 
 # %%
 class CurrentRef:
     """
-    This reference calculation method resembles the method "Analytical design
-    and autotuning of adaptive flux-weakening voltage regulation loop in IPMSM
-    drives with accurate torque regulation":
+    This reference calculation method resembles the method presented in
+    "Analytical design and autotuning of adaptive flux-weakening voltage
+    regulation loop in IPMSM drives with accurate torque regulation":
 
         https://doi.org/10.1109/TIA.2019.2942807
 
     Instead of the PI controller, we use a simpler integral controller with a
     constant gain. The resulting operating-point-dependent closed-loop pole
-    could be derived using (12) of the paper. The MTPV limit is also used.
+    could be derived using (12) of the paper. The MTPV limit is also included
+    by means of limiting the reference torque and the d-axis current reference.
 
     """
 
@@ -269,12 +364,16 @@ class CurrentRef:
         self.L_d = pars.L_d
         self.L_q = pars.L_q
         self.psi_f = pars.psi_f
-        self.i_sd_mtpa = pars.i_sd_mtpa
-        self.i_sq_mtpv = pars.i_sq_mtpv
-        self.i_sd_ref = self.i_sd_mtpa(0)
         self.k = pars.alpha_fw/(pars.w_nom*self.L_d)
+        self.k_u = pars.k_u
+        self.tau_M_lim = pars.tau_M_lim
+        self.i_sd_mtpa = pars.i_sd_mtpa
+        self.i_sd_lim = pars.i_sd_lim
+        self.i_sd_ref = 0
+        self.desc = ('Current reference computation and field weakening:\n'
+                     '    i_s_max={:.1f}\n').format(pars.i_s_max)
 
-    def output(self, tau_M_ref):
+    def output(self, tau_M_ref, w_m, u_dc):
         """
         Compute the stator current reference.
 
@@ -282,6 +381,10 @@ class CurrentRef:
         ----------
         tau_M_ref : float
             Torque reference.
+        w_m : float
+            Rotor speed (in electrical rad/s)
+        u_dc : float
+            DC-bus voltage.
 
         Returns
         -------
@@ -291,25 +394,32 @@ class CurrentRef:
             Limited torque reference.
 
         """
-        def q_axis_current_limit(i_sd_ref):
-            # Limit corresponding to the maximum current
-            i_sq_curr = np.sqrt(self.i_s_max**2 - i_sd_ref**2)
-            # Take the MTPV limit into account
-            i_sq_mtpv = self.i_sq_mtpv(i_sd_ref)
-            if i_sq_mtpv:
-                i_sq_max = np.min([i_sq_curr, i_sq_mtpv])
+        def limit_torque(tau_M_ref, w_m, u_dc):
+            if np.abs(w_m) > 0:
+                psi_s_max = self.k_u*u_dc/np.sqrt(3)/np.abs(w_m)
+                tau_M_max = self.tau_M_lim(psi_s_max)
             else:
-                i_sq_max = i_sq_curr
-            return i_sq_max
+                tau_M_max = self.tau_M_lim(np.inf)
 
+            if np.abs(tau_M_ref) > tau_M_max:
+                tau_M_ref = np.sign(tau_M_ref)*tau_M_max
+
+            return tau_M_ref
+
+        # Limit the torque reference according to MTPV and current limits
+        tau_M_ref = limit_torque(tau_M_ref, w_m, u_dc)
+
+        # q-axis current reference
         psi_t = self.psi_f + (self.L_d - self.L_q)*self.i_sd_ref
         if psi_t != 0:
             i_sq_ref = tau_M_ref/(1.5*self.p*psi_t)
         else:
             i_sq_ref = 0
 
-        # Limit the current
-        i_sq_max = q_axis_current_limit(self.i_sd_ref)
+        # Limit the q-axis current reference
+        i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M_ref))
+        i_sq_max = np.min([np.sqrt(self.i_s_max**2 - self.i_sd_ref**2),
+                           np.sqrt(self.i_s_max**2 - i_sd_mtpa**2)])
         if np.abs(i_sq_ref) > i_sq_max:
             i_sq_ref = np.sign(i_sq_ref)*i_sq_max
 
@@ -335,81 +445,20 @@ class CurrentRef:
             float.
 
         """
-        u_s_max = u_dc/np.sqrt(3)
-        i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M))
+        u_s_max = self.k_u*u_dc/np.sqrt(3)
         self.i_sd_ref += self.T_s*self.k*(u_s_max - np.abs(u_s_ref))
+
+        # Limit the current
+        i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M))
+        i_sd_lim = self.i_sd_lim(np.abs(tau_M))
+
         if self.i_sd_ref > i_sd_mtpa:
             self.i_sd_ref = i_sd_mtpa
-        elif self.i_sd_ref < -self.i_s_max:
-            self.i_sd_ref = -self.i_s_max
+        elif self.i_sd_ref < i_sd_lim:
+            self.i_sd_ref = i_sd_lim
 
     def __str__(self):
-        desc = ('Current reference computation and field weakening:\n'
-                '    i_s_max={:.1f}')
-
-        return desc.format(self.i_s_max)
-
-
-# %%
-class CurrentCtrl:
-    """
-    This class represents a state-feedback current controller, with reference
-    feedforward, without integral action.
-
-    """
-
-    def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Controller parameters.
-
-        """
-        self.alpha_c = pars.alpha_c
-        self.L_d = pars.L_d
-        self.L_q = pars.L_q
-        self.R_s = pars.R_s
-
-    def output(self, i_s_ref, i_s, psi_s, w_m):
-        """
-        State-feedback current controller.
-
-        Parameters
-        ----------
-        i_s_ref : complex
-            Stator current reference.
-        i_s : complex
-            Stator current.
-        psi_s : complex
-            Stator flux linkage (calculated in the upper level).
-        w_m : float
-            Rotor speed (in electrical rad/s).
-
-        Returns
-        -------
-        u_s_ref : complex
-            Voltage reference.
-
-        """
-        # Map current error to the flux linkage error
-        err = self.L_d*(i_s_ref - i_s).real + 1j*self.L_q*(i_s_ref - i_s).imag
-        # Voltage reference in rotor coordinates
-        u_s_ref = self.R_s*i_s + 1j*w_m*psi_s + self.alpha_c*err
-
-        return u_s_ref
-
-    def update(self, *_):
-        """
-        No states, nothing to update. This method is just for compatibility.
-
-        """
-
-    def __str__(self):
-        desc = ('State-feedback current control (without integral action):\n'
-                '    alpha_c=2*pi*{:.1f}')
-
-        return desc.format(self.alpha_c/(2*np.pi))
+        return self.desc
 
 
 # %%
@@ -445,6 +494,9 @@ class SensorlessObserver:
         self.zeta_inf = .7
         # Initial states
         self.theta_m, self.w_m, self.psi_s = 0, 0, pars.psi_f
+        self.desc = (('Sensorless observer:\n'
+                      '    w_o=2*pi*{:.1f}\n')
+                     .format(pars.w_o/(2*np.pi)))
 
     def update(self, u_s, i_s):
         """
@@ -486,10 +538,7 @@ class SensorlessObserver:
         self.theta_m = np.mod(self.theta_m, 2*np.pi)    # Limit to [0, 2*pi]
 
     def __str__(self):
-        desc = ('Sensorless observer:\n'
-                '    w_o=2*pi*{:.1f}')
-
-        return desc.format(.5*self.k_p/(2*np.pi))
+        return self.desc
 
 
 # %%
@@ -623,7 +672,6 @@ class Datalogger:
         ax5.plot(data.t, np.abs(data.psi_s)/base.psi)
         ax5.step(self.t, np.abs(self.psi_s)/base.psi, '--', where='post')
         ax5.set_xlim(t_range)
-        ax5.set_ylim(0, 1.2)
         ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
         ax5.set_ylabel('Flux (p.u.)')
         ax5.set_xlabel('Time (s)')

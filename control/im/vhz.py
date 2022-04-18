@@ -57,6 +57,16 @@ class VHzCtrl:
         self.i_s_ref = 0j
         self.theta_s = 0
         self.w_r_ref = 0
+        self.desc = (('V/Hz control\n'
+                      '------------\n'
+                      'Sampling period:\n'
+                      '    T_s={}\n'
+                      'Motor parameter estimates:\n'
+                      '    R_s={}  R_R={}  L_sgm={}  L_M={}\n'
+                      'Tuning parameters:\n'
+                      '    k_u={:.1f}  k_w={:.1f}  alpha_f=2*pi*{:.1f}')
+                     .format(self.T_s, self.R_s, self.R_R, self.L_sgm,
+                             self.L_M, self.k_u, self.k_w, self.alpha_f))
 
     def __call__(self, w_m_ref, i_s_abc, u_dc):
         """
@@ -145,11 +155,7 @@ class VHzCtrl:
         return u_s_ref
 
     def __str__(self):
-        desc = ('V/Hz control:\n'
-                '    R_s={}  R_R={}  L_sgm={}  L_M={}\n'
-                '    k_u={:.1f}  k_w={:.1f}  alpha_f=2*pi*{:.1f}')
-        return desc.format(self.R_s, self.R_R, self.L_sgm, self.L_M,
-                           self.k_u, self.k_w, self.alpha_f)
+        return self.desc
 
 
 # %%

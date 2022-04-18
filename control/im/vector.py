@@ -32,6 +32,16 @@ class VectorCtrl:
         self.current_ref = current_ref
         self.pwm = PWM(pars)
         self.datalog = datalog
+        self.desc = (('Sensored vector control for induction motors\n'
+                      '--------------------------------------------\n'
+                      'Sampling period:\n'
+                      '    T_s={}\n'
+                      'Motor parameter estimates:\n'
+                      '    p={}  R_s={}  R_R={}  L_sgm={}  L_M={}\n')
+                     .format(pars.T_s, pars.p, pars.R_s, pars.R_R, pars.L_sgm,
+                             pars.L_M))
+        self.desc += (self.current_ref.desc + self.current_ctrl.desc
+                      + self.observer.desc + self.speed_ctrl.desc)
 
     def __call__(self, w_m_ref, w_M, _, i_s_abc, u_dc):
         """
@@ -71,7 +81,7 @@ class VectorCtrl:
         tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_M)
         i_s_ref, tau_M = self.current_ref.output(tau_M_ref, psi_R)
         w_s = self.observer.output(i_s, w_m)
-        u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s)
+        u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s, psi_R, w_s, w_m)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
 
         # Update the states
@@ -88,8 +98,7 @@ class VectorCtrl:
         return d_abc_ref, self.pwm.T_s
 
     def __str__(self):
-        desc = 'Sensored vector control of an induction motor'
-        return desc
+        return self.desc
 
 
 # %%
@@ -113,6 +122,16 @@ class SensorlessVectorCtrl:
         self.current_ref = current_ref
         self.pwm = PWM(pars)
         self.datalog = datalog
+        self.desc = (('Sensorless vector control for induction motors\n'
+                      '----------------------------------------------\n'
+                      'Sampling period:\n'
+                      '    T_s={}\n'
+                      'Motor parameter estimates:\n'
+                      '    p={}  R_s={}  R_R={}  L_sgm={}  L_M={}\n')
+                     .format(pars.T_s, pars.p, pars.R_s, pars.R_R, pars.L_sgm,
+                             pars.L_M))
+        self.desc += (self.current_ref.desc + self.current_ctrl.desc
+                      + self.observer.desc + self.speed_ctrl.desc)
 
     def __call__(self, w_m_ref, i_s_abc, u_dc):
         """
@@ -148,14 +167,14 @@ class SensorlessVectorCtrl:
         tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
         i_s_ref, tau_M = self.current_ref.output(tau_M_ref, psi_R)
         w_s, w_r, dpsi_R = self.observer.output(u_s, i_s)
-        u_s_ref = self.current_ctrl.output(i_s_ref, i_s, psi_R, w_s, w_m)
+        u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s, psi_R, w_s, w_m)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
 
         # Update the states
         self.pwm.update(u_s_ref_lim)
         self.speed_ctrl.update(tau_M, tau_L)
         self.current_ref.update(u_s_ref, u_dc)
-        self.current_ctrl.update(i_s_ref, i_s, u_s_ref, u_s_ref_lim)
+        self.current_ctrl.update(e, u_s_ref, u_s_ref_lim, w_s)
         self.observer.update(i_s, w_s, w_r, dpsi_R)
 
         # Data logging
@@ -165,8 +184,7 @@ class SensorlessVectorCtrl:
         return d_abc_ref, self.pwm.T_s
 
     def __str__(self):
-        desc = 'Sensorless vector control of an induction motor'
-        return desc
+        return self.desc
 
 
 # %%
@@ -207,6 +225,9 @@ class CurrentRef:
         self.gain_fw = 3*R_R*psi_R_nom/(pars.L_sgm*u_dc_nom)**2
         # State variable
         self.i_sd_ref = self.i_sd_nom
+        self.desc = (('Current reference computation and field weakening:\n'
+                      '    i_s_max={:.1f}  i_sd_nom={:.1f}\n')
+                     .format(self.i_s_max, self.i_sd_nom))
 
     def output(self, tau_M_ref, psi_R):
         """
@@ -256,8 +277,8 @@ class CurrentRef:
         ----------
         u_s_ref : complex
             Unlimited stator voltage reference.
-        u_dc : DC-bus voltage.
-            float.
+        u_dc : float.
+            DC-bus voltage.
 
         """
         u_s_max = u_dc/np.sqrt(3)
@@ -269,9 +290,7 @@ class CurrentRef:
             self.i_sd_ref = -self.i_s_max
 
     def __str__(self):
-        desc = ('Current reference computation and field weakening:\n'
-                '    i_s_max={:.1f}  i_sd_nom={:.1f}')
-        return desc.format(self.i_s_max, self.i_sd_nom)
+        return self.desc
 
 
 # %%
@@ -294,6 +313,9 @@ class CurrentCtrl:
         self.L_sgm = pars.L_sgm
         self.alpha = pars.R_R/pars.L_M
         self.R_sgm = pars.R_s + pars.R_R
+        self.desc = (('State-feedback current control (no integral action):\n'
+                      '    alpha_c=2*pi*{:.1f}\n')
+                     .format(self.alpha_c/(2*np.pi)))
 
     def output(self, i_s_ref, i_s, psi_R, w_s, w_m):
         """
@@ -316,6 +338,8 @@ class CurrentCtrl:
         -------
         u_s_ref : complex
             Voltage reference.
+        None
+            Just for compatibility.
 
         """
         # pylint: disable=R0913
@@ -326,7 +350,7 @@ class CurrentCtrl:
         k_t = self.R_sgm + 1j*w_s*self.L_sgm + k_1
         # Control law
         u_s_ref = k_t*i_s_ref - k_1*i_s - k_2*psi_R
-        return u_s_ref
+        return u_s_ref, None
 
     def update(self, *_):
         """
@@ -335,9 +359,7 @@ class CurrentCtrl:
         """
 
     def __str__(self):
-        desc = ('State-feedback current control (without integral action):\n'
-                '    alpha_c=2*pi*{:.1f}')
-        return desc.format(self.alpha_c/(2*np.pi))
+        return self.desc
 
 
 # %%
@@ -366,10 +388,12 @@ class CurrentCtrl2DOFPI:
         self.T_s = pars.T_s
         self.L_sgm = pars.L_sgm
         self.alpha_c = pars.alpha_c
-        # Integral state
-        self.u_i = 0
+        self.u_i = 0  # Integral state
+        self.desc = (('2DOF PI current control:\n'
+                      '    alpha_c=2*pi*{:.1f}\n')
+                     .format(self.alpha_c/(2*np.pi)))
 
-    def output(self, i_s_ref, i_s):
+    def output(self, i_s_ref, i_s, *_):
         """
         Computes the unlimited voltage reference.
 
@@ -384,6 +408,8 @@ class CurrentCtrl2DOFPI:
         -------
         u_s_ref : complex
             Unlimited voltage reference.
+        e : complex
+            Error (scaled, corresponds to the leakage flux linkage).
 
         """
         psi_sgm_ref = self.L_sgm*i_s_ref
@@ -415,9 +441,7 @@ class CurrentCtrl2DOFPI:
         self.u_i += self.T_s*k_i*(e + (u_s_ref_lim - u_s_ref)/k_t)
 
     def __str__(self):
-        desc = ('2DOF PI current control:\n'
-                '    alpha_c=2*pi*{:.1f}')
-        return desc.format(self.alpha_c/(2*np.pi))
+        return self.desc
 
 
 # %%
@@ -453,6 +477,9 @@ class SensorlessObserver:
         self.zeta_inf = .7
         # Initial states
         self.theta_s, self.psi_R, self.i_s_old, self.w_m = 0, 0, 0, 0
+        self.desc = (('Sensorless reduced-order observer:\n'
+                      '    alpha_o=2*pi*{:.1f}\n')
+                     .format(self.alpha_o/(2*np.pi)))
 
     def output(self, u_s, i_s):
         """
@@ -517,9 +544,7 @@ class SensorlessObserver:
         self.i_s_old = i_s
 
     def __str__(self):
-        desc = ('Sensorless reduced-order observer:\n'
-                '    alpha_o=2*pi*{:.1f}')
-        return desc.format(self.alpha_o/(2*np.pi))
+        return self.desc
 
 
 # %%
@@ -544,6 +569,7 @@ class CurrentModelEstimator:
         self.L_M = pars.L_M
         # Initialize the states
         self.theta_s, self.psi_R = 0, 0
+        self.desc = 'Current model flux estimator\n'
 
     def output(self, i_s, w_m):
         """
@@ -585,8 +611,7 @@ class CurrentModelEstimator:
         self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
 
     def __str__(self):
-        desc = ('Current model flux estimator')
-        return desc
+        return self.desc
 
 
 # %%

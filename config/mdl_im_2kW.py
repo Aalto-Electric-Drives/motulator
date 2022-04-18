@@ -14,20 +14,15 @@ from model.converter import Inverter, FrequencyConverter
 
 
 # %% Selectors
-delay_length = 1            # Computational delay
-pwm_modeled = not True      # Enable the carrier comparison
-saturated = not True        # Enable the magnetic saturation model
+saturated = not True  # Enable the magnetic saturation model
 constant_dc_voltage = True  # Enable constant DC-bus voltage
+
+# %% Computational delay and PWM
+delay = Delay(1)
+pwm = PWM(enabled=False)
 
 # %% Mechanics
 mech = Mechanics(J=.015, B=0)
-
-# %% Computational delay and PWM
-delay = Delay(delay_length)
-if pwm_modeled:
-    pwm = PWM()
-else:
-    pwm = None
 
 # %% Motor model
 if not saturated:
@@ -63,15 +58,4 @@ else:
     converter = FrequencyConverter(**converter_data)
     datalog = DataloggerExtended()
     mdl = DriveWithDiodeBridge(motor, mech, converter, delay, pwm, datalog)
-
-# %% Print the system data
-print('\nSystem: 2.2-kW induction motor drive')
-print('------------------------------------')
-print(delay)
-if pwm_modeled:
-    print(pwm)
-else:
-    print('PWM model:\n    disabled')
-print(converter)
-print(motor)
-print(mech)
+print(mdl)

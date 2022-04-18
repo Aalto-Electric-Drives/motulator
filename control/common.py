@@ -138,6 +138,8 @@ class SpeedCtrl:
         self.J = pars.J
         self.k = pars.alpha_s*pars.J    # Gain
         self.tau_l = 0                  # Integral state
+        self.desc = ('2DOF PI speed control:\n'
+                     '    alpha_s=2*pi*{:.1f}').format(pars.alpha_s/(2*np.pi))
 
     def output(self, w_M_ref, w_M):
         """
@@ -171,7 +173,7 @@ class SpeedCtrl:
         Parameters
         ----------
         tau_M : float
-            Limited torque reference or torque estimate.
+            Realized (limited) torque reference.
         tau_L : float
             Load torque estimate.
 
@@ -179,9 +181,7 @@ class SpeedCtrl:
         self.tau_l += self.T_s*self.alpha_s*(tau_M - tau_L)
 
     def __str__(self):
-        desc = ('Speed control:\n'
-                '    alpha_s=2*pi*{:.1f}')
-        return desc.format(self.alpha_s/(2*np.pi))
+        return self.desc
 
 
 # %%

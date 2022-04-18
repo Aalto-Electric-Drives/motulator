@@ -9,6 +9,95 @@ from helpers import abc2complex, complex2abc
 
 
 # %%
+class Drive:
+    """
+    This class interconnects the subsystems of an induction motor drive
+    and provides the interface to the solver. More complicated systems
+    could be simulated using a similar template.
+
+    """
+
+    def __init__(self, motor, mech, converter, delay, pwm, datalog):
+        """
+        Instantiate the classes.
+
+        """
+        self.motor = motor
+        self.mech = mech
+        self.converter = converter
+        self.delay = delay
+        self.pwm = pwm
+        self.datalog = datalog
+        self.q = 0                  # Switching-state space vector
+        self.t0 = 0                 # Initial simulation time
+        self.desc = ('\nSystem: Induction motor drive\n'
+                     '-----------------------------\n')
+        self.desc += (self.delay.desc + self.pwm.desc + self.converter.desc
+                      + self.motor.desc + self.mech.desc)
+
+    def get_initial_values(self):
+        """
+        Returns
+        -------
+        x0 : complex list, length 3
+            Initial values of the state variables.
+
+        """
+        x0 = [self.motor.psi_ss0, self.motor.psi_Rs0,
+              self.mech.theta_M0, self.mech.w_M0]
+        return x0
+
+    def set_initial_values(self, t0, x0):
+        """
+        Parameters
+        ----------
+        x0 : complex ndarray
+            Initial values of the state variables.
+
+        """
+        self.t0 = t0
+        self.motor.psi_ss0 = x0[0]
+        self.motor.psi_Rs0 = x0[1]
+        # x0[2].imag and x0[3].imag are always zero
+        self.mech.theta_M0 = x0[2].real
+        self.mech.w_M0 = x0[3].real
+        # Limit the angle [0, 2*pi]
+        self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
+
+    def f(self, t, x):
+        """
+        Compute the complete state derivative list for the solver.
+
+        Parameters
+        ----------
+        t : float
+            Time.
+        x : complex ndarray
+            State vector.
+
+        Returns
+        -------
+        complex list
+            State derivatives.
+
+        """
+        # Unpack the states
+        psi_ss, psi_Rs, _, w_M = x
+        # Interconnections: outputs for computing the state derivatives
+        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
+        i_ss, i_Rs = self.motor.currents(psi_ss, psi_Rs)
+        tau_M = self.motor.torque(psi_ss, i_ss)
+        # State derivatives
+        motor_f = self.motor.f(psi_Rs, i_ss, i_Rs, u_ss, w_M)
+        mech_f = self.mech.f(t, w_M, tau_M)
+        # List of state derivatives
+        return motor_f + mech_f
+
+    def __str__(self):
+        return self.desc
+
+
+# %%
 class Motor:
     """
     This class represents an induction motor. The inverse-Gamma model and
@@ -38,6 +127,9 @@ class Motor:
         self.R_s, self.R_R, self.L_sgm, self.L_M = R_s, R_R, L_sgm, L_M
         self.p = p
         self.psi_ss0, self.psi_Rs0 = 0j, 0j
+        self.desc = (('Induction motor (inverse-Gamma model):\n'
+                      '    p={}  R_s={}  R_R={}  L_sgm={}  L_M={}\n')
+                     .format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M))
 
     def currents(self, psi_ss, psi_Rs):
         """
@@ -131,9 +223,7 @@ class Motor:
         return i_s_abc
 
     def __str__(self):
-        desc = ('Induction motor (inverse-Gamma model):\n'
-                '    p={}  R_s={}  R_R={}  L_sgm={}  L_M={}')
-        return desc.format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M)
+        return self.desc
 
 
 # %%
@@ -146,6 +236,9 @@ class SaturationModel:
 
     def __init__(self, L_unsat=.34, beta=.84, S=7):
         self.L_unsat, self.beta, self.S = L_unsat, beta, S
+        self.desc = (('L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S):'
+                      '  L_unsat={}  beta={}  S={}')
+                     .format(self.L_unsat, self.beta, self.S))
 
     def __call__(self, psi):
         """
@@ -167,9 +260,7 @@ class SaturationModel:
         return L_sat
 
     def __str__(self):
-        desc = ('L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S):'
-                '  L_unsat={}  beta={}  S={}')
-        return desc.format(self.L_unsat, self.beta, self.S)
+        return self.desc
 
 
 # %%
@@ -202,6 +293,10 @@ class MotorSaturated(Motor):
 
         """
         super().__init__(R_s=R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, p=p)
+        self.desc = (('Saturated induction motor (Gamma model):\n'
+                      '    p={}  R_s={}  R_R={}  L_sgm={}\n'
+                      '    L_M={}\n')
+                     .format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M))
 
     def currents(self, psi_ss, psi_Rs):
         """
@@ -214,92 +309,7 @@ class MotorSaturated(Motor):
         return i_ss, i_Rs
 
     def __str__(self):
-        desc = ('Saturated induction motor (Gamma model):\n'
-                '    p={}  R_s={}  R_R={}  L_sgm={}\n'
-                '    L_M={}')
-        return desc.format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M)
-
-
-# %%
-class Drive:
-    """
-    This class interconnects the subsystems of an induction motor drive
-    and provides the interface to the solver. More complicated systems
-    could be simulated using a similar template.
-
-    """
-
-    def __init__(self, motor, mech, converter, delay, pwm, datalog):
-        """
-        Instantiate the classes.
-
-        """
-        self.motor = motor
-        self.mech = mech
-        self.converter = converter
-        self.delay = delay
-        self.pwm = pwm
-        self.datalog = datalog
-        self.q = 0                  # Switching-state space vector
-        self.t0 = 0                 # Initial simulation time
-
-    def get_initial_values(self):
-        """
-        Returns
-        -------
-        x0 : complex list, length 3
-            Initial values of the state variables.
-
-        """
-        x0 = [self.motor.psi_ss0, self.motor.psi_Rs0,
-              self.mech.theta_M0, self.mech.w_M0]
-        return x0
-
-    def set_initial_values(self, t0, x0):
-        """
-        Parameters
-        ----------
-        x0 : complex ndarray
-            Initial values of the state variables.
-
-        """
-        self.t0 = t0
-        self.motor.psi_ss0 = x0[0]
-        self.motor.psi_Rs0 = x0[1]
-        # x0[2].imag and x0[3].imag are always zero
-        self.mech.theta_M0 = x0[2].real
-        self.mech.w_M0 = x0[3].real
-        # Limit the angle [0, 2*pi]
-        self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
-
-    def f(self, t, x):
-        """
-        Compute the complete state derivative list for the solver.
-
-        Parameters
-        ----------
-        t : float
-            Time.
-        x : complex ndarray
-            State vector.
-
-        Returns
-        -------
-        complex list
-            State derivatives.
-
-        """
-        # Unpack the states
-        psi_ss, psi_Rs, _, w_M = x
-        # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
-        i_ss, i_Rs = self.motor.currents(psi_ss, psi_Rs)
-        tau_M = self.motor.torque(psi_ss, i_ss)
-        # State derivatives
-        motor_f = self.motor.f(psi_Rs, i_ss, i_Rs, u_ss, w_M)
-        mech_f = self.mech.f(t, w_M, tau_M)
-        # List of state derivatives
-        return motor_f + mech_f
+        return self.desc
 
 
 # %%
@@ -320,7 +330,7 @@ class Datalogger:
         self.theta_M, self.w_M = [], []
         self.u_ss, self.i_ss = 0j, 0j
         self.w_m, self.theta_m = 0, 0
-        self.T_M, self.T_L = 0, 0
+        self.tau_M, self.tau_L = 0, 0
 
     def save(self, mdl, sol):
         """

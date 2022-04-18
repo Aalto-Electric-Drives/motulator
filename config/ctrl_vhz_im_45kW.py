@@ -61,6 +61,7 @@ pars = CtrlParameters()
 # pars.k_u, pars.k_w, pars.R_s, pars.R_R = 0, 0, 0, 0
 datalog = Datalogger()
 ctrl = VHzCtrl(pars, datalog)
+print(ctrl)
 
 # %% Profile: Acceleration and load torque step
 # Speed reference
@@ -69,24 +70,6 @@ mdl.speed_ref = Step(2, .8*base.w)
 mdl.mech.tau_L_ext = Step(5, 291)
 # Stop time of the simulation
 mdl.t_stop = 7
-# %% Profile: Speed reversals with constant load torque
-# Speed reference
-# times = 5*np.array([0, .5, 1, 1.5, 2, 2.5,  3, 3.5, 4])
-# values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*2*np.pi*50
-# mdl.speed_ref = Sequence(times, values)
-# External load torque
-# times = np.array([0, .5, .5, 3.5, 3.5, 4])*5
-# values = np.array([0, 0, 1, 1, 0, 0])*291*.3
-# mdl.mech.tau_L_ext = Sequence(times, values)
-# Stop time of the simulation
-# mdl.t_stop = mdl.freq_ref.times[-1]
-
-# %% Print the control system data
-print('\nV/Hz control')
-print('------------')
-print('Sampling period:')
-print('    T_s={}'.format(pars.T_s))
-print(ctrl)
 
 # %% Print the profiles
 print('\nProfiles')

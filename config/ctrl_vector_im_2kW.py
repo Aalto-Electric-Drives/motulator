@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This script configures sensored vector control for a 2.2-kW induction motor
+This script configures sensorless vector control for a 2.2-kW induction motor
 drive.
 
 """
@@ -9,9 +9,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
 from control.common import SpeedCtrl
-from control.im.vector import CurrentModelEstimator
-from control.im.vector import CurrentRef, CurrentCtrl2DOFPI
-from control.im.vector import VectorCtrl, Datalogger
+from control.im.vector import SensorlessObserver, CurrentModelEstimator
+from control.im.vector import CurrentRef, CurrentCtrl2DOFPI  # , CurrentCtrl
+from control.im.vector import SensorlessVectorCtrl, VectorCtrl, Datalogger
 from helpers import Sequence  # , Step
 from config.mdl_im_2kW import mdl
 
@@ -44,10 +44,12 @@ class CtrlParameters:
 
     """
     # pylint: disable=too-many-instance-attributes
+    sensorless: bool = True
     # Sampling period
-    T_s: float = 250e-6
+    T_s: float = 2*250e-6
     # Bandwidths
     alpha_c: float = 2*np.pi*100
+    alpha_o: float = 2*np.pi*40  # Used only in the sensorless mode
     alpha_s: float = 2*np.pi*4
     # Maximum values
     tau_M_max: float = 1.5*14.6
@@ -64,21 +66,32 @@ class CtrlParameters:
     J: float = .015
 
 
-# %% Choose controller
+# %%
 base = BaseValues()
 pars = CtrlParameters()
+
+# %% Choose controller
 speed_ctrl = SpeedCtrl(pars)
 current_ref = CurrentRef(pars)
 current_ctrl = CurrentCtrl2DOFPI(pars)
-observer = CurrentModelEstimator(pars)
+# current_ctrl = CurrentCtrl(pars)
 datalog = Datalogger()
-ctrl = VectorCtrl(pars, speed_ctrl, current_ref, current_ctrl,
-                  observer, datalog)
+
+if pars.sensorless:
+    observer = SensorlessObserver(pars)
+    ctrl = SensorlessVectorCtrl(pars, speed_ctrl, current_ref, current_ctrl,
+                                observer, datalog)
+else:
+    observer = CurrentModelEstimator(pars)
+    ctrl = VectorCtrl(pars, speed_ctrl, current_ref, current_ctrl,
+                      observer, datalog)
+
+print(ctrl)
 
 # %% Profiles
 # Speed reference
 times = np.array([0, .5, 1, 1.5, 2, 2.5,  3, 3.5, 4])
-values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*2*np.pi*50
+values = np.array([0,  0, 1,   1, 0,  -1, -1,   0, 0])*base.w
 mdl.speed_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .5, .5, 3.5, 3.5, 4])
@@ -86,19 +99,6 @@ values = np.array([0, 0, 1, 1, 0, 0])*14.6
 mdl.mech.tau_L_ext = Sequence(times, values)  # tau_L_ext = Step(1, 14.6)
 # Stop time of the simulation
 mdl.t_stop = mdl.speed_ref.times[-1]
-
-# %% Print the control system data
-print('\nSensored vector control')
-print('-----------------------')
-print('Sampling period:')
-print('    T_s={}'.format(pars.T_s))
-print('Motor parameter estimates:')
-print(('    p={}  R_s={}  R_R={}  L_sgm={}  L_M={}'
-       ).format(pars.p, pars.R_s, pars.R_R, pars.L_sgm, pars.L_M))
-print(current_ref)
-print(current_ctrl)
-print(observer)
-print(speed_ctrl)
 
 # %% Print the profiles
 print('\nProfiles')
