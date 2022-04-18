@@ -42,7 +42,7 @@ def solve(mdl, d_abc, t_span, max_step=np.inf):
             if mdl.datalog:
                 mdl.datalog.save(mdl, sol)
 
-    if not mdl.pwm:
+    if not mdl.pwm.enabled:
         # Update the duty ratio space vector (constant over the time span)
         mdl.q = abc2complex(d_abc)
         # Run the solver
@@ -72,16 +72,24 @@ class PWM:
     """
 
     # pylint: disable=R0903
-    def __init__(self, N=2**12):
+    def __init__(self, enabled=True, N=2**12):
         """
         Parameters
         ----------
         N : int, optional
             Amount of PWM quantization levels. The default is 2**12.
+        enabled : Boolean, optional
+            PMW enabled. The default is True.
 
         """
         self.N = N
         self.falling_edge = False
+        self.enabled = enabled
+        if not enabled:
+            self.desc = 'PWM model:\n    disabled\n'
+        else:
+            self.desc = ('PWM model:\n'
+                         '    {} quantization levels\n').format(self.N)
 
     def __call__(self, d_abc):
         """
@@ -134,9 +142,7 @@ class PWM:
         return tn_sw, q
 
     def __str__(self):
-        desc = ('PWM model:\n'
-                '    {} quantization levels')
-        return desc.format(self.N)
+        return self.desc
 
 
 # %%
@@ -155,9 +161,9 @@ class Delay:
             Length of the buffer in samples. The default is 1.
 
         """
-        # Creates a zero list
-        self.data = length*[elem*[0]]
-        self._length = length  # Needed for __str__ only
+        self.data = length*[elem*[0]]  # Creates a zero list
+        self.desc = (('Computational delay:\n    {} sampling periods\n')
+                     .format(length))
 
     def __call__(self, u):
         """
@@ -178,5 +184,4 @@ class Delay:
         return self.data.pop(0)
 
     def __str__(self):
-        desc = ('Computational delay:\n    {} sampling periods')
-        return desc.format(self._length)
+        return self.desc

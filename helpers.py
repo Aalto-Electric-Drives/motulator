@@ -131,32 +131,3 @@ class Step:
         desc = ('Step(step_time={}, initial_value={:.1f}, step_value={:.1f})')
         return desc.format(self.step_time,
                            self.initial_value, self.step_value)
-
-
-# %%
-class LUT:
-    """
-    This class represents a 1-D look-up table with linear interpolation.
-
-    """
-
-    def __init__(self, x_data, y_data):
-        self.x_data = x_data
-        self.y_data = y_data
-
-    def __call__(self, x):
-        """
-        Interpolates the output.
-
-        Parameters
-        ----------
-        x : float
-            Reference.
-
-        Returns
-        -------
-        complex
-            Interpolated output value.
-
-        """
-        return np.interp(x, self.x_data, self.y_data)

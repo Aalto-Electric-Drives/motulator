@@ -30,6 +30,9 @@ class Mechanics:
         # Initial state
         self.w_M0 = 0
         self.theta_M0 = 0
+        self.desc = (('Mechanics:\n'
+                      '    J={:.4f}  B={}  w_M0={}  theta_M0={}\n')
+                     .format(self.J, self.B, self.w_M0, self.theta_M0))
 
     def f(self, t, w_M, tau_M):
         """
@@ -79,6 +82,4 @@ class Mechanics:
         return self.theta_M0
 
     def __str__(self):
-        desc = ('Mechanics:\n'
-                '    J={:.4f}  B={}  w_M0={}  theta_M0={}')
-        return desc.format(self.J, self.B, self.w_M0, self.theta_M0)
+        return self.desc

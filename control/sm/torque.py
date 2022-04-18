@@ -10,6 +10,8 @@ from sys import float_info
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
+from scipy.interpolate import interp1d
+from sklearn.utils import Bunch
 
 # %%
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
@@ -39,6 +41,10 @@ class TorqueCharacteristics:
         self.psi_f = pars.psi_f
         try:
             self.i_sd_min = pars.i_sd_min
+        except AttributeError:
+            pass
+        try:
+            self.i_sd_max = pars.i_sd_max
         except AttributeError:
             pass
 
@@ -213,62 +219,218 @@ class TorqueCharacteristics:
                 i_s = i_sd + 1j*i_sq
         else:
             # No MTPV for the given current magnitude
-            i_s = None  # float('nan')
+            i_s = np.nan
 
         return i_s
 
-    def mtpa_locus(self, i_s_max, N=20):
+    def mtpa_locus(self, i_s_max=1, N=20):
         """
         Compute the MTPA locus.
 
         Parameters
         ----------
-        i_s_max : float
-            Maximum current at which the locus is computed.
+        i_s_max : float, optional
+            Maximum stator current magnitude at which the locus is computed.
+            The default is 1.
         N : int, optional
             Amount of points. The default is 20.
 
         Returns
         -------
+        Bunch object with the following fields defined:
+        psi_s : complex
+            Stator flux.
         i_s : complex
-            Current space vectors at the MTPA locus.
+            Stator current.
+        tau_m : float
+            Electromagnetic torque.
+        abs_psi_s_vs_tau_M : interp1d object
+            Stator flux magnitude as a function of the torque.
+        i_sd_vs_tau_M : interp1d object
+            d-axis current as a function of the torque.
 
         """
+        # Current  magnitudes
         abs_i_s = np.linspace(0, i_s_max, N)
+
+        # MTPA locus expressed with different quantities
         beta = self.mtpa(abs_i_s)
         i_s = abs_i_s*np.exp(1j*beta)
 
-        # Minimum d-axis current (needed for sensorless SyRM drives)
+        # Minimum d-axis current for sensorless SyRM drives
         try:
             i_s.real = ((i_s.real < self.i_sd_min)*self.i_sd_min
                         + (i_s.real >= self.i_sd_min)*i_s.real)
         except AttributeError:
             pass
+        # Maximum d-axis current for sensorless PM-SyRM drives
+        try:
+            i_s.real = ((i_s.real > self.i_sd_max)*self.i_sd_max
+                        + (i_s.real <= self.i_sd_max)*i_s.real)
+        except AttributeError:
+            pass
 
-        return i_s
+        psi_s = self.flux(i_s)
+        tau_M = self.torque(psi_s)
 
-    def mtpv_locus(self, psi_s_max, N=20):
+        # Create an interpolant that can be used as a look-up table. If needed,
+        # more interpolants can be easily added.
+        abs_psi_s_vs_tau_M = interp1d(tau_M, np.abs(psi_s),
+                                      fill_value="extrapolate")
+        i_sd_vs_tau_M = interp1d(tau_M, i_s.real,
+                                 fill_value="extrapolate")
+
+        # Return the result as a bunch object
+        return Bunch(psi_s=psi_s, i_s=i_s, tau_M=tau_M,
+                     abs_psi_s_vs_tau_M=abs_psi_s_vs_tau_M,
+                     i_sd_vs_tau_M=i_sd_vs_tau_M)
+
+    def mtpv_locus(self, psi_s_max=1, i_s_max=None, N=20):
         """
         Compute the MTPV locus.
 
         Parameters
         ----------
-        psi_s_max : float
-            Maximum stator flux at which the locus is computed.
+        psi_s_max : float, optional
+            Maximum stator flux magnitude at which the locus is computed. The
+            default is 1.
+        i_s_max : float, optional
+            Maximum stator current magnitude at which the locus is computed.
+            The default is None.
         N : int, optional
             Amount of points. The default is 20.
 
         Returns
         -------
+        Bunch object with the following fields defined:
         psi_s : complex
-            MTPV stator flux.
+            Stator flux.
+        i_s : complex
+            Stator current.
+        tau_m : float
+            Electromagnetic torque.
+        tau_M_vs_abs_psi_s : interp1d object
+            Torque as a function of the flux magnitude.
 
         """
+        # If i_s_max is given, compute the corresponding MTPV stator flux
+        if i_s_max:
+            i_s_mtpv = self.mtpv_current(i_s_max)
+            psi_s_max = np.abs(self.flux(i_s_mtpv))
+
+        # Flux magnitudes
         abs_psi_s = np.linspace(0, psi_s_max, N)
+
+        # MTPV locus expressed with different quantities
         delta = self.mtpv(abs_psi_s)
         psi_s = abs_psi_s*np.exp(1j*delta)
+        i_s = self.current(psi_s)
+        tau_M = self.torque(psi_s)
 
-        return psi_s
+        # Create an interpolant that can be used as a look-up table. If needed,
+        # more interpolants can be easily added.
+        tau_M_vs_abs_psi_s = interp1d(np.abs(psi_s), tau_M, bounds_error=False)
+
+        # Return the result as a bunch object
+        return Bunch(psi_s=psi_s, i_s=i_s, tau_M=tau_M,
+                     tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s)
+
+    def current_limit(self, i_s_max=1, gamma1=np.pi, gamma2=0, N=20):
+        """
+        Compute the current limit.
+
+        Parameters
+        ----------
+        i_s_max : float, optional
+            Current limit. The default is 1.
+        gamma1 : float, optional
+            Starting angle in radians. The default is 0.
+        gamm21 : float, optional
+            End angle in radians. The defauls in np.pi.
+        N : int, optional
+            Amount of points. The default is 20.
+
+        Returns
+        -------
+        Bunch object with the following fields defined:
+        psi_s : complex
+            Stator flux.
+        i_s : complex
+            Stator current.
+        tau_m : float
+            Electromagnetic torque.
+        tau_M_vs_abs_psi_s : interp1d object
+            Torque as a function of the flux magnitude.
+
+        """
+        if np.isnan(gamma1):
+            # No MTPV
+            gamma1 = np.pi
+
+        gamma = np.linspace(gamma1, gamma2, N)
+
+        # MTPA locus expressed with different quantities
+        i_s = i_s_max*np.exp(1j*gamma)
+        psi_s = self.flux(i_s)
+        tau_M = self.torque(psi_s)
+
+        # Create an interpolant that can be used as a look-up table. If needed,
+        # more interpolants can be easily added.
+        tau_M_vs_abs_psi_s = interp1d(np.abs(psi_s), tau_M,
+                                      bounds_error=False,
+                                      fill_value=(tau_M[0], tau_M[-1]))
+
+        # Return the result as a bunch object
+        return Bunch(psi_s=psi_s, i_s=i_s, tau_M=tau_M,
+                     tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s)
+
+    def mtpv_and_current_limits(self, i_s_max=1, N=20):
+        """
+        Merge the MTPV and current limits into a single interpolant.
+
+        Parameters
+        ----------
+        i_s_max : float, optional
+            Current limit. The default is 1.
+        N : int, optional
+            Amount of points. The default is 20.
+
+        Returns
+        -------
+        Bunch object with the following fields defined:
+        tau_M_vs_abs_psi_s : interp1d object
+            Torque as a function of the flux magnitude.
+        i_sd_vs_tau_M : interp1d object
+            d-axis current as a function of the torque.
+
+        """
+        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
+        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
+        clim = self.current_limit(i_s_max=i_s_max, N=N,
+                                  gamma1=np.angle(mtpv.i_s[-1]),
+                                  gamma2=np.angle(mtpa.i_s[-1]))
+
+        if np.isnan(mtpv.i_s).any():
+            # No MTPV, only the current limit
+            psi_s = clim.psi_s
+            tau_M = clim.tau_M
+            i_sd = clim.i_s.real
+        else:
+            # Concatenate the MTPV and current limits
+            psi_s = np.concatenate((mtpv.psi_s, clim.psi_s))
+            tau_M = np.concatenate((mtpv.tau_M, clim.tau_M))
+            i_sd = np.concatenate((mtpv.i_s.real, clim.i_s.real))
+
+        # Create an interpolant that can be used as a look-up table
+        tau_M_vs_abs_psi_s = interp1d(np.abs(psi_s), tau_M,
+                                      bounds_error=False,
+                                      fill_value=(tau_M[0], tau_M[-1]))
+        i_sd_vs_tau_M = interp1d(tau_M, i_sd,
+                                 fill_value="extrapolate")
+
+        # Return the result as a bunch object
+        return Bunch(tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s,
+                     i_sd_vs_tau_M=i_sd_vs_tau_M)
 
     def delta_at_zero_torque(self, abs_psi_s):
         """
@@ -306,8 +468,8 @@ class TorqueCharacteristics:
 
         Parameters
         ----------
-        psi_s_max : float
-            Maximum flux at which the loci are evaluated.
+        i_s_max : float
+            Maximum current at which the loci are evaluated.
         base : object
             Base values.
         N : int, optional
@@ -318,33 +480,25 @@ class TorqueCharacteristics:
         None.
 
         """
-        # Compute the constant current locus
-        theta = np.linspace(0, np.pi, 2*N)
-        i_s_clim = i_s_max*np.exp(1j*theta)
-        psi_s_clim = self.flux(i_s_clim)
-
         # Compute the characteristics
-        i_s_mtpa = self.mtpa_locus(i_s_max, N)
-        psi_s_mtpa = self.flux(i_s_mtpa)
-        i_s_mtpv_max = self.mtpv_current(i_s_max)
-        psi_s_mtpv_max = self.flux(i_s_mtpv_max)
-        psi_s_mtpv = self.mtpv_locus(np.abs(psi_s_mtpv_max), N)
+        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
+        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
+        clim = self.current_limit(i_s_max=i_s_max, N=N,
+                                  gamma1=np.angle(mtpv.i_s[-1]),
+                                  gamma2=np.angle(mtpa.i_s[-1]))
 
         # Plot the i_sd--i_sq current plane
         _, ax = plt.subplots()
-        ax.plot(psi_s_mtpa.real/base.psi, psi_s_mtpa.imag/base.psi,
+        ax.plot(mtpa.psi_s.real/base.psi, mtpa.psi_s.imag/base.psi,
                 label='MTPA')
         try:
-            ax.plot(psi_s_mtpv.real/base.psi, psi_s_mtpv.imag/base.psi,
+            ax.plot(mtpv.psi_s.real/base.psi, mtpv.psi_s.imag/base.psi,
                     label='MTPV')
-            ax.plot(psi_s_mtpv_max.real/base.psi,
-                    psi_s_mtpv_max.imag/base.psi, 'o')
         except AttributeError:
             pass
-        ax.plot(psi_s_mtpa.real[-1]/base.psi,
-                psi_s_mtpa.imag[-1]/base.psi, 'o')
-        ax.plot(psi_s_clim.real/base.psi, psi_s_clim.imag/base.psi,
+        ax.plot(clim.psi_s.real/base.psi, clim.psi_s.imag/base.psi,
                 label='Const current')
+
         ax.legend()
         ax.set_xlabel(r'$\psi_\mathrm{sd}$ (p.u.)')
         ax.set_ylabel(r'$\psi_\mathrm{sq}$ (p.u.)')
@@ -369,28 +523,23 @@ class TorqueCharacteristics:
         None.
 
         """
-        # Compute the current limit for plotting
-        theta = np.linspace(0, np.pi, 2*N)
-        i_s_clim = i_s_max*np.exp(1j*theta)
-
         # Compute the characteristics
-        i_s_mtpa = self.mtpa_locus(i_s_max, N)
-        i_s_mtpv_max = self.mtpv_current(i_s_max)
-        psi_s_mtpv_max = self.flux(i_s_mtpv_max)
-        psi_s_mtpv = self.mtpv_locus(np.abs(psi_s_mtpv_max), N)
-        i_s_mtpv = self.current(psi_s_mtpv)
+        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
+        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
+        clim = self.current_limit(i_s_max=i_s_max, N=N,
+                                  gamma1=np.angle(mtpv.i_s[-1]),
+                                  gamma2=np.angle(mtpa.i_s[-1]))
 
         # Plot the i_sd--i_sq current plane
         _, ax = plt.subplots()
-        ax.plot(i_s_mtpa.real/base.i, i_s_mtpa.imag/base.i, label='MTPA')
-        ax.plot(i_s_mtpa.real[-1]/base.i, i_s_mtpa.imag[-1]/base.i, 'o')
+        ax.plot(mtpa.i_s.real/base.i, mtpa.i_s.imag/base.i, label='MTPA')
         try:
-            ax.plot(i_s_mtpv.real/base.i, i_s_mtpv.imag/base.i, label='MTPV')
-            ax.plot(i_s_mtpv_max.real/base.i, i_s_mtpv_max.imag/base.i, 'o')
+            ax.plot(mtpv.i_s.real/base.i, mtpv.i_s.imag/base.i, label='MTPV')
         except AttributeError:
             pass
-        ax.plot(-i_s_clim.real/base.i, i_s_clim.imag/base.i,
+        ax.plot(clim.i_s.real/base.i, clim.i_s.imag/base.i,
                 label='Const current')
+
         ax.set_xlabel(r'$i_\mathrm{sd}$ (p.u.)')
         ax.set_ylabel(r'$i_\mathrm{sq}$ (p.u.)')
         ax.legend()
@@ -400,7 +549,7 @@ class TorqueCharacteristics:
             ax.axis([-i_s_max/base.i, 0, 0, i_s_max/base.i])
         else:
             ax.axis([-i_s_max/base.i, i_s_max/base.i, 0, i_s_max/base.i])
-        ax.set_aspect('equal', 'box')
+        ax.set_aspect('equal')
 
     def plot_torque_current(self, i_s_max, base, N=20):
         """
@@ -421,44 +570,81 @@ class TorqueCharacteristics:
 
         """
         # Compute the characteristics
-        i_s_mtpa = self.mtpa_locus(i_s_max, N)
-        psi_s_mtpa = self.flux(i_s_mtpa)
-        tau_M_mtpa = self.torque(psi_s_mtpa)
-        i_s_mtpv_max = self.mtpv_current(i_s_max)
-        psi_s_mtpv_max = np.abs(self.flux(i_s_mtpv_max))
-        psi_s_mtpv = self.mtpv_locus(psi_s_mtpv_max, N)
-        i_s_mtpv = self.current(psi_s_mtpv)
-        if i_s_mtpv.any():  # is not None:
-            tau_M_mtpv = self.torque(psi_s_mtpv)
-        else:
-            tau_M_mtpv = None     # No MTPV in finite speed drives
+        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
+        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
+        clim = self.current_limit(i_s_max=i_s_max, N=N,
+                                  gamma1=np.angle(mtpv.i_s[-1]),
+                                  gamma2=np.angle(mtpa.i_s[-1]))
 
-        # Plot tau_M vs. abs(i_s)
+        # Plot i_sd vs. tau_M
         _, (ax1, ax2) = plt.subplots(2, 1)
-        ax1.plot(tau_M_mtpa/base.tau, np.abs(i_s_mtpa)/base.i)
+        ax1.plot(mtpa.tau_M/base.tau, mtpa.i_s.real/base.i)
         try:
-            ax1.plot(tau_M_mtpv/base.tau, np.abs(i_s_mtpv)/base.i)
-        except TypeError:
-            pass
-        ax1.set_xlim(0, i_s_max/base.i)
-        ax1.set_ylim(0, None)
-        ax1.legend(['MTPA', 'MTPV'])
-        ax1.set_ylabel(r'$i_\mathrm{s}$ (p.u.)')
-
-        # Plot tau_M vs. i_sd
-        ax2.plot(tau_M_mtpa/base.tau, np.real(i_s_mtpa)/base.i)
-        try:
-            ax2.plot(tau_M_mtpv/base.tau, i_s_mtpv.real/base.i)
+            ax1.plot(mtpv.tau_M/base.tau, mtpv.i_s.real/base.i)
         except AttributeError:
             pass
-        ax2.set_xlim(0, i_s_max/base.i)
+        ax1.plot(clim.tau_M/base.tau, clim.i_s.real/base.i)
+
+        ax1.set_xlim(0, i_s_max/base.i)
         if self.psi_f == 0:
-            ax2.set_ylim(0, None)
+            ax1.set_ylim(0, None)
         elif self.L_q > self.L_d:
-            ax2.set_ylim(None, 0)
-        ax2.legend(['MTPA', 'MTPV'])
+            ax1.set_ylim(None, 0)
+        ax1.legend(['MTPA', 'MTPV', 'Const current'])
+        ax1.set_ylabel(r'$i_\mathrm{sd}$ (p.u.)')
+
+        # Plot i_sq vs. tau_M
+        ax2.plot(mtpa.tau_M/base.tau, mtpa.i_s.imag/base.i)
+        try:
+            ax2.plot(mtpv.tau_M/base.tau, mtpv.i_s.imag/base.i)
+        except TypeError:
+            pass
+        ax2.plot(clim.tau_M/base.tau, clim.i_s.imag/base.i)
+
+        ax2.set_xlim(0, i_s_max/base.i)
+        ax2.set_ylim(0, None)
+        ax2.legend(['MTPA', 'MTPV', 'Const current'])
+        ax2.set_ylabel(r'$i_\mathrm{sq}$ (p.u.)')
         ax2.set_xlabel(r'$\tau_\mathrm{M}$ (p.u.)')
-        ax2.set_ylabel(r'$i_\mathrm{sd}$ (p.u.)')
+
+    def plot_torque_flux(self, i_s_max, base, N=20):
+        """
+        Plot torque vs. flux magnitude characteristics using per-unit
+        quantities.
+
+        Parameters
+        ----------
+        i_s_max : float
+            Maximum current at which the loci are evaluated.
+        base : object
+            Base values.
+        N : int, optional
+            Amount of points to be evaluated. The default is 20.
+
+        Returns
+        -------
+        None.
+
+        """
+        # Compute the characteristics
+        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
+        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
+        clim = self.current_limit(i_s_max=i_s_max, N=N,
+                                  gamma1=np.angle(mtpv.i_s[-1]),
+                                  gamma2=np.angle(mtpa.i_s[-1]))
+
+        # Plot
+        _, ax = plt.subplots(1, 1)
+        ax.plot(np.abs(mtpa.psi_s)/base.psi, mtpa.tau_M/base.tau)
+        try:
+            ax.plot(np.abs(mtpv.psi_s)/base.psi, mtpv.tau_M/base.tau)
+        except AttributeError:
+            pass
+        ax.plot(np.abs(clim.psi_s)/base.psi, clim.tau_M/base.tau)
+
+        ax.legend(['MTPA', 'MTPV', 'Const current'])
+        ax.set_xlabel(r'$\psi_\mathrm{s}$ (p.u.)')
+        ax.set_ylabel(r'$\tau_\mathrm{m}$ (p.u.)')
 
     def plot_angle_torque(self, abs_psi_s, base, N=100):
         """
@@ -494,6 +680,7 @@ class TorqueCharacteristics:
         ax.plot(180*delta/np.pi, tau_M/base.tau)
         ax.plot(180*delta_mtpv/np.pi, tau_M_mtpv/base.tau, 'o')
         ax.plot(180*delta0/np.pi, tau_M0/base.tau, 'x')
+
         ax.set_xlim([-180, 180])
         ax.set_xticks([-180, -135, -90, -45, 0, 45, 90, 135, 180])
         ax.set_xlabel(r'$\delta$ (deg)')

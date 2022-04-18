@@ -11,19 +11,14 @@ from model.mech import Mechanics
 from model.converter import Inverter
 
 # %% Selectors
-delay_length = 1        # Computational delay
-pwm_modeled = not True  # Enable the carrier comparison
-saturated = not True        # Enable the magnetic saturation model
+saturated = not True  # Enable the magnetic saturation model
+
+# %% Computational delay and PWM
+delay = Delay(1)
+pwm = PWM(enabled=False)
 
 # %% Mechanics
 mech = Mechanics(J=1.66*.49, B=0)
-
-# %% Computational delay and PWM
-delay = Delay(delay_length)
-if pwm_modeled:
-    pwm = PWM()
-else:
-    pwm = None
 
 # %% Motor model
 if not saturated:
@@ -48,15 +43,4 @@ else:
 converter = Inverter(u_dc=540)
 datalog = Datalogger()
 mdl = Drive(motor, mech, converter, delay, pwm, datalog)
-
-# %% Print the system data
-print('\nSystem: 45-kW induction motor drive')
-print('-----------------------------------')
-print(delay)
-if pwm_modeled:
-    print(pwm)
-else:
-    print('PWM model:\n    disabled')
-print(converter)
-print(motor)
-print(mech)
+print(mdl)
