@@ -38,9 +38,9 @@ def solve(mdl, d_abc, t_span, max_step=np.inf):
             # Set the new initial values (last points of the solution)
             t0_new, x0_new = t_span[-1], sol.y[:, -1]
             mdl.set_initial_values(t0_new, x0_new)
-            # Data logger
-            if mdl.datalog:
-                mdl.datalog.save(mdl, sol)
+            # Data logging
+            sol.q = len(sol.t)*[mdl.q]  # Switching state vector is constant
+            mdl.datalog.save(sol)
 
     if not mdl.pwm.enabled:
         # Update the duty ratio space vector (constant over the time span)
@@ -85,11 +85,6 @@ class PWM:
         self.N = N
         self.falling_edge = False
         self.enabled = enabled
-        if not enabled:
-            self.desc = 'PWM model:\n    disabled\n'
-        else:
-            self.desc = ('PWM model:\n'
-                         '    {} quantization levels\n').format(self.N)
 
     def __call__(self, d_abc):
         """
@@ -142,7 +137,12 @@ class PWM:
         return tn_sw, q
 
     def __str__(self):
-        return self.desc
+        if not self.enabled:
+            desc = 'PWM model:\n    disabled\n'
+        else:
+            desc = ('PWM model:\n'
+                    '    {} quantization levels\n').format(self.N)
+        return desc
 
 
 # %%
@@ -162,8 +162,6 @@ class Delay:
 
         """
         self.data = length*[elem*[0]]  # Creates a zero list
-        self.desc = (('Computational delay:\n    {} sampling periods\n')
-                     .format(length))
 
     def __call__(self, u):
         """
@@ -184,4 +182,7 @@ class Delay:
         return self.data.pop(0)
 
     def __str__(self):
-        return self.desc
+        length = len(self.data)
+        desc = (('Computational delay:\n    {} sampling periods\n')
+                .format(length))
+        return desc

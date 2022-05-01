@@ -5,6 +5,7 @@ space vector models are implemented in stator coordinates.
 
 """
 import numpy as np
+from sklearn.utils import Bunch
 from helpers import abc2complex, complex2abc
 
 
@@ -30,21 +31,17 @@ class Drive:
         self.datalog = datalog
         self.q = 0                  # Switching-state space vector
         self.t0 = 0                 # Initial simulation time
-        self.desc = ('\nSystem: Induction motor drive\n'
-                     '-----------------------------\n')
-        self.desc += (self.delay.desc + self.pwm.desc + self.converter.desc
-                      + self.motor.desc + self.mech.desc)
 
     def get_initial_values(self):
         """
         Returns
         -------
-        x0 : complex list, length 3
+        x0 : complex list, length 4
             Initial values of the state variables.
 
         """
         x0 = [self.motor.psi_ss0, self.motor.psi_Rs0,
-              self.mech.theta_M0, self.mech.w_M0]
+              self.mech.w_M0, self.mech.theta_M0]
         return x0
 
     def set_initial_values(self, t0, x0):
@@ -59,8 +56,8 @@ class Drive:
         self.motor.psi_ss0 = x0[0]
         self.motor.psi_Rs0 = x0[1]
         # x0[2].imag and x0[3].imag are always zero
-        self.mech.theta_M0 = x0[2].real
-        self.mech.w_M0 = x0[3].real
+        self.mech.w_M0 = x0[2].real
+        self.mech.theta_M0 = x0[3].real
         # Limit the angle [0, 2*pi]
         self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
 
@@ -82,7 +79,7 @@ class Drive:
 
         """
         # Unpack the states
-        psi_ss, psi_Rs, _, w_M = x
+        psi_ss, psi_Rs, w_M, _ = x
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
         i_ss, i_Rs = self.motor.currents(psi_ss, psi_Rs)
@@ -94,7 +91,12 @@ class Drive:
         return motor_f + mech_f
 
     def __str__(self):
-        return self.desc
+        desc = ('\nSystem: Induction motor drive\n'
+                '-----------------------------\n')
+        desc += (self.delay.__str__() + self.pwm.__str__()
+                 + self.converter.__str__() + self.motor.__str__()
+                 + self.mech.__str__())
+        return desc
 
 
 # %%
@@ -127,9 +129,6 @@ class Motor:
         self.R_s, self.R_R, self.L_sgm, self.L_M = R_s, R_R, L_sgm, L_M
         self.p = p
         self.psi_ss0, self.psi_Rs0 = 0j, 0j
-        self.desc = (('Induction motor (inverse-Gamma model):\n'
-                      '    p={}  R_s={}  R_R={}  L_sgm={}  L_M={}\n')
-                     .format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M))
 
     def currents(self, psi_ss, psi_Rs):
         """
@@ -223,7 +222,10 @@ class Motor:
         return i_s_abc
 
     def __str__(self):
-        return self.desc
+        desc = (('Induction motor (inverse-Gamma model):\n'
+                 '    p={}  R_s={}  R_R={}  L_sgm={}  L_M={}\n')
+                .format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M))
+        return desc
 
 
 # %%
@@ -236,9 +238,6 @@ class SaturationModel:
 
     def __init__(self, L_unsat=.34, beta=.84, S=7):
         self.L_unsat, self.beta, self.S = L_unsat, beta, S
-        self.desc = (('L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S):'
-                      '  L_unsat={}  beta={}  S={}')
-                     .format(self.L_unsat, self.beta, self.S))
 
     def __call__(self, psi):
         """
@@ -260,7 +259,10 @@ class SaturationModel:
         return L_sat
 
     def __str__(self):
-        return self.desc
+        desc = (('L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S):'
+                 '  L_unsat={}  beta={}  S={}')
+                .format(self.L_unsat, self.beta, self.S))
+        return desc
 
 
 # %%
@@ -293,10 +295,6 @@ class MotorSaturated(Motor):
 
         """
         super().__init__(R_s=R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, p=p)
-        self.desc = (('Saturated induction motor (Gamma model):\n'
-                      '    p={}  R_s={}  R_R={}  L_sgm={}\n'
-                      '    L_M={}\n')
-                     .format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M))
 
     def currents(self, psi_ss, psi_Rs):
         """
@@ -309,13 +307,17 @@ class MotorSaturated(Motor):
         return i_ss, i_Rs
 
     def __str__(self):
-        return self.desc
+        desc = (('Saturated induction motor (Gamma model):\n'
+                 '    p={}  R_s={}  R_R={}  L_sgm={}\n'
+                 '    L_M={}\n')
+                .format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M))
+        return desc
 
 
 # %%
 class Datalogger:
     """
-    This class contains a default datalogger.
+    This class contains a datalogger.
 
     """
 
@@ -324,53 +326,48 @@ class Datalogger:
         Initialize the attributes.
 
         """
-        # pylint: disable=too-many-instance-attributes
-        self.t, self.q = [], []
-        self.psi_ss, self.psi_Rs = [], []
-        self.theta_M, self.w_M = [], []
-        self.u_ss, self.i_ss = 0j, 0j
-        self.w_m, self.theta_m = 0, 0
-        self.tau_M, self.tau_L = 0, 0
+        self.data = Bunch()
+        self.data.t, self.data.q = [], []
+        self.data.psi_ss, self.data.psi_Rs = [], []
+        self.data.theta_M, self.data.w_M = [], []
 
-    def save(self, mdl, sol):
+    def save(self, sol):
         """
-        Saves the solution.
+        Save the solution.
 
         Parameters
         ----------
-        mdl : instance of a class
-            Continuous-time model.
         sol : bunch object
             Solution from the solver.
 
         """
-        self.t.extend(sol.t)
-        self.q.extend(len(sol.t)*[mdl.q])
-        self.psi_ss.extend(sol.y[0])
-        self.psi_Rs.extend(sol.y[1])
-        self.theta_M.extend(sol.y[2].real)
-        self.w_M.extend(sol.y[3].real)
+        self.data.t.extend(sol.t)
+        self.data.q.extend(sol.q)
+        self.data.psi_ss.extend(sol.y[0])
+        self.data.psi_Rs.extend(sol.y[1])
+        self.data.w_M.extend(sol.y[2].real)
+        self.data.theta_M.extend(sol.y[3].real)
 
     def post_process(self, mdl):
         """
-        Transforms the lists to the ndarray format and post-process them.
+        Transform the lists to the ndarray format and post-process them.
 
         """
         # From lists to the ndarray
-        self.t = np.asarray(self.t)
-        self.q = np.asarray(self.q)
-        self.psi_ss = np.asarray(self.psi_ss)
-        self.psi_Rs = np.asarray(self.psi_Rs)
-        self.theta_M = np.asarray(self.theta_M)
-        self.w_M = np.asarray(self.w_M)
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
+
         # Some useful variables
-        self.i_ss, _ = mdl.motor.currents(self.psi_ss, self.psi_Rs)
-        self.theta_m = mdl.motor.p*self.theta_M
-        self.theta_m = np.mod(self.theta_m, 2*np.pi)
-        self.w_m = mdl.motor.p*self.w_M
-        self.tau_M = mdl.motor.torque(self.psi_ss, self.i_ss)
-        self.tau_L = mdl.mech.tau_L_ext(self.t) + mdl.mech.B*self.w_M
-        self.u_ss = mdl.converter.ac_voltage(self.q, mdl.converter.u_dc0)
+        self.data.i_ss, _ = mdl.motor.currents(self.data.psi_ss,
+                                               self.data.psi_Rs)
+        self.data.theta_m = mdl.motor.p*self.data.theta_M
+        self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
+        self.data.w_m = mdl.motor.p*self.data.w_M
+        self.data.tau_M = mdl.motor.torque(self.data.psi_ss, self.data.i_ss)
+        self.data.tau_L = (mdl.mech.tau_L_ext(self.data.t)
+                           + mdl.mech.B*self.data.w_M)
+        self.data.u_ss = mdl.converter.ac_voltage(self.data.q,
+                                                  mdl.converter.u_dc0)
 
 
 # %%
@@ -431,17 +428,17 @@ class DataloggerExtended(Datalogger):
         """
         # pylint: disable=too-many-instance-attributes
         super().__init__()
-        self.u_dc, self.i_L = [], []
-        self.i_dc, self.u_di, self.u_g, self.i_g = 0, 0, 0, 0
+        self.data.u_dc, self.data.i_L = [], []
+        # self.i_dc, self.u_di, self.u_g, self.i_g = 0, 0, 0, 0
 
-    def save(self, mdl, sol):
+    def save(self, sol):
         """
         Extends the base class.
 
         """
-        super().save(mdl, sol)
-        self.u_dc.extend(sol.y[4].real)
-        self.i_L.extend(sol.y[5].real)
+        super().save(sol)
+        self.data.u_dc.extend(sol.y[4].real)
+        self.data.i_L.extend(sol.y[5].real)
 
     def post_process(self, mdl):
         """
@@ -450,17 +447,17 @@ class DataloggerExtended(Datalogger):
         """
         super().post_process(mdl)
         # From lists to the ndarray
-        self.u_dc = np.asarray(self.u_dc)
-        self.i_L = np.asarray(self.i_L)
+        self.data.u_dc = np.asarray(self.data.u_dc)
+        self.data.i_L = np.asarray(self.data.i_L)
         # Some useful variables
-        self.u_ss = mdl.converter.ac_voltage(self.q, self.u_dc)
-        self.i_dc = mdl.converter.dc_current(self.q, self.i_ss)
-        u_g_abc = mdl.converter.grid_voltages(self.t)
-        self.u_g = abc2complex(u_g_abc)
+        self.data.u_ss = mdl.converter.ac_voltage(self.data.q, self.data.u_dc)
+        self.data.i_dc = mdl.converter.dc_current(self.data.q, self.data.i_ss)
+        u_g_abc = mdl.converter.grid_voltages(self.data.t)
+        self.data.u_g = abc2complex(u_g_abc)
         # Voltage at the output of the diode bridge
-        self.u_di = np.amax(u_g_abc, 0) - np.amin(u_g_abc, 0)
+        self.data.u_di = np.amax(u_g_abc, 0) - np.amin(u_g_abc, 0)
         # Diode briddge switching states (-1, 0, 1)
         q_g_abc = ((np.amax(u_g_abc, 0) == u_g_abc).astype(int) -
                    (np.amin(u_g_abc, 0) == u_g_abc).astype(int))
         # Grid current space vector
-        self.i_g = abc2complex(q_g_abc)*self.i_L
+        self.data.i_g = abc2complex(q_g_abc)*self.data.i_L
