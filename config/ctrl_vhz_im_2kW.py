@@ -8,9 +8,10 @@ correspond to a 2.2-kW induction motor.
 from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
-from helpers import Step  # , Sequence
-from control.im.vhz import VHzCtrl, Datalogger
+from control.im.vhz import VHzCtrl
 from config.mdl_im_2kW import mdl
+# pylint: disable=unused-import
+from helpers import ref_step, plot
 
 
 # %%
@@ -58,26 +59,12 @@ class CtrlParameters:
 # %%
 base = BaseValues()
 pars = CtrlParameters()
-# Open-loop V/Hz control can be obtained by choosing:
+
+# %% Configure controller
+#  Open-loop V/Hz control can be obtained by choosing:
 # pars.k_u, pars.k_w, pars.R_s, pars.R_R = 0, 0, 0, 0
-datalog = Datalogger()
-ctrl = VHzCtrl(pars, datalog)
+ctrl = VHzCtrl(pars)
 print(ctrl)
 
-# %% Profile: Acceleration and load torque step
-# Speed reference
-mdl.speed_ref = Step(.2, .8*base.w)
-# External load torque
-mdl.mech.tau_L_ext = Step(1, 14.6)
-# Stop time of the simulation
-mdl.t_stop = 1.5
-
-# %% Print the profiles
-print('\nProfiles')
-print('--------')
-print('Speed reference:')
-with np.printoptions(precision=1, suppress=True):
-    print('    {}'.format(mdl.speed_ref))
-print('External load torque:')
-with np.printoptions(precision=1, suppress=True):
-    print('    {}'.format(mdl.mech.tau_L_ext))
+# %% Speed refrerence and load torque profiles
+ref_step(mdl, w_max=.8*base.w, tau_max=14.6, t_max=1.5)

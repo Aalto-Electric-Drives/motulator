@@ -6,6 +6,7 @@ coordinates.
 
 """
 import numpy as np
+from sklearn.utils import Bunch
 from helpers import complex2abc
 
 
@@ -30,10 +31,6 @@ class Drive:
         self.datalog = datalog
         self.q = 0                  # Switching-state space vector
         self.t0 = 0                 # Initial simulation time
-        self.desc = ('\nSystem: Synchronous motor drive\n'
-                     '-------------------------------\n')
-        self.desc += (self.delay.desc + self.pwm.desc + self.converter.desc
-                      + self.motor.desc + self.mech.desc)
 
     def get_initial_values(self):
         """
@@ -43,7 +40,7 @@ class Drive:
             Initial values of the state variables.
 
         """
-        x0 = [self.motor.psi_s0, self.mech.theta_M0, self.mech.w_M0]
+        x0 = [self.motor.psi_s0, self.mech.w_M0, self.mech.theta_M0]
         return x0
 
     def set_initial_values(self, t0, x0):
@@ -56,8 +53,8 @@ class Drive:
         """
         self.t0 = t0
         self.motor.psi_s0 = x0[0]
-        self.mech.theta_M0 = x0[1].real     # x0[1].imag is always zero
-        self.mech.w_M0 = x0[2].real         # x0[2].imag is always zero
+        self.mech.w_M0 = x0[1].real         # x0[2].imag is always zero
+        self.mech.theta_M0 = x0[2].real     # x0[1].imag is always zero
         # Limit the angle [0, 2*pi]
         self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
 
@@ -79,7 +76,7 @@ class Drive:
 
         """
         # Unpack the states
-        psi_s, theta_M, w_M = x
+        psi_s, w_M, theta_M = x
         theta_m = self.motor.p*theta_M
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
@@ -93,7 +90,12 @@ class Drive:
         return motor_f + mech_f
 
     def __str__(self):
-        return self.desc
+        desc = ('System: Synchronous motor drive\n'
+                '-------------------------------\n')
+        desc += (self.delay.__str__() + self.pwm.__str__()
+                 + self.converter.__str__() + self.motor.__str__()
+                 + self.mech.__str__())
+        return desc
 
 
 # %%
@@ -128,13 +130,10 @@ class Motor:
         self.p = p
         self.mech = mech
         self.psi_s0 = psi_f + 0j
-        self.desc = (('Synchronous motor:\n'
-                      '    p={}  R_s={}  L_d={}  L_q={}  psi_f={}\n')
-                     .format(self.p, self.R_s, self.L_d, self.L_q, self.psi_f))
 
     def current(self, psi_s):
         """
-        Computes the stator current.
+        Compute the stator current.
 
         Parameters
         ----------
@@ -152,7 +151,7 @@ class Motor:
 
     def torque(self, psi_s, i_s):
         """
-        Computes the electromagnetic torque.
+        Compute the electromagnetic torque.
 
         Parameters
         ----------
@@ -172,7 +171,7 @@ class Motor:
 
     def f(self, psi_s, i_s, u_s, w_M):
         """
-        Computes the state derivative.
+        Compute the state derivative.
 
         Parameters
         ----------
@@ -194,7 +193,7 @@ class Motor:
 
     def meas_currents(self):
         """
-        Returns the phase currents at the end of the sampling period.
+        Return the phase currents at the end of the sampling period.
 
         Returns
         -------
@@ -208,7 +207,10 @@ class Motor:
         return i_s_abc
 
     def __str__(self):
-        return self.desc
+        desc = (('Synchronous motor:\n'
+                 '    p={}  R_s={}  L_d={}  L_q={}  psi_f={}\n')
+                .format(self.p, self.R_s, self.L_d, self.L_q, self.psi_f))
+        return desc
 
 
 # %%
@@ -224,48 +226,42 @@ class Datalogger:
         Initialize the attributes.
 
         """
-        # pylint: disable=too-many-instance-attributes
-        self.t, self.q = [], []
-        self.psi_s = []
-        self.theta_M, self.w_M = [], []
-        self.u_ss, self.i_s = 0j, 0j
-        self.w_m, self.theta_m = 0, 0
-        self.tau_M, self.tau_L = 0, 0
+        self.data = Bunch()
+        self.data.t, self.data.q = [], []
+        self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
 
-    def save(self, mdl, sol):
+    def save(self, sol):
         """
-        Saves the solution.
+        Save the solution.
 
         Parameters
         ----------
-        mdl : instance of a class
-            Continuous-time model.
         sol : bunch object
             Solution from the solver.
 
         """
-        self.t.extend(sol.t)
-        self.q.extend(len(sol.t)*[mdl.q])
-        self.psi_s.extend(sol.y[0])
-        self.theta_M.extend(sol.y[1].real)
-        self.w_M.extend(sol.y[2].real)
+        self.data.t.extend(sol.t)
+        self.data.q.extend(sol.q)
+        self.data.psi_s.extend(sol.y[0])
+        self.data.w_M.extend(sol.y[1].real)
+        self.data.theta_M.extend(sol.y[2].real)
 
     def post_process(self, mdl):
         """
-        Transforms the lists to the ndarray format and post-process them.
+        Transform the lists to the ndarray format and post-process them.
 
         """
         # From lists to the ndarray
-        self.t = np.asarray(self.t)
-        self.q = np.asarray(self.q)
-        self.psi_s = np.asarray(self.psi_s)
-        self.theta_M = np.asarray(self.theta_M)
-        self.w_M = np.asarray(self.w_M)
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
+
         # Compute some useful quantities
-        self.i_s = mdl.motor.current(self.psi_s)
-        self.w_m = mdl.motor.p*self.w_M
-        self.tau_M = mdl.motor.torque(self.psi_s, self.i_s)
-        self.tau_L = mdl.mech.tau_L_ext(self.t) + mdl.mech.B*self.w_M
-        self.u_ss = mdl.converter.ac_voltage(self.q, mdl.converter.u_dc0)
-        self.theta_m = mdl.motor.p*self.theta_M
-        self.theta_m = np.mod(self.theta_m, 2*np.pi)
+        self.data.i_s = mdl.motor.current(self.data.psi_s)
+        self.data.w_m = mdl.motor.p*self.data.w_M
+        self.data.tau_M = mdl.motor.torque(self.data.psi_s, self.data.i_s)
+        self.data.tau_L = (mdl.mech.tau_L_ext(self.data.t)
+                           + mdl.mech.B*self.data.w_M)
+        self.data.u_ss = mdl.converter.ac_voltage(self.data.q,
+                                                  mdl.converter.u_dc0)
+        self.data.theta_m = mdl.motor.p*self.data.theta_M
+        self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)

@@ -4,6 +4,7 @@ This module contains common control functions and classes.
 
 """
 import numpy as np
+from sklearn.utils import Bunch
 from helpers import complex2abc, abc2complex
 
 
@@ -138,8 +139,9 @@ class SpeedCtrl:
         self.J = pars.J
         self.k = pars.alpha_s*pars.J    # Gain
         self.tau_l = 0                  # Integral state
-        self.desc = ('2DOF PI speed control:\n'
-                     '    alpha_s=2*pi*{:.1f}').format(pars.alpha_s/(2*np.pi))
+        self.desc = (('2DOF PI speed control:\n'
+                      '    alpha_s=2*pi*{:.1f}\n')
+                     .format(pars.alpha_s/(2*np.pi)))
 
     def output(self, w_M_ref, w_M):
         """
@@ -234,3 +236,49 @@ class RateLimiter:
         # Store the limited output
         self.y_old = y
         return y
+
+
+# %%
+class Datalogger:
+    """
+    This class contains the data logger.
+
+    """
+
+    def __init__(self):
+        """
+        Initialize the attributes.
+
+        """
+        self.data = Bunch()
+
+    def save(self, data):
+        """
+        Save the solution.
+
+        Parameters
+        ----------
+        data : dictionary or Bunch object
+            Data to be saved.
+
+        """
+        try:
+            for key, value in data.items():
+                self.data[key].extend([value])
+        except KeyError:
+            # Lists do not exist, initialize them
+            for key, value in data.items():
+                self.data[key] = []
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format.
+
+        """
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
+        try:
+            # Compute time vector using the stored sampling periods
+            self.data["t"] = np.cumsum(self.data["T_s"]) - self.data["T_s"][0]
+        except KeyError:
+            pass

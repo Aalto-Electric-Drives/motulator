@@ -68,8 +68,6 @@ class Inverter:
         """
         self.u_dc0 = u_dc
         self.ac_voltage = ac_voltage
-        self.desc = ('Inverter fed from the constant DC-voltage source:\n'
-                     '    u_dc={}\n').format(self.u_dc0)
 
     def meas_dc_voltage(self):
         """
@@ -82,7 +80,9 @@ class Inverter:
         return self.u_dc0
 
     def __str__(self):
-        return self.desc
+        desc = ('Inverter fed from the constant DC-voltage source:\n'
+                '    u_dc={}\n').format(self.u_dc0)
+        return desc
 
 
 # %%
@@ -115,10 +115,6 @@ class FrequencyConverter:
         # Methods
         self.ac_voltage = ac_voltage
         self.dc_current = dc_current
-        self.desc = (('Frequency converter:\n'
-                      '  U_g={:.0f}  f_g={:.0f}  C={}  L={}\n')
-                     .format(self.u_g*np.sqrt(3/2), self.w_g/(2*np.pi),
-                             self.C, self.L))
 
     def grid_voltages(self, t):
         """
@@ -185,4 +181,8 @@ class FrequencyConverter:
         return self.u_dc0
 
     def __str__(self):
-        return self.desc
+        desc = (('Frequency converter:\n'
+                 '  U_g={:.0f}  f_g={:.0f}  C={}  L={}\n')
+                .format(self.u_g*np.sqrt(3/2), self.w_g/(2*np.pi),
+                        self.C, self.L))
+        return desc
