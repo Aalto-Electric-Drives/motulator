@@ -402,7 +402,7 @@ class DriveWithDiodeBridge(Drive):
 
         """
         # Unpack the states for better readability
-        psi_ss, psi_Rs, _, w_M, u_dc, i_L = x
+        psi_ss, psi_Rs, w_M, _, u_dc, i_L = x
         # Interconnections: outputs for computing the state derivatives
         i_ss, i_Rs = self.motor.currents(psi_ss, psi_Rs)
         u_ss = self.converter.ac_voltage(self.q, u_dc)

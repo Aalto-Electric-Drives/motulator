@@ -253,9 +253,9 @@ def plot(mdl, ctrl, base):
                     r'$\hat \omega_\mathrm{m}$'])
     else:
         ax1.step(ctrl.t, ctrl.w_s/base.w, where='post')
-        ax1.legend([r'$\omega_\mathrm{m}$',
-                    r'$\omega_\mathrm{m,ref}$',
-                    r'$\omega_\mathrm{s}$'])
+        ax1.legend([r'$\omega_\mathrm{m,ref}$',
+                    r'$\omega_\mathrm{m}$',
+                    r'$\hat \omega_\mathrm{m}$'])
     ax1.set_xlim(t_range)
     ax1.set_xticklabels([])
     ax1.set_ylabel('Speed (p.u.)')
