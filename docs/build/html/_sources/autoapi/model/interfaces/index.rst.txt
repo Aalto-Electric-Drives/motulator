@@ -1,0 +1,71 @@
+:py:mod:`model.interfaces`
+==========================
+
+.. py:module:: model.interfaces
+
+.. autoapi-nested-parse::
+
+   This module includes the solver functions as well as the models for PWM
+   carrier comparison and computational delay.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   model.interfaces.PWM
+   model.interfaces.Delay
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   model.interfaces.solve
+
+
+
+.. py:function:: solve(mdl, d_abc, t_span, max_step=np.inf)
+
+   Solve the continuous-time model over t_span.
+
+   :param mdl: Model to be simulated.
+   :type mdl: object
+   :param d_abc: Duty ratio references in the interval [0, 1].
+   :type d_abc: array_like of floats, shape (3,)
+   :param t_span: Interval of integration (t0, tf). The solver starts with t=t0 and
+                  integrates until it reaches t=tf.
+   :type t_span: 2-tuple of floats
+   :param max_step: Max step size of the solver. The default is inf.
+   :type max_step: float, optional
+
+
+.. py:class:: PWM(enabled=True, N=2**12)
+
+   This class implements carrier comparison of three-phase PWM. The switching
+   instants and the switching states are explicitly and exactly computed from
+   the duty ratios. The switching instants can be used in the ODE solver.
+
+
+   :param N: Amount of PWM quantization levels. The default is 2**12.
+   :type N: int, optional
+   :param enabled: PMW enabled. The default is True.
+   :type enabled: Boolean, optional
+
+
+.. py:class:: Delay(length=1, elem=3)
+
+   This class implements a delay as a ring buffer.
+
+
+   :param length: Length of the buffer in samples. The default is 1.
+   :type length: int, optional
+
+

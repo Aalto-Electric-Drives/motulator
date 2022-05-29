@@ -1,0 +1,163 @@
+:py:mod:`control.common`
+========================
+
+.. py:module:: control.common
+
+.. autoapi-nested-parse::
+
+   This module contains common control functions and classes.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   control.common.PWM
+   control.common.SpeedCtrl
+   control.common.RateLimiter
+   control.common.Datalogger
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   control.common.duty_ratios
+
+
+
+.. py:function:: duty_ratios(u, u_dc)
+
+   Duty ratios for three-phase PWM using a symmetrical suboscillation method.
+
+   :param u: Voltage space vector (typically reference value).
+   :type u: complex
+   :param u_dc: DC-bus voltage (typically measured value).
+   :type u_dc: float
+
+   :returns: **d_abc** -- Duty ratios (typically reference values).
+   :rtype: ndarray, shape (3,)
+
+
+.. py:class:: PWM(pars)
+
+   This class contains the duty ratio computation and the voltage estimation.
+   The voltage estimate is computed from the duty ratio references, taking
+   the delay effects into account.
+
+
+   .. py:method:: __call__(self, u_ref, u_dc, theta, w)
+
+      Computes the duty ratio references and updates the state.
+
+      :param u_ref: Voltage reference in synchronous coordinates.
+      :type u_ref: complex
+      :param u_dc: DC-bus voltage.
+      :type u_dc: float
+      :param theta: Angle of synchronous coordinates.
+      :type theta: float
+      :param w: Angular frequency of synchronous coordinates.
+      :type w: float
+
+      :returns: **d_abc_ref** -- Duty ratio references.
+      :rtype: ndarray, shape (3,)
+
+
+   .. py:method:: output(self, u_ref, u_dc, theta, w)
+
+      Computes the duty ratio references and the limited voltage reference.
+
+
+
+   .. py:method:: update(self, u_ref_lim)
+
+      Update the voltage estimate for the next sampling instant.
+
+      :param u_ref_lim: Limited voltage reference in synchronous coordinates.
+      :type u_ref_lim: complex
+
+
+
+.. py:class:: SpeedCtrl(pars)
+
+   Speed controller with the disturbance-observer structure. This controller
+   is mathematically equivalent to the 2DOF PI speed controller.
+
+
+   .. py:method:: output(self, w_M_ref, w_M)
+
+      Computes the torque reference and the load torque estimate.
+
+      :param w_M_ref: Rotor speed reference (in mechanical rad/s).
+      :type w_M_ref: float
+      :param w_M: Rotor speed (in mechanical rad/s).
+      :type w_M: float
+
+      :returns: * **tau_M_ref** (*float*) -- Torque reference.
+                * **tau_L** (*float*) -- Load torque estimate.
+
+
+   .. py:method:: update(self, tau_M, tau_L)
+
+      Updates the integral state.
+
+      :param tau_M: Realized (limited) torque reference.
+      :type tau_M: float
+      :param tau_L: Load torque estimate.
+      :type tau_L: float
+
+
+   .. py:method:: __str__(self)
+
+      Return str(self).
+
+
+
+.. py:class:: RateLimiter(pars)
+
+   A class used to implement a rate limiter.
+
+
+   .. py:method:: __call__(self, u)
+
+      :param u: Input signal.
+      :type u: float
+
+      :returns: **y** -- Rate-limited output signal.
+      :rtype: float
+
+      .. rubric:: Notes
+
+      In this implementation, the falling rate limit equals the (negative)
+      rising rate limit. If needed, these limits can be separated with minor
+      modifications in the class.
+
+
+
+.. py:class:: Datalogger
+
+   This class contains the data logger.
+
+
+   .. py:method:: save(self, data)
+
+      Save the solution.
+
+      :param data: Data to be saved.
+      :type data: dictionary or Bunch object
+
+
+   .. py:method:: post_process(self)
+
+      Transform the lists to the ndarray format.
+
+
+
+

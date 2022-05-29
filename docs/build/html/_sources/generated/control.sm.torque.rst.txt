@@ -1,0 +1,29 @@
+control.sm.torque
+=================
+
+.. automodule:: control.sm.torque
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TorqueCharacteristics
+   
+   
+
+   
+   
+   
+
+
+

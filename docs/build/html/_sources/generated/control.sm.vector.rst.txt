@@ -1,0 +1,32 @@
+control.sm.vector
+=================
+
+.. automodule:: control.sm.vector
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CurrentCtrl
+      CurrentRef
+      SensorlessObserver
+      VectorCtrl
+   
+   
+
+   
+   
+   
+
+
+

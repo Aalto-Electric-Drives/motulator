@@ -1,0 +1,37 @@
+model.converter
+===============
+
+.. automodule:: model.converter
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      ac_voltage
+      dc_current
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FrequencyConverter
+      Inverter
+   
+   
+
+   
+   
+   
+
+
+

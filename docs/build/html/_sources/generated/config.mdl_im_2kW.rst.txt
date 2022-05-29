@@ -1,0 +1,23 @@
+config.mdl\_im\_2kW
+===================
+
+.. automodule:: config.mdl_im_2kW
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

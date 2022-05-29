@@ -1,0 +1,79 @@
+:py:mod:`conf`
+==============
+
+.. py:module:: conf
+
+
+Module Contents
+---------------
+
+.. py:data:: project
+   :annotation: = motulator
+
+   
+
+.. py:data:: copyright
+   :annotation: = 2022, Aalto Electric Drives
+
+   
+
+.. py:data:: author
+   :annotation: = Aalto Electric Drives
+
+   
+
+.. py:data:: release
+   :annotation: = 0
+
+   
+
+.. py:data:: autodoc_mock_imports
+   :annotation: = ['numpy', 'sklearn', 'matplotlib', 'scipy', 'cycler']
+
+   
+
+.. py:data:: extensions
+   :annotation: = ['sphinx.ext.napoleon']
+
+   
+
+.. py:data:: autoapi_type
+   :annotation: = python
+
+   
+
+.. py:data:: autoapi_dirs
+   :annotation: = ['../..']
+
+   
+
+.. py:data:: autodoc_typehints
+   :annotation: = description
+
+   
+
+.. py:data:: autoapi_root
+   :annotation: = usage/autoapi
+
+   
+
+.. py:data:: templates_path
+   :annotation: = ['_templates']
+
+   
+
+.. py:data:: exclude_patterns
+   :annotation: = ['../../.idea', '../../__pycache__', '../../venv']
+
+   
+
+.. py:data:: html_theme
+   :annotation: = alabaster
+
+   
+
+.. py:data:: html_static_path
+   :annotation: = ['_static']
+
+   
+

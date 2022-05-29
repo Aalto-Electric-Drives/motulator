@@ -1,0 +1,67 @@
+:py:mod:`model.mech`
+====================
+
+.. py:module:: model.mech
+
+.. autoapi-nested-parse::
+
+   This module contains continuous-time models for mechanical subsystems.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   model.mech.Mechanics
+
+
+
+
+.. py:class:: Mechanics(J=0.015, B=0, tau_L_ext=Step(0.8, 14.6))
+
+   This class represents the mechanical subsystem.
+
+
+   :param J: Total moment of inertia. The default is .015.
+   :type J: float, optional
+   :param B: Viscous damping coefficient. The default is 0.
+   :type B: float, optional
+   :param tau_L_ext: External load torque as a function of time, tau_L_ext(t). The
+                     default is Step(.8, 14.6).
+   :type tau_L_ext: function, optional
+
+   .. py:method:: f(self, t, w_M, tau_M)
+
+      Computes the state derivative.
+
+      :param t: Time.
+      :type t: float
+      :param w_M: Rotor speed (in mechanical rad/s).
+      :type w_M: float
+      :param tau_M: Electromagnetic torque.
+      :type tau_M: float
+
+      :returns: Time derivative of the state vector.
+      :rtype: list, length 2
+
+
+   .. py:method:: meas_speed(self)
+
+      :returns: **w_M0** -- Rotor speed (in mechanical rad/s) at the end of the integration
+                period.
+      :rtype: float
+
+
+   .. py:method:: meas_position(self)
+
+      :returns: **theta_M0** -- Rotor angle (in mechanical rad) at the end of the integration
+                period.
+      :rtype: float
+
+
+

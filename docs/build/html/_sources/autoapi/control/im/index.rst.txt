@@ -1,0 +1,16 @@
+:py:mod:`control.im`
+====================
+
+.. py:module:: control.im
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   vector/index.rst
+   vhz/index.rst
+
+

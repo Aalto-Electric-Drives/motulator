@@ -1,0 +1,30 @@
+config.ctrl\_vector\_syrm\_7kW
+==============================
+
+.. automodule:: config.ctrl_vector_syrm_7kW
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseValues
+      CtrlParameters
+   
+   
+
+   
+   
+   
+
+
+

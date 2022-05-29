@@ -1,0 +1,23 @@
+config.mdl\_syrm\_7kW
+=====================
+
+.. automodule:: config.mdl_syrm_7kW
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

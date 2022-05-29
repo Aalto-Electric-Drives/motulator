@@ -1,0 +1,32 @@
+control.im
+==========
+
+.. automodule:: control.im
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   control.im.vector
+   control.im.vhz
+

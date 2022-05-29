@@ -1,0 +1,33 @@
+control.im.vector
+=================
+
+.. automodule:: control.im.vector
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CurrentCtrl
+      CurrentModelEstimator
+      CurrentRef
+      SensorlessObserver
+      VectorCtrl
+   
+   
+
+   
+   
+   
+
+
+
