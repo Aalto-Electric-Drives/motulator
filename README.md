@@ -1,4 +1,4 @@
-# motulator
+# *motulator*
 Open-Source Simulator for Motor Drives and Power Converters
 
 Introduction
@@ -14,6 +14,8 @@ Usage
 The main folder includes the example script `sim.py` to run the simulation. The folder `config` contains example configuration files that can be modified or used as templates for new ones. There are separate config files for the drive system and for its controller. For example, pulse-width modulation (PWM) can be enabled in the drive system config file. The control system can be configured to operate in a sensorless or sensored mode. More detailed documentation is available here:
 
 https://aalto-electric-drives.github.io/motulator/
+
+The main folder includes the example script `sim.py` to run the simulation. The folder `config` contains example configuration files that can be modified or used as templates for new ones. There are separate config files for the drive system and for its controller. For example, pulse-width modulation (PWM) can be enabled in the drive system config file. The control system can be configured to operate in a sensorless or sensored mode. 
 
 Acknowledgement
 ---------------
