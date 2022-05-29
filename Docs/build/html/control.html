@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>control package &mdash; Motulator 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="control.im package" href="control.im.html" />
+    <link rel="prev" title="config package" href="config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Motulator_Aalto</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config.html">config package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">control package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="control.im.html">control.im package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="control.sm.html">control.sm package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-control.common">control.common module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-control">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html">helpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">model package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sim.html">sim module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Motulator_Aalto</a> &raquo;</li>
+      <li>control package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/control.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="control-package">
+<h1>control package<a class="headerlink" href="#control-package" title="Permalink to this headline"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="control.im.html">control.im package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="control.im.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.im.html#module-control.im.vector">control.im.vector module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.im.html#module-control.im.vhz">control.im.vhz module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.im.html#module-control.im">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="control.sm.html">control.sm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="control.sm.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.sm.html#module-control.sm.torque">control.sm.torque module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.sm.html#module-control.sm.vector">control.sm.vector module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.sm.html#module-control.sm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-control.common">
+<span id="control-common-module"></span><h2>control.common module<a class="headerlink" href="#module-control.common" title="Permalink to this headline"></a></h2>
+<p>This module contains common control functions and classes.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="control.common.Datalogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">control.common.</span></span><span class="sig-name descname"><span class="pre">Datalogger</span></span><a class="headerlink" href="#control.common.Datalogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class contains the data logger.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="control.common.Datalogger.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#control.common.Datalogger.post_process" title="Permalink to this definition"></a></dt>
+<dd><p>Transform the lists to the ndarray format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="control.common.Datalogger.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.Datalogger.save" title="Permalink to this definition"></a></dt>
+<dd><p>Save the solution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dictionary</em><em> or </em><em>Bunch object</em>) – Data to be saved.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="control.common.PWM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">control.common.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.PWM" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class contains the duty ratio computation and the voltage estimation.
+The voltage estimate is computed from the duty ratio references, taking
+the delay effects into account.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="control.common.PWM.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.PWM.output" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the duty ratio references and the limited voltage reference.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="control.common.PWM.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_ref_lim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.PWM.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the voltage estimate for the next sampling instant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>u_ref_lim</strong> (<em>complex</em>) – Limited voltage reference in synchronous coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="control.common.RateLimiter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">control.common.</span></span><span class="sig-name descname"><span class="pre">RateLimiter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.RateLimiter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to implement a rate limiter.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="control.common.SpeedCtrl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">control.common.</span></span><span class="sig-name descname"><span class="pre">SpeedCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.SpeedCtrl" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Speed controller with the disturbance-observer structure. This controller
+is mathematically equivalent to the 2DOF PI speed controller.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="control.common.SpeedCtrl.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.SpeedCtrl.output" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the torque reference and the load torque estimate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w_M_ref</strong> (<em>float</em>) – Rotor speed reference (in mechanical rad/s).</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor speed (in mechanical rad/s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>tau_M_ref</strong> (<em>float</em>) – Torque reference.</p></li>
+<li><p><strong>tau_L</strong> (<em>float</em>) – Load torque estimate.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="control.common.SpeedCtrl.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.SpeedCtrl.update" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the integral state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau_M</strong> (<em>float</em>) – Realized (limited) torque reference.</p></li>
+<li><p><strong>tau_L</strong> (<em>float</em>) – Load torque estimate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="control.common.duty_ratios">
+<span class="sig-prename descclassname"><span class="pre">control.common.</span></span><span class="sig-name descname"><span class="pre">duty_ratios</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#control.common.duty_ratios" title="Permalink to this definition"></a></dt>
+<dd><p>Duty ratios for three-phase PWM using a symmetrical suboscillation method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>complex</em>) – Voltage space vector (typically reference value).</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (typically measured value).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>d_abc</strong> – Duty ratios (typically reference values).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray, shape (3,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-control">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-control" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="config.html" class="btn btn-neutral float-left" title="config package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="control.im.html" class="btn btn-neutral float-right" title="control.im package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, mhinkkan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

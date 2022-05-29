@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>config package &mdash; Motulator 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="control package" href="control.html" />
+    <link rel="prev" title="Motulator_Aalto" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Motulator_Aalto</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">config package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.ctrl_vector_im_2kW">config.ctrl_vector_im_2kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.ctrl_vector_im_45kW">config.ctrl_vector_im_45kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.ctrl_vector_pmsm_2kW">config.ctrl_vector_pmsm_2kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.ctrl_vector_syrm_7kW">config.ctrl_vector_syrm_7kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.ctrl_vhz_im_2kW">config.ctrl_vhz_im_2kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.ctrl_vhz_im_45kW">config.ctrl_vhz_im_45kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.mdl_im_2kW">config.mdl_im_2kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.mdl_im_45kW">config.mdl_im_45kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.mdl_pmsm_2kW">config.mdl_pmsm_2kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config.mdl_syrm_7kW">config.mdl_syrm_7kW module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-config">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html">helpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">model package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sim.html">sim module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Motulator_Aalto</a> &raquo;</li>
+      <li>config package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/config.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="config-package">
+<h1>config package<a class="headerlink" href="#config-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-config.ctrl_vector_im_2kW">
+<span id="config-ctrl-vector-im-2kw-module"></span><h2>config.ctrl_vector_im_2kW module<a class="headerlink" href="#module-config.ctrl_vector_im_2kW" title="Permalink to this headline"></a></h2>
+<p>This script configures sensorless vector control for a 2.2-kW induction motor
+drive.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vector_im_2kW.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">314.1592653589793</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7.0710678118654755</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">326.5986323710904</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0395957349782348</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3464.1016151377544</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">46.18802153517006</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.14702103877914455</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">22.05315581687168</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains the base values computed from the rated values.
+These are used for plotting the results.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.14702103877914455</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.L" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.P">
+<span class="sig-name descname"><span class="pre">P</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3464.1016151377544</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">46.18802153517006</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.Z" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.i">
+<span class="sig-name descname"><span class="pre">i</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7.0710678118654755</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.i" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.psi">
+<span class="sig-name descname"><span class="pre">psi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0395957349782348</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.psi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.tau">
+<span class="sig-name descname"><span class="pre">tau</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">22.05315581687168</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.tau" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">326.5986323710904</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.BaseValues.w">
+<span class="sig-name descname"><span class="pre">w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">314.1592653589793</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.BaseValues.w" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vector_im_2kW.</span></span><span class="sig-name descname"><span class="pre">CtrlParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1256.6370614359173</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">251.32741228718345</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25.132741228718345</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">21.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.606601717798213</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_R_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">540</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_sgm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.224</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.015</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains parameters for the control system.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.J">
+<span class="sig-name descname"><span class="pre">J</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.015</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.J" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.L_M">
+<span class="sig-name descname"><span class="pre">L_M</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.224</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.L_M" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.L_sgm">
+<span class="sig-name descname"><span class="pre">L_sgm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.021</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.L_sgm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.R_R">
+<span class="sig-name descname"><span class="pre">R_R</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.1</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.R_R" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.R_s">
+<span class="sig-name descname"><span class="pre">R_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.7</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.R_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.T_s">
+<span class="sig-name descname"><span class="pre">T_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.00025</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.T_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.alpha_c">
+<span class="sig-name descname"><span class="pre">alpha_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1256.6370614359173</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.alpha_c" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.alpha_o">
+<span class="sig-name descname"><span class="pre">alpha_o</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">251.32741228718345</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.alpha_o" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.alpha_s">
+<span class="sig-name descname"><span class="pre">alpha_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">25.132741228718345</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.alpha_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.i_s_max">
+<span class="sig-name descname"><span class="pre">i_s_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10.606601717798213</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.i_s_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.psi_R_nom">
+<span class="sig-name descname"><span class="pre">psi_R_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.9</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.psi_R_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.sensorless">
+<span class="sig-name descname"><span class="pre">sensorless</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.sensorless" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.tau_M_max">
+<span class="sig-name descname"><span class="pre">tau_M_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">21.9</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.tau_M_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_2kW.CtrlParameters.u_dc_nom">
+<span class="sig-name descname"><span class="pre">u_dc_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">540</span></em><a class="headerlink" href="#config.ctrl_vector_im_2kW.CtrlParameters.u_dc_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-config.ctrl_vector_im_45kW">
+<span id="config-ctrl-vector-im-45kw-module"></span><h2>config.ctrl_vector_im_45kW module<a class="headerlink" href="#module-config.ctrl_vector_im_45kW" title="Permalink to this headline"></a></h2>
+<p>This script configures sensorless vector control for an induction motor.
+The default values correspond to a 45-kW induction motor.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vector_im_45kW.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">314.1592653589793</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">114.5512985522207</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">326.5986323710904</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0395957349782348</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">56118.446165231624</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.8511124404425963</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.009075372764144725</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">357.26112423332125</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains the base values computed from the rated values.
+These are used for plotting the results.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.009075372764144725</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.L" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.P">
+<span class="sig-name descname"><span class="pre">P</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">56118.446165231624</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.8511124404425963</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.Z" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.i">
+<span class="sig-name descname"><span class="pre">i</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">114.5512985522207</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.i" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.psi">
+<span class="sig-name descname"><span class="pre">psi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0395957349782348</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.psi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.tau">
+<span class="sig-name descname"><span class="pre">tau</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">357.26112423332125</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.tau" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">326.5986323710904</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.BaseValues.w">
+<span class="sig-name descname"><span class="pre">w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">314.1592653589793</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.BaseValues.w" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vector_im_45kW.</span></span><span class="sig-name descname"><span class="pre">CtrlParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">628.3185307179587</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">251.32741228718345</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6.283185307179586</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">436.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">171.82694782833107</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_R_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">540</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.057</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.029</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_sgm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0022</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0245</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.8133999999999999</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains parameters for the control system.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.J">
+<span class="sig-name descname"><span class="pre">J</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.8133999999999999</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.J" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.L_M">
+<span class="sig-name descname"><span class="pre">L_M</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0245</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.L_M" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.L_sgm">
+<span class="sig-name descname"><span class="pre">L_sgm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0022</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.L_sgm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.R_R">
+<span class="sig-name descname"><span class="pre">R_R</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.029</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.R_R" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.R_s">
+<span class="sig-name descname"><span class="pre">R_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.057</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.R_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.T_s">
+<span class="sig-name descname"><span class="pre">T_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0005</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.T_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.alpha_c">
+<span class="sig-name descname"><span class="pre">alpha_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">628.3185307179587</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.alpha_c" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.alpha_o">
+<span class="sig-name descname"><span class="pre">alpha_o</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">251.32741228718345</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.alpha_o" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.alpha_s">
+<span class="sig-name descname"><span class="pre">alpha_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6.283185307179586</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.alpha_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.i_s_max">
+<span class="sig-name descname"><span class="pre">i_s_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">171.82694782833107</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.i_s_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.psi_R_nom">
+<span class="sig-name descname"><span class="pre">psi_R_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.95</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.psi_R_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.sensorless">
+<span class="sig-name descname"><span class="pre">sensorless</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.sensorless" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.tau_M_max">
+<span class="sig-name descname"><span class="pre">tau_M_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">436.5</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.tau_M_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_im_45kW.CtrlParameters.u_dc_nom">
+<span class="sig-name descname"><span class="pre">u_dc_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">540</span></em><a class="headerlink" href="#config.ctrl_vector_im_45kW.CtrlParameters.u_dc_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-config.ctrl_vector_pmsm_2kW">
+<span id="config-ctrl-vector-pmsm-2kw-module"></span><h2>config.ctrl_vector_pmsm_2kW module<a class="headerlink" href="#module-config.ctrl_vector_pmsm_2kW" title="Permalink to this headline"></a></h2>
+<p>This script configures sensorless vector control for a 2.2-kW permanent-magnet
+synchronous motor drive.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vector_pmsm_2kW.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">471.23889803846896</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6.081118318204309</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">302.10373494325864</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.6410840365699115</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2755.6928348420843</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">49.67897665120036</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.10542206269047187</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">17.543285452321427</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains the base values computed from the rated values.
+These are used for plotting the results.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.10542206269047187</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.L" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.P">
+<span class="sig-name descname"><span class="pre">P</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2755.6928348420843</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">49.67897665120036</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.Z" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.i">
+<span class="sig-name descname"><span class="pre">i</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6.081118318204309</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.i" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.psi">
+<span class="sig-name descname"><span class="pre">psi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.6410840365699115</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.psi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.tau">
+<span class="sig-name descname"><span class="pre">tau</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17.543285452321427</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.tau" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">302.10373494325864</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.BaseValues.w">
+<span class="sig-name descname"><span class="pre">w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">471.23889803846896</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.BaseValues.w" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vector_pmsm_2kW.</span></span><span class="sig-name descname"><span class="pre">CtrlParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1256.6370614359173</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_fw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">125.66370614359172</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25.132741228718345</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">29.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.606601717798213</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">540</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">471.23889803846896</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.036</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.051</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.545</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.015</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">251.32741228718345</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains parameters for the control system of a 2.2-kW
+permanent-magnet synchronous motor.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.J">
+<span class="sig-name descname"><span class="pre">J</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.015</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.J" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.L_d">
+<span class="sig-name descname"><span class="pre">L_d</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.036</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.L_d" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.L_q">
+<span class="sig-name descname"><span class="pre">L_q</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.051</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.L_q" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.R_s">
+<span class="sig-name descname"><span class="pre">R_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.6</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.R_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.T_s">
+<span class="sig-name descname"><span class="pre">T_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.00025</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.T_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.alpha_c">
+<span class="sig-name descname"><span class="pre">alpha_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1256.6370614359173</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.alpha_c" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.alpha_fw">
+<span class="sig-name descname"><span class="pre">alpha_fw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">125.66370614359172</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.alpha_fw" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.alpha_s">
+<span class="sig-name descname"><span class="pre">alpha_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">25.132741228718345</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.alpha_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.i_s_max">
+<span class="sig-name descname"><span class="pre">i_s_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10.606601717798213</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.i_s_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.i_sd_lim">
+<span class="sig-name descname"><span class="pre">i_sd_lim</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.i_sd_lim" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.i_sd_mtpa">
+<span class="sig-name descname"><span class="pre">i_sd_mtpa</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.i_sd_mtpa" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.k_u">
+<span class="sig-name descname"><span class="pre">k_u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.95</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.k_u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.psi_f">
+<span class="sig-name descname"><span class="pre">psi_f</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.545</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.psi_f" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.sensorless">
+<span class="sig-name descname"><span class="pre">sensorless</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.sensorless" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.tau_M_lim">
+<span class="sig-name descname"><span class="pre">tau_M_lim</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.tau_M_lim" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.tau_M_max">
+<span class="sig-name descname"><span class="pre">tau_M_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">29.2</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.tau_M_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.u_dc_nom">
+<span class="sig-name descname"><span class="pre">u_dc_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">540</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.u_dc_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.w_nom">
+<span class="sig-name descname"><span class="pre">w_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">471.23889803846896</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.w_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_pmsm_2kW.CtrlParameters.w_o">
+<span class="sig-name descname"><span class="pre">w_o</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">251.32741228718345</span></em><a class="headerlink" href="#config.ctrl_vector_pmsm_2kW.CtrlParameters.w_o" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-config.ctrl_vector_syrm_7kW">
+<span id="config-ctrl-vector-syrm-7kw-module"></span><h2>config.ctrl_vector_syrm_7kW module<a class="headerlink" href="#module-config.ctrl_vector_syrm_7kW" title="Permalink to this headline"></a></h2>
+<p>This script configures sensorless vector control for a 6.7-kW synchronous
+reluctance motor.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">664.7610054996002</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">21.920310216782976</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">302.10373494325864</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.45445465730381257</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9933.311381407513</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13.781909651623323</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.02073212709169899</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">29.885361202684106</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains the base values computed from the rated values.
+These are used for plotting the results.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.02073212709169899</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.L" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.P">
+<span class="sig-name descname"><span class="pre">P</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9933.311381407513</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13.781909651623323</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.Z" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.i">
+<span class="sig-name descname"><span class="pre">i</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">21.920310216782976</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.i" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.psi">
+<span class="sig-name descname"><span class="pre">psi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.45445465730381257</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.psi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.tau">
+<span class="sig-name descname"><span class="pre">tau</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">29.885361202684106</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.tau" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">302.10373494325864</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.BaseValues.w">
+<span class="sig-name descname"><span class="pre">w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">664.7610054996002</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.w" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></span><span class="sig-name descname"><span class="pre">CtrlParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1256.6370614359173</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_fw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">125.66370614359172</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25.132741228718345</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">43.84062043356595</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_sd_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.480077554195744</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">540</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">664.7610054996002</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.54</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0415</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0062</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.015</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">502.6548245743669</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains parameters for the control system of a 6.7-kW
+synchronous relutance motor.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.J">
+<span class="sig-name descname"><span class="pre">J</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.015</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.J" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.L_d">
+<span class="sig-name descname"><span class="pre">L_d</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0415</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.L_d" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.L_q">
+<span class="sig-name descname"><span class="pre">L_q</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0062</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.L_q" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.R_s">
+<span class="sig-name descname"><span class="pre">R_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.54</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.R_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.T_s">
+<span class="sig-name descname"><span class="pre">T_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.00025</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.T_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_c">
+<span class="sig-name descname"><span class="pre">alpha_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1256.6370614359173</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_c" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_fw">
+<span class="sig-name descname"><span class="pre">alpha_fw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">125.66370614359172</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_fw" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_s">
+<span class="sig-name descname"><span class="pre">alpha_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">25.132741228718345</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.i_s_max">
+<span class="sig-name descname"><span class="pre">i_s_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">43.84062043356595</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.i_s_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_lim">
+<span class="sig-name descname"><span class="pre">i_sd_lim</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_lim" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_min">
+<span class="sig-name descname"><span class="pre">i_sd_min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5.480077554195744</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_min" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_mtpa">
+<span class="sig-name descname"><span class="pre">i_sd_mtpa</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_mtpa" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.k_u">
+<span class="sig-name descname"><span class="pre">k_u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.95</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.k_u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.psi_f">
+<span class="sig-name descname"><span class="pre">psi_f</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.psi_f" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.sensorless">
+<span class="sig-name descname"><span class="pre">sensorless</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.sensorless" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.tau_M_lim">
+<span class="sig-name descname"><span class="pre">tau_M_lim</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.tau_M_lim" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.tau_M_max">
+<span class="sig-name descname"><span class="pre">tau_M_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">40.2</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.tau_M_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.u_dc_nom">
+<span class="sig-name descname"><span class="pre">u_dc_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">540</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.u_dc_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.w_nom">
+<span class="sig-name descname"><span class="pre">w_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">664.7610054996002</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.w_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vector_syrm_7kW.CtrlParameters.w_o">
+<span class="sig-name descname"><span class="pre">w_o</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">502.6548245743669</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.w_o" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-config.ctrl_vhz_im_2kW">
+<span id="config-ctrl-vhz-im-2kw-module"></span><h2>config.ctrl_vhz_im_2kW module<a class="headerlink" href="#module-config.ctrl_vhz_im_2kW" title="Permalink to this headline"></a></h2>
+<p>This script configures V/Hz control for an induction motor. The default values
+correspond to a 2.2-kW induction motor.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vhz_im_2kW.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">314.1592653589793</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7.0710678118654755</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">326.5986323710904</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0395957349782348</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3464.1016151377544</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">46.18802153517006</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.14702103877914455</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">22.05315581687168</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains the base values computed from the rated values.
+These are used for plotting the results.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.14702103877914455</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.L" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.P">
+<span class="sig-name descname"><span class="pre">P</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3464.1016151377544</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">46.18802153517006</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.Z" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.i">
+<span class="sig-name descname"><span class="pre">i</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7.0710678118654755</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.i" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.psi">
+<span class="sig-name descname"><span class="pre">psi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0395957349782348</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.psi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.tau">
+<span class="sig-name descname"><span class="pre">tau</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">22.05315581687168</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.tau" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">326.5986323710904</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.BaseValues.w">
+<span class="sig-name descname"><span class="pre">w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">314.1592653589793</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.BaseValues.w" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vhz_im_2kW.</span></span><span class="sig-name descname"><span class="pre">CtrlParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0395957349782348</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">753.9822368615503</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_sgm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.224</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_rb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">109.37499999999997</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.937499999999998</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.937499999999998</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains parameters for the V/Hz control system.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.L_M">
+<span class="sig-name descname"><span class="pre">L_M</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.224</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.L_M" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.L_sgm">
+<span class="sig-name descname"><span class="pre">L_sgm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.021</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.L_sgm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.R_R">
+<span class="sig-name descname"><span class="pre">R_R</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.1</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.R_R" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.R_s">
+<span class="sig-name descname"><span class="pre">R_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.7</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.R_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.T_s">
+<span class="sig-name descname"><span class="pre">T_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.00025</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.T_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.alpha_f">
+<span class="sig-name descname"><span class="pre">alpha_f</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10.937499999999998</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.alpha_f" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.alpha_i">
+<span class="sig-name descname"><span class="pre">alpha_i</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10.937499999999998</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.alpha_i" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.k_u">
+<span class="sig-name descname"><span class="pre">k_u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.k_u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.k_w">
+<span class="sig-name descname"><span class="pre">k_w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.k_w" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.psi_s_nom">
+<span class="sig-name descname"><span class="pre">psi_s_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0395957349782348</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.psi_s_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.rate_limit">
+<span class="sig-name descname"><span class="pre">rate_limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">753.9822368615503</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.rate_limit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.sensorless">
+<span class="sig-name descname"><span class="pre">sensorless</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.sensorless" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_2kW.CtrlParameters.w_rb">
+<span class="sig-name descname"><span class="pre">w_rb</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">109.37499999999997</span></em><a class="headerlink" href="#config.ctrl_vhz_im_2kW.CtrlParameters.w_rb" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-config.ctrl_vhz_im_45kW">
+<span id="config-ctrl-vhz-im-45kw-module"></span><h2>config.ctrl_vhz_im_45kW module<a class="headerlink" href="#module-config.ctrl_vhz_im_45kW" title="Permalink to this headline"></a></h2>
+<p>This script configures V/Hz control for an induction motor. The default values
+correspond to a 45-kW induction motor.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vhz_im_45kW.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">314.1592653589793</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">114.5512985522207</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">326.5986323710904</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0395957349782348</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">56118.446165231624</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.8511124404425963</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.009075372764144725</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">357.26112423332125</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains the base values computed from the rated values.
+These are used for plotting the results.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.009075372764144725</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.L" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.P">
+<span class="sig-name descname"><span class="pre">P</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">56118.446165231624</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.8511124404425963</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.Z" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.i">
+<span class="sig-name descname"><span class="pre">i</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">114.5512985522207</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.i" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.psi">
+<span class="sig-name descname"><span class="pre">psi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0395957349782348</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.psi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.tau">
+<span class="sig-name descname"><span class="pre">tau</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">357.26112423332125</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.tau" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.u">
+<span class="sig-name descname"><span class="pre">u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">326.5986323710904</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.BaseValues.w">
+<span class="sig-name descname"><span class="pre">w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">314.1592653589793</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.BaseValues.w" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">config.ctrl_vhz_im_45kW.</span></span><span class="sig-name descname"><span class="pre">CtrlParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_nom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0395957349782348</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">753.9822368615503</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.057</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.029</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_sgm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0022</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0245</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_rb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">14.365491651205938</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.436549165120594</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.436549165120594</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This data class contains parameters for the V/Hz control system.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.L_M">
+<span class="sig-name descname"><span class="pre">L_M</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0245</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.L_M" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.L_sgm">
+<span class="sig-name descname"><span class="pre">L_sgm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0022</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.L_sgm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.R_R">
+<span class="sig-name descname"><span class="pre">R_R</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.029</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.R_R" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.R_s">
+<span class="sig-name descname"><span class="pre">R_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.057</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.R_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.T_s">
+<span class="sig-name descname"><span class="pre">T_s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0005</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.T_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.alpha_f">
+<span class="sig-name descname"><span class="pre">alpha_f</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.436549165120594</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.alpha_f" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.alpha_i">
+<span class="sig-name descname"><span class="pre">alpha_i</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.436549165120594</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.alpha_i" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.k_u">
+<span class="sig-name descname"><span class="pre">k_u</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.4</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.k_u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.k_w">
+<span class="sig-name descname"><span class="pre">k_w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.0</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.k_w" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.psi_s_nom">
+<span class="sig-name descname"><span class="pre">psi_s_nom</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0395957349782348</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.psi_s_nom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.rate_limit">
+<span class="sig-name descname"><span class="pre">rate_limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">753.9822368615503</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.rate_limit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.sensorless">
+<span class="sig-name descname"><span class="pre">sensorless</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.sensorless" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="config.ctrl_vhz_im_45kW.CtrlParameters.w_rb">
+<span class="sig-name descname"><span class="pre">w_rb</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14.365491651205938</span></em><a class="headerlink" href="#config.ctrl_vhz_im_45kW.CtrlParameters.w_rb" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-config.mdl_im_2kW">
+<span id="config-mdl-im-2kw-module"></span><h2>config.mdl_im_2kW module<a class="headerlink" href="#module-config.mdl_im_2kW" title="Permalink to this headline"></a></h2>
+<p>This file contains the configuration data for the 2.2-kW induction motor drive.</p>
+</section>
+<section id="module-config.mdl_im_45kW">
+<span id="config-mdl-im-45kw-module"></span><h2>config.mdl_im_45kW module<a class="headerlink" href="#module-config.mdl_im_45kW" title="Permalink to this headline"></a></h2>
+<p>This file contains the configuration data for the 45-kW induction motor drive.</p>
+</section>
+<section id="module-config.mdl_pmsm_2kW">
+<span id="config-mdl-pmsm-2kw-module"></span><h2>config.mdl_pmsm_2kW module<a class="headerlink" href="#module-config.mdl_pmsm_2kW" title="Permalink to this headline"></a></h2>
+<p>This file contains the configuration data for the 2.2-kW permanent-magnet
+synchronous motor drive.</p>
+</section>
+<section id="module-config.mdl_syrm_7kW">
+<span id="config-mdl-syrm-7kw-module"></span><h2>config.mdl_syrm_7kW module<a class="headerlink" href="#module-config.mdl_syrm_7kW" title="Permalink to this headline"></a></h2>
+<p>This file contains the configuration data for the 6.7-kW synchronous reluctance
+motor drive.</p>
+</section>
+<section id="module-config">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-config" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Motulator_Aalto" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="control.html" class="btn btn-neutral float-right" title="control package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, mhinkkan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
