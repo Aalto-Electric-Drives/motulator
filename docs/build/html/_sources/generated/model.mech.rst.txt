@@ -1,0 +1,29 @@
+model.mech
+==========
+
+.. automodule:: model.mech
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Mechanics
+   
+   
+
+   
+   
+   
+
+
+

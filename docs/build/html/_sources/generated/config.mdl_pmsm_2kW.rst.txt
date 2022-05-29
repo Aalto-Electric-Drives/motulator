@@ -1,0 +1,23 @@
+config.mdl\_pmsm\_2kW
+=====================
+
+.. automodule:: config.mdl_pmsm_2kW
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

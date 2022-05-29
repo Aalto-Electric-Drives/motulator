@@ -1,0 +1,30 @@
+config.ctrl\_vector\_im\_45kW
+=============================
+
+.. automodule:: config.ctrl_vector_im_45kW
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseValues
+      CtrlParameters
+   
+   
+
+   
+   
+   
+
+
+

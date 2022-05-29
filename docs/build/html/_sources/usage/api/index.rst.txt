@@ -1,0 +1,16 @@
+API Reference
+=============
+
+This page contains auto-generated API reference documentation [#f1]_.
+
+.. toctree::
+   :titlesonly:
+
+   /usage/api/sim/index
+   /usage/api/helpers/index
+   /usage/api/control/index
+   /usage/api/conf/index
+   /usage/api/model/index
+   /usage/api/config/index
+
+.. [#f1] Created with `sphinx-autoapi <https://github.com/readthedocs/sphinx-autoapi>`_

@@ -1,0 +1,32 @@
+control.sm
+==========
+
+.. automodule:: control.sm
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   control.sm.torque
+   control.sm.vector
+

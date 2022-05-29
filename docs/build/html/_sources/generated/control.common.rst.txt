@@ -1,0 +1,38 @@
+control.common
+==============
+
+.. automodule:: control.common
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      duty_ratios
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Datalogger
+      PWM
+      RateLimiter
+      SpeedCtrl
+   
+   
+
+   
+   
+   
+
+
+

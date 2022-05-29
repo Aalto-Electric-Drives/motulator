@@ -1,0 +1,30 @@
+config.ctrl\_vhz\_im\_2kW
+=========================
+
+.. automodule:: config.ctrl_vhz_im_2kW
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseValues
+      CtrlParameters
+   
+   
+
+   
+   
+   
+
+
+

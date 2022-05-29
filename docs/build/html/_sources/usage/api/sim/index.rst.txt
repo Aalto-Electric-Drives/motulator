@@ -1,0 +1,52 @@
+:py:mod:`sim`
+=============
+
+.. py:module:: sim
+
+.. autoapi-nested-parse::
+
+   (c) Aalto Electric Drives (contact: marko.hinkkanen@aalto.fi)
+
+   motulator: Open-Source Simulator for Motor Drives and Power Converters
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   sim.sensorless_ctrl
+   sim.sensored_ctrl
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   sim.start_time
+
+
+.. py:function:: sensorless_ctrl()
+
+   Run the digital controller and solve the continuous-time system model.
+
+
+
+.. py:function:: sensored_ctrl()
+
+   Run the digital controller and solve the continuous-time system model.
+
+
+
+.. py:data:: start_time
+   
+
+   
+

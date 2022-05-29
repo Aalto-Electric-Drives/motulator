@@ -1,0 +1,156 @@
+:py:mod:`model.sm_drive`
+========================
+
+.. py:module:: model.sm_drive
+
+.. autoapi-nested-parse::
+
+   This module includes continuous-time models for a permmanent-magnet
+   synchronous motor drive. The space-vector model is implemented in rotor
+   coordinates.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   model.sm_drive.Drive
+   model.sm_drive.Motor
+   model.sm_drive.Datalogger
+
+
+
+
+.. py:class:: Drive(motor, mech, converter, delay, pwm, datalog)
+
+   This class interconnects the subsystems of a PMSM drive and provides an
+   interface to the solver.
+
+
+   Instantiate the classes.
+
+
+   .. py:method:: get_initial_values(self)
+
+      :returns: **x0** -- Initial values of the state variables.
+      :rtype: complex list, length 2
+
+
+   .. py:method:: set_initial_values(self, t0, x0)
+
+      :param x0: Initial values of the state variables.
+      :type x0: complex ndarray
+
+
+   .. py:method:: f(self, t, x)
+
+      Compute the complete state derivative list for the solver.
+
+      :param t: Time.
+      :type t: float
+      :param x: State vector.
+      :type x: complex ndarray
+
+      :returns: State derivatives.
+      :rtype: complex list
+
+
+
+.. py:class:: Motor(mech, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, p=3)
+
+   This class represents a permanent-magnet synchronous motor. The
+   peak-valued complex space vectors are used.
+
+
+   The default values correspond to the 2.2-kW PMSM.
+
+   :param mech: Mechanics, needed for computing the measured phase currents.
+   :type mech: object
+   :param R_s: Stator resistance. The default is 3.6.
+   :type R_s: float, optional
+   :param L_d: d-axis inductance. The default is .036.
+   :type L_d: float, optional
+   :param L_q: q-axis inductance. The default is .051.
+   :type L_q: float, optional
+   :param psi_f: PM-flux linkage. The default is .545.
+   :type psi_f: float, optional
+   :param p: Number of pole pairs. The default is 3.
+   :type p: int, optional
+
+   .. py:method:: current(self, psi_s)
+
+      Compute the stator current.
+
+      :param psi_s: Stator flux linkage in rotor coordinates.
+      :type psi_s: complex
+
+      :returns: **i_s** -- Stator current in rotor coordinates.
+      :rtype: complex
+
+
+   .. py:method:: torque(self, psi_s, i_s)
+
+      Compute the electromagnetic torque.
+
+      :param psi_s: Stator flux linkage.
+      :type psi_s: complex
+      :param i_s: Stator current.
+      :type i_s: complex
+
+      :returns: **tau_M** -- Electromagnetic torque.
+      :rtype: float
+
+
+   .. py:method:: f(self, psi_s, i_s, u_s, w_M)
+
+      Compute the state derivative.
+
+      :param psi_s: Stator flux linkage in rotor coordinates.
+      :type psi_s: complex
+      :param u_s: Stator voltage in rotor coordinates.
+      :type u_s: complex
+      :param w_M: Rotor speed (in mechanical rad/s).
+      :type w_M: float
+
+      :returns: **dpsi_s** -- Time derivative of the stator flux linkage.
+      :rtype: complex
+
+
+   .. py:method:: meas_currents(self)
+
+      Return the phase currents at the end of the sampling period.
+
+      :returns: **i_s_abc** -- Phase currents.
+      :rtype: 3-tuple of floats
+
+
+
+.. py:class:: Datalogger
+
+   This class contains a datalogger. Here, stator coordinates are marked
+   with additional s, e.g. i_ss is the stator current in stator coordinates.
+
+
+   Initialize the attributes.
+
+
+   .. py:method:: save(self, sol)
+
+      Save the solution.
+
+      :param sol: Solution from the solver.
+      :type sol: bunch object
+
+
+   .. py:method:: post_process(self, mdl)
+
+      Transform the lists to the ndarray format and post-process them.
+
+
+
+

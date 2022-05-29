@@ -1,0 +1,30 @@
+config.ctrl\_vector\_pmsm\_2kW
+==============================
+
+.. automodule:: config.ctrl_vector_pmsm_2kW
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseValues
+      CtrlParameters
+   
+   
+
+   
+   
+   
+
+
+

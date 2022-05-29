@@ -1,0 +1,16 @@
+:py:mod:`control.sm`
+====================
+
+.. py:module:: control.sm
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   torque/index.rst
+   vector/index.rst
+
+

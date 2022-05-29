@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>config.ctrl_vector_syrm_7kW &#8212; motulator 0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-config.ctrl_vector_syrm_7kW">
+<span id="config-ctrl-vector-syrm-7kw"></span><h1><a class="reference internal" href="#module-config.ctrl_vector_syrm_7kW" title="config.ctrl_vector_syrm_7kW"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config.ctrl_vector_syrm_7kW</span></code></a><a class="headerlink" href="#module-config.ctrl_vector_syrm_7kW" title="Permalink to this headline">¶</a></h1>
+<p>This script configures sensorless vector control for a 6.7-kW synchronous
+reluctance motor.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.BaseValues" title="config.ctrl_vector_syrm_7kW.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
+<td><p>This data class contains the base values computed from the rated values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.CtrlParameters" title="config.ctrl_vector_syrm_7kW.CtrlParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CtrlParameters</span></code></a></p></td>
+<td><p>This data class contains parameters for the control system of a 6.7-kW</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.base" title="config.ctrl_vector_syrm_7kW.base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.pars" title="config.ctrl_vector_syrm_7kW.pars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pars</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.tq" title="config.ctrl_vector_syrm_7kW.tq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tq</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.mtpa" title="config.ctrl_vector_syrm_7kW.mtpa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mtpa</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.lims" title="config.ctrl_vector_syrm_7kW.lims"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lims</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.i_sd_mtpa" title="config.ctrl_vector_syrm_7kW.i_sd_mtpa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">i_sd_mtpa</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.tau_M_lim" title="config.ctrl_vector_syrm_7kW.tau_M_lim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tau_M_lim</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.i_sd_lim" title="config.ctrl_vector_syrm_7kW.i_sd_lim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">i_sd_lim</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.speed_ctrl" title="config.ctrl_vector_syrm_7kW.speed_ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">speed_ctrl</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.current_ref" title="config.ctrl_vector_syrm_7kW.current_ref"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_ref</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.current_ctrl" title="config.ctrl_vector_syrm_7kW.current_ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_ctrl</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id0" title="config.ctrl_vector_syrm_7kW.observer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observer</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="config.ctrl_vector_syrm_7kW.observer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observer</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.ctrl_vector_syrm_7kW.ctrl" title="config.ctrl_vector_syrm_7kW.ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctrl</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">BaseValues</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>This data class contains the base values computed from the rated values.
+These are used for plotting the results.</p>
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.w">
+<code class="sig-name descname"><span class="pre">w</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.w" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.i">
+<code class="sig-name descname"><span class="pre">i</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.u">
+<code class="sig-name descname"><span class="pre">u</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.u" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.p">
+<code class="sig-name descname"><span class="pre">p</span></code><em class="property"> <span class="pre">:int</span> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.psi">
+<code class="sig-name descname"><span class="pre">psi</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.psi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.P">
+<code class="sig-name descname"><span class="pre">P</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.P" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.Z">
+<code class="sig-name descname"><span class="pre">Z</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.L">
+<code class="sig-name descname"><span class="pre">L</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.L" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.BaseValues.tau">
+<code class="sig-name descname"><span class="pre">tau</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.BaseValues.tau" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">CtrlParameters</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>This data class contains parameters for the control system of a 6.7-kW
+synchronous relutance motor.</p>
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.sensorless">
+<code class="sig-name descname"><span class="pre">sensorless</span></code><em class="property"> <span class="pre">:bool</span> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.sensorless" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.T_s">
+<code class="sig-name descname"><span class="pre">T_s</span></code><em class="property"> <span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.00025</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.T_s" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_c">
+<code class="sig-name descname"><span class="pre">alpha_c</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_fw">
+<code class="sig-name descname"><span class="pre">alpha_fw</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_s">
+<code class="sig-name descname"><span class="pre">alpha_s</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.alpha_s" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.tau_M_max">
+<code class="sig-name descname"><span class="pre">tau_M_max</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.tau_M_max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.i_s_max">
+<code class="sig-name descname"><span class="pre">i_s_max</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.i_s_max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_min">
+<code class="sig-name descname"><span class="pre">i_sd_min</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.k_u">
+<code class="sig-name descname"><span class="pre">k_u</span></code><em class="property"> <span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.95</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.k_u" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.u_dc_nom">
+<code class="sig-name descname"><span class="pre">u_dc_nom</span></code><em class="property"> <span class="pre">:float</span> <span class="pre">=</span> <span class="pre">540</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.u_dc_nom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.w_nom">
+<code class="sig-name descname"><span class="pre">w_nom</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.w_nom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.R_s">
+<code class="sig-name descname"><span class="pre">R_s</span></code><em class="property"> <span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.54</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.R_s" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.L_d">
+<code class="sig-name descname"><span class="pre">L_d</span></code><em class="property"> <span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.0415</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.L_d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.L_q">
+<code class="sig-name descname"><span class="pre">L_q</span></code><em class="property"> <span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.0062</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.L_q" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.psi_f">
+<code class="sig-name descname"><span class="pre">psi_f</span></code><em class="property"> <span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.psi_f" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.p">
+<code class="sig-name descname"><span class="pre">p</span></code><em class="property"> <span class="pre">:int</span> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.J">
+<code class="sig-name descname"><span class="pre">J</span></code><em class="property"> <span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.015</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.J" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.w_o">
+<code class="sig-name descname"><span class="pre">w_o</span></code><em class="property"> <span class="pre">:float</span></em><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.w_o" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_mtpa">
+<code class="sig-name descname"><span class="pre">i_sd_mtpa</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_mtpa" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_lim">
+<code class="sig-name descname"><span class="pre">i_sd_lim</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.i_sd_lim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="config.ctrl_vector_syrm_7kW.CtrlParameters.tau_M_lim">
+<code class="sig-name descname"><span class="pre">tau_M_lim</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.CtrlParameters.tau_M_lim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.base">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">base</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.base" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.pars">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">pars</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.pars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.tq">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">tq</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.tq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.mtpa">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">mtpa</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.mtpa" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.lims">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">lims</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.lims" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.i_sd_mtpa">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">i_sd_mtpa</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.i_sd_mtpa" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.tau_M_lim">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">tau_M_lim</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.tau_M_lim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.i_sd_lim">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">i_sd_lim</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.i_sd_lim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.speed_ctrl">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">speed_ctrl</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.speed_ctrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.current_ref">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">current_ref</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.current_ref" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.current_ctrl">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">current_ctrl</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.current_ctrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.observer">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">observer</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.observer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="id0">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">observer</span></code><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="config.ctrl_vector_syrm_7kW.ctrl">
+<code class="sig-prename descclassname"><span class="pre">config.ctrl_vector_syrm_7kW.</span></code><code class="sig-name descname"><span class="pre">ctrl</span></code><a class="headerlink" href="#config.ctrl_vector_syrm_7kW.ctrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">motulator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Aalto Electric Drives.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../../_sources/usage/autoapi/config/ctrl_vector_syrm_7kW/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

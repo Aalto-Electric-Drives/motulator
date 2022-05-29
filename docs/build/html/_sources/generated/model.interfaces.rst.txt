@@ -1,0 +1,36 @@
+model.interfaces
+================
+
+.. automodule:: model.interfaces
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      solve
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Delay
+      PWM
+   
+   
+
+   
+   
+   
+
+
+
