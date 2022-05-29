@@ -1,0 +1,61 @@
+:py:mod:`control.im.vhz`
+========================
+
+.. py:module:: control.im.vhz
+
+.. autoapi-nested-parse::
+
+   This module includes V/Hz control for induction motor drives. The method
+   is similar to the paper "On the stability of volts-per-hertz control for
+   induction motors":
+
+       https://doi.org/10.1109/JESTPE.2021.3060583
+
+   Open-loop V/Hz control can be obtained as a special case by choosing:
+
+       R_s, R_R = 0, 0
+       k_u, k_w = 0, 0
+
+   .. rubric:: Notes
+
+   The low-pass-filtered values are marked with ref at the end of the variable
+   name. These slowly varying quasi-steady-state quantities can be seen to
+   represent the operating point.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   control.im.vhz.VHzCtrl
+
+
+
+
+.. py:class:: VHzCtrl(pars)
+
+   V/Hz control algorithm with the stator current feedback.
+
+
+   Instantiate the classes and get the parameters.
+
+
+   .. py:method:: stator_freq(self, w_s_ref, i_s)
+
+      Computes the dynamic stator frequency reference used in
+      the coordinate transformations.
+
+
+
+   .. py:method:: voltage_reference(self, w_s, i_s)
+
+      Compute the stator voltage reference in synchronous coordinates.
+
+
+
+

@@ -1,0 +1,25 @@
+:py:mod:`control`
+=================
+
+.. py:module:: control
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   im/index.rst
+   sm/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   common/index.rst
+
+
