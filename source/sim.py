@@ -1,8 +1,9 @@
 # pylint: disable=C0103
-'''
-(c) Aalto Electric Drives (contact: marko.hinkkanen@aalto.fi)
+# (c) Aalto Electric Drives (contact: marko.hinkkanen@aalto.fi)
+# motulator: Open-Source Simulator for Motor Drives and Power Converters
 
-motulator: Open-Source Simulator for Motor Drives and Power Converters
+'''
+This file contains the main program.
 
 '''
 # %% Imports
@@ -63,8 +64,11 @@ def sensored_ctrl():
 
 
 # %% Main program
-if __name__ == '__main__':
+def main():
+    """
+    Main program.
 
+    """
     # Start computing the execution time
     start_time = time()
 
@@ -81,3 +85,8 @@ if __name__ == '__main__':
     mdl.datalog.post_process(mdl)
     ctrl.datalog.post_process()
     plot(mdl.datalog.data, ctrl.datalog.data, base)
+
+
+# %%
+if __name__ == '__main__':
+    main()
