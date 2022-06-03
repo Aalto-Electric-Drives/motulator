@@ -103,24 +103,22 @@ class Simulation:
         self.mdl.datalog.post_process(self.mdl)
         self.ctrl.datalog.post_process()
 
+    def print_profiles_config(self):
+        with np.printoptions(precision=1, suppress=True):
+            print('Profiles'
+                  '\n--------',
+                  '\nSpeed reference:'
+                  '\n    {}'.format(self.mdl.speed_ref),
+                  '\nExternal load torque:',
+                  '\n    {}'.format(self.mdl.mech.tau_L_ext))
+
     def print_control_config(self):
         # %% Print the control system data, speed reference and load reference
-        with np.printoptions(precision=1, suppress=True):
-            print('\nControl: ',
-                  self.ctrl,
-                  '\nProfiles\n',
-                  '    {}\n'.format(self.mdl.speed_ref),
-                  'External load torque:\n',
-                  '    {}'.format(self.mdl.mech.tau_L_ext))
+        print(self.ctrl)
 
     def print_model_config(self):
-        # %% Print the system data
-        print('\nSystem model:')
-        print(self.mdl.motor)
-        print(self.mdl.mech)
-        print('PWM model:\n    ', self.mdl.pwm)
-        print(self.mdl.converter)
-        print(self.mdl.delay)
+        # %% Print the induction motor model data
+        print(self.mdl)
 
 
 # %%
@@ -164,6 +162,7 @@ class SimEnv:
 
     def print_simulation_configs(self):
         for idx, simulation in enumerate(self.simulations):
-            print('\nSimulation {}\n-----------'.format(str(idx)))
+            print('\nSimulation {}\n-----------'.format(str(idx+1)))
             simulation.print_model_config()
             simulation.print_control_config()
+            simulation.print_profiles_config()

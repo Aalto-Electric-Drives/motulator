@@ -58,4 +58,3 @@ else:
     converter = FrequencyConverter(**converter_data)
     datalog = DataloggerExtended()
     mdl = DriveWithDiodeBridge(motor, mech, converter, delay, pwm, datalog)
-print(mdl)

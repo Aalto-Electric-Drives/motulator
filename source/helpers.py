@@ -174,15 +174,6 @@ def ref_ramp(mdl, w_max=2*np.pi*50, tau_max=14.6, t_max=4):
     # Stop time of the simulation
     mdl.t_stop = mdl.speed_ref.times[-1]
 
-    # Print the profiles
-    # np.set_printoptions(precision=1, suppress=True)
-    # print('Profiles')
-    # print('--------')
-    # print('Speed reference:')
-    # print('    {}'.format(mdl.speed_ref))
-    # print('External load torque:')
-    # print('    {}\n'.format(mdl.mech.tau_L_ext))
-
 
 # %%
 def ref_step(mdl, w_max=.8*2*np.pi*50, tau_max=14.6, t_max=1.5):
@@ -208,14 +199,6 @@ def ref_step(mdl, w_max=.8*2*np.pi*50, tau_max=14.6, t_max=1.5):
     mdl.mech.tau_L_ext = Step(2./3.*t_max, tau_max)
     # Stop time of the simulation
     mdl.t_stop = t_max
-
-    # Print the profiles
-    print('Profiles')
-    print('--------')
-    print('Speed reference:')
-    print('    {}'.format(mdl.speed_ref))
-    print('External load torque:')
-    print('    {}'.format(mdl.mech.tau_L_ext))
 
 
 # %%
