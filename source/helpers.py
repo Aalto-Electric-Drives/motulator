@@ -246,16 +246,14 @@ def plot(mdl, ctrl, base):
 
     ax1.step(ctrl.t, ctrl.w_m_ref/base.w, '--', where='post')
     ax1.plot(mdl.t, mdl.w_m/base.w)
-    if motor_type == 'sm':
+    try:
         ax1.step(ctrl.t, ctrl.w_m/base.w, where='post')
-        ax1.legend([r'$\omega_\mathrm{m,ref}$',
-                    r'$\omega_\mathrm{m}$',
-                    r'$\hat \omega_\mathrm{m}$'])
-    else:
-        ax1.step(ctrl.t, ctrl.w_s/base.w, where='post')
-        ax1.legend([r'$\omega_\mathrm{m,ref}$',
-                    r'$\omega_\mathrm{m}$',
-                    r'$\hat \omega_\mathrm{m}$'])
+    except AttributeError:
+        pass
+    ax1.legend([r'$\omega_\mathrm{m,ref}$',
+                r'$\omega_\mathrm{m}$',
+                r'$\hat \omega_\mathrm{m}$'])
+    # ax1.step(ctrl.t, ctrl.w_s/base.w, where='post')  # Stator frequency
     ax1.set_xlim(t_range)
     ax1.set_xticklabels([])
     ax1.set_ylabel('Speed (p.u.)')
@@ -299,10 +297,10 @@ def plot(mdl, ctrl, base):
         ax5.plot(mdl.t, np.abs(mdl.psi_Rs)/base.psi)
         try:
             ax5.plot(ctrl.t, np.abs(ctrl.psi_R)/base.psi)
-            ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$',
-                        r'$\hat \psi_\mathrm{R}$'])
         except AttributeError:
-            ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$'])
+            pass
+        ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$',
+                    r'$\hat \psi_\mathrm{R}$'])
     ax5.set_xlim(t_range)
     ax5.set_ylabel('Flux (p.u.)')
     ax5.set_xlabel('Time (s)')
