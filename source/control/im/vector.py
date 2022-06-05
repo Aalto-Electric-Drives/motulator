@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module includes vector control methods for induction motor drives.
+This module contains vector control methods for an induction motor drive.
 
 """
 # %%
@@ -13,16 +13,14 @@ from control.common import PWM, Datalogger
 # %%
 class VectorCtrl:
     """
-    This class interconnects the subsystems of an induction motor control
-    system and provides the interface to the solver.
+    Interconnect the subsystems of the control method.
+
+    This class interconnects the subsystems of the control system and
+    provides the interface to the solver.
 
     """
 
     def __init__(self, pars, speed_ctrl, current_ref, current_ctrl, observer):
-        """
-        Instantiate the classes.
-
-        """
         self.sensorless = pars.sensorless
         self.p = pars.p
         self.speed_ctrl = speed_ctrl
@@ -92,7 +90,7 @@ class VectorCtrl:
         return d_abc_ref, self.pwm.T_s
 
     def __str__(self):
-        desc = (('Vector control for induction motors\n'
+        desc = (('Vector control for an induction motor\n'
                  '-----------------------------------\n'
                  'Sensorless:\n'
                  '    {}\n'
@@ -107,13 +105,21 @@ class VectorCtrl:
 # %%
 class CurrentRef:
     """
-    This class contains a method for current reference computation with
-    field weakening based on the voltage reference. The field-weakening method
-    and its tuning corresponds roughly to the paper "Braking scheme for
-    vector-controlled induction motor drives equipped with diode rectifier
-    without braking resistor":
+    Current reference calculation.
 
-        https://doi.org/10.1109/TIA.2006.880852
+    This current reference calculation method includes field-weakenting
+    operation based on the unlimited voltage reference feedback. The breakdown
+    torque and current limits are taken into account.
+
+    Notes
+    -----
+    The field-weakening method and its tuning corresponds roughly to [1]_.
+
+    References
+    ----------
+    .. [1] Hinkkanen, Luomi, "Braking scheme for vector-controlled induction
+       motor drives equipped with diode rectifier without braking resistor,"
+       IEEE Trans. Ind. Appl., 2006, https://doi.org/10.1109/TIA.2006.880852
 
     """
 
@@ -204,7 +210,7 @@ class CurrentRef:
             self.i_sd_ref = -self.i_s_max
 
     def __str__(self):
-        desc = (('Current reference computation and field weakening:\n'
+        desc = (('Current reference calculation:\n'
                  '    i_s_max={:.1f}  i_sd_nom={:.1f}\n')
                 .format(self.i_s_max, self.i_sd_nom))
         return desc
@@ -213,15 +219,23 @@ class CurrentRef:
 # %%
 class CurrentCtrl:
     """
-    A current controller corresponding to the paper "Flux-linkage-based current
-    control of saturated synchronous motors":
+    2DOF PI current controller.
 
-        https://doi.org/10.1109/TIA.2019.291925
+    This 2DOF PI current controller corresponds to [2]_. The continuous-time
+    complex-vector design corresponding to (13) is used here. The rotor flux
+    linkage is considered as a quasi-constant disturbance. This design could
+    be equivalently presented as a 2DOF PI controller.
 
-    The continuous-time complex-vector design corresponding to (13) is used
-    here. This design could be equivalently presented as a 2DOF PI controller.
-    For better performance at high speed with low sampling frequencies, the
-    discrete-time design in (18) is recommended.
+    Notes
+    -----
+    This implementation does not take the magnetic saturation into account.
+
+    References
+    ----------
+    .. [2] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+       https://doi.org/10.1109/TIA.2019.2919258
+
 
     """
 
@@ -295,16 +309,25 @@ class CurrentCtrl:
 # %%
 class SensorlessObserver:
     """
-    Sensorless reduced-order observer corresponding to the paper
-    "Reduced-order flux observers with stator-resistance adaptation for
-    speed-sensorless induction motor drives":
+    Sensorless reduced-order observer.
 
-        https://doi.org/10.1109/TPEL.2009.2039650
+    This sensorless reduced-order flux observer corresponds to [3]_. The
+    observer gain decouples the electrical and mechanical dynamics and allows
+    placing the poles of the corresponding linearized estimation error
+    dynamics. This implementation operates in estimated rotor flux coordinates.
 
-    This implementation corresponds to (26)-(30) with the fixed selection
-    c = w_s**2 in (17). This selection allows to avoid the algebraic loop
-    in (26b). The closed-loop poles, cf. (40), can still be affected via the
-    choice of the coefficient b > 0.
+    Notes
+    -----
+    This implementation corresponds to (26)-(30) in [3]_ with the fixed
+    selection c = w_s**2 in (17). The closed-loop poles, cf. (40), can still be
+    affected via the choice of the coefficient b > 0.
+
+    References
+    ----------
+    .. [3] Hinkkanen, Harnefors, Luomi, "Reduced-order flux observers with
+       stator-resistance adaptation for speed-sensorless induction motor
+       drives," IEEE Trans. Power Electron., 2010,
+       https://doi.org/10.1109/TPEL.2009.2039650
 
     """
 
@@ -409,8 +432,9 @@ class SensorlessObserver:
 # %%
 class CurrentModelEstimator:
     """
-    This class contains a simple sensored flux estimator, commonly known as
-    the current model.
+    Current model flux estimator.
+
+    This simple flux estimator requires speed measurement.
 
     """
 

@@ -9,7 +9,9 @@ from helpers import Step
 # %%
 class Mechanics:
     """
-    This class represents the mechanical subsystem.
+    Mechanical subsystem.
+
+    This models an equation of motion for stiff mechanics.
 
     """
 
@@ -33,14 +35,14 @@ class Mechanics:
 
     def f(self, t, w_M, tau_M):
         """
-        Computes the state derivative.
+        Compute the state derivative.
 
         Parameters
         ----------
         t : float
             Time.
         w_M : float
-            Rotor speed (in mechanical rad/s).
+            Rotor angular speed (in mechanical rad/s).
         tau_M : float
             Electromagnetic torque.
 
@@ -56,11 +58,14 @@ class Mechanics:
 
     def meas_speed(self):
         """
+        Measure the rotor speed.
+
+        This returns the rotor speed at the end of the sampling period.
+
         Returns
         -------
         w_M0 : float
-            Rotor speed (in mechanical rad/s) at the end of the integration
-            period.
+            Rotor angular speed (in mechanical rad/s).
 
         """
         # The quantization noise of an incremental encoder could be modeled
@@ -69,11 +74,14 @@ class Mechanics:
 
     def meas_position(self):
         """
+        Measure the rotor angle.
+
+        This returns the rotor angle at the end of the sampling period.
+
         Returns
         -------
         theta_M0 : float
-            Rotor angle (in mechanical rad) at the end of the integration
-            period.
+            Rotor angle (in mechanical rad).
 
         """
         return self.theta_M0

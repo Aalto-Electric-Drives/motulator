@@ -71,12 +71,25 @@ def complex2abc(u):
 # %%
 class Sequence:
     """
-    This class represents a sequence generator. The time array must be
-    increasing. The output values are interpolated between the data points.
+    Sequence generator.
+
+    This represents a sequence generator. The time array must be increasing.
+    The output values are interpolated between the data points.
 
     """
 
     def __init__(self, times, values, periodic=False):
+        """
+        Parameters
+        ----------
+        times : ndarray
+            Time values.
+        values : ndarray
+            Output values.
+        periodic : Boolean, optional
+            Enables periodicity. The default is False.
+
+        """
         self.times = times
         self.values = values
         if periodic is True:
@@ -86,7 +99,7 @@ class Sequence:
 
     def __call__(self, t):
         """
-        Interpolates the output.
+        Interpolate the output.
 
         Parameters
         ----------
@@ -110,7 +123,7 @@ class Sequence:
 # %%
 class Step:
     """
-    This data class represents a step function.
+    Step function.
 
     """
 
@@ -146,13 +159,15 @@ class Step:
 # %%
 def ref_ramp(mdl, w_max=2*np.pi*50, tau_max=14.6, t_max=4):
     """
-    Generate an example ramp profile for the speed reference. The load torque
-    changes stepwise.
+    Generate a ramp reference.
+
+    This generate an example ramp profile for the speed reference. The load
+    torque changes stepwise.
 
     Parameters
     ----------
     mdl : object
-        Model.
+        Drive model.
     w_max : float, optional
         Maximum speed in the profile. The default is 2*pi*50.
     tau_max : float, optional
@@ -187,13 +202,15 @@ def ref_ramp(mdl, w_max=2*np.pi*50, tau_max=14.6, t_max=4):
 # %%
 def ref_step(mdl, w_max=.8*2*np.pi*50, tau_max=14.6, t_max=1.5):
     """
-    Generate an example stepwise profile for the speed reference and load
+    Generate a step reference.
+
+    This generates an example stepwise profile for the speed reference and load
     torque.
 
     Parameters
     ----------
     mdl : object
-        Model.
+        Drive model.
     w_max : float, optional
         Maximum speed in the profile. The default is .8*2*pi*50.
     tau_max : float, optional
@@ -313,7 +330,7 @@ def plot(mdl, ctrl, base):
 # %%
 def plot_im_extra(mdl, ctrl, base):
     """
-    Plots extra waveforms for induction motors.
+    Plot extra waveforms for an induction motor with a diode bridge.
 
     Parameters
     ----------

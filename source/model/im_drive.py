@@ -1,7 +1,9 @@
 # pylint: disable=C0103
 """
-This module includes a continuous-time model for an induction motor drive. The
-space vector models are implemented in stator coordinates.
+This module contains continuous-time models for an induction motor drive.
+
+Peak-valued complex space vectors are used. The space vector models are
+implemented in stator coordinates.
 
 """
 import numpy as np
@@ -12,17 +14,15 @@ from helpers import abc2complex, complex2abc
 # %%
 class Drive:
     """
-    This class interconnects the subsystems of an induction motor drive
-    and provides the interface to the solver. More complicated systems
-    could be simulated using a similar template.
+    Interconnect the subsystems of an indcution motor drive.
+
+    This interconnects the subsystems of an induction motor drive and provides
+    the interface to the solver. More complicated systems could be simulated
+    using a similar template.
 
     """
 
     def __init__(self, motor, mech, converter, delay, pwm, datalog):
-        """
-        Instantiate the classes.
-
-        """
         self.motor = motor
         self.mech = mech
         self.converter = converter
@@ -34,6 +34,8 @@ class Drive:
 
     def get_initial_values(self):
         """
+        Get the initial values.
+
         Returns
         -------
         x0 : complex list, length 4
@@ -46,6 +48,8 @@ class Drive:
 
     def set_initial_values(self, t0, x0):
         """
+        Set the initial values.
+
         Parameters
         ----------
         x0 : complex ndarray
@@ -102,16 +106,22 @@ class Drive:
 # %%
 class Motor:
     """
-    This class represents an induction motor. The inverse-Gamma model and
-    peak-valued complex space vectors are used.
+    Induction motor.
+
+    This models an induction motor using the inverse-Gamma model. The model is
+    implemented in stator coordinates. The default values correspond to a
+    2.2-kW induction motor.
+
+    References
+    ----------
+    Slemon, "Modelling of induction machines for electric drives," IEEE Trans.
+    Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
 
     """
 
     def __init__(self, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, p=2):
         # pylint: disable=R0913
         """
-        The default values correspond to the 2.2-kW induction motor.
-
         Parameters
         ----------
         R_s : float, optional
@@ -132,21 +142,21 @@ class Motor:
 
     def currents(self, psi_ss, psi_Rs):
         """
-        Computes the stator and rotor currents.
+        Compute the stator and rotor currents.
 
         Parameters
         ----------
         psi_ss : complex
-            Stator flux linkage in stator coordinates.
+            Stator flux linkage.
         psi_Rs : complex
-            Rotor flux linkage in stator coordinates.
+            Rotor flux linkage.
 
         Returns
         -------
         i_ss : complex
-            Stator current in stator coordinates.
+            Stator current.
         i_Rs : complex
-            Rotor current in stator coordinates.
+            Rotor current.
 
         """
         i_ss = (psi_ss - psi_Rs)/self.L_sgm
@@ -155,7 +165,7 @@ class Motor:
 
     def torque(self, psi_ss, i_ss):
         """
-        Computes the electromagnetic torque.
+        Compute the electromagnetic torque.
 
         Parameters
         ----------
@@ -177,8 +187,7 @@ class Motor:
         # pylint: disable=R0913
         # To avoid overlapping computations, i_s and i_R are the inputs.
         """
-        Computes the state derivatives. All space vectors are in stator
-        coordinates.
+        Compute the state derivatives.
 
         Parameters
         ----------
@@ -193,7 +202,7 @@ class Motor:
         u_ss : complex
             Stator voltage.
         w_M : float
-            Rotor speed (in mechanical rad/s).
+            Rotor angular speed (in mechanical rad/s).
 
         Returns
         -------
@@ -207,7 +216,7 @@ class Motor:
 
     def meas_currents(self):
         """
-        Returns the phase currents at the end of the sampling period.
+        Measure the phase currents at the end of the sampling period.
 
         Returns
         -------
@@ -231,19 +240,39 @@ class Motor:
 # %%
 class SaturationModel:
     """
-    This data class contains a saturation model based on a simple power
-    function.
+    Magnetic saturation model based on a power function.
+
+    This models magnetic saturation using a power function::
+
+        L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S)
+
+    The default values correspond to the stator inductance of a 2.2-kW
+    induction motor.
+
+    References
+    ----------
+    Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
+    induction motor drives," IEEE Trans. Ind. Appl., 2021,
+    https://doi.org/10.1109/TIA.2012.2190818
 
     """
 
     def __init__(self, L_unsat=.34, beta=.84, S=7):
+        """
+        Parameters
+        ----------
+        L_unsat : float, optional
+            Unsaturatad inductance. The default is .34.
+        beta : float, optional
+            Positive coefficient. The default is .84.
+        S : TYPE, float
+            Positive coefficient. The default is 7.
+
+        """
         self.L_unsat, self.beta, self.S = L_unsat, beta, S
 
     def __call__(self, psi):
         """
-        The default values correspond to the stator inductance of the 2.2-kW
-        induction motor.
-
         Parameters
         ----------
         psi : complex
@@ -268,8 +297,11 @@ class SaturationModel:
 # %%
 class MotorSaturated(Motor):
     """
-    This subclass represents the Gamma model of a saturated induction motor.
-    The Gamma model suits better for modeling the magnetic saturation.
+    Saturated induction motor.
+
+    This models a saturated induction motor using the Gamma model. The Gamma
+    model suits better for modeling the magnetic saturation. The default values
+    correspond to a 2.2-kW induction motor.
 
     """
 
@@ -277,8 +309,6 @@ class MotorSaturated(Motor):
                  R_s=3.7, R_R=2.5, L_sgm=.023, L_M=SaturationModel(), p=2):
         # pylint: disable=R0913
         """
-        The default values correspond to the 2.2-kW induction motor.
-
         Parameters
         ----------
         R_s : float, optional
@@ -297,10 +327,7 @@ class MotorSaturated(Motor):
         super().__init__(R_s=R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, p=p)
 
     def currents(self, psi_ss, psi_Rs):
-        """
-        This method overrides the base class method.
-
-        """
+        # This method overrides the base class method.
         L_M = self.L_M(psi_ss)
         i_Rs = (psi_Rs - psi_ss)/self.L_sgm
         i_ss = psi_ss/L_M - i_Rs
@@ -317,15 +344,11 @@ class MotorSaturated(Motor):
 # %%
 class Datalogger:
     """
-    This class contains a datalogger.
+    Datalogger for an induction motor drive.
 
     """
 
     def __init__(self):
-        """
-        Initialize the attributes.
-
-        """
         self.data = Bunch()
         self.data.t, self.data.q = [], []
         self.data.psi_ss, self.data.psi_Rs = [], []
@@ -352,6 +375,11 @@ class Datalogger:
         """
         Transform the lists to the ndarray format and post-process them.
 
+        Parameters
+        ----------
+        mdl : object
+            Drive object that includes the data.
+
         """
         # From lists to the ndarray
         for key in self.data:
@@ -373,34 +401,28 @@ class Datalogger:
 # %%
 class DriveWithDiodeBridge(Drive):
     """
-    This subclass models an induction motor drive, equipped with a three-phase
-    diode bridge.
+    Induction motor drive equipped with a diode bridge.
+
+    This models an induction motor drive, equipped with a three-phase diode
+    bridge fed from stiff supply voltages. The DC bus has an inductor and
+    a capacitor.
 
     """
 
     def get_initial_values(self):
-        """
-        Extends the base class.
-
-        """
+        # Extends the base class.
         x0 = super().get_initial_values() + [self.converter.u_dc0,
                                              self.converter.i_L0]
         return x0
 
     def set_initial_values(self, t0, x0):
-        """
-        Extends the base class.
-
-        """
+        # Extends the base class.
         super().set_initial_values(t0, x0[0:4])
         self.converter.u_dc0 = x0[4].real
         self.converter.i_L0 = x0[5].real
 
     def f(self, t, x):
-        """
-        Overrides the base class.
-
-        """
+        # Overrides the base class.
         # Unpack the states for better readability
         psi_ss, psi_Rs, w_M, _, u_dc, i_L = x
         # Interconnections: outputs for computing the state derivatives
@@ -417,34 +439,24 @@ class DriveWithDiodeBridge(Drive):
 # %%
 class DataloggerExtended(Datalogger):
     """
-    Extends the default data logger for the model with the DC-bus dynamics.
+    Datalogger for an induction motor drive with a diode bridge.
 
     """
 
     def __init__(self):
-        """
-        Initialize the attributes.
-
-        """
         # pylint: disable=too-many-instance-attributes
         super().__init__()
         self.data.u_dc, self.data.i_L = [], []
         # self.i_dc, self.u_di, self.u_g, self.i_g = 0, 0, 0, 0
 
     def save(self, sol):
-        """
-        Extends the base class.
-
-        """
+        # Extends the base class.
         super().save(sol)
         self.data.u_dc.extend(sol.y[4].real)
         self.data.i_L.extend(sol.y[5].real)
 
     def post_process(self, mdl):
-        """
-        Extends the base class.
-
-        """
+        # Extends the base class.
         super().post_process(mdl)
         # From lists to the ndarray
         self.data.u_dc = np.asarray(self.data.u_dc)
