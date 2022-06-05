@@ -357,11 +357,11 @@ Classes
 
 .. py:class:: SaturationModel(L_unsat=0.34, beta=0.84, S=7)
 
-   Magnetic saturation model based on a power function.
+   Magnetic saturation model.
 
    This models magnetic saturation using a power function::
 
-       L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S)
+       L_sat(psi) = L_unsat/(1 + (beta*abs(psi))**S)
 
    The default values correspond to the stator inductance of a 2.2-kW
    induction motor.
@@ -377,7 +377,7 @@ Classes
    :param beta: Positive coefficient. The default is .84.
    :type beta: float, optional
    :param S: Positive coefficient. The default is 7.
-   :type S: TYPE, float
+   :type S: float, optional
 
 
 
@@ -403,7 +403,7 @@ Classes
       :param psi: Flux linkage. If the value is complex, its magnitude is used.
       :type psi: complex
 
-      :returns: **L_sat** -- Instantatenous saturated value of the inductance.
+      :returns: **L_sat** -- Instantaneous saturated value of the inductance.
       :rtype: float
 
 

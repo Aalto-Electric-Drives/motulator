@@ -386,11 +386,11 @@
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="SaturationModel"><a class="viewcode-back" href="../../autoapi/model/im_drive/index.html#model.im_drive.SaturationModel">[docs]</a><span class="k">class</span> <span class="nc">SaturationModel</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Magnetic saturation model based on a power function.</span>
+<span class="sd">    Magnetic saturation model.</span>
 
 <span class="sd">    This models magnetic saturation using a power function::</span>
 
-<span class="sd">        L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S)</span>
+<span class="sd">        L_sat(psi) = L_unsat/(1 + (beta*abs(psi))**S)</span>
 
 <span class="sd">    The default values correspond to the stator inductance of a 2.2-kW</span>
 <span class="sd">    induction motor.</span>
@@ -411,7 +411,7 @@
 <span class="sd">            Unsaturatad inductance. The default is .34.</span>
 <span class="sd">        beta : float, optional</span>
 <span class="sd">            Positive coefficient. The default is .84.</span>
-<span class="sd">        S : TYPE, float</span>
+<span class="sd">        S : float, optional</span>
 <span class="sd">            Positive coefficient. The default is 7.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -427,7 +427,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        L_sat : float</span>
-<span class="sd">            Instantatenous saturated value of the inductance.</span>
+<span class="sd">            Instantaneous saturated value of the inductance.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">L_sat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_unsat</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>

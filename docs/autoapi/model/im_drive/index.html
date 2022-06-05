@@ -164,7 +164,7 @@ implemented in stator coordinates.</p>
 <td><p>Induction motor.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#model.im_drive.SaturationModel" title="model.im_drive.SaturationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModel</span></code></a></p></td>
-<td><p>Magnetic saturation model based on a power function.</p></td>
+<td><p>Magnetic saturation model.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#model.im_drive.MotorSaturated" title="model.im_drive.MotorSaturated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MotorSaturated</span></code></a></p></td>
 <td><p>Saturated induction motor.</p></td>
@@ -351,9 +351,9 @@ Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.1109/28
 <dl class="py class">
 <dt id="model.im_drive.SaturationModel">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.im_drive.</span></code><code class="sig-name descname"><span class="pre">SaturationModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_unsat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.34</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.84</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#SaturationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.SaturationModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Magnetic saturation model based on a power function.</p>
+<dd><p>Magnetic saturation model.</p>
 <p>This models magnetic saturation using a power function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L_sat</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">=</span><span class="n">L_unsat</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span><span class="o">**</span><span class="n">S</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L_sat</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span> <span class="o">=</span> <span class="n">L_unsat</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span><span class="o">**</span><span class="n">S</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The default values correspond to the stator inductance of a 2.2-kW
@@ -367,7 +367,7 @@ induction motor drives,” IEEE Trans. Ind. Appl., 2021,
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>L_unsat</strong> (<em>float</em><em>, </em><em>optional</em>) – Unsaturatad inductance. The default is .34.</p></li>
 <li><p><strong>beta</strong> (<em>float</em><em>, </em><em>optional</em>) – Positive coefficient. The default is .84.</p></li>
-<li><p><strong>S</strong> (<em>TYPE</em><em>, </em><em>float</em>) – Positive coefficient. The default is 7.</p></li>
+<li><p><strong>S</strong> (<em>float</em><em>, </em><em>optional</em>) – Positive coefficient. The default is 7.</p></li>
 </ul>
 </dd>
 </dl>
@@ -379,7 +379,7 @@ induction motor drives,” IEEE Trans. Ind. Appl., 2021,
 <dd class="field-odd"><p><strong>psi</strong> (<em>complex</em>) – Flux linkage. If the value is complex, its magnitude is used.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>L_sat</strong> – Instantatenous saturated value of the inductance.</p>
+<dd class="field-even"><p><strong>L_sat</strong> – Instantaneous saturated value of the inductance.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>

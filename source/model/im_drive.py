@@ -281,7 +281,7 @@ class SaturationModel:
         Returns
         -------
         L_sat : float
-            Instantatenous saturated value of the inductance.
+            Instantaneous saturated value of the inductance.
 
         """
         L_sat = self.L_unsat/(1 + (self.beta*np.abs(psi))**self.S)
