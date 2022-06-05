@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>model.mech &mdash; motulator 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mech</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/autoapi/model/mech/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="module-model.mech">
+<span id="model-mech"></span><h1><a class="reference internal" href="#module-model.mech" title="model.mech"><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mech</span></code></a><a class="headerlink" href="#module-model.mech" title="Permalink to this headline">¶</a></h1>
+<p>This module contains continuous-time models for mechanical subsystems.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#model.mech.Mechanics" title="model.mech.Mechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mechanics</span></code></a></p></td>
+<td><p>Mechanical subsystem.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="model.mech.Mechanics">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.mech.</span></code><code class="sig-name descname"><span class="pre">Mechanics</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.015</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Step(0.8,</span> <span class="pre">14.6)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/mech.html#Mechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.mech.Mechanics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mechanical subsystem.</p>
+<p>This models an equation of motion for stiff mechanics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Total moment of inertia. The default is .015.</p></li>
+<li><p><strong>B</strong> (<em>float</em><em>, </em><em>optional</em>) – Viscous damping coefficient. The default is 0.</p></li>
+<li><p><strong>tau_L_ext</strong> (<em>function</em><em>, </em><em>optional</em>) – External load torque as a function of time, tau_L_ext(t). The
+default is Step(.8, 14.6).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="model.mech.Mechanics.f">
+<code class="sig-name descname"><span class="pre">f</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/mech.html#Mechanics.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.mech.Mechanics.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the state derivative.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (in mechanical rad/s).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Time derivative of the state vector.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list, length 2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.mech.Mechanics.meas_speed">
+<code class="sig-name descname"><span class="pre">meas_speed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/mech.html#Mechanics.meas_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.mech.Mechanics.meas_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Measure the rotor speed.</p>
+<p>This returns the rotor speed at the end of the sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w_M0</strong> – Rotor angular speed (in mechanical rad/s).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.mech.Mechanics.meas_position">
+<code class="sig-name descname"><span class="pre">meas_position</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/mech.html#Mechanics.meas_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.mech.Mechanics.meas_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Measure the rotor angle.</p>
+<p>This returns the rotor angle at the end of the sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>theta_M0</strong> – Rotor angle (in mechanical rad).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.mech.Mechanics.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/mech.html#Mechanics.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.mech.Mechanics.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Aalto Electric Drives
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

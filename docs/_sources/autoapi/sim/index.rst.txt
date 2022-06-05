@@ -1,0 +1,97 @@
+:py:mod:`sim`
+=============
+
+.. py:module:: sim
+
+.. autoapi-nested-parse::
+
+   This file contains the main program.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   sim.sensorless_ctrl
+   sim.sensored_ctrl
+   sim.main
+
+
+
+.. py:function:: sensorless_ctrl()
+
+   
+   Run the digital controller and solve the continuous-time system model.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: sensored_ctrl()
+
+   
+   Run the digital controller and solve the continuous-time system model.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: main()
+
+   
+   Main program.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

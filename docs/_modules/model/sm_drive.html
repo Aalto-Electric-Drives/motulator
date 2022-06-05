@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>model.sm_drive &mdash; motulator 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>model.sm_drive</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for model.sm_drive</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=C0103</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains continuous-time models for synchronous motor drives.</span>
+
+<span class="sd">The same motor model can be parametrized to represent a permanent-magnet</span>
+<span class="sd">synchronous motor and synchronous reluctance motor. Peak-valued complex space</span>
+<span class="sd">vectors are used.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">Bunch</span>
+<span class="kn">from</span> <span class="nn">helpers</span> <span class="kn">import</span> <span class="n">complex2abc</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Drive"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Drive">[docs]</a><span class="k">class</span> <span class="nc">Drive</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interconnect the subsystems of an synchronous motor drive.</span>
+
+<span class="sd">    This interconnects the subsystems of an synchronous motor drive and</span>
+<span class="sd">    provides the interface to the solver. More complicated systems could be</span>
+<span class="sd">    simulated using a similar template.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span> <span class="n">mech</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">datalog</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motor</span> <span class="o">=</span> <span class="n">motor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mech</span> <span class="o">=</span> <span class="n">mech</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">delay</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datalog</span> <span class="o">=</span> <span class="n">datalog</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="mi">0</span>                  <span class="c1"># Switching-state space vector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>                 <span class="c1"># Initial simulation time</span>
+
+<div class="viewcode-block" id="Drive.get_initial_values"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Drive.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the initial values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x0 : complex list, length 2</span>
+<span class="sd">            Initial values of the state variables.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">psi_s0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">w_M0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">theta_M0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">x0</span></div>
+
+<div class="viewcode-block" id="Drive.set_initial_values"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Drive.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the initial values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x0 : complex ndarray</span>
+<span class="sd">            Initial values of the state variables.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">t0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">psi_s0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">w_M0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>         <span class="c1"># x0[2].imag is always zero</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">theta_M0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>     <span class="c1"># x0[1].imag is always zero</span>
+        <span class="c1"># Limit the angle [0, 2*pi]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">theta_M0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">theta_M0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Drive.f"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Drive.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the complete state derivative list for the solver.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Time.</span>
+<span class="sd">        x : complex ndarray</span>
+<span class="sd">            State vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex list</span>
+<span class="sd">            State derivatives.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Unpack the states</span>
+        <span class="n">psi_s</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">theta_M</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">theta_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">theta_M</span>
+        <span class="c1"># Interconnections: outputs for computing the state derivatives</span>
+        <span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc0</span><span class="p">)</span>
+        <span class="n">u_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta_m</span><span class="p">)</span><span class="o">*</span><span class="n">u_ss</span>  <span class="c1"># Stator voltage in rotor coordinates</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">current</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">)</span>
+        <span class="c1"># State derivatives</span>
+        <span class="n">motor_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">w_M</span><span class="p">)</span>
+        <span class="n">mech_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">)</span>
+        <span class="c1"># List of state derivatives</span>
+        <span class="k">return</span> <span class="n">motor_f</span> <span class="o">+</span> <span class="n">mech_f</span></div>
+
+<div class="viewcode-block" id="Drive.__str__"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Drive.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;System: Synchronous motor drive</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;-------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">desc</span> <span class="o">+=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+                 <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+                 <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">desc</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Motor"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Motor">[docs]</a><span class="k">class</span> <span class="nc">Motor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Synchronous motor.</span>
+
+<span class="sd">    This models a synchronous motor. The model is implemented in rotor</span>
+<span class="sd">    coordinates. The default values correspond to a 2.2-kW permanent-magnet</span>
+<span class="sd">    synchronous motor.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mech</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">.036</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">.051</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.545</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mech : object</span>
+<span class="sd">            Mechanics, needed for computing the measured phase currents.</span>
+<span class="sd">        R_s : float, optional</span>
+<span class="sd">            Stator resistance. The default is 3.6.</span>
+<span class="sd">        L_d : float, optional</span>
+<span class="sd">            d-axis inductance. The default is .036.</span>
+<span class="sd">        L_q : float, optional</span>
+<span class="sd">            q-axis inductance. The default is .051.</span>
+<span class="sd">        psi_f : float, optional</span>
+<span class="sd">            PM-flux linkage. The default is .545.</span>
+<span class="sd">        p : int, optional</span>
+<span class="sd">            Number of pole pairs. The default is 3.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">R_s</span><span class="p">,</span> <span class="n">L_d</span><span class="p">,</span> <span class="n">L_q</span><span class="p">,</span> <span class="n">psi_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mech</span> <span class="o">=</span> <span class="n">mech</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s0</span> <span class="o">=</span> <span class="n">psi_f</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span>
+
+<div class="viewcode-block" id="Motor.current"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Motor.current">[docs]</a>    <span class="k">def</span> <span class="nf">current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the stator current.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux linkage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span>
+        <span class="k">return</span> <span class="n">i_s</span></div>
+
+<div class="viewcode-block" id="Motor.torque"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Motor.torque">[docs]</a>    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the electromagnetic torque.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux linkage.</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tau_M : float</span>
+<span class="sd">            Electromagnetic torque.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">tau_M</span></div>
+
+<div class="viewcode-block" id="Motor.f"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Motor.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">w_M</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the state derivative.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux linkage.</span>
+<span class="sd">        u_s : complex</span>
+<span class="sd">            Stator voltage.</span>
+<span class="sd">        w_M : float</span>
+<span class="sd">            Rotor angular speed (in mechanical rad/s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dpsi_s : complex</span>
+<span class="sd">            Time derivative of the stator flux linkage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dpsi_s</span> <span class="o">=</span> <span class="n">u_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_s</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">w_M</span><span class="o">*</span><span class="n">psi_s</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">dpsi_s</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Motor.meas_currents"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Motor.meas_currents">[docs]</a>    <span class="k">def</span> <span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measure the phase currents at the end of the sampling period.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_s_abc : 3-tuple of floats</span>
+<span class="sd">            Phase currents.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_s0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s0</span><span class="p">)</span>
+        <span class="n">theta_m0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">theta_M0</span>
+        <span class="n">i_s_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta_m0</span><span class="p">)</span><span class="o">*</span><span class="n">i_s0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">i_s_abc</span></div>
+
+<div class="viewcode-block" id="Motor.__str__"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Motor.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Synchronous motor:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;    p=</span><span class="si">{}</span><span class="s1">  R_s=</span><span class="si">{}</span><span class="s1">  L_d=</span><span class="si">{}</span><span class="s1">  L_q=</span><span class="si">{}</span><span class="s1">  psi_f=</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">desc</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Datalogger"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Datalogger">[docs]</a><span class="k">class</span> <span class="nc">Datalogger</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Datalogger for a synchronous motor drive.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Datalogger.save"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Datalogger.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the solution.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sol : bunch object</span>
+<span class="sd">            Solution from the solver.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">q</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Datalogger.post_process"><a class="viewcode-back" href="../../autoapi/model/sm_drive/index.html#model.sm_drive.Datalogger.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transform the lists to the ndarray format and post-process them.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mdl : object</span>
+<span class="sd">            Drive object that includes the data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># From lists to the ndarray</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="c1"># Compute some useful quantities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">tau_L_ext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+                           <span class="o">+</span> <span class="n">mdl</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">B</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_ss</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q</span><span class="p">,</span>
+                                                  <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Aalto Electric Drives
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

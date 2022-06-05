@@ -1,0 +1,170 @@
+:py:mod:`model.mech`
+====================
+
+.. py:module:: model.mech
+
+.. autoapi-nested-parse::
+
+   This module contains continuous-time models for mechanical subsystems.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   model.mech.Mechanics
+
+
+
+
+.. py:class:: Mechanics(J=0.015, B=0, tau_L_ext=Step(0.8, 14.6))
+
+   Mechanical subsystem.
+
+   This models an equation of motion for stiff mechanics.
+
+
+
+   :param J: Total moment of inertia. The default is .015.
+   :type J: float, optional
+   :param B: Viscous damping coefficient. The default is 0.
+   :type B: float, optional
+   :param tau_L_ext: External load torque as a function of time, tau_L_ext(t). The
+                     default is Step(.8, 14.6).
+   :type tau_L_ext: function, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: f(self, t, w_M, tau_M)
+
+      
+      Compute the state derivative.
+
+      :param t: Time.
+      :type t: float
+      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :type w_M: float
+      :param tau_M: Electromagnetic torque.
+      :type tau_M: float
+
+      :returns: Time derivative of the state vector.
+      :rtype: list, length 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: meas_speed(self)
+
+      
+      Measure the rotor speed.
+
+      This returns the rotor speed at the end of the sampling period.
+
+      :returns: **w_M0** -- Rotor angular speed (in mechanical rad/s).
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: meas_position(self)
+
+      
+      Measure the rotor angle.
+
+      This returns the rotor angle at the end of the sampling period.
+
+      :returns: **theta_M0** -- Rotor angle (in mechanical rad).
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

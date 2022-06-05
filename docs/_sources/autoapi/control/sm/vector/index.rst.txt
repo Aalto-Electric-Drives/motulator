@@ -1,0 +1,460 @@
+:py:mod:`control.sm.vector`
+===========================
+
+.. py:module:: control.sm.vector
+
+.. autoapi-nested-parse::
+
+   This module contains vector control for synchronous motor drives.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   control.sm.vector.VectorCtrl
+   control.sm.vector.CurrentCtrl
+   control.sm.vector.CurrentRef
+   control.sm.vector.SensorlessObserver
+
+
+
+
+.. py:class:: VectorCtrl(pars, speed_ctrl, current_ref, current_ctrl, observer)
+
+   Interconnect the subsystems of the control method.
+
+   This class interconnects the subsystems of the control system and
+   provides the interface to the solver.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: __call__(self, w_m_ref, i_s_abc, u_dc, *args)
+
+      
+      Main control loop.
+
+      :param w_m_ref: Rotor speed reference (in electrical rad/s).
+      :type w_m_ref: float
+      :param i_s_abc: Phase currents.
+      :type i_s_abc: ndarray, shape (3,)
+      :param u_dc: DC-bus voltage.
+      :type u_dc: float
+      :param w_M: Rotor speed (in mechanical rad/s), for the sensored control.
+      :type w_M: float, optional
+      :param theta_M: Rotor angle (in mechanical rad), for the sensored control.
+      :type theta_M: float, optional
+
+      :returns: * **d_abc_ref** (*ndarray, shape (3,)*) -- Duty ratio references.
+                * **T_s** (*float*) -- Sampling period.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: CurrentCtrl(pars)
+
+   2DOF PI current controller.
+
+   This 2DOF PI current controller corresponds to [1]_. The continuous-time
+   complex-vector design corresponding to (13) is used here. This design could
+   be equivalently presented as a 2DOF PI controller.
+
+   .. rubric:: Notes
+
+   For better performance at high speeds with low sampling frequencies, the
+   discrete-time design in (18) is recommended. This implementation does not
+   take the magnetic saturation into account.
+
+   .. rubric:: References
+
+   .. [1] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+      saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+      https://doi.org/10.1109/TIA.2019.2919258
+
+   :param pars: Controller parameters.
+   :type pars: data object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(self, i_s_ref, i_s)
+
+      
+      Compute the unlimited voltage reference.
+
+      :param i_s_ref: Current reference.
+      :type i_s_ref: complex
+      :param i_s: Measured current.
+      :type i_s: complex
+
+      :returns: * **u_s_ref** (*complex*) -- Unlimited voltage reference.
+                * **e** (*complex*) -- Error signal (scaled, corresponds to the stator flux linkage).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: update(self, e, u_s_ref, u_s_ref_lim, w_m)
+
+      
+      Update the integral state.
+
+      :param e: Error signal (scaled, corresponds to the stator flux linkage).
+      :type e: complex
+      :param u_s_ref: Unlimited voltage reference.
+      :type u_s_ref: complex
+      :param u_s_ref_lim: Limited voltage reference.
+      :type u_s_ref_lim: complex
+      :param w_m: Angular rotor speed.
+      :type w_m: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: CurrentRef(pars)
+
+   Current reference calculation.
+
+   This current reference calculation method includes the MTPA locus and
+   field-weakenting operation based on the unlimited voltage reference
+   feedback. The MTPV and current limits are taken into account. This
+   resembles the method presented [2]_.
+
+   .. rubric:: Notes
+
+   Instead of the PI controller used in [2]_, we use a simpler integral
+   controller with a constant gain. The resulting operating-point-dependent
+   closed-loop pole could be derived using (12) of the paper. Unlike in [2]_,
+   the MTPV limit is also included here by means of limiting the reference
+   torque and the d-axis current reference.
+
+   .. rubric:: References
+
+   .. [2] Bedetti, Calligaro, Petrella, "Analytical design and autotuning of
+      adaptive flux-weakening voltage regulation loop in IPMSM drives with
+      accurate torque regulation," IEEE Trans. Ind. Appl., 2020,
+      https://doi.org/10.1109/TIA.2019.2942807
+
+   :param pars: Controller parameters.
+   :type pars: data object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(self, tau_M_ref, w_m, u_dc)
+
+      
+      Compute the stator current reference.
+
+      :param tau_M_ref: Torque reference.
+      :type tau_M_ref: float
+      :param w_m: Rotor speed (in electrical rad/s)
+      :type w_m: float
+      :param u_dc: DC-bus voltage.
+      :type u_dc: float
+
+      :returns: * **i_s_ref** (*complex*) -- Stator current reference.
+                * **tau_M** (*float*) -- Limited torque reference.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: update(self, tau_M, u_s_ref, u_dc)
+
+      
+      Field-weakening based on the unlimited reference voltage.
+
+      :param tau_M: Limited torque reference.
+      :type tau_M: float
+      :param u_s_ref: Unlimited stator voltage reference.
+      :type u_s_ref: complex
+      :param u_dc: float.
+      :type u_dc: DC-bus voltage.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SensorlessObserver(pars)
+
+   Sensorless observer.
+
+   This sensorless observer corresponds to [3]_. The observer gain decouples
+   the electrical and mechanical dynamics and allows placing the poles of the
+   corresponding linearized estimation error dynamics. This implementation
+   operates in estimated rotor coordinates.
+
+   .. rubric:: References
+
+   .. [3] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
+      sensorless synchronous motor drives: Framework for design and analysis,"
+      IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
+
+   :param pars: Controller parameters.
+   :type pars: data object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: update(self, u_s, i_s)
+
+      
+      Update the states for the next sampling period.
+
+      :param u_s: Stator voltage in estimated rotor coordinates.
+      :type u_s: complex
+      :param i_s: Stator current in estimated rotor coordinates.
+      :type i_s: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

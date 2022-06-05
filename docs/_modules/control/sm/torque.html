@@ -1,0 +1,873 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>control.sm.torque &mdash; motulator 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>control.sm.torque</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for control.sm.torque</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=C0103</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Torque characteristics for synchronous machines.</span>
+
+<span class="sd">This contains computation and plotting of torque characteristics for</span>
+<span class="sd">synchronous machines, including the MTPA and MTPV loci. The methods can be used</span>
+<span class="sd">to define look-up tables for control as well as to analyze the characteristics.</span>
+<span class="sd">In this version, the magnetic saturation is omitted.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">float_info</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">cycler</span> <span class="kn">import</span> <span class="n">cycler</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">Bunch</span>
+
+<span class="c1"># %%</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cycler</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;brgcmyk&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>  <span class="c1"># Disable LaTeX in plots</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="TorqueCharacteristics"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics">[docs]</a><span class="k">class</span> <span class="nc">TorqueCharacteristics</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute MTPA and MTPV loci based on the motor parameters.</span>
+
+<span class="sd">    The magnetic saturation is omitted.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pars : data object</span>
+<span class="sd">            Motor parameters.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_min</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">i_sd_min</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_max</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">i_sd_max</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+<div class="viewcode-block" id="TorqueCharacteristics.torque"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.torque">[docs]</a>    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the torque as a function of the stator flux linkage.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tau_M : float</span>
+<span class="sd">            Electromagnetic torque.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">tau_M</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.current"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.current">[docs]</a>    <span class="k">def</span> <span class="nf">current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the stator current as a function of the stator flux linkage.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux linkage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span>
+
+        <span class="k">return</span> <span class="n">i_s</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.flux"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.flux">[docs]</a>    <span class="k">def</span> <span class="nf">flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the stator flux linkage as a function of the current.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux linkage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span>
+
+        <span class="k">return</span> <span class="n">psi_s</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.mtpa"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.mtpa">[docs]</a>    <span class="k">def</span> <span class="nf">mtpa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_i_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the MTPA stator current angle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        abs_i_s : float</span>
+<span class="sd">            Stator current magnitude.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        beta : float</span>
+<span class="sd">            MTPA angle of the stator current vector.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Replace zeros with epsilon</span>
+        <span class="n">abs_i_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">abs_i_s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="n">abs_i_s</span> <span class="o">+</span> <span class="p">(</span><span class="n">abs_i_s</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="n">float_info</span><span class="o">.</span><span class="n">epsilon</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># SyRM (d-axis aligned with the maximum inductance)</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="mf">.25</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">:</span>
+            <span class="c1"># Nonsalient machine</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Salient machine</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="o">/</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">)</span><span class="o">*</span><span class="n">abs_i_s</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">:</span>
+                <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="mf">.25</span><span class="o">*</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">8</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="mf">.25</span><span class="o">*</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">8</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">beta</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.mtpv"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.mtpv">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_psi_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the MTPV stator flux angle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        abs_psi_s : float</span>
+<span class="sd">            Stator flux magnitude.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        delta : float</span>
+<span class="sd">            MTPV angle of the stator flux vector.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Replace zeros with epsilon</span>
+        <span class="n">abs_psi_s</span> <span class="o">=</span> <span class="p">((</span><span class="n">abs_psi_s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="n">abs_psi_s</span>
+                     <span class="o">+</span> <span class="p">(</span><span class="n">abs_psi_s</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="n">float_info</span><span class="o">.</span><span class="n">epsilon</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># SyRM (d-axis aligned with the maximum inductance)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mf">.25</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">:</span>
+            <span class="c1"># Nonsalient machine</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Salient machine</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="o">/</span><span class="n">abs_psi_s</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="mf">.25</span><span class="o">*</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">8</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="mf">.25</span><span class="o">*</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">8</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">delta</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.mtpv_current"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.mtpv_current">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_i_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the MTPV based on the current magnitude.</span>
+
+<span class="sd">        This computes the MTPV based on the current magnitude, i.e., the</span>
+<span class="sd">        intersection of the MTPV current locus and the current limit circle.</span>
+<span class="sd">        This method is not necessary for computing the control look-up tables.</span>
+<span class="sd">        It is used here to &quot;cut&quot; the MTPV characteristics at the desired</span>
+<span class="sd">        current. Alternatively just a large enough maximum flux magnitude could</span>
+<span class="sd">        be used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        abs_i_s : float</span>
+<span class="sd">            Stator current magnitude.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            MTPV stator current.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># SyRM</span>
+            <span class="n">i_s</span> <span class="o">=</span> <span class="n">abs_i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">&lt;</span> <span class="n">abs_i_s</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">:</span>
+                <span class="c1"># Nonsalient machine</span>
+                <span class="n">i_sd</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span>
+                <span class="n">i_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">abs_i_s</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">i_sd</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">i_s</span> <span class="o">=</span> <span class="n">i_sd</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i_sq</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Salient machine</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">abs_i_s</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">:</span>
+                    <span class="n">i_sd</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">a</span><span class="o">*</span><span class="n">c</span><span class="p">))</span><span class="o">/</span><span class="n">a</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">i_sd</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">a</span><span class="o">*</span><span class="n">c</span><span class="p">))</span><span class="o">/</span><span class="n">a</span>
+                <span class="n">i_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">abs_i_s</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">i_sd</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">i_s</span> <span class="o">=</span> <span class="n">i_sd</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i_sq</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># No MTPV for the given current magnitude</span>
+            <span class="n">i_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="k">return</span> <span class="n">i_s</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.mtpa_locus"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.mtpa_locus">[docs]</a>    <span class="k">def</span> <span class="nf">mtpa_locus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the MTPA locus.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_max : float, optional</span>
+<span class="sd">            Maximum stator current magnitude at which the locus is computed.</span>
+<span class="sd">            The default is 1.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points. The default is 20.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Bunch object with the following fields defined:</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux.</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current.</span>
+<span class="sd">        tau_m : float</span>
+<span class="sd">            Electromagnetic torque.</span>
+<span class="sd">        abs_psi_s_vs_tau_M : interp1d object</span>
+<span class="sd">            Stator flux magnitude as a function of the torque.</span>
+<span class="sd">        i_sd_vs_tau_M : interp1d object</span>
+<span class="sd">            d-axis current as a function of the torque.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Current  magnitudes</span>
+        <span class="n">abs_i_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+
+        <span class="c1"># MTPA locus expressed with different quantities</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span><span class="p">(</span><span class="n">abs_i_s</span><span class="p">)</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="n">abs_i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span>
+
+        <span class="c1"># Minimum d-axis current for sensorless SyRM drives</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="p">((</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_min</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sd_min</span>
+                        <span class="o">+</span> <span class="p">(</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_min</span><span class="p">)</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="c1"># Maximum d-axis current for sensorless PM-SyRM drives</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="p">((</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_max</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sd_max</span>
+                        <span class="o">+</span> <span class="p">(</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_max</span><span class="p">)</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+
+        <span class="c1"># Create an interpolant that can be used as a look-up table. If needed,</span>
+        <span class="c1"># more interpolants can be easily added.</span>
+        <span class="n">abs_psi_s_vs_tau_M</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">),</span>
+                                      <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+        <span class="n">i_sd_vs_tau_M</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+                                 <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Return the result as a bunch object</span>
+        <span class="k">return</span> <span class="n">Bunch</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
+                     <span class="n">abs_psi_s_vs_tau_M</span><span class="o">=</span><span class="n">abs_psi_s_vs_tau_M</span><span class="p">,</span>
+                     <span class="n">i_sd_vs_tau_M</span><span class="o">=</span><span class="n">i_sd_vs_tau_M</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.mtpv_locus"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.mtpv_locus">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_locus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the MTPV locus.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s_max : float, optional</span>
+<span class="sd">            Maximum stator flux magnitude at which the locus is computed. The</span>
+<span class="sd">            default is 1.</span>
+<span class="sd">        i_s_max : float, optional</span>
+<span class="sd">            Maximum stator current magnitude at which the locus is computed.</span>
+<span class="sd">            The default is None.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points. The default is 20.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Bunch object with the following fields defined:</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux.</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current.</span>
+<span class="sd">        tau_m : float</span>
+<span class="sd">            Electromagnetic torque.</span>
+<span class="sd">        tau_M_vs_abs_psi_s : interp1d object</span>
+<span class="sd">            Torque as a function of the flux magnitude.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If i_s_max is given, compute the corresponding MTPV stator flux</span>
+        <span class="k">if</span> <span class="n">i_s_max</span><span class="p">:</span>
+            <span class="n">i_s_mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv_current</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">)</span>
+            <span class="n">psi_s_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flux</span><span class="p">(</span><span class="n">i_s_mtpv</span><span class="p">))</span>
+
+        <span class="c1"># Flux magnitudes</span>
+        <span class="n">abs_psi_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">psi_s_max</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+
+        <span class="c1"># MTPV locus expressed with different quantities</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv</span><span class="p">(</span><span class="n">abs_psi_s</span><span class="p">)</span>
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="n">abs_psi_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">delta</span><span class="p">)</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+
+        <span class="c1"># Create an interpolant that can be used as a look-up table. If needed,</span>
+        <span class="c1"># more interpolants can be easily added.</span>
+        <span class="n">tau_M_vs_abs_psi_s</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">),</span> <span class="n">tau_M</span><span class="p">,</span> <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Return the result as a bunch object</span>
+        <span class="k">return</span> <span class="n">Bunch</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
+                     <span class="n">tau_M_vs_abs_psi_s</span><span class="o">=</span><span class="n">tau_M_vs_abs_psi_s</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.current_limit"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.current_limit">[docs]</a>    <span class="k">def</span> <span class="nf">current_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">gamma2</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the current limit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_max : float, optional</span>
+<span class="sd">            Current limit. The default is 1.</span>
+<span class="sd">        gamma1 : float, optional</span>
+<span class="sd">            Starting angle in radians. The default is 0.</span>
+<span class="sd">        gamm21 : float, optional</span>
+<span class="sd">            End angle in radians. The defauls in np.pi.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points. The default is 20.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Bunch object with the following fields defined:</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux.</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current.</span>
+<span class="sd">        tau_m : float</span>
+<span class="sd">            Electromagnetic torque.</span>
+<span class="sd">        tau_M_vs_abs_psi_s : interp1d object</span>
+<span class="sd">            Torque as a function of the flux magnitude.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">gamma1</span><span class="p">):</span>
+            <span class="c1"># No MTPV</span>
+            <span class="n">gamma1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">gamma1</span><span class="p">,</span> <span class="n">gamma2</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+
+        <span class="c1"># MTPA locus expressed with different quantities</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="n">i_s_max</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">gamma</span><span class="p">)</span>
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+
+        <span class="c1"># Create an interpolant that can be used as a look-up table. If needed,</span>
+        <span class="c1"># more interpolants can be easily added.</span>
+        <span class="n">tau_M_vs_abs_psi_s</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">),</span> <span class="n">tau_M</span><span class="p">,</span>
+                                      <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">fill_value</span><span class="o">=</span><span class="p">(</span><span class="n">tau_M</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="c1"># Return the result as a bunch object</span>
+        <span class="k">return</span> <span class="n">Bunch</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
+                     <span class="n">tau_M_vs_abs_psi_s</span><span class="o">=</span><span class="n">tau_M_vs_abs_psi_s</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.mtpv_and_current_limits"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.mtpv_and_current_limits">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_and_current_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merge the MTPV and current limits into a single interpolant.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_max : float, optional</span>
+<span class="sd">            Current limit. The default is 1.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points. The default is 20.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Bunch object with the following fields defined:</span>
+<span class="sd">        tau_M_vs_abs_psi_s : interp1d object</span>
+<span class="sd">            Torque as a function of the flux magnitude.</span>
+<span class="sd">        i_sd_vs_tau_M : interp1d object</span>
+<span class="sd">            d-axis current as a function of the torque.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">clim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limit</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span>
+                                  <span class="n">gamma1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                                  <span class="n">gamma2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="c1"># No MTPV, only the current limit</span>
+            <span class="n">psi_s</span> <span class="o">=</span> <span class="n">clim</span><span class="o">.</span><span class="n">psi_s</span>
+            <span class="n">tau_M</span> <span class="o">=</span> <span class="n">clim</span><span class="o">.</span><span class="n">tau_M</span>
+            <span class="n">i_sd</span> <span class="o">=</span> <span class="n">clim</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Concatenate the MTPV and current limits</span>
+            <span class="n">psi_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">clim</span><span class="o">.</span><span class="n">psi_s</span><span class="p">))</span>
+            <span class="n">tau_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">clim</span><span class="o">.</span><span class="n">tau_M</span><span class="p">))</span>
+            <span class="n">i_sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">clim</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">))</span>
+
+        <span class="c1"># Create an interpolant that can be used as a look-up table</span>
+        <span class="n">tau_M_vs_abs_psi_s</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">),</span> <span class="n">tau_M</span><span class="p">,</span>
+                                      <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">fill_value</span><span class="o">=</span><span class="p">(</span><span class="n">tau_M</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">i_sd_vs_tau_M</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">i_sd</span><span class="p">,</span>
+                                 <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Return the result as a bunch object</span>
+        <span class="k">return</span> <span class="n">Bunch</span><span class="p">(</span><span class="n">tau_M_vs_abs_psi_s</span><span class="o">=</span><span class="n">tau_M_vs_abs_psi_s</span><span class="p">,</span>
+                     <span class="n">i_sd_vs_tau_M</span><span class="o">=</span><span class="n">i_sd_vs_tau_M</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.delta_at_zero_torque"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.delta_at_zero_torque">[docs]</a>    <span class="k">def</span> <span class="nf">delta_at_zero_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_psi_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the load angle value at the zero torque.</span>
+
+<span class="sd">        This computes the &quot;nontrivial&quot; load angle value corresponding to the</span>
+<span class="sd">        zero electromagnetic torque.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        abs_psi_s : float</span>
+<span class="sd">            Stator flux magnitude.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        delta : float</span>
+<span class="sd">            Load angle at the zero torque.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">abs_psi_s</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">:</span>
+                    <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">delta</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.plot_flux_loci"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.plot_flux_loci">[docs]</a>    <span class="k">def</span> <span class="nf">plot_flux_loci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the stator flux linkage loci.</span>
+
+<span class="sd">        Per-unit quantities are used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_max : float</span>
+<span class="sd">            Maximum current at which the loci are evaluated.</span>
+<span class="sd">        base : object</span>
+<span class="sd">            Base values.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points to be evaluated. The default is 20.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute the characteristics</span>
+        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">clim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limit</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span>
+                                  <span class="n">gamma1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                                  <span class="n">gamma2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="c1"># Plot the i_sd--i_sq current plane</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MTPA&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MTPV&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">clim</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">clim</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Const current&#39;</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\psi_\mathrm</span><span class="si">{sd}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\psi_\mathrm</span><span class="si">{sq}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.plot_current_loci"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.plot_current_loci">[docs]</a>    <span class="k">def</span> <span class="nf">plot_current_loci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the current loci.</span>
+
+<span class="sd">        Per-unit quantities are used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_max : float</span>
+<span class="sd">            Maximum current at which the loci are evaluated.</span>
+<span class="sd">        base : object</span>
+<span class="sd">            Base values.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points to be evaluated. The default is 20.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute the characteristics</span>
+        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">clim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limit</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span>
+                                  <span class="n">gamma1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                                  <span class="n">gamma2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="c1"># Plot the i_sd--i_sq current plane</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MTPA&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MTPV&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">clim</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">clim</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Const current&#39;</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$i_\mathrm</span><span class="si">{sd}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$i_\mathrm</span><span class="si">{sq}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.plot_torque_current"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.plot_torque_current">[docs]</a>    <span class="k">def</span> <span class="nf">plot_torque_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot torque vs. current characteristics.</span>
+
+<span class="sd">        Per-unit quantities are used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_max : float</span>
+<span class="sd">            Maximum current at which the loci are evaluated.</span>
+<span class="sd">        base : object</span>
+<span class="sd">            Base values.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points to be evaluated. The default is 20.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute the characteristics</span>
+        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">clim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limit</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span>
+                                  <span class="n">gamma1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                                  <span class="n">gamma2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="c1"># Plot i_sd vs. tau_M</span>
+        <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">clim</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">clim</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;MTPA&#39;</span><span class="p">,</span> <span class="s1">&#39;MTPV&#39;</span><span class="p">,</span> <span class="s1">&#39;Const current&#39;</span><span class="p">])</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$i_\mathrm</span><span class="si">{sd}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Plot i_sq vs. tau_M</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">clim</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">clim</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;MTPA&#39;</span><span class="p">,</span> <span class="s1">&#39;MTPV&#39;</span><span class="p">,</span> <span class="s1">&#39;Const current&#39;</span><span class="p">])</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$i_\mathrm</span><span class="si">{sq}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\tau_\mathrm</span><span class="si">{M}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.plot_torque_flux"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.plot_torque_flux">[docs]</a>    <span class="k">def</span> <span class="nf">plot_torque_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot torque vs. flux magnitude characteristics.</span>
+
+<span class="sd">        Per-unit quantities are used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_max : float</span>
+<span class="sd">            Maximum current at which the loci are evaluated.</span>
+<span class="sd">        base : object</span>
+<span class="sd">            Base values.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points to be evaluated. The default is 20.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute the characteristics</span>
+        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">clim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limit</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span>
+                                  <span class="n">gamma1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                                  <span class="n">gamma2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="c1"># Plot</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">clim</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">clim</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;MTPA&#39;</span><span class="p">,</span> <span class="s1">&#39;MTPV&#39;</span><span class="p">,</span> <span class="s1">&#39;Const current&#39;</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\psi_\mathrm</span><span class="si">{s}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\tau_\mathrm</span><span class="si">{m}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TorqueCharacteristics.plot_angle_torque"><a class="viewcode-back" href="../../../autoapi/control/sm/torque/index.html#control.sm.torque.TorqueCharacteristics.plot_angle_torque">[docs]</a>    <span class="k">def</span> <span class="nf">plot_angle_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_psi_s</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the electromagnetic torque as a function of the load angle.</span>
+
+<span class="sd">        Per-unit quantities are used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        abs_psi_s : float</span>
+<span class="sd">            Stator flux magnitude.</span>
+<span class="sd">        base : object</span>
+<span class="sd">            Base values.</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of points to be evaluated. The default is 100.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="n">abs_psi_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">delta</span><span class="p">)</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+
+        <span class="n">delta_mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv</span><span class="p">(</span><span class="n">abs_psi_s</span><span class="p">)</span>
+        <span class="n">psi_s_mtpv</span> <span class="o">=</span> <span class="n">abs_psi_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">delta_mtpv</span><span class="p">)</span>
+        <span class="n">tau_M_mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">psi_s_mtpv</span><span class="p">)</span>
+
+        <span class="n">delta0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_at_zero_torque</span><span class="p">(</span><span class="n">abs_psi_s</span><span class="p">)</span>
+        <span class="n">psi_s0</span> <span class="o">=</span> <span class="n">abs_psi_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">delta0</span><span class="p">)</span>
+        <span class="n">tau_M0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">torque</span><span class="p">(</span><span class="n">psi_s0</span><span class="p">)</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">180</span><span class="o">*</span><span class="n">delta</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">180</span><span class="o">*</span><span class="n">delta_mtpv</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">tau_M_mtpv</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">180</span><span class="o">*</span><span class="n">delta0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">tau_M0</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">135</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">135</span><span class="p">,</span> <span class="mi">180</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\delta$ (deg)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\tau_\mathrm</span><span class="si">{m}</span><span class="s1">$ (p.u.)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\psi_\mathrm</span><span class="si">{s}</span><span class="s1">=$ </span><span class="si">%1.2f</span><span class="s1"> p.u.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">abs_psi_s</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Aalto Electric Drives
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

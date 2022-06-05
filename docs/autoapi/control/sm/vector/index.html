@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>control.sm.vector &mdash; motulator 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">control.sm.vector</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/autoapi/control/sm/vector/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="module-control.sm.vector">
+<span id="control-sm-vector"></span><h1><a class="reference internal" href="#module-control.sm.vector" title="control.sm.vector"><code class="xref py py-mod docutils literal notranslate"><span class="pre">control.sm.vector</span></code></a><a class="headerlink" href="#module-control.sm.vector" title="Permalink to this headline">¶</a></h1>
+<p>This module contains vector control for synchronous motor drives.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#control.sm.vector.VectorCtrl" title="control.sm.vector.VectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorCtrl</span></code></a></p></td>
+<td><p>Interconnect the subsystems of the control method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#control.sm.vector.CurrentCtrl" title="control.sm.vector.CurrentCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentCtrl</span></code></a></p></td>
+<td><p>2DOF PI current controller.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#control.sm.vector.CurrentRef" title="control.sm.vector.CurrentRef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentRef</span></code></a></p></td>
+<td><p>Current reference calculation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#control.sm.vector.SensorlessObserver" title="control.sm.vector.SensorlessObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SensorlessObserver</span></code></a></p></td>
+<td><p>Sensorless observer.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="control.sm.vector.VectorCtrl">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">control.sm.vector.</span></code><code class="sig-name descname"><span class="pre">VectorCtrl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#VectorCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.VectorCtrl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interconnect the subsystems of the control method.</p>
+<p>This class interconnects the subsystems of the control system and
+provides the interface to the solver.</p>
+<dl class="py method">
+<dt id="control.sm.vector.VectorCtrl.__call__">
+<code class="sig-name descname"><span class="pre">__call__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_m_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#VectorCtrl.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.VectorCtrl.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main control loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w_m_ref</strong> (<em>float</em>) – Rotor speed reference (in electrical rad/s).</p></li>
+<li><p><strong>i_s_abc</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Phase currents.</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage.</p></li>
+<li><p><strong>w_M</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotor speed (in mechanical rad/s), for the sensored control.</p></li>
+<li><p><strong>theta_M</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotor angle (in mechanical rad), for the sensored control.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>d_abc_ref</strong> (<em>ndarray, shape (3,)</em>) – Duty ratio references.</p></li>
+<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="control.sm.vector.VectorCtrl.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#VectorCtrl.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.VectorCtrl.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="control.sm.vector.CurrentCtrl">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">control.sm.vector.</span></code><code class="sig-name descname"><span class="pre">CurrentCtrl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#CurrentCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.CurrentCtrl" title="Permalink to this definition">¶</a></dt>
+<dd><p>2DOF PI current controller.</p>
+<p>This 2DOF PI current controller corresponds to <a class="footnote-reference brackets" href="#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The continuous-time
+complex-vector design corresponding to (13) is used here. This design could
+be equivalently presented as a 2DOF PI controller.</p>
+<p class="rubric">Notes</p>
+<p>For better performance at high speeds with low sampling frequencies, the
+discrete-time design in (18) is recommended. This implementation does not
+take the magnetic saturation into account.</p>
+<p class="rubric">References</p>
+<aside class="footnote brackets" id="footnote-1" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of
+saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
+</aside>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pars</strong> (<em>data object</em>) – Controller parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="control.sm.vector.CurrentCtrl.output">
+<code class="sig-name descname"><span class="pre">output</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#CurrentCtrl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.CurrentCtrl.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the unlimited voltage reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_s_ref</strong> (<em>complex</em>) – Current reference.</p></li>
+<li><p><strong>i_s</strong> (<em>complex</em>) – Measured current.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>u_s_ref</strong> (<em>complex</em>) – Unlimited voltage reference.</p></li>
+<li><p><strong>e</strong> (<em>complex</em>) – Error signal (scaled, corresponds to the stator flux linkage).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="control.sm.vector.CurrentCtrl.update">
+<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref_lim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#CurrentCtrl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.CurrentCtrl.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the integral state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e</strong> (<em>complex</em>) – Error signal (scaled, corresponds to the stator flux linkage).</p></li>
+<li><p><strong>u_s_ref</strong> (<em>complex</em>) – Unlimited voltage reference.</p></li>
+<li><p><strong>u_s_ref_lim</strong> (<em>complex</em>) – Limited voltage reference.</p></li>
+<li><p><strong>w_m</strong> (<em>float</em>) – Angular rotor speed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="control.sm.vector.CurrentCtrl.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#CurrentCtrl.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.CurrentCtrl.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="control.sm.vector.CurrentRef">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">control.sm.vector.</span></code><code class="sig-name descname"><span class="pre">CurrentRef</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#CurrentRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.CurrentRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current reference calculation.</p>
+<p>This current reference calculation method includes the MTPA locus and
+field-weakenting operation based on the unlimited voltage reference
+feedback. The MTPV and current limits are taken into account. This
+resembles the method presented <a class="footnote-reference brackets" href="#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p class="rubric">Notes</p>
+<p>Instead of the PI controller used in <a class="footnote-reference brackets" href="#footnote-2" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, we use a simpler integral
+controller with a constant gain. The resulting operating-point-dependent
+closed-loop pole could be derived using (12) of the paper. Unlike in <a class="footnote-reference brackets" href="#footnote-2" id="footnote-reference-4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>,
+the MTPV limit is also included here by means of limiting the reference
+torque and the d-axis current reference.</p>
+<p class="rubric">References</p>
+<aside class="footnote brackets" id="footnote-2" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#footnote-reference-2">1</a>,<a role="doc-backlink" href="#footnote-reference-3">2</a>,<a role="doc-backlink" href="#footnote-reference-4">3</a>)</span>
+<p>Bedetti, Calligaro, Petrella, “Analytical design and autotuning of
+adaptive flux-weakening voltage regulation loop in IPMSM drives with
+accurate torque regulation,” IEEE Trans. Ind. Appl., 2020,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2019.2942807">https://doi.org/10.1109/TIA.2019.2942807</a></p>
+</aside>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pars</strong> (<em>data object</em>) – Controller parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="control.sm.vector.CurrentRef.output">
+<code class="sig-name descname"><span class="pre">output</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#CurrentRef.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.CurrentRef.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the stator current reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau_M_ref</strong> (<em>float</em>) – Torque reference.</p></li>
+<li><p><strong>w_m</strong> (<em>float</em>) – Rotor speed (in electrical rad/s)</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>i_s_ref</strong> (<em>complex</em>) – Stator current reference.</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Limited torque reference.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="control.sm.vector.CurrentRef.update">
+<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#CurrentRef.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.CurrentRef.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Field-weakening based on the unlimited reference voltage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau_M</strong> (<em>float</em>) – Limited torque reference.</p></li>
+<li><p><strong>u_s_ref</strong> (<em>complex</em>) – Unlimited stator voltage reference.</p></li>
+<li><p><strong>u_dc</strong> (<em>DC-bus voltage.</em>) – float.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="control.sm.vector.CurrentRef.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#CurrentRef.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.CurrentRef.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="control.sm.vector.SensorlessObserver">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">control.sm.vector.</span></code><code class="sig-name descname"><span class="pre">SensorlessObserver</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#SensorlessObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.SensorlessObserver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sensorless observer.</p>
+<p>This sensorless observer corresponds to <a class="footnote-reference brackets" href="#footnote-3" id="footnote-reference-5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The observer gain decouples
+the electrical and mechanical dynamics and allows placing the poles of the
+corresponding linearized estimation error dynamics. This implementation
+operates in estimated rotor coordinates.</p>
+<p class="rubric">References</p>
+<aside class="footnote brackets" id="footnote-3" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-5">3</a><span class="fn-bracket">]</span></span>
+<p>Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, “Observers for
+sensorless synchronous motor drives: Framework for design and analysis,”
+IEEE Trans. Ind. Appl., 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2858753">https://doi.org/10.1109/TIA.2018.2858753</a></p>
+</aside>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pars</strong> (<em>data object</em>) – Controller parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="control.sm.vector.SensorlessObserver.update">
+<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#SensorlessObserver.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.SensorlessObserver.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the states for the next sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_s</strong> (<em>complex</em>) – Stator voltage in estimated rotor coordinates.</p></li>
+<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current in estimated rotor coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="control.sm.vector.SensorlessObserver.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/control/sm/vector.html#SensorlessObserver.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#control.sm.vector.SensorlessObserver.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Aalto Electric Drives
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

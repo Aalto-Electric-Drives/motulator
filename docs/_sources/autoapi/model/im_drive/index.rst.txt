@@ -1,0 +1,811 @@
+:py:mod:`model.im_drive`
+========================
+
+.. py:module:: model.im_drive
+
+.. autoapi-nested-parse::
+
+   This module contains continuous-time models for an induction motor drive.
+
+   Peak-valued complex space vectors are used. The space vector models are
+   implemented in stator coordinates.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   model.im_drive.Drive
+   model.im_drive.Motor
+   model.im_drive.SaturationModel
+   model.im_drive.MotorSaturated
+   model.im_drive.Datalogger
+   model.im_drive.DriveWithDiodeBridge
+   model.im_drive.DataloggerExtended
+
+
+
+
+.. py:class:: Drive(motor, mech, converter, delay, pwm, datalog)
+
+   Interconnect the subsystems of an indcution motor drive.
+
+   This interconnects the subsystems of an induction motor drive and provides
+   the interface to the solver. More complicated systems could be simulated
+   using a similar template.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_initial_values(self)
+
+      
+      Get the initial values.
+
+      :returns: **x0** -- Initial values of the state variables.
+      :rtype: complex list, length 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_initial_values(self, t0, x0)
+
+      
+      Set the initial values.
+
+      :param x0: Initial values of the state variables.
+      :type x0: complex ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(self, t, x)
+
+      
+      Compute the complete state derivative list for the solver.
+
+      :param t: Time.
+      :type t: float
+      :param x: State vector.
+      :type x: complex ndarray
+
+      :returns: State derivatives.
+      :rtype: complex list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Motor(R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224, p=2)
+
+   Induction motor.
+
+   This models an induction motor using the inverse-Gamma model. The model is
+   implemented in stator coordinates. The default values correspond to a
+   2.2-kW induction motor.
+
+   .. rubric:: References
+
+   Slemon, "Modelling of induction machines for electric drives," IEEE Trans.
+   Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
+
+   :param R_s: Stator resistance. The default is 3.7.
+   :type R_s: float, optional
+   :param R_R: Rotor resistance. The default is 2.1.
+   :type R_R: float, optional
+   :param L_sgm: Leakage inductance. The default is .021.
+   :type L_sgm: float, optional
+   :param L_M: Magnetizing inductance. The default is .224.
+   :type L_M: float, optional
+   :param p: Number of pole pairs. The default is 2.
+   :type p: int, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: currents(self, psi_ss, psi_Rs)
+
+      
+      Compute the stator and rotor currents.
+
+      :param psi_ss: Stator flux linkage.
+      :type psi_ss: complex
+      :param psi_Rs: Rotor flux linkage.
+      :type psi_Rs: complex
+
+      :returns: * **i_ss** (*complex*) -- Stator current.
+                * **i_Rs** (*complex*) -- Rotor current.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: torque(self, psi_ss, i_ss)
+
+      
+      Compute the electromagnetic torque.
+
+      :param psi_ss: Stator flux linkage.
+      :type psi_ss: complex
+      :param i_ss: Stator current.
+      :type i_ss: complex
+
+      :returns: **tau_M** -- Electromagnetic torque.
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(self, psi_Rs, i_ss, i_Rs, u_ss, w_M)
+
+      
+      Compute the state derivatives.
+
+      :param psi_ss: Stator flux linkage.
+      :type psi_ss: complex
+      :param psi_Rs: Rotor flux linkage.
+      :type psi_Rs: complex
+      :param i_ss: Stator current.
+      :type i_ss: complex
+      :param i_Rs: Rotor current.
+      :type i_Rs: complex
+      :param u_ss: Stator voltage.
+      :type u_ss: complex
+      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :type w_M: float
+
+      :returns: Time derivative of the state vector, [dpsi_ss, dpsi_Rs]
+      :rtype: complex list, length 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: meas_currents(self)
+
+      
+      Measure the phase currents at the end of the sampling period.
+
+      :returns: **i_s_abc** -- Phase currents.
+      :rtype: 3-tuple of floats
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SaturationModel(L_unsat=0.34, beta=0.84, S=7)
+
+   Magnetic saturation model based on a power function.
+
+   This models magnetic saturation using a power function::
+
+       L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S)
+
+   The default values correspond to the stator inductance of a 2.2-kW
+   induction motor.
+
+   .. rubric:: References
+
+   Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
+   induction motor drives," IEEE Trans. Ind. Appl., 2021,
+   https://doi.org/10.1109/TIA.2012.2190818
+
+   :param L_unsat: Unsaturatad inductance. The default is .34.
+   :type L_unsat: float, optional
+   :param beta: Positive coefficient. The default is .84.
+   :type beta: float, optional
+   :param S: Positive coefficient. The default is 7.
+   :type S: TYPE, float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: __call__(self, psi)
+
+      
+      :param psi: Flux linkage. If the value is complex, its magnitude is used.
+      :type psi: complex
+
+      :returns: **L_sat** -- Instantatenous saturated value of the inductance.
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: MotorSaturated(R_s=3.7, R_R=2.5, L_sgm=0.023, L_M=SaturationModel(), p=2)
+
+   Bases: :py:obj:`Motor`
+
+   Saturated induction motor.
+
+   This models a saturated induction motor using the Gamma model. The Gamma
+   model suits better for modeling the magnetic saturation. The default values
+   correspond to a 2.2-kW induction motor.
+
+
+
+   :param R_s: Stator resistance. The default is 3.7.
+   :type R_s: float, optional
+   :param R_R: Rotor resistance. The default is 2.1.
+   :type R_R: float, optional
+   :param L_sgm: Leakage inductance. The default is .021.
+   :type L_sgm: float, optional
+   :param L_M: Stator inductance function L_M(psi_s). The default is
+               SaturationModel().
+   :type L_M: function, optional
+   :param p: Number of pole pairs. The default is 2.
+   :type p: int, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: currents(self, psi_ss, psi_Rs)
+
+      
+      Compute the stator and rotor currents.
+
+      :param psi_ss: Stator flux linkage.
+      :type psi_ss: complex
+      :param psi_Rs: Rotor flux linkage.
+      :type psi_Rs: complex
+
+      :returns: * **i_ss** (*complex*) -- Stator current.
+                * **i_Rs** (*complex*) -- Rotor current.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __str__(self)
+
+      
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Datalogger
+
+   Datalogger for an induction motor drive.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: save(self, sol)
+
+      
+      Save the solution.
+
+      :param sol: Solution from the solver.
+      :type sol: bunch object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: post_process(self, mdl)
+
+      
+      Transform the lists to the ndarray format and post-process them.
+
+      :param mdl: Drive object that includes the data.
+      :type mdl: object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveWithDiodeBridge(motor, mech, converter, delay, pwm, datalog)
+
+   Bases: :py:obj:`Drive`
+
+   Induction motor drive equipped with a diode bridge.
+
+   This models an induction motor drive, equipped with a three-phase diode
+   bridge fed from stiff supply voltages. The DC bus has an inductor and
+   a capacitor.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_initial_values(self)
+
+      
+      Get the initial values.
+
+      :returns: **x0** -- Initial values of the state variables.
+      :rtype: complex list, length 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_initial_values(self, t0, x0)
+
+      
+      Set the initial values.
+
+      :param x0: Initial values of the state variables.
+      :type x0: complex ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(self, t, x)
+
+      
+      Compute the complete state derivative list for the solver.
+
+      :param t: Time.
+      :type t: float
+      :param x: State vector.
+      :type x: complex ndarray
+
+      :returns: State derivatives.
+      :rtype: complex list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DataloggerExtended
+
+   Bases: :py:obj:`Datalogger`
+
+   Datalogger for an induction motor drive with a diode bridge.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: save(self, sol)
+
+      
+      Save the solution.
+
+      :param sol: Solution from the solver.
+      :type sol: bunch object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: post_process(self, mdl)
+
+      
+      Transform the lists to the ndarray format and post-process them.
+
+      :param mdl: Drive object that includes the data.
+      :type mdl: object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
