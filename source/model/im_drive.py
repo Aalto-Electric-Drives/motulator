@@ -240,11 +240,11 @@ class Motor:
 # %%
 class SaturationModel:
     """
-    Magnetic saturation model based on a power function.
+    Magnetic saturation model.
 
     This models magnetic saturation using a power function::
 
-        L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S)
+        L_sat(psi) = L_unsat/(1 + (beta*abs(psi))**S)
 
     The default values correspond to the stator inductance of a 2.2-kW
     induction motor.
@@ -265,7 +265,7 @@ class SaturationModel:
             Unsaturatad inductance. The default is .34.
         beta : float, optional
             Positive coefficient. The default is .84.
-        S : TYPE, float
+        S : float, optional
             Positive coefficient. The default is 7.
 
         """
