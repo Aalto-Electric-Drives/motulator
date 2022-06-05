@@ -1,5 +1,5 @@
 # *motulator*
-Motor Drive Simulator
+*motulator*: Motor Drive Simulator
 
 Introduction
 ------------
