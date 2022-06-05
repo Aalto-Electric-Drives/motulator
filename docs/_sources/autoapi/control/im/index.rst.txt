@@ -1,0 +1,39 @@
+:py:mod:`control.im`
+====================
+
+.. py:module:: control.im
+
+.. autoapi-nested-parse::
+
+   
+   This package contains example controllers for an induction motor drive.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   vector/index.rst
+   vhz/index.rst
+
+

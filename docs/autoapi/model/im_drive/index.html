@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>model.im_drive &mdash; motulator 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.im_drive</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/autoapi/model/im_drive/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="module-model.im_drive">
+<span id="model-im-drive"></span><h1><a class="reference internal" href="#module-model.im_drive" title="model.im_drive"><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.im_drive</span></code></a><a class="headerlink" href="#module-model.im_drive" title="Permalink to this headline">¶</a></h1>
+<p>This module contains continuous-time models for an induction motor drive.</p>
+<p>Peak-valued complex space vectors are used. The space vector models are
+implemented in stator coordinates.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#model.im_drive.Drive" title="model.im_drive.Drive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drive</span></code></a></p></td>
+<td><p>Interconnect the subsystems of an indcution motor drive.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#model.im_drive.Motor" title="model.im_drive.Motor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Motor</span></code></a></p></td>
+<td><p>Induction motor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#model.im_drive.SaturationModel" title="model.im_drive.SaturationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModel</span></code></a></p></td>
+<td><p>Magnetic saturation model based on a power function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#model.im_drive.MotorSaturated" title="model.im_drive.MotorSaturated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MotorSaturated</span></code></a></p></td>
+<td><p>Saturated induction motor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#model.im_drive.Datalogger" title="model.im_drive.Datalogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Datalogger</span></code></a></p></td>
+<td><p>Datalogger for an induction motor drive.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#model.im_drive.DriveWithDiodeBridge" title="model.im_drive.DriveWithDiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveWithDiodeBridge</span></code></a></p></td>
+<td><p>Induction motor drive equipped with a diode bridge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#model.im_drive.DataloggerExtended" title="model.im_drive.DataloggerExtended"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataloggerExtended</span></code></a></p></td>
+<td><p>Datalogger for an induction motor drive with a diode bridge.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="model.im_drive.Drive">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.im_drive.</span></code><code class="sig-name descname"><span class="pre">Drive</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mech</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datalog</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Drive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Drive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interconnect the subsystems of an indcution motor drive.</p>
+<p>This interconnects the subsystems of an induction motor drive and provides
+the interface to the solver. More complicated systems could be simulated
+using a similar template.</p>
+<dl class="py method">
+<dt id="model.im_drive.Drive.get_initial_values">
+<code class="sig-name descname"><span class="pre">get_initial_values</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Drive.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Drive.get_initial_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the initial values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x0</strong> – Initial values of the state variables.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>complex list, length 4</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.Drive.set_initial_values">
+<code class="sig-name descname"><span class="pre">set_initial_values</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Drive.set_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Drive.set_initial_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the initial values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x0</strong> (<em>complex ndarray</em>) – Initial values of the state variables.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.Drive.f">
+<code class="sig-name descname"><span class="pre">f</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Drive.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Drive.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the complete state derivative list for the solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
+<li><p><strong>x</strong> (<em>complex ndarray</em>) – State vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>State derivatives.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>complex list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.Drive.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Drive.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Drive.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="model.im_drive.Motor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.im_drive.</span></code><code class="sig-name descname"><span class="pre">Motor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_sgm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.224</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Motor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Motor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Induction motor.</p>
+<p>This models an induction motor using the inverse-Gamma model. The model is
+implemented in stator coordinates. The default values correspond to a
+2.2-kW induction motor.</p>
+<p class="rubric">References</p>
+<p>Slemon, “Modelling of induction machines for electric drives,” IEEE Trans.
+Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.1109/28.44251">https://doi.org/10.1109/28.44251</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Stator resistance. The default is 3.7.</p></li>
+<li><p><strong>R_R</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotor resistance. The default is 2.1.</p></li>
+<li><p><strong>L_sgm</strong> (<em>float</em><em>, </em><em>optional</em>) – Leakage inductance. The default is .021.</p></li>
+<li><p><strong>L_M</strong> (<em>float</em><em>, </em><em>optional</em>) – Magnetizing inductance. The default is .224.</p></li>
+<li><p><strong>p</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of pole pairs. The default is 2.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="model.im_drive.Motor.currents">
+<code class="sig-name descname"><span class="pre">currents</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_ss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_Rs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Motor.currents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Motor.currents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the stator and rotor currents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage.</p></li>
+<li><p><strong>psi_Rs</strong> (<em>complex</em>) – Rotor flux linkage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current.</p></li>
+<li><p><strong>i_Rs</strong> (<em>complex</em>) – Rotor current.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.Motor.torque">
+<code class="sig-name descname"><span class="pre">torque</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_ss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_ss</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Motor.torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Motor.torque" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the electromagnetic torque.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage.</p></li>
+<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>tau_M</strong> – Electromagnetic torque.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.Motor.f">
+<code class="sig-name descname"><span class="pre">f</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_Rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_ss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_Rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Motor.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Motor.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the state derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage.</p></li>
+<li><p><strong>psi_Rs</strong> (<em>complex</em>) – Rotor flux linkage.</p></li>
+<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current.</p></li>
+<li><p><strong>i_Rs</strong> (<em>complex</em>) – Rotor current.</p></li>
+<li><p><strong>u_ss</strong> (<em>complex</em>) – Stator voltage.</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (in mechanical rad/s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Time derivative of the state vector, [dpsi_ss, dpsi_Rs]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>complex list, length 2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.Motor.meas_currents">
+<code class="sig-name descname"><span class="pre">meas_currents</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Motor.meas_currents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Motor.meas_currents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Measure the phase currents at the end of the sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_s_abc</strong> – Phase currents.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>3-tuple of floats</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.Motor.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Motor.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Motor.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="model.im_drive.SaturationModel">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.im_drive.</span></code><code class="sig-name descname"><span class="pre">SaturationModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_unsat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.34</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.84</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#SaturationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.SaturationModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Magnetic saturation model based on a power function.</p>
+<p>This models magnetic saturation using a power function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L_sat</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">=</span><span class="n">L_unsat</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span><span class="o">**</span><span class="n">S</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default values correspond to the stator inductance of a 2.2-kW
+induction motor.</p>
+<p class="rubric">References</p>
+<p>Qu, Ranta, Hinkkanen, Luomi, “Loss-minimizing flux level control of
+induction motor drives,” IEEE Trans. Ind. Appl., 2021,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_unsat</strong> (<em>float</em><em>, </em><em>optional</em>) – Unsaturatad inductance. The default is .34.</p></li>
+<li><p><strong>beta</strong> (<em>float</em><em>, </em><em>optional</em>) – Positive coefficient. The default is .84.</p></li>
+<li><p><strong>S</strong> (<em>TYPE</em><em>, </em><em>float</em>) – Positive coefficient. The default is 7.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="model.im_drive.SaturationModel.__call__">
+<code class="sig-name descname"><span class="pre">__call__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#SaturationModel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.SaturationModel.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>psi</strong> (<em>complex</em>) – Flux linkage. If the value is complex, its magnitude is used.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>L_sat</strong> – Instantatenous saturated value of the inductance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.SaturationModel.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#SaturationModel.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.SaturationModel.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="model.im_drive.MotorSaturated">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.im_drive.</span></code><code class="sig-name descname"><span class="pre">MotorSaturated</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_sgm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.023</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SaturationModel()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#MotorSaturated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.MotorSaturated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.im_drive.Motor" title="model.im_drive.Motor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Motor</span></code></a></p>
+<p>Saturated induction motor.</p>
+<p>This models a saturated induction motor using the Gamma model. The Gamma
+model suits better for modeling the magnetic saturation. The default values
+correspond to a 2.2-kW induction motor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Stator resistance. The default is 3.7.</p></li>
+<li><p><strong>R_R</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotor resistance. The default is 2.1.</p></li>
+<li><p><strong>L_sgm</strong> (<em>float</em><em>, </em><em>optional</em>) – Leakage inductance. The default is .021.</p></li>
+<li><p><strong>L_M</strong> (<em>function</em><em>, </em><em>optional</em>) – Stator inductance function L_M(psi_s). The default is
+SaturationModel().</p></li>
+<li><p><strong>p</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of pole pairs. The default is 2.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="model.im_drive.MotorSaturated.currents">
+<code class="sig-name descname"><span class="pre">currents</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_ss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_Rs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#MotorSaturated.currents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.MotorSaturated.currents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the stator and rotor currents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage.</p></li>
+<li><p><strong>psi_Rs</strong> (<em>complex</em>) – Rotor flux linkage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current.</p></li>
+<li><p><strong>i_Rs</strong> (<em>complex</em>) – Rotor current.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.MotorSaturated.__str__">
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#MotorSaturated.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.MotorSaturated.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="model.im_drive.Datalogger">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.im_drive.</span></code><code class="sig-name descname"><span class="pre">Datalogger</span></code><a class="reference internal" href="../../../_modules/model/im_drive.html#Datalogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Datalogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Datalogger for an induction motor drive.</p>
+<dl class="py method">
+<dt id="model.im_drive.Datalogger.save">
+<code class="sig-name descname"><span class="pre">save</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Datalogger.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Datalogger.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the solution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sol</strong> (<em>bunch object</em>) – Solution from the solver.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.Datalogger.post_process">
+<code class="sig-name descname"><span class="pre">post_process</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#Datalogger.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.Datalogger.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the lists to the ndarray format and post-process them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mdl</strong> (<em>object</em>) – Drive object that includes the data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="model.im_drive.DriveWithDiodeBridge">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.im_drive.</span></code><code class="sig-name descname"><span class="pre">DriveWithDiodeBridge</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mech</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datalog</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#DriveWithDiodeBridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.DriveWithDiodeBridge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.im_drive.Drive" title="model.im_drive.Drive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drive</span></code></a></p>
+<p>Induction motor drive equipped with a diode bridge.</p>
+<p>This models an induction motor drive, equipped with a three-phase diode
+bridge fed from stiff supply voltages. The DC bus has an inductor and
+a capacitor.</p>
+<dl class="py method">
+<dt id="model.im_drive.DriveWithDiodeBridge.get_initial_values">
+<code class="sig-name descname"><span class="pre">get_initial_values</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#DriveWithDiodeBridge.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.DriveWithDiodeBridge.get_initial_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the initial values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x0</strong> – Initial values of the state variables.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>complex list, length 4</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.DriveWithDiodeBridge.set_initial_values">
+<code class="sig-name descname"><span class="pre">set_initial_values</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#DriveWithDiodeBridge.set_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.DriveWithDiodeBridge.set_initial_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the initial values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x0</strong> (<em>complex ndarray</em>) – Initial values of the state variables.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.DriveWithDiodeBridge.f">
+<code class="sig-name descname"><span class="pre">f</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#DriveWithDiodeBridge.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.DriveWithDiodeBridge.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the complete state derivative list for the solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
+<li><p><strong>x</strong> (<em>complex ndarray</em>) – State vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>State derivatives.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>complex list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="model.im_drive.DataloggerExtended">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">model.im_drive.</span></code><code class="sig-name descname"><span class="pre">DataloggerExtended</span></code><a class="reference internal" href="../../../_modules/model/im_drive.html#DataloggerExtended"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.DataloggerExtended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.im_drive.Datalogger" title="model.im_drive.Datalogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Datalogger</span></code></a></p>
+<p>Datalogger for an induction motor drive with a diode bridge.</p>
+<dl class="py method">
+<dt id="model.im_drive.DataloggerExtended.save">
+<code class="sig-name descname"><span class="pre">save</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#DataloggerExtended.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.DataloggerExtended.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the solution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sol</strong> (<em>bunch object</em>) – Solution from the solver.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="model.im_drive.DataloggerExtended.post_process">
+<code class="sig-name descname"><span class="pre">post_process</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/model/im_drive.html#DataloggerExtended.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.im_drive.DataloggerExtended.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the lists to the ndarray format and post-process them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mdl</strong> (<em>object</em>) – Drive object that includes the data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Aalto Electric Drives
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

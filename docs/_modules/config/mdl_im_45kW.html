@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>config.mdl_im_45kW &mdash; motulator 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>config.mdl_im_45kW</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for config.mdl_im_45kW</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=C0103</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains the configuration data for the 45-kW induction motor drive.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># %%</span>
+<span class="kn">from</span> <span class="nn">model.im_drive</span> <span class="kn">import</span> <span class="n">Motor</span><span class="p">,</span> <span class="n">MotorSaturated</span><span class="p">,</span> <span class="n">SaturationModel</span>
+<span class="kn">from</span> <span class="nn">model.im_drive</span> <span class="kn">import</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">Datalogger</span>
+<span class="kn">from</span> <span class="nn">model.interfaces</span> <span class="kn">import</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">Delay</span>
+<span class="kn">from</span> <span class="nn">model.mech</span> <span class="kn">import</span> <span class="n">Mechanics</span>
+<span class="kn">from</span> <span class="nn">model.converter</span> <span class="kn">import</span> <span class="n">Inverter</span>
+
+<span class="c1"># %% Selectors</span>
+<div class="viewcode-block" id="saturated"><a class="viewcode-back" href="../../autoapi/config/mdl_im_45kW/index.html#config.mdl_im_45kW.saturated">[docs]</a><span class="n">saturated</span> <span class="o">=</span> <span class="ow">not</span> <span class="kc">True</span>  <span class="c1"># Enable the magnetic saturation model</span></div>
+
+<span class="c1"># %% Computational delay and PWM</span>
+<div class="viewcode-block" id="delay"><a class="viewcode-back" href="../../autoapi/config/mdl_im_45kW/index.html#config.mdl_im_45kW.delay">[docs]</a><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+<div class="viewcode-block" id="pwm"><a class="viewcode-back" href="../../autoapi/config/mdl_im_45kW/index.html#config.mdl_im_45kW.pwm">[docs]</a><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<span class="c1"># %% Mechanics</span>
+<div class="viewcode-block" id="mech"><a class="viewcode-back" href="../../autoapi/config/mdl_im_45kW/index.html#config.mdl_im_45kW.mech">[docs]</a><span class="n">mech</span> <span class="o">=</span> <span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">1.66</span><span class="o">*</span><span class="mf">.49</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+<span class="c1"># %% Motor model</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">saturated</span><span class="p">:</span>
+    <span class="c1"># Inverse-Gamma model (no saturation)</span>
+<div class="viewcode-block" id="motor_data"><a class="viewcode-back" href="../../autoapi/config/mdl_im_45kW/index.html#config.mdl_im_45kW.motor_data">[docs]</a>    <span class="n">motor_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;R_s&#39;</span><span class="p">:</span> <span class="mf">0.057</span><span class="p">,</span>
+                  <span class="s1">&#39;R_R&#39;</span><span class="p">:</span> <span class="mf">0.029</span><span class="p">,</span>
+                  <span class="s1">&#39;L_sgm&#39;</span><span class="p">:</span> <span class="mf">2.2e-3</span><span class="p">,</span>
+                  <span class="s1">&#39;L_M&#39;</span><span class="p">:</span> <span class="mf">24.5e-3</span><span class="p">,</span>
+                  <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span></div>
+    <span class="n">motor</span> <span class="o">=</span> <span class="n">Motor</span><span class="p">(</span><span class="o">**</span><span class="n">motor_data</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Saturable Gamma umodel with the main-flux saturation model</span>
+    <span class="n">L_M</span> <span class="o">=</span> <span class="n">SaturationModel</span><span class="p">(</span><span class="n">L_unsat</span><span class="o">=</span><span class="mf">29.4e-3</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">.68</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="mf">6.5</span><span class="p">)</span>
+    <span class="n">motor_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;R_s&#39;</span><span class="p">:</span> <span class="mf">.057</span><span class="p">,</span>
+                  <span class="s1">&#39;R_R&#39;</span><span class="p">:</span> <span class="mf">.034</span><span class="p">,</span>
+                  <span class="s1">&#39;L_sgm&#39;</span><span class="p">:</span> <span class="mf">2.4e-3</span><span class="p">,</span>
+                  <span class="s1">&#39;L_M&#39;</span><span class="p">:</span> <span class="n">L_M</span><span class="p">,</span>
+                  <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+    <span class="n">motor</span> <span class="o">=</span> <span class="n">MotorSaturated</span><span class="p">(</span><span class="o">**</span><span class="n">motor_data</span><span class="p">)</span>
+
+<span class="c1"># %% Drive model</span>
+<div class="viewcode-block" id="converter"><a class="viewcode-back" href="../../autoapi/config/mdl_im_45kW/index.html#config.mdl_im_45kW.converter">[docs]</a><span class="n">converter</span> <span class="o">=</span> <span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span></div>
+<div class="viewcode-block" id="datalog"><a class="viewcode-back" href="../../autoapi/config/mdl_im_45kW/index.html#config.mdl_im_45kW.datalog">[docs]</a><span class="n">datalog</span> <span class="o">=</span> <span class="n">Datalogger</span><span class="p">()</span></div>
+<div class="viewcode-block" id="mdl"><a class="viewcode-back" href="../../autoapi/config/mdl_im_45kW/index.html#config.mdl_im_45kW.mdl">[docs]</a><span class="n">mdl</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">mech</span><span class="p">,</span> <span class="n">converter</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">datalog</span><span class="p">)</span></div>
+<span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Aalto Electric Drives
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
