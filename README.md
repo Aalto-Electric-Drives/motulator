@@ -15,4 +15,4 @@ https://aalto-electric-drives.github.io/motulator/
 
 Acknowledgement
 ---------------
-This open-source project has been sponsored by ABB Oy. The example control methods included in this repository are based on published algorithms (available in textbooks and scientific articles). They do not present any proprietary control software.
+This project has been sponsored by ABB Oy. The example control methods included in this repository are based on published algorithms (available in textbooks and scientific articles). They do not present any proprietary control software.
