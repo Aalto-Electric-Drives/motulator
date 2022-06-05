@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains vector control for PMSM drives.
+This module contains vector control for synchronous motor drives.
 
 """
 
@@ -14,16 +14,14 @@ from control.common import PWM, Datalogger
 # %%
 class VectorCtrl:
     """
-    This class interconnects the subsystems of the PMSM control system and
+    Interconnect the subsystems of the control method.
+
+    This class interconnects the subsystems of the control system and
     provides the interface to the solver.
 
     """
 
     def __init__(self, pars, speed_ctrl, current_ref, current_ctrl, observer):
-        """
-        Instantiate the classes.
-
-        """
         self.p = pars.p
         self.sensorless = pars.sensorless
         self.current_ctrl = current_ctrl
@@ -95,7 +93,7 @@ class VectorCtrl:
         return d_abc_ref, self.pwm.T_s
 
     def __str__(self):
-        desc = (('Vector control for synchronous motors\n'
+        desc = (('Vector control for a synchronous motor\n'
                  '-------------------------------------\n'
                  'Sensorless:\n'
                  '    {}\n'
@@ -116,15 +114,23 @@ class VectorCtrl:
 # %%
 class CurrentCtrl:
     """
-    A current controller corresponding to the paper "Flux-linkage-based current
-    control of saturated synchronous motors":
+    2DOF PI current controller.
 
-        https://doi.org/10.1109/TIA.2019.291925
+    This 2DOF PI current controller corresponds to [1]_. The continuous-time
+    complex-vector design corresponding to (13) is used here. This design could
+    be equivalently presented as a 2DOF PI controller.
 
-    The continuous-time complex-vector design corresponding to (13) is used
-    here. This design could be equivalently presented as a 2DOF PI controller.
+    Notes
+    -----
     For better performance at high speeds with low sampling frequencies, the
-    discrete-time design in (18) is recommended.
+    discrete-time design in (18) is recommended. This implementation does not
+    take the magnetic saturation into account.
+
+    References
+    ----------
+    .. [1] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+       https://doi.org/10.1109/TIA.2019.2919258
 
     """
 
@@ -174,7 +180,7 @@ class CurrentCtrl:
 
     def update(self, e, u_s_ref, u_s_ref_lim, w_m):
         """
-        Updates the integral state.
+        Update the integral state.
 
         Parameters
         ----------
@@ -202,16 +208,27 @@ class CurrentCtrl:
 # %%
 class CurrentRef:
     """
-    This reference calculation method resembles the method presented in
-    "Analytical design and autotuning of adaptive flux-weakening voltage
-    regulation loop in IPMSM drives with accurate torque regulation":
+    Current reference calculation.
 
-        https://doi.org/10.1109/TIA.2019.2942807
+    This current reference calculation method includes the MTPA locus and
+    field-weakenting operation based on the unlimited voltage reference
+    feedback. The MTPV and current limits are taken into account. This
+    resembles the method presented [2]_.
 
-    Instead of the PI controller, we use a simpler integral controller with a
-    constant gain. The resulting operating-point-dependent closed-loop pole
-    could be derived using (12) of the paper. The MTPV limit is also included
-    by means of limiting the reference torque and the d-axis current reference.
+    Notes
+    -----
+    Instead of the PI controller used in [2]_, we use a simpler integral
+    controller with a constant gain. The resulting operating-point-dependent
+    closed-loop pole could be derived using (12) of the paper. Unlike in [2]_,
+    the MTPV limit is also included here by means of limiting the reference
+    torque and the d-axis current reference.
+
+    References
+    ----------
+    .. [2] Bedetti, Calligaro, Petrella, "Analytical design and autotuning of
+       adaptive flux-weakening voltage regulation loop in IPMSM drives with
+       accurate torque regulation," IEEE Trans. Ind. Appl., 2020,
+       https://doi.org/10.1109/TIA.2019.2942807
 
     """
 
@@ -321,7 +338,7 @@ class CurrentRef:
             self.i_sd_ref = i_sd_lim
 
     def __str__(self):
-        desc = ('Current reference computation and field weakening:\n'
+        desc = ('Current reference calculation:\n'
                 '    i_s_max={:.1f}\n').format(self.i_s_max)
         return desc
 
@@ -329,14 +346,18 @@ class CurrentRef:
 # %%
 class SensorlessObserver:
     """
-    A sensorless observer corresponding to the paper "Observers for sensorless
-    synchronous motor drives: Framework for design and analysis":
+    Sensorless observer.
 
-        https://doi.org/10.1109/TIA.2018.2858753
+    This sensorless observer corresponds to [3]_. The observer gain decouples
+    the electrical and mechanical dynamics and allows placing the poles of the
+    corresponding linearized estimation error dynamics. This implementation
+    operates in estimated rotor coordinates.
 
-    The observer gain decouples the electrical and mechanical dynamicas and
-    allows placing the poles of the corresponding linearized estimation
-    error dynamics.
+    References
+    ----------
+    .. [3] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
+       sensorless synchronous motor drives: Framework for design and analysis,"
+       IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
 
     """
 

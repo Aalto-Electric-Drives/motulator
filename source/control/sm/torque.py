@@ -1,6 +1,8 @@
 # pylint: disable=C0103
 """
-This file contains computation and plotting of torque characteristics for
+Torque characteristics for synchronous machines.
+
+This contains computation and plotting of torque characteristics for
 synchronous machines, including the MTPA and MTPV loci. The methods can be used
 to define look-up tables for control as well as to analyze the characteristics.
 In this version, the magnetic saturation is omitted.
@@ -22,8 +24,9 @@ plt.rcParams.update({"text.usetex": False})  # Disable LaTeX in plots
 # %%
 class TorqueCharacteristics:
     """
-    Computes MTPA and MTPV loci based on the motor parameters. The magnetic
-    saturation is omitted.
+    Compute MTPA and MTPV loci based on the motor parameters.
+
+    The magnetic saturation is omitted.
 
     """
 
@@ -179,11 +182,14 @@ class TorqueCharacteristics:
 
     def mtpv_current(self, abs_i_s):
         """
-        Compute the MTPV based on the current magnitude, i.e., the intersection
-        of the MTPV current locus and the current limit circle. This method is
-        not necessary for computing the control look-up tables. It is used here
-        to "cut" the MTPV characteristics at the desired current. Alternatively
-        just a large enough maximum flux magnitude could be used.
+        Compute the MTPV based on the current magnitude.
+
+        This computes the MTPV based on the current magnitude, i.e., the
+        intersection of the MTPV current locus and the current limit circle.
+        This method is not necessary for computing the control look-up tables.
+        It is used here to "cut" the MTPV characteristics at the desired
+        current. Alternatively just a large enough maximum flux magnitude could
+        be used.
 
         Parameters
         ----------
@@ -434,8 +440,10 @@ class TorqueCharacteristics:
 
     def delta_at_zero_torque(self, abs_psi_s):
         """
-        Compute the "nontrivial" load angle value corresponding to the zero
-        electromagnetic torque.
+        Compute the load angle value at the zero torque.
+
+        This computes the "nontrivial" load angle value corresponding to the
+        zero electromagnetic torque.
 
         Parameters
         ----------
@@ -464,7 +472,9 @@ class TorqueCharacteristics:
 
     def plot_flux_loci(self, i_s_max, base, N=20):
         """
-        Plot stator flux linkage loci using per-unit quantities.
+        Plot the stator flux linkage loci.
+
+        Per-unit quantities are used.
 
         Parameters
         ----------
@@ -474,10 +484,6 @@ class TorqueCharacteristics:
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
-
-        Returns
-        -------
-        None.
 
         """
         # Compute the characteristics
@@ -507,7 +513,9 @@ class TorqueCharacteristics:
 
     def plot_current_loci(self, i_s_max, base, N=20):
         """
-        Plot current loci using per-unit quantities.
+        Plot the current loci.
+
+        Per-unit quantities are used.
 
         Parameters
         ----------
@@ -517,10 +525,6 @@ class TorqueCharacteristics:
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
-
-        Returns
-        -------
-        None.
 
         """
         # Compute the characteristics
@@ -553,7 +557,9 @@ class TorqueCharacteristics:
 
     def plot_torque_current(self, i_s_max, base, N=20):
         """
-        Plot torque vs. current characteristics using per-unit quantities.
+        Plot torque vs. current characteristics.
+
+        Per-unit quantities are used.
 
         Parameters
         ----------
@@ -563,10 +569,6 @@ class TorqueCharacteristics:
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
-
-        Returns
-        -------
-        None.
 
         """
         # Compute the characteristics
@@ -609,8 +611,9 @@ class TorqueCharacteristics:
 
     def plot_torque_flux(self, i_s_max, base, N=20):
         """
-        Plot torque vs. flux magnitude characteristics using per-unit
-        quantities.
+        Plot torque vs. flux magnitude characteristics.
+
+        Per-unit quantities are used.
 
         Parameters
         ----------
@@ -620,10 +623,6 @@ class TorqueCharacteristics:
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
-
-        Returns
-        -------
-        None.
 
         """
         # Compute the characteristics
@@ -650,6 +649,8 @@ class TorqueCharacteristics:
         """
         Plot the electromagnetic torque as a function of the load angle.
 
+        Per-unit quantities are used.
+
         Parameters
         ----------
         abs_psi_s : float
@@ -658,10 +659,6 @@ class TorqueCharacteristics:
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 100.
-
-        Returns
-        -------
-        None.
 
         """
         delta = np.linspace(-np.pi, np.pi, N)

@@ -1,7 +1,6 @@
 # pylint: disable=C0103
 """
-This module includes the solver functions as well as the models for PWM
-carrier comparison and computational delay.
+This module contains the interfaces for the solver.
 
 """
 import numpy as np
@@ -65,9 +64,11 @@ def solve(mdl, d_abc, t_span, max_step=np.inf):
 # %%
 class PWM:
     """
-    This class implements carrier comparison of three-phase PWM. The switching
+    Carrier comparison for pulse-width modulation.
+
+    This implements carrier comparison for three-phase PWM. The switching
     instants and the switching states are explicitly and exactly computed from
-    the duty ratios. The switching instants can be used in the ODE solver.
+    the duty ratios. The switching instants can be used in the solver.
 
     """
 
@@ -98,8 +99,7 @@ class PWM:
         Returns
         -------
         tn_sw : ndarray, shape (4,2)
-            Normalized switching instants,
-            tn_sw = [0, t1, t2, t3, 1].
+            Normalized switching instants, tn_sw = [0, t1, t2, t3, 1].
         q : complex ndarray, shape (4,)
             Switching state space vectors corresponding to the switching
             instants. For example, the switching state q[1] is applied
@@ -148,7 +148,9 @@ class PWM:
 # %%
 class Delay:
     """
-    This class implements a delay as a ring buffer.
+    Computational delay.
+
+    This models the compuational delay as a ring buffer.
 
     """
 
