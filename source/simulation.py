@@ -6,17 +6,12 @@ motulator: Open-Source Simulator for Motor Drives and Power Converters
 
 '''
 # %% Imports
-from time import time
+
 from model.interfaces import solve
 import copy
 import numpy as np
 from helpers import plot, save_plot
 import matplotlib.pyplot as plt
-
-# from source.config.ctrl_vector_im_2kW import ctrl, pars, mdl, base
-# from source.config.ctrl_vector_pmsm_2kW import ctrl, pars, mdl, base
-from config.ctrl_vector_syrm_7kW import ctrl, pars, mdl, base
-# from config.ctrl_vhz_im_2kW import ctrl, pars, mdl, base
 
 import scipy.io
 
@@ -177,22 +172,4 @@ class Simulation:
 
         scipy.io.savemat(self.name+'.mat', data)
 
-# %% Main program
-if __name__ == '__main__':
 
-    # Start computing the execution time
-    start_time = time()
-
-
-    sim = Simulation(mdl, ctrl, base)
-    sim.simulate()
-    sim.plot_figure()
-    plt.show()
-
-    # sim.save_mat()
-
-    # Print the execution time
-    print('\nExecution time: {:.2f} s'.format((time() - start_time)))
-
-
-# %%
