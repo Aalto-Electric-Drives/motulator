@@ -46,7 +46,7 @@ class CtrlParameters:
 
     """
     # pylint: disable=too-many-instance-attributes
-    sensorless: bool = True
+    sensorless: bool = False
     # Sampling period
     T_s: float = 250e-6
     # Bandwidths
@@ -108,7 +108,7 @@ if pars.sensorless:
     observer = SensorlessObserver(pars)
 
 ctrl = VectorCtrl(pars, speed_ctrl, current_ref, current_ctrl, observer)
-print(ctrl)
+
 
 # %% Speed refrerence and load torque profiles
 ref_ramp(mdl, w_max=base.w, tau_max=20.1, t_max=4)

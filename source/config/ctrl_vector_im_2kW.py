@@ -81,7 +81,7 @@ else:
     observer = CurrentModelEstimator(pars)
 
 ctrl = VectorCtrl(pars, speed_ctrl, current_ref, current_ctrl, observer)
-print(ctrl)
+
 
 # %% Speed refrerence and load torque profiles
 ref_ramp(mdl, w_max=base.w, tau_max=14.6, t_max=4)

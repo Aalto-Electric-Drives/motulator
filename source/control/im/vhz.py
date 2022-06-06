@@ -36,6 +36,8 @@ class VHzCtrl:
     """
 
     def __init__(self, pars):
+        #
+        self.sensorless = True
         # Instantiate classes
         self.pwm = PWM(pars)
         self.rate_limiter = RateLimiter(pars)

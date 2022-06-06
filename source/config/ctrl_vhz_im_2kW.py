@@ -64,7 +64,7 @@ pars = CtrlParameters()
 #  Open-loop V/Hz control can be obtained by choosing:
 # pars.k_u, pars.k_w, pars.R_s, pars.R_R = 0, 0, 0, 0
 ctrl = VHzCtrl(pars)
-print(ctrl)
+
 
 # %% Speed refrerence and load torque profiles
 ref_step(mdl, w_max=.8*base.w, tau_max=14.6, t_max=1.5)

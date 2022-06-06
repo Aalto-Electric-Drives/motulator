@@ -43,4 +43,3 @@ else:
 converter = Inverter(u_dc=540)
 datalog = Datalogger()
 mdl = Drive(motor, mech, converter, delay, pwm, datalog)
-print(mdl)
