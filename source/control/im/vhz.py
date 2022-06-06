@@ -1,12 +1,9 @@
 # pylint: disable=C0103
 '''
-This module includes V/Hz control for induction motor drives. The method
-is similar to the paper "On the stability of volts-per-hertz control for
-induction motors":
+This module includes V/Hz control for induction motor drives.
 
-    https://doi.org/10.1109/JESTPE.2021.3060583
-
-Open-loop V/Hz control can be obtained as a special case by choosing:
+The V/Hz control method is similar to [1]_. Open-loop V/Hz control can be
+obtained as a special case by choosing::
 
     R_s, R_R = 0, 0
     k_u, k_w = 0, 0
@@ -15,7 +12,13 @@ Notes
 -----
 The low-pass-filtered values are marked with ref at the end of the variable
 name. These slowly varying quasi-steady-state quantities can be seen to
-represent the operating point.
+represent the operating point (marked with the subscript 0 in [1]_).
+
+References
+----------
+.. [1] Hinkkanen, Tiitinen, Mölsä, Harnefors, "On the stability of
+   volts-per-hertz control for induction motors," IEEE J. Emerg. Sel. Topics
+   Power Electron., 2022, https://doi.org/10.1109/JESTPE.2021.3060583
 
 '''
 # %%
@@ -28,15 +31,11 @@ from helpers import abc2complex
 # %%
 class VHzCtrl:
     """
-    V/Hz control algorithm with the stator current feedback.
+    V/Hz control with the stator current feedback.
 
     """
 
     def __init__(self, pars):
-        """
-        Instantiate the classes and get the parameters.
-
-        """
         # Instantiate classes
         self.pwm = PWM(pars)
         self.rate_limiter = RateLimiter(pars)
@@ -112,8 +111,10 @@ class VHzCtrl:
 
     def stator_freq(self, w_s_ref, i_s):
         """
-        Computes the dynamic stator frequency reference used in
-        the coordinate transformations.
+        Compute the dynamic stator frequency.
+
+        This computes the dynamic stator frequency reference used in the
+        coordinate transformations.
 
         """
         # Operating-point quantities
@@ -131,7 +132,7 @@ class VHzCtrl:
 
     def voltage_reference(self, w_s, i_s):
         """
-        Compute the stator voltage reference in synchronous coordinates.
+        Compute the stator voltage reference.
 
         """
         # Nominal magnetizing current

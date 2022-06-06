@@ -11,7 +11,11 @@ from helpers import complex2abc, abc2complex
 # %%
 def duty_ratios(u, u_dc):
     """
-    Duty ratios for three-phase PWM using a symmetrical suboscillation method.
+    Compute the duty ratios for three-phase PWM.
+
+    This compuates the duty ratios for three-phase PWM using a symmetrical
+    suboscillation method. This method is identical to the standard
+    space-vector PWM.
 
     Parameters
     ----------
@@ -43,9 +47,11 @@ def duty_ratios(u, u_dc):
 # %%
 class PWM:
     """
-    This class contains the duty ratio computation and the voltage estimation.
-    The voltage estimate is computed from the duty ratio references, taking
-    the delay effects into account.
+    Compute the duty ratio references and the realized voltage.
+
+    This contains the compuation of the duty ratio references and the realized
+    voltage. The compuation of the realized voltage takes the digital delay
+    effects into account.
 
     """
 
@@ -63,7 +69,7 @@ class PWM:
 
     def __call__(self, u_ref, u_dc, theta, w):
         """
-        Computes the duty ratio references and updates the state.
+        Compute the duty ratio references and update the state.
 
         Parameters
         ----------
@@ -88,7 +94,7 @@ class PWM:
 
     def output(self, u_ref, u_dc, theta, w):
         """
-        Computes the duty ratio references and the limited voltage reference.
+        Compute the duty ratio references and the limited voltage reference.
 
         """
         # Advance the angle due to the computational delay (T_s) and
@@ -120,8 +126,11 @@ class PWM:
 # %%
 class SpeedCtrl:
     """
-    Speed controller with the disturbance-observer structure. This controller
-    is mathematically equivalent to the 2DOF PI speed controller.
+    2DOF PI speed controller.
+
+    This speed controller is implemented using the disturbance-observer
+    structure. The controller is mathematically identical to the 2DOF PI speed
+    controller.
 
     """
 
@@ -145,7 +154,7 @@ class SpeedCtrl:
 
     def output(self, w_M_ref, w_M):
         """
-        Computes the torque reference and the load torque estimate.
+        Compute the torque reference and the load torque estimate.
 
         Parameters
         ----------
@@ -170,7 +179,7 @@ class SpeedCtrl:
 
     def update(self, tau_M, tau_L):
         """
-        Updates the integral state.
+        Update the integral state.
 
         Parameters
         ----------
@@ -189,7 +198,7 @@ class SpeedCtrl:
 # %%
 class RateLimiter:
     """
-    A class used to implement a rate limiter.
+    Rate limiter.
 
     """
 
@@ -241,15 +250,11 @@ class RateLimiter:
 # %%
 class Datalogger:
     """
-    This class contains the data logger.
+    Datalogger for the control system.
 
     """
 
     def __init__(self):
-        """
-        Initialize the attributes.
-
-        """
         self.data = Bunch()
 
     def save(self, data):

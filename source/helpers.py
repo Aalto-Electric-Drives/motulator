@@ -71,12 +71,25 @@ def complex2abc(u):
 # %%
 class Sequence:
     """
-    This class represents a sequence generator. The time array must be
-    increasing. The output values are interpolated between the data points.
+    Sequence generator.
+
+    This represents a sequence generator. The time array must be increasing.
+    The output values are interpolated between the data points.
 
     """
 
     def __init__(self, times, values, periodic=False):
+        """
+        Parameters
+        ----------
+        times : ndarray
+            Time values.
+        values : ndarray
+            Output values.
+        periodic : Boolean, optional
+            Enables periodicity. The default is False.
+
+        """
         self.times = times
         self.values = values
         if periodic is True:
@@ -86,7 +99,7 @@ class Sequence:
 
     def __call__(self, t):
         """
-        Interpolates the output.
+        Interpolate the output.
 
         Parameters
         ----------
@@ -110,7 +123,7 @@ class Sequence:
 # %%
 class Step:
     """
-    This data class represents a step function.
+    Step function.
 
     """
 
@@ -146,13 +159,15 @@ class Step:
 # %%
 def ref_ramp(mdl, w_max=2*np.pi*50, tau_max=14.6, t_max=4):
     """
-    Generate an example ramp profile for the speed reference. The load torque
-    changes stepwise.
+    Generate a ramp reference.
+
+    This generate an example ramp profile for the speed reference. The load
+    torque changes stepwise.
 
     Parameters
     ----------
     mdl : object
-        Model.
+        Drive model.
     w_max : float, optional
         Maximum speed in the profile. The default is 2*pi*50.
     tau_max : float, optional
@@ -178,13 +193,15 @@ def ref_ramp(mdl, w_max=2*np.pi*50, tau_max=14.6, t_max=4):
 # %%
 def ref_step(mdl, w_max=.8*2*np.pi*50, tau_max=14.6, t_max=1.5):
     """
-    Generate an example stepwise profile for the speed reference and load
+    Generate a step reference.
+
+    This generates an example stepwise profile for the speed reference and load
     torque.
 
     Parameters
     ----------
     mdl : object
-        Model.
+        Drive model.
     w_max : float, optional
         Maximum speed in the profile. The default is .8*2*pi*50.
     tau_max : float, optional
@@ -229,16 +246,14 @@ def plot(mdl, ctrl, base):
 
     ax1.step(ctrl.t, ctrl.w_m_ref/base.w, '--', where='post')
     ax1.plot(mdl.t, mdl.w_m/base.w)
-    if motor_type == 'sm':
+    try:
         ax1.step(ctrl.t, ctrl.w_m/base.w, where='post')
-        ax1.legend([r'$\omega_\mathrm{m,ref}$',
-                    r'$\omega_\mathrm{m}$',
-                    r'$\hat \omega_\mathrm{m}$'])
-    else:
-        ax1.step(ctrl.t, ctrl.w_s/base.w, where='post')
-        ax1.legend([r'$\omega_\mathrm{m,ref}$',
-                    r'$\omega_\mathrm{m}$',
-                    r'$\hat \omega_\mathrm{m}$'])
+    except AttributeError:
+        pass
+    ax1.legend([r'$\omega_\mathrm{m,ref}$',
+                r'$\omega_\mathrm{m}$',
+                r'$\hat \omega_\mathrm{m}$'])
+    # ax1.step(ctrl.t, ctrl.w_s/base.w, where='post')  # Stator frequency
     ax1.set_xlim(t_range)
     ax1.set_xticklabels([])
     ax1.set_ylabel('Speed (p.u.)')
@@ -282,10 +297,10 @@ def plot(mdl, ctrl, base):
         ax5.plot(mdl.t, np.abs(mdl.psi_Rs)/base.psi)
         try:
             ax5.plot(ctrl.t, np.abs(ctrl.psi_R)/base.psi)
-            ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$',
-                        r'$\hat \psi_\mathrm{R}$'])
         except AttributeError:
-            ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$'])
+            pass
+        ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$',
+                    r'$\hat \psi_\mathrm{R}$'])
     ax5.set_xlim(t_range)
     ax5.set_ylabel('Flux (p.u.)')
     ax5.set_xlabel('Time (s)')
@@ -297,7 +312,7 @@ def plot(mdl, ctrl, base):
 # %%
 def plot_im_extra(mdl, ctrl, base):
     """
-    Plots extra waveforms for induction motors.
+    Plot extra waveforms for an induction motor with a diode bridge.
 
     Parameters
     ----------

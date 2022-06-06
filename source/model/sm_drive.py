@@ -1,8 +1,10 @@
 # pylint: disable=C0103
 """
-This module includes continuous-time models for a permmanent-magnet
-synchronous motor drive. The space-vector model is implemented in rotor
-coordinates.
+This module contains continuous-time models for synchronous motor drives.
+
+The same motor model can be parametrized to represent a permanent-magnet
+synchronous motor and synchronous reluctance motor. Peak-valued complex space
+vectors are used.
 
 """
 import numpy as np
@@ -13,16 +15,15 @@ from helpers import complex2abc
 # %%
 class Drive:
     """
-    This class interconnects the subsystems of a PMSM drive and provides an
-    interface to the solver.
+    Interconnect the subsystems of an synchronous motor drive.
+
+    This interconnects the subsystems of an synchronous motor drive and
+    provides the interface to the solver. More complicated systems could be
+    simulated using a similar template.
 
     """
 
     def __init__(self, motor, mech, converter, delay, pwm, datalog):
-        """
-        Instantiate the classes.
-
-        """
         self.motor = motor
         self.mech = mech
         self.converter = converter
@@ -34,6 +35,8 @@ class Drive:
 
     def get_initial_values(self):
         """
+        Get the initial values.
+
         Returns
         -------
         x0 : complex list, length 2
@@ -45,6 +48,8 @@ class Drive:
 
     def set_initial_values(self, t0, x0):
         """
+        Set the initial values.
+
         Parameters
         ----------
         x0 : complex ndarray
@@ -101,15 +106,16 @@ class Drive:
 # %%
 class Motor:
     """
-    This class represents a permanent-magnet synchronous motor. The
-    peak-valued complex space vectors are used.
+    Synchronous motor.
+
+    This models a synchronous motor. The model is implemented in rotor
+    coordinates. The default values correspond to a 2.2-kW permanent-magnet
+    synchronous motor.
 
     """
 
     def __init__(self, mech, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, p=3):
         """
-        The default values correspond to the 2.2-kW PMSM.
-
         Parameters
         ----------
         mech : object
@@ -138,12 +144,12 @@ class Motor:
         Parameters
         ----------
         psi_s : complex
-            Stator flux linkage in rotor coordinates.
+            Stator flux linkage.
 
         Returns
         -------
         i_s : complex
-            Stator current in rotor coordinates.
+            Stator current.
 
         """
         i_s = (psi_s.real - self.psi_f)/self.L_d + 1j*psi_s.imag/self.L_q
@@ -176,11 +182,11 @@ class Motor:
         Parameters
         ----------
         psi_s : complex
-            Stator flux linkage in rotor coordinates.
+            Stator flux linkage.
         u_s : complex
-            Stator voltage in rotor coordinates.
+            Stator voltage.
         w_M : float
-            Rotor speed (in mechanical rad/s).
+            Rotor angular speed (in mechanical rad/s).
 
         Returns
         -------
@@ -193,7 +199,7 @@ class Motor:
 
     def meas_currents(self):
         """
-        Return the phase currents at the end of the sampling period.
+        Measure the phase currents at the end of the sampling period.
 
         Returns
         -------
@@ -216,16 +222,11 @@ class Motor:
 # %%
 class Datalogger:
     """
-    This class contains a datalogger. Here, stator coordinates are marked
-    with additional s, e.g. i_ss is the stator current in stator coordinates.
+    Datalogger for a synchronous motor drive.
 
     """
 
     def __init__(self):
-        """
-        Initialize the attributes.
-
-        """
         self.data = Bunch()
         self.data.t, self.data.q = [], []
         self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
@@ -249,6 +250,11 @@ class Datalogger:
     def post_process(self, mdl):
         """
         Transform the lists to the ndarray format and post-process them.
+
+        Parameters
+        ----------
+        mdl : object
+            Drive object that includes the data.
 
         """
         # From lists to the ndarray

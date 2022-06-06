@@ -1,8 +1,9 @@
 # pylint: disable=C0103
 """
-This module contains models for the power converter. The inverter with the
-constant DC-bus voltage and the frequency converter with the diode
-front-end rectifier are modeled.
+This module contains power converter models.
+
+The inverter with the constant DC-bus voltage and the frequency converter with
+the diode front-end rectifier are modeled.
 
 """
 import numpy as np
@@ -10,7 +11,7 @@ import numpy as np
 
 def ac_voltage(q, u_dc):
     """
-    Computes the AC-side voltage of a lossless inverter.
+    Compute the AC-side voltage of a lossless inverter.
 
     Parameters
     ----------
@@ -31,7 +32,7 @@ def ac_voltage(q, u_dc):
 
 def dc_current(q, i_ac):
     """
-    Computes the DC-side current of a lossless inverter.
+    Compute the DC-side current of a lossless inverter.
 
     Parameters
     ----------
@@ -53,7 +54,7 @@ def dc_current(q, i_ac):
 # %%
 class Inverter:
     """
-    This class represents an inverter fed from the constant DC-voltage source.
+    Inverter fed from the constant DC-voltage source.
 
     """
 
@@ -71,10 +72,12 @@ class Inverter:
 
     def meas_dc_voltage(self):
         """
+        Measure the DC-bus voltage.
+
         Returns
         -------
         float
-            Measured DC-bus voltage.
+            DC-bus voltage.
 
         """
         return self.u_dc0
@@ -88,8 +91,10 @@ class Inverter:
 # %%
 class FrequencyConverter:
     """
-    This class models a strong grid, a three-phase diode-bridge rectifier,
-    an LC filter, and a three-phase inverter.
+    Frequency converter.
+
+    This models a strong grid, a three-phase diode-bridge rectifier, an LC
+    filter, and a three-phase inverter.
 
     """
 
@@ -97,7 +102,6 @@ class FrequencyConverter:
         """
         Parameters
         ----------
-
         C : float, optional
             DC-bus capacitance. The default is 235e-6.
         L : float, optional
@@ -118,7 +122,7 @@ class FrequencyConverter:
 
     def grid_voltages(self, t):
         """
-        Computes the three-phase grid voltages.
+        Compute the three-phase grid voltages.
 
         Parameters
         ----------
@@ -139,7 +143,7 @@ class FrequencyConverter:
 
     def f(self, t, u_dc, i_L, i_dc):
         """
-        Computes the state derivatives.
+        Compute the state derivatives.
 
         Parameters
         ----------
@@ -172,6 +176,8 @@ class FrequencyConverter:
 
     def meas_dc_voltage(self):
         """
+        Measure the DC-bus voltage.
+
         Returns
         -------
         float
