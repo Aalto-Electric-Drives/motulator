@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from simulation import Simulation
 # from source.config.ctrl_vector_im_2kW import ctrl, pars, mdl, base
 # from source.config.ctrl_vector_pmsm_2kW import ctrl, pars, mdl, base
-from config.ctrl_vector_syrm_7kW import ctrl, pars, mdl, base
+from config.ctrl_vector_syrm_7kW import ctrl, mdl, base
 # from config.ctrl_vhz_im_2kW import ctrl, pars, mdl, base
 
 # %% Main program
