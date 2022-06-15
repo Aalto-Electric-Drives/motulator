@@ -1,0 +1,232 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>source.cfg.mdl_syrm_7kW &mdash; motulator 0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>source.cfg.mdl_syrm_7kW</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for source.cfg.mdl_syrm_7kW</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=C0103</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains the configuration data for the 6.7-kW synchronous reluctance</span>
+<span class="sd">motor drive.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># %%</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="ModelData"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData">[docs]</a><span class="k">class</span> <span class="nc">ModelData</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    System model data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ModelData.name"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.name">[docs]</a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;6.7-kW synchronous reluctance motor drive&#39;</span></div>
+    <span class="c1"># Motor</span>
+<div class="viewcode-block" id="ModelData.motor_type"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.motor_type">[docs]</a>    <span class="n">motor_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;synchronous motor&#39;</span></div>
+<div class="viewcode-block" id="ModelData.R_s"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.R_s">[docs]</a>    <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">.</span><span class="mi">54</span></div>
+<div class="viewcode-block" id="ModelData.L_d"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.L_d">[docs]</a>    <span class="n">L_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">41.5e-3</span></div>
+<div class="viewcode-block" id="ModelData.L_q"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.L_q">[docs]</a>    <span class="n">L_q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.2e-3</span></div>
+<div class="viewcode-block" id="ModelData.psi_f"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.psi_f">[docs]</a>    <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span></div>
+<div class="viewcode-block" id="ModelData.p"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.p">[docs]</a>    <span class="n">p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span></div>
+    <span class="c1"># Mechanics</span>
+<div class="viewcode-block" id="ModelData.J"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.J">[docs]</a>    <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">.</span><span class="mi">015</span></div>
+<div class="viewcode-block" id="ModelData.B"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.B">[docs]</a>    <span class="n">B</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span></div>
+<div class="viewcode-block" id="ModelData.w_M0"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.w_M0">[docs]</a>    <span class="n">w_M0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Initial rotor speed</span></div>
+<div class="viewcode-block" id="ModelData.theta_M0"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.theta_M0">[docs]</a>    <span class="n">theta_M0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Initial rotor angle</span></div>
+    <span class="c1"># Converter</span>
+<div class="viewcode-block" id="ModelData.pwm_enabled"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.pwm_enabled">[docs]</a>    <span class="n">pwm_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># PWM disabled to fasten the simulation</span></div>
+<div class="viewcode-block" id="ModelData.u_dc"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.u_dc">[docs]</a>    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">540</span>  <span class="c1"># DC-bus voltage</span></div>
+    <span class="c1"># Computational delay</span>
+<div class="viewcode-block" id="ModelData.delay"><a class="viewcode-back" href="../../../autoapi/source/cfg/mdl_syrm_7kW/index.html#source.cfg.mdl_syrm_7kW.ModelData.delay">[docs]</a>    <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Aalto Electric Drives.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>source.simulation &mdash; motulator 0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">source.simulation</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/autoapi/source/simulation/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-source.simulation">
+<span id="source-simulation"></span><h1><a class="reference internal" href="#module-source.simulation" title="source.simulation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">source.simulation</span></code></a><a class="headerlink" href="#module-source.simulation" title="Permalink to this headline">¶</a></h1>
+<p>This module contains the simulation class.</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#source.simulation.Simulation" title="source.simulation.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
+<td><p>Create a simulation object.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="source.simulation.Simulation">
+<em class="property">class </em><code class="sig-prename descclassname">source.simulation.</code><code class="sig-name descname">Simulation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mdl</span></em>, <em class="sig-param"><span class="n">ctrl</span></em>, <em class="sig-param"><span class="n">base</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'sim'</span></em>, <em class="sig-param"><span class="n">print_opts</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/source/simulation.html#Simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.simulation.Simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a simulation object.</p>
+<p>Each simulation has a control module and a plant module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mdl</strong> (<em>mdl</em>) – drive model</p></li>
+<li><p><strong>ctrl</strong> (<em>ctrl</em>) – control model</p></li>
+<li><p><strong>base</strong> (<em>base</em>) – base values</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – name for the simulation instance</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="source.simulation.Simulation.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/source/simulation.html#Simulation.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.simulation.Simulation.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the main simulation loop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.simulation.Simulation.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/source/simulation.html#Simulation.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.simulation.Simulation.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute post simulation processes for the saved simulation data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.simulation.Simulation.print_control_config">
+<code class="sig-name descname">print_control_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/source/simulation.html#Simulation.print_control_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.simulation.Simulation.print_control_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the control system data, speed reference and load reference.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.simulation.Simulation.print_model_config">
+<code class="sig-name descname">print_model_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/source/simulation.html#Simulation.print_model_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.simulation.Simulation.print_model_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the model configuration data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.simulation.Simulation.print_simulation_profile">
+<code class="sig-name descname">print_simulation_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/source/simulation.html#Simulation.print_simulation_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.simulation.Simulation.print_simulation_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the simulation profiles.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.simulation.Simulation.plot_figure">
+<code class="sig-name descname">plot_figure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">save</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/source/simulation.html#Simulation.plot_figure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.simulation.Simulation.plot_figure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the simulation results.</p>
+<p>A wrapper for the plot function in helpers.py.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.simulation.Simulation.save_mat">
+<code class="sig-name descname">save_mat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/source/simulation.html#Simulation.save_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.simulation.Simulation.save_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the simulation data to MATLAB .mat file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Aalto Electric Drives.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+:mod:`source.cfg.ctrl_vhz_im_2kW`
+=================================
+
+.. py:module:: source.cfg.ctrl_vhz_im_2kW
+
+.. autoapi-nested-parse::
+
+   This script configures V/Hz control for an induction motor. The default values
+   correspond to a 2.2-kW induction motor.
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   source.cfg.ctrl_vhz_im_2kW.BaseValues
+   source.cfg.ctrl_vhz_im_2kW.CtrlParameters
+
+
+
+.. py:class:: BaseValues
+
+   This data class contains the base values computed from the rated values.
+   These are used for plotting the results.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. attribute:: w
+      :annotation: :float
+
+      
+
+   .. attribute:: i
+      :annotation: :float
+
+      
+
+   .. attribute:: u
+      :annotation: :float
+
+      
+
+   .. attribute:: p
+      :annotation: :int = 2
+
+      
+
+   .. attribute:: psi
+      :annotation: :float
+
+      
+
+   .. attribute:: P
+      :annotation: :float
+
+      
+
+   .. attribute:: Z
+      :annotation: :float
+
+      
+
+   .. attribute:: L
+      :annotation: :float
+
+      
+
+   .. attribute:: tau
+      :annotation: :float
+
+      
+
+
+.. py:class:: CtrlParameters
+
+   This data class contains parameters for the V/Hz control system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. attribute:: sensorless
+      :annotation: :bool = True
+
+      
+
+   .. attribute:: T_s
+      :annotation: :float = 0.00025
+
+      
+
+   .. attribute:: psi_s_nom
+      :annotation: :float
+
+      
+
+   .. attribute:: rate_limit
+      :annotation: :float
+
+      
+
+   .. attribute:: R_s
+      :annotation: :float = 3.7
+
+      
+
+   .. attribute:: R_R
+      :annotation: :float = 2.1
+
+      
+
+   .. attribute:: L_sgm
+      :annotation: :float = 0.021
+
+      
+
+   .. attribute:: L_M
+      :annotation: :float = 0.224
+
+      
+
+   .. attribute:: w_rb
+      :annotation: :float
+
+      
+
+   .. attribute:: alpha_f
+      :annotation: :float
+
+      
+
+   .. attribute:: alpha_i
+      :annotation: :float
+
+      
+
+   .. attribute:: k_u
+      :annotation: :float = 1
+
+      
+
+   .. attribute:: k_w
+      :annotation: :float = 4
+
+      
+
+
+.. data:: base
+   
+
+   
+
+.. data:: pars
+   
+
+   
+
+.. data:: ctrl
+   
+
+   
+

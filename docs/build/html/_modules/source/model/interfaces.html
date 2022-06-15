@@ -1,0 +1,387 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>source.model.interfaces &mdash; motulator 0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>source.model.interfaces</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for source.model.interfaces</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=C0103</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the interfaces for the solver.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+<span class="kn">from</span> <span class="nn">helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="solve"><a class="viewcode-back" href="../../../autoapi/source/model/interfaces/index.html#source.model.interfaces.solve">[docs]</a><span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve the continuous-time model over t_span.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mdl : object</span>
+<span class="sd">        Model to be simulated.</span>
+<span class="sd">    d_abc : array_like of floats, shape (3,)</span>
+<span class="sd">        Duty ratio references in the interval [0, 1].</span>
+<span class="sd">    t_span : 2-tuple of floats</span>
+<span class="sd">        Interval of integration (t0, tf). The solver starts with t=t0 and</span>
+<span class="sd">        integrates until it reaches t=tf.</span>
+<span class="sd">    max_step : float, optional</span>
+<span class="sd">        Max step size of the solver. The default is inf.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Common code</span>
+    <span class="k">def</span> <span class="nf">run_solver</span><span class="p">(</span><span class="n">t_span</span><span class="p">):</span>
+        <span class="c1"># Skip possible zero time spans</span>
+        <span class="k">if</span> <span class="n">t_span</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">t_span</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="c1"># Get initial values</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span>
+            <span class="c1"># Integrate</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="n">max_step</span><span class="p">)</span>
+            <span class="c1"># Set the new initial values (last points of the solution)</span>
+            <span class="n">t0_new</span><span class="p">,</span> <span class="n">x0_new</span> <span class="o">=</span> <span class="n">t_span</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">set_initial_values</span><span class="p">(</span><span class="n">t0_new</span><span class="p">,</span> <span class="n">x0_new</span><span class="p">)</span>
+            <span class="c1"># Data logging</span>
+            <span class="n">sol</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">q</span><span class="p">]</span>  <span class="c1"># Switching state vector is constant</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">datalog</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mdl</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+        <span class="c1"># Update the duty ratio space vector (constant over the time span)</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)</span>
+        <span class="c1"># Run the solver</span>
+        <span class="n">run_solver</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Sampling period</span>
+        <span class="n">T_s</span> <span class="o">=</span> <span class="n">t_span</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_span</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Compute the normalized switching spans and the corresponding states</span>
+        <span class="n">tn_sw</span><span class="p">,</span> <span class="n">q_sw</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)</span>
+        <span class="c1"># Convert the normalized switching spans to seconds</span>
+        <span class="n">t_sw</span> <span class="o">=</span> <span class="n">t_span</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">T_s</span><span class="o">*</span><span class="n">tn_sw</span>
+        <span class="c1"># Loop over the switching time spans</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t_sw_span</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t_sw</span><span class="p">):</span>
+            <span class="c1"># Update the switching state vector (constant over the time span)</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q_sw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1"># Run the solver</span>
+            <span class="n">run_solver</span><span class="p">(</span><span class="n">t_sw_span</span><span class="p">)</span></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="PWM"><a class="viewcode-back" href="../../../autoapi/source/model/interfaces/index.html#source.model.interfaces.PWM">[docs]</a><span class="k">class</span> <span class="nc">PWM</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Carrier comparison for pulse-width modulation.</span>
+
+<span class="sd">    This implements carrier comparison for three-phase PWM. The switching</span>
+<span class="sd">    instants and the switching states are explicitly and exactly computed from</span>
+<span class="sd">    the duty ratios. The switching instants can be used in the solver.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=R0903</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            Amount of PWM quantization levels. The default is 2**12.</span>
+<span class="sd">        enabled : Boolean, optional</span>
+<span class="sd">            PMW enabled. The default is True.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">falling_edge</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span>
+
+<div class="viewcode-block" id="PWM.__call__"><a class="viewcode-back" href="../../../autoapi/source/model/interfaces/index.html#source.model.interfaces.PWM.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the normalized switching instants and the switching states.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        d_abc : array_like of floats, shape (3,)</span>
+<span class="sd">            Duty ratios in the range [0, 1].</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tn_sw : ndarray, shape (4,2)</span>
+<span class="sd">            Normalized switching instants, tn_sw = [0, t1, t2, t3, 1].</span>
+<span class="sd">        q : complex ndarray, shape (4,)</span>
+<span class="sd">            Switching state space vectors corresponding to the switching</span>
+<span class="sd">            instants. For example, the switching state q[1] is applied</span>
+<span class="sd">            at the interval tn_sw[1].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Switching instants t_sw split the sampling period T_s into</span>
+<span class="sd">        four spans. No switching (e.g. da = 0 or da = 1) or simultaneous</span>
+<span class="sd">        switching instants (e.g da == db) lead to zero spans, i.e.,</span>
+<span class="sd">        t_sw[i] == t_sw[i].</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Quantize the duty ratios to N levels</span>
+        <span class="n">d_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d_abc</span><span class="p">))</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span>
+        <span class="c1"># Initialize the normalized switching instant array</span>
+        <span class="n">tn_sw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">tn_sw</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># Could be understood as a carrier comparison</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">falling_edge</span><span class="p">:</span>
+            <span class="c1"># Normalized switching instants (zero crossing instants)</span>
+            <span class="n">tn_sw</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)</span>
+            <span class="n">tn_sw</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tn_sw</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Compute the switching state array</span>
+            <span class="n">q_abc</span> <span class="o">=</span> <span class="p">(</span><span class="n">tn_sw</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">d_abc</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Rising edge</span>
+            <span class="n">tn_sw</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">d_abc</span><span class="p">)</span>
+            <span class="n">tn_sw</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tn_sw</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">q_abc</span> <span class="o">=</span> <span class="p">(</span><span class="n">tn_sw</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">d_abc</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="c1"># Change the carrier direction for the next call</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">falling_edge</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">falling_edge</span>
+        <span class="c1"># Switching state space vector</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">q_abc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tn_sw</span><span class="p">,</span> <span class="n">q</span></div>
+
+<div class="viewcode-block" id="PWM.__str__"><a class="viewcode-back" href="../../../autoapi/source/model/interfaces/index.html#source.model.interfaces.PWM.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;PWM model:</span><span class="se">\n</span><span class="s1">    disabled</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;PWM model:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="s1">&#39;    </span><span class="si">{}</span><span class="s1"> quantization levels</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">desc</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Delay"><a class="viewcode-back" href="../../../autoapi/source/model/interfaces/index.html#source.model.interfaces.Delay">[docs]</a><span class="k">class</span> <span class="nc">Delay</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computational delay.</span>
+
+<span class="sd">    This models the compuational delay as a ring buffer.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=R0903</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">elem</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        length : int, optional</span>
+<span class="sd">            Length of the buffer in samples. The default is 1.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">length</span><span class="o">*</span><span class="p">[</span><span class="n">elem</span><span class="o">*</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>  <span class="c1"># Creates a zero list</span>
+
+<div class="viewcode-block" id="Delay.__call__"><a class="viewcode-back" href="../../../autoapi/source/model/interfaces/index.html#source.model.interfaces.Delay.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        u : array_like, shape (elem,)</span>
+<span class="sd">            Input array.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array_like, shape (elem,)</span>
+<span class="sd">            Output array.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Add the latest value to the end of the list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="c1"># Pop the first element and return it</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Delay.__str__"><a class="viewcode-back" href="../../../autoapi/source/model/interfaces/index.html#source.model.interfaces.Delay.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Computational delay:</span><span class="se">\n</span><span class="s1">    </span><span class="si">{}</span><span class="s1"> sampling periods</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">desc</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Aalto Electric Drives.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

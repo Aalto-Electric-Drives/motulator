@@ -1,0 +1,24 @@
+:mod:`source.cfg`
+=================
+
+.. py:module:: source.cfg
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   ctrl_vector_im_2kW/index.rst
+   ctrl_vector_im_45kW/index.rst
+   ctrl_vector_pmsm_2kW/index.rst
+   ctrl_vector_syrm_7kW/index.rst
+   ctrl_vhz_im_2kW/index.rst
+   ctrl_vhz_im_45kW/index.rst
+   mdl_im_2kW/index.rst
+   mdl_im_45kW/index.rst
+   mdl_pmsm_2kW/index.rst
+   mdl_syrm_7kW/index.rst
+
+

@@ -1,0 +1,447 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>source.control.common &mdash; motulator 0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">source.control.common</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../../_sources/autoapi/source/control/common/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-source.control.common">
+<span id="source-control-common"></span><h1><a class="reference internal" href="#module-source.control.common" title="source.control.common"><code class="xref py py-mod docutils literal notranslate"><span class="pre">source.control.common</span></code></a><a class="headerlink" href="#module-source.control.common" title="Permalink to this headline">¶</a></h1>
+<p>This module contains common control functions and classes.</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#source.control.common.PWM" title="source.control.common.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<td><p>Compute the duty ratio references and the realized voltage.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#source.control.common.SpeedCtrl" title="source.control.common.SpeedCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedCtrl</span></code></a></p></td>
+<td><p>2DOF PI speed controller.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#source.control.common.RateLimiter" title="source.control.common.RateLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></p></td>
+<td><p>Rate limiter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#source.control.common.Datalogger" title="source.control.common.Datalogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Datalogger</span></code></a></p></td>
+<td><p>Datalogger for the control system.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#source.control.common.state_machine" title="source.control.common.state_machine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_machine</span></code></a>(mdl, ctrl)</p></td>
+<td><p>State machine for running the simulation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#source.control.common.duty_ratios" title="source.control.common.duty_ratios"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duty_ratios</span></code></a>(u, u_dc)</p></td>
+<td><p>Compute the duty ratios for three-phase PWM.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt id="source.control.common.state_machine">
+<code class="sig-prename descclassname">source.control.common.</code><code class="sig-name descname">state_machine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mdl</span></em>, <em class="sig-param"><span class="n">ctrl</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#state_machine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.state_machine" title="Permalink to this definition">¶</a></dt>
+<dd><p>State machine for running the simulation.</p>
+<p>This runs the digital controller and calls the solver for integrating the
+continuous-time system model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mdl</strong> (<em>object</em>) – System model.</p></li>
+<li><p><strong>ctrl</strong> (<em>object</em>) – Controller.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="source.control.common.duty_ratios">
+<code class="sig-prename descclassname">source.control.common.</code><code class="sig-name descname">duty_ratios</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">u_dc</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#duty_ratios"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.duty_ratios" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the duty ratios for three-phase PWM.</p>
+<p>This compuates the duty ratios for three-phase PWM using a symmetrical
+suboscillation method. This method is identical to the standard
+space-vector PWM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>complex</em>) – Voltage space vector (typically reference value).</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (typically measured value).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>d_abc</strong> – Duty ratios (typically reference values).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray, shape (3,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="source.control.common.PWM">
+<em class="property">class </em><code class="sig-prename descclassname">source.control.common.</code><code class="sig-name descname">PWM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pars</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#PWM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.PWM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the duty ratio references and the realized voltage.</p>
+<p>This contains the compuation of the duty ratio references and the realized
+voltage. The compuation of the realized voltage takes the digital delay
+effects into account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<em>data object</em>) – Controller parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="source.control.common.PWM.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">u_ref</span></em>, <em class="sig-param"><span class="n">u_dc</span></em>, <em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">w</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#PWM.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.PWM.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the duty ratio references and update the state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_ref</strong> (<em>complex</em>) – Voltage reference in synchronous coordinates.</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage.</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – Angle of synchronous coordinates.</p></li>
+<li><p><strong>w</strong> (<em>float</em>) – Angular frequency of synchronous coordinates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>d_abc_ref</strong> – Duty ratio references.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray, shape (3,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.control.common.PWM.output">
+<code class="sig-name descname">output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">u_ref</span></em>, <em class="sig-param"><span class="n">u_dc</span></em>, <em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">w</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#PWM.output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.PWM.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the duty ratio references and the limited voltage reference.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.control.common.PWM.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">u_ref_lim</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#PWM.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.PWM.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the voltage estimate for the next sampling instant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>u_ref_lim</strong> (<em>complex</em>) – Limited voltage reference in synchronous coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="source.control.common.SpeedCtrl">
+<em class="property">class </em><code class="sig-prename descclassname">source.control.common.</code><code class="sig-name descname">SpeedCtrl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pars</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#SpeedCtrl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.SpeedCtrl" title="Permalink to this definition">¶</a></dt>
+<dd><p>2DOF PI speed controller.</p>
+<p>This speed controller is implemented using the disturbance-observer
+structure. The controller is mathematically identical to the 2DOF PI speed
+controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<em>data object</em>) – Controller parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="source.control.common.SpeedCtrl.output">
+<code class="sig-name descname">output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">w_M_ref</span></em>, <em class="sig-param"><span class="n">w_M</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#SpeedCtrl.output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.SpeedCtrl.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the torque reference and the load torque estimate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w_M_ref</strong> (<em>float</em>) – Rotor speed reference (in mechanical rad/s).</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor speed (in mechanical rad/s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>tau_M_ref</strong> (<em>float</em>) – Torque reference.</p></li>
+<li><p><strong>tau_L</strong> (<em>float</em>) – Load torque estimate.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.control.common.SpeedCtrl.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">tau_M</span></em>, <em class="sig-param"><span class="n">tau_L</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#SpeedCtrl.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.SpeedCtrl.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the integral state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau_M</strong> (<em>float</em>) – Realized (limited) torque reference.</p></li>
+<li><p><strong>tau_L</strong> (<em>float</em>) – Load torque estimate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.control.common.SpeedCtrl.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#SpeedCtrl.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.SpeedCtrl.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="source.control.common.RateLimiter">
+<em class="property">class </em><code class="sig-prename descclassname">source.control.common.</code><code class="sig-name descname">RateLimiter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pars</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#RateLimiter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.RateLimiter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rate limiter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<em>data object</em>) – Controller parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="source.control.common.RateLimiter.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">u</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#RateLimiter.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.RateLimiter.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>u</strong> (<em>float</em>) – Input signal.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>y</strong> – Rate-limited output signal.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In this implementation, the falling rate limit equals the (negative)
+rising rate limit. If needed, these limits can be separated with minor
+modifications in the class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="source.control.common.Datalogger">
+<em class="property">class </em><code class="sig-prename descclassname">source.control.common.</code><code class="sig-name descname">Datalogger</code><a class="reference internal" href="../../../../_modules/source/control/common.html#Datalogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.Datalogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Datalogger for the control system.</p>
+<p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dl class="py method">
+<dt id="source.control.common.Datalogger.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#Datalogger.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.Datalogger.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the solution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dictionary</em><em> or </em><em>Bunch object</em>) – Data to be saved.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="source.control.common.Datalogger.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/source/control/common.html#Datalogger.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.control.common.Datalogger.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the lists to the ndarray format.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Aalto Electric Drives.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

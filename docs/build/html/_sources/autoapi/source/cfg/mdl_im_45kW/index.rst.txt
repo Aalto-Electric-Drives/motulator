@@ -1,0 +1,57 @@
+:mod:`source.cfg.mdl_im_45kW`
+=============================
+
+.. py:module:: source.cfg.mdl_im_45kW
+
+.. autoapi-nested-parse::
+
+   This file contains the configuration data for the 45-kW induction motor drive.
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+Module Contents
+---------------
+
+.. data:: saturated
+   
+
+   
+
+.. data:: delay
+   
+
+   
+
+.. data:: pwm
+   
+
+   
+
+.. data:: mech
+   
+
+   
+
+.. data:: motor_data
+   
+
+   
+
+.. data:: converter
+   
+
+   
+
+.. data:: datalog
+   
+
+   
+
+.. data:: mdl
+   
+
+   
+

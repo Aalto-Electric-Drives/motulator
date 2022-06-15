@@ -1,0 +1,22 @@
+:mod:`source.main`
+==================
+
+.. py:module:: source.main
+
+.. autoapi-nested-parse::
+
+   This module contains the main program.
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+Module Contents
+---------------
+
+.. data:: start_time
+   
+
+   
+

@@ -6,62 +6,6 @@ This module contains common control functions and classes.
 import numpy as np
 from sklearn.utils import Bunch
 from helpers import complex2abc, abc2complex
-from model.interfaces import solve
-
-
-def state_machine(mdl, ctrl):
-    """
-    State machine for running the simulation.
-
-    This runs the digital controller and calls the solver for integrating the
-    continuous-time system model.
-
-    Parameters
-    ----------
-    mdl : object
-        System model.
-    ctrl : object
-        Controller.
-
-    """
-    def sensorless_ctrl():
-        while mdl.t0 <= mdl.t_stop:
-            # Sample the phase currents and the DC-bus voltage
-            i_s_abc_meas = mdl.motor.meas_currents()
-            u_dc_meas = mdl.converter.meas_dc_voltage()
-            # Get the speed reference
-            w_m_ref = mdl.speed_ref(mdl.t0)
-            # Run the digital controller
-            d_abc_ref, T_s = ctrl(w_m_ref, i_s_abc_meas, u_dc_meas)
-            # Model the computational delay
-            d_abc = mdl.delay(d_abc_ref)
-            # Simulate the continuous-time plant model over the sampling period
-            solve(mdl, d_abc, [mdl.t0, mdl.t0+T_s])
-
-    def sensored_ctrl():
-        while mdl.t0 <= mdl.t_stop:
-            # Sample the phase currents and the DC-bus voltage
-            i_s_abc_meas = mdl.motor.meas_currents()
-            u_dc_meas = mdl.converter.meas_dc_voltage()
-            # Measure the rotor position (not used in the case of an IM)
-            theta_m_meas = ctrl.p*mdl.mech.meas_position()
-            # Measure the rotor speed
-            w_m_meas = ctrl.p*mdl.mech.meas_speed()
-            # Get the speed reference
-            w_m_ref = mdl.speed_ref(mdl.t0)
-            # Run the digital controller
-            d_abc_ref, T_s = ctrl(w_m_ref, i_s_abc_meas, u_dc_meas, w_m_meas,
-                                  theta_m_meas)
-            # Model the computational delay
-            d_abc = mdl.delay(d_abc_ref)
-            # Simulate the continuous-time plant model over the sampling period
-            solve(mdl, d_abc, [mdl.t0, mdl.t0 + T_s])
-
-    # Run the state machine
-    if ctrl.sensorless:
-        sensorless_ctrl()
-    else:
-        sensored_ctrl()
 
 
 # %%
@@ -301,6 +245,51 @@ class RateLimiter:
         # Store the limited output
         self.y_old = y
         return y
+
+
+# %%
+class Delay:
+    """
+    Computational delay.
+
+    This models the compuational delay as a ring buffer.
+
+    """
+
+    # pylint: disable=R0903
+    def __init__(self, length=1, elem=3):
+        """
+        Parameters
+        ----------
+        length : int, optional
+            Length of the buffer in samples. The default is 1.
+
+        """
+        self.data = length*[elem*[0]]  # Creates a zero list
+
+    def __call__(self, u):
+        """
+        Parameters
+        ----------
+        u : array_like, shape (elem,)
+            Input array.
+
+        Returns
+        -------
+        array_like, shape (elem,)
+            Output array.
+
+        """
+        # Add the latest value to the end of the list
+        self.data.append(u)
+        # Pop the first element and return it
+        return self.data.pop(0)
+
+    def __str__(self):
+        length = len(self.data)
+        desc = (('Computational delay:\n    {} sampling periods\n')
+                .format(length))
+        return desc
 
 
 # %%

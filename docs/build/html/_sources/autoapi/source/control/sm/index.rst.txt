@@ -1,0 +1,39 @@
+:mod:`source.control.sm`
+========================
+
+.. py:module:: source.control.sm
+
+.. autoapi-nested-parse::
+
+   This package contains example controllers for a synchronous motor drive.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   torque/index.rst
+   vector/index.rst
+
+

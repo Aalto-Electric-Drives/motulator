@@ -1,0 +1,48 @@
+:mod:`source.control`
+=====================
+
+.. py:module:: source.control
+
+.. autoapi-nested-parse::
+
+   This package contains example controllers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   im/index.rst
+   sm/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   common/index.rst
+
+

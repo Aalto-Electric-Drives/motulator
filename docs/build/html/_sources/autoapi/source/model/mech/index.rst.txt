@@ -1,0 +1,211 @@
+:mod:`source.model.mech`
+========================
+
+.. py:module:: source.model.mech
+
+.. autoapi-nested-parse::
+
+   This module contains continuous-time models for mechanical subsystems.
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   source.model.mech.Mechanics
+
+
+
+.. py:class:: Mechanics(pars)
+
+   Mechanical subsystem.
+
+   This models an equation of motion for stiff mechanics.
+
+   .. attribute:: J
+
+      Total moment of inertia.
+
+      :type: float
+
+   .. attribute:: B
+
+      Viscous damping coefficient.
+
+      :type: float
+
+   .. attribute:: tau_L_ext
+
+      External load torque as a function of time, `tau_L_ext(t)`. If not
+      defined, `tau_L_ext(t) = 0` is used.
+
+      :type: function
+
+   .. attribute:: w_M0
+
+      Initial value of the rotor angular speed.
+
+      :type: float
+
+   .. attribute:: theta_M0
+
+      Initial value of the rotor angle.
+
+      :type: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   :param pars: Contains the mechanics data.
+   :type pars: ModelData object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. method:: f(self, t, w_M, tau_M)
+
+      Compute the state derivative.
+
+      :param t: Time.
+      :type t: float
+      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :type w_M: float
+      :param tau_M: Electromagnetic torque.
+      :type tau_M: float
+
+      :returns: Time derivative of the state vector.
+      :rtype: list, length 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. method:: meas_speed(self)
+
+      Measure the rotor speed.
+
+      This returns the rotor speed at the end of the sampling period.
+
+      :returns: **w_M0** -- Rotor angular speed (in mechanical rad/s).
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. method:: meas_position(self)
+
+      Measure the rotor angle.
+
+      This returns the rotor angle at the end of the sampling period.
+
+      :returns: **theta_M0** -- Rotor angle (in mechanical rad).
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. method:: __str__(self)
+
+      Return str(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+

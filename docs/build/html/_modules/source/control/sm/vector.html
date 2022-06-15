@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>source.control.sm.vector &mdash; motulator 0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>source.control.sm.vector</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for source.control.sm.vector</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=C0103</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains vector control for synchronous motor drives.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># %%</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">Bunch</span>
+<span class="kn">from</span> <span class="nn">helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span>
+<span class="kn">from</span> <span class="nn">control.common</span> <span class="kn">import</span> <span class="n">SpeedCtrl</span><span class="p">,</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">Datalogger</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Ctrl"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.Ctrl">[docs]</a><span class="k">class</span> <span class="nc">Ctrl</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create the vector controller.</span>
+
+<span class="sd">    This class interconnects the subsystems of the control system and</span>
+<span class="sd">    provides the interface to the solver.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pars : dataclass object</span>
+<span class="sd">            Control parameters.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">sensorless</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span> <span class="o">=</span> <span class="n">CurrentCtrl</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedCtrl</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_ref</span> <span class="o">=</span> <span class="n">CurrentRef</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">SensorlessObserver</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datalog</span> <span class="o">=</span> <span class="n">Datalogger</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">pars</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">SensorlessObserver</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Ctrl.__call__"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.Ctrl.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_m_ref</span><span class="p">,</span> <span class="n">i_s_abc</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Main control loop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        w_m_ref : float</span>
+<span class="sd">            Rotor speed reference (in electrical rad/s).</span>
+<span class="sd">        i_s_abc : ndarray, shape (3,)</span>
+<span class="sd">            Phase currents.</span>
+<span class="sd">        u_dc : float</span>
+<span class="sd">            DC-bus voltage.</span>
+<span class="sd">        w_M : float, optional</span>
+<span class="sd">            Rotor speed (in mechanical rad/s), for the sensored control.</span>
+<span class="sd">        theta_M : float, optional</span>
+<span class="sd">            Rotor angle (in mechanical rad), for the sensored control.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        d_abc_ref : ndarray, shape (3,)</span>
+<span class="sd">            Duty ratio references.</span>
+<span class="sd">        T_s : float</span>
+<span class="sd">            Sampling period.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the states</span>
+        <span class="n">u_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">realized_voltage</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
+            <span class="n">w_m</span><span class="p">,</span> <span class="n">theta_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">w_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">theta_m</span>
+            <span class="n">i_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta_m</span><span class="p">)</span><span class="o">*</span><span class="n">abc2complex</span><span class="p">(</span><span class="n">i_s_abc</span><span class="p">)</span>
+            <span class="c1"># Needed only for the current controller without integral action</span>
+            <span class="n">psi_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">psi_s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">w_m</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">theta_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+            <span class="n">i_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta_m</span><span class="p">)</span><span class="o">*</span><span class="n">abc2complex</span><span class="p">(</span><span class="n">i_s_abc</span><span class="p">)</span>
+            <span class="n">psi_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="c1"># psi_s = self.L_d*i_s.real + self.psi_f + 1j*self.L_q*i_s.imag</span>
+
+        <span class="c1"># Outputs</span>
+        <span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">w_m_ref</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">w_m</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">i_s_ref</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_ref</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+        <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">i_s_ref</span><span class="p">,</span> <span class="n">i_s</span><span class="p">)</span>
+        <span class="n">d_abc_ref</span><span class="p">,</span> <span class="n">u_s_ref_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">w_m</span><span class="p">)</span>
+
+        <span class="c1"># Update all the states</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">tau_L</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_ref</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_s_ref_lim</span><span class="p">,</span> <span class="n">w_m</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">u_s_ref_lim</span><span class="p">)</span>
+
+        <span class="c1"># Data logging</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span><span class="n">i_s_ref</span><span class="o">=</span><span class="n">i_s_ref</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">u_s</span><span class="o">=</span><span class="n">u_s</span><span class="p">,</span> <span class="n">psi_s</span><span class="o">=</span><span class="n">psi_s</span><span class="p">,</span>
+                     <span class="n">w_m_ref</span><span class="o">=</span><span class="n">w_m_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="o">=</span><span class="n">w_m</span><span class="p">,</span> <span class="n">theta_m</span><span class="o">=</span><span class="n">theta_m</span><span class="p">,</span>
+                     <span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datalog</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">d_abc_ref</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">T_s</span></div>
+
+<div class="viewcode-block" id="Ctrl.__str__"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.Ctrl.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Vector control for a synchronous motor</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;-------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;Sensorless:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;    </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;Sampling period:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;    T_s=</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;Number of pole pairs:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;    p=</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">+=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_ref</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+                     <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">+=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_ref</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+                     <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">desc</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="CurrentCtrl"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.CurrentCtrl">[docs]</a><span class="k">class</span> <span class="nc">CurrentCtrl</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2DOF PI current controller.</span>
+
+<span class="sd">    This 2DOF PI current controller corresponds to [1]_. The continuous-time</span>
+<span class="sd">    complex-vector design corresponding to (13) is used here. This design could</span>
+<span class="sd">    be equivalently presented as a 2DOF PI controller.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For better performance at high speeds with low sampling frequencies, the</span>
+<span class="sd">    discrete-time design in (18) is recommended. This implementation does not</span>
+<span class="sd">    take the magnetic saturation into account.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Awan, Saarakkala, Hinkkanen, &quot;Flux-linkage-based current control of</span>
+<span class="sd">       saturated synchronous motors,&quot; IEEE Trans. Ind. Appl. 2019,</span>
+<span class="sd">       https://doi.org/10.1109/TIA.2019.2919258</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pars : data object</span>
+<span class="sd">            Controller parameters.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Integral state</span>
+
+<div class="viewcode-block" id="CurrentCtrl.output"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.CurrentCtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_ref</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the unlimited voltage reference.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_ref : complex</span>
+<span class="sd">            Current reference.</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Measured current.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u_s_ref : complex</span>
+<span class="sd">            Unlimited voltage reference.</span>
+<span class="sd">        e : complex</span>
+<span class="sd">            Error signal (scaled, corresponds to the stator flux linkage).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Gains</span>
+        <span class="n">k_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span>
+        <span class="c1"># PM-flux linkage cancels out</span>
+        <span class="n">psi_s_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i_s_ref</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i_s_ref</span><span class="o">.</span><span class="n">imag</span>
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span>
+        <span class="n">u_s_ref</span> <span class="o">=</span> <span class="n">k_t</span><span class="o">*</span><span class="n">psi_s_ref</span> <span class="o">-</span> <span class="n">k</span><span class="o">*</span><span class="n">psi_s</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">psi_s_ref</span> <span class="o">-</span> <span class="n">psi_s</span>
+
+        <span class="k">return</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="CurrentCtrl.update"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.CurrentCtrl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_s_ref_lim</span><span class="p">,</span> <span class="n">w_m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the integral state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        e : complex</span>
+<span class="sd">            Error signal (scaled, corresponds to the stator flux linkage).</span>
+<span class="sd">        u_s_ref : complex</span>
+<span class="sd">            Unlimited voltage reference.</span>
+<span class="sd">        u_s_ref_lim : complex</span>
+<span class="sd">            Limited voltage reference.</span>
+<span class="sd">        w_m : float</span>
+<span class="sd">            Angular rotor speed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">k_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span>
+        <span class="n">k_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_m</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="n">k_i</span><span class="o">*</span><span class="p">(</span><span class="n">e</span> <span class="o">+</span> <span class="p">(</span><span class="n">u_s_ref_lim</span> <span class="o">-</span> <span class="n">u_s_ref</span><span class="p">)</span><span class="o">/</span><span class="n">k_t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CurrentCtrl.__str__"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.CurrentCtrl.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;2DOF PI current control:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;    alpha_c=2*pi*</span><span class="si">{:.1f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">desc</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="CurrentRef"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.CurrentRef">[docs]</a><span class="k">class</span> <span class="nc">CurrentRef</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Current reference calculation.</span>
+
+<span class="sd">    This current reference calculation method includes the MTPA locus and</span>
+<span class="sd">    field-weakenting operation based on the unlimited voltage reference</span>
+<span class="sd">    feedback. The MTPV and current limits are taken into account. This</span>
+<span class="sd">    resembles the method presented [2]_.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Instead of the PI controller used in [2]_, we use a simpler integral</span>
+<span class="sd">    controller with a constant gain. The resulting operating-point-dependent</span>
+<span class="sd">    closed-loop pole could be derived using (12) of the paper. Unlike in [2]_,</span>
+<span class="sd">    the MTPV limit is also included here by means of limiting the reference</span>
+<span class="sd">    torque and the d-axis current reference.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [2] Bedetti, Calligaro, Petrella, &quot;Analytical design and autotuning of</span>
+<span class="sd">       adaptive flux-weakening voltage regulation loop in IPMSM drives with</span>
+<span class="sd">       accurate torque regulation,&quot; IEEE Trans. Ind. Appl., 2020,</span>
+<span class="sd">       https://doi.org/10.1109/TIA.2019.2942807</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pars : data object</span>
+<span class="sd">            Controller parameters.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">i_s_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_fw</span><span class="o">/</span><span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">w_nom</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_lim</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">tau_M_lim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_mtpa</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">i_sd_mtpa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_lim</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">i_sd_lim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="CurrentRef.output"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.CurrentRef.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the stator current reference.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tau_M_ref : float</span>
+<span class="sd">            Torque reference.</span>
+<span class="sd">        w_m : float</span>
+<span class="sd">            Rotor speed (in electrical rad/s)</span>
+<span class="sd">        u_dc : float</span>
+<span class="sd">            DC-bus voltage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_s_ref : complex</span>
+<span class="sd">            Stator current reference.</span>
+<span class="sd">        tau_M : float</span>
+<span class="sd">            Limited torque reference.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">limit_torque</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">psi_s_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span><span class="o">*</span><span class="n">u_dc</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">)</span>
+                <span class="n">tau_M_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_lim</span><span class="p">(</span><span class="n">psi_s_max</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tau_M_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_lim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tau_M_max</span><span class="p">:</span>
+                <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">)</span><span class="o">*</span><span class="n">tau_M_max</span>
+
+            <span class="k">return</span> <span class="n">tau_M_ref</span>
+
+        <span class="c1"># Limit the torque reference according to MTPV and current limits</span>
+        <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="n">limit_torque</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+
+        <span class="c1"># q-axis current reference</span>
+        <span class="n">psi_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span>
+        <span class="k">if</span> <span class="n">psi_t</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">i_sq_ref</span> <span class="o">=</span> <span class="n">tau_M_ref</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">psi_t</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i_sq_ref</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Limit the q-axis current reference</span>
+        <span class="n">i_sd_mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_mtpa</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">))</span>
+        <span class="n">i_sq_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">i_sd_mtpa</span><span class="o">**</span><span class="mi">2</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_sq_ref</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">i_sq_max</span><span class="p">:</span>
+            <span class="n">i_sq_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">i_sq_ref</span><span class="p">)</span><span class="o">*</span><span class="n">i_sq_max</span>
+
+        <span class="c1"># Current reference</span>
+        <span class="n">i_s_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i_sq_ref</span>
+
+        <span class="c1"># Limited torque (for the speed controller)</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">psi_t</span><span class="o">*</span><span class="n">i_sq_ref</span>
+
+        <span class="k">return</span> <span class="n">i_s_ref</span><span class="p">,</span> <span class="n">tau_M</span></div>
+
+<div class="viewcode-block" id="CurrentRef.update"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.CurrentRef.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Field-weakening based on the unlimited reference voltage.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tau_M : float</span>
+<span class="sd">            Limited torque reference.</span>
+<span class="sd">        u_s_ref : complex</span>
+<span class="sd">            Unlimited stator voltage reference.</span>
+<span class="sd">        u_dc : DC-bus voltage.</span>
+<span class="sd">            float.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">u_s_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span><span class="o">*</span><span class="n">u_dc</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">u_s_max</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">))</span>
+
+        <span class="c1"># Limit the current</span>
+        <span class="n">i_sd_mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_mtpa</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tau_M</span><span class="p">))</span>
+        <span class="n">i_sd_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_lim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tau_M</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">&gt;</span> <span class="n">i_sd_mtpa</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">=</span> <span class="n">i_sd_mtpa</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">&lt;</span> <span class="n">i_sd_lim</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">=</span> <span class="n">i_sd_lim</span></div>
+
+<div class="viewcode-block" id="CurrentRef.__str__"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.CurrentRef.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Current reference calculation:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;    i_s_max=</span><span class="si">{:.1f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">desc</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="SensorlessObserver"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.SensorlessObserver">[docs]</a><span class="k">class</span> <span class="nc">SensorlessObserver</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sensorless observer.</span>
+
+<span class="sd">    This sensorless observer corresponds to [3]_. The observer gain decouples</span>
+<span class="sd">    the electrical and mechanical dynamics and allows placing the poles of the</span>
+<span class="sd">    corresponding linearized estimation error dynamics. This implementation</span>
+<span class="sd">    operates in estimated rotor coordinates.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [3] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, &quot;Observers for</span>
+<span class="sd">       sensorless synchronous motor drives: Framework for design and analysis,&quot;</span>
+<span class="sd">       IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pars : data object</span>
+<span class="sd">            Controller parameters.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">R_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">w_o</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_i</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">w_o</span><span class="o">**</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_p</span> <span class="o">=</span> <span class="o">.</span><span class="mi">5</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zeta_inf</span> <span class="o">=</span> <span class="o">.</span><span class="mi">7</span>
+        <span class="c1"># Initial states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span>
+
+<div class="viewcode-block" id="SensorlessObserver.update"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.SensorlessObserver.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the states for the next sampling period.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        u_s : complex</span>
+<span class="sd">            Stator voltage in estimated rotor coordinates.</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current in estimated rotor coordinates.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Auxiliary flux (12)</span>
+        <span class="n">psi_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
+
+        <span class="c1"># Estimation error (6)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span>
+
+        <span class="c1"># Pole locations are chosen according to (36), with c = w_m**2</span>
+        <span class="c1"># and w_inf = inf, and the gain corresponding to (30) is used</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_p</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">zeta_inf</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span>
+        <span class="n">psi_a_sqr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_a</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">if</span> <span class="n">psi_a_sqr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Correction voltage</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="n">psi_a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="o">/</span><span class="n">psi_a_sqr</span>
+            <span class="c1"># Error signal (10)</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">psi_a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="o">/</span><span class="n">psi_a_sqr</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">v</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="c1"># Speed estimation (9)</span>
+        <span class="n">w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span><span class="o">*</span><span class="n">eps</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span>
+
+        <span class="c1"># Update the states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="p">(</span><span class="n">u_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_s</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_m</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">k_i</span><span class="o">*</span><span class="n">eps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="n">w_m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>    <span class="c1"># Limit to [0, 2*pi]</span></div>
+
+<div class="viewcode-block" id="SensorlessObserver.__str__"><a class="viewcode-back" href="../../../../autoapi/source/control/sm/vector/index.html#source.control.sm.vector.SensorlessObserver.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Sensorless observer:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;    w_o=2*pi*</span><span class="si">{:.1f}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;Motor parameter estimates:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;    R_s=</span><span class="si">{}</span><span class="s1">  L_d=</span><span class="si">{}</span><span class="s1">  L_q=</span><span class="si">{}</span><span class="s1">  psi_f=</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">.</span><span class="mi">25</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">k_p</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">desc</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Aalto Electric Drives.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

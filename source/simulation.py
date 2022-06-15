@@ -5,13 +5,116 @@ This module contains the simulation class.
 """
 
 # %% Imports
-import copy
 import numpy as np
-import scipy.io
-from helpers import plot, save_plot
-from control.common import state_machine
+from scipy.io import savemat
+from scipy.integrate import solve_ivp
+from helpers import plot, plot_pu, plot_pu_extra, save_plot
 
 
+# %%
+def state_machine(mdl, ctrl):
+    """
+    State machine for running the simulation.
+
+    This runs the digital controller and calls the solver for integrating the
+    continuous-time system model.
+
+    Parameters
+    ----------
+    mdl : object
+        System model.
+    ctrl : object
+        Controller.
+
+    """
+    def sensorless_ctrl():
+        while mdl.t0 <= mdl.t_stop:
+            # Sample the phase currents and the DC-bus voltage
+            i_s_abc_meas = mdl.motor.meas_currents()
+            u_dc_meas = mdl.conv.meas_dc_voltage()
+            # Get the speed reference
+            w_m_ref = mdl.speed_ref(mdl.t0)
+            # Run the digital controller
+            d_abc_ref, T_s = ctrl(w_m_ref, i_s_abc_meas, u_dc_meas)
+            # Model the computational delay
+            d_abc = ctrl.delay(d_abc_ref)
+            # Simulate the continuous-time plant model over the sampling period
+            solve(mdl, d_abc, [mdl.t0, mdl.t0+T_s])
+
+    def sensored_ctrl():
+        while mdl.t0 <= mdl.t_stop:
+            # Sample the phase currents and the DC-bus voltage
+            i_s_abc_meas = mdl.motor.meas_currents()
+            u_dc_meas = mdl.conv.meas_dc_voltage()
+            # Measure the rotor position (not used in the case of an IM)
+            theta_m_meas = ctrl.p*mdl.mech.meas_position()
+            # Measure the rotor speed
+            w_m_meas = ctrl.p*mdl.mech.meas_speed()
+            # Get the speed reference
+            w_m_ref = mdl.speed_ref(mdl.t0)
+            # Run the digital controller
+            d_abc_ref, T_s = ctrl(w_m_ref, i_s_abc_meas, u_dc_meas, w_m_meas,
+                                  theta_m_meas)
+            # Model the computational delay
+            d_abc = ctrl.delay(d_abc_ref)
+            # Simulate the continuous-time plant model over the sampling period
+            solve(mdl, d_abc, [mdl.t0, mdl.t0 + T_s])
+
+    # Run the state machine
+    if ctrl.sensorless:
+        sensorless_ctrl()
+    else:
+        sensored_ctrl()
+
+
+# %%
+def solve(mdl, d_abc, t_span, max_step=np.inf):
+    """
+    Solve the continuous-time model over t_span.
+
+    Parameters
+    ----------
+    mdl : object
+        Model to be simulated.
+    d_abc : array_like of floats, shape (3,)
+        Duty ratio references in the interval [0, 1].
+    t_span : 2-tuple of floats
+        Interval of integration (t0, tf). The solver starts with t=t0 and
+        integrates until it reaches t=tf.
+    max_step : float, optional
+        Max step size of the solver. The default is inf.
+
+    """
+    def run_solver(t_span):
+        # Skip possible zero time spans
+        if t_span[-1] > t_span[0]:
+            # Get initial values
+            x0 = mdl.get_initial_values()
+            # Integrate
+            sol = solve_ivp(mdl.f, t_span, x0, max_step=max_step)
+            # Set the new initial values (last points of the solution)
+            t0_new, x0_new = t_span[-1], sol.y[:, -1]
+            mdl.set_initial_values(t0_new, x0_new)
+            # Data logging
+            # Switching state vector is constant
+            sol.q = len(sol.t)*[mdl.conv.q]
+            mdl.save(sol)
+
+    # Sampling period
+    T_s = t_span[-1] - t_span[0]
+    # Compute the normalized switching spans and the corresponding states
+    tn_sw, q_sw = mdl.conv.pwm(d_abc)
+    # Convert the normalized switching spans to seconds
+    t_sw = t_span[0] + T_s*tn_sw
+    # Loop over the switching time spans
+    for i, t_sw_span in enumerate(t_sw):
+        # Update the switching state vector (constant over the time span)
+        mdl.conv.q = q_sw[i]
+        # Run the solver
+        run_solver(t_sw_span)
+
+
+# %%
 class Simulation:
     """
     Create a simulation object.
@@ -20,24 +123,23 @@ class Simulation:
 
     """
 
-    def __init__(self, mdl, ctrl, base, name='sim', print_opts=True):
+    def __init__(self, mdl, ctrl, base=None, name='sim', print_opts=True):
         """
         Parameters
         ----------
         mdl : mdl
-            drive model
+            System model.
         ctrl : ctrl
-            control model
-        base : base
-            base values
+            Controller.
+        base : dataclass
+            Base values for plotting figures.
         name : str, optional
-            name for the simulation instance
+            Name for the simulation instance.
 
         """
-        self.mdl = copy.deepcopy(mdl)
-        self.ctrl = copy.deepcopy(ctrl)
-        self.base = copy.deepcopy(base)
-
+        self.mdl = mdl
+        self.ctrl = ctrl
+        self.base = base
         self.name = name
 
         if print_opts:
@@ -61,46 +163,34 @@ class Simulation:
         Execute post simulation processes for the saved simulation data.
 
         """
-        self.mdl.datalog.post_process(self.mdl)
-        self.ctrl.datalog.post_process()
-
-    def print_control_config(self):
-        """
-        Prints the control system data, speed reference and load reference.
-
-        """
-        with np.printoptions(precision=1, suppress=True):
-            print('\nControl: ',
-                  self.ctrl,
-                  '\nProfiles\n',
-                  '    {}\n'.format(self.mdl.speed_ref),
-                  'External load torque:\n',
-                  '    {}'.format(self.mdl.mech.tau_L_ext))
+        self.mdl.post_process()
+        self.ctrl.post_process()
 
     def print_model_config(self):
         """
         Print the model configuration data.
 
         """
-        print('\nSystem model:')
-        print(self.mdl.motor)
-        print(self.mdl.mech)
-        print('PWM model:\n    ', self.mdl.pwm)
-        print(self.mdl.converter)
-        print(self.mdl.delay)
+        print('\n--- Model ---')
+        print(self.mdl)
+
+    def print_control_config(self):
+        """
+        Print the control system data, speed reference and load reference.
+
+        """
+        print('\n--- Control ---')
+        print(self.ctrl)
 
     def print_simulation_profile(self):
         """
         Print the simulation profiles.
 
         """
-        np.set_printoptions(precision=1, suppress=True)
-        print('Profiles')
-        print('--------')
-        print('Speed reference:')
-        print('    {}'.format(self.mdl.speed_ref))
-        print('External load torque:')
-        print('    {}\n'.format(self.mdl.mech.tau_L_ext))
+        print('\n--- Speed reference ---')
+        print(self.mdl.speed_ref)
+        print('--- External load torque ---')
+        print(self.mdl.mech.tau_L_ext)
 
     def plot_figure(self, save=False):
         """
@@ -109,7 +199,14 @@ class Simulation:
         A wrapper for the plot function in helpers.py.
 
         """
-        plot(self.mdl.datalog.data, self.ctrl.datalog.data, self.base)
+        if self.base is not None:
+            plot_pu(self.mdl.data, self.ctrl.data, self.base)
+            try:
+                plot_pu_extra(self.mdl.data, self.ctrl.data, self.base)
+            except AttributeError:
+                pass
+        else:
+            plot(self.mdl.data, self.ctrl.data)
         if save:
             save_plot(self.name)
 
@@ -128,4 +225,4 @@ class Simulation:
         # Unpack data
         data = {**plant_data, **t_cont, **controller_data}
 
-        scipy.io.savemat(self.name+'.mat', data)
+        savemat(self.name+'.mat', data)

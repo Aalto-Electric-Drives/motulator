@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>source.cfg.ctrl_vhz_im_45kW &mdash; motulator 0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> motulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">motulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">source.cfg.ctrl_vhz_im_45kW</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../../_sources/autoapi/source/cfg/ctrl_vhz_im_45kW/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-source.cfg.ctrl_vhz_im_45kW">
+<span id="source-cfg-ctrl-vhz-im-45kw"></span><h1><a class="reference internal" href="#module-source.cfg.ctrl_vhz_im_45kW" title="source.cfg.ctrl_vhz_im_45kW"><code class="xref py py-mod docutils literal notranslate"><span class="pre">source.cfg.ctrl_vhz_im_45kW</span></code></a><a class="headerlink" href="#module-source.cfg.ctrl_vhz_im_45kW" title="Permalink to this headline">¶</a></h1>
+<p>This script configures V/Hz control for an induction motor. The default values
+correspond to a 45-kW induction motor.</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues" title="source.cfg.ctrl_vhz_im_45kW.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
+<td><p>This data class contains the base values computed from the rated values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters" title="source.cfg.ctrl_vhz_im_45kW.CtrlParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CtrlParameters</span></code></a></p></td>
+<td><p>This data class contains parameters for the V/Hz control system.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues">
+<em class="property">class </em><code class="sig-prename descclassname">source.cfg.ctrl_vhz_im_45kW.</code><code class="sig-name descname">BaseValues</code><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>This data class contains the base values computed from the rated values.
+These are used for plotting the results.</p>
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.w">
+<code class="sig-name descname">w</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.w"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.w" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.i">
+<code class="sig-name descname">i</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.u">
+<code class="sig-name descname">u</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.u" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.p">
+<code class="sig-name descname">p</code><em class="property"> :int = 2</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.p"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.psi">
+<code class="sig-name descname">psi</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.psi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.psi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.P">
+<code class="sig-name descname">P</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.P"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.P" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.Z">
+<code class="sig-name descname">Z</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.L">
+<code class="sig-name descname">L</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.L"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.L" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.BaseValues.tau">
+<code class="sig-name descname">tau</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#BaseValues.tau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.BaseValues.tau" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters">
+<em class="property">class </em><code class="sig-prename descclassname">source.cfg.ctrl_vhz_im_45kW.</code><code class="sig-name descname">CtrlParameters</code><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>This data class contains parameters for the V/Hz control system.</p>
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.sensorless">
+<code class="sig-name descname">sensorless</code><em class="property"> :bool = True</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.sensorless"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.sensorless" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.T_s">
+<code class="sig-name descname">T_s</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.T_s"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.T_s" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.psi_s_nom">
+<code class="sig-name descname">psi_s_nom</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.psi_s_nom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.psi_s_nom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.rate_limit">
+<code class="sig-name descname">rate_limit</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.rate_limit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.rate_limit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.R_s">
+<code class="sig-name descname">R_s</code><em class="property"> :float = 0.057</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.R_s"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.R_s" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.R_R">
+<code class="sig-name descname">R_R</code><em class="property"> :float = 0.029</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.R_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.R_R" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.L_sgm">
+<code class="sig-name descname">L_sgm</code><em class="property"> :float = 0.0022</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.L_sgm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.L_sgm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.L_M">
+<code class="sig-name descname">L_M</code><em class="property"> :float = 0.0245</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.L_M"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.L_M" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.w_rb">
+<code class="sig-name descname">w_rb</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.w_rb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.w_rb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.alpha_f">
+<code class="sig-name descname">alpha_f</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.alpha_f"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.alpha_f" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.alpha_i">
+<code class="sig-name descname">alpha_i</code><em class="property"> :float</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.alpha_i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.alpha_i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.k_u">
+<code class="sig-name descname">k_u</code><em class="property"> :float = 0.4</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.k_u"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.k_u" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="source.cfg.ctrl_vhz_im_45kW.CtrlParameters.k_w">
+<code class="sig-name descname">k_w</code><em class="property"> :float = 3.0</em><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#CtrlParameters.k_w"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.CtrlParameters.k_w" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt id="source.cfg.ctrl_vhz_im_45kW.base">
+<code class="sig-prename descclassname">source.cfg.ctrl_vhz_im_45kW.</code><code class="sig-name descname">base</code><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#base"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.base" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="source.cfg.ctrl_vhz_im_45kW.pars">
+<code class="sig-prename descclassname">source.cfg.ctrl_vhz_im_45kW.</code><code class="sig-name descname">pars</code><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#pars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.pars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt id="source.cfg.ctrl_vhz_im_45kW.ctrl">
+<code class="sig-prename descclassname">source.cfg.ctrl_vhz_im_45kW.</code><code class="sig-name descname">ctrl</code><a class="reference internal" href="../../../../_modules/source/cfg/ctrl_vhz_im_45kW.html#ctrl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#source.cfg.ctrl_vhz_im_45kW.ctrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2022, Aalto Electric Drives.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
