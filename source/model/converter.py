@@ -6,69 +6,94 @@ The inverter with the constant DC-bus voltage and the frequency converter with
 the diode front-end rectifier are modeled.
 
 """
+from __future__ import annotations
+from dataclasses import dataclass, field
 import numpy as np
-
-
-def ac_voltage(q, u_dc):
-    """
-    Compute the AC-side voltage of a lossless inverter.
-
-    Parameters
-    ----------
-    q : complex
-        Switching state vector (in stator coordinates).
-    u_dc : float
-        DC-Bus voltage.
-
-    Returns
-    -------
-    u_ac : complex
-        AC-side voltage.
-
-    """
-    u_ac = q*u_dc
-    return u_ac
-
-
-def dc_current(q, i_ac):
-    """
-    Compute the DC-side current of a lossless inverter.
-
-    Parameters
-    ----------
-    q : complex
-        Switching state vector (in stator coordinates).
-    i_ac : complex
-        AC-side current.
-
-    Returns
-    -------
-    i_dc : float
-        DC-side current.
-
-    """
-    i_dc = 1.5*np.real(q*np.conj(i_ac))
-    return i_dc
+from helpers import abc2complex
 
 
 # %%
+@dataclass
 class Inverter:
     """
-    Inverter fed from the constant DC-voltage source.
+    Inverter with the constant DC voltage and switching-cycle averaging.
+
+    Attributes
+    ----------
+    u_dc0 : float
+        DC-bus voltage.
+    q : complex
+        Duty ratio space vector.
 
     """
+    u_dc0: float = 540
+    q: float = field(repr=False, default=0)
 
-    # pylint: disable=R0903
-    def __init__(self, u_dc=540):
+    @staticmethod
+    def ac_voltage(q, u_dc):
         """
+        Compute the AC-side voltage of a lossless inverter.
+
         Parameters
         ----------
-        u_dc : float, optional
-            DC-bus voltage. The default is 540.
+        q : complex
+            Switching state vector (in stator coordinates).
+        u_dc : float
+            DC-Bus voltage.
+
+        Returns
+        -------
+        u_ac : complex
+            AC-side voltage.
 
         """
-        self.u_dc0 = u_dc
-        self.ac_voltage = ac_voltage
+        u_ac = q*u_dc
+        return u_ac
+
+    @staticmethod
+    def dc_current(q, i_ac):
+        """
+        Compute the DC-side current of a lossless inverter.
+
+        Parameters
+        ----------
+        q : complex
+            Switching state vector (in stator coordinates).
+        i_ac : complex
+            AC-side current.
+
+        Returns
+        -------
+        i_dc : float
+            DC-side current.
+
+        """
+        i_dc = 1.5*np.real(q*np.conj(i_ac))
+        return i_dc
+
+    @staticmethod
+    def pwm(d_abc):
+        """
+        Zero-order hold of the duty ratios over the sampling period.
+
+        The output arrays are compatible with the solver.
+
+        Parameters
+        ----------
+        d_abc : array_like of floats, shape (3,)
+            Duty ratios in the range [0, 1].
+
+        Returns
+        -------
+        tn_sw : ndarray, shape (1,2)
+            Normalized switching instant, tn_sw = [0, 1].
+        q : complex ndarray, shape (1,)
+            Swithching state is qual to the duty ratio space vector.
+
+        """
+        tn_sw = np.array([[0, 1]])
+        q = np.array([1])*abc2complex(d_abc)
+        return tn_sw, q
 
     def meas_dc_voltage(self):
         """
@@ -82,43 +107,111 @@ class Inverter:
         """
         return self.u_dc0
 
-    def __str__(self):
-        desc = ('Inverter fed from the constant DC-voltage source:\n'
-                '    u_dc={}\n').format(self.u_dc0)
-        return desc
+
+# %%
+@dataclass
+class PWMInverter(Inverter):
+    """
+    Pulse-width modulated inverter with the constant DC voltage.
+
+    Attributes
+    ----------
+    u_dc0 : float
+        DC-bus voltage.
+    q : complex
+        Switching state vector (in stator coordinates).
+    falling_edge : bool
+        Stores the carrier direction.
+
+    """
+    N: int = 2**12
+    falling_edge: bool = field(repr=False, default=False)
+    q: int = field(repr=False, default=0)
+
+    def pwm(self, d_abc):
+        """
+        Compute the normalized switching instants and the switching states.
+
+        Parameters
+        ----------
+        d_abc : array_like of floats, shape (3,)
+            Duty ratios in the range [0, 1].
+
+        Returns
+        -------
+        tn_sw : ndarray, shape (4,2)
+            Normalized switching instants, tn_sw = [0, t1, t2, t3, 1].
+        q : complex ndarray, shape (4,)
+            Switching state space vectors corresponding to the switching
+            instants. For example, the switching state q[1] is applied
+            at the interval tn_sw[1].
+
+        Notes
+        -----
+        Switching instants t_sw split the sampling period T_s into
+        four spans. No switching (e.g. da = 0 or da = 1) or simultaneous
+        switching instants (e.g da == db) lead to zero spans, i.e.,
+        t_sw[i] == t_sw[i].
+
+        """
+        # Quantize the duty ratios to N levels
+        d_abc = np.round(self.N*np.asarray(d_abc))/self.N
+        # Initialize the normalized switching instant array
+        tn_sw = np.zeros((4, 2))
+        tn_sw[3, 1] = 1
+        # Could be understood as a carrier comparison
+        if self.falling_edge:
+            # Normalized switching instants (zero crossing instants)
+            tn_sw[1:4, 0] = np.sort(d_abc)
+            tn_sw[0:3, 1] = tn_sw[1:4, 0]
+            # Compute the switching state array
+            q_abc = (tn_sw[:, 0] < d_abc[:, np.newaxis]).astype(int)
+        else:
+            # Rising edge
+            tn_sw[1:4, 0] = np.sort(1 - d_abc)
+            tn_sw[0:3, 1] = tn_sw[1:4, 0]
+            q_abc = (tn_sw[:, 0] >= 1 - d_abc[:, np.newaxis]).astype(int)
+        # Change the carrier direction for the next call
+        self.falling_edge = not self.falling_edge
+        # Switching state space vector
+        q = abc2complex(q_abc)
+        return tn_sw, q
 
 
 # %%
-class FrequencyConverter:
+@dataclass
+class FrequencyConverter(PWMInverter):
     """
     Frequency converter.
 
     This models a strong grid, a three-phase diode-bridge rectifier, an LC
     filter, and a three-phase inverter.
 
+    Attributes
+    ----------
+    L : float
+        DC-bus inductance.
+    C : float
+        DC-bus capacitance.
+    U_g : float
+        Grid voltage (line-line, rms).
+    f_g : float
+        Grid frequency.
+
     """
+    L: float = 2e-3
+    C: float = 235e-6
+    U_g: float = 400
+    f_g: float = 50
+    i_L0: float = field(repr=False, default=0)
+    u_dc0: float = field(repr=False, init=False)
+    u_g: float = field(repr=False, init=False)
+    w_g: float = field(repr=False, init=False)
 
-    def __init__(self, C=235e-6, L=2e-3, u_g=np.sqrt(2/3)*400, w_g=2*np.pi*50):
-        """
-        Parameters
-        ----------
-        C : float, optional
-            DC-bus capacitance. The default is 235e-6.
-        L : float, optional
-            DC-bus inductance. The default is 2e-3.
-        u_g : float, optional
-            Grid voltage (line-neutral, peak). The default is sqrt(2/3)*400.
-        w_g : float, optional
-            Grid angular frequency. The default is 2*pi*50.
-
-        """
-        # Parameters
-        self.C, self.L, self.u_g, self.w_g = C, L, u_g, w_g
-        # Initial states
-        self.u_dc0, self.i_L0 = np.sqrt(3)*self.u_g, 0
-        # Methods
-        self.ac_voltage = ac_voltage
-        self.dc_current = dc_current
+    def __post_init__(self):
+        self.u_dc0 = np.sqrt(2)*self.U_g
+        self.u_g = np.sqrt(2/3)*self.U_g
+        self.w_g = 2*np.pi*self.f_g
 
     def grid_voltages(self, t):
         """
@@ -173,22 +266,3 @@ class FrequencyConverter:
         if i_L < 0 and di_L < 0:
             di_L = 0
         return [du_dc, di_L]
-
-    def meas_dc_voltage(self):
-        """
-        Measure the DC-bus voltage.
-
-        Returns
-        -------
-        float
-            Measured DC-bus voltage.
-
-        """
-        return self.u_dc0
-
-    def __str__(self):
-        desc = (('Frequency converter:\n'
-                 '  U_g={:.0f}  f_g={:.0f}  C={}  L={}\n')
-                .format(self.u_g*np.sqrt(3/2), self.w_g/(2*np.pi),
-                        self.C, self.L))
-        return desc

@@ -3,35 +3,39 @@
 This module contains continuous-time models for mechanical subsystems.
 
 """
-from helpers import Step
+
+from __future__ import annotations
+from dataclasses import dataclass, field
 
 
 # %%
+@dataclass
 class Mechanics:
     """
-    Mechanical subsystem.
+    Mechanics subsystem.
 
     This models an equation of motion for stiff mechanics.
 
+    Attributes
+    ----------
+    J : float
+        Total moment of inertia.
+    B : float
+        Viscous damping coefficient.
+    w_M0 : float
+        Initial value of the rotor angular speed.
+    theta_M0 : float
+        Initial value of the rotor angle.
+    tau_L_ext : function
+        External load torque as a function of time, `tau_L_ext(t)`.
+
     """
-
-    def __init__(self, J=.015, B=0, tau_L_ext=Step(.8, 14.6)):
-        """
-        Parameters
-        ----------
-        J : float, optional
-            Total moment of inertia. The default is .015.
-        B : float, optional
-            Viscous damping coefficient. The default is 0.
-        tau_L_ext : function, optional
-            External load torque as a function of time, tau_L_ext(t). The
-            default is Step(.8, 14.6).
-
-        """
-        self.J, self.B, self.tau_L_ext = J, B, tau_L_ext
-        # Initial state
-        self.w_M0 = 0
-        self.theta_M0 = 0
+    J: float = .015
+    B: float = 0
+    w_M0: float = field(repr=False, default=0)      # Initial rotor speed
+    theta_M0: float = field(repr=False, default=0)  # Initial rotor angle
+    # Default: tau_L_ext(t) = 0
+    tau_L_ext: float = field(repr=False, default=lambda t: 0)
 
     def f(self, t, w_M, tau_M):
         """
@@ -85,9 +89,3 @@ class Mechanics:
 
         """
         return self.theta_M0
-
-    def __str__(self):
-        desc = (('Mechanics:\n'
-                 '    J={:.4f}  B={}  w_M0={}  theta_M0={}\n')
-                .format(self.J, self.B, self.w_M0, self.theta_M0))
-        return desc

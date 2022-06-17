@@ -248,6 +248,51 @@ class RateLimiter:
 
 
 # %%
+class Delay:
+    """
+    Computational delay.
+
+    This models the compuational delay as a ring buffer.
+
+    """
+
+    # pylint: disable=R0903
+    def __init__(self, length=1, elem=3):
+        """
+        Parameters
+        ----------
+        length : int, optional
+            Length of the buffer in samples. The default is 1.
+
+        """
+        self.data = length*[elem*[0]]  # Creates a zero list
+
+    def __call__(self, u):
+        """
+        Parameters
+        ----------
+        u : array_like, shape (elem,)
+            Input array.
+
+        Returns
+        -------
+        array_like, shape (elem,)
+            Output array.
+
+        """
+        # Add the latest value to the end of the list
+        self.data.append(u)
+        # Pop the first element and return it
+        return self.data.pop(0)
+
+    def __str__(self):
+        length = len(self.data)
+        desc = (('Computational delay:\n    {} sampling periods\n')
+                .format(length))
+        return desc
+
+
+# %%
 class Datalogger:
     """
     Datalogger for the control system.

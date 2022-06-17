@@ -3,34 +3,41 @@
 This module contains continuous-time models for an induction motor drive.
 
 Peak-valued complex space vectors are used. The space vector models are
-implemented in stator coordinates.
+implemented in stator coordinates. The default values correspond to a 2.2-kW
+induction motor.
 
 """
+from __future__ import annotations
+from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
 from helpers import abc2complex, complex2abc
+from model.mech import Mechanics
+from model.converter import Inverter, PWMInverter, FrequencyConverter
 
 
 # %%
-class Drive:
+@dataclass
+class InductionMotorDrive:
     """
-    Interconnect the subsystems of an indcution motor drive.
+    Interconnect the subsystems of an induction motor drive.
 
     This interconnects the subsystems of an induction motor drive and provides
-    the interface to the solver. More complicated systems could be simulated
+    an interface to the solver. More complicated systems could be simulated
     using a similar template.
 
     """
+    motor: InductionMotor | InductionMotorSaturated = None
+    mech: Mechanics = None
+    conv: Inverter | PWMInverter = None
+    data: Bunch = field(repr=False, default_factory=Bunch)
+    t0: float = field(repr=False, default=0)
 
-    def __init__(self, motor, mech, converter, delay, pwm, datalog):
-        self.motor = motor
-        self.mech = mech
-        self.converter = converter
-        self.delay = delay
-        self.pwm = pwm
-        self.datalog = datalog
-        self.q = 0                  # Switching-state space vector
-        self.t0 = 0                 # Initial simulation time
+    def __post_init__(self):
+        # Store the solution in these lists
+        self.data.t, self.data.q = [], []
+        self.data.psi_ss, self.data.psi_rs = [], []
+        self.data.theta_M, self.data.w_M = [], []
 
     def get_initial_values(self):
         """
@@ -42,7 +49,7 @@ class Drive:
             Initial values of the state variables.
 
         """
-        x0 = [self.motor.psi_ss0, self.motor.psi_Rs0,
+        x0 = [self.motor.psi_ss0, self.motor.psi_rs0,
               self.mech.w_M0, self.mech.theta_M0]
         return x0
 
@@ -58,7 +65,7 @@ class Drive:
         """
         self.t0 = t0
         self.motor.psi_ss0 = x0[0]
-        self.motor.psi_Rs0 = x0[1]
+        self.motor.psi_rs0 = x0[1]
         # x0[2].imag and x0[3].imag are always zero
         self.mech.w_M0 = x0[2].real
         self.mech.theta_M0 = x0[3].real
@@ -83,64 +90,114 @@ class Drive:
 
         """
         # Unpack the states
-        psi_ss, psi_Rs, w_M, _ = x
+        psi_ss, psi_rs, w_M, _ = x
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
-        i_ss, i_Rs = self.motor.currents(psi_ss, psi_Rs)
+        u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
+        i_ss, _ = self.motor.currents(psi_ss, psi_rs)
         tau_M = self.motor.torque(psi_ss, i_ss)
         # State derivatives
-        motor_f = self.motor.f(psi_Rs, i_ss, i_Rs, u_ss, w_M)
+        motor_f = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
         mech_f = self.mech.f(t, w_M, tau_M)
         # List of state derivatives
         return motor_f + mech_f
 
-    def __str__(self):
-        desc = ('\nSystem: Induction motor drive\n'
-                '-----------------------------\n')
-        desc += (self.delay.__str__() + self.pwm.__str__()
-                 + self.converter.__str__() + self.motor.__str__()
-                 + self.mech.__str__())
-        return desc
+    def save(self, sol):
+        """
+        Save the solution.
+
+        Parameters
+        ----------
+        sol : bunch object
+            Solution from the solver.
+
+        """
+        self.data.t.extend(sol.t)
+        self.data.q.extend(sol.q)
+        self.data.psi_ss.extend(sol.y[0])
+        self.data.psi_rs.extend(sol.y[1])
+        self.data.w_M.extend(sol.y[2].real)
+        self.data.theta_M.extend(sol.y[3].real)
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format and post-process them.
+
+        """
+        # From lists to the ndarray
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
+        # Some useful variables
+        self.data.i_ss, _ = self.motor.currents(self.data.psi_ss,
+                                                self.data.psi_rs)
+        self.data.theta_m = self.motor.p*self.data.theta_M
+        self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
+        self.data.w_m = self.motor.p*self.data.w_M
+        self.data.tau_M = self.motor.torque(self.data.psi_ss, self.data.i_ss)
+        self.data.tau_L = (self.mech.tau_L_ext(self.data.t)
+                           + self.mech.B*self.data.w_M)
+        self.data.u_ss = self.conv.ac_voltage(self.data.q,
+                                              self.conv.u_dc0)
+        # Compute the inverse-Gamma rotor flux
+        try:
+            # Saturable stator inductance
+            L_s = self.motor.L_s(np.abs(self.data.psi_ss))
+        except TypeError:
+            # Constant stator inductance
+            L_s = self.motor.L_s
+        gamma = L_s/(L_s + self.motor.L_ell)  # Magnetic coupling factor
+        self.data.psi_Rs = gamma*self.data.psi_rs
 
 
 # %%
-class Motor:
+@dataclass
+class InductionMotor:
     """
     Induction motor.
 
-    This models an induction motor using the inverse-Gamma model. The model is
-    implemented in stator coordinates. The default values correspond to a
-    2.2-kW induction motor.
+    An induction motor is modeled using the Gamma-equivalent model [1]_. The
+    model is implemented in stator coordinates.
+
+    Attributes
+    ----------
+    p : int
+        Number of pole pairs.
+    R_s : float
+        Stator resistance.
+    R_r : float
+        Rotor resistance.
+    L_ell : float
+        Leakage inductance.
+    L_s : float
+        Stator inductance.
+    psi_ss0 : complex
+        Initial value of the stator flux linkage.
+    psi_rs0 : complex
+        Initial value of the rotor flux linkage.
+
+    Notes
+    -----
+    The Gamma model is chosen here since it can be extended with the magnetic
+    saturation model in a staightforward manner. If the magnetic saturation is
+    omitted, the Gamma model is mathematically identical to the inverse-Gamma
+    and T models [1]_.
 
     References
     ----------
-    Slemon, "Modelling of induction machines for electric drives," IEEE Trans.
-    Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
+    .. [1] Slemon, "Modelling of induction machines for electric drives," IEEE
+       Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
 
     """
+    p: int = 2
+    # Gamma parameters
+    R_s: float = 3.7
+    R_r: float = 2.5
+    L_ell: float = .023
+    L_s: float = .245
+    # Initial values
+    psi_ss0: complex = field(repr=False, default=0j)
+    psi_rs0: complex = field(repr=False, default=0j)
 
-    def __init__(self, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, p=2):
-        # pylint: disable=R0913
-        """
-        Parameters
-        ----------
-        R_s : float, optional
-            Stator resistance. The default is 3.7.
-        R_R : float, optional
-            Rotor resistance. The default is 2.1.
-        L_sgm : float, optional
-            Leakage inductance. The default is .021.
-        L_M : float, optional
-            Magnetizing inductance. The default is .224.
-        p : int, optional
-            Number of pole pairs. The default is 2.
-
-        """
-        self.R_s, self.R_R, self.L_sgm, self.L_M = R_s, R_R, L_sgm, L_M
-        self.p = p
-        self.psi_ss0, self.psi_Rs0 = 0j, 0j
-
-    def currents(self, psi_ss, psi_Rs):
+    def currents(self, psi_ss, psi_rs):
         """
         Compute the stator and rotor currents.
 
@@ -148,20 +205,20 @@ class Motor:
         ----------
         psi_ss : complex
             Stator flux linkage.
-        psi_Rs : complex
+        psi_rs : complex
             Rotor flux linkage.
 
         Returns
         -------
         i_ss : complex
             Stator current.
-        i_Rs : complex
+        i_rs : complex
             Rotor current.
 
         """
-        i_ss = (psi_ss - psi_Rs)/self.L_sgm
-        i_Rs = psi_Rs/self.L_M - i_ss
-        return i_ss, i_Rs
+        i_rs = (psi_rs - psi_ss)/self.L_ell
+        i_ss = psi_ss/self.L_s - i_rs
+        return i_ss, i_rs
 
     def torque(self, psi_ss, i_ss):
         """
@@ -183,9 +240,8 @@ class Motor:
         tau_M = 1.5*self.p*np.imag(i_ss*np.conj(psi_ss))
         return tau_M
 
-    def f(self, psi_Rs, i_ss, i_Rs, u_ss, w_M):
+    def f(self, psi_ss, psi_rs, u_ss, w_M):
         # pylint: disable=R0913
-        # To avoid overlapping computations, i_s and i_R are the inputs.
         """
         Compute the state derivatives.
 
@@ -193,12 +249,8 @@ class Motor:
         ----------
         psi_ss : complex
             Stator flux linkage.
-        psi_Rs : complex
+        psi_rs : complex
             Rotor flux linkage.
-        i_ss : complex
-            Stator current.
-        i_Rs : complex
-            Rotor current.
         u_ss : complex
             Stator voltage.
         w_M : float
@@ -207,12 +259,13 @@ class Motor:
         Returns
         -------
         complex list, length 2
-            Time derivative of the state vector, [dpsi_ss, dpsi_Rs]
+            Time derivative of the state vector, [dpsi_ss, dpsi_rs]
 
         """
+        i_ss, i_rs = self.currents(psi_ss, psi_rs)
         dpsi_ss = u_ss - self.R_s*i_ss
-        dpsi_Rs = -self.R_R*i_Rs + 1j*self.p*w_M*psi_Rs
-        return [dpsi_ss, dpsi_Rs]
+        dpsi_rs = -self.R_r*i_rs + 1j*self.p*w_M*psi_rs
+        return [dpsi_ss, dpsi_rs]
 
     def meas_currents(self):
         """
@@ -225,181 +278,49 @@ class Motor:
 
         """
         # Stator current space vector in stator coordinates
-        i_ss, _ = self.currents(self.psi_ss0, self.psi_Rs0)
+        i_ss, _ = self.currents(self.psi_ss0, self.psi_rs0)
         # Phase currents
         i_s_abc = complex2abc(i_ss)  # + noise + offset ...
         return i_s_abc
 
-    def __str__(self):
-        desc = (('Induction motor (inverse-Gamma model):\n'
-                 '    p={}  R_s={}  R_R={}  L_sgm={}  L_M={}\n')
-                .format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M))
-        return desc
-
 
 # %%
-class SaturationModel:
+@dataclass
+class InductionMotorSaturated(InductionMotor):
     """
-    Magnetic saturation model.
+    Induction motor with main-flux saturation.
 
-    This models magnetic saturation using a power function::
+    Main-flux magnetic saturation is modeled. The default saturation model is
+    given by [2]_::
 
-        L_sat(psi) = L_unsat/(1 + (beta*abs(psi))**S)
-
-    The default values correspond to the stator inductance of a 2.2-kW
-    induction motor.
+        L_s(psi_s) = L_su/(1 + (beta*abs(psi_s)**S)
 
     References
     ----------
-    Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
-    induction motor drives," IEEE Trans. Ind. Appl., 2021,
-    https://doi.org/10.1109/TIA.2012.2190818
+    .. [2] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
+       induction motor drives," IEEE Trans. Ind. Appl., 2021,
+       https://doi.org/10.1109/TIA.2012.2190818
 
     """
+    L_su: float = .34  # Unsaturated inductance
+    beta: float = .84
+    S: float = 7
+    L_s: float = field(repr=False, init=False)
 
-    def __init__(self, L_unsat=.34, beta=.84, S=7):
-        """
-        Parameters
-        ----------
-        L_unsat : float, optional
-            Unsaturatad inductance. The default is .34.
-        beta : float, optional
-            Positive coefficient. The default is .84.
-        S : float, optional
-            Positive coefficient. The default is 7.
+    def __post_init__(self):
+        self.L_s = lambda psi: self.L_su/(1. + (self.beta*np.abs(psi))**self.S)
 
-        """
-        self.L_unsat, self.beta, self.S = L_unsat, beta, S
-
-    def __call__(self, psi):
-        """
-        Parameters
-        ----------
-        psi : complex
-            Flux linkage. If the value is complex, its magnitude is used.
-
-        Returns
-        -------
-        L_sat : float
-            Instantaneous saturated value of the inductance.
-
-        """
-        L_sat = self.L_unsat/(1 + (self.beta*np.abs(psi))**self.S)
-        return L_sat
-
-    def __str__(self):
-        desc = (('L_sat(psi)=L_unsat/(1+(beta*abs(psi))**S):'
-                 '  L_unsat={}  beta={}  S={}')
-                .format(self.L_unsat, self.beta, self.S))
-        return desc
-
-
-# %%
-class MotorSaturated(Motor):
-    """
-    Saturated induction motor.
-
-    This models a saturated induction motor using the Gamma model. The Gamma
-    model suits better for modeling the magnetic saturation. The default values
-    correspond to a 2.2-kW induction motor.
-
-    """
-
-    def __init__(self,
-                 R_s=3.7, R_R=2.5, L_sgm=.023, L_M=SaturationModel(), p=2):
-        # pylint: disable=R0913
-        """
-        Parameters
-        ----------
-        R_s : float, optional
-            Stator resistance. The default is 3.7.
-        R_R : float, optional
-            Rotor resistance. The default is 2.1.
-        L_sgm : float, optional
-            Leakage inductance. The default is .021.
-        L_M : function, optional
-            Stator inductance function L_M(psi_s). The default is
-            SaturationModel().
-        p : int, optional
-            Number of pole pairs. The default is 2.
-
-        """
-        super().__init__(R_s=R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, p=p)
-
-    def currents(self, psi_ss, psi_Rs):
+    def currents(self, psi_ss, psi_rs):
         # This method overrides the base class method.
-        L_M = self.L_M(psi_ss)
-        i_Rs = (psi_Rs - psi_ss)/self.L_sgm
-        i_ss = psi_ss/L_M - i_Rs
-        return i_ss, i_Rs
-
-    def __str__(self):
-        desc = (('Saturated induction motor (Gamma model):\n'
-                 '    p={}  R_s={}  R_R={}  L_sgm={}\n'
-                 '    L_M={}\n')
-                .format(self.p, self.R_s, self.R_R, self.L_sgm, self.L_M))
-        return desc
+        L_s = self.L_s(psi_ss)
+        i_rs = (psi_rs - psi_ss)/self.L_ell
+        i_ss = psi_ss/L_s - i_rs
+        return i_ss, i_rs
 
 
 # %%
-class Datalogger:
-    """
-    Datalogger for an induction motor drive.
-
-    """
-
-    def __init__(self):
-        self.data = Bunch()
-        self.data.t, self.data.q = [], []
-        self.data.psi_ss, self.data.psi_Rs = [], []
-        self.data.theta_M, self.data.w_M = [], []
-
-    def save(self, sol):
-        """
-        Save the solution.
-
-        Parameters
-        ----------
-        sol : bunch object
-            Solution from the solver.
-
-        """
-        self.data.t.extend(sol.t)
-        self.data.q.extend(sol.q)
-        self.data.psi_ss.extend(sol.y[0])
-        self.data.psi_Rs.extend(sol.y[1])
-        self.data.w_M.extend(sol.y[2].real)
-        self.data.theta_M.extend(sol.y[3].real)
-
-    def post_process(self, mdl):
-        """
-        Transform the lists to the ndarray format and post-process them.
-
-        Parameters
-        ----------
-        mdl : object
-            Drive object that includes the data.
-
-        """
-        # From lists to the ndarray
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
-
-        # Some useful variables
-        self.data.i_ss, _ = mdl.motor.currents(self.data.psi_ss,
-                                               self.data.psi_Rs)
-        self.data.theta_m = mdl.motor.p*self.data.theta_M
-        self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
-        self.data.w_m = mdl.motor.p*self.data.w_M
-        self.data.tau_M = mdl.motor.torque(self.data.psi_ss, self.data.i_ss)
-        self.data.tau_L = (mdl.mech.tau_L_ext(self.data.t)
-                           + mdl.mech.B*self.data.w_M)
-        self.data.u_ss = mdl.converter.ac_voltage(self.data.q,
-                                                  mdl.converter.u_dc0)
-
-
-# %%
-class DriveWithDiodeBridge(Drive):
+@dataclass
+class InductionMotorDriveDiode(InductionMotorDrive):
     """
     Induction motor drive equipped with a diode bridge.
 
@@ -408,46 +329,39 @@ class DriveWithDiodeBridge(Drive):
     a capacitor.
 
     """
+    conv: FrequencyConverter = None
+
+    def __post_init__(self):
+        # Extends the base class. Store the solution in these lists
+        self.data.t, self.data.q = [], []
+        self.data.psi_ss, self.data.psi_rs = [], []
+        self.data.theta_M, self.data.w_M = [], []
+        self.data.u_dc, self.data.i_L = [], []
 
     def get_initial_values(self):
         # Extends the base class.
-        x0 = super().get_initial_values() + [self.converter.u_dc0,
-                                             self.converter.i_L0]
+        x0 = super().get_initial_values() + [self.conv.u_dc0, self.conv.i_L0]
         return x0
 
     def set_initial_values(self, t0, x0):
         # Extends the base class.
         super().set_initial_values(t0, x0[0:4])
-        self.converter.u_dc0 = x0[4].real
-        self.converter.i_L0 = x0[5].real
+        self.conv.u_dc0 = x0[4].real
+        self.conv.i_L0 = x0[5].real
 
     def f(self, t, x):
         # Overrides the base class.
         # Unpack the states for better readability
-        psi_ss, psi_Rs, w_M, _, u_dc, i_L = x
+        psi_ss, psi_rs, w_M, _, u_dc, i_L = x
         # Interconnections: outputs for computing the state derivatives
-        i_ss, i_Rs = self.motor.currents(psi_ss, psi_Rs)
-        u_ss = self.converter.ac_voltage(self.q, u_dc)
-        i_dc = self.converter.dc_current(self.q, i_ss)
+        i_ss, _ = self.motor.currents(psi_ss, psi_rs)
+        u_ss = self.conv.ac_voltage(self.conv.q, u_dc)
+        i_dc = self.conv.dc_current(self.conv.q, i_ss)
         tau_M = self.motor.torque(psi_ss, i_ss)
         # Returns the list of state derivatives
-        return (self.motor.f(psi_Rs, i_ss, i_Rs, u_ss, w_M) +
+        return (self.motor.f(psi_ss, psi_rs, u_ss, w_M) +
                 self.mech.f(t, w_M, tau_M) +
-                self.converter.f(t, u_dc, i_L, i_dc))
-
-
-# %%
-class DataloggerExtended(Datalogger):
-    """
-    Datalogger for an induction motor drive with a diode bridge.
-
-    """
-
-    def __init__(self):
-        # pylint: disable=too-many-instance-attributes
-        super().__init__()
-        self.data.u_dc, self.data.i_L = [], []
-        # self.i_dc, self.u_di, self.u_g, self.i_g = 0, 0, 0, 0
+                self.conv.f(t, u_dc, i_L, i_dc))
 
     def save(self, sol):
         # Extends the base class.
@@ -455,16 +369,16 @@ class DataloggerExtended(Datalogger):
         self.data.u_dc.extend(sol.y[4].real)
         self.data.i_L.extend(sol.y[5].real)
 
-    def post_process(self, mdl):
+    def post_process(self):
         # Extends the base class.
-        super().post_process(mdl)
+        super().post_process()
         # From lists to the ndarray
         self.data.u_dc = np.asarray(self.data.u_dc)
         self.data.i_L = np.asarray(self.data.i_L)
         # Some useful variables
-        self.data.u_ss = mdl.converter.ac_voltage(self.data.q, self.data.u_dc)
-        self.data.i_dc = mdl.converter.dc_current(self.data.q, self.data.i_ss)
-        u_g_abc = mdl.converter.grid_voltages(self.data.t)
+        self.data.u_ss = self.conv.ac_voltage(self.data.q, self.data.u_dc)
+        self.data.i_dc = self.conv.dc_current(self.data.q, self.data.i_ss)
+        u_g_abc = self.conv.grid_voltages(self.data.t)
         self.data.u_g = abc2complex(u_g_abc)
         # Voltage at the output of the diode bridge
         self.data.u_di = np.amax(u_g_abc, 0) - np.amin(u_g_abc, 0)

@@ -9,9 +9,7 @@ This open-source software includes simulation models for an induction motor, a s
 
 Usage
 -----
-The main folder includes the example script `sim.py` to run the simulation. The folder `config` contains example configuration files that can be modified or used as templates for new ones. There are separate config files for the drive system and for its controller. For example, pulse-width modulation (PWM) can be enabled in the drive system config file. The control system can be configured to operate in a sensorless or sensored mode. More detailed documentation is available here:
-
-https://aalto-electric-drives.github.io/motulator/
+An example script `main.py` exemplifies how to configure and simulate different models. More detailed documentation will be provided quite soon...
 
 Acknowledgement
 ---------------

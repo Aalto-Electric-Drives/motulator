@@ -5,31 +5,96 @@ This module contains vector control for synchronous motor drives.
 """
 
 # %%
+from __future__ import annotations
+from dataclasses import dataclass
 import numpy as np
 from sklearn.utils import Bunch
 from helpers import abc2complex
-from control.common import PWM, Datalogger
+from control.common import SpeedCtrl, PWM, Datalogger, Delay
+from control.sm_torque import TorqueCharacteristics
 
 
 # %%
-class VectorCtrl:
+@dataclass
+class SynchronousMotorVectorCtrlPars:
     """
-    Interconnect the subsystems of the control method.
+    Control system parameters for a synchronous motor.
+
+    """
+    # pylint: disable=too-many-instance-attributes
+    sensorless: bool = True
+    # Sampling period
+    T_s: float = 250e-6
+    delay: int = 1
+    # Bandwidths
+    alpha_c: float = 2*np.pi*200
+    alpha_fw: float = 2*np.pi*20
+    alpha_s: float = 2*np.pi*4
+    # Maximum values
+    tau_M_max: float = 2*14.6
+    i_s_max: float = 1.5*np.sqrt(2)*5
+    # Voltage margin
+    k_u: float = .95
+    # Nominal values
+    u_dc_nom: float = 540
+    w_nom: float = 2*np.pi*75
+    # Motor parameter estimates
+    R_s: float = 3.6
+    L_d: float = .036
+    L_q: float = .051
+    psi_f: float = .545
+    p: int = 3
+    J: float = .015
+    # Sensorless observer
+    w_o: float = 2*np.pi*40  # Used only in the sensorless mode
+
+    def __post_init__(self):
+        """
+        Generate control look-up tables for synchronous motors.
+
+        """
+        # Generate LUTs
+        tq = TorqueCharacteristics(self)
+        mtpa = tq.mtpa_locus(i_s_max=self.i_s_max)
+        lims = tq.mtpv_and_current_limits(i_s_max=self.i_s_max)
+        # MTPA locus
+        self.i_sd_mtpa = mtpa.i_sd_vs_tau_M
+        # Merged MTPV and current limits
+        self.tau_M_lim = lims.tau_M_vs_abs_psi_s
+        self.i_sd_lim = lims.i_sd_vs_tau_M
+
+
+class SynchronousMotorVectorCtrl(Datalogger):
+    """
+    Create the vector controller.
 
     This class interconnects the subsystems of the control system and
     provides the interface to the solver.
 
     """
 
-    def __init__(self, pars, speed_ctrl, current_ref, current_ctrl, observer):
+    def __init__(self, pars):
+        """
+        Parameters
+        ----------
+        pars : SynchronousMotorVectorCtrlData
+            Control parameters.
+
+        """
+        super().__init__()
         self.p = pars.p
         self.sensorless = pars.sensorless
-        self.current_ctrl = current_ctrl
-        self.speed_ctrl = speed_ctrl
-        self.current_ref = current_ref
-        self.observer = observer
+        self.current_ctrl = CurrentCtrl(pars)
+        self.speed_ctrl = SpeedCtrl(pars)
+        self.current_ref = CurrentRef(pars)
+        self.observer = SensorlessObserver(pars)
         self.pwm = PWM(pars)
-        self.datalog = Datalogger()
+        self.delay = Delay(pars.delay)
+        if pars.sensorless:
+            self.observer = SensorlessObserver(pars)
+        else:
+            self.observer = None
+        self.desc = pars.__repr__()
 
     def __call__(self, w_m_ref, i_s_abc, u_dc, *args):
         """
@@ -64,8 +129,8 @@ class VectorCtrl:
             # Needed only for the current controller without integral action
             psi_s = self.observer.psi_s
         else:
-            w_m = args[0]
-            theta_m = np.mod(args[1], 2*np.pi)
+            w_m = self.p*args[0]
+            theta_m = self.p*np.mod(args[1], 2*np.pi)
             i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
             psi_s = np.nan
             # psi_s = self.L_d*i_s.real + self.psi_f + 1j*self.L_q*i_s.imag
@@ -88,27 +153,12 @@ class VectorCtrl:
         data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, psi_s=psi_s,
                      w_m_ref=w_m_ref, w_m=w_m, theta_m=theta_m,
                      u_dc=u_dc, tau_M=tau_M, T_s=self.pwm.T_s)
-        self.datalog.save(data)
+        self.save(data)
 
         return d_abc_ref, self.pwm.T_s
 
-    def __str__(self):
-        desc = (('Vector control for a synchronous motor\n'
-                 '-------------------------------------\n'
-                 'Sensorless:\n'
-                 '    {}\n'
-                 'Sampling period:\n'
-                 '    T_s={}\n'
-                 'Number of pole pairs:\n'
-                 '    p={}\n')
-                .format(self.sensorless, self.pwm.T_s, self.p))
-        if self.observer:
-            desc += (self.current_ref.__str__() + self.current_ctrl.__str__()
-                     + self.speed_ctrl.__str__() + self.observer.__str__())
-        else:
-            desc += (self.current_ref.__str__() + self.current_ctrl.__str__()
-                     + self.speed_ctrl.__str__())
-        return desc
+    def __repr__(self):
+        return self.desc
 
 
 # %%
@@ -138,7 +188,7 @@ class CurrentCtrl:
         """
         Parameters
         ----------
-        pars : data object
+        pars : SynchronousMotorVectorCtrlPars (or its subset)
             Controller parameters.
 
         """
@@ -198,12 +248,6 @@ class CurrentCtrl:
         k_i = self.alpha_c*(self.alpha_c + 1j*w_m)
         self.u_i += self.T_s*k_i*(e + (u_s_ref_lim - u_s_ref)/k_t)
 
-    def __str__(self):
-        desc = (('2DOF PI current control:\n'
-                 '    alpha_c=2*pi*{:.1f}\n')
-                .format(self.alpha_c/(2*np.pi)))
-        return desc
-
 
 # %%
 class CurrentRef:
@@ -236,7 +280,7 @@ class CurrentRef:
         """
         Parameters
         ----------
-        pars : data object
+        pars : SynchronousMotorVectorCtrlPars (or its subset)
             Controller parameters.
 
         """
@@ -337,11 +381,6 @@ class CurrentRef:
         elif self.i_sd_ref < i_sd_lim:
             self.i_sd_ref = i_sd_lim
 
-    def __str__(self):
-        desc = ('Current reference calculation:\n'
-                '    i_s_max={:.1f}\n').format(self.i_s_max)
-        return desc
-
 
 # %%
 class SensorlessObserver:
@@ -365,7 +404,7 @@ class SensorlessObserver:
         """
         Parameters
         ----------
-        pars : data object
+        pars : SynchronousMotorVectorCtrlPars (or its subset)
             Controller parameters.
 
         """
@@ -419,12 +458,3 @@ class SensorlessObserver:
         self.w_m += self.T_s*self.k_i*eps
         self.theta_m += self.T_s*w_m
         self.theta_m = np.mod(self.theta_m, 2*np.pi)    # Limit to [0, 2*pi]
-
-    def __str__(self):
-        desc = (('Sensorless observer:\n'
-                 '    w_o=2*pi*{:.1f}\n'
-                 'Motor parameter estimates:\n'
-                 '    R_s={}  L_d={}  L_q={}  psi_f={}\n')
-                .format(.25*self.k_p/np.pi, self.R_s,
-                        self.L_d, self.L_q, self.psi_f))
-        return desc
