@@ -37,6 +37,7 @@ class SynchronousMotorDrive:
         # Store the solution in these lists
         self.data.t, self.data.q = [], []
         self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
+        self.motor._mech = self.mech
 
     def get_initial_values(self):
         """
@@ -150,8 +151,9 @@ class SynchronousMotor:
 
     Parameters
     ----------
-    mech : Mechanics object
-        Mechanical subsystem model.
+    _mech : Mechanics object
+        Mechanical subsystem model. The rotor position is needed for the
+        coordinate transformation in measure_currents().
 
     Attributes
     ----------
@@ -175,10 +177,9 @@ class SynchronousMotor:
     L_d: float = .036
     L_q: float = .051
     psi_f: float = .545
+    _mech: Mechanics = field(repr=False, default=None)
     # Initial value
     psi_s0: complex = field(repr=False, init=False)
-    # Needed for coordinate transformations
-    mech: Mechanics = None
 
     def __post_init__(self):
         self.psi_s0 = self.psi_f + 0j
@@ -254,7 +255,6 @@ class SynchronousMotor:
 
         """
         i_s0 = self.current(self.psi_s0)
-        theta_m0 = self.p*self.mech.theta_M0
+        theta_m0 = self.p*self._mech.theta_M0
         i_s_abc = complex2abc(np.exp(1j*theta_m0)*i_s0)
         return i_s_abc
-
