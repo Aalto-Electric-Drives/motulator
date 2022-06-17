@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 '''
-This module includes V/Hz control for induction motor drives.
+This module contains V/Hz control for induction motor drives.
 
 The V/Hz control method is similar to [1]_. Open-loop V/Hz control can be
 obtained as a special case by choosing::
@@ -22,24 +22,58 @@ References
 
 '''
 # %%
+from __future__ import annotations
+from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
-from control.common import PWM, RateLimiter, Datalogger
+from control.common import PWM, RateLimiter, Delay, Datalogger
 from helpers import abc2complex
 
 
 # %%
-class VHzCtrl:
+@dataclass
+class InductionMotorVHzCtrlPars:
+    """
+    V/Hz control parameters.
+
+    """
+    # pylint: disable=too-many-instance-attributes
+    # Open-loop V/Hz control can be obtained by choosing:
+    # pars.k_u, pars.k_w, pars.R_s, pars.R_R = 0, 0, 0, 0
+    sensorless: bool = field(repr=False, default=True)  # Always sensorless
+    T_s: float = 250e-6
+    delay: int = 1
+    psi_s_nom: float = 1.04  # 1 p.u.
+    rate_limit: float = 2*np.pi*120
+    # Motor parameter estimates
+    R_s: float = 3.7
+    R_R: float = 2.1
+    L_sgm: float = .021
+    L_M: float = .224
+    k_u: float = 1
+    k_w: float = 4
+
+
+# %%
+class InductionMotorVHzCtrl(Datalogger):
     """
     V/Hz control with the stator current feedback.
 
+    Parameters
+    ----------
+    pars : InductionMotorVHzCtrlPars
+        Controller parameters.
+
     """
 
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
+        super().__init__()
+        self.sensorless = True
         # Instantiate classes
         self.pwm = PWM(pars)
         self.rate_limiter = RateLimiter(pars)
-        self.datalog = Datalogger()
+        self.delay = Delay(pars.delay)
         # Parameters
         self.T_s = pars.T_s
         self.k_u = pars.k_u
@@ -49,12 +83,14 @@ class VHzCtrl:
         self.R_R = pars.R_R
         self.L_sgm = pars.L_sgm
         self.L_M = pars.L_M
-        self.alpha_f = pars.alpha_f
-        self.alpha_i = pars.alpha_i
+        w_rb = pars.R_R*(pars.L_M + pars.L_sgm)/(pars.L_sgm*pars.L_M)
+        self.alpha_f: float = .1*w_rb
+        self.alpha_i: float = .1*w_rb
         # States
         self.i_s_ref = 0j
         self.theta_s = 0
         self.w_r_ref = 0
+        self.desc = pars.__repr__()
 
     def __call__(self, w_m_ref, i_s_abc, u_dc):
         """
@@ -99,7 +135,7 @@ class VHzCtrl:
         data = Bunch(i_s_ref=self.i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
                      w_r=w_r, w_s=w_s, psi_s_ref=self.psi_s_ref,
                      theta_s=self.theta_s, u_dc=u_dc, T_s=self.pwm.T_s)
-        self.datalog.save(data)
+        self.save(data)
 
         # Update the states
         self.i_s_ref += self.T_s*self.alpha_i*(i_s - self.i_s_ref)
@@ -146,15 +182,5 @@ class VHzCtrl:
                    + k*(self.i_s_ref - i_s))
         return u_s_ref
 
-    def __str__(self):
-        desc = (('V/Hz control\n'
-                 '------------\n'
-                 'Sampling period:\n'
-                 '    T_s={}\n'
-                 'Motor parameter estimates:\n'
-                 '    R_s={}  R_R={}  L_sgm={}  L_M={}\n'
-                 'Tuning parameters:\n'
-                 '    k_u={:.1f}  k_w={:.1f}  alpha_f=2*pi*{:.1f}\n')
-                .format(self.T_s, self.R_s, self.R_R, self.L_sgm,
-                        self.L_M, self.k_u, self.k_w, self.alpha_f))
-        return desc
+    def __repr__(self):
+        return self.desc
