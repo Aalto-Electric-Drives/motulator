@@ -1,168 +1,211 @@
 # pylint: disable=C0103
 """
-This module includes tools for simulating the induction motor model
+This module contains the simulation class.
 
 """
-# %% Imports
-from model.interfaces import solve
-from multiprocessing import Pool, RLock#, freeze_support
-import copy
-import numpy as np
-from helpers import plot
 
-try:
-    from tqdm import tqdm, trange  # Can play around with tqdm.gui aswell, prints progress bars using matplotlib
-except ImportError:
-    print('tqdm could not be imported, because the tqdm library is missing')
+# %% Imports
+import numpy as np
+from scipy.io import savemat
+from scipy.integrate import solve_ivp
+from helpers import plot, plot_pu, plot_pu_extra, save_plot
 
 
 # %%
 class Simulation:
     """
-    This class implements a simulation object. Each simulation has a control module and a plant model
-    in addition to a main simulation loop and plotting functions
+    Simulation object.
+
+    Each simulation has a control module and a plant module.
+
     """
 
-    def __init__(self, ctrl, mdl, base, pars, name='sim') -> None:
-        # Deepcopy() creates new instances of the models (and whatever is under them)
-        self.ctrl = copy.deepcopy(ctrl)
-        self.mdl = copy.deepcopy(mdl)
-        self.base = copy.deepcopy(base)
-        self.pars = copy.deepcopy(pars)
+    def __init__(self, mdl, ctrl, base=None, name='sim', print_opts=True):
+        """
+        Parameters
+        ----------
+        mdl : (InductionMotorDrive | SynchronousMotorDrive)
+            Continuous-time system model.
+        ctrl : (SynchronousMotorVectorCtrl | InductionMotorVectorCtrl |
+                InductionMotorVHzCtrl)
+            Discrete-time controller.
+        base : BaseValues, optional
+            Base values for plotting figures.
+        name : str, optional
+            Name for the simulation instance.
+
+        """
+        self.mdl = mdl
+        self.ctrl = ctrl
+        self.base = base
         self.name = name
 
-    def plot_figure(self):
-        plot(self.mdl.datalog.data, self.ctrl.datalog.data, self.base)
+        if print_opts:
+            self.print_model_config()
+            self.print_control_config()
+            self.print_simulation_profile()
 
-    def sensorless_ctrl(self, i=0):
+    def simulate(self, max_step=np.inf):
         """
-        Run the digital controller and solve the continuous-time system model.
+        Solve the continuous-time model and call the discrete-time controller.
+
+        Parameters
+        ----------
+        max_step : float, optional
+            Max step size of the solver. The default is inf.
+
+        Notes
+        -----
+        Other options of solve_ivp() could be easily changed if needed, but,
+        for simplicity, only max_step is included as an option of this method.
 
         """
-        # Start computing the execution time
-        if hasattr(self.ctrl, 'speed_ctrl'):
-            runs = int(self.mdl.t_stop / self.ctrl.speed_ctrl.T_s)
-        else:
-            runs = int(self.mdl.t_stop / self.pars.T_s)
 
-        with tqdm(total=runs, position=i, desc="Simulating: " + self.name, ncols=80, leave=False,
-                  disable=False) as pbar:
+        def solve(d_abc, t_span):
+            """
+            Solve the continuous-time model over t_span.
+
+            Parameters
+            ----------
+            d_abc : array_like of floats, shape (3,)
+                Duty ratio references in the interval [0, 1].
+            t_span : 2-tuple of floats
+                Interval of integration (t0, tf). The solver starts with t=t0
+                and integrates until it reaches t=tf.
+
+            """
+            # Sampling period
+            T_s = t_span[-1] - t_span[0]
+            # Compute the normalized switching spans and corresponding states
+            tn_sw, q_sw = self.mdl.conv.pwm(d_abc)
+            # Convert the normalized switching spans to seconds
+            t_sw = t_span[0] + T_s*tn_sw
+            # Loop over the switching time spans
+            for i, t_sw_span in enumerate(t_sw):
+                # Update the switching states (constant over the time span)
+                self.mdl.conv.q = q_sw[i]
+                # Skip possible zero time spans
+                if t_sw_span[-1] > t_sw_span[0]:
+                    # Get initial values
+                    x0 = self.mdl.get_initial_values()
+                    # Integrate
+                    sol = solve_ivp(self.mdl.f, t_sw_span, x0,
+                                    max_step=max_step)
+                    # Set the new initial values (last points of the solution)
+                    t0_new, x0_new = t_sw_span[-1], sol.y[:, -1]
+                    self.mdl.set_initial_values(t0_new, x0_new)
+                    # Data logging
+                    sol.q = len(sol.t)*[self.mdl.conv.q]
+                    self.mdl.save(sol)
+
+        def sensorless_ctrl():
             while self.mdl.t0 <= self.mdl.t_stop:
                 # Sample the phase currents and the DC-bus voltage
                 i_s_abc_meas = self.mdl.motor.meas_currents()
-                u_dc_meas = self.mdl.converter.meas_dc_voltage()
+                u_dc_meas = self.mdl.conv.meas_dc_voltage()
                 # Get the speed reference
                 w_m_ref = self.mdl.speed_ref(self.mdl.t0)
                 # Run the digital controller
                 d_abc_ref, T_s = self.ctrl(w_m_ref, i_s_abc_meas, u_dc_meas)
                 # Model the computational delay
-                d_abc = self.mdl.delay(d_abc_ref)
-                # Simulate the continuous-time system model over the sampling period
-                solve(self.mdl, d_abc, [self.mdl.t0, self.mdl.t0 + T_s])
-                pbar.update()
+                d_abc = self.ctrl.delay(d_abc_ref)
+                # Simulate the continuous-time model over the sampling period
+                solve(d_abc, [self.mdl.t0, self.mdl.t0+T_s])
 
-    def sensored_ctrl(self, i=0):
-        """
-        Run the digital controller and solve the continuous-time system model.
-
-        """
-        # Start computing the execution time
-        if hasattr(self.ctrl, 'speed_ctrl'):
-            runs = int(self.mdl.t_stop / self.ctrl.speed_ctrl.T_s)
-        else:
-            runs = int(self.mdl.t_stop / self.pars.T_s)
-
-        with tqdm(total=runs, position=i, desc="Simulating: " + self.name, ncols=80, leave=False,
-                  disable=False) as pbar:
+        def sensored_ctrl():
             while self.mdl.t0 <= self.mdl.t_stop:
                 # Sample the phase currents and the DC-bus voltage
                 i_s_abc_meas = self.mdl.motor.meas_currents()
-                u_dc_meas = self.mdl.converter.meas_dc_voltage()
+                u_dc_meas = self.mdl.conv.meas_dc_voltage()
                 # Measure the rotor position (not used in the case of an IM)
-                theta_m_meas = self.ctrl.p * self.mdl.mech.meas_position()
+                theta_M_meas = self.mdl.mech.meas_position()
                 # Measure the rotor speed
-                w_m_meas = self.ctrl.p * self.mdl.mech.meas_speed()
+                w_M_meas = self.mdl.mech.meas_speed()
                 # Get the speed reference
                 w_m_ref = self.mdl.speed_ref(self.mdl.t0)
                 # Run the digital controller
-                d_abc_ref, T_s = self.ctrl(w_m_ref, i_s_abc_meas, u_dc_meas, w_m_meas, theta_m_meas)
+                d_abc_ref, T_s = self.ctrl(w_m_ref, i_s_abc_meas, u_dc_meas,
+                                           w_M_meas, theta_M_meas)
                 # Model the computational delay
-                d_abc = self.mdl.delay(d_abc_ref)
-                # Simulate the continuous-time system model over the sampling period
-                solve(self.mdl, d_abc, [self.mdl.t0, self.mdl.t0 + T_s])
-                pbar.update()
+                d_abc = self.ctrl.delay(d_abc_ref)
+                # Simulate the continuous-time model over the sampling period
+                solve(d_abc, [self.mdl.t0, self.mdl.t0+T_s])
 
-    def simulate(self, i=0):
-        # Run the model
-        if self.pars.sensorless:
-            self.sensorless_ctrl(i)
+        # Choose the state machine
+        if self.ctrl.sensorless:
+            sensorless_ctrl()
         else:
-            self.sensored_ctrl(i)
+            sensored_ctrl()
 
-        # Post-process
-        self.mdl.datalog.post_process(self.mdl)
-        self.ctrl.datalog.post_process()
+        # Call the post-processing function
+        self.post_process()
 
-    def print_profiles_config(self):
-        with np.printoptions(precision=1, suppress=True):
-            print('Profiles'
-                  '\n--------',
-                  '\nSpeed reference:'
-                  '\n    {}'.format(self.mdl.speed_ref),
-                  '\nExternal load torque:',
-                  '\n    {}'.format(self.mdl.mech.tau_L_ext))
-
-    def print_control_config(self):
-        # %% Print the control system data, speed reference and load reference
-        print(self.ctrl)
+    def post_process(self):
+        """
+        Execute post simulation processes for the saved simulation data.
+        """
+        self.mdl.post_process()
+        self.ctrl.post_process()
 
     def print_model_config(self):
-        # %% Print the induction motor model data
+        """
+        Print the model configuration data.
+
+        """
+        print('\n--- Model ---')
         print(self.mdl)
 
-
-# %%
-class SimEnv:
-    """
-    Implements a class to store individual simulation objects. Has a method to simulate using multiple processors
-    i.e. allows the user to run several simulations in parallel.
-    """
-
-    def __init__(self) -> None:
-        # Create a list of simulations
-        self.simulations = []
-
-    def add_sim(self, ctrl, mdl, base, pars, name=""):
-        sim = Simulation(ctrl, mdl, base, pars, name)
-        self.simulations.append(sim)
-        return sim
-
-    def simulate(self):
-        for sim in self.simulations:
-            sim.simulate()
-
-    def mp_simulation_function(self, i):
-        self.simulations[i].simulate(i)
-        return self.simulations[i]
-
-    def simulate_all(self):
+    def print_control_config(self):
         """
-        Simulates all the stored simulation instances simultaneously using multiple processors
+        Print the control system data, speed reference and load reference.
+
         """
-        with Pool(initializer=tqdm.set_lock(RLock()), initargs=(tqdm.get_lock(),)) as pool:
-            num_tasks = range(len(self.simulations))
-            self.simulations = pool.map(self.mp_simulation_function, num_tasks)
+        print('\n--- Control ---')
+        print(self.ctrl)
 
-    def plot_figures(self):
-        with tqdm(total=self.simulations.__len__(), desc='Plotting figures', ncols=80, leave=False,
-                  disable=False) as pbar:
-            for sim in self.simulations:
-                sim.plot_figure()
-                pbar.update()
+    def print_simulation_profile(self):
+        """
+        Print the simulation profiles.
 
-    def print_simulation_configs(self):
-        for idx, simulation in enumerate(self.simulations):
-            print('\nSimulation {}\n-----------'.format(str(idx+1)))
-            simulation.print_model_config()
-            simulation.print_control_config()
-            simulation.print_profiles_config()
+        """
+        print('\n--- Speed reference ---')
+        print(self.mdl.speed_ref)
+        print('\n--- External load torque ---')
+        print(self.mdl.mech.tau_L_ext)
+
+    def plot_figure(self, save=False, extra=False):
+        """
+        Plot the simulation results.
+
+        A wrapper for the plot function in helpers.py.
+
+        """
+        if self.base is not None:
+            plot_pu(self.mdl.data, self.ctrl.data, self.base)
+            if extra:
+                # Try plotting extra figures
+                try:
+                    plot_pu_extra(self.mdl.data, self.ctrl.data, self.base)
+                except AttributeError:
+                    pass
+        else:
+            plot(self.mdl.data, self.ctrl.data)
+        if save:
+            save_plot(self.name)
+
+    def save_mat(self):
+        """
+        Save the simulation data to MATLAB .mat file.
+
+        """
+        plant_data = self.mdl.datalog.data
+        controller_data = self.ctrl.datalog.data
+
+        # Copies the continuous time vector to a new variable to avoid being
+        # rewritten over by the discrete time vector
+        t_cont = {'t_cont': plant_data.t}
+
+        # Unpack data
+        data = {**plant_data, **t_cont, **controller_data}
+
+        savemat(self.name+'.mat', data)

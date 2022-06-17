@@ -34,7 +34,7 @@ autodoc_mock_imports = ['numpy', 'sklearn', 'matplotlib', 'scipy', 'cycler']
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.napoleon', 'sphinx.ext.viewcode', 'numpydoc'] #, 'sphinx_copybutton', 'sphinx.ext.autodoc', 'sphinx.ext.autosummary']
+extensions = ['sphinx.ext.napoleon', 'sphinx.ext.viewcode', 'numpydoc'] #, 'sphinx.ext.autodoc', 'sphinx.ext.autosummary']
 extensions.append('autoapi.extension')
 autoapi_type = 'python'
 # autoapi_dirs = ['../..']

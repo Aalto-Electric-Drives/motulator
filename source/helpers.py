@@ -5,6 +5,8 @@ This module contains various helper functions and classes.
 
 """
 # %%
+from __future__ import annotations
+from dataclasses import dataclass
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
@@ -219,9 +221,9 @@ def ref_step(mdl, w_max=.8*2*np.pi*50, tau_max=14.6, t_max=1.5):
 
 
 # %%
-def plot(mdl, ctrl, base):
+def plot_pu(mdl, ctrl, base):
     """
-    Plot example figures.
+    Plot example figures in per units.
 
     Parameters
     ----------
@@ -229,7 +231,7 @@ def plot(mdl, ctrl, base):
         Continuous-time solution.
     ctrl : object
         Continuous-time solution.
-    base : object
+    base : BaseValues
         Base values.
 
     """
@@ -302,17 +304,107 @@ def plot(mdl, ctrl, base):
         ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$',
                     r'$\hat \psi_\mathrm{R}$'])
     ax5.set_xlim(t_range)
-    ax5.set_ylabel('Flux (p.u.)')
+    ax5.set_ylabel('Flux linkage (p.u.)')
     ax5.set_xlabel('Time (s)')
 
     fig.align_ylabels()
     plt.tight_layout()
+    plt.show()
 
 
 # %%
-def plot_im_extra(mdl, ctrl, base):
+def plot(mdl, ctrl):
     """
-    Plot extra waveforms for an induction motor with a diode bridge.
+    Plot example figures in SI units.
+
+    Parameters
+    ----------
+    mdl : object
+        Continuous-time solution.
+    ctrl : object
+        Continuous-time solution.
+
+    """
+    # Recognize the motor type by checking if the rotor flux data exist
+    try:
+        if mdl.psi_Rs is not None:
+            motor_type = 'im'
+    except AttributeError:
+        motor_type = 'sm'
+
+    t_range = (0, ctrl.t[-1])   # Time span
+
+    fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(8, 10))
+
+    ax1.step(ctrl.t, ctrl.w_m_ref, '--', where='post')
+    ax1.plot(mdl.t, mdl.w_m)
+    try:
+        ax1.step(ctrl.t, ctrl.w_m, where='post')
+    except AttributeError:
+        pass
+    ax1.legend([r'$\omega_\mathrm{m,ref}$',
+                r'$\omega_\mathrm{m}$',
+                r'$\hat \omega_\mathrm{m}$'])
+    # ax1.step(ctrl.t, ctrl.w_s, where='post')  # Stator frequency
+    ax1.set_xlim(t_range)
+    ax1.set_xticklabels([])
+    ax1.set_ylabel('Speed (rad/s)')
+
+    ax2.plot(mdl.t, mdl.tau_L, '--')
+    ax2.plot(mdl.t, mdl.tau_M)
+    try:
+        ax2.step(ctrl.t, ctrl.tau_M)  # Limited torque reference
+        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$',
+                    r'$\tau_\mathrm{M,ref}$'])
+    except AttributeError:
+        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$'])
+    ax2.set_xlim(t_range)
+    ax2.set_ylabel('Torque (Nm)')
+    ax2.set_xticklabels([])
+
+    ax3.step(ctrl.t, ctrl.i_s_ref.real, '--', where='post')
+    ax3.step(ctrl.t, ctrl.i_s.real, where='post')
+    ax3.step(ctrl.t, ctrl.i_s_ref.imag, '--', where='post')
+    ax3.step(ctrl.t, ctrl.i_s.imag, where='post')
+    ax3.set_ylabel('Current (A)')
+    ax3.legend([r'$i_\mathrm{sd,ref}$', r'$i_\mathrm{sd}$',
+                r'$i_\mathrm{sq,ref}$', r'$i_\mathrm{sq}$'])
+    ax3.set_xlim(t_range)
+    ax3.set_xticklabels([])
+
+    ax4.step(ctrl.t, np.abs(ctrl.u_s), where='post')
+    ax4.step(ctrl.t, ctrl.u_dc/np.sqrt(3), '--', where='post')
+    ax4.set_ylabel('Voltage (V)')
+    ax4.set_xlim(t_range)
+    ax4.legend([r'$u_\mathrm{s}$', r'$u_\mathrm{dc}/\sqrt{3}$'])
+    ax4.set_xticklabels([])
+
+    if motor_type == 'sm':
+        ax5.plot(mdl.t, np.abs(mdl.psi_s))
+        ax5.step(ctrl.t, np.abs(ctrl.psi_s), '--', where='post')
+        ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
+    else:
+        ax5.plot(mdl.t, np.abs(mdl.psi_ss))
+        ax5.plot(mdl.t, np.abs(mdl.psi_Rs))
+        try:
+            ax5.plot(ctrl.t, np.abs(ctrl.psi_R))
+        except AttributeError:
+            pass
+        ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$',
+                    r'$\hat \psi_\mathrm{R}$'])
+    ax5.set_xlim(t_range)
+    ax5.set_ylabel('Flux linkage (Vs)')
+    ax5.set_xlabel('Time (s)')
+
+    fig.align_ylabels()
+    plt.tight_layout()
+    plt.show()
+
+
+# %%
+def plot_pu_extra(mdl, ctrl, base):
+    """
+    Plot extra waveforms for a motor drive with a diode bridge.
 
     Parameters
     ----------
@@ -325,7 +417,7 @@ def plot_im_extra(mdl, ctrl, base):
 
     """
     # Time span
-    t_zoom = (.9, .925)
+    t_zoom = (1.1, 1.125)
 
     # Quantities in stator coordinates
     ctrl.u_ss = np.exp(1j*ctrl.theta_s)*ctrl.u_s
@@ -335,7 +427,7 @@ def plot_im_extra(mdl, ctrl, base):
     ax1.plot(mdl.t, mdl.u_ss.real/base.u)
     ax1.plot(ctrl.t, ctrl.u_ss.real/base.u)
     ax1.set_xlim(t_zoom)
-    ax1.set_ylim(-1.5, 1.5)
+    # ax1.set_ylim(-1.5, 1.5)
     ax1.legend([r'$u_\mathrm{sa}$', r'$\hat u_\mathrm{sa}$'])
     ax1.set_ylabel('Voltage (p.u.)')
     ax1.set_xticklabels([])
@@ -359,7 +451,7 @@ def plot_im_extra(mdl, ctrl, base):
         ax1.plot(mdl.t, mdl.u_dc/base.u)
         ax1.plot(mdl.t, complex2abc(mdl.u_g).T/base.u)
         ax1.set_xlim(t_zoom)
-        ax1.set_ylim(-1.5, 2)
+        # ax1.set_ylim(-1.5, 2)
         ax1.set_xticklabels([])
         ax1.legend([r'$u_\mathrm{di}$',
                     r'$u_\mathrm{dc}$',
@@ -378,3 +470,51 @@ def plot_im_extra(mdl, ctrl, base):
 
     plt.tight_layout()
     plt.show()
+
+
+# %%
+def save_plot(name):
+    """
+    Save figures.
+
+    This saves figures in a folder "figures" in the current directory. If the
+    folder doesn't exist, it is created.
+
+    Parameters
+    ----------
+    name : string
+        Name for the figure
+    plt : object
+        Handle for the figure to be saved
+
+    """
+    plt.savefig(name + '.pdf')
+
+
+# %%
+@dataclass
+class BaseValues:
+    """
+    Base values for plotting the results.
+
+    Base values are computed from the rated values and the number of pole
+    pairs.
+
+    """
+    # pylint: disable=too-many-instance-attributes
+    U_nom: float
+    I_nom: float
+    f_nom: float
+    P_nom: float
+    tau_nom: float
+    p: int
+
+    def __post_init__(self):
+        self.u = np.sqrt(2/3)*self.U_nom
+        self.i = np.sqrt(2)*self.I_nom
+        self.w = 2*np.pi*self.f_nom
+        self.psi = self.u/self.w
+        self.P = 1.5*self.u*self.i
+        self.Z = self.u/self.i
+        self.L = self.Z/self.w
+        self.tau = self.p*self.P/self.w
