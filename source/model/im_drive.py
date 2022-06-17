@@ -23,7 +23,7 @@ class InductionMotorDrive:
     Interconnect the subsystems of an induction motor drive.
 
     This interconnects the subsystems of an induction motor drive and provides
-    the interface to the solver. More complicated systems could be simulated
+    an interface to the solver. More complicated systems could be simulated
     using a similar template.
 
     """
@@ -156,11 +156,6 @@ class InductionMotor:
 
     An induction motor is modeled using the Gamma-equivalent model [1]_. The
     model is implemented in stator coordinates.
-
-    Parameters
-    ----------
-    data : InductionMotorData
-        Contains the model parameters.
 
     Attributes
     ----------

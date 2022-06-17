@@ -16,23 +16,18 @@ class Mechanics:
 
     This models an equation of motion for stiff mechanics.
 
-    Parameters
-    ----------
-    data : MechanicsData
-        Contains the model parameters.
-
     Attributes
     ----------
     J : float
         Total moment of inertia.
     B : float
         Viscous damping coefficient.
-    tau_L_ext : function
-        External load torque as a function of time, `tau_L_ext(t)`.
     w_M0 : float
         Initial value of the rotor angular speed.
     theta_M0 : float
         Initial value of the rotor angle.
+    tau_L_ext : function
+        External load torque as a function of time, `tau_L_ext(t)`.
 
     """
     J: float = .015

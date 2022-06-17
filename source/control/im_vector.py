@@ -84,8 +84,8 @@ class InductionMotorVectorCtrl(Datalogger):
             Phase currents.
         u_dc : float
             DC-bus voltage.
-        w_m : float, optional
-            Rotor speed (in electrical rad/s), for the sensored control.
+        w_M : float, optional
+            Rotor speed (in mechanical rad/s), only for the sensored control.
 
         Returns
         -------
@@ -102,7 +102,7 @@ class InductionMotorVectorCtrl(Datalogger):
         if self.sensorless:
             w_m = self.observer.w_m
         else:
-            w_m = args[0]
+            w_m = self.p*args[0]
 
         # Space vector and coordinate transformation
         i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
@@ -160,7 +160,7 @@ class CurrentRef:
         """
         Parameters
         ----------
-        pars : data object
+        pars : InductionMotorVectorCtrlPars (or its subset)
             Controller parameters.
 
         """
@@ -242,12 +242,6 @@ class CurrentRef:
         elif self.i_sd_ref < -self.i_s_max:
             self.i_sd_ref = -self.i_s_max
 
-    def __str__(self):
-        desc = (('Current reference calculation:\n'
-                 '    i_s_max={:.1f}  i_sd_nom={:.1f}\n')
-                .format(self.i_s_max, self.i_sd_nom))
-        return desc
-
 
 # %%
 class CurrentCtrl:
@@ -276,7 +270,7 @@ class CurrentCtrl:
         """
         Parameters
         ----------
-        pars : data object
+        pars : InductionMotorVectorCtrlPars (or its subset)
             Controller parameters.
 
         """
@@ -332,12 +326,6 @@ class CurrentCtrl:
         k_t = self.alpha_c
         self.u_i += self.T_s*k_i*(e + (u_s_ref_lim - u_s_ref)/k_t)
 
-    def __str__(self):
-        desc = (('2DOF PI current control:\n'
-                 '    alpha_c=2*pi*{:.1f}\n')
-                .format(self.alpha_c/(2*np.pi)))
-        return desc
-
 
 # %%
 class SensorlessObserver:
@@ -368,7 +356,7 @@ class SensorlessObserver:
         """
         Parameters
         ----------
-        pars : data object
+        pars : InductionMotorVectorCtrlPars (or its subset)
             Controller parameters.
 
         """
@@ -452,15 +440,6 @@ class SensorlessObserver:
         self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
         self.i_s_old = i_s
 
-    def __str__(self):
-        desc = (('Sensorless reduced-order observer:\n'
-                 '    alpha_o=2*pi*{:.1f}\n'
-                 'Motor parameter estimates:\n'
-                 '    R_s={}  R_R={}  L_sgm={}  L_M={}\n')
-                .format(self.alpha_o/(2*np.pi), self.R_s,
-                        self.R_R, self.L_sgm, self.L_M))
-        return desc
-
 
 # %%
 class CurrentModelEstimator:
@@ -469,13 +448,18 @@ class CurrentModelEstimator:
 
     This simple flux estimator requires speed measurement.
 
+    Notes
+    -----
+    This is to be upgraded to a sensored flux observer later. The current model
+    is not a feasible choice due to its sensitivity to the inductances.
+
     """
 
     def __init__(self, pars):
         """
         Parameters
         ----------
-        pars : data object
+        pars : InductionMotorVectorCtrlPars (or its subset)
             Controller parameters.
 
         """
@@ -534,9 +518,3 @@ class CurrentModelEstimator:
         self.psi_R += self.T_s*self.R_R*(i_s.real - self.psi_R/self.L_M)
         self.theta_s += self.T_s*w_s
         self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
-
-    def __str__(self):
-        desc = (('Current model flux estimator:\n'
-                 '    R_R={}  L_M={}\n')
-                .format(self.R_R, self.L_M))
-        return desc

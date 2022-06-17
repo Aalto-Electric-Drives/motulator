@@ -18,11 +18,6 @@ class Inverter:
     """
     Inverter with the constant DC voltage and switching-cycle averaging.
 
-    Parameters
-    ----------
-    data : InverterData
-        Contains the model parameters.
-
     Attributes
     ----------
     u_dc0 : float
@@ -119,17 +114,12 @@ class PWMInverter(Inverter):
     """
     Pulse-width modulated inverter with the constant DC voltage.
 
-    Parameters
-    ----------
-    data : PWMInverterData
-        Contains the model parameters.
-
     Attributes
     ----------
     u_dc0 : float
         DC-bus voltage.
     q : complex
-        Duty ratio space vector.
+        Switching state vector (in stator coordinates).
     falling_edge : bool
         Stores the carrier direction.
 
@@ -197,21 +187,16 @@ class FrequencyConverter(PWMInverter):
     This models a strong grid, a three-phase diode-bridge rectifier, an LC
     filter, and a three-phase inverter.
 
-    Parameters
-    ----------
-    pars : dataclass
-        Contains the model parameters.
-
     Attributes
     ----------
     L : float
         DC-bus inductance.
     C : float
         DC-bus capacitance.
-    u_g : float
-        Grid voltage (line-neutral, peak).
-    w_g : float
-        Grid angular frequency.
+    U_g : float
+        Grid voltage (line-line, rms).
+    f_g : float
+        Grid frequency.
 
     """
     L: float = 2e-3

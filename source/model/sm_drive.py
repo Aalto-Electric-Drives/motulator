@@ -20,10 +20,10 @@ from model.converter import Inverter, PWMInverter
 @dataclass
 class SynchronousMotorDrive:
     """
-    Model of a synchronous motor drive.
+    Continuous-time model for a synchronous motor drive.
 
     This interconnects the subsystems of a synchronous motor drive and provides
-    the interface to the solver. More complicated systems could be simulated
+    an interface to the solver. More complicated systems could be simulated
     using a similar template.
 
     """
@@ -35,9 +35,9 @@ class SynchronousMotorDrive:
 
     def __post_init__(self):
         # Store the solution in these lists
+        self.motor._mech = self.mech
         self.data.t, self.data.q = [], []
         self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
-        self.motor._mech = self.mech
 
     def get_initial_values(self):
         """
@@ -152,7 +152,7 @@ class SynchronousMotor:
     Parameters
     ----------
     _mech : Mechanics object
-        Mechanical subsystem model. The rotor position is needed for the
+        Mechanical subsystem model. The rotor position is needed only for the
         coordinate transformation in measure_currents().
 
     Attributes

@@ -23,7 +23,7 @@ References
 '''
 # %%
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
 from control.common import PWM, RateLimiter, Delay, Datalogger
@@ -40,7 +40,7 @@ class InductionMotorVHzCtrlPars:
     # pylint: disable=too-many-instance-attributes
     # Open-loop V/Hz control can be obtained by choosing:
     # pars.k_u, pars.k_w, pars.R_s, pars.R_R = 0, 0, 0, 0
-    sensorless: bool = True  # Always sensorless
+    sensorless: bool = field(repr=False, default=True)  # Always sensorless
     T_s: float = 250e-6
     delay: int = 1
     psi_s_nom: float = 1.04  # 1 p.u.
@@ -62,10 +62,11 @@ class InductionMotorVHzCtrl(Datalogger):
     Parameters
     ----------
     pars : InductionMotorVHzCtrlPars
-        Control parameters.
+        Controller parameters.
 
     """
 
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
         super().__init__()
         self.sensorless = True
