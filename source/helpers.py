@@ -88,7 +88,7 @@ class Sequence:
             Time values.
         values : ndarray
             Output values.
-        periodic : Boolean, optional
+        periodic : bool, optional
             Enables periodicity. The default is False.
 
         """
@@ -497,7 +497,7 @@ class BaseValues:
     """
     Base values for plotting the results.
 
-    Base values are computed from the rated values and the number of pole
+    Base values are computed from the nominal values and the number of pole
     pairs.
 
     """

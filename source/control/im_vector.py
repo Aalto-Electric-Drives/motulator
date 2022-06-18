@@ -45,7 +45,7 @@ class InductionMotorVectorCtrlPars:
 
 class InductionMotorVectorCtrl(Datalogger):
     """
-    Interconnect the subsystems of the control method.
+    Vector control for an induction motor drive.
 
     This class interconnects the subsystems of the control system and
     provides the interface to the solver.
@@ -140,9 +140,9 @@ class CurrentRef:
     """
     Current reference calculation.
 
-    This current reference calculation method includes field-weakenting
-    operation based on the unlimited voltage reference feedback. The breakdown
-    torque and current limits are taken into account.
+    This method includes field-weakenting operation based on the unlimited
+    voltage reference feedback. The breakdown torque and current limits are
+    taken into account.
 
     Notes
     -----
@@ -161,7 +161,7 @@ class CurrentRef:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -248,10 +248,10 @@ class CurrentCtrl:
     """
     2DOF PI current controller.
 
-    This 2DOF PI current controller corresponds to [2]_. The continuous-time
-    complex-vector design corresponding to (13) is used here. The rotor flux
-    linkage is considered as a quasi-constant disturbance. This design could
-    be equivalently presented as a 2DOF PI controller.
+    This controller corresponds to [2]_. The continuous-time complex-vector
+    design corresponding to (13) is used here. The rotor flux linkage is
+    considered as a quasi-constant disturbance. This design could be
+    equivalently presented as a 2DOF PI controller.
 
     Notes
     -----
@@ -271,7 +271,7 @@ class CurrentCtrl:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -332,10 +332,10 @@ class SensorlessObserver:
     """
     Sensorless reduced-order observer.
 
-    This sensorless reduced-order flux observer corresponds to [3]_. The
-    observer gain decouples the electrical and mechanical dynamics and allows
-    placing the poles of the corresponding linearized estimation error
-    dynamics. This implementation operates in estimated rotor flux coordinates.
+    This observer corresponds to [3]_. The observer gain decouples the
+    electrical and mechanical dynamics and allows placing the poles of the
+    corresponding linearized estimation error dynamics. This implementation
+    operates in estimated rotor flux coordinates.
 
     Notes
     -----
@@ -357,7 +357,7 @@ class SensorlessObserver:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -460,7 +460,7 @@ class CurrentModelEstimator:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         # Parameters

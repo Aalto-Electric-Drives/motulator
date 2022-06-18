@@ -20,17 +20,28 @@ from model.converter import Inverter, PWMInverter, FrequencyConverter
 @dataclass
 class InductionMotorDrive:
     """
-    Interconnect the subsystems of an induction motor drive.
+    Continuous-time model for an induction motor drive.
 
     This interconnects the subsystems of an induction motor drive and provides
-    an interface to the solver. More complicated systems could be simulated
-    using a similar template.
+    an interface to the solver. More complicated systems could be modeled using
+    a similar template.
+
+    Parameters
+    ----------
+    motor : InductionMotor | InductionMotorSaturated
+        Induction motor model.
+    mech : Mechanics
+        Mechanics model.
+    conv : Inverter | PWMInverter
+        Inverter model.
 
     """
     motor: InductionMotor | InductionMotorSaturated = None
     mech: Mechanics = None
     conv: Inverter | PWMInverter = None
+    # Stores the solution data
     data: Bunch = field(repr=False, default_factory=Bunch)
+    # Initial time
     t0: float = field(repr=False, default=0)
 
     def __post_init__(self):
@@ -107,7 +118,7 @@ class InductionMotorDrive:
 
         Parameters
         ----------
-        sol : bunch object
+        sol : Bunch object
             Solution from the solver.
 
         """
@@ -157,7 +168,7 @@ class InductionMotor:
     An induction motor is modeled using the Gamma-equivalent model [1]_. The
     model is implemented in stator coordinates.
 
-    Attributes
+    Parameters
     ----------
     p : int
         Number of pole pairs.
@@ -169,10 +180,6 @@ class InductionMotor:
         Leakage inductance.
     L_s : float
         Stator inductance.
-    psi_ss0 : complex
-        Initial value of the stator flux linkage.
-    psi_rs0 : complex
-        Initial value of the rotor flux linkage.
 
     Notes
     -----
@@ -290,10 +297,19 @@ class InductionMotorSaturated(InductionMotor):
     """
     Induction motor with main-flux saturation.
 
-    Main-flux magnetic saturation is modeled. The default saturation model is
-    given by [2]_::
+    This extends the InductionMotor class with a main-flux magnetic saturation
+    model. The default saturation model is given by [2]_::
 
         L_s(psi_s) = L_su/(1 + (beta*abs(psi_s)**S)
+
+    Parameters
+    ----------
+    L_su : float
+        Unsaturated stator inductance.
+    beta : float
+        Positive coefficient.
+    S : float
+        Positive coefficient.
 
     References
     ----------
@@ -324,34 +340,39 @@ class InductionMotorDriveDiode(InductionMotorDrive):
     """
     Induction motor drive equipped with a diode bridge.
 
-    This models an induction motor drive, equipped with a three-phase diode
-    bridge fed from stiff supply voltages. The DC bus has an inductor and
-    a capacitor.
+    This models extends the InductionMotorDrive class with a model for a
+    three-phase diode bridge fed from stiff supply voltages. The DC bus is
+    modeled as an inductor and a capacitor.
+
+    Parameters
+    ----------
+
+    conv : FrequencyConverter
+        Frequency converter model.
 
     """
     conv: FrequencyConverter = None
 
     def __post_init__(self):
-        # Extends the base class. Store the solution in these lists
+        # Extends the base class, store the solution in these lists
         self.data.t, self.data.q = [], []
         self.data.psi_ss, self.data.psi_rs = [], []
         self.data.theta_M, self.data.w_M = [], []
         self.data.u_dc, self.data.i_L = [], []
 
     def get_initial_values(self):
-        # Extends the base class.
+        # Extends the base class
         x0 = super().get_initial_values() + [self.conv.u_dc0, self.conv.i_L0]
         return x0
 
     def set_initial_values(self, t0, x0):
-        # Extends the base class.
+        # Extends the base class
         super().set_initial_values(t0, x0[0:4])
         self.conv.u_dc0 = x0[4].real
         self.conv.i_L0 = x0[5].real
 
     def f(self, t, x):
-        # Overrides the base class.
-        # Unpack the states for better readability
+        # Overrides the base class, unpack the states for better readability
         psi_ss, psi_rs, w_M, _, u_dc, i_L = x
         # Interconnections: outputs for computing the state derivatives
         i_ss, _ = self.motor.currents(psi_ss, psi_rs)
@@ -364,13 +385,13 @@ class InductionMotorDriveDiode(InductionMotorDrive):
                 self.conv.f(t, u_dc, i_L, i_dc))
 
     def save(self, sol):
-        # Extends the base class.
+        # Extends the base class
         super().save(sol)
         self.data.u_dc.extend(sol.y[4].real)
         self.data.i_L.extend(sol.y[5].real)
 
     def post_process(self):
-        # Extends the base class.
+        # Extends the base class
         super().post_process()
         # From lists to the ndarray
         self.data.u_dc = np.asarray(self.data.u_dc)

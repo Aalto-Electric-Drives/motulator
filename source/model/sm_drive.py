@@ -2,9 +2,10 @@
 """
 This module contains continuous-time models for synchronous motor drives.
 
-The motor model can be parametrized to represent a permanent-magnet synchronous
-motor and synchronous reluctance motor. Peak-valued complex space vectors are
-used.
+The motor model can be parametrized to represent permanent-magnet synchronous
+motors and synchronous reluctance motors. Peak-valued complex space vectors are
+used. The default values correspond to a 2.2-kW permanent-magnet synchronous
+motor.
 
 """
 from __future__ import annotations
@@ -23,19 +24,30 @@ class SynchronousMotorDrive:
     Continuous-time model for a synchronous motor drive.
 
     This interconnects the subsystems of a synchronous motor drive and provides
-    an interface to the solver. More complicated systems could be simulated
-    using a similar template.
+    an interface to the solver. More complicated systems could be modeled using
+    a similar template.
+
+    Parameters
+    ----------
+    motor : SynchronousMotor
+        Synchronous motor model.
+    mech : Mechanics
+        Mechanics model.
+    conv : Inverter | PWMInverter
+        Inverter model.
 
     """
     motor: SynchronousMotor = None
     mech: Mechanics = None
     conv: Inverter | PWMInverter = None
+    # Stores the solution data
     data: Bunch = field(repr=False, default_factory=Bunch)
+    # Initial time
     t0: float = field(repr=False, default=0)
 
     def __post_init__(self):
-        # Store the solution in these lists
         self.motor._mech = self.mech
+        # Store the solution in these lists
         self.data.t, self.data.q = [], []
         self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
 
@@ -64,8 +76,9 @@ class SynchronousMotorDrive:
         """
         self.t0 = t0
         self.motor.psi_s0 = x0[0]
-        self.mech.w_M0 = x0[1].real         # x0[2].imag is always zero
-        self.mech.theta_M0 = x0[2].real     # x0[1].imag is always zero
+        # x0[1].imag and x0[2].imag are always zero
+        self.mech.w_M0 = x0[1].real
+        self.mech.theta_M0 = x0[2].real
         # Limit the angle [0, 2*pi]
         self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
 
@@ -109,7 +122,7 @@ class SynchronousMotorDrive:
 
         Parameters
         ----------
-        sol : bunch object
+        sol : Bunch object
             Solution from the solver.
 
         """
@@ -146,17 +159,12 @@ class SynchronousMotor:
     """
     Synchronous motor.
 
-    This models a synchronous motor. The model is implemented in rotor
-    coordinates.
+    This models a synchronous motor in rotor coordinates.
 
     Parameters
     ----------
-    _mech : Mechanics object
-        Mechanical subsystem model. The rotor position is needed only for the
-        coordinate transformation in measure_currents().
-
-    Attributes
-    ----------
+    p : int
+        Number of pole pairs.
     R_s : float
         Stator resistance.
     L_d : float
@@ -164,19 +172,16 @@ class SynchronousMotor:
     L_q : float
         q-axis inductance.
     psi_f : float
-        PM-flux linkage.
-    p : int
-        Number of pole pairs.
-    psi_s0 : complex
-        Initial value of the stator flux linkage.
+        Pemanent-magnet-flux linkage.
 
     """
-
     p: int = 3
     R_s: float = 3.6
     L_d: float = .036
     L_q: float = .051
     psi_f: float = .545
+    # The rotor position from the mechanics subsystem is needed only for the
+    # coordinate transformation in the measure_currents method
     _mech: Mechanics = field(repr=False, default=None)
     # Initial value
     psi_s0: complex = field(repr=False, init=False)

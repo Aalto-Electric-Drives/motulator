@@ -2,8 +2,8 @@
 '''
 This module contains V/Hz control for induction motor drives.
 
-The V/Hz control method is similar to [1]_. Open-loop V/Hz control can be
-obtained as a special case by choosing::
+The method is similar to [1]_. Open-loop V/Hz control can be obtained as a
+special case by choosing::
 
     R_s, R_R = 0, 0
     k_u, k_w = 0, 0
@@ -62,7 +62,7 @@ class InductionMotorVHzCtrl(Datalogger):
     Parameters
     ----------
     pars : InductionMotorVHzCtrlPars
-        Controller parameters.
+        Control parameters.
 
     """
 

@@ -66,7 +66,7 @@ class SynchronousMotorVectorCtrlPars:
 
 class SynchronousMotorVectorCtrl(Datalogger):
     """
-    Create the vector controller.
+    Vector control for a synchronous motor drive.
 
     This class interconnects the subsystems of the control system and
     provides the interface to the solver.
@@ -166,9 +166,9 @@ class CurrentCtrl:
     """
     2DOF PI current controller.
 
-    This 2DOF PI current controller corresponds to [1]_. The continuous-time
-    complex-vector design corresponding to (13) is used here. This design could
-    be equivalently presented as a 2DOF PI controller.
+    This controller corresponds to [1]_. The continuous-time complex-vector
+    design corresponding to (13) is used here. This design could be
+    equivalently presented as a 2DOF PI controller.
 
     Notes
     -----
@@ -189,7 +189,7 @@ class CurrentCtrl:
         Parameters
         ----------
         pars : SynchronousMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -254,10 +254,9 @@ class CurrentRef:
     """
     Current reference calculation.
 
-    This current reference calculation method includes the MTPA locus and
-    field-weakenting operation based on the unlimited voltage reference
-    feedback. The MTPV and current limits are taken into account. This
-    resembles the method presented [2]_.
+    This method includes the MTPA locus and field-weakenting operation based on
+    the unlimited voltage reference feedback. The MTPV and current limits are
+    taken into account. This resembles the method presented [2]_.
 
     Notes
     -----
@@ -281,7 +280,7 @@ class CurrentRef:
         Parameters
         ----------
         pars : SynchronousMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -387,8 +386,8 @@ class SensorlessObserver:
     """
     Sensorless observer.
 
-    This sensorless observer corresponds to [3]_. The observer gain decouples
-    the electrical and mechanical dynamics and allows placing the poles of the
+    This observer corresponds to [3]_. The observer gain decouples the
+    electrical and mechanical dynamics and allows placing the poles of the
     corresponding linearized estimation error dynamics. This implementation
     operates in estimated rotor coordinates.
 
@@ -405,7 +404,7 @@ class SensorlessObserver:
         Parameters
         ----------
         pars : SynchronousMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s

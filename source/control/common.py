@@ -9,49 +9,13 @@ from helpers import complex2abc, abc2complex
 
 
 # %%
-def duty_ratios(u, u_dc):
-    """
-    Compute the duty ratios for three-phase PWM.
-
-    This compuates the duty ratios for three-phase PWM using a symmetrical
-    suboscillation method. This method is identical to the standard
-    space-vector PWM.
-
-    Parameters
-    ----------
-    u : complex
-        Voltage space vector (typically reference value).
-    u_dc : float
-        DC-bus voltage (typically measured value).
-
-    Returns
-    -------
-    d_abc : ndarray, shape (3,)
-        Duty ratios (typically reference values).
-
-    """
-    # Phase voltages without the zero-sequence voltage
-    u_abc = complex2abc(u)
-    # Symmetrization by adding the zero-sequence voltage
-    u_0 = .5*(np.amax(u_abc) + np.amin(u_abc))
-    u_abc -= u_0
-    # Preventing overmodulation by means of a minimum phase error method
-    m = (2./u_dc)*np.amax(u_abc)
-    if m > 1:
-        u_abc = u_abc/m
-    # Duty ratios
-    d_abc = .5 + u_abc/u_dc
-    return d_abc
-
-
-# %%
 class PWM:
     """
-    Compute the duty ratio references and the realized voltage.
+    Duty ratio references and realized voltage for three-phase PWM.
 
-    This contains the compuation of the duty ratio references and the realized
-    voltage. The compuation of the realized voltage takes the digital delay
-    effects into account.
+    This contains the computation of the duty ratio references and the realized
+    voltage. The digital delay effects are taken into account in the realized
+    voltage.
 
     """
 
@@ -60,12 +24,46 @@ class PWM:
         Parameters
         ----------
         pars : data object
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
         self.realized_voltage = 0
         self._u_ref_lim_old = 0
+
+    @staticmethod
+    def duty_ratios(u_s_ref, u_dc):
+        """
+        Compute the duty ratios for three-phase PWM.
+
+        This computes the duty ratios using a symmetrical suboscillation
+        method. This method is identical to the standard space-vector PWM.
+
+        Parameters
+        ----------
+        u_s_ref : complex
+            Voltage reference in stator coordinates.
+        u_dc : float
+            DC-bus voltage.
+
+        Returns
+        -------
+        d_abc_ref : ndarray, shape (3,)
+            Duty ratio references.
+
+        """
+        # Phase voltages without the zero-sequence voltage
+        u_abc = complex2abc(u_s_ref)
+        # Symmetrization by adding the zero-sequence voltage
+        u_0 = .5*(np.amax(u_abc) + np.amin(u_abc))
+        u_abc -= u_0
+        # Preventing overmodulation by means of a minimum phase error method
+        m = (2./u_dc)*np.amax(u_abc)
+        if m > 1:
+            u_abc = u_abc/m
+        # Duty ratios
+        d_abc_ref = .5 + u_abc/u_dc
+        return d_abc_ref
 
     def __call__(self, u_ref, u_dc, theta, w):
         """
@@ -103,7 +101,7 @@ class PWM:
         # Voltage reference in stator coordinates
         u_s_ref = np.exp(1j*theta_comp)*u_ref
         # Duty ratios
-        d_abc_ref = duty_ratios(u_s_ref, u_dc)
+        d_abc_ref = self.duty_ratios(u_s_ref, u_dc)
         # Realizable voltage
         u_s_ref_lim = abc2complex(d_abc_ref)*u_dc
         u_ref_lim = np.exp(-1j*theta_comp)*u_s_ref_lim
@@ -128,9 +126,8 @@ class SpeedCtrl:
     """
     2DOF PI speed controller.
 
-    This speed controller is implemented using the disturbance-observer
-    structure. The controller is mathematically identical to the 2DOF PI speed
-    controller.
+    This controller is implemented using the disturbance-observer structure.
+    The controller is mathematically identical to the 2DOF PI speed controller.
 
     """
 
@@ -139,7 +136,7 @@ class SpeedCtrl:
         Parameters
         ----------
         pars : data object
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -148,9 +145,6 @@ class SpeedCtrl:
         self.J = pars.J
         self.k = pars.alpha_s*pars.J    # Gain
         self.tau_l = 0                  # Integral state
-        self.desc = (('2DOF PI speed control:\n'
-                      '    alpha_s=2*pi*{:.1f}\n')
-                     .format(pars.alpha_s/(2*np.pi)))
 
     def output(self, w_M_ref, w_M):
         """
@@ -191,9 +185,6 @@ class SpeedCtrl:
         """
         self.tau_l += self.T_s*self.alpha_s*(tau_M - tau_L)
 
-    def __str__(self):
-        return self.desc
-
 
 # %%
 class RateLimiter:
@@ -207,7 +198,7 @@ class RateLimiter:
         Parameters
         ----------
         pars : data object
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -284,12 +275,6 @@ class Delay:
         self.data.append(u)
         # Pop the first element and return it
         return self.data.pop(0)
-
-    def __str__(self):
-        length = len(self.data)
-        desc = (('Computational delay:\n    {} sampling periods\n')
-                .format(length))
-        return desc
 
 
 # %%

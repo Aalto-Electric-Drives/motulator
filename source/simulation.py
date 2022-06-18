@@ -14,9 +14,9 @@ from helpers import plot, plot_pu, plot_pu_extra, save_plot
 # %%
 class Simulation:
     """
-    Simulation object.
+    Simulation class.
 
-    Each simulation has a control module and a plant module.
+    Each simulation object has a system model object and a controller object.
 
     """
 
@@ -32,7 +32,7 @@ class Simulation:
         base : BaseValues, optional
             Base values for plotting figures.
         name : str, optional
-            Name for the simulation instance.
+            Name for the simulation instance. The default is 'sim'.
 
         """
         self.mdl = mdl
@@ -56,8 +56,8 @@ class Simulation:
 
         Notes
         -----
-        Other options of solve_ivp() could be easily changed if needed, but,
-        for simplicity, only max_step is included as an option of this method.
+        Other options of solve_ivp could be easily changed if needed, but, for
+        simplicity, only max_step is included as an option of this method.
 
         """
 
@@ -142,7 +142,8 @@ class Simulation:
 
     def post_process(self):
         """
-        Execute post simulation processes for the saved simulation data.
+        Post-process the saved simulation data.
+
         """
         self.mdl.post_process()
         self.ctrl.post_process()
@@ -157,7 +158,7 @@ class Simulation:
 
     def print_control_config(self):
         """
-        Print the control system data, speed reference and load reference.
+        Print the control system data, speed reference, and load reference.
 
         """
         print('\n--- Control ---')
@@ -177,7 +178,7 @@ class Simulation:
         """
         Plot the simulation results.
 
-        A wrapper for the plot function in helpers.py.
+        A wrapper for plot functions in helpers.py.
 
         """
         if self.base is not None:

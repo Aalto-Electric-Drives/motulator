@@ -16,24 +16,21 @@ class Mechanics:
 
     This models an equation of motion for stiff mechanics.
 
-    Attributes
+    Parameters
     ----------
     J : float
         Total moment of inertia.
     B : float
         Viscous damping coefficient.
-    w_M0 : float
-        Initial value of the rotor angular speed.
-    theta_M0 : float
-        Initial value of the rotor angle.
     tau_L_ext : function
         External load torque as a function of time, `tau_L_ext(t)`.
 
     """
     J: float = .015
     B: float = 0
-    w_M0: float = field(repr=False, default=0)      # Initial rotor speed
-    theta_M0: float = field(repr=False, default=0)  # Initial rotor angle
+    # Initial values
+    w_M0: float = field(repr=False, default=0)
+    theta_M0: float = field(repr=False, default=0)
     # Default: tau_L_ext(t) = 0
     tau_L_ext: float = field(repr=False, default=lambda t: 0)
 

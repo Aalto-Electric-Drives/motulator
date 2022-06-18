@@ -9,7 +9,7 @@ import numpy as np
 from simulation import Simulation
 from helpers import BaseValues, ref_ramp, ref_step
 from model.mech import Mechanics
-from model.converter import Inverter, FrequencyConverter
+from model.converter import Inverter, FrequencyConverter  # , PWMInverter
 from model.im_drive import (InductionMotorDrive, InductionMotorDriveDiode,
                             InductionMotor, InductionMotorSaturated)
 from model.sm_drive import SynchronousMotorDrive, SynchronousMotor
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # Start computing the execution time
     start_time = time()
 
-    # %% 2.2-kW induction motor, ensorless vector control
+    # %% 2.2-kW induction motor, sensorless vector control
 
     # Compute base values based on the nominal values (just for figures)
     base = BaseValues(U_nom=400,        # Line-line rms voltage
