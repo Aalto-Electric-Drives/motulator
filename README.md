@@ -7,9 +7,34 @@ This open-source software includes simulation models for an induction motor, a s
 
 <img src="pwm.png" alt="PWM waveforms" width="320"/><img src="pmsm.png" alt="Speed and torque waveforms" width="320"/>
 
+Installation
+------------
+This software can be installed using pip: 
+
+```bash
+pip install motulator
+```
+Alternatively, the repository can be cloned. Running `__init__.py` in the folder `motulator` allows importing the package.
+
 Usage
 -----
-The folder `examples` contains example scripts for different drive systems and control methods. More detailed documentation will be provided later.
+The following example shows how to create a continuous-time system model, a discrete-time controller, and a simulation object:
+```python3
+import motulator as mt
+# Continuous-time model for the drive system
+motor = InductionMotor() 		# Motor model
+mech = Mechanics() 			# Mechanics model
+conv = Inverter() 			# Converter model
+mdl = InductionMotorDrive(motor, mech, conv)
+# Discrete-time controller 
+pars = InductionMotorVectorCtrlPars() 	# Dataclass of control parameters
+ctrl = InductionMotorVectorCtrl(pars) 	# Sensorless controller
+# Create a simulation object, simulate, and plot example figures
+sim = Simulation(mdl, ctrl)
+sim.simulate()
+mt.plot(sim)
+```
+This example applies the default settings. However, the drive system, controller, reference sequences etc. are easy to configure, see the folder `examples` for example scripts. New system models and controllers can be developed using the existing ones as templates. More features will be added later.
 
 Acknowledgement
 ---------------
