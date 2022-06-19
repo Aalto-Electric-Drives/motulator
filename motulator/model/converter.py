@@ -1,9 +1,12 @@
 # pylint: disable=C0103
 """
-This module contains power converter models.
+ThThis module contains power converter models.
 
-The inverter with the constant DC-bus voltage and the frequency converter with
-the diode front-end rectifier are modeled.
+An inverter with constant DC-bus voltage and a frequency converter with a diode
+front-end rectifier are modeled. Complex space vectors are used also for duty
+ratios and switching states, wherever applicable. In this module, all space
+vectors are in stationary coordinates. The default values correspond to a
+2.2-kW 400-V motor drive.
 
 """
 from __future__ import annotations
@@ -16,18 +19,18 @@ from helpers import abc2complex
 @dataclass
 class Inverter:
     """
-    Inverter with the constant DC voltage and switching-cycle averaging.
+    Inverter with constant DC-bus voltage and switching-cycle averaging.
 
-    Attributes
+    Parameters
     ----------
     u_dc0 : float
         DC-bus voltage.
-    q : complex
-        Duty ratio space vector.
 
     """
     u_dc0: float = 540
-    q: float = field(repr=False, default=0)
+    # Here q is the duty ratio vector. In the subclasses where the PWM is
+    # modeled, the variable `q` refers to the switching state vector.
+    q: complex = field(repr=False, default=0j)
 
     @staticmethod
     def ac_voltage(q, u_dc):
@@ -37,9 +40,9 @@ class Inverter:
         Parameters
         ----------
         q : complex
-            Switching state vector (in stator coordinates).
+            Duty ratio vector (switching state vector in subclasses).
         u_dc : float
-            DC-Bus voltage.
+            DC-bus voltage.
 
         Returns
         -------
@@ -58,7 +61,7 @@ class Inverter:
         Parameters
         ----------
         q : complex
-            Switching state vector (in stator coordinates).
+            Duty ratio vector (switching state vector in subclasses).
         i_ac : complex
             AC-side current.
 
@@ -88,7 +91,7 @@ class Inverter:
         tn_sw : ndarray, shape (1,2)
             Normalized switching instant, tn_sw = [0, 1].
         q : complex ndarray, shape (1,)
-            Swithching state is qual to the duty ratio space vector.
+            Duty ratio vector, having a shape compatible with the solver.
 
         """
         tn_sw = np.array([[0, 1]])
@@ -112,21 +115,19 @@ class Inverter:
 @dataclass
 class PWMInverter(Inverter):
     """
-    Pulse-width modulated inverter with the constant DC voltage.
+    PWM inverter with constant DC-bus voltage.
 
-    Attributes
+    This extends the Inverter class with pulse-width modulation.
+
+    Parameters
     ----------
-    u_dc0 : float
-        DC-bus voltage.
-    q : complex
-        Switching state vector (in stator coordinates).
-    falling_edge : bool
-        Stores the carrier direction.
+    N : int, optional
+        Amount of PWM quantization levels. The default is 2**12.
 
     """
     N: int = 2**12
+    # Stores the carrier direction
     falling_edge: bool = field(repr=False, default=False)
-    q: int = field(repr=False, default=0)
 
     def pwm(self, d_abc):
         """
@@ -142,9 +143,9 @@ class PWMInverter(Inverter):
         tn_sw : ndarray, shape (4,2)
             Normalized switching instants, tn_sw = [0, t1, t2, t3, 1].
         q : complex ndarray, shape (4,)
-            Switching state space vectors corresponding to the switching
-            instants. For example, the switching state q[1] is applied
-            at the interval tn_sw[1].
+            Switching state vectors corresponding to the switching instants.
+            For example, the switching state q[1] is applied at the interval
+            tn_sw[1].
 
         Notes
         -----
@@ -184,10 +185,11 @@ class FrequencyConverter(PWMInverter):
     """
     Frequency converter.
 
-    This models a strong grid, a three-phase diode-bridge rectifier, an LC
-    filter, and a three-phase inverter.
+    This extends the PWMInverter class with models for a strong grid, a
+    three-phase diode-bridge rectifier, an LC filter, and a three-phase
+    inverter.
 
-    Attributes
+    Parameters
     ----------
     L : float
         DC-bus inductance.
@@ -203,9 +205,13 @@ class FrequencyConverter(PWMInverter):
     C: float = 235e-6
     U_g: float = 400
     f_g: float = 50
+    # Initial value of the DC-bus inductor current
     i_L0: float = field(repr=False, default=0)
+    # Initial value of the DC-bus voltage
     u_dc0: float = field(repr=False, init=False)
+    # Peak-valued line-neutral grid voltage
     u_g: float = field(repr=False, init=False)
+    # Grid angular frequeyncy
     w_g: float = field(repr=False, init=False)
 
     def __post_init__(self):
@@ -215,7 +221,7 @@ class FrequencyConverter(PWMInverter):
 
     def grid_voltages(self, t):
         """
-        Compute the three-phase grid voltages.
+        Compute three-phase grid voltages.
 
         Parameters
         ----------

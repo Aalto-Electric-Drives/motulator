@@ -2,16 +2,15 @@
 """
 This module contains continuous-time models for synchronous motor drives.
 
-The motor model can be parametrized to represent a permanent-magnet synchronous
-motor and synchronous reluctance motor. Peak-valued complex space vectors are
-used.
+Peak-valued complex space vectors are used. The default values correspond to a
+2.2-kW permanent-magnet synchronous motor.
 
 """
 from __future__ import annotations
 from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
-from helpers import complex2abc
+from model.sm import SynchronousMotor
 from model.mech import Mechanics
 from model.converter import Inverter, PWMInverter
 
@@ -23,19 +22,30 @@ class SynchronousMotorDrive:
     Continuous-time model for a synchronous motor drive.
 
     This interconnects the subsystems of a synchronous motor drive and provides
-    an interface to the solver. More complicated systems could be simulated
-    using a similar template.
+    an interface to the solver. More complicated systems could be modeled using
+    a similar template.
+
+    Parameters
+    ----------
+    motor : SynchronousMotor
+        Synchronous motor model.
+    mech : Mechanics
+        Mechanics model.
+    conv : Inverter | PWMInverter
+        Inverter model.
 
     """
-    motor: SynchronousMotor = None
-    mech: Mechanics = None
-    conv: Inverter | PWMInverter = None
+    motor: SynchronousMotor = SynchronousMotor()
+    mech: Mechanics = Mechanics()
+    conv: Inverter | PWMInverter = Inverter()
+    # Stores the solution data
     data: Bunch = field(repr=False, default_factory=Bunch)
+    # Initial time
     t0: float = field(repr=False, default=0)
 
     def __post_init__(self):
-        # Store the solution in these lists
         self.motor._mech = self.mech
+        # Store the solution in these lists
         self.data.t, self.data.q = [], []
         self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
 
@@ -64,8 +74,9 @@ class SynchronousMotorDrive:
         """
         self.t0 = t0
         self.motor.psi_s0 = x0[0]
-        self.mech.w_M0 = x0[1].real         # x0[2].imag is always zero
-        self.mech.theta_M0 = x0[2].real     # x0[1].imag is always zero
+        # x0[1].imag and x0[2].imag are always zero
+        self.mech.w_M0 = x0[1].real
+        self.mech.theta_M0 = x0[2].real
         # Limit the angle [0, 2*pi]
         self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
 
@@ -109,7 +120,7 @@ class SynchronousMotorDrive:
 
         Parameters
         ----------
-        sol : bunch object
+        sol : Bunch object
             Solution from the solver.
 
         """
@@ -138,123 +149,3 @@ class SynchronousMotorDrive:
                                               self.conv.u_dc0)
         self.data.theta_m = self.motor.p*self.data.theta_M
         self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
-
-
-# %%
-@dataclass
-class SynchronousMotor:
-    """
-    Synchronous motor.
-
-    This models a synchronous motor. The model is implemented in rotor
-    coordinates.
-
-    Parameters
-    ----------
-    _mech : Mechanics object
-        Mechanical subsystem model. The rotor position is needed only for the
-        coordinate transformation in measure_currents().
-
-    Attributes
-    ----------
-    R_s : float
-        Stator resistance.
-    L_d : float
-        d-axis inductance.
-    L_q : float
-        q-axis inductance.
-    psi_f : float
-        PM-flux linkage.
-    p : int
-        Number of pole pairs.
-    psi_s0 : complex
-        Initial value of the stator flux linkage.
-
-    """
-
-    p: int = 3
-    R_s: float = 3.6
-    L_d: float = .036
-    L_q: float = .051
-    psi_f: float = .545
-    _mech: Mechanics = field(repr=False, default=None)
-    # Initial value
-    psi_s0: complex = field(repr=False, init=False)
-
-    def __post_init__(self):
-        self.psi_s0 = self.psi_f + 0j
-
-    def current(self, psi_s):
-        """
-        Compute the stator current.
-
-        Parameters
-        ----------
-        psi_s : complex
-            Stator flux linkage.
-
-        Returns
-        -------
-        i_s : complex
-            Stator current.
-
-        """
-        i_s = (psi_s.real - self.psi_f)/self.L_d + 1j*psi_s.imag/self.L_q
-        return i_s
-
-    def torque(self, psi_s, i_s):
-        """
-        Compute the electromagnetic torque.
-
-        Parameters
-        ----------
-        psi_s : complex
-            Stator flux linkage.
-        i_s : complex
-            Stator current.
-
-        Returns
-        -------
-        tau_M : float
-            Electromagnetic torque.
-
-        """
-        tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
-        return tau_M
-
-    def f(self, psi_s, i_s, u_s, w_M):
-        """
-        Compute the state derivative.
-
-        Parameters
-        ----------
-        psi_s : complex
-            Stator flux linkage.
-        u_s : complex
-            Stator voltage.
-        w_M : float
-            Rotor angular speed (in mechanical rad/s).
-
-        Returns
-        -------
-        dpsi_s : complex
-            Time derivative of the stator flux linkage.
-
-        """
-        dpsi_s = u_s - self.R_s*i_s - 1j*self.p*w_M*psi_s
-        return [dpsi_s]
-
-    def meas_currents(self):
-        """
-        Measure the phase currents at the end of the sampling period.
-
-        Returns
-        -------
-        i_s_abc : 3-tuple of floats
-            Phase currents.
-
-        """
-        i_s0 = self.current(self.psi_s0)
-        theta_m0 = self.p*self._mech.theta_M0
-        i_s_abc = complex2abc(np.exp(1j*theta_m0)*i_s0)
-        return i_s_abc

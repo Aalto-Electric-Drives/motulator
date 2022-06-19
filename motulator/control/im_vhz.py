@@ -2,8 +2,8 @@
 '''
 This module contains V/Hz control for induction motor drives.
 
-The V/Hz control method is similar to [1]_. Open-loop V/Hz control can be
-obtained as a special case by choosing::
+The method is similar to [1]_. Open-loop V/Hz control can be obtained as a
+special case by choosing::
 
     R_s, R_R = 0, 0
     k_u, k_w = 0, 0
@@ -23,6 +23,7 @@ References
 '''
 # %%
 from __future__ import annotations
+from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
@@ -38,8 +39,9 @@ class InductionMotorVHzCtrlPars:
 
     """
     # pylint: disable=too-many-instance-attributes
-    # Open-loop V/Hz control can be obtained by choosing:
-    # pars.k_u, pars.k_w, pars.R_s, pars.R_R = 0, 0, 0, 0
+    # Speed reference (in electrical rad/s)
+    w_m_ref: Callable[[float], float] = field(
+        repr=False, default=lambda t: (t > .2)*(2*np.pi*50))
     sensorless: bool = field(repr=False, default=True)  # Always sensorless
     T_s: float = 250e-6
     delay: int = 1
@@ -62,20 +64,21 @@ class InductionMotorVHzCtrl(Datalogger):
     Parameters
     ----------
     pars : InductionMotorVHzCtrlPars
-        Controller parameters.
+        Control parameters.
 
     """
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
         super().__init__()
+        self.t = 0
+        self.T_s = pars.T_s
         self.sensorless = True
         # Instantiate classes
         self.pwm = PWM(pars)
         self.rate_limiter = RateLimiter(pars)
         self.delay = Delay(pars.delay)
         # Parameters
-        self.T_s = pars.T_s
         self.k_u = pars.k_u
         self.k_w = pars.k_w
         self.psi_s_ref = pars.psi_s_nom
@@ -92,14 +95,12 @@ class InductionMotorVHzCtrl(Datalogger):
         self.w_r_ref = 0
         self.desc = pars.__repr__()
 
-    def __call__(self, w_m_ref, i_s_abc, u_dc):
+    def __call__(self, i_s_abc, u_dc):
         """
         Main control loop.
 
         Parameters
         ----------
-        w_m_ref : float
-            Speed reference (in electrical rad/s).
         i_s_abc : ndarray, shape (3,)
             Phase currents.
         u_dc : float
@@ -113,11 +114,11 @@ class InductionMotorVHzCtrl(Datalogger):
             Sampling period.
 
         """
+        # Rate limit the frequency reference
+        w_m_ref = self.rate_limiter(self.w_m_ref(self.t))
+
         # Space vector transformation
         i_s = np.exp(-1j*self.theta_s)*abc2complex(i_s_abc)
-
-        # Rate limit the frequency reference
-        w_m_ref = self.rate_limiter(w_m_ref)
 
         # Slip compensation
         w_s_ref = w_m_ref + self.w_r_ref
@@ -129,12 +130,13 @@ class InductionMotorVHzCtrl(Datalogger):
         u_s_ref = self.voltage_reference(w_s, i_s)
 
         # Compute the duty ratios
-        d_abc_ref, u_s = self.pwm.output(u_s_ref, u_dc, self.theta_s, 0)
+        u_s = self.pwm.realized_voltage  # Used only for datalogging
+        d_abc_ref = self.pwm(u_s_ref, u_dc, self.theta_s, w_s)
 
         # Data logging
         data = Bunch(i_s_ref=self.i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
                      w_r=w_r, w_s=w_s, psi_s_ref=self.psi_s_ref,
-                     theta_s=self.theta_s, u_dc=u_dc, T_s=self.pwm.T_s)
+                     theta_s=self.theta_s, u_dc=u_dc, t=self.t)
         self.save(data)
 
         # Update the states
@@ -142,6 +144,7 @@ class InductionMotorVHzCtrl(Datalogger):
         self.w_r_ref += self.T_s*self.alpha_f*(w_r - self.w_r_ref)
         self.theta_s += self.T_s*w_s
         self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
+        self.t += self.T_s
 
         return d_abc_ref, self.T_s
 

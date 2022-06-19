@@ -3,9 +3,9 @@
 This module contains vector control methods for an induction motor drive.
 
 """
-# %%
 from __future__ import annotations
-from dataclasses import dataclass
+from collections.abc import Callable
+from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
 from helpers import abc2complex
@@ -20,6 +20,10 @@ class InductionMotorVectorCtrlPars:
 
     """
     # pylint: disable=too-many-instance-attributes
+    # Speed reference (in electrical rad/s)
+    w_m_ref: Callable[[float], float] = field(
+        repr=False, default=lambda t: (t > .2)*(2*np.pi*50))
+    # Mode
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
@@ -45,7 +49,7 @@ class InductionMotorVectorCtrlPars:
 
 class InductionMotorVectorCtrl(Datalogger):
     """
-    Interconnect the subsystems of the control method.
+    Vector control for an induction motor drive.
 
     This class interconnects the subsystems of the control system and
     provides the interface to the solver.
@@ -57,8 +61,11 @@ class InductionMotorVectorCtrl(Datalogger):
 
     """
 
-    def __init__(self, pars):
+    def __init__(self, pars=InductionMotorVectorCtrlPars()):
         super().__init__()
+        self.t = 0
+        self.T_s = pars.T_s
+        self.w_m_ref = pars.w_m_ref
         self.sensorless = pars.sensorless
         self.p = pars.p
         self.speed_ctrl = SpeedCtrl(pars)
@@ -72,14 +79,12 @@ class InductionMotorVectorCtrl(Datalogger):
         self.delay = Delay(pars.delay)
         self.desc = pars.__repr__()
 
-    def __call__(self, w_m_ref, i_s_abc, u_dc, *args):
+    def __call__(self, i_s_abc, u_dc, *args):
         """
         Main control loop.
 
         Parameters
         ----------
-        w_m_ref : float
-            Rotor speed reference (in electrical rad/s).
         i_s_abc : ndarray, shape (3,)
             Phase currents.
         u_dc : float
@@ -95,7 +100,10 @@ class InductionMotorVectorCtrl(Datalogger):
             Sampling period.
 
         """
-        # Get the states
+        # Speed reference
+        w_m_ref = self.w_m_ref(self.t)
+
+        # States
         u_s = self.pwm.realized_voltage
         psi_R = self.observer.psi_R
         theta_s = self.observer.theta_s
@@ -117,19 +125,20 @@ class InductionMotorVectorCtrl(Datalogger):
         u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
 
+        # Data logging
+        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
+                     w_m=w_m, w_s=w_s, psi_R=psi_R, theta_s=theta_s,
+                     u_dc=u_dc, tau_M=tau_M, t=self.t)
+        self.save(data)
+
         # Update the states
         self.pwm.update(u_s_ref_lim)
         self.speed_ctrl.update(tau_M, tau_L)
         self.current_ref.update(u_s_ref, u_dc)
         self.current_ctrl.update(e, u_s_ref, u_s_ref_lim, w_s)
+        self.t += self.T_s
 
-        # Data logging
-        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
-                     w_m=w_m, w_s=w_s, psi_R=psi_R, theta_s=theta_s,
-                     u_dc=u_dc, tau_M=tau_M, T_s=self.pwm.T_s)
-        self.save(data)
-
-        return d_abc_ref, self.pwm.T_s
+        return d_abc_ref, self.T_s
 
     def __repr__(self):
         return self.desc
@@ -140,9 +149,9 @@ class CurrentRef:
     """
     Current reference calculation.
 
-    This current reference calculation method includes field-weakenting
-    operation based on the unlimited voltage reference feedback. The breakdown
-    torque and current limits are taken into account.
+    This method includes field-weakenting operation based on the unlimited
+    voltage reference feedback. The breakdown torque and current limits are
+    taken into account.
 
     Notes
     -----
@@ -161,7 +170,7 @@ class CurrentRef:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -248,10 +257,10 @@ class CurrentCtrl:
     """
     2DOF PI current controller.
 
-    This 2DOF PI current controller corresponds to [2]_. The continuous-time
-    complex-vector design corresponding to (13) is used here. The rotor flux
-    linkage is considered as a quasi-constant disturbance. This design could
-    be equivalently presented as a 2DOF PI controller.
+    This controller corresponds to [2]_. The continuous-time complex-vector
+    design corresponding to (13) is used here. The rotor flux linkage is
+    considered as a quasi-constant disturbance. This design could be
+    equivalently presented as a 2DOF PI controller.
 
     Notes
     -----
@@ -271,7 +280,7 @@ class CurrentCtrl:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -332,10 +341,10 @@ class SensorlessObserver:
     """
     Sensorless reduced-order observer.
 
-    This sensorless reduced-order flux observer corresponds to [3]_. The
-    observer gain decouples the electrical and mechanical dynamics and allows
-    placing the poles of the corresponding linearized estimation error
-    dynamics. This implementation operates in estimated rotor flux coordinates.
+    This observer corresponds to [3]_. The observer gain decouples the
+    electrical and mechanical dynamics and allows placing the poles of the
+    corresponding linearized estimation error dynamics. This implementation
+    operates in estimated rotor flux coordinates.
 
     Notes
     -----
@@ -357,7 +366,7 @@ class SensorlessObserver:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -460,7 +469,7 @@ class CurrentModelEstimator:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         # Parameters

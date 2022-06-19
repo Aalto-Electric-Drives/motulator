@@ -1,5 +1,5 @@
-*motulator*: Motor Drive Simulator
-==================================
+*motulator*: Motor Drive Simulator in Python
+============================================
 
 .. toctree::
    :maxdepth: 1
