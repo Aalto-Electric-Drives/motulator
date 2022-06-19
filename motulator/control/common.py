@@ -293,7 +293,7 @@ class Datalogger:
 
         Parameters
         ----------
-        data : dictionary or Bunch object
+        data : Bunch object
             Data to be saved.
 
         """
@@ -304,6 +304,7 @@ class Datalogger:
             # Lists do not exist, initialize them
             for key, value in data.items():
                 self.data[key] = []
+                self.data[key].extend([value])
 
     def post_process(self):
         """
@@ -312,8 +313,3 @@ class Datalogger:
         """
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
-        try:
-            # Compute time vector using the stored sampling periods
-            self.data["t"] = np.cumsum(self.data["T_s"]) - self.data["T_s"][0]
-        except KeyError:
-            pass

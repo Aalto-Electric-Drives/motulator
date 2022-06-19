@@ -6,9 +6,8 @@ This module contains the simulation class.
 
 # %% Imports
 import numpy as np
-from scipy.io import savemat
 from scipy.integrate import solve_ivp
-from helpers import plot, plot_pu, plot_pu_extra, save_plot
+from scipy.io import savemat
 
 
 # %%
@@ -20,7 +19,7 @@ class Simulation:
 
     """
 
-    def __init__(self, mdl, ctrl, base=None, name='sim', print_opts=True):
+    def __init__(self, mdl=None, ctrl=None, base=None, t_stop=1):
         """
         Parameters
         ----------
@@ -31,19 +30,14 @@ class Simulation:
             Discrete-time controller.
         base : BaseValues, optional
             Base values for plotting figures.
-        name : str, optional
-            Name for the simulation instance. The default is 'sim'.
+        t_stop : float, optional
+            Simulation stop time. The default is 1.
 
         """
         self.mdl = mdl
         self.ctrl = ctrl
         self.base = base
-        self.name = name
-
-        if print_opts:
-            self.print_model_config()
-            self.print_control_config()
-            self.print_simulation_profile()
+        self.t_stop = t_stop
 
     def simulate(self, max_step=np.inf):
         """
@@ -99,21 +93,19 @@ class Simulation:
                     self.mdl.save(sol)
 
         def sensorless_ctrl():
-            while self.mdl.t0 <= self.mdl.t_stop:
+            while self.mdl.t0 <= self.t_stop:
                 # Sample the phase currents and the DC-bus voltage
                 i_s_abc_meas = self.mdl.motor.meas_currents()
                 u_dc_meas = self.mdl.conv.meas_dc_voltage()
-                # Get the speed reference
-                w_m_ref = self.mdl.speed_ref(self.mdl.t0)
                 # Run the digital controller
-                d_abc_ref, T_s = self.ctrl(w_m_ref, i_s_abc_meas, u_dc_meas)
+                d_abc_ref, T_s = self.ctrl(i_s_abc_meas, u_dc_meas)
                 # Model the computational delay
                 d_abc = self.ctrl.delay(d_abc_ref)
                 # Simulate the continuous-time model over the sampling period
                 solve(d_abc, [self.mdl.t0, self.mdl.t0+T_s])
 
         def sensored_ctrl():
-            while self.mdl.t0 <= self.mdl.t_stop:
+            while self.mdl.t0 <= self.t_stop:
                 # Sample the phase currents and the DC-bus voltage
                 i_s_abc_meas = self.mdl.motor.meas_currents()
                 u_dc_meas = self.mdl.conv.meas_dc_voltage()
@@ -121,11 +113,9 @@ class Simulation:
                 theta_M_meas = self.mdl.mech.meas_position()
                 # Measure the rotor speed
                 w_M_meas = self.mdl.mech.meas_speed()
-                # Get the speed reference
-                w_m_ref = self.mdl.speed_ref(self.mdl.t0)
                 # Run the digital controller
-                d_abc_ref, T_s = self.ctrl(w_m_ref, i_s_abc_meas, u_dc_meas,
-                                           w_M_meas, theta_M_meas)
+                d_abc_ref, T_s = self.ctrl(i_s_abc_meas, u_dc_meas, w_M_meas,
+                                           theta_M_meas)
                 # Model the computational delay
                 d_abc = self.ctrl.delay(d_abc_ref)
                 # Simulate the continuous-time model over the sampling period
@@ -137,76 +127,19 @@ class Simulation:
         else:
             sensored_ctrl()
 
-        # Call the post-processing function
-        self.post_process()
-
-    def post_process(self):
-        """
-        Post-process the saved simulation data.
-
-        """
+        # Call the post-processing functions
         self.mdl.post_process()
         self.ctrl.post_process()
 
-    def print_model_config(self):
+    def save_mat(self, name='sim'):
         """
-        Print the model configuration data.
+        Save the simulation data into MATLAB .mat files.
 
-        """
-        print('\n--- Model ---')
-        print(self.mdl)
-
-    def print_control_config(self):
-        """
-        Print the control system data, speed reference, and load reference.
+        Parameters
+        ----------
+        name : str, optional
+            Name for the simulation instance. The default is 'sim'.
 
         """
-        print('\n--- Control ---')
-        print(self.ctrl)
-
-    def print_simulation_profile(self):
-        """
-        Print the simulation profiles.
-
-        """
-        print('\n--- Speed reference ---')
-        print(self.mdl.speed_ref)
-        print('\n--- External load torque ---')
-        print(self.mdl.mech.tau_L_ext)
-
-    def plot_figure(self, save=False, extra=False):
-        """
-        Plot the simulation results.
-
-        A wrapper for plot functions in helpers.py.
-
-        """
-        if self.base is not None:
-            plot_pu(self.mdl.data, self.ctrl.data, self.base)
-            if extra:
-                # Try plotting extra figures
-                try:
-                    plot_pu_extra(self.mdl.data, self.ctrl.data, self.base)
-                except AttributeError:
-                    pass
-        else:
-            plot(self.mdl.data, self.ctrl.data)
-        if save:
-            save_plot(self.name)
-
-    def save_mat(self):
-        """
-        Save the simulation data to MATLAB .mat file.
-
-        """
-        plant_data = self.mdl.datalog.data
-        controller_data = self.ctrl.datalog.data
-
-        # Copies the continuous time vector to a new variable to avoid being
-        # rewritten over by the discrete time vector
-        t_cont = {'t_cont': plant_data.t}
-
-        # Unpack data
-        data = {**plant_data, **t_cont, **controller_data}
-
-        savemat(self.name+'.mat', data)
+        savemat(name+'_mdl_data'+'.mat', self.mdl.data)
+        savemat(name+'_ctrl_data'+'.mat', self.ctrl.data)

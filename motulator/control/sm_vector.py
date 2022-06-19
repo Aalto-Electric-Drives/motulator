@@ -3,10 +3,9 @@
 This module contains vector control for synchronous motor drives.
 
 """
-
-# %%
 from __future__ import annotations
-from dataclasses import dataclass
+from collections.abc import Callable
+from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
 from helpers import abc2complex
@@ -18,10 +17,14 @@ from control.sm_torque import TorqueCharacteristics
 @dataclass
 class SynchronousMotorVectorCtrlPars:
     """
-    Control system parameters for a synchronous motor.
+    Control system parameters for synchronous motors.
 
     """
     # pylint: disable=too-many-instance-attributes
+    # Speed reference (in electrical rad/s)
+    w_m_ref: Callable[[float], float] = field(
+        repr=False, default=lambda t: (t > .2)*(2*np.pi*75))
+    # Mode
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
@@ -33,6 +36,7 @@ class SynchronousMotorVectorCtrlPars:
     # Maximum values
     tau_M_max: float = 2*14.6
     i_s_max: float = 1.5*np.sqrt(2)*5
+    i_sd_min: float = None
     # Voltage margin
     k_u: float = .95
     # Nominal values
@@ -50,7 +54,7 @@ class SynchronousMotorVectorCtrlPars:
 
     def __post_init__(self):
         """
-        Generate control look-up tables for synchronous motors.
+        Generate control look-up tables.
 
         """
         # Generate LUTs
@@ -63,6 +67,22 @@ class SynchronousMotorVectorCtrlPars:
         self.tau_M_lim = lims.tau_M_vs_abs_psi_s
         self.i_sd_lim = lims.i_sd_vs_tau_M
 
+    def plot(self, base):
+        """
+        Plot control look-up tables.
+
+        Parameters
+        ----------
+        base : BaseValues
+            Base values for scaling the plots.
+
+        """
+        tq = TorqueCharacteristics(self)
+        tq.plot_current_loci(self.i_s_max, base)
+        tq.plot_torque_flux(self.i_s_max, base)
+        tq.plot_torque_current(self.i_s_max, base)
+        # tq.plot_flux_loci(self.i_s_max, base)
+
 
 class SynchronousMotorVectorCtrl(Datalogger):
     """
@@ -73,7 +93,7 @@ class SynchronousMotorVectorCtrl(Datalogger):
 
     """
 
-    def __init__(self, pars):
+    def __init__(self, pars=SynchronousMotorVectorCtrlPars()):
         """
         Parameters
         ----------
@@ -82,6 +102,9 @@ class SynchronousMotorVectorCtrl(Datalogger):
 
         """
         super().__init__()
+        self.t = 0
+        self.T_s = pars.T_s
+        self.w_m_ref = pars.w_m_ref
         self.p = pars.p
         self.sensorless = pars.sensorless
         self.current_ctrl = CurrentCtrl(pars)
@@ -96,14 +119,12 @@ class SynchronousMotorVectorCtrl(Datalogger):
             self.observer = None
         self.desc = pars.__repr__()
 
-    def __call__(self, w_m_ref, i_s_abc, u_dc, *args):
+    def __call__(self, i_s_abc, u_dc, *args):
         """
         Main control loop.
 
         Parameters
         ----------
-        w_m_ref : float
-            Rotor speed reference (in electrical rad/s).
         i_s_abc : ndarray, shape (3,)
             Phase currents.
         u_dc : float
@@ -121,6 +142,9 @@ class SynchronousMotorVectorCtrl(Datalogger):
             Sampling period.
 
         """
+        # Speed reference
+        w_m_ref = self.w_m_ref(self.t)
+
         # Get the states
         u_s = self.pwm.realized_voltage
         if self.sensorless:
@@ -141,21 +165,22 @@ class SynchronousMotorVectorCtrl(Datalogger):
         u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
-        # Update all the states
+        # Data logging
+        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, psi_s=psi_s,
+                     w_m_ref=w_m_ref, w_m=w_m, theta_m=theta_m,
+                     u_dc=u_dc, tau_M=tau_M, t=self.t)
+        self.save(data)
+
+        # Update states
         if self.sensorless:
             self.observer.update(u_s, i_s)
         self.speed_ctrl.update(tau_M, tau_L)
         self.current_ref.update(tau_M, u_s_ref, u_dc)
         self.current_ctrl.update(e, u_s_ref, u_s_ref_lim, w_m)
         self.pwm.update(u_s_ref_lim)
+        self.t += self.T_s
 
-        # Data logging
-        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, psi_s=psi_s,
-                     w_m_ref=w_m_ref, w_m=w_m, theta_m=theta_m,
-                     u_dc=u_dc, tau_M=tau_M, T_s=self.pwm.T_s)
-        self.save(data)
-
-        return d_abc_ref, self.pwm.T_s
+        return d_abc_ref, self.T_s
 
     def __repr__(self):
         return self.desc

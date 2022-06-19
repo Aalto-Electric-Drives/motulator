@@ -5,6 +5,7 @@ This module contains continuous-time models for mechanical subsystems.
 """
 
 from __future__ import annotations
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 
@@ -28,11 +29,11 @@ class Mechanics:
     """
     J: float = .015
     B: float = 0
+    tau_L_ext: Callable[[float], float] = field(repr=False,
+                                                default=lambda t: 0)
     # Initial values
     w_M0: float = field(repr=False, default=0)
     theta_M0: float = field(repr=False, default=0)
-    # Default: tau_L_ext(t) = 0
-    tau_L_ext: float = field(repr=False, default=lambda t: 0)
 
     def f(self, t, w_M, tau_M):
         """

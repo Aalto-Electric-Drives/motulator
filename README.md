@@ -9,7 +9,7 @@ This open-source software includes simulation models for an induction motor, a s
 
 Usage
 -----
-An example script `main.py` exemplifies how to configure and simulate different models. More detailed documentation will be provided quite soon...
+The folder `examples` contains example scripts for different drive systems and control methods. More detailed documentation will be provided later.
 
 Acknowledgement
 ---------------
