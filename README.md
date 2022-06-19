@@ -23,9 +23,9 @@ The following example shows how to create a continuous-time system model, a disc
 import motulator as mt
 
 # Continuous-time model for the drive system
-motor = mt.InductionMotor() 		          # Motor model
-mech = mt.Mechanics() 			              # Mechanics model
-conv = mt.Inverter() 			                # Converter model
+motor = mt.InductionMotor()     # Motor model
+mech = mt.Mechanics()           # Mechanics model
+conv = mt.Inverter() 	        # Converter model
 mdl = mt.InductionMotorDrive(motor, mech, conv)
 
 # Discrete-time controller 
