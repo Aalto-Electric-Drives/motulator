@@ -13,7 +13,7 @@
 import os
 import sys
 # sys.path.insert(0, os.path.abspath('../..'))
-sys.path.insert(0, os.path.abspath('../../source'))
+sys.path.insert(0, os.path.abspath('../../motulator'))
 
 # -- Project information -----------------------------------------------------
 
@@ -34,12 +34,18 @@ autodoc_mock_imports = ['numpy', 'sklearn', 'matplotlib', 'scipy', 'cycler']
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.napoleon', 'sphinx.ext.viewcode', 'numpydoc'] #, 'sphinx.ext.autodoc', 'sphinx.ext.autosummary']
+extensions = ['sphinx.ext.napoleon',
+              'sphinx.ext.viewcode',
+              'numpydoc',
+              'sphinx_copybutton',
+              'sphinx.ext.mathjax',
+]
+#, 'sphinx.ext.autodoc', 'sphinx.ext.autosummary', 'nbsphinx', MyST-NB]
 extensions.append('autoapi.extension')
 autoapi_type = 'python'
 # autoapi_dirs = ['../..']
-# autoapi_root = '../../source'
-autoapi_dirs = ['../../source']
+# autoapi_root = '../../motulator'
+autoapi_dirs = ['../../motulator']
 autodoc_typehints = 'description'
 # autoapi_add_toctree_entry = False
 autoapi_options = [ 'members', 'show-inheritance', 'show-module-summary', 'imported-members', 'undoc-members', 'special-members',]  # 'private-members', 

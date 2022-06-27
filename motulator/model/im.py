@@ -86,6 +86,16 @@ class InductionMotor:
         """
         Compute the electromagnetic torque.
 
+        The electromagnetic torque of an induction motor can be obtained from
+        stator flux linkage and stator current with the following equation [2]_
+
+        .. math::
+
+           T_{M}=\\frac{3p}{2}Im\\{\\underline{i}_{s}\\underline{\\psi}_{s}^{*}\\}
+
+        where :math:`p` is the number of pole pairs, :math:`\\underline{i}_{s}` is the
+        stator current and :math:`\\underline{\\psi}_{s}^{*}` is stator flux linkage.
+
         Parameters
         ----------
         psi_ss : complex
@@ -97,6 +107,12 @@ class InductionMotor:
         -------
         tau_M : float
             Electromagnetic torque.
+
+        References
+        ----------
+        .. [2] Hinkkanen, "Lecture 2: Scalar-Controlled Induction Motor Drive".
+           ELEC-E8402 Control of Electric Drives and Power Converters,
+           Aalto University School of Electrical Engineering; lecture given 2022 Spring
 
         """
         tau_M = 1.5*self.p*np.imag(i_ss*np.conj(psi_ss))
@@ -152,7 +168,7 @@ class SaturableStatorInductance:
     """
     Stator inductance saturation model.
 
-    This saturation model is given by [2]_::
+    This saturation model is given by [3]_::
 
         L_s(psi_s) = L_su/(1 + (beta*abs(psi_s)**S)
 
@@ -167,7 +183,7 @@ class SaturableStatorInductance:
 
     References
     ----------
-    .. [2] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
+    .. [3] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
        induction motor drives," IEEE Trans. Ind. Appl., 2021,
        https://doi.org/10.1109/TIA.2012.2190818
 
