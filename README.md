@@ -1,5 +1,5 @@
 # *motulator*
-*motulator*: Motor Drive Simulator in Python
+*motulator:* Motor Drive Simulator in Python
 
 Introduction
 ------------
