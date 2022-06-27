@@ -3,9 +3,9 @@
 This module contains vector control methods for an induction motor drive.
 
 """
-# %%
 from __future__ import annotations
-from dataclasses import dataclass
+from collections.abc import Callable
+from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
 from helpers import abc2complex
@@ -20,6 +20,11 @@ class InductionMotorVectorCtrlPars:
 
     """
     # pylint: disable=too-many-instance-attributes
+
+    # Speed reference (in electrical rad/s)
+    w_m_ref: Callable[[float], float] = field(
+        repr=False, default=lambda t: (t > .2)*(2*np.pi*50))
+    # Mode
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
@@ -45,7 +50,7 @@ class InductionMotorVectorCtrlPars:
 
 class InductionMotorVectorCtrl(Datalogger):
     """
-    Interconnect the subsystems of the control method.
+    Vector control for an induction motor drive.
 
     This class interconnects the subsystems of the control system and
     provides the interface to the solver.
@@ -57,8 +62,12 @@ class InductionMotorVectorCtrl(Datalogger):
 
     """
 
-    def __init__(self, pars):
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, pars=InductionMotorVectorCtrlPars()):
         super().__init__()
+        self.t = 0
+        self.T_s = pars.T_s
+        self.w_m_ref = pars.w_m_ref
         self.sensorless = pars.sensorless
         self.p = pars.p
         self.speed_ctrl = SpeedCtrl(pars)
@@ -67,19 +76,17 @@ class InductionMotorVectorCtrl(Datalogger):
         if self.sensorless:
             self.observer = SensorlessObserver(pars)
         else:
-            self.observer = CurrentModelEstimator(pars)
+            self.observer = Observer(pars)
         self.pwm = PWM(pars)
         self.delay = Delay(pars.delay)
         self.desc = pars.__repr__()
 
-    def __call__(self, w_m_ref, i_s_abc, u_dc, *args):
+    def __call__(self, i_s_abc, u_dc, *args):
         """
         Main control loop.
 
         Parameters
         ----------
-        w_m_ref : float
-            Rotor speed reference (in electrical rad/s).
         i_s_abc : ndarray, shape (3,)
             Phase currents.
         u_dc : float
@@ -95,7 +102,10 @@ class InductionMotorVectorCtrl(Datalogger):
             Sampling period.
 
         """
-        # Get the states
+        # Speed reference
+        w_m_ref = self.w_m_ref(self.t)
+
+        # States
         u_s = self.pwm.realized_voltage
         psi_R = self.observer.psi_R
         theta_s = self.observer.theta_s
@@ -110,26 +120,25 @@ class InductionMotorVectorCtrl(Datalogger):
         # Outputs
         tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
         i_s_ref, tau_M = self.current_ref.output(tau_M_ref, psi_R)
-        if self.sensorless:
-            w_s = self.observer(u_s, i_s)
-        else:
-            w_s = self.observer(i_s, w_m)
+        w_s = self.observer.output(u_s, i_s, w_m)  # w_m not used if sensorless
         u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
+
+        # Data logging
+        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
+                     w_m=w_m, w_s=w_s, psi_R=psi_R, theta_s=theta_s,
+                     u_dc=u_dc, tau_M=tau_M, t=self.t)
+        self.save(data)
 
         # Update the states
         self.pwm.update(u_s_ref_lim)
         self.speed_ctrl.update(tau_M, tau_L)
         self.current_ref.update(u_s_ref, u_dc)
         self.current_ctrl.update(e, u_s_ref, u_s_ref_lim, w_s)
+        self.observer.update(i_s, w_s)
+        self.t += self.T_s
 
-        # Data logging
-        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
-                     w_m=w_m, w_s=w_s, psi_R=psi_R, theta_s=theta_s,
-                     u_dc=u_dc, tau_M=tau_M, T_s=self.pwm.T_s)
-        self.save(data)
-
-        return d_abc_ref, self.pwm.T_s
+        return d_abc_ref, self.T_s
 
     def __repr__(self):
         return self.desc
@@ -140,9 +149,9 @@ class CurrentRef:
     """
     Current reference calculation.
 
-    This current reference calculation method includes field-weakenting
-    operation based on the unlimited voltage reference feedback. The breakdown
-    torque and current limits are taken into account.
+    This method includes field-weakenting operation based on the unlimited
+    voltage reference feedback. The breakdown torque and current limits are
+    taken into account.
 
     Notes
     -----
@@ -161,7 +170,7 @@ class CurrentRef:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -175,8 +184,6 @@ class CurrentRef:
         u_dc_nom = pars.u_dc_nom
         # Nominal d-axis current
         self.i_sd_nom = psi_R_nom/L_M
-        # Torque gain
-        self.gain_tq = 1/(1.5*pars.p*psi_R_nom)
         # Field weakening
         self.gain_fw = 3*R_R*psi_R_nom/(pars.L_sgm*u_dc_nom)**2
         # State variable
@@ -210,8 +217,11 @@ class CurrentRef:
             i_sq_max = np.min([i_sq_max1, i_sq_max2])
             return i_sq_max
 
-        # To improve the robustness, we keep the torque gain constant
-        i_sq_ref = self.gain_tq*tau_M_ref
+        # Current reference
+        if psi_R > 0:
+            i_sq_ref = tau_M_ref/(1.5*self.p*psi_R)
+        else:
+            i_sq_ref = 0
         # Limit the current
         i_sq_max = q_axis_current_limit(self.i_sd_ref, psi_R)
         if np.abs(i_sq_ref) > i_sq_max:
@@ -220,6 +230,7 @@ class CurrentRef:
         i_s_ref = self.i_sd_ref + 1j*i_sq_ref
         # Limited torque (for the speed controller)
         tau_M = 1.5*self.p*psi_R*i_sq_ref
+
         return i_s_ref, tau_M
 
     def update(self, u_s_ref, u_dc):
@@ -248,10 +259,10 @@ class CurrentCtrl:
     """
     2DOF PI current controller.
 
-    This 2DOF PI current controller corresponds to [2]_. The continuous-time
-    complex-vector design corresponding to (13) is used here. The rotor flux
-    linkage is considered as a quasi-constant disturbance. This design could
-    be equivalently presented as a 2DOF PI controller.
+    This controller corresponds to [2]_. The continuous-time complex-vector
+    design corresponding to (13) is used here. The rotor flux linkage is
+    considered as a quasi-constant disturbance. This design could be
+    equivalently presented as a 2DOF PI controller.
 
     Notes
     -----
@@ -271,7 +282,7 @@ class CurrentCtrl:
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -304,6 +315,7 @@ class CurrentCtrl:
         k = 2*self.alpha_c
         u_s_ref = k_t*psi_sgm_ref - k*psi_sgm + self.u_i
         e = psi_sgm_ref - psi_sgm
+
         return u_s_ref, e
 
     def update(self, e, u_s_ref, u_s_ref_lim, w_s):
@@ -330,18 +342,18 @@ class CurrentCtrl:
 # %%
 class SensorlessObserver:
     """
-    Sensorless reduced-order observer.
+    Sensorless reduced-order flux observer.
 
-    This sensorless reduced-order flux observer corresponds to [3]_. The
-    observer gain decouples the electrical and mechanical dynamics and allows
-    placing the poles of the corresponding linearized estimation error
-    dynamics. This implementation operates in estimated rotor flux coordinates.
+    This observer corresponds to [3]_. The observer gain decouples the
+    electrical and mechanical dynamics and allows placing the poles of the
+    corresponding linearized estimation error dynamics. This implementation
+    operates in estimated rotor flux coordinates.
 
     Notes
     -----
-    This implementation corresponds to (26)-(30) in [3]_ with the fixed
-    selection c = w_s**2 in (17). The closed-loop poles, cf. (40), can still be
-    affected via the choice of the coefficient b > 0.
+    This implementation corresponds to (26)-(30) in [3]_ with the choice
+    c = w_s**2 in (17). The closed-loop poles, cf. (40), can still be
+    affected via the coefficient b > 0.
 
     References
     ----------
@@ -352,12 +364,13 @@ class SensorlessObserver:
 
     """
 
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
         """
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
         self.T_s = pars.T_s
@@ -366,13 +379,15 @@ class SensorlessObserver:
         self.L_sgm = pars.L_sgm
         self.L_M = pars.L_M
         self.alpha_o = pars.alpha_o
-        self.zeta_inf = .7
+        self.zeta_inf = .2
         # Initial states
         self.theta_s, self.psi_R, self.i_s_old, self.w_m = 0, 0, 0, 0
+        # Store for the update method to avoid recalculation
+        self.dpsi_R, self.w_r = 0, 0
 
-    def __call__(self, u_s, i_s):
+    def output(self, u_s, i_s, _):
         """
-        Output and update the sensorless observer.
+        Compute the output.
 
         Parameters
         ----------
@@ -380,106 +395,118 @@ class SensorlessObserver:
             Stator voltage in estimated rotor flux coordinates.
         i_s : complex
             Stator current in estimated rotor flux coordinates.
+        _ : not used
+            Provides a compatible interface with the sensored observer.
 
         Returns
         -------
         w_s : float
             Angular frequency of the rotor flux.
-
-        """
-        w_s, w_r, dpsi_R = self.output(u_s, i_s)
-        self.update(i_s, w_s, w_r, dpsi_R)
-
-        return w_s
-
-    def output(self, u_s, i_s):
-        """
-        Compute the outputs of the observer.
 
         """
         alpha = self.R_R/self.L_M
 
         # Observer gain (17) with c = w_s**2 (without the orthogonal projection
         # which is embedded into the state update)
-        b = 2*self.zeta_inf*np.abs(self.w_m) + alpha
+        b = alpha + 2*self.zeta_inf*np.abs(self.w_m)
         g = b*(alpha + 1j*self.w_m)/(alpha**2 + self.w_m**2)
 
-        # Auxiliary variable: e = e_s + 1j*w_s*L_sgm*i_s
-        e = u_s - self.R_s*i_s - self.L_sgm*(i_s - self.i_s_old)/self.T_s
+        # Induced voltage from stator quantities, cf. (7)
+        e_s = u_s - self.R_s*i_s - self.L_sgm*(i_s - self.i_s_old)/self.T_s
         # Induced voltage (8) from the rotor quantities
         e_r = self.R_R*i_s - (alpha - 1j*self.w_m)*self.psi_R
 
         # Angular frequency of the rotor flux vector
         den = self.psi_R + self.L_sgm*(i_s.real + g.imag*i_s.imag)
         if den > 0:
-            w_s = (e.imag + g.imag*(e_r - e).real)/den
+            w_s = (e_s.imag + g.imag*(e_r - e_s).real)/den
         else:
             w_s = self.w_m
-        # Induced voltage (7) from the stator quantities
-        e_s = e - 1j*w_s*self.L_sgm*i_s
 
-        # Slip angular frequency
+        # Slip angular frequency (stored for the update method)
         if self.psi_R > 0:
-            w_r = e_r.imag/self.psi_R
+            self.w_r = e_r.imag/self.psi_R
         else:
-            w_r = 0
+            self.w_r = 0
 
-        # Increment of the flux magnitude
-        dpsi_R = e_s.real + g.real*(e_r - e_s).real
+        # Increment of the flux magnitude (stored for the update method)
+        self.dpsi_R = ((1 - g.real)*(e_s.real + w_s*self.L_sgm*i_s.imag)
+                       + g.real*e_r.real)
 
-        return w_s, w_r, dpsi_R
+        return w_s
 
-    def update(self, i_s, w_s, w_r, dpsi_R):
+    def update(self, i_s, w_s):
         """
         Update the states for the next sampling period.
 
         """
-        self.w_m += self.T_s*self.alpha_o*(w_s - w_r)
-        self.psi_R += self.T_s*dpsi_R
+        self.w_m += self.T_s*self.alpha_o*(w_s - self.w_r)
+        self.psi_R += self.T_s*self.dpsi_R
         self.theta_s += self.T_s*w_s
         self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
         self.i_s_old = i_s
 
 
 # %%
-class CurrentModelEstimator:
+class Observer:
     """
-    Current model flux estimator.
+    Sensored reduced-order flux observer.
 
-    This simple flux estimator requires speed measurement.
+    This reduced-order flux observer [4]_ uses the measured rotor speed. The
+    selected default gain allows smooth transition from the current model at
+    zero speed to the (damped) voltage model at higher speeds.
 
     Notes
     -----
-    This is to be upgraded to a sensored flux observer later. The current model
-    is not a feasible choice due to its sensitivity to the inductances.
+    This implementation places the pole in synchronous coordinates at::
+
+        s = -R_R/L_M - g*abs(w_m) - 1j*w_s
+
+    The current model would be obtained using k = 1, resulting in the pole at
+    s = -R_R/L_M - 1j*(w_s - w_m). The pure voltage model corresponds to k = 0,
+    resulting in the marginally stable pole at s = -1j*w_s.
+
+    References
+    ----------
+    .. [4] Verghese, Sanders, “Observers for flux estimation in induction
+       machines,” IEEE Trans. Ind. Electron., 1988,
+       https://doi.org/10.1109/41.3067
 
     """
 
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
         """
         Parameters
         ----------
         pars : InductionMotorVectorCtrlPars (or its subset)
-            Controller parameters.
+            Control parameters.
 
         """
-        # Parameters
         self.T_s = pars.T_s
+        self.R_s = pars.R_s
         self.R_R = pars.R_R
+        self.L_sgm = pars.L_sgm
         self.L_M = pars.L_M
-        # Initialize the states
-        self.theta_s, self.psi_R = 0, 0
+        # Nonnegative gain for damping
+        self.g = .5
+        # Initial states
+        self.theta_s, self.psi_R, self.i_s_old = 0, 0, 0
+        # Store for the update method to avoid recalculation
+        self.dpsi_R = 0
 
-    def __call__(self, i_s, w_m):
+    def output(self, u_s, i_s, w_m):
         """
-        Output and update the observer.
+        Compute the output of the observer.
 
         Parameters
         ----------
+        u_s : complex
+            Stator voltage in estimated rotor flux coordinates.
         i_s : complex
-            Stator current.
+            Stator current in estimated rotor flux coordinates.
         w_m : float
-            Rotor speed (in electrical rad/s).
+            Rotor angular speed (in electrical rad/s)
 
         Returns
         -------
@@ -487,34 +514,39 @@ class CurrentModelEstimator:
             Angular frequency of the rotor flux.
 
         """
-        w_s = self.output(i_s, w_m)
-        self.update(i_s, w_s)
+        alpha = self.R_R/self.L_M
 
-        return w_s
+        # The observer pole could be placed arbitrarily by means of the
+        # observer gain k. The following choice places the pole at
+        # s = -sigma - 1j*w_s, where sigma = alpha + g*abs(w_m). This allows
+        # smooth transition from the current model (at zero speed to the
+        # (damped) voltage model (at higher speeds).
+        k = (alpha + self.g*np.abs(w_m))/(alpha - 1j*w_m)
 
-    def output(self, i_s, w_m):
-        """
-        Compute the outputs of the observer.
+        # Induced voltage from the stator quantities
+        e_s = u_s - self.R_s*i_s - self.L_sgm*(i_s - self.i_s_old)/self.T_s
+        # Induced voltage from the rotor quantities
+        e_r = self.R_R*i_s - (alpha - 1j*w_m)*self.psi_R
 
-        """
-        if self.psi_R > 0:
-            w_s = w_m + self.R_R*i_s.imag/self.psi_R
+        # Angular frequency of the rotor flux vector
+        den = self.psi_R + self.L_sgm*((1 - k)*i_s).real
+        v = (1 - k)*e_s + k*e_r
+        if den > 0:
+            w_s = v.imag/den
         else:
             w_s = w_m
+
+        # Increment of the flux magnitude (stored for the update method)
+        self.dpsi_R = v.real + w_s*self.L_sgm*((1 - k)*i_s).imag
+
         return w_s
 
     def update(self, i_s, w_s):
         """
         Update the states for the next sampling period.
 
-        Parameters
-        ----------
-        i_s : complex
-            Stator current.
-        w_s : float
-            Angular frequency of the rotor flux.
-
         """
-        self.psi_R += self.T_s*self.R_R*(i_s.real - self.psi_R/self.L_M)
+        self.psi_R += self.T_s*self.dpsi_R
         self.theta_s += self.T_s*w_s
         self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
+        self.i_s_old = i_s

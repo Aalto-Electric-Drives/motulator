@@ -10,12 +10,11 @@ In this version, the magnetic saturation is omitted.
 """
 from sys import float_info
 import numpy as np
-import matplotlib.pyplot as plt
-from cycler import cycler
 from scipy.interpolate import interp1d
 from sklearn.utils import Bunch
+import matplotlib.pyplot as plt
+from cycler import cycler
 
-# %%
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
 plt.rcParams['lines.linewidth'] = 1.
 plt.rcParams.update({"text.usetex": False})  # Disable LaTeX in plots
@@ -45,11 +44,11 @@ class TorqueCharacteristics:
         try:
             self.i_sd_min = pars.i_sd_min
         except AttributeError:
-            pass
+            self.i_sd_min = None
         try:
             self.i_sd_max = pars.i_sd_max
         except AttributeError:
-            pass
+            self.i_sd_max = None
 
     def torque(self, psi_s):
         """
@@ -264,17 +263,13 @@ class TorqueCharacteristics:
         i_s = abs_i_s*np.exp(1j*beta)
 
         # Minimum d-axis current for sensorless SyRM drives
-        try:
+        if self.i_sd_min is not None:
             i_s.real = ((i_s.real < self.i_sd_min)*self.i_sd_min
                         + (i_s.real >= self.i_sd_min)*i_s.real)
-        except AttributeError:
-            pass
         # Maximum d-axis current for sensorless PM-SyRM drives
-        try:
+        if self.i_sd_max is not None:
             i_s.real = ((i_s.real > self.i_sd_max)*self.i_sd_max
                         + (i_s.real <= self.i_sd_max)*i_s.real)
-        except AttributeError:
-            pass
 
         psi_s = self.flux(i_s)
         tau_M = self.torque(psi_s)
