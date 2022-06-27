@@ -49,8 +49,8 @@ if __name__ == '__main__':
     mdl.mech.tau_L_ext = lambda t: (t > .75)*base.tau_nom
 
     # No load, field-weakening (uncomment to try)
-    # mdl.mech.tau_L_ext = lambda t: 0
-    # ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
+    mdl.mech.tau_L_ext = lambda t: 0
+    ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
 
     # Create the simulation object and simulate it
     sim = mt.Simulation(mdl, ctrl, base=base, t_stop=1.5)

@@ -40,7 +40,6 @@ class SynchronousMotorVectorCtrlPars:
     # Voltage margin
     k_u: float = .95
     # Nominal values
-    u_dc_nom: float = 540
     w_nom: float = 2*np.pi*75
     # Motor parameter estimates
     R_s: float = 3.6
