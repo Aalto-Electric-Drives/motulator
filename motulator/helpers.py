@@ -15,6 +15,14 @@ def abc2complex(u):
     """
     Transform three-phase quantities to a complex space vector.
 
+    The complex space vector can be obtained from three-phase quantities with the following equation [1]_
+
+    .. math::
+
+       \\underline{i}_{s}^{s} = \\frac{2}{3}(i_{a} + i_{b}e^{j2\\pi/3} + i_{c}e^{j4\\pi/3})
+
+    where :math:`i_{a}`, :math:`i_{b}` and :math:`i_{c}` are arbitrarily varying instantaneous phase variables.
+
     Parameters
     ----------
     u : array_like, shape (3,)
@@ -31,6 +39,12 @@ def abc2complex(u):
     >>> y
     (-1-0.5773502691896258j)
 
+    References
+    ----------
+    .. [1] Hinkkanen, "Lecture 1: Induction Motor".
+       ELEC-E8402 Control of Electric Drives and Power Converters,
+       Aalto University School of Electrical Engineering; lecture given 2022 Spring
+
     """
     return (2/3)*u[0] - (u[1] + u[2])/3 + 1j*(u[1] - u[2])/np.sqrt(3)
 
@@ -39,6 +53,22 @@ def abc2complex(u):
 def complex2abc(u):
     """
     Transform a complex space vector to three-phase quantities.
+
+    The three-phase quantities can be obtained from complex space vector with the following equations [2]_
+
+    .. math::
+
+       i_{a} = Re\\{\\underline{i}_{s}^{s}\\}
+
+    .. math::
+
+       i_{b} = Re\\{e^{-j2\\pi/3}\\underline{i}_{s}^{s}\\}
+
+    .. math::
+
+       i_{c} = Re\\{e^{-j4\\pi/3}\\underline{i}_{s}^{s}\\}
+
+    where :math:`\\underline{i}_{s}^{s}` is the complex space vector.
 
     Parameters
     ----------
@@ -55,6 +85,12 @@ def complex2abc(u):
     >>> y = complex2abc(1-.5j)
     >>> y
     array([ 1.       , -0.9330127, -0.0669873])
+
+    References
+    ----------
+    .. [2] Hinkkanen, "Lecture 1: Induction Motor".
+       ELEC-E8402 Control of Electric Drives and Power Converters,
+       Aalto University School of Electrical Engineering; lecture given 2022 Spring
 
     """
     return np.array([u.real,

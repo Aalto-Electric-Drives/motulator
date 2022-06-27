@@ -1,3 +1,0 @@
-Usage
------
-An example script :mod:`main` exemplifies how to configure and simulate different models. More detailed documentation will be provided quite soon...
