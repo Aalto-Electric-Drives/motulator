@@ -32,7 +32,7 @@ if __name__ == '__main__':
         tau_M_max=2*base.tau_nom,
         i_s_max=2*base.i,
         i_sd_min=.25*base.i,  # Can be 0 in the sensored mode
-        k_u=.95, u_dc_nom=540, w_nom=2*np.pi*105.8,
+        k_u=.95, w_nom=2*np.pi*105.8,
         p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0,
         J=.015)
     # pars.plot(base)  # Plot control look-up tables
