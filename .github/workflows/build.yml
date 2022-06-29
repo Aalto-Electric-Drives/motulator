@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2 # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Build Sphinx documentation
-      uses: ammaraskar/sphinx-action@master
+      uses: ammaraskar/sphinx-action@master # https://github.com/ammaraskar/sphinx-action
       with:
         pre-build-command: "python -m pip install sphinx m2r2 sphinx_rtd_theme && python -m pip install -r requirements.txt & python -m pip install ."
         docs-folder: "docs/"
@@ -22,7 +22,7 @@ jobs:
     # ===============================
     - name: Commit documentation changes
       run: |
-        git clone https://github.com/upb-lea/gym-electric-motor.git --branch gh-pages --single-branch gh-pages
+        git clone https://github.com/JoonaKukkonen/motulator.git --branch gh-pages --single-branch gh-pages
         cp -r docs/_build/html/* gh-pages/
         cd gh-pages
         touch .nojekyll
