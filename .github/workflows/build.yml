@@ -25,7 +25,7 @@ jobs:
         git clone https://github.com/JoonaKukkonen/motulator.git --branch gh-pages --single-branch gh-pages
         cp -r docs/_build/html/* gh-pages/
         cd gh-pages
-        touch .nojekyll
+        touch docs/.nojekyll
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .
