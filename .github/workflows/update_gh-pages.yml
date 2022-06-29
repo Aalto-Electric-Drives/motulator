@@ -1,4 +1,4 @@
-name: Update gh-pages
+name: Update-gh-pages-branch
 
 on:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
