@@ -1,4 +1,4 @@
-name: Build
+name: Update gh-pages
 
 on:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2 # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Build Sphinx documentation
-      uses: ammaraskar/sphinx-action@master # https://github.com/ammaraskar/sphinx-action
+      uses: ammaraskar/sphinx-action@master
       with:
         pre-build-command: "python -m pip install sphinx m2r2 sphinx_rtd_theme\
         && pip install numpydoc\
