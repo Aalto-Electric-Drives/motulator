@@ -17,11 +17,8 @@ jobs:
       uses: ammaraskar/sphinx-action@master
       with:
         pre-build-command: "python -m pip install sphinx m2r2 sphinx_rtd_theme\
-        && pip install numpydoc\
-        && pip install sphinx-copybutton\
-        && pip install sphinx-autoapi\
-        && pip install sphinx-gallery\
-        && pip install matplotlib"
+        && pip install numpydoc && pip install sphinx-copybutton && pip install sphinx-autoapi\
+        && pip install sphinx-gallery && pip install matplotlib && pip install motulator"
         # && python -m pip install -r requirements.txt && python -m pip install ."
         docs-folder: "docs/"
     # Publish built docs to gh-pages branch.
