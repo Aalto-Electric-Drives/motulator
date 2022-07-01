@@ -20,7 +20,8 @@ jobs:
         && pip install numpydoc\
         && pip install sphinx-copybutton\
         && pip install sphinx-autoapi\
-        && pip install sphinx-gallery"
+        && pip install sphinx-gallery\
+        && pip install matplotlib"
         # && python -m pip install -r requirements.txt && python -m pip install ."
         docs-folder: "docs/"
     # Publish built docs to gh-pages branch.
