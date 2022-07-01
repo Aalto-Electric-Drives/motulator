@@ -21,6 +21,13 @@ This open-source software includes simulation models for an induction motor, a s
    parts/usage
    parts/tutorial
 
+.. toctree::
+   :maxdepth: 2
+   :name: examples
+   :caption: Examples
+
+   auto_examples/index
+
 Acknowledgement
 ---------------
 

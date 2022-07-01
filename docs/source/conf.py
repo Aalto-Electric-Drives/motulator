@@ -39,6 +39,7 @@ extensions = ['sphinx.ext.napoleon',
               'numpydoc',
               'sphinx_copybutton',
               'sphinx.ext.mathjax',
+              'sphinx_gallery.gen_gallery'
 ]
 #, 'sphinx.ext.autodoc', 'sphinx.ext.autosummary', 'nbsphinx', MyST-NB]
 extensions.append('autoapi.extension')
@@ -53,6 +54,10 @@ autoapi_python_class_content = 'both'
 #autoapi_python_class_content = 'class'
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
+sphinx_gallery_conf = {
+     'examples_dirs': '../../examples',   # path to your example scripts
+     'gallery_dirs': 'auto_examples',  # path to where to save gallery generated output
+}
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

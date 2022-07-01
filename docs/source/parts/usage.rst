@@ -21,4 +21,4 @@ After :doc:`installation`, motulator can be used by creating a continuous-time s
    sim.simulate()
    mt.plot(sim)
 
-The `examples <https://github.com/Aalto-Electric-Drives/motulator/tree/main/examples>`_ folder includes a variety of different example scripts to run the simulation. These example scripts use the :mod:`motulator.simulation` class in order to simulate a model and :mod:`motulator.plots` to plot the simulation results. Basic drive system and controller configurations for the simulation can be changed as shown in the example scripts. Optionally multiple simulation objects can be run in parallel (see :doc:`tutorial`).
+The :ref:`examples` includes a variety of different example scripts to run the simulation. These example scripts use the :mod:`motulator.simulation` class in order to simulate a model and :mod:`motulator.plots` to plot the simulation results. Basic drive system and controller configurations for the simulation can be changed as shown in the example scripts. Optionally multiple simulation objects can be run in parallel (see :doc:`tutorial`).

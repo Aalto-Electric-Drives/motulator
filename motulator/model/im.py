@@ -86,16 +86,6 @@ class InductionMotor:
         """
         Compute the electromagnetic torque.
 
-        The electromagnetic torque of an induction motor can be obtained from
-        stator flux linkage and stator current with the following equation [2]_
-
-        .. math::
-
-           T_{M}=\\frac{3p}{2}Im\\{\\underline{i}_{s}\\underline{\\psi}_{s}^{*}\\}
-
-        where :math:`p` is the number of pole pairs, :math:`\\underline{i}_{s}` is the
-        stator current and :math:`\\underline{\\psi}_{s}^{*}` is stator flux linkage.
-
         Parameters
         ----------
         psi_ss : complex
@@ -107,12 +97,6 @@ class InductionMotor:
         -------
         tau_M : float
             Electromagnetic torque.
-
-        References
-        ----------
-        .. [2] Hinkkanen, "Lecture 2: Scalar-Controlled Induction Motor Drive".
-           ELEC-E8402 Control of Electric Drives and Power Converters,
-           Aalto University School of Electrical Engineering; lecture given 2022 Spring
 
         """
         tau_M = 1.5*self.p*np.imag(i_ss*np.conj(psi_ss))

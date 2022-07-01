@@ -39,42 +39,6 @@ class PWM:
         This computes the duty ratios using a symmetrical suboscillation
         method. This method is identical to the standard space-vector PWM.
 
-        Suboscillation method goes as follows: first the zero sequence voltage is calculated as follows [1]_:
-
-        .. math::
-
-           u_{0} = \\frac{min(u_{a,ref},u_{b,ref},u_{c,ref})+max(u_{a,ref},u_{b,ref},u_{c,ref})}{2}
-
-        The modified voltage references are then calculated as follows [1]_:
-
-        .. math::
-
-           u_{a,ref}^{'} = u_{a,ref}-u_{0}
-
-        .. math::
-
-           u_{b,ref}^{'} = u_{b,ref}-u_{0}
-
-        .. math::
-
-           u_{c,ref}^{'} = u_{c,ref}-u_{0}
-
-        The duty ratios for three-phase PWM can then be obtained with the following equations [1]_:
-
-        .. math::
-
-           d_{a} = \\frac{1}{2}+\\frac{u_{a,ref}^{'}}{U_{dc}}
-
-        .. math::
-
-           d_{b} = \\frac{1}{2}+\\frac{u_{b,ref}^{'}}{U_{dc}}
-
-        .. math::
-
-           d_{c} = \\frac{1}{2}+\\frac{u_{c,ref}^{'}}{U_{dc}}
-
-        where :math:`U_{dc}` is the DC-bus voltage a 3-phase inverter.
-
         Parameters
         ----------
         u_s_ref : complex
@@ -86,12 +50,6 @@ class PWM:
         -------
         d_abc_ref : ndarray, shape (3,)
             Duty ratio references.
-
-        References
-        ----------
-        .. [1] Hinkkanen, "Lecture 4: Pulse-Width Modulation and Current Control".
-           ELEC-E8402 Control of Electric Drives and Power Converters,
-           Aalto University School of Electrical Engineering; lecture given 2022 Spring
 
         """
         # Phase voltages without the zero-sequence voltage
