@@ -143,8 +143,7 @@ Or alternatively plotting figures in per units:
     mt.plot_pu(sim)
 
 In this tutorial, induction motor was used to simulate the model. However, motulator also supports functionality for synchronous motors
-and more. There are example scripts in `examples <https://github.com/Aalto-Electric-Drives/motulator/tree/main/examples>`_ folder that show
-similar configurations for different motor types. More detailed information on configuration parameters can be found from :ref:`contents`.
+and more (see :ref:`examples`). More detailed information on configuration parameters can be found from :ref:`contents`.
 
 .. note::
 
