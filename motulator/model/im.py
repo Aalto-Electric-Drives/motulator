@@ -152,7 +152,7 @@ class SaturableStatorInductance:
     """
     Stator inductance saturation model.
 
-    This saturation model is given by [2]_::
+    This saturation model is given by [3]_::
 
         L_s(psi_s) = L_su/(1 + (beta*abs(psi_s)**S)
 
@@ -167,7 +167,7 @@ class SaturableStatorInductance:
 
     References
     ----------
-    .. [2] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
+    .. [3] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
        induction motor drives," IEEE Trans. Ind. Appl., 2021,
        https://doi.org/10.1109/TIA.2012.2190818
 
