@@ -6,6 +6,7 @@
 name: Upload Python Package
 
 on:
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
   release:
     types: [published]
 
