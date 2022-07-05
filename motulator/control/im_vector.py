@@ -274,7 +274,6 @@ class CurrentCtrl:
        saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
        https://doi.org/10.1109/TIA.2019.2919258
 
-
     """
 
     def __init__(self, pars):

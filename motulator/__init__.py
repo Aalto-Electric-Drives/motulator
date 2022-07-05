@@ -7,8 +7,8 @@ motulator: Motor Drive Simulator in Python
 import sys
 import os
 
-PATH = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(PATH)
+sys.path.append(
+    os.path.dirname(os.path.abspath(__file__)))
 
 # Import simulation environment
 from simulation import Simulation
@@ -53,4 +53,4 @@ from plots import (
     plot_extra_pu)
 
 # Delete imported modules
-del sys, os, PATH
+del sys, os
