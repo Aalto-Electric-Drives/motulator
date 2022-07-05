@@ -1,5 +1,4 @@
-# *motulator*
-*motulator:* Motor Drive Simulator in Python
+# *motulator:* Motor Drive Simulator in Python
 
 Introduction
 ------------
@@ -38,6 +37,10 @@ sim.simulate()
 mt.plot(sim)
 ```
 This example applies the default settings. However, the drive system, controller, reference sequences etc. are easy to configure, see the folder `examples` for example scripts. New system models and controllers can be developed using the existing ones as templates. More features will be added later.
+
+The documentation is available here:
+
+https://aalto-electric-drives.github.io/motulator/
 
 Acknowledgement
 ---------------
