@@ -24,9 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install build twine
     - name: Build
-      run: |
-        python -m build
-        py setup.py sdist bdist_wheel
+      run: python -m build
     - name: Publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERS }}
