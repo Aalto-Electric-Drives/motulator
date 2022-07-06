@@ -4,7 +4,7 @@ Synchronous Motor
 A continuous-time synchronous motor model is given in the module :mod:`motulator.model.sm`. The model can be parametrized to represent permanent-magnet synchronous motors (PMSMs) and synchronous reluctance motors (SyRMs). Peak-valued complex space vectors are used. 
 
 .. figure:: figs/sm_block_rot.svg
-   :width: 40%
+   :width: 100%
    :align: center
    :alt: Synchronous motor model
    :target: .
@@ -32,7 +32,7 @@ where :math:`L_\mathrm{d}` is the d-axis inductance, :math:`L_\mathrm{q}` is the
 Since the motor is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from :math:`\tau_\mathrm{M}` to :math:`\omega_\mathrm{m}`.
 
 .. figure:: figs/sm_block_stat.svg
-   :width: 50%
+   :width: 100%
    :align: center
    :alt: Synchronous motor model seen from stator coordinates
    :target: .

@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-ThThis module contains power converter models.
+This module contains power converter models.
 
 An inverter with constant DC-bus voltage and a frequency converter with a diode
 front-end rectifier are modeled. Complex space vectors are used also for duty

@@ -8,13 +8,13 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="206.32437"
-   height="161.33299"
+   width="480"
+   height="175.00003"
    id="svg6781"
    version="1.1"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="im_block.svg"
-   viewBox="0 0 206.32437 161.33299">
+   viewBox="0 0 480 175.00003">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -23,8 +23,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="104.98593"
-     inkscape:cy="102.65792"
+     inkscape:cx="237.68682"
+     inkscape:cy="108.2191"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -51,8 +51,8 @@
        empspacing="5"
        id="grid7066"
        type="xygrid"
-       originx="-220"
-       originy="-789.33349" />
+       originx="-95"
+       originy="-784.99997" />
   </sodipodi:namedview>
   <defs
      id="defs6783">
@@ -521,7 +521,7 @@
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1"
-     transform="translate(-220,-789.3335)">
+     transform="translate(-95,-785)">
     <g
        id="g3079"
        transform="matrix(0,1,1,0,-570,718)">

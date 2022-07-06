@@ -14,14 +14,14 @@
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:version="0.32"
    id="svg3470"
-   height="82.509476"
-   width="258.07288">
+   height="95"
+   width="480">
   <sodipodi:namedview
      inkscape:document-rotation="0"
      inkscape:snap-to-guides="false"
      inkscape:snap-object-midpoints="false"
      inkscape:snap-grids="true"
-     inkscape:window-maximized="0"
+     inkscape:window-maximized="1"
      inkscape:snap-guide="true"
      inkscape:snap-global="true"
      inkscape:bbox-paths="true"
@@ -34,10 +34,10 @@
      showguides="true"
      height="359.4px"
      width="349.29px"
-     inkscape:window-y="23"
-     inkscape:window-x="26"
-     inkscape:window-height="856"
-     inkscape:window-width="1436"
+     inkscape:window-y="0"
+     inkscape:window-x="0"
+     inkscape:window-height="1136"
+     inkscape:window-width="1920"
      inkscape:grid-bbox="false"
      inkscape:object-points="false"
      inkscape:object-paths="true"
@@ -45,8 +45,8 @@
      showgrid="true"
      inkscape:current-layer="layer2"
      inkscape:document-units="px"
-     inkscape:cy="88.53752"
-     inkscape:cx="63.244718"
+     inkscape:cy="93.278045"
+     inkscape:cx="199.73169"
      inkscape:zoom="1.7469907"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -66,8 +66,8 @@
        visible="true"
        id="GridFromPre046Settings"
        type="xygrid"
-       originx="-323.08098"
-       originy="-44.740525"
+       originx="-215"
+       originy="-40"
        spacingx="0.5"
        spacingy="0.5"
        color="#0000ff"
@@ -79,12 +79,12 @@
     <sodipodi:guide
        inkscape:locked="false"
        orientation="0,1"
-       position="1626.4382,1071.9227"
+       position="1734.5192,1079.6727"
        id="guide35742" />
     <sodipodi:guide
        inkscape:locked="false"
        orientation="1,0"
-       position="-343.08098,158.84587"
+       position="-235,166.59587"
        id="guide3449" />
   </sodipodi:namedview>
   <defs
@@ -612,13 +612,13 @@
      style="display:inline"
      id="layer1"
      inkscape:groupmode="layer"
-     transform="translate(-502.91598,-374.39507)" />
+     transform="translate(-394.835,-369.65454)" />
   <g
      inkscape:label="Labels"
      style="display:inline;opacity:1"
      id="layer2"
      inkscape:groupmode="layer"
-     transform="translate(-323.08098,-44.740525)">
+     transform="translate(-215,-40)">
     <g
        inkscape:label="Circuit"
        style="display:inline"

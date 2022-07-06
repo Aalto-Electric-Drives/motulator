@@ -4,7 +4,7 @@ Induction Motor
 Continuous-time induction motor models are given in the module :mod:`motulator.model.im`. Peak-valued complex space vectors are used. The models are implemented in stator coordinates. A Γ-equivalent model is used since it can be extended with the magnetic saturation model in a staightforward manner [1]_.
 
 .. figure:: figs/im_gamma.svg
-   :width: 50%
+   :width: 100%
    :align: center
    :alt: Gamma-model of an induction motor
    :target: .
@@ -12,7 +12,7 @@ Continuous-time induction motor models are given in the module :mod:`motulator.m
    Γ model.
 
 .. figure:: figs/im_block.svg
-   :width: 40%
+   :width: 100%
    :align: center
    :alt: Block diagram of an induction motor model
    :target: .
@@ -49,7 +49,7 @@ The class :class:`motulator.model.im.InductionMotorSaturated` extends the model 
        L_\mathrm{M} &=  L_\mathrm{s} - L_\sigma 
 
    .. figure:: figs/im_inv_gamma.svg
-      :width: 50%
+      :width: 100%
       :align: center
       :alt: Inverse-Gamma model of an induction motor
       :target: .
