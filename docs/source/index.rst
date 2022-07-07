@@ -25,6 +25,12 @@ This open-source software includes simulation models for an induction motor, a s
    mechanics
    converters
 
+.. toctree::
+   :caption: Contributing
+   :maxdepth: 1
+
+   contributing
+
 Acknowledgement
 ---------------
 
