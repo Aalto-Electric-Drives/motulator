@@ -26,9 +26,9 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
-from sklearn.utils import Bunch
-from control.common import PWM, RateLimiter, Delay, Datalogger
-from helpers import abc2complex
+
+from motulator.control.common import PWM, RateLimiter, Delay, Datalogger
+from motulator.helpers import abc2complex, Bunch
 
 
 # %%

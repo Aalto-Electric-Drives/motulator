@@ -1,5 +1,4 @@
-# *motulator*
-*motulator:* Motor Drive Simulator in Python
+# *motulator:* Motor Drive Simulator in Python
 
 [![Build Status](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml/badge.svg)](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml)
 [![License](https://img.shields.io/github/license/mashape/apistatus)](https://github.com/Aalto-Electric-Drives/motulator/blob/main/LICENSE)
@@ -43,8 +42,6 @@ mt.plot(sim)
 ```
 This example applies the default settings. However, the drive system, controller, reference sequences etc. are easy to configure, see the folder `examples` for example scripts. New system models and controllers can be developed using the existing ones as templates. More features will be added later.
 
-Documentation
--------------
 Documentation is provided at <https://aalto-electric-drives.github.io/motulator/>
 
 Acknowledgement

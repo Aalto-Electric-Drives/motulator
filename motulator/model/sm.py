@@ -11,8 +11,9 @@ motor.
 from __future__ import annotations
 from dataclasses import dataclass, field
 import numpy as np
-from helpers import complex2abc
-from model.mech import Mechanics
+
+from motulator.helpers import complex2abc
+from motulator.model.mech import Mechanics
 
 
 # %%
