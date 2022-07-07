@@ -7,9 +7,9 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
-from sklearn.utils import Bunch
-from helpers import abc2complex
-from control.common import SpeedCtrl, PWM, Delay, Datalogger
+
+from motulator.helpers import abc2complex, Bunch
+from motulator.control.common import SpeedCtrl, PWM, Delay, Datalogger
 
 
 # %%
@@ -273,7 +273,6 @@ class CurrentCtrl:
     .. [2] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
        saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
        https://doi.org/10.1109/TIA.2019.2919258
-
 
     """
 

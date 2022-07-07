@@ -10,11 +10,11 @@ induction motor.
 from __future__ import annotations
 from dataclasses import dataclass, field
 import numpy as np
-from sklearn.utils import Bunch
-from helpers import abc2complex
-from model.im import InductionMotor, InductionMotorSaturated
-from model.mech import Mechanics
-from model.converter import Inverter, PWMInverter, FrequencyConverter
+
+from motulator.helpers import abc2complex, Bunch
+from motulator.model.im import InductionMotor, InductionMotorSaturated
+from motulator.model.mech import Mechanics
+from motulator.model.converter import Inverter, PWMInverter, FrequencyConverter
 
 
 # %%

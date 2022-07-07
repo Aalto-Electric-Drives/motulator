@@ -9,10 +9,11 @@ Peak-valued complex space vectors are used. The default values correspond to a
 from __future__ import annotations
 from dataclasses import dataclass, field
 import numpy as np
-from sklearn.utils import Bunch
-from model.sm import SynchronousMotor
-from model.mech import Mechanics
-from model.converter import Inverter, PWMInverter
+
+from motulator.helpers import Bunch
+from motulator.model.sm import SynchronousMotor
+from motulator.model.mech import Mechanics
+from motulator.model.converter import Inverter, PWMInverter
 
 
 # %%

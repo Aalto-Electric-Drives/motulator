@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-ThThis module contains power converter models.
+This module contains power converter models.
 
 An inverter with constant DC-bus voltage and a frequency converter with a diode
 front-end rectifier are modeled. Complex space vectors are used also for duty
@@ -12,7 +12,7 @@ vectors are in stationary coordinates. The default values correspond to a
 from __future__ import annotations
 from dataclasses import dataclass, field
 import numpy as np
-from helpers import abc2complex
+from motulator.helpers import abc2complex
 
 
 # %%
