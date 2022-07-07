@@ -8,8 +8,9 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
 from sklearn.utils import Bunch
-from helpers import abc2complex
-from control.common import SpeedCtrl, PWM, Delay, Datalogger
+
+from motulator.helpers import abc2complex
+from motulator.control.common import SpeedCtrl, PWM, Delay, Datalogger
 
 
 # %%

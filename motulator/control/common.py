@@ -5,7 +5,8 @@ This module contains common control functions and classes.
 """
 import numpy as np
 from sklearn.utils import Bunch
-from helpers import complex2abc, abc2complex
+
+from motulator.helpers import complex2abc, abc2complex
 
 
 # %%

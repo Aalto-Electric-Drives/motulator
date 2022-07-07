@@ -8,7 +8,8 @@ This module contains example plotting scripts.
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
-from helpers import complex2abc
+
+from motulator.helpers import complex2abc
 
 # Plotting parameters
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')

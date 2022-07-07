@@ -1,5 +1,3 @@
-# pylint: disable=wrong-import-position
-# pylint: disable=import-error
 """
 motulator: Motor Drive Simulator in Python
 
@@ -11,35 +9,38 @@ sys.path.append(
     os.path.dirname(os.path.abspath(__file__)))
 
 # Import simulation environment
-from simulation import Simulation
+# pylint: disable=wrong-import-position
+from motulator.simulation import Simulation
 
 # Import system models
-from model.mech import Mechanics
-from model.converter import (
+from motulator.model.mech import Mechanics
+from motulator.model.converter import (
     Inverter,
     PWMInverter,
     FrequencyConverter)
-from model.im import (
+from motulator.model.im import (
     InductionMotor,
     InductionMotorSaturated,
     SaturableStatorInductance)
-from model.sm import SynchronousMotor
-from model.im_drive import InductionMotorDrive, InductionMotorDriveDiode
-from model.sm_drive import SynchronousMotorDrive
+from motulator.model.sm import SynchronousMotor
+from motulator.model.im_drive import (
+    InductionMotorDrive,
+    InductionMotorDriveDiode)
+from motulator.model.sm_drive import SynchronousMotorDrive
 
 # Import controllers
-from control.im_vhz import (
+from motulator.control.im_vhz import (
     InductionMotorVHzCtrl,
     InductionMotorVHzCtrlPars)
-from control.im_vector import (
+from motulator.control.im_vector import (
     InductionMotorVectorCtrl,
     InductionMotorVectorCtrlPars)
-from control.sm_vector import (
+from motulator.control.sm_vector import (
     SynchronousMotorVectorCtrl,
     SynchronousMotorVectorCtrlPars)
 
 # Import other useful stuff
-from helpers import (
+from motulator.helpers import (
     BaseValues,
     abc2complex,
     complex2abc,
@@ -47,7 +48,7 @@ from helpers import (
     Step)
 
 # Import some default plotting functions
-from plots import (
+from motulator.plots import (
     plot,
     plot_pu,
     plot_extra_pu)

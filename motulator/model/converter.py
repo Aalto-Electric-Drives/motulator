@@ -12,7 +12,7 @@ vectors are in stationary coordinates. The default values correspond to a
 from __future__ import annotations
 from dataclasses import dataclass, field
 import numpy as np
-from helpers import abc2complex
+from motulator.helpers import abc2complex
 
 
 # %%
