@@ -11,9 +11,10 @@ In this version, the magnetic saturation is omitted.
 from sys import float_info
 import numpy as np
 from scipy.interpolate import interp1d
-from sklearn.utils import Bunch
 import matplotlib.pyplot as plt
 from cycler import cycler
+
+from motulator.helpers import Bunch
 
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
 plt.rcParams['lines.linewidth'] = 1.
