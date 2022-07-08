@@ -73,6 +73,7 @@ class InductionMotorVHzCtrl(Datalogger):
         super().__init__()
         self.t = 0
         self.T_s = pars.T_s
+        self.w_m_ref = pars.w_m_ref
         self.sensorless = True
         # Instantiate classes
         self.pwm = PWM(pars)

@@ -40,7 +40,7 @@ class Inverter:
         Parameters
         ----------
         q : complex
-            Duty ratio vector (switching state vector in subclasses).
+            Duty ratio vector (switching state vector in the subclasses).
         u_dc : float
             DC-bus voltage.
 

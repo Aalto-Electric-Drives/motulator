@@ -7,12 +7,11 @@ This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 """
 
 # %%
-# Import the packages and start the timer.
+# Import the packages.
 
 from time import time
 import numpy as np
 import motulator as mt
-start_time = time()
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -30,7 +29,7 @@ conv = mt.Inverter()
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 # %%
-# Configure the control system. You may also try to change the parameters.
+# Configure the control system.
 
 pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True)
 # pars.plot(base)  # Uncommenting this plot control look-up tables
@@ -54,6 +53,7 @@ print(str(mdl)+'\n\n'+str(ctrl))
 # Create the simulation object and simulate it.
 
 sim = mt.Simulation(mdl, ctrl, base=base, t_stop=4)
+start_time = time()  # Start the timer
 sim.simulate()
 # Print the execution time
 print('\nExecution time: {:.2f} s'.format((time() - start_time)))

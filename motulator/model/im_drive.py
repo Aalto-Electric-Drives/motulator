@@ -149,7 +149,7 @@ class InductionMotorDrive:
                            + self.mech.B*self.data.w_M)
         self.data.u_ss = self.conv.ac_voltage(self.data.q,
                                               self.conv.u_dc0)
-        # Compute the inverse-Gamma rotor flux
+        # Compute the inverse-Γ rotor flux
         try:
             # Saturable stator inductance
             L_s = self.motor.L_s(np.abs(self.data.psi_ss))

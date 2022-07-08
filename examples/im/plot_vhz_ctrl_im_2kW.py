@@ -7,11 +7,10 @@ parameters correspond to an open-loop V/Hz control.
 
 """
 # %%
-# Import the packages and start the timer.
+# Import the packages.
 
 from time import time
 import motulator as mt
-start_time = time()
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -24,7 +23,7 @@ base = mt.BaseValues(
 
 # Saturation model
 L_s = mt.SaturableStatorInductance()
-# Motor model with main-flux saturation included
+# Γ-equivalent motor model with main-flux saturation included
 motor = mt.InductionMotorSaturated(
     R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s, p=2)
 # Mechanics model
@@ -51,6 +50,7 @@ mdl.mech.tau_L_ext = lambda t: (t > 1.)*base.tau_nom
 # Create the simulation object and simulate it.
 
 sim = mt.Simulation(mdl, ctrl, base=base, t_stop=1.5)
+start_time = time()  # Start the timer
 sim.simulate()
 # Print the execution time
 print('\nExecution time: {:.2f} s'.format((time() - start_time)))
