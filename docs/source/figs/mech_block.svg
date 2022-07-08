@@ -8,13 +8,13 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="161.48453"
-   height="71.333"
+   width="480"
+   height="85.000053"
    id="svg6781"
    version="1.1"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="mech_block.svg"
-   viewBox="0 0 161.48453 71.333002">
+   viewBox="0 0 480.00001 85.000056">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -23,8 +23,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="40.970414"
-     inkscape:cy="3.1206908"
+     inkscape:cx="132.82802"
+     inkscape:cy="46.518745"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -51,8 +51,8 @@
        empspacing="5"
        id="grid7066"
        type="xygrid"
-       originx="-214.83985"
-       originy="-809.33355" />
+       originx="-75.000002"
+       originy="-805.00001" />
   </sodipodi:namedview>
   <defs
      id="defs6783">
@@ -344,7 +344,7 @@
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1"
-     transform="translate(-214.83985,-809.3335)">
+     transform="translate(-75,-804.99994)">
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
        d="M 285,869.99997 H 267.5"

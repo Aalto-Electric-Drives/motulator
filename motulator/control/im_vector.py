@@ -2,14 +2,16 @@
 """
 This module contains vector control methods for an induction motor drive.
 
+The algorithms are written based on the inverse-Γ model.
+
 """
 from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
-from sklearn.utils import Bunch
-from helpers import abc2complex
-from control.common import SpeedCtrl, PWM, Delay, Datalogger
+
+from motulator.helpers import abc2complex, Bunch
+from motulator.control.common import SpeedCtrl, PWM, Delay, Datalogger
 
 
 # %%
@@ -39,7 +41,7 @@ class InductionMotorVectorCtrlPars:
     # Nominal values
     psi_R_nom: float = .9
     u_dc_nom: float = 540
-    # Motor parameter estimates
+    # Motor parameter estimates (inverse-Γ model)
     R_s: float = 3.7
     R_R: float = 2.1
     L_sgm: float = .021
@@ -241,7 +243,7 @@ class CurrentRef:
         ----------
         u_s_ref : complex
             Unlimited stator voltage reference.
-        u_dc : float.
+        u_dc : float
             DC-bus voltage.
 
         """

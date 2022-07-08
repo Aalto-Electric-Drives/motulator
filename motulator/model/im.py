@@ -11,17 +11,18 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
-from helpers import complex2abc
+
+from motulator.helpers import complex2abc
 
 
 # %%
 @dataclass
 class InductionMotor:
     """
-    Induction motor model.
+    Γ-equivalent model of an induction motor.
 
-    An induction motor is modeled using the Gamma-equivalent model [1]_. The
-    model is implemented in stator coordinates.
+    An induction motor is modeled using the Γ-equivalent model [1]_. The model
+    is implemented in stator coordinates.
 
     Parameters
     ----------
@@ -38,10 +39,10 @@ class InductionMotor:
 
     Notes
     -----
-    The Gamma model is chosen here since it can be extended with the magnetic
+    The Γ model is chosen here since it can be extended with the magnetic
     saturation model in a staightforward manner. If the magnetic saturation is
-    omitted, the Gamma model is mathematically identical to the inverse-Gamma
-    and T models [1]_.
+    omitted, the Γ model is mathematically identical to the inverse-Γ and T
+    models [1]_.
 
     References
     ----------
@@ -50,7 +51,7 @@ class InductionMotor:
 
     """
     p: int = 2
-    # Gamma parameters
+    # Γ parameters
     R_s: float = 3.7
     R_r: float = 2.5
     L_ell: float = .023
@@ -197,7 +198,7 @@ class SaturableStatorInductance:
 @dataclass
 class InductionMotorSaturated(InductionMotor):
     """
-    Induction motor model with main-flux saturation.
+    Γ-equivalent model of an induction motor model with main-flux saturation.
 
     This extends the InductionMotor class with a main-flux magnetic saturation
     model.
@@ -219,3 +220,47 @@ class InductionMotorSaturated(InductionMotor):
         i_rs = (psi_rs - psi_ss)/self.L_ell
         i_ss = psi_ss/L_s - i_rs
         return i_ss, i_rs
+
+
+# %%
+@dataclass
+class InductionMotorInvGamma(InductionMotor):
+    """
+    Inverse-Γ model of an induction motor.
+
+    This extends the InductionMotor class (based on the Γ model) by providing
+    the interface for the inverse-Γ model parameters. Linear magnetics are
+    assumed. If magnetic saturation is to be modeled, the Γ model is preferred.
+
+    Parameters
+    ----------
+    p : int
+        Number of pole pairs.
+    R_s : float
+        Stator resistance.
+    R_R : float
+        Rotor resistance.
+    L_sgm : float
+        Leakage inductance.
+    L_M : float
+        Magnetizing inductance.
+
+    """
+    # Inverse-Γ parameters
+    R_R: float = 2.1
+    L_sgm: float = .021
+    L_M: float = .224
+    # Γ parameters to be computed in the post init
+    R_r: float = field(repr=False, default=None)
+    L_ell: float = field(repr=False, default=None)
+    L_s: float = field(repr=False, default=None)
+    # Initial value
+    # psi_Rs0: complex = field(repr=False, default=0j)
+
+    def __post_init__(self):
+        # Convert the inverse-Γ parameters to the Γ parameters
+        gamma = self.L_M/(self.L_M + self.L_sgm)  # Magnetic coupling factor
+        self.L_s = self.L_M + self.L_sgm
+        self.L_ell = self.L_sgm/gamma
+        self.R_r = self.R_R/gamma**2
+        # self.psi_rs0 = self.psi_Rs0/gamma

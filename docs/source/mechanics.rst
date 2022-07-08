@@ -14,7 +14,7 @@ where :math:`\omega_\mathrm{M}` is the mechanical angular speed of the rotor, :m
 where :math:`\tau_\ell` is the external load torque as a function of time and :math:`B` is the viscous friction coefficient.
 
 .. figure:: figs/mech_block.svg
-   :width: 35%
+   :width: 100%
    :align: center
    :alt: Block diagram of mechanics
    :target: .
