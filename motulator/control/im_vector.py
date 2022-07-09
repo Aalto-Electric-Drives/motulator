@@ -83,18 +83,15 @@ class InductionMotorVectorCtrl(Datalogger):
         self.delay = Delay(pars.delay)
         self.desc = pars.__repr__()
 
-    def __call__(self, i_s_abc, u_dc, *args):
+    def __call__(self, mdl):
         """
         Main control loop.
 
         Parameters
         ----------
-        i_s_abc : ndarray, shape (3,)
-            Phase currents.
-        u_dc : float
-            DC-bus voltage.
-        w_M : float, optional
-            Rotor speed (in mechanical rad/s), only for the sensored control.
+        mdl : InductionMotorDrive
+            Continuous-time model of an induction motor drive for getting the
+            feedback signals.
 
         Returns
         -------
@@ -104,17 +101,22 @@ class InductionMotorVectorCtrl(Datalogger):
             Sampling period.
 
         """
-        # Speed reference
+        # Get the speed reference
         w_m_ref = self.w_m_ref(self.t)
 
-        # States
+        # Measure the feedback signals
+        i_s_abc = mdl.motor.meas_currents()  # Phase currents
+        u_dc = mdl.conv.meas_dc_voltage()  # DC-bus voltage
+
+        if not self.sensorless:
+            w_m = self.p*mdl.mech.meas_speed()  # Rotor speed
+        else:
+            w_m = self.observer.w_m  # Get the estimated speed
+
+        # Get the states
         u_s = self.pwm.realized_voltage
         psi_R = self.observer.psi_R
         theta_s = self.observer.theta_s
-        if self.sensorless:
-            w_m = self.observer.w_m
-        else:
-            w_m = self.p*args[0]
 
         # Space vector and coordinate transformation
         i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)

@@ -96,16 +96,15 @@ class InductionMotorVHzCtrl(Datalogger):
         self.w_r_ref = 0
         self.desc = pars.__repr__()
 
-    def __call__(self, i_s_abc, u_dc):
+    def __call__(self, mdl):
         """
         Main control loop.
 
         Parameters
         ----------
-        i_s_abc : ndarray, shape (3,)
-            Phase currents.
-        u_dc : float
-            DC-bus voltage.
+        mdl : InductionMotorDrive
+            Continuous-time model of an induction motor drive for getting the
+            feedback signals.
 
         Returns
         -------
@@ -117,6 +116,10 @@ class InductionMotorVHzCtrl(Datalogger):
         """
         # Rate limit the frequency reference
         w_m_ref = self.rate_limiter(self.w_m_ref(self.t))
+
+        # Measure the feedback signals
+        i_s_abc = mdl.motor.meas_currents()  # Phase currents
+        u_dc = mdl.conv.meas_dc_voltage()  # DC-bus voltage
 
         # Space vector transformation
         i_s = np.exp(-1j*self.theta_s)*abc2complex(i_s_abc)

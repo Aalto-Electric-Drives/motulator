@@ -33,7 +33,7 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True)
 # pars.plot(base)  # Uncommenting this plot control look-up tables
-ctrl = mt.SynchronousMotorVectorCtrl()
+ctrl = mt.SynchronousMotorVectorCtrl(pars)
 
 # %%
 # Set the speed reference and the external load torque.

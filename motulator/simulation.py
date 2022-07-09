@@ -92,40 +92,14 @@ class Simulation:
                     sol.q = len(sol.t)*[self.mdl.conv.q]
                     self.mdl.save(sol)
 
-        def sensorless_ctrl():
-            while self.mdl.t0 <= self.t_stop:
-                # Sample the phase currents and the DC-bus voltage
-                i_s_abc_meas = self.mdl.motor.meas_currents()
-                u_dc_meas = self.mdl.conv.meas_dc_voltage()
-                # Run the digital controller
-                d_abc_ref, T_s = self.ctrl(i_s_abc_meas, u_dc_meas)
-                # Model the computational delay
-                d_abc = self.ctrl.delay(d_abc_ref)
-                # Simulate the continuous-time model over the sampling period
-                solve(d_abc, [self.mdl.t0, self.mdl.t0+T_s])
-
-        def sensored_ctrl():
-            while self.mdl.t0 <= self.t_stop:
-                # Sample the phase currents and the DC-bus voltage
-                i_s_abc_meas = self.mdl.motor.meas_currents()
-                u_dc_meas = self.mdl.conv.meas_dc_voltage()
-                # Measure the rotor position (not used in the case of an IM)
-                theta_M_meas = self.mdl.mech.meas_position()
-                # Measure the rotor speed
-                w_M_meas = self.mdl.mech.meas_speed()
-                # Run the digital controller
-                d_abc_ref, T_s = self.ctrl(i_s_abc_meas, u_dc_meas, w_M_meas,
-                                           theta_M_meas)
-                # Model the computational delay
-                d_abc = self.ctrl.delay(d_abc_ref)
-                # Simulate the continuous-time model over the sampling period
-                solve(d_abc, [self.mdl.t0, self.mdl.t0+T_s])
-
-        # Choose the state machine
-        if self.ctrl.sensorless:
-            sensorless_ctrl()
-        else:
-            sensored_ctrl()
+        # Simulation loop
+        while self.mdl.t0 <= self.t_stop:
+            # Run the digital controller
+            d_abc_ref, T_s = self.ctrl(self.mdl)
+            # Model the computational delay
+            d_abc = self.ctrl.delay(d_abc_ref)
+            # Simulate the continuous-time model over the sampling period
+            solve(d_abc, [self.mdl.t0, self.mdl.t0+T_s])
 
         # Call the post-processing functions
         self.mdl.post_process()
