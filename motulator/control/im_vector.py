@@ -95,10 +95,10 @@ class InductionMotorVectorCtrl(Datalogger):
 
         Returns
         -------
-        d_abc_ref : ndarray, shape (3,)
-            Duty ratio references.
         T_s : float
             Sampling period.
+        d_abc_ref : ndarray, shape (3,)
+            Duty ratio references.
 
         """
         # Get the speed reference
@@ -142,7 +142,7 @@ class InductionMotorVectorCtrl(Datalogger):
         self.observer.update(i_s, w_s)
         self.t += self.T_s
 
-        return d_abc_ref, self.T_s
+        return self.T_s, d_abc_ref
 
     def __repr__(self):
         return self.desc

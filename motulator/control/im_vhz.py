@@ -108,10 +108,10 @@ class InductionMotorVHzCtrl(Datalogger):
 
         Returns
         -------
-        d_abc_ref : ndarray, shape (3,)
-            Duty ratio references.
         T_s : float
             Sampling period.
+        d_abc_ref : ndarray, shape (3,)
+            Duty ratio references.
 
         """
         # Rate limit the frequency reference
@@ -150,7 +150,7 @@ class InductionMotorVHzCtrl(Datalogger):
         self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
         self.t += self.T_s
 
-        return d_abc_ref, self.T_s
+        return self.T_s, d_abc_ref
 
     def stator_freq(self, w_s_ref, i_s):
         """

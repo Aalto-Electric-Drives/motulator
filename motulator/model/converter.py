@@ -28,7 +28,7 @@ class Inverter:
 
     """
     u_dc0: float = 540
-    # Here q is the duty ratio vector. In the subclasses where the PWM is
+    # Here `q` is the duty ratio vector. In the subclasses where the PWM is
     # modeled, the variable `q` refers to the switching state vector.
     q: complex = field(repr=False, default=0j)
 
@@ -75,28 +75,30 @@ class Inverter:
         return i_dc
 
     @staticmethod
-    def pwm(d_abc):
+    def pwm(T_s, d_abc):
         """
-        Zero-order hold of the duty ratios over the sampling period.
+        Zero-order hold of the duty ratio over the sampling period.
 
         The output arrays are compatible with the solver.
 
         Parameters
         ----------
+        T_s : float
+            Sampling period.
         d_abc : array_like of floats, shape (3,)
             Duty ratios in the range [0, 1].
 
         Returns
         -------
-        tn_sw : ndarray, shape (1,2)
-            Normalized switching instant, tn_sw = [0, 1].
+        t_step : ndarray, shape (1,)
+            Sampling period as an array compatible with the solver.
         q : complex ndarray, shape (1,)
-            Duty ratio vector, having a shape compatible with the solver.
+            Duty ratio vector as an array compatible with the solver.
 
         """
-        tn_sw = np.array([[0, 1]])
-        q = np.array([1])*abc2complex(d_abc)
-        return tn_sw, q
+        t_step = np.array([T_s])
+        q = np.array([abc2complex(d_abc)])
+        return t_step, q
 
     def meas_dc_voltage(self):
         """
@@ -127,56 +129,59 @@ class PWMInverter(Inverter):
     """
     N: int = 2**12
     # Stores the carrier direction
-    falling_edge: bool = field(repr=False, default=False)
+    rising_edge: bool = field(repr=False, default=True)
 
-    def pwm(self, d_abc):
+    def pwm(self, T_s, d_abc):
         """
-        Compute the normalized switching instants and the switching states.
+        Compute the the switching states and their durations.
 
         Parameters
         ----------
+        T_s : float
+            Sampling period (either half or full carrier period).
         d_abc : array_like of floats, shape (3,)
             Duty ratios in the range [0, 1].
 
         Returns
         -------
-        tn_sw : ndarray, shape (4,2)
-            Normalized switching instants, tn_sw = [0, t1, t2, t3, 1].
+        t_steps : ndarray, shape (4,)
+            Switching state durations, `[t0, t1, t2, t3]`.
         q : complex ndarray, shape (4,)
-            Switching state vectors corresponding to the switching instants.
-            For example, the switching state q[1] is applied at the interval
-            tn_sw[1].
+            Switching state vectors, `[0, q1, q2, 0]`, where `q1` and `q2` are
+            active vectors.
 
         Notes
         -----
-        Switching instants t_sw split the sampling period T_s into
-        four spans. No switching (e.g. da = 0 or da = 1) or simultaneous
-        switching instants (e.g da == db) lead to zero spans, i.e.,
-        t_sw[i] == t_sw[i].
+        Switching instants split the sampling period `T_s` into
+        four subperiods. No switching (e.g. `d_a == 0` or `d_a == 1`) or
+        simultaneous switching instants (e.g `d_a == d_b`) lead to zero length
+        of the corresponding subperiods.
 
         """
         # Quantize the duty ratios to N levels
         d_abc = np.round(self.N*np.asarray(d_abc))/self.N
-        # Initialize the normalized switching instant array
-        tn_sw = np.zeros((4, 2))
-        tn_sw[3, 1] = 1
-        # Could be understood as a carrier comparison
-        if self.falling_edge:
-            # Normalized switching instants (zero crossing instants)
-            tn_sw[1:4, 0] = np.sort(d_abc)
-            tn_sw[0:3, 1] = tn_sw[1:4, 0]
-            # Compute the switching state array
-            q_abc = (tn_sw[:, 0] < d_abc[:, np.newaxis]).astype(int)
+
+        # Normalized switching instants and switching states
+        if self.rising_edge:
+            # t_n = [0, t_n1, t_n2, t_n3]
+            t_n = np.append(0, np.sort(1 - d_abc))
+            # q_abc = [[0, 0, 0], [q_abc1], [q_abc2], [1, 1, 1]]
+            q_abc = (t_n[:, np.newaxis] >= 1 - d_abc).astype(int)
         else:
-            # Rising edge
-            tn_sw[1:4, 0] = np.sort(1 - d_abc)
-            tn_sw[0:3, 1] = tn_sw[1:4, 0]
-            q_abc = (tn_sw[:, 0] >= 1 - d_abc[:, np.newaxis]).astype(int)
+            t_n = np.append(0, np.sort(d_abc))
+            q_abc = (t_n[:, np.newaxis] < d_abc).astype(int)
+
+        # Durations of switching states: t_steps = [t0, t1, t2, t3]
+        t_steps = T_s*np.diff(t_n, append=1)
+
+        # Array of the switching state space vectors, q = [0, q1, q2, 0]
+        q = abc2complex(q_abc.T)
+
         # Change the carrier direction for the next call
-        self.falling_edge = not self.falling_edge
-        # Switching state space vector
-        q = abc2complex(q_abc)
-        return tn_sw, q
+        self.rising_edge = not self.rising_edge
+
+        # If needed, alternatively q_abc could be returned
+        return t_steps, q
 
 
 # %%
