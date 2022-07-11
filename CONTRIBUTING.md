@@ -6,4 +6,7 @@ The latest contributing guide is available in the repository at
 
 https://joonakukkonen.github.io/motulator/contributing.html
 
-There are many ways to contribute to motulator...
+Most common ways of contributing are the implementation of code or
+documentation. Other common ways of contributing are bug fixes and fixing
+of typos or other nuances in the documentation. Documentation can be found
+under the `docs/` directory.

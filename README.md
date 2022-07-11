@@ -44,6 +44,10 @@ This example applies the default settings. However, the drive system, controller
 
 Documentation is provided at <https://aalto-electric-drives.github.io/motulator/>
 
+Contributing
+---------------
+If you'd like to help us develop motulator, please have a look at these [guidelines](https://github.com/JoonaKukkonen/motulator/blob/doc-dev/CONTRIBUTING.md) first.
+
 Acknowledgement
 ---------------
 This project has been sponsored by ABB Oy. The example control methods included in this repository are based on published algorithms (available in textbooks and scientific articles). They do not present any proprietary control software.
