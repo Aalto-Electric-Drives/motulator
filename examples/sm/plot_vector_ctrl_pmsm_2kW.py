@@ -1,5 +1,5 @@
 """
-Vector-controlled 2.2-kW PMSM drive
+Vector-Controlled 2.2-kW PMSM Drive
 ===================================
 
 This example simulates sensorless vector control of a 2.2-kW PMSM drive.
@@ -20,19 +20,18 @@ base = mt.BaseValues(
     U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, p=3)
 
 # %%
-# Configure the system model. Enable PWM by uncommenting the line below.
+# Configure the system model.
 
 motor = mt.SynchronousMotor()
 mech = mt.Mechanics()
 conv = mt.Inverter()
-# conv = mt.PWMInverter()
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 # %%
 # Configure the control system.
 
 pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True)
-# pars.plot(base)  # Uncommenting this plot control look-up tables
+# pars.plot(base)  # Uncommenting this line plots control look-up tables
 ctrl = mt.SynchronousMotorVectorCtrl(pars)
 
 # %%
@@ -52,7 +51,7 @@ print(str(mdl)+'\n\n'+str(ctrl))
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, base=base, t_stop=4)
+sim = mt.Simulation(mdl, ctrl, base=base, enable_pwm=False, t_stop=4)
 start_time = time()  # Start the timer
 sim.simulate()
 # Print the execution time

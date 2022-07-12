@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains continuous-time models for mechanical subsystems.
+Continuous-time models for mechanical subsystems.
 
 """
 

@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains continuous-time models for synchronous motors.
+Continuous-time models for synchronous motors.
 
 The motor model can be parametrized to represent permanent-magnet synchronous
 motors and synchronous reluctance motors. Peak-valued complex space vectors are

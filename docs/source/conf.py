@@ -12,7 +12,7 @@
 #
 import os
 import sys
-# sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../..'))
 sys.path.insert(0, os.path.abspath('../../motulator'))
 
 # -- Project information -----------------------------------------------------
@@ -22,7 +22,7 @@ copyright = '2022, Aalto Electric Drives'
 author = 'Aalto Electric Drives'
 
 # The full version, including alpha/beta/rc tags
-release = '0'
+release = '0.0.6'
 
 # -- General configuration ---------------------------------------------------
 

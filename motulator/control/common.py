@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains common control functions and classes.
+Common control functions and classes.
 
 """
 import numpy as np
@@ -239,53 +239,13 @@ class RateLimiter:
 
 
 # %%
-class Delay:
+def datalogger(cls):
     """
-    Computational delay.
-
-    This models the compuational delay as a ring buffer.
+    Add datalog methods to a controller class.
 
     """
-
-    # pylint: disable=R0903
-    def __init__(self, length=1, elem=3):
-        """
-        Parameters
-        ----------
-        length : int, optional
-            Length of the buffer in samples. The default is 1.
-
-        """
-        self.data = length*[elem*[0]]  # Creates a zero list
-
-    def __call__(self, u):
-        """
-        Parameters
-        ----------
-        u : array_like, shape (elem,)
-            Input array.
-
-        Returns
-        -------
-        array_like, shape (elem,)
-            Output array.
-
-        """
-        # Add the latest value to the end of the list
-        self.data.append(u)
-        # Pop the first element and return it
-        return self.data.pop(0)
-
-
-# %%
-class Datalogger:
-    """
-    Datalogger for the control system.
-
-    """
-
-    def __init__(self):
-        self.data = Bunch()
+    # Add the data store
+    cls.data = Bunch()
 
     def save(self, data):
         """
@@ -313,3 +273,9 @@ class Datalogger:
         """
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
+
+    # Add new methods to the class
+    cls.save = save
+    cls.post_process = post_process
+
+    return cls

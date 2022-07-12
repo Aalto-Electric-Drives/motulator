@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains continuous-time models for synchronous motor drives.
+Continuous-time models for synchronous motor drives.
 
 Peak-valued complex space vectors are used. The default values correspond to a
 2.2-kW permanent-magnet synchronous motor.
@@ -13,7 +13,7 @@ import numpy as np
 from motulator.helpers import Bunch
 from motulator.model.sm import SynchronousMotor
 from motulator.model.mech import Mechanics
-from motulator.model.converter import Inverter, PWMInverter
+from motulator.model.converter import Inverter
 
 
 # %%
@@ -32,13 +32,13 @@ class SynchronousMotorDrive:
         Synchronous motor model.
     mech : Mechanics
         Mechanics model.
-    conv : Inverter | PWMInverter
+    conv : Inverter
         Inverter model.
 
     """
     motor: SynchronousMotor = SynchronousMotor()
     mech: Mechanics = Mechanics()
-    conv: Inverter | PWMInverter = Inverter()
+    conv: Inverter = Inverter()
     # Stores the solution data
     data: Bunch = field(repr=False, default_factory=Bunch)
     # Initial time

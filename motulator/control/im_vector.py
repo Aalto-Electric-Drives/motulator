@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains vector control methods for an induction motor drive.
+Vector control methods for induction motor drives.
 
 The algorithms are written based on the inverse-Γ model.
 
@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM, Delay, Datalogger
+from motulator.control.common import SpeedCtrl, PWM, datalogger
 
 
 # %%
@@ -30,7 +30,6 @@ class InductionMotorVectorCtrlPars:
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
-    delay: int = 1
     # Bandwidths
     alpha_c: float = 2*np.pi*200
     alpha_o: float = 2*np.pi*40  # Used only in the sensorless mode
@@ -50,7 +49,8 @@ class InductionMotorVectorCtrlPars:
     J: float = .015
 
 
-class InductionMotorVectorCtrl(Datalogger):
+@datalogger
+class InductionMotorVectorCtrl:
     """
     Vector control for an induction motor drive.
 
@@ -66,7 +66,6 @@ class InductionMotorVectorCtrl(Datalogger):
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars=InductionMotorVectorCtrlPars()):
-        super().__init__()
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -80,7 +79,6 @@ class InductionMotorVectorCtrl(Datalogger):
         else:
             self.observer = Observer(pars)
         self.pwm = PWM(pars)
-        self.delay = Delay(pars.delay)
         self.desc = pars.__repr__()
 
     def __call__(self, mdl):
@@ -143,6 +141,10 @@ class InductionMotorVectorCtrl(Datalogger):
         self.t += self.T_s
 
         return self.T_s, d_abc_ref
+
+    def save(self, data):
+        # pylint: disable=missing-function-docstring
+        pass
 
     def __repr__(self):
         return self.desc

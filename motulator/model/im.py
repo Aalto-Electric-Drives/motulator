@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains continuous-time models for induction motors.
+Continuous-time models for induction motors.
 
 Peak-valued complex space vectors are used. The space vector models are
 implemented in stator coordinates. The default values correspond to a 2.2-kW

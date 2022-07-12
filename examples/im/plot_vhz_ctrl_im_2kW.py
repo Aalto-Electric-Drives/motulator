@@ -1,5 +1,5 @@
 """
-V/Hz-controlled 2.2-kW induction motor drive
+V/Hz-Controlled 2.2-kW Induction Motor Drive
 ============================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
@@ -49,7 +49,7 @@ mdl.mech.tau_L_ext = lambda t: (t > 1.)*base.tau_nom
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, base=base, t_stop=1.5)
+sim = mt.Simulation(mdl, ctrl, base=base, enable_pwm=True, t_stop=1.5)
 start_time = time()  # Start the timer
 sim.simulate()
 # Print the execution time

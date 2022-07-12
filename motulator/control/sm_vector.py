@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains vector control for synchronous motor drives.
+Vector control for synchronous motor drives.
 
 """
 from __future__ import annotations
@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM, Datalogger, Delay
+from motulator.control.common import SpeedCtrl, PWM, datalogger
 from motulator.control.sm_torque import TorqueCharacteristics
 
 
@@ -28,7 +28,6 @@ class SynchronousMotorVectorCtrlPars:
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
-    delay: int = 1
     # Bandwidths
     alpha_c: float = 2*np.pi*200
     alpha_fw: float = 2*np.pi*20
@@ -83,7 +82,8 @@ class SynchronousMotorVectorCtrlPars:
         # tq.plot_flux_loci(self.i_s_max, base)
 
 
-class SynchronousMotorVectorCtrl(Datalogger):
+@datalogger
+class SynchronousMotorVectorCtrl:
     """
     Vector control for a synchronous motor drive.
 
@@ -100,7 +100,6 @@ class SynchronousMotorVectorCtrl(Datalogger):
             Control parameters.
 
         """
-        super().__init__()
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -111,7 +110,6 @@ class SynchronousMotorVectorCtrl(Datalogger):
         self.current_ref = CurrentRef(pars)
         self.observer = SensorlessObserver(pars)
         self.pwm = PWM(pars)
-        self.delay = Delay(pars.delay)
         if pars.sensorless:
             self.observer = SensorlessObserver(pars)
         else:
@@ -183,6 +181,10 @@ class SynchronousMotorVectorCtrl(Datalogger):
         self.t += self.T_s
 
         return self.T_s, d_abc_ref
+
+    def save(self, data):
+        # pylint: disable=missing-function-docstring
+        pass
 
     def __repr__(self):
         return self.desc

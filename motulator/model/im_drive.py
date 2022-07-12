@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains continuous-time models for induction motor drives.
+Continuous-time models for induction motor drives.
 
 Peak-valued complex space vectors are used. The space vector models are
 implemented in stator coordinates. The default values correspond to a 2.2-kW
@@ -14,7 +14,7 @@ import numpy as np
 from motulator.helpers import abc2complex, Bunch
 from motulator.model.im import InductionMotor, InductionMotorSaturated
 from motulator.model.mech import Mechanics
-from motulator.model.converter import Inverter, PWMInverter, FrequencyConverter
+from motulator.model.converter import Inverter, FrequencyConverter
 
 
 # %%
@@ -33,13 +33,13 @@ class InductionMotorDrive:
         Induction motor model.
     mech : Mechanics
         Mechanics model.
-    conv : Inverter | PWMInverter
+    conv : Inverter
         Inverter model.
 
     """
     motor: InductionMotor | InductionMotorSaturated = InductionMotor()
     mech: Mechanics = Mechanics()
-    conv: Inverter | PWMInverter = Inverter()
+    conv: Inverter = Inverter()
     # Stores the solution data
     data: Bunch = field(repr=False, default_factory=Bunch)
     # Initial time

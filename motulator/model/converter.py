@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains power converter models.
+Power converter models.
 
 An inverter with constant DC-bus voltage and a frequency converter with a diode
 front-end rectifier are modeled. Complex space vectors are used also for duty
@@ -12,7 +12,6 @@ vectors are in stationary coordinates. The default values correspond to a
 from __future__ import annotations
 from dataclasses import dataclass, field
 import numpy as np
-from motulator.helpers import abc2complex
 
 
 # %%
@@ -28,9 +27,7 @@ class Inverter:
 
     """
     u_dc0: float = 540
-    # Here `q` is the duty ratio vector. In the subclasses where the PWM is
-    # modeled, the variable `q` refers to the switching state vector.
-    q: complex = field(repr=False, default=0j)
+    q: complex = field(repr=False, default=0j)  # Switching state vector
 
     @staticmethod
     def ac_voltage(q, u_dc):
@@ -40,7 +37,7 @@ class Inverter:
         Parameters
         ----------
         q : complex
-            Duty ratio vector (switching state vector in the subclasses).
+            Switching state vector.
         u_dc : float
             DC-bus voltage.
 
@@ -61,7 +58,7 @@ class Inverter:
         Parameters
         ----------
         q : complex
-            Duty ratio vector (switching state vector in subclasses).
+            Switching state vector.
         i_ac : complex
             AC-side current.
 
@@ -73,32 +70,6 @@ class Inverter:
         """
         i_dc = 1.5*np.real(q*np.conj(i_ac))
         return i_dc
-
-    @staticmethod
-    def pwm(T_s, d_abc):
-        """
-        Zero-order hold of the duty ratio over the sampling period.
-
-        The output arrays are compatible with the solver.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period.
-        d_abc : array_like of floats, shape (3,)
-            Duty ratios in the range [0, 1].
-
-        Returns
-        -------
-        t_step : ndarray, shape (1,)
-            Sampling period as an array compatible with the solver.
-        q : complex ndarray, shape (1,)
-            Duty ratio vector as an array compatible with the solver.
-
-        """
-        t_step = np.array([T_s])
-        q = np.array([abc2complex(d_abc)])
-        return t_step, q
 
     def meas_dc_voltage(self):
         """
@@ -115,82 +86,11 @@ class Inverter:
 
 # %%
 @dataclass
-class PWMInverter(Inverter):
-    """
-    PWM inverter with constant DC-bus voltage.
-
-    This extends the Inverter class with pulse-width modulation.
-
-    Parameters
-    ----------
-    N : int, optional
-        Amount of PWM quantization levels. The default is 2**12.
-
-    """
-    N: int = 2**12
-    # Stores the carrier direction
-    rising_edge: bool = field(repr=False, default=True)
-
-    def pwm(self, T_s, d_abc):
-        """
-        Compute the the switching states and their durations.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (either half or full carrier period).
-        d_abc : array_like of floats, shape (3,)
-            Duty ratios in the range [0, 1].
-
-        Returns
-        -------
-        t_steps : ndarray, shape (4,)
-            Switching state durations, `[t0, t1, t2, t3]`.
-        q : complex ndarray, shape (4,)
-            Switching state vectors, `[0, q1, q2, 0]`, where `q1` and `q2` are
-            active vectors.
-
-        Notes
-        -----
-        Switching instants split the sampling period `T_s` into
-        four subperiods. No switching (e.g. `d_a == 0` or `d_a == 1`) or
-        simultaneous switching instants (e.g `d_a == d_b`) lead to zero length
-        of the corresponding subperiods.
-
-        """
-        # Quantize the duty ratios to N levels
-        d_abc = np.round(self.N*np.asarray(d_abc))/self.N
-
-        # Normalized switching instants and switching states
-        if self.rising_edge:
-            # t_n = [0, t_n1, t_n2, t_n3]
-            t_n = np.append(0, np.sort(1 - d_abc))
-            # q_abc = [[0, 0, 0], [q_abc1], [q_abc2], [1, 1, 1]]
-            q_abc = (t_n[:, np.newaxis] >= 1 - d_abc).astype(int)
-        else:
-            t_n = np.append(0, np.sort(d_abc))
-            q_abc = (t_n[:, np.newaxis] < d_abc).astype(int)
-
-        # Durations of switching states: t_steps = [t0, t1, t2, t3]
-        t_steps = T_s*np.diff(t_n, append=1)
-
-        # Array of the switching state space vectors, q = [0, q1, q2, 0]
-        q = abc2complex(q_abc.T)
-
-        # Change the carrier direction for the next call
-        self.rising_edge = not self.rising_edge
-
-        # If needed, alternatively q_abc could be returned
-        return t_steps, q
-
-
-# %%
-@dataclass
-class FrequencyConverter(PWMInverter):
+class FrequencyConverter(Inverter):
     """
     Frequency converter.
 
-    This extends the PWMInverter class with models for a strong grid, a
+    This extends the Inverter class with models for a strong grid, a
     three-phase diode-bridge rectifier, an LC filter, and a three-phase
     inverter.
 

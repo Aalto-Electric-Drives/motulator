@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 '''
-This module contains V/Hz control for induction motor drives.
+V/Hz control for induction motor drives.
 
 The method is similar to [1]_. Open-loop V/Hz control can be obtained as a
 special case by choosing::
@@ -27,7 +27,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
-from motulator.control.common import PWM, RateLimiter, Delay, Datalogger
+from motulator.control.common import PWM, RateLimiter, datalogger
 from motulator.helpers import abc2complex, Bunch
 
 
@@ -44,7 +44,6 @@ class InductionMotorVHzCtrlPars:
         repr=False, default=lambda t: (t > .2)*(2*np.pi*50))
     sensorless: bool = field(repr=False, default=True)  # Always sensorless
     T_s: float = 250e-6
-    delay: int = 1
     psi_s_nom: float = 1.04  # 1 p.u.
     rate_limit: float = 2*np.pi*120
     # Motor parameter estimates
@@ -57,7 +56,8 @@ class InductionMotorVHzCtrlPars:
 
 
 # %%
-class InductionMotorVHzCtrl(Datalogger):
+@datalogger
+class InductionMotorVHzCtrl:
     """
     V/Hz control with the stator current feedback.
 
@@ -70,7 +70,6 @@ class InductionMotorVHzCtrl(Datalogger):
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-        super().__init__()
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -78,7 +77,6 @@ class InductionMotorVHzCtrl(Datalogger):
         # Instantiate classes
         self.pwm = PWM(pars)
         self.rate_limiter = RateLimiter(pars)
-        self.delay = Delay(pars.delay)
         # Parameters
         self.k_u = pars.k_u
         self.k_w = pars.k_w
@@ -188,6 +186,10 @@ class InductionMotorVHzCtrl(Datalogger):
         u_s_ref = (self.R_s*i_s_ref0 + 1j*w_s*self.psi_s_ref
                    + k*(self.i_s_ref - i_s))
         return u_s_ref
+
+    def save(self, data):
+        # pylint: disable=missing-function-docstring
+        pass
 
     def __repr__(self):
         return self.desc

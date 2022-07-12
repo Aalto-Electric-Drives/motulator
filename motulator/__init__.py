@@ -16,7 +16,6 @@ from motulator.simulation import Simulation
 from motulator.model.mech import Mechanics
 from motulator.model.converter import (
     Inverter,
-    PWMInverter,
     FrequencyConverter)
 from motulator.model.im import (
     InductionMotor,

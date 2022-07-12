@@ -1,7 +1,7 @@
 # pylint: disable=C0103
 # pylint: disable=R0903
 """
-This module contains various helper functions and classes.
+Helper functions and classes.
 
 """
 # %%
