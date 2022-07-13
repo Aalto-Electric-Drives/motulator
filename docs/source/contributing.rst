@@ -14,11 +14,10 @@ Ways to contribute
 ------------------
 
 Most common ways of contributing are the implementation of code or
-documentation. Other common ways of contributing are bug fixes and fixing
-of typos or other nuances in the documentation. Bug triaging is also a
-helpful contribution to the project. We'd also like to hear about your
-suggestions, so if you wish to see a feature implemented, feel free to open
-an `issue
+documentation. Other common ways of contributing are bug triaging and
+fixing of typos or other nuances in the documentation. We'd also like
+to hear about your suggestions, so if you wish to see a feature
+implemented, feel free to open an `issue
 <https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues>`__
 on GitHub.
 
