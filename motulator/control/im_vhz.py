@@ -27,7 +27,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
-from motulator.control.common import PWM, RateLimiter, datalogger
+from motulator.control.common import PWM, RateLimiter
 from motulator.helpers import abc2complex, Bunch
 
 
@@ -56,7 +56,6 @@ class InductionMotorVHzCtrlPars:
 
 
 # %%
-@datalogger
 class InductionMotorVHzCtrl:
     """
     V/Hz control with the stator current feedback.
@@ -92,6 +91,7 @@ class InductionMotorVHzCtrl:
         self.i_s_ref = 0j
         self.theta_s = 0
         self.w_r_ref = 0
+        self.data = Bunch()
         self.desc = pars.__repr__()
 
     def __call__(self, mdl):
@@ -139,7 +139,7 @@ class InductionMotorVHzCtrl:
         data = Bunch(i_s_ref=self.i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
                      w_r=w_r, w_s=w_s, psi_s_ref=self.psi_s_ref,
                      theta_s=self.theta_s, u_dc=u_dc, t=self.t)
-        self.save(data)
+        self._save(data)
 
         # Update the states
         self.i_s_ref += self.T_s*self.alpha_i*(i_s - self.i_s_ref)
@@ -187,9 +187,17 @@ class InductionMotorVHzCtrl:
                    + k*(self.i_s_ref - i_s))
         return u_s_ref
 
-    def save(self, data):
-        # pylint: disable=missing-function-docstring
-        pass
+    def _save(self, data):
+        for key, value in data.items():
+            self.data.setdefault(key, []).extend([value])
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format.
+
+        """
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
 
     def __repr__(self):
         return self.desc

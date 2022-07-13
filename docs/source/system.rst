@@ -1,7 +1,7 @@
-Sampled-Data System
-===================
+Motor Drive System
+==================
 
-Motor drives are sampled-data systems, consisting of continuous-time systems and discrete-time systems as well as the interfaces between them [1]_. The figure below shows a generic example system. The same architecture is used in *motulator*.
+Motor drives are sampled-data systems, consisting of continuous-time systems and discrete-time systems as well as the interfaces between them [1]_, [2]_. The figure below shows a generic example system. The same architecture is used in *motulator*.
 
 .. figure:: figs/system.svg
    :width: 100%
@@ -20,4 +20,6 @@ Digital control systems typically have a computational delay of one sampling per
 References
 ----------
 
-.. [1] Franklin, Powell, Workman, Digital Control of Dynamic Systems. Menlo Park, CA, USA: Addison-Wesley, 1997
+.. [1] Franklin, Powell, Workman, "Digital Control of Dynamic Systems," Menlo Park, CA, USA: Addison-Wesley, 1997
+
+.. [2] Buso, Mattavelli, "Digital Control in Power Electronics," 2nd ed.,  Morgan & Claypool, 2015, https://doi.org/10.2200/S00637ED1V01Y201503PEL007

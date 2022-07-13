@@ -5,7 +5,7 @@ Common control functions and classes.
 """
 import numpy as np
 
-from motulator.helpers import complex2abc, abc2complex, Bunch
+from motulator.helpers import complex2abc, abc2complex
 
 
 # %%
@@ -236,46 +236,3 @@ class RateLimiter:
         # Store the limited output
         self.y_old = y
         return y
-
-
-# %%
-def datalogger(cls):
-    """
-    Add datalog methods to a controller class.
-
-    """
-    # Add the data store
-    cls.data = Bunch()
-
-    def save(self, data):
-        """
-        Save the solution.
-
-        Parameters
-        ----------
-        data : Bunch object
-            Data to be saved.
-
-        """
-        try:
-            for key, value in data.items():
-                self.data[key].extend([value])
-        except KeyError:
-            # Lists do not exist, initialize them
-            for key, value in data.items():
-                self.data[key] = []
-                self.data[key].extend([value])
-
-    def post_process(self):
-        """
-        Transform the lists to the ndarray format.
-
-        """
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
-
-    # Add new methods to the class
-    cls.save = save
-    cls.post_process = post_process
-
-    return cls

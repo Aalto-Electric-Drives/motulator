@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM, datalogger
+from motulator.control.common import SpeedCtrl, PWM
 from motulator.control.sm_torque import TorqueCharacteristics
 
 
@@ -82,7 +82,7 @@ class SynchronousMotorVectorCtrlPars:
         # tq.plot_flux_loci(self.i_s_max, base)
 
 
-@datalogger
+# %%
 class SynchronousMotorVectorCtrl:
     """
     Vector control for a synchronous motor drive.
@@ -114,6 +114,7 @@ class SynchronousMotorVectorCtrl:
             self.observer = SensorlessObserver(pars)
         else:
             self.observer = None
+        self.data = Bunch()
         self.desc = pars.__repr__()
 
     def __call__(self, mdl):
@@ -169,7 +170,7 @@ class SynchronousMotorVectorCtrl:
         data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, psi_s=psi_s,
                      w_m_ref=w_m_ref, w_m=w_m, theta_m=theta_m,
                      u_dc=u_dc, tau_M=tau_M, t=self.t)
-        self.save(data)
+        self._save(data)
 
         # Update states
         if self.sensorless:
@@ -182,9 +183,17 @@ class SynchronousMotorVectorCtrl:
 
         return self.T_s, d_abc_ref
 
-    def save(self, data):
-        # pylint: disable=missing-function-docstring
-        pass
+    def _save(self, data):
+        for key, value in data.items():
+            self.data.setdefault(key, []).extend([value])
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format.
+
+        """
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
 
     def __repr__(self):
         return self.desc

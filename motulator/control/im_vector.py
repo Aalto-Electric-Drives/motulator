@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM, datalogger
+from motulator.control.common import SpeedCtrl, PWM
 
 
 # %%
@@ -49,7 +49,7 @@ class InductionMotorVectorCtrlPars:
     J: float = .015
 
 
-@datalogger
+# %%
 class InductionMotorVectorCtrl:
     """
     Vector control for an induction motor drive.
@@ -79,6 +79,7 @@ class InductionMotorVectorCtrl:
         else:
             self.observer = Observer(pars)
         self.pwm = PWM(pars)
+        self.data = Bunch()
         self.desc = pars.__repr__()
 
     def __call__(self, mdl):
@@ -130,7 +131,7 @@ class InductionMotorVectorCtrl:
         data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
                      w_m=w_m, w_s=w_s, psi_R=psi_R, theta_s=theta_s,
                      u_dc=u_dc, tau_M=tau_M, t=self.t)
-        self.save(data)
+        self._save(data)
 
         # Update the states
         self.pwm.update(u_s_ref_lim)
@@ -142,9 +143,17 @@ class InductionMotorVectorCtrl:
 
         return self.T_s, d_abc_ref
 
-    def save(self, data):
-        # pylint: disable=missing-function-docstring
-        pass
+    def _save(self, data):
+        for key, value in data.items():
+            self.data.setdefault(key, []).extend([value])
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format.
+
+        """
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
 
     def __repr__(self):
         return self.desc

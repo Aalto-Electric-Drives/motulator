@@ -29,7 +29,7 @@ release = '0.0.7'
 # This value contains a list of modules to be mocked up.
 # This is useful when some external dependencies are not met at build time and break the building process.
 # You may only specify the root package of the dependencies themselves and omit the sub-modules:
-autodoc_mock_imports = ['numpy', 'sklearn', 'matplotlib', 'scipy', 'cycler']
+autodoc_mock_imports = ['numpy', 'matplotlib', 'scipy', 'cycler']
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
