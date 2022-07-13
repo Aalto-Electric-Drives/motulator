@@ -1,6 +1,6 @@
 # pylint: disable=C0103
 """
-This module contains vector control for synchronous motor drives.
+Vector control for synchronous motor drives.
 
 """
 from __future__ import annotations
@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM, Datalogger, Delay
+from motulator.control.common import SpeedCtrl, PWM
 from motulator.control.sm_torque import TorqueCharacteristics
 
 
@@ -28,7 +28,6 @@ class SynchronousMotorVectorCtrlPars:
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
-    delay: int = 1
     # Bandwidths
     alpha_c: float = 2*np.pi*200
     alpha_fw: float = 2*np.pi*20
@@ -83,7 +82,8 @@ class SynchronousMotorVectorCtrlPars:
         # tq.plot_flux_loci(self.i_s_max, base)
 
 
-class SynchronousMotorVectorCtrl(Datalogger):
+# %%
+class SynchronousMotorVectorCtrl:
     """
     Vector control for a synchronous motor drive.
 
@@ -100,7 +100,6 @@ class SynchronousMotorVectorCtrl(Datalogger):
             Control parameters.
 
         """
-        super().__init__()
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -111,52 +110,55 @@ class SynchronousMotorVectorCtrl(Datalogger):
         self.current_ref = CurrentRef(pars)
         self.observer = SensorlessObserver(pars)
         self.pwm = PWM(pars)
-        self.delay = Delay(pars.delay)
         if pars.sensorless:
             self.observer = SensorlessObserver(pars)
         else:
             self.observer = None
+        self.data = Bunch()
         self.desc = pars.__repr__()
 
-    def __call__(self, i_s_abc, u_dc, *args):
+    def __call__(self, mdl):
         """
         Main control loop.
 
         Parameters
         ----------
-        i_s_abc : ndarray, shape (3,)
-            Phase currents.
-        u_dc : float
-            DC-bus voltage.
-        w_M : float, optional
-            Rotor speed (in mechanical rad/s), for the sensored control.
-        theta_M : float, optional
-            Rotor angle (in mechanical rad), for the sensored control.
+        mdl : SynchronousMotorDrive
+            Continuous-time model of a synchronous motor drive for getting the
+            feedback signals.
 
         Returns
         -------
-        d_abc_ref : ndarray, shape (3,)
-            Duty ratio references.
         T_s : float
             Sampling period.
+        d_abc_ref : ndarray, shape (3,)
+            Duty ratio references.
 
         """
-        # Speed reference
+        # Get the speed reference
         w_m_ref = self.w_m_ref(self.t)
 
-        # Get the states
-        u_s = self.pwm.realized_voltage
-        if self.sensorless:
-            w_m, theta_m = self.observer.w_m, self.observer.theta_m
-            i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
-            # Needed only for the current controller without integral action
-            psi_s = self.observer.psi_s
-        else:
-            w_m = self.p*args[0]
-            theta_m = self.p*np.mod(args[1], 2*np.pi)
-            i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
-            psi_s = np.nan
+        # Measure the feedback signals
+        i_s_abc = mdl.motor.meas_currents()  # Phase currents
+        u_dc = mdl.conv.meas_dc_voltage()  # DC-bus voltage
+
+        if not self.sensorless:
+            # Measure the rotor speed and position
+            w_m = self.p*mdl.mech.meas_speed()
+            theta_m = self.p*np.mod(mdl.mech.meas_position(), 2*np.pi)
             # psi_s = self.L_d*i_s.real + self.psi_f + 1j*self.L_q*i_s.imag
+            psi_s = np.nan  # Flux not estimated
+        else:
+            # Get the rotor speed and position estimates
+            w_m, theta_m = self.observer.w_m, self.observer.theta_m
+            # Get the flux estimate (not used)
+            psi_s = self.observer.psi_s
+
+        # Get the realized voltage from the PWM method
+        u_s = self.pwm.realized_voltage
+
+        # Current vector in estimated rotor coordinates
+        i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
 
         # Outputs
         tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
@@ -168,7 +170,7 @@ class SynchronousMotorVectorCtrl(Datalogger):
         data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, psi_s=psi_s,
                      w_m_ref=w_m_ref, w_m=w_m, theta_m=theta_m,
                      u_dc=u_dc, tau_M=tau_M, t=self.t)
-        self.save(data)
+        self._save(data)
 
         # Update states
         if self.sensorless:
@@ -179,7 +181,19 @@ class SynchronousMotorVectorCtrl(Datalogger):
         self.pwm.update(u_s_ref_lim)
         self.t += self.T_s
 
-        return d_abc_ref, self.T_s
+        return self.T_s, d_abc_ref
+
+    def _save(self, data):
+        for key, value in data.items():
+            self.data.setdefault(key, []).extend([value])
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format.
+
+        """
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
 
     def __repr__(self):
         return self.desc

@@ -1,5 +1,5 @@
 """
-Vector-controlled 6.7-kW SyRM drive
+Vector-Controlled 6.7-kW SyRM Drive
 ===================================
 
 This example simulates sensorless vector control of a 6.7-kW SyRM drive.
@@ -7,15 +7,15 @@ This example simulates sensorless vector control of a 6.7-kW SyRM drive.
 """
 
 # %%
-# Import the packages and start the timer.
+# Import the packages.
 
 from time import time
 import numpy as np
 import motulator as mt
-start_time = time()
 
 # %%
 # Compute base values based on the nominal values (just for figures).
+
 base = mt.BaseValues(
     U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, p=2)
 
@@ -32,7 +32,7 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 pars = mt.SynchronousMotorVectorCtrlPars(
     sensorless=True,
-    T_s=250e-6, delay=1,
+    T_s=250e-6,
     alpha_c=2*np.pi*200, alpha_fw=2*np.pi*20, alpha_s=2*np.pi*4,
     w_o=2*np.pi*80,  # Used only in the sensorless mode
     tau_M_max=2*base.tau_nom,
@@ -61,7 +61,8 @@ print(str(mdl)+'\n\n'+str(ctrl))
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, base=base, t_stop=4)
+sim = mt.Simulation(mdl, ctrl, base=base, enable_pwm=False, t_stop=4)
+start_time = time()  # Start the timer
 sim.simulate()
 # Print the execution time
 print('\nExecution time: {:.2f} s'.format((time() - start_time)))

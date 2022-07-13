@@ -20,6 +20,7 @@ This open-source software includes simulation models for an induction motor, a s
    :name: models
    :maxdepth: 2
 
+   system
    induction_motor
    synchronous_motor
    mechanics

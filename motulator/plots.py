@@ -1,7 +1,7 @@
 # pylint: disable=C0103
 # pylint: disable=R0903
 """
-This module contains example plotting scripts.
+Example plotting scripts.
 
 """
 # %%

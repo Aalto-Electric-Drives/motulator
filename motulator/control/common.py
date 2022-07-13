@@ -1,11 +1,11 @@
 # pylint: disable=C0103
 """
-This module contains common control functions and classes.
+Common control functions and classes.
 
 """
 import numpy as np
 
-from motulator.helpers import complex2abc, abc2complex, Bunch
+from motulator.helpers import complex2abc, abc2complex
 
 
 # %%
@@ -236,80 +236,3 @@ class RateLimiter:
         # Store the limited output
         self.y_old = y
         return y
-
-
-# %%
-class Delay:
-    """
-    Computational delay.
-
-    This models the compuational delay as a ring buffer.
-
-    """
-
-    # pylint: disable=R0903
-    def __init__(self, length=1, elem=3):
-        """
-        Parameters
-        ----------
-        length : int, optional
-            Length of the buffer in samples. The default is 1.
-
-        """
-        self.data = length*[elem*[0]]  # Creates a zero list
-
-    def __call__(self, u):
-        """
-        Parameters
-        ----------
-        u : array_like, shape (elem,)
-            Input array.
-
-        Returns
-        -------
-        array_like, shape (elem,)
-            Output array.
-
-        """
-        # Add the latest value to the end of the list
-        self.data.append(u)
-        # Pop the first element and return it
-        return self.data.pop(0)
-
-
-# %%
-class Datalogger:
-    """
-    Datalogger for the control system.
-
-    """
-
-    def __init__(self):
-        self.data = Bunch()
-
-    def save(self, data):
-        """
-        Save the solution.
-
-        Parameters
-        ----------
-        data : Bunch object
-            Data to be saved.
-
-        """
-        try:
-            for key, value in data.items():
-                self.data[key].extend([value])
-        except KeyError:
-            # Lists do not exist, initialize them
-            for key, value in data.items():
-                self.data[key] = []
-                self.data[key].extend([value])
-
-    def post_process(self):
-        """
-        Transform the lists to the ndarray format.
-
-        """
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])

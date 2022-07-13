@@ -1,6 +1,8 @@
 # pylint: disable=C0103
 """
-This module contains vector control methods for an induction motor drive.
+Vector control methods for induction motor drives.
+
+The algorithms are written based on the inverse-Γ model.
 
 """
 from __future__ import annotations
@@ -9,7 +11,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM, Delay, Datalogger
+from motulator.control.common import SpeedCtrl, PWM
 
 
 # %%
@@ -28,7 +30,6 @@ class InductionMotorVectorCtrlPars:
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
-    delay: int = 1
     # Bandwidths
     alpha_c: float = 2*np.pi*200
     alpha_o: float = 2*np.pi*40  # Used only in the sensorless mode
@@ -39,7 +40,7 @@ class InductionMotorVectorCtrlPars:
     # Nominal values
     psi_R_nom: float = .9
     u_dc_nom: float = 540
-    # Motor parameter estimates
+    # Motor parameter estimates (inverse-Γ model)
     R_s: float = 3.7
     R_R: float = 2.1
     L_sgm: float = .021
@@ -48,7 +49,8 @@ class InductionMotorVectorCtrlPars:
     J: float = .015
 
 
-class InductionMotorVectorCtrl(Datalogger):
+# %%
+class InductionMotorVectorCtrl:
     """
     Vector control for an induction motor drive.
 
@@ -64,7 +66,6 @@ class InductionMotorVectorCtrl(Datalogger):
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars=InductionMotorVectorCtrlPars()):
-        super().__init__()
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -78,41 +79,43 @@ class InductionMotorVectorCtrl(Datalogger):
         else:
             self.observer = Observer(pars)
         self.pwm = PWM(pars)
-        self.delay = Delay(pars.delay)
+        self.data = Bunch()
         self.desc = pars.__repr__()
 
-    def __call__(self, i_s_abc, u_dc, *args):
+    def __call__(self, mdl):
         """
         Main control loop.
 
         Parameters
         ----------
-        i_s_abc : ndarray, shape (3,)
-            Phase currents.
-        u_dc : float
-            DC-bus voltage.
-        w_M : float, optional
-            Rotor speed (in mechanical rad/s), only for the sensored control.
+        mdl : InductionMotorDrive
+            Continuous-time model of an induction motor drive for getting the
+            feedback signals.
 
         Returns
         -------
-        d_abc_ref : ndarray, shape (3,)
-            Duty ratio references.
         T_s : float
             Sampling period.
+        d_abc_ref : ndarray, shape (3,)
+            Duty ratio references.
 
         """
-        # Speed reference
+        # Get the speed reference
         w_m_ref = self.w_m_ref(self.t)
 
-        # States
+        # Measure the feedback signals
+        i_s_abc = mdl.motor.meas_currents()  # Phase currents
+        u_dc = mdl.conv.meas_dc_voltage()  # DC-bus voltage
+
+        if not self.sensorless:
+            w_m = self.p*mdl.mech.meas_speed()  # Rotor speed
+        else:
+            w_m = self.observer.w_m  # Get the estimated speed
+
+        # Get the states
         u_s = self.pwm.realized_voltage
         psi_R = self.observer.psi_R
         theta_s = self.observer.theta_s
-        if self.sensorless:
-            w_m = self.observer.w_m
-        else:
-            w_m = self.p*args[0]
 
         # Space vector and coordinate transformation
         i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
@@ -128,7 +131,7 @@ class InductionMotorVectorCtrl(Datalogger):
         data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
                      w_m=w_m, w_s=w_s, psi_R=psi_R, theta_s=theta_s,
                      u_dc=u_dc, tau_M=tau_M, t=self.t)
-        self.save(data)
+        self._save(data)
 
         # Update the states
         self.pwm.update(u_s_ref_lim)
@@ -138,7 +141,19 @@ class InductionMotorVectorCtrl(Datalogger):
         self.observer.update(i_s, w_s)
         self.t += self.T_s
 
-        return d_abc_ref, self.T_s
+        return self.T_s, d_abc_ref
+
+    def _save(self, data):
+        for key, value in data.items():
+            self.data.setdefault(key, []).extend([value])
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format.
+
+        """
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
 
     def __repr__(self):
         return self.desc
@@ -241,7 +256,7 @@ class CurrentRef:
         ----------
         u_s_ref : complex
             Unlimited stator voltage reference.
-        u_dc : float.
+        u_dc : float
             DC-bus voltage.
 
         """
