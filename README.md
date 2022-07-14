@@ -2,9 +2,9 @@
 
 Introduction
 ------------
-This open-source software includes simulation models for an induction motor, a synchronous reluctance motor, and a permanent-magnet synchronous motor. The motor models are simulated in the continuous-time domain while the control algorithms run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from scipy.integrate.solve_ivp. Simple control algorithms are provided as examples. 
+This open-source software includes simulation models for an induction motor, a synchronous reluctance motor, and a permanent-magnet synchronous motor. The motor models are simulated in the continuous-time domain while the control algorithms run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from scipy.integrate.solve_ivp. Simple control algorithms are provided as examples. The documentation is available here:
 
-<img src="pwm.png" alt="PWM waveforms" width="320"/><img src="pmsm.png" alt="Speed and torque waveforms" width="320"/>
+https://aalto-electric-drives.github.io/motulator/
 
 Installation
 ------------
@@ -36,11 +36,11 @@ sim = mt.Simulation(mdl, ctrl)
 sim.simulate()
 mt.plot(sim)
 ```
-This example applies the default settings. However, the drive system, controller, reference sequences etc. are easy to configure, see the folder `examples` for example scripts. New system models and controllers can be developed using the existing ones as templates. More features will be added later.
+This example applies the default settings. The drive system, controller, reference sequences etc. are easy to configure. The example scripts and Jupyter notebooks can be downloaded here:
 
-The documentation is available here:
+https://aalto-electric-drives.github.io/motulator/auto_examples/index.html
 
-https://aalto-electric-drives.github.io/motulator/
+New system models and controllers can be developed using the existing ones as templates. 
 
 Acknowledgement
 ---------------
