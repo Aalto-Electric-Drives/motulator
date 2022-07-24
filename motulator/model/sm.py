@@ -153,15 +153,23 @@ class SynchronousMotorSaturated(SynchronousMotor):
     a_q0 : float
         Nonnegative parameter of the saturation model. In the magnetically
         linear case, `a_q0 = 1/L_q`.
-    a_dd, S : floats
-        Nonnegative constants defining the d-axis self-saturation. In the
-        magnetically linear case, `a_dd = 0`.
-    a_qq, T: floats
-        Nonnegative constants defining the q-axis self-saturation. In the
-        magnetically linear case, `a_qq = 0`.
-    a_dq, U, V : floats
-        Nonnegative constants defining the cross-saturation. In the
-        magnetically linear case, `a_dq = 0`.
+    a_dd : float
+        Nonnegative constant defining the d-axis self-saturation together with
+        `S`. In the magnetically linear case, `a_dd = 0`.
+    a_qq : float
+        Nonnegative constant defining the q-axis self-saturation together with
+        `T`. In the magnetically linear case, `a_qq = 0`.
+    a_dq : float
+        Nonnegative constants defining the cross-saturation together with `U`
+        and `V`. In the magnetically linear case, `a_dq = 0`.
+    S : float
+        Nonnegative constant defining the d-axis self-saturation.
+    T : float
+        Nonnegative constant defining the q-axis self-saturation.
+    U : float
+        Nonnegative constant defining the cross-saturation.
+    V : float
+        Nonnegative constant defining the cross-saturation.
     mech : Mechanics
         Model of the mechanical subsystem, needed only for the coordinate
         transformation in the measure_currents method.
