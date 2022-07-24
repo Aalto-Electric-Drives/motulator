@@ -30,8 +30,8 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # %%
 # Configure the control system.
 
-pars = mt.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars()
-ctrl = mt.control.sm_flux_vector.SynchronousMotorFluxVectorCtrl(pars)
+pars = mt.SynchronousMotorFluxVectorCtrlPars()
+ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 
 # %%
 # Set the speed reference and the external load torque.

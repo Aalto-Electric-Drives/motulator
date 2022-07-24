@@ -35,7 +35,7 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # %%
 # Configure the control system.
 
-pars = mt.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars(
+pars = mt.SynchronousMotorFluxVectorCtrlPars(
     sensorless=True,
     T_s=250e-6,
     # Disable MTPA since the control system does not consider the saturation
@@ -47,7 +47,7 @@ pars = mt.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars(
     tau_M_max=2*base.tau_nom, i_s_max=2*base.i,
     R_s=.54, L_d=41.5e-3*.9, L_q=6.2e-3, psi_f=0, p=2, J=.015,
     w_o=2*np.pi*40, zeta_inf=.2)
-ctrl = mt.control.sm_flux_vector.SynchronousMotorFluxVectorCtrl(pars)
+ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 
 # %%
 # Set the speed reference and the external load torque.
