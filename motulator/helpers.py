@@ -1,5 +1,4 @@
-# pylint: disable=C0103
-# pylint: disable=R0903
+# pylint: disable=invalid-name
 """
 Helper functions and classes.
 
@@ -218,7 +217,6 @@ class Step:
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 # ----------------------------------------------------------------------------
-# pylint: disable=raise-missing-from
 class Bunch(dict):
     """
     Container object exposing keys as attributes.
@@ -256,6 +254,7 @@ class Bunch(dict):
         try:
             return self[key]
         except KeyError:
+            # pylint: disable=raise-missing-from
             raise AttributeError(key)
 
     def __setstate__(self, state):

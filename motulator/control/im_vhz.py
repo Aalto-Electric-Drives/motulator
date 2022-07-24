@@ -42,7 +42,6 @@ class InductionMotorVHzCtrlPars:
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
         repr=False, default=lambda t: (t > .2)*(2*np.pi*50))
-    sensorless: bool = field(repr=False, default=True)  # Always sensorless
     T_s: float = 250e-6
     psi_s_nom: float = 1.04  # 1 p.u.
     rate_limit: float = 2*np.pi*120
@@ -72,7 +71,6 @@ class InductionMotorVHzCtrl:
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
-        self.sensorless = True
         # Instantiate classes
         self.pwm = PWM(pars)
         self.rate_limiter = RateLimiter(pars)
@@ -91,8 +89,8 @@ class InductionMotorVHzCtrl:
         self.i_s_ref = 0j
         self.theta_s = 0
         self.w_r_ref = 0
+        # Data store
         self.data = Bunch()
-        self.desc = pars.__repr__()
 
     def __call__(self, mdl):
         """
@@ -198,6 +196,3 @@ class InductionMotorVHzCtrl:
         """
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
-
-    def __repr__(self):
-        return self.desc

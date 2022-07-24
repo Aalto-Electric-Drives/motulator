@@ -61,7 +61,7 @@ def plot(sim):
     ax2.plot(mdl.t, mdl.tau_L, '--')
     ax2.plot(mdl.t, mdl.tau_M)
     try:
-        ax2.step(ctrl.t, ctrl.tau_M)  # Limited torque reference
+        ax2.step(ctrl.t, ctrl.tau_M_ref_lim)  # Limited torque reference
         ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$',
                     r'$\tau_\mathrm{M,ref}$'])
     except AttributeError:
@@ -89,8 +89,11 @@ def plot(sim):
 
     if motor_type == 'sm':
         ax5.plot(mdl.t, np.abs(mdl.psi_s))
-        ax5.step(ctrl.t, np.abs(ctrl.psi_s), '--', where='post')
-        ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
+        try:
+            ax5.step(ctrl.t, np.abs(ctrl.psi_s), '--', where='post')
+            ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
+        except AttributeError:
+            ax5.legend([r'$\psi_\mathrm{s}$'])
     else:
         ax5.plot(mdl.t, np.abs(mdl.psi_ss))
         ax5.plot(mdl.t, np.abs(mdl.psi_Rs))
@@ -152,7 +155,7 @@ def plot_pu(sim):
     ax2.plot(mdl.t, mdl.tau_L/base.tau, '--')
     ax2.plot(mdl.t, mdl.tau_M/base.tau)
     try:
-        ax2.step(ctrl.t, ctrl.tau_M/base.tau)  # Limited torque reference
+        ax2.step(ctrl.t, ctrl.tau_M_ref_lim/base.tau)  # Limited torque ref
         ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$',
                     r'$\tau_\mathrm{M,ref}$'])
     except AttributeError:
@@ -181,8 +184,11 @@ def plot_pu(sim):
 
     if motor_type == 'sm':
         ax5.plot(mdl.t, np.abs(mdl.psi_s)/base.psi)
-        ax5.step(ctrl.t, np.abs(ctrl.psi_s)/base.psi, '--', where='post')
-        ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
+        try:
+            ax5.step(ctrl.t, np.abs(ctrl.psi_s)/base.psi, '--', where='post')
+            ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
+        except AttributeError:
+            ax5.legend([r'$\psi_\mathrm{s}$'])
     else:
         ax5.plot(mdl.t, np.abs(mdl.psi_ss)/base.psi)
         ax5.plot(mdl.t, np.abs(mdl.psi_Rs)/base.psi)

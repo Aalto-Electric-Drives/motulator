@@ -1,4 +1,4 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
 Simulation environment.
 
@@ -60,6 +60,7 @@ class CarrierCmp:
     period, allowing faster simulations.
 
     """
+    # pylint: disable=too-few-public-methods
 
     def __init__(self, N=2**12):
         """
@@ -163,7 +164,7 @@ class Simulation:
         mdl : InductionMotorDrive | SynchronousMotorDrive
             Continuous-time system model.
         ctrl : SynchronousMotorVectorCtrl | InductionMotorVectorCtrl |
-        InductionMotorVHzCtrl
+            InductionMotorVHzCtrl
             Discrete-time controller.
         delay : int, optional
             Amount of computational delays. The default is 1.
@@ -175,6 +176,7 @@ class Simulation:
             Simulation stop time. The default is 1.
 
         """
+        # pylint: disable=too-many-arguments
         self.mdl = mdl
         self.ctrl = ctrl
         self.delay = Delay(delay)

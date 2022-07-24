@@ -66,6 +66,7 @@ class InductionMotorVectorCtrl:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars=InductionMotorVectorCtrlPars()):
+
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -80,7 +81,6 @@ class InductionMotorVectorCtrl:
             self.observer = Observer(pars)
         self.pwm = PWM(pars)
         self.data = Bunch()
-        self.desc = pars.__repr__()
 
     def __call__(self, mdl):
         """
@@ -121,23 +121,23 @@ class InductionMotorVectorCtrl:
         i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
 
         # Outputs
-        tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
-        i_s_ref, tau_M = self.current_ref.output(tau_M_ref, psi_R)
+        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
+        i_s_ref, tau_M_ref_lim = self.current_ref.output(tau_M_ref, psi_R)
         w_s = self.observer.output(u_s, i_s, w_m)  # w_m not used if sensorless
-        u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s)
+        u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
 
         # Data logging
         data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
                      w_m=w_m, w_s=w_s, psi_R=psi_R, theta_s=theta_s,
-                     u_dc=u_dc, tau_M=tau_M, t=self.t)
+                     u_dc=u_dc, tau_M_ref_lim=tau_M_ref_lim, t=self.t)
         self._save(data)
 
         # Update the states
         self.pwm.update(u_s_ref_lim)
-        self.speed_ctrl.update(tau_M, tau_L)
+        self.speed_ctrl.update(tau_M_ref_lim)
         self.current_ref.update(u_s_ref, u_dc)
-        self.current_ctrl.update(e, u_s_ref, u_s_ref_lim, w_s)
+        self.current_ctrl.update(u_s_ref_lim, w_s)
         self.observer.update(i_s, w_s)
         self.t += self.T_s
 
@@ -155,9 +155,6 @@ class InductionMotorVectorCtrl:
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
 
-    def __repr__(self):
-        return self.desc
-
 
 # %%
 class CurrentRef:
@@ -167,6 +164,11 @@ class CurrentRef:
     This method includes field-weakenting operation based on the unlimited
     voltage reference feedback. The breakdown torque and current limits are
     taken into account.
+
+    Parameters
+    ----------
+    pars : InductionMotorVectorCtrlPars (or its subset)
+        Control parameters.
 
     Notes
     -----
@@ -181,13 +183,7 @@ class CurrentRef:
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : InductionMotorVectorCtrlPars (or its subset)
-            Control parameters.
 
-        """
         self.T_s = pars.T_s
         self.i_s_max = pars.i_s_max
         self.L_sgm = pars.L_sgm
@@ -244,9 +240,9 @@ class CurrentRef:
         # Current reference
         i_s_ref = self.i_sd_ref + 1j*i_sq_ref
         # Limited torque (for the speed controller)
-        tau_M = 1.5*self.p*psi_R*i_sq_ref
+        tau_M_ref_lim = 1.5*self.p*psi_R*i_sq_ref
 
-        return i_s_ref, tau_M
+        return i_s_ref, tau_M_ref_lim
 
     def update(self, u_s_ref, u_dc):
         """
@@ -279,6 +275,11 @@ class CurrentCtrl:
     considered as a quasi-constant disturbance. This design could be
     equivalently presented as a 2DOF PI controller.
 
+    Parameters
+    ----------
+    pars : InductionMotorVectorCtrlPars (or its subset)
+        Control parameters.
+
     Notes
     -----
     This implementation does not take the magnetic saturation into account.
@@ -292,17 +293,15 @@ class CurrentCtrl:
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : InductionMotorVectorCtrlPars (or its subset)
-            Control parameters.
 
-        """
         self.T_s = pars.T_s
         self.L_sgm = pars.L_sgm
         self.alpha_c = pars.alpha_c
-        self.u_i = 0  # Integral state
+        # Integral state
+        self.u_i = 0
+        # Memory for the update method
+        self.e = 0
+        self.u_s_ref = 0
 
     def output(self, i_s_ref, i_s):
         """
@@ -319,29 +318,24 @@ class CurrentCtrl:
         -------
         u_s_ref : complex
             Unlimited voltage reference.
-        e : complex
-            Error (scaled, corresponds to the leakage flux linkage).
 
         """
         psi_sgm_ref = self.L_sgm*i_s_ref
         psi_sgm = self.L_sgm*i_s
         k_t = self.alpha_c
         k = 2*self.alpha_c
-        u_s_ref = k_t*psi_sgm_ref - k*psi_sgm + self.u_i
-        e = psi_sgm_ref - psi_sgm
+        self.u_s_ref = k_t*psi_sgm_ref - k*psi_sgm + self.u_i
+        # Error (scaled, corresponds to the leakage flux linkage)
+        self.e = psi_sgm_ref - psi_sgm
 
-        return u_s_ref, e
+        return self.u_s_ref
 
-    def update(self, e, u_s_ref, u_s_ref_lim, w_s):
+    def update(self, u_s_ref_lim, w_s):
         """
         Update the integral state.
 
         Parameters
         ----------
-        e : complex
-            Error (scaled, corresponds to the leakage flux linkage).
-        u_s_ref : complex
-            Unlimited voltage reference.
         u_s_ref_lim : complex
             Limited voltage reference.
         w_s : float
@@ -350,7 +344,7 @@ class CurrentCtrl:
         """
         k_i = self.alpha_c*(self.alpha_c + 1j*w_s)
         k_t = self.alpha_c
-        self.u_i += self.T_s*k_i*(e + (u_s_ref_lim - u_s_ref)/k_t)
+        self.u_i += self.T_s*k_i*(self.e + (u_s_ref_lim - self.u_s_ref)/k_t)
 
 
 # %%
@@ -362,6 +356,11 @@ class SensorlessObserver:
     electrical and mechanical dynamics and allows placing the poles of the
     corresponding linearized estimation error dynamics. This implementation
     operates in estimated rotor flux coordinates.
+
+    Parameters
+    ----------
+    pars : InductionMotorVectorCtrlPars (or its subset)
+        Control parameters.
 
     Notes
     -----
@@ -380,13 +379,7 @@ class SensorlessObserver:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : InductionMotorVectorCtrlPars (or its subset)
-            Control parameters.
 
-        """
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.R_R = pars.R_R
@@ -399,7 +392,7 @@ class SensorlessObserver:
         # Store for the update method to avoid recalculation
         self.dpsi_R, self.w_r = 0, 0
 
-    def output(self, u_s, i_s, _):
+    def output(self, u_s, i_s, *_):
         """
         Compute the output.
 
@@ -409,7 +402,7 @@ class SensorlessObserver:
             Stator voltage in estimated rotor flux coordinates.
         i_s : complex
             Stator current in estimated rotor flux coordinates.
-        _ : not used
+        *_ : not used
             Provides a compatible interface with the sensored observer.
 
         Returns
@@ -470,6 +463,11 @@ class Observer:
     selected default gain allows smooth transition from the current model at
     zero speed to the (damped) voltage model at higher speeds.
 
+    Parameters
+    ----------
+    pars : InductionMotorVectorCtrlPars (or its subset)
+        Control parameters.
+
     Notes
     -----
     This implementation places the pole in synchronous coordinates at::
@@ -490,13 +488,7 @@ class Observer:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : InductionMotorVectorCtrlPars (or its subset)
-            Control parameters.
 
-        """
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.R_R = pars.R_R

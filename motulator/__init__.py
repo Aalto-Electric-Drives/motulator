@@ -20,9 +20,8 @@ from motulator.model.converter import (
 from motulator.model.im import (
     InductionMotor,
     InductionMotorSaturated,
-    SaturableStatorInductance,
     InductionMotorInvGamma)
-from motulator.model.sm import SynchronousMotor
+from motulator.model.sm import SynchronousMotor, SynchronousMotorSaturated
 from motulator.model.im_drive import (
     InductionMotorDrive,
     InductionMotorDriveDiode)

@@ -1,6 +1,6 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
-Vector control for synchronous motor drives.
+Current vector control for synchronous motor drives.
 
 """
 from __future__ import annotations
@@ -17,7 +17,7 @@ from motulator.control.sm_torque import TorqueCharacteristics
 @dataclass
 class SynchronousMotorVectorCtrlPars:
     """
-    Control system parameters for synchronous motors.
+    Vector control parameters for synchronous motors.
 
     """
     # pylint: disable=too-many-instance-attributes
@@ -33,9 +33,9 @@ class SynchronousMotorVectorCtrlPars:
     alpha_fw: float = 2*np.pi*20
     alpha_s: float = 2*np.pi*4
     # Maximum values
-    tau_M_max: float = 2*14.6
+    tau_M_max: float = 2*14
     i_s_max: float = 1.5*np.sqrt(2)*5
-    i_sd_min: float = None
+    psi_s_min: float = 0
     # Voltage margin
     k_u: float = .95
     # Nominal values
@@ -49,23 +49,9 @@ class SynchronousMotorVectorCtrlPars:
     J: float = .015
     # Sensorless observer
     w_o: float = 2*np.pi*40  # Used only in the sensorless mode
+    zeta_inf: float = .2
 
-    def __post_init__(self):
-        """
-        Generate control look-up tables.
-
-        """
-        # Generate LUTs
-        tq = TorqueCharacteristics(self)
-        mtpa = tq.mtpa_locus(i_s_max=self.i_s_max)
-        lims = tq.mtpv_and_current_limits(i_s_max=self.i_s_max)
-        # MTPA locus
-        self.i_sd_mtpa = mtpa.i_sd_vs_tau_M
-        # Merged MTPV and current limits
-        self.tau_M_lim = lims.tau_M_vs_abs_psi_s
-        self.i_sd_lim = lims.i_sd_vs_tau_M
-
-    def plot(self, base):
+    def plot_luts(self, base):
         """
         Plot control look-up tables.
 
@@ -90,16 +76,16 @@ class SynchronousMotorVectorCtrl:
     This class interconnects the subsystems of the control system and
     provides the interface to the solver.
 
+    Parameters
+    ----------
+    pars : SynchronousMotorVectorCtrlPars
+        Control parameters.
+
     """
 
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars=SynchronousMotorVectorCtrlPars()):
-        """
-        Parameters
-        ----------
-        pars : SynchronousMotorVectorCtrlData
-            Control parameters.
 
-        """
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -108,14 +94,12 @@ class SynchronousMotorVectorCtrl:
         self.current_ctrl = CurrentCtrl(pars)
         self.speed_ctrl = SpeedCtrl(pars)
         self.current_ref = CurrentRef(pars)
-        self.observer = SensorlessObserver(pars)
         self.pwm = PWM(pars)
         if pars.sensorless:
             self.observer = SensorlessObserver(pars)
         else:
             self.observer = None
         self.data = Bunch()
-        self.desc = pars.__repr__()
 
     def __call__(self, mdl):
         """
@@ -146,13 +130,9 @@ class SynchronousMotorVectorCtrl:
             # Measure the rotor speed and position
             w_m = self.p*mdl.mech.meas_speed()
             theta_m = self.p*np.mod(mdl.mech.meas_position(), 2*np.pi)
-            # psi_s = self.L_d*i_s.real + self.psi_f + 1j*self.L_q*i_s.imag
-            psi_s = np.nan  # Flux not estimated
         else:
             # Get the rotor speed and position estimates
             w_m, theta_m = self.observer.w_m, self.observer.theta_m
-            # Get the flux estimate (not used)
-            psi_s = self.observer.psi_s
 
         # Get the realized voltage from the PWM method
         u_s = self.pwm.realized_voltage
@@ -161,23 +141,23 @@ class SynchronousMotorVectorCtrl:
         i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
 
         # Outputs
-        tau_M_ref, tau_L = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
-        i_s_ref, tau_M = self.current_ref.output(tau_M_ref, w_m, u_dc)
-        u_s_ref, e = self.current_ctrl.output(i_s_ref, i_s)
+        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
+        i_s_ref, tau_M_ref_lim = self.current_ref.output(tau_M_ref, w_m, u_dc)
+        u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
-        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, psi_s=psi_s,
-                     w_m_ref=w_m_ref, w_m=w_m, theta_m=theta_m,
-                     u_dc=u_dc, tau_M=tau_M, t=self.t)
+        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
+                     w_m=w_m, theta_m=theta_m, u_dc=u_dc,
+                     tau_M_ref_lim=tau_M_ref_lim, t=self.t)
         self._save(data)
 
         # Update states
         if self.sensorless:
             self.observer.update(u_s, i_s)
-        self.speed_ctrl.update(tau_M, tau_L)
-        self.current_ref.update(tau_M, u_s_ref, u_dc)
-        self.current_ctrl.update(e, u_s_ref, u_s_ref_lim, w_m)
+        self.speed_ctrl.update(tau_M_ref_lim)
+        self.current_ref.update(tau_M_ref_lim, u_s_ref, u_dc)
+        self.current_ctrl.update(u_s_ref_lim, w_m)
         self.pwm.update(u_s_ref_lim)
         self.t += self.T_s
 
@@ -195,9 +175,6 @@ class SynchronousMotorVectorCtrl:
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
 
-    def __repr__(self):
-        return self.desc
-
 
 # %%
 class CurrentCtrl:
@@ -207,6 +184,11 @@ class CurrentCtrl:
     This controller corresponds to [1]_. The continuous-time complex-vector
     design corresponding to (13) is used here. This design could be
     equivalently presented as a 2DOF PI controller.
+
+    Parameters
+    ----------
+    pars : SynchronousMotorVectorCtrlPars (or its subset)
+        Control parameters.
 
     Notes
     -----
@@ -223,18 +205,16 @@ class CurrentCtrl:
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : SynchronousMotorVectorCtrlPars (or its subset)
-            Control parameters.
 
-        """
         self.T_s = pars.T_s
         self.L_d = pars.L_d
         self.L_q = pars.L_q
         self.alpha_c = pars.alpha_c
-        self.u_i = 0  # Integral state
+        # Integral state
+        self.u_i = 0
+        # Memory for the update method
+        self.e = 0
+        self.u_s_ref = 0
 
     def output(self, i_s_ref, i_s):
         """
@@ -251,8 +231,6 @@ class CurrentCtrl:
         -------
         u_s_ref : complex
             Unlimited voltage reference.
-        e : complex
-            Error signal (scaled, corresponds to the stator flux linkage).
 
         """
         # Gains
@@ -261,21 +239,18 @@ class CurrentCtrl:
         # PM-flux linkage cancels out
         psi_s_ref = self.L_d*i_s_ref.real + 1j*self.L_q*i_s_ref.imag
         psi_s = self.L_d*i_s.real + 1j*self.L_q*i_s.imag
-        u_s_ref = k_t*psi_s_ref - k*psi_s + self.u_i
-        e = psi_s_ref - psi_s
+        self.u_s_ref = k_t*psi_s_ref - k*psi_s + self.u_i
+        # Error signal (scaled, corresponds to the stator flux linkage).
+        self.e = psi_s_ref - psi_s
 
-        return u_s_ref, e
+        return self.u_s_ref
 
-    def update(self, e, u_s_ref, u_s_ref_lim, w_m):
+    def update(self, u_s_ref_lim, w_m):
         """
         Update the integral state.
 
         Parameters
         ----------
-        e : complex
-            Error signal (scaled, corresponds to the stator flux linkage).
-        u_s_ref : complex
-            Unlimited voltage reference.
         u_s_ref_lim : complex
             Limited voltage reference.
         w_m : float
@@ -284,7 +259,7 @@ class CurrentCtrl:
         """
         k_t = self.alpha_c
         k_i = self.alpha_c*(self.alpha_c + 1j*w_m)
-        self.u_i += self.T_s*k_i*(e + (u_s_ref_lim - u_s_ref)/k_t)
+        self.u_i += self.T_s*k_i*(self.e + (u_s_ref_lim - self.u_s_ref)/k_t)
 
 
 # %%
@@ -295,6 +270,11 @@ class CurrentRef:
     This method includes the MTPA locus and field-weakenting operation based on
     the unlimited voltage reference feedback. The MTPV and current limits are
     taken into account. This resembles the method presented [2]_.
+
+    Parameters
+    ----------
+    pars : SynchronousMotorVectorCtrlPars (or its subset)
+        Control parameters.
 
     Notes
     -----
@@ -313,14 +293,9 @@ class CurrentRef:
 
     """
 
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : SynchronousMotorVectorCtrlPars (or its subset)
-            Control parameters.
 
-        """
         self.T_s = pars.T_s
         self.i_s_max = pars.i_s_max
         self.p = pars.p
@@ -329,9 +304,16 @@ class CurrentRef:
         self.psi_f = pars.psi_f
         self.k = pars.alpha_fw/(pars.w_nom*self.L_d)
         self.k_u = pars.k_u
-        self.tau_M_lim = pars.tau_M_lim
-        self.i_sd_mtpa = pars.i_sd_mtpa
-        self.i_sd_lim = pars.i_sd_lim
+        # Generate LUTs
+        tq = TorqueCharacteristics(pars)
+        mtpa = tq.mtpa_locus(i_s_max=pars.i_s_max)
+        lims = tq.mtpv_and_current_limits(i_s_max=pars.i_s_max)
+        # MTPA locus
+        self.i_sd_mtpa = mtpa.i_sd_vs_tau_M
+        # Merged MTPV and current limits
+        self.tau_M_lim = lims.tau_M_vs_abs_psi_s
+        self.i_sd_lim = lims.i_sd_vs_tau_M
+        # Initial value
         self.i_sd_ref = 0
 
     def output(self, tau_M_ref, w_m, u_dc):
@@ -351,7 +333,7 @@ class CurrentRef:
         -------
         i_s_ref : complex
             Stator current reference.
-        tau_M : float
+        tau_M_ref_lim : float
             Limited torque reference.
 
         """
@@ -388,17 +370,17 @@ class CurrentRef:
         i_s_ref = self.i_sd_ref + 1j*i_sq_ref
 
         # Limited torque (for the speed controller)
-        tau_M = 1.5*self.p*psi_t*i_sq_ref
+        tau_M_ref_lim = 1.5*self.p*psi_t*i_sq_ref
 
-        return i_s_ref, tau_M
+        return i_s_ref, tau_M_ref_lim
 
-    def update(self, tau_M, u_s_ref, u_dc):
+    def update(self, tau_M_ref_lim, u_s_ref, u_dc):
         """
         Field-weakening based on the unlimited reference voltage.
 
         Parameters
         ----------
-        tau_M : float
+        tau_M_ref_lim : float
             Limited torque reference.
         u_s_ref : complex
             Unlimited stator voltage reference.
@@ -410,8 +392,8 @@ class CurrentRef:
         self.i_sd_ref += self.T_s*self.k*(u_s_max - np.abs(u_s_ref))
 
         # Limit the current
-        i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M))
-        i_sd_lim = self.i_sd_lim(np.abs(tau_M))
+        i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M_ref_lim))
+        i_sd_lim = self.i_sd_lim(np.abs(tau_M_ref_lim))
 
         if self.i_sd_ref > i_sd_mtpa:
             self.i_sd_ref = i_sd_mtpa
@@ -429,6 +411,11 @@ class SensorlessObserver:
     corresponding linearized estimation error dynamics. This implementation
     operates in estimated rotor coordinates.
 
+    Parameters
+    ----------
+    pars : SynchronousMotorVectorCtrlPars (or its subset)
+        Control parameters.
+
     References
     ----------
     .. [3] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
@@ -437,14 +424,10 @@ class SensorlessObserver:
 
     """
 
+    # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-few-public-methods
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : SynchronousMotorVectorCtrlPars (or its subset)
-            Control parameters.
 
-        """
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.L_d = pars.L_d
@@ -453,11 +436,11 @@ class SensorlessObserver:
         self.k_p = 2*pars.w_o
         self.k_i = pars.w_o**2
         self.b_p = .5*pars.R_s*(pars.L_d + pars.L_q)/(pars.L_d*pars.L_q)
-        self.zeta_inf = .7
+        self.zeta_inf = pars.zeta_inf
         # Initial states
         self.theta_m, self.w_m, self.psi_s = 0, 0, pars.psi_f
 
-    def update(self, u_s, i_s):
+    def update(self, u_s, i_s, *_):
         """
         Update the states for the next sampling period.
 
@@ -494,4 +477,4 @@ class SensorlessObserver:
         self.psi_s += self.T_s*(u_s - self.R_s*i_s - 1j*w_m*self.psi_s + v)
         self.w_m += self.T_s*self.k_i*eps
         self.theta_m += self.T_s*w_m
-        self.theta_m = np.mod(self.theta_m, 2*np.pi)    # Limit to [0, 2*pi]
+        self.theta_m = np.mod(self.theta_m, 2*np.pi)  # Limit to [0, 2*pi]

@@ -1,4 +1,4 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
 Continuous-time models for synchronous motor drives.
 
@@ -7,7 +7,6 @@ Peak-valued complex space vectors are used. The default values correspond to a
 
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import Bunch
@@ -17,7 +16,6 @@ from motulator.model.converter import Inverter
 
 
 # %%
-@dataclass
 class SynchronousMotorDrive:
     """
     Continuous-time model for a synchronous motor drive.
@@ -36,17 +34,20 @@ class SynchronousMotorDrive:
         Inverter model.
 
     """
-    motor: SynchronousMotor = SynchronousMotor()
-    mech: Mechanics = Mechanics()
-    conv: Inverter = Inverter()
-    # Stores the solution data
-    data: Bunch = field(repr=False, default_factory=Bunch)
-    # Initial time
-    t0: float = field(repr=False, default=0)
 
-    def __post_init__(self):
-        self.motor._mech = self.mech
+    def __init__(self, motor=SynchronousMotor(), mech=Mechanics(),
+                 conv=Inverter()):
+
+        self.motor = motor
+        self.motor._mech = mech
+        self.mech = mech
+        self.conv = conv
+
+        # Initial time
+        self.t0 = 0
+
         # Store the solution in these lists
+        self.data = Bunch()
         self.data.t, self.data.q = [], []
         self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
 

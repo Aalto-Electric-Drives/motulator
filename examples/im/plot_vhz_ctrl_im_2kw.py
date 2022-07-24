@@ -3,7 +3,7 @@ V/Hz-Controlled 2.2-kW Induction Motor Drive
 ============================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters correspond to an open-loop V/Hz control.
+parameters correspond to open-loop V/Hz control.
 
 """
 # %%
@@ -21,11 +21,9 @@ base = mt.BaseValues(
 # %%
 # Create the system model.
 
-# Saturation model
-L_s = mt.SaturableStatorInductance()
 # Γ-equivalent motor model with main-flux saturation included
 motor = mt.InductionMotorSaturated(
-    R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s, p=2)
+    R_s=3.7, R_r=2.5, L_ell=.023, L_su=.34, beta=.84, S=7, p=2)
 # Mechanics model
 mech = mt.Mechanics(J=.015)
 # Frequency converter with a diode bridge

@@ -1,28 +1,27 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
 Continuous-time models for synchronous motors.
 
 The motor model can be parametrized to represent permanent-magnet synchronous
 motors and synchronous reluctance motors. Peak-valued complex space vectors are
-used. The default values correspond to a 2.2-kW permanent-magnet synchronous
-motor.
+used.
 
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
 import numpy as np
+from scipy import optimize
 
 from motulator.helpers import complex2abc
 from motulator.model.mech import Mechanics
 
 
 # %%
-@dataclass
 class SynchronousMotor:
     """
     Synchronous motor model.
 
-    This models a synchronous motor in rotor coordinates.
+    This models a synchronous motor in rotor coordinates. The default values
+    correspond to a 2.2-kW permanent-magnet synchronous motor.
 
     Parameters
     ----------
@@ -35,22 +34,23 @@ class SynchronousMotor:
     L_q : float
         q-axis inductance.
     psi_f : float
-        PM flux linkage.
+        PM-flux linkage.
+    mech : Mechanics
+        Model of the mechanical subsystem, needed only for the coordinate
+        transformation in the measure_currents method.
 
     """
-    p: int = 3
-    R_s: float = 3.6
-    L_d: float = .036
-    L_q: float = .051
-    psi_f: float = .545
-    # The rotor position from the mechanics subsystem is needed only for the
-    # coordinate transformation in the measure_currents method
-    _mech: Mechanics = field(repr=False, default=None)
-    # Initial value
-    psi_s0: complex = field(repr=False, init=False)
 
-    def __post_init__(self):
+    def __init__(self, p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545,
+                 mech=Mechanics()):
+
+        # pylint: disable=too-many-arguments
+        self.p, self.R_s = p, R_s
+        self.L_d, self.L_q, self.psi_f = L_d, L_q, psi_f
+        # Initial value
         self.psi_s0 = self.psi_f + 0j
+        # For the coordinate transformation
+        self._mech = mech
 
     def current(self, psi_s):
         """
@@ -126,3 +126,115 @@ class SynchronousMotor:
         theta_m0 = self.p*self._mech.theta_M0
         i_s_abc = complex2abc(np.exp(1j*theta_m0)*i_s0)
         return i_s_abc
+
+
+# %%
+class SynchronousMotorSaturated(SynchronousMotor):
+    """
+    Model of a saturated synchronous motor.
+
+    This extends the SynchronousMotor class with an analytical saturation
+    model [1]_, [2]_. The permanent magnets (PMs) are assumed to be along the
+    d-axis. The default values correspond to a 6.7-kW synchronous reluctance
+    motor.
+
+    Parameters
+    ----------
+    p : int
+        Number of pole pairs.
+    R_s : float
+        Stator resistance.
+    i_f : float
+        Constant current corresponding to the magnetomotive force (MMF) of PMs.
+        In the magnetically linear case, `i_f = psi_f/L_d`.
+    a_d0 : float
+        Nonnegative parameter of the saturation model. In the magnetically
+        linear case, `a_d0 = 1/L_d`.
+    a_q0 : float
+        Nonnegative parameter of the saturation model. In the magnetically
+        linear case, `a_q0 = 1/L_q`.
+    a_dd, S : floats
+        Nonnegative constants defining the d-axis self-saturation. In the
+        magnetically linear case, `a_dd = 0`.
+    a_qq, T: floats
+        Nonnegative constants defining the q-axis self-saturation. In the
+        magnetically linear case, `a_qq = 0`.
+    a_dq, U, V : floats
+        Nonnegative constants defining the cross-saturation. In the
+        magnetically linear case, `a_dq = 0`.
+    mech : Mechanics
+        Model of the mechanical subsystem, needed only for the coordinate
+        transformation in the measure_currents method.
+
+    Notes
+    -----
+    The magnetomotive force (MMF) of the PMs is modeled using constant current
+    source `i_f` on the d-axis [3]_. Correspondingly, this approach assumes
+    that the MMFs of the d-axis current and of the PMs are in series. This
+    model cannot capture the desaturation phenomenon of thin iron ribs [4]_.
+    For such motors, look-up tables can be used (see scipy.interpolate).
+
+    References
+    ----------
+    .. [1] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi,
+       “Sensorless self-commissioning of synchronous reluctance motors at
+       standstill without rotor locking, ”IEEE Trans. Ind. Appl., 2017,
+       https://doi.org/10.1109/TIA.2016.2644624
+
+    .. [2] Awan, Song, Saarakkala, Hinkkanen, "Optimal torque control of
+       saturated synchronous motors: plug-and-play method," IEEE Trans. Ind.
+       Appl., 2018, https://doi.org/10.1109/TIA.2018.2862410
+
+    .. [3] Jahns, Kliman, Neumann, “Interior permanent-magnet synchronous
+       motors for adjustable-speed drives,” IEEE Trans. Ind. Appl., 1986,
+       https://doi.org/10.1109/TIA.1986.4504786
+
+    .. [4] Armando, Guglielmi, Pellegrino, Pastorelli, Vagati, "Accurate
+       modeling and performance analysis of IPM-PMASR motors," IEEE Trans. Ind.
+       Appl., 2009, https://doi.org/10.1109/TIA.2008.2009493
+
+    """
+
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, p=2, R_s=.54, i_f=0, a_d0=17.4, a_q0=52.1,
+                 a_dd=373., a_qq=658., a_dq=1120., S=5, T=1, U=1, V=0,
+                 mech=Mechanics()):
+
+        # pylint: disable=too-many-arguments, disable=super-init-not-called
+        self.p, self.R_s = p, R_s
+        self.i_f, self.a_d0, self.a_q0 = i_f, a_d0, a_q0
+        self.a_dd, self.a_qq, self.a_dq = a_dd, a_qq, a_dq
+        self.S, self.T, self.U, self.V = S, T, U, V
+
+        # Initial value of the stator flux
+        if i_f == 0:
+            # No magnets
+            self.psi_s0 = 0j
+        else:
+            # Solve the stator flux caused by the magnets @ i_s = 0
+            psi_d0 = optimize.fmin(
+                lambda psi_d:
+                    np.abs((a_d0 + a_dd*np.abs(psi_d)**S)*psi_d - i_f), 0)
+            self.psi_s0 = complex(psi_d0)
+
+        # For the coordinate transformation
+        self._mech = mech
+
+    def current(self, psi_s):
+        """
+        This method overrides the base class method.
+
+        """
+        abs_psi_d = np.abs(psi_s.real)
+        abs_psi_q = np.abs(psi_s.imag)
+
+        i_d = (self.a_d0 + self.a_dd*abs_psi_d**self.S
+               + (self.a_dq/(self.V + 2)*abs_psi_d**self.U
+                  * abs_psi_q**(self.V + 2)))*psi_s.real - self.i_f
+        i_q = (self.a_q0 + self.a_qq*abs_psi_q**self.T
+               + (self.a_dq/(self.U + 2)*abs_psi_d**(self.U + 2)
+                  * abs_psi_q**self.V))*psi_s.imag
+
+        i_s = i_d + 1j*i_q
+
+        return i_s

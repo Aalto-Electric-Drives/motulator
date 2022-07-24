@@ -31,7 +31,6 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # Configure the control system.
 
 pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True)
-# pars.plot(base)  # Uncommenting this line plots control look-up tables
 ctrl = mt.SynchronousMotorVectorCtrl(pars)
 
 # %%
@@ -45,8 +44,6 @@ ctrl.w_m_ref = mt.Sequence(times, values)
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 mdl.mech.tau_L_ext = mt.Sequence(times, values)
-# Print the system model and controller parameters.
-print(str(mdl)+'\n\n'+str(ctrl))
 
 # %%
 # Create the simulation object and simulate it.

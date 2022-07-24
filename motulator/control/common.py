@@ -143,8 +143,12 @@ class SpeedCtrl:
         self.alpha_s = pars.alpha_s
         self.tau_M_max = pars.tau_M_max
         self.J = pars.J
-        self.k = pars.alpha_s*pars.J    # Gain
-        self.tau_l = 0                  # Integral state
+        # Gain
+        self.k = pars.alpha_s*pars.J
+        # Integral state
+        self.tau_l = 0
+        # Load torque estimate (stored for the update method)
+        self.tau_L = 0
 
     def output(self, w_M_ref, w_M):
         """
@@ -161,29 +165,25 @@ class SpeedCtrl:
         -------
         tau_M_ref : float
             Torque reference.
-        tau_L : float
-            Load torque estimate.
 
         """
-        tau_L = self.tau_l - self.alpha_s*self.J*w_M
-        tau_M_ref = self.k*(w_M_ref - w_M) + tau_L
+        self.tau_L = self.tau_l - self.alpha_s*self.J*w_M
+        tau_M_ref = self.k*(w_M_ref - w_M) + self.tau_L
         if np.abs(tau_M_ref) > self.tau_M_max:
             tau_M_ref = np.sign(tau_M_ref)*self.tau_M_max
-        return tau_M_ref, tau_L
+        return tau_M_ref
 
-    def update(self, tau_M, tau_L):
+    def update(self, tau_M_ref_lim):
         """
         Update the integral state.
 
         Parameters
         ----------
-        tau_M : float
+        tau_M_ref_lim : float
             Realized (limited) torque reference.
-        tau_L : float
-            Load torque estimate.
 
         """
-        self.tau_l += self.T_s*self.alpha_s*(tau_M - tau_L)
+        self.tau_l += self.T_s*self.alpha_s*(tau_M_ref_lim - self.tau_L)
 
 
 # %%

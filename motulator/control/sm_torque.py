@@ -43,13 +43,13 @@ class TorqueCharacteristics:
         self.L_q = pars.L_q
         self.psi_f = pars.psi_f
         try:
-            self.i_sd_min = pars.i_sd_min
+            self.psi_s_min = pars.psi_s_min
         except AttributeError:
-            self.i_sd_min = None
+            self.psi_s_min = None
         try:
-            self.i_sd_max = pars.i_sd_max
+            self.psi_s_max = pars.psi_s_max
         except AttributeError:
-            self.i_sd_max = None
+            self.psi_s_max = None
 
     def torque(self, psi_s):
         """
@@ -248,7 +248,7 @@ class TorqueCharacteristics:
             Stator flux.
         i_s : complex
             Stator current.
-        tau_m : float
+        tau_M : float
             Electromagnetic torque.
         abs_psi_s_vs_tau_M : interp1d object
             Stator flux magnitude as a function of the torque.
@@ -263,14 +263,11 @@ class TorqueCharacteristics:
         beta = self.mtpa(abs_i_s)
         i_s = abs_i_s*np.exp(1j*beta)
 
-        # Minimum d-axis current for sensorless SyRM drives
-        if self.i_sd_min is not None:
-            i_s.real = ((i_s.real < self.i_sd_min)*self.i_sd_min
-                        + (i_s.real >= self.i_sd_min)*i_s.real)
-        # Maximum d-axis current for sensorless PM-SyRM drives
-        if self.i_sd_max is not None:
-            i_s.real = ((i_s.real > self.i_sd_max)*self.i_sd_max
-                        + (i_s.real <= self.i_sd_max)*i_s.real)
+        if (self.psi_s_min is not None) and (self.psi_f == 0):
+            # Minimum d-axis current for sensorless SyRM drives
+            i_sd_min = self.psi_s_min/self.L_d
+            i_s.real = ((i_s.real < i_sd_min)*i_sd_min
+                        + (i_s.real >= i_sd_min)*i_s.real)
 
         psi_s = self.flux(i_s)
         tau_M = self.torque(psi_s)
@@ -279,8 +276,7 @@ class TorqueCharacteristics:
         # more interpolants can be easily added.
         abs_psi_s_vs_tau_M = interp1d(tau_M, np.abs(psi_s),
                                       fill_value="extrapolate")
-        i_sd_vs_tau_M = interp1d(tau_M, i_s.real,
-                                 fill_value="extrapolate")
+        i_sd_vs_tau_M = interp1d(tau_M, i_s.real, fill_value="extrapolate")
 
         # Return the result as a bunch object
         return Bunch(psi_s=psi_s, i_s=i_s, tau_M=tau_M,
@@ -309,7 +305,7 @@ class TorqueCharacteristics:
             Stator flux.
         i_s : complex
             Stator current.
-        tau_m : float
+        tau_M : float
             Electromagnetic torque.
         tau_M_vs_abs_psi_s : interp1d object
             Torque as a function of the flux magnitude.
@@ -347,7 +343,7 @@ class TorqueCharacteristics:
             Current limit. The default is 1.
         gamma1 : float, optional
             Starting angle in radians. The default is 0.
-        gamm21 : float, optional
+        gamma2 : float, optional
             End angle in radians. The defauls in np.pi.
         N : int, optional
             Amount of points. The default is 20.
@@ -359,7 +355,7 @@ class TorqueCharacteristics:
             Stator flux.
         i_s : complex
             Stator current.
-        tau_m : float
+        tau_M : float
             Electromagnetic torque.
         tau_M_vs_abs_psi_s : interp1d object
             Torque as a function of the flux magnitude.
@@ -427,8 +423,7 @@ class TorqueCharacteristics:
         tau_M_vs_abs_psi_s = interp1d(np.abs(psi_s), tau_M,
                                       bounds_error=False,
                                       fill_value=(tau_M[0], tau_M[-1]))
-        i_sd_vs_tau_M = interp1d(tau_M, i_sd,
-                                 fill_value="extrapolate")
+        i_sd_vs_tau_M = interp1d(tau_M, i_sd, fill_value="extrapolate")
 
         # Return the result as a bunch object
         return Bunch(tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s,
