@@ -251,7 +251,7 @@ class FluxTorqueCtrl:
 # %%
 class FluxTorqueRef:
     """
-    Calculate the flux reference and limit the torque reference.
+    Flux and torque references.
 
     Parameters
     ----------
@@ -279,6 +279,8 @@ class FluxTorqueRef:
 
     def __call__(self, tau_M_ref, w_m, u_dc):
         """
+        Calculate the stator flux reference and limit the torque reference.
+
         Parameters
         ----------
         tau_M_ref : float
