@@ -26,7 +26,7 @@ base = mt.BaseValues(
 
 # Saturated SyRM model
 motor = mt.SynchronousMotorSaturated()
-# Magnetically linear model
+# Magnetically linear SyRM model
 # motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
 mech = mt.Mechanics()
 conv = mt.Inverter()

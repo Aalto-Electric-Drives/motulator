@@ -11,7 +11,6 @@ drive.
 # Import the packages.
 
 from time import time
-import numpy as np
 import motulator as mt
 
 # %%
@@ -37,23 +36,14 @@ ctrl = mt.control.sm_flux_vector.SynchronousMotorFluxVectorCtrl(pars)
 # %%
 # Set the speed reference and the external load torque.
 
-# Speed reference
-times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = mt.Sequence(times, values)
-# External load torque
-times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-mdl.mech.tau_L_ext = mt.Sequence(times, values)
-
 # Simple acceleration and load torque step
-# ctrl.w_m_ref = lambda t: (t > .2)*(1.5*base.w)
-# mdl.mech.tau_L_ext = lambda t: (t > .75)*base.tau_nom*0
+ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
+mdl.mech.tau_L_ext = lambda t: (t > .8)*base.tau_nom*.7
 
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, base=base, enable_pwm=False, t_stop=4)
+sim = mt.Simulation(mdl, ctrl, base=base, enable_pwm=False, t_stop=1.6)
 start_time = time()  # Start the timer
 sim.simulate()
 # Print the execution time

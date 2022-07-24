@@ -1,8 +1,8 @@
 # pylint: disable=invalid-name
 """
-Flux vector control for synchronous motor drives.
+Flux-vector control for synchronous motor drives.
 
-This implements a simplified version of stator-flux vector control [1]_. The
+This implements a simplified version of stator-flux-vector control [1]_. The
 rotor coordinates are used in this implementation [2]_. One control variable is
 the stator-flux magnitude and another is the electromagnetic torque. The latter
 choice differs from [1]_ and [2]_, where the torque-producing current component
@@ -35,7 +35,7 @@ from motulator.control.sm_vector import SensorlessObserver
 @dataclass
 class SynchronousMotorFluxVectorCtrlPars:
     """
-    Control parameters: flux vector control for synchronous motor drives.
+    Control parameters: flux-vector control for synchronous motor drives.
 
     """
     # pylint: disable=too-many-instance-attributes
@@ -53,7 +53,7 @@ class SynchronousMotorFluxVectorCtrlPars:
     # Minimum flux
     psi_s_min: float = .5*np.sqrt(2/3)*370/(2*np.pi*75)
     # Voltage marginal
-    k_u: float = .95
+    k_u: float = .9
     # Bandwidths
     alpha_psi: float = 2*np.pi*100
     alpha_tau_max: float = 2*np.pi*400
@@ -78,7 +78,7 @@ class SynchronousMotorFluxVectorCtrlPars:
 # %%
 class SynchronousMotorFluxVectorCtrl:
     """
-    Flux vector control for synchronous motor drives.
+    Flux-vector control for synchronous motor drives.
 
     This class interconnects the subsystems of the control system and
     provides the interface to the solver.
@@ -219,7 +219,7 @@ class FluxTorqueCtrl:
         tau_M_ref : float
             Torque reference.
         psi_s : complex
-            Estimate of the stator flux magnitude.
+            Stator flux estimate.
         i_s : complex
             Stator current.
         w_m : float
@@ -279,8 +279,6 @@ class FluxTorqueRef:
 
     def __call__(self, tau_M_ref, w_m, u_dc):
         """
-        Calculate the flux reference and limit the torque reference.
-
         Parameters
         ----------
         tau_M_ref : float

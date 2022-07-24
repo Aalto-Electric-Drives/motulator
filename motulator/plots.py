@@ -186,7 +186,6 @@ def plot_pu(sim):
     ax4.step(ctrl.t, ctrl.u_dc/np.sqrt(3)/base.u, '--', where='post')
     ax4.set_ylabel('Voltage (p.u.)')
     ax4.set_xlim(t_range)
-    # ax4.set_ylim(0, 1.2)
     ax4.legend([r'$u_\mathrm{s}$', r'$u_\mathrm{dc}/\sqrt{3}$'])
     ax4.set_xticklabels([])
 
