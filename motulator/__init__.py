@@ -37,6 +37,9 @@ from motulator.control.im_vector import (
 from motulator.control.sm_vector import (
     SynchronousMotorVectorCtrl,
     SynchronousMotorVectorCtrlPars)
+from motulator.control.sm_flux_vector import (
+    SynchronousMotorFluxVectorCtrl,
+    SynchronousMotorFluxVectorCtrlPars)
 
 # Import other useful stuff
 from motulator.helpers import (

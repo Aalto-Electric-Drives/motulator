@@ -70,10 +70,15 @@ def plot(sim):
     ax2.set_ylabel('Torque (Nm)')
     ax2.set_xticklabels([])
 
-    ax3.step(ctrl.t, ctrl.i_s_ref.real, '--', where='post')
     ax3.step(ctrl.t, ctrl.i_s.real, where='post')
-    ax3.step(ctrl.t, ctrl.i_s_ref.imag, '--', where='post')
     ax3.step(ctrl.t, ctrl.i_s.imag, where='post')
+    try:
+        ax3.step(ctrl.t, ctrl.i_s_ref.real, '--', where='post')
+        ax3.step(ctrl.t, ctrl.i_s_ref.imag, '--', where='post')
+        ax3.legend([r'$i_\mathrm{sd}$', r'$i_\mathrm{sq}$',
+                    r'$i_\mathrm{sd,ref}$', r'$i_\mathrm{sq,ref}$'])
+    except AttributeError:
+        ax3.legend([r'$i_\mathrm{sd}$', r'$i_\mathrm{sq}$'])
     ax3.set_ylabel('Current (A)')
     ax3.legend([r'$i_\mathrm{sd,ref}$', r'$i_\mathrm{sd}$',
                 r'$i_\mathrm{sq,ref}$', r'$i_\mathrm{sq}$'])
@@ -90,7 +95,7 @@ def plot(sim):
     if motor_type == 'sm':
         ax5.plot(mdl.t, np.abs(mdl.psi_s))
         try:
-            ax5.step(ctrl.t, np.abs(ctrl.psi_s), '--', where='post')
+            ax5.step(ctrl.t, np.abs(ctrl.psi_s), where='post')
             ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
         except AttributeError:
             ax5.legend([r'$\psi_\mathrm{s}$'])
@@ -164,13 +169,16 @@ def plot_pu(sim):
     ax2.set_ylabel('Torque (p.u.)')
     ax2.set_xticklabels([])
 
-    ax3.step(ctrl.t, ctrl.i_s_ref.real/base.i, '--', where='post')
     ax3.step(ctrl.t, ctrl.i_s.real/base.i, where='post')
-    ax3.step(ctrl.t, ctrl.i_s_ref.imag/base.i, '--', where='post')
     ax3.step(ctrl.t, ctrl.i_s.imag/base.i, where='post')
+    try:
+        ax3.step(ctrl.t, ctrl.i_s_ref.real/base.i, '--', where='post')
+        ax3.step(ctrl.t, ctrl.i_s_ref.imag/base.i, '--', where='post')
+        ax3.legend([r'$i_\mathrm{sd}$', r'$i_\mathrm{sq}$',
+                    r'$i_\mathrm{sd,ref}$', r'$i_\mathrm{sq,ref}$'])
+    except AttributeError:
+        ax3.legend([r'$i_\mathrm{sd}$', r'$i_\mathrm{sq}$'])
     ax3.set_ylabel('Current (p.u.)')
-    ax3.legend([r'$i_\mathrm{sd,ref}$', r'$i_\mathrm{sd}$',
-                r'$i_\mathrm{sq,ref}$', r'$i_\mathrm{sq}$'])
     ax3.set_xlim(t_range)
     ax3.set_xticklabels([])
 
@@ -185,7 +193,7 @@ def plot_pu(sim):
     if motor_type == 'sm':
         ax5.plot(mdl.t, np.abs(mdl.psi_s)/base.psi)
         try:
-            ax5.step(ctrl.t, np.abs(ctrl.psi_s)/base.psi, '--', where='post')
+            ax5.step(ctrl.t, np.abs(ctrl.psi_s)/base.psi, where='post')
             ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
         except AttributeError:
             ax5.legend([r'$\psi_\mathrm{s}$'])
