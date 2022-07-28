@@ -33,13 +33,20 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 pars = mt.SynchronousMotorVectorCtrlPars(
     sensorless=True,
     T_s=250e-6,
-    alpha_c=2*np.pi*200, alpha_fw=2*np.pi*20, alpha_s=2*np.pi*4,
+    alpha_c=2*np.pi*200,
+    alpha_fw=2*np.pi*20,
+    alpha_s=2*np.pi*4,
     w_o=2*np.pi*80,  # Used only in the sensorless mode
     tau_M_max=2*base.tau_nom,
     i_s_max=2*base.i,
     psi_s_min=.5*base.psi,  # Can be 0 in the sensored mode
-    k_u=.95, w_nom=2*np.pi*105.8,
-    p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0,
+    k_u=.95,
+    w_nom=2*np.pi*105.8,
+    p=2,
+    R_s=.54,
+    L_d=41.5e-3,
+    L_q=6.2e-3,
+    psi_f=0,
     J=.015)
 ctrl = mt.SynchronousMotorVectorCtrl(pars)
 # pars.plot_luts(base)  # Plot control look-up tables
@@ -49,7 +56,7 @@ ctrl = mt.SynchronousMotorVectorCtrl(pars)
 
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
-values = np.array([0,  0, 1, 1, 0, -1, -1, 0, 0])*base.w
+values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.w_m_ref = mt.Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4

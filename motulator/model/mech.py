@@ -1,8 +1,5 @@
 # pylint: disable=invalid-name
-"""
-Continuous-time models for mechanical subsystems.
-
-"""
+"""Continuous-time models for mechanical subsystems."""
 from __future__ import annotations
 
 
@@ -25,7 +22,6 @@ class Mechanics:
     """
 
     def __init__(self, J=.015, B=0, tau_L_ext=lambda t: 0):
-
         self.J, self.B = J, B
         self.tau_L_ext = tau_L_ext
         # Initial values

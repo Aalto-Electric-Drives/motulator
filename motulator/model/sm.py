@@ -41,9 +41,15 @@ class SynchronousMotor:
 
     """
 
-    def __init__(self, p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545,
-                 mech=Mechanics()):
-
+    def __init__(
+            self,
+            p=3,
+            R_s=3.6,
+            L_d=.036,
+            L_q=.051,
+            psi_f=.545,
+            mech=Mechanics(),
+    ):
         # pylint: disable=too-many-arguments
         self.p, self.R_s = p, R_s
         self.L_d, self.L_q, self.psi_f = L_d, L_q, psi_f
@@ -204,10 +210,22 @@ class SynchronousMotorSaturated(SynchronousMotor):
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, p=2, R_s=.54, i_f=0, a_d0=17.4, a_q0=52.1,
-                 a_dd=373., a_qq=658., a_dq=1120., S=5, T=1, U=1, V=0,
-                 mech=Mechanics()):
-
+    def __init__(
+            self,
+            p=2,
+            R_s=.54,
+            i_f=0,
+            a_d0=17.4,
+            a_q0=52.1,
+            a_dd=373.,
+            a_qq=658.,
+            a_dq=1120.,
+            S=5,
+            T=1,
+            U=1,
+            V=0,
+            mech=Mechanics(),
+    ):
         # pylint: disable=too-many-arguments, disable=super-init-not-called
         self.p, self.R_s = p, R_s
         self.i_f, self.a_d0, self.a_q0 = i_f, a_d0, a_q0
@@ -221,27 +239,25 @@ class SynchronousMotorSaturated(SynchronousMotor):
         else:
             # Solve the stator flux caused by the magnets @ i_s = 0
             psi_d0 = optimize.fmin(
-                lambda psi_d:
-                    np.abs((a_d0 + a_dd*np.abs(psi_d)**S)*psi_d - i_f), 0)
+                lambda psi_d: np.abs(
+                    (a_d0 + a_dd*np.abs(psi_d)**S)*psi_d - i_f), 0)
             self.psi_s0 = complex(psi_d0)
 
         # For the coordinate transformation
         self._mech = mech
 
     def current(self, psi_s):
-        """
-        This method overrides the base class method.
-
-        """
+        """Override the base class method."""
         abs_psi_d = np.abs(psi_s.real)
         abs_psi_q = np.abs(psi_s.imag)
 
-        i_d = (self.a_d0 + self.a_dd*abs_psi_d**self.S
-               + (self.a_dq/(self.V + 2)*abs_psi_d**self.U
-                  * abs_psi_q**(self.V + 2)))*psi_s.real - self.i_f
-        i_q = (self.a_q0 + self.a_qq*abs_psi_q**self.T
-               + (self.a_dq/(self.U + 2)*abs_psi_d**(self.U + 2)
-                  * abs_psi_q**self.V))*psi_s.imag
+        G_dd = self.a_d0 + self.a_dd*abs_psi_d**self.S
+        G_dq = self.a_dq/(self.V + 2)*abs_psi_d**self.U*abs_psi_q**(self.V + 2)
+        G_qq = self.a_q0 + self.a_qq*abs_psi_q**self.T
+        G_qd = self.a_dq/(self.U + 2)*abs_psi_d**(self.U + 2)*abs_psi_q**self.V
+
+        i_d = (G_dd + G_dq)*psi_s.real - self.i_f
+        i_q = (G_qq + G_qd)*psi_s.imag
 
         i_s = i_d + 1j*i_q
 

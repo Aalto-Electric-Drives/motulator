@@ -1,8 +1,6 @@
 # pylint: disable=invalid-name
-"""
-Current vector control for synchronous motor drives.
+"""Current vector control for synchronous motor drives."""
 
-"""
 from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -16,10 +14,8 @@ from motulator.control.sm_torque import TorqueCharacteristics
 # %%
 @dataclass
 class SynchronousMotorVectorCtrlPars:
-    """
-    Vector control parameters for synchronous motors.
+    """Vector control parameters for synchronous motors."""
 
-    """
     # pylint: disable=too-many-instance-attributes
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
@@ -103,7 +99,7 @@ class SynchronousMotorVectorCtrl:
 
     def __call__(self, mdl):
         """
-        Main control loop.
+        Run the main control loop.
 
         Parameters
         ----------
@@ -147,9 +143,16 @@ class SynchronousMotorVectorCtrl:
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
-        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
-                     w_m=w_m, theta_m=theta_m, u_dc=u_dc,
-                     tau_M_ref_lim=tau_M_ref_lim, t=self.t)
+        data = Bunch(
+            i_s_ref=i_s_ref,
+            i_s=i_s,
+            u_s=u_s,
+            w_m_ref=w_m_ref,
+            w_m=w_m,
+            theta_m=theta_m,
+            u_dc=u_dc,
+            tau_M_ref_lim=tau_M_ref_lim,
+            t=self.t)
         self._save(data)
 
         # Update states
@@ -168,10 +171,7 @@ class SynchronousMotorVectorCtrl:
             self.data.setdefault(key, []).extend([value])
 
     def post_process(self):
-        """
-        Transform the lists to the ndarray format.
-
-        """
+        """Transform the lists to the ndarray format."""
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
 
@@ -337,6 +337,7 @@ class CurrentRef:
             Limited torque reference.
 
         """
+
         def limit_torque(tau_M_ref, w_m, u_dc):
             if np.abs(w_m) > 0:
                 psi_s_max = self.k_u*u_dc/np.sqrt(3)/np.abs(w_m)
@@ -354,15 +355,15 @@ class CurrentRef:
 
         # q-axis current reference
         psi_t = self.psi_f + (self.L_d - self.L_q)*self.i_sd_ref
-        if psi_t != 0:
-            i_sq_ref = tau_M_ref/(1.5*self.p*psi_t)
-        else:
-            i_sq_ref = 0
+        i_sq_ref = tau_M_ref/(1.5*self.p*psi_t) if psi_t != 0 else 0
 
         # Limit the q-axis current reference
         i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M_ref))
-        i_sq_max = np.min([np.sqrt(self.i_s_max**2 - self.i_sd_ref**2),
-                           np.sqrt(self.i_s_max**2 - i_sd_mtpa**2)])
+        i_sq_max = np.min(
+            [
+                np.sqrt(self.i_s_max**2 - self.i_sd_ref**2),
+                np.sqrt(self.i_s_max**2 - i_sd_mtpa**2)
+            ])
         if np.abs(i_sq_ref) > i_sq_max:
             i_sq_ref = np.sign(i_sq_ref)*i_sq_max
 
@@ -461,12 +462,11 @@ class SensorlessObserver:
         # Pole locations are chosen according to (36), with c = w_m**2
         # and w_inf = inf, and the gain corresponding to (30) is used
         k = self.b_p + 2*self.zeta_inf*np.abs(self.w_m)
-        psi_a_sqr = np.abs(psi_a)**2
-        if psi_a_sqr > 0:
+        if np.abs(psi_a) > 0:
             # Correction voltage
-            v = k*psi_a*np.real(psi_a*np.conj(e))/psi_a_sqr
+            v = k*psi_a*np.real(e/psi_a)
             # Error signal (10)
-            eps = np.imag(psi_a*np.conj(e))/psi_a_sqr
+            eps = -np.imag(e/psi_a)
         else:
             v, eps = 0, 0
 

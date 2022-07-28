@@ -35,9 +35,12 @@ class SynchronousMotorDrive:
 
     """
 
-    def __init__(self, motor=SynchronousMotor(), mech=Mechanics(),
-                 conv=Inverter()):
-
+    def __init__(
+            self,
+            motor=SynchronousMotor(),
+            mech=Mechanics(),
+            conv=Inverter(),
+    ):
         self.motor = motor
         self.motor._mech = mech
         self.mech = mech
@@ -61,7 +64,11 @@ class SynchronousMotorDrive:
             Initial values of the state variables.
 
         """
-        x0 = [self.motor.psi_s0, self.mech.w_M0, self.mech.theta_M0]
+        x0 = [
+            self.motor.psi_s0,
+            self.mech.w_M0,
+            self.mech.theta_M0,
+        ]
         return x0
 
     def set_initial_values(self, t0, x0):
@@ -133,10 +140,7 @@ class SynchronousMotorDrive:
         self.data.theta_M.extend(sol.y[2].real)
 
     def post_process(self):
-        """
-        Transform the lists to the ndarray format and post-process them.
-
-        """
+        """Transform the lists to the ndarray format and post-process them."""
         # From lists to the ndarray
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
@@ -145,9 +149,8 @@ class SynchronousMotorDrive:
         self.data.i_s = self.motor.current(self.data.psi_s)
         self.data.w_m = self.motor.p*self.data.w_M
         self.data.tau_M = self.motor.torque(self.data.psi_s, self.data.i_s)
-        self.data.tau_L = (self.mech.tau_L_ext(self.data.t)
-                           + self.mech.B*self.data.w_M)
-        self.data.u_ss = self.conv.ac_voltage(self.data.q,
-                                              self.conv.u_dc0)
+        self.data.tau_L = (
+            self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)
+        self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
         self.data.theta_m = self.motor.p*self.data.theta_M
         self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)

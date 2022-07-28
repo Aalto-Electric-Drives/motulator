@@ -1,9 +1,6 @@
-# pylint: disable=C0103
-# pylint: disable=R0903
-"""
-Example plotting scripts.
+# pylint: disable=invalid-name
+"""Example plotting scripts."""
 
-"""
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,9 +26,9 @@ def plot(sim):
         Should contain the simulated data.
 
     """
-
-    mdl = sim.mdl.data      # Continuous-time data
-    ctrl = sim.ctrl.data    # Discrete-time data
+    # pylint: disable=too-many-statements
+    mdl = sim.mdl.data  # Continuous-time data
+    ctrl = sim.ctrl.data  # Discrete-time data
 
     # Recognize the motor type by checking if the rotor flux data exist
     try:
@@ -40,7 +37,7 @@ def plot(sim):
     except AttributeError:
         motor_type = 'sm'
 
-    t_range = (0, ctrl.t[-1])   # Time span
+    t_range = (0, ctrl.t[-1])  # Time span
 
     fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(8, 10))
 
@@ -50,9 +47,12 @@ def plot(sim):
         ax1.step(ctrl.t, ctrl.w_m, where='post')
     except AttributeError:
         pass
-    ax1.legend([r'$\omega_\mathrm{m,ref}$',
-                r'$\omega_\mathrm{m}$',
-                r'$\hat \omega_\mathrm{m}$'])
+    ax1.legend(
+        [
+            r'$\omega_\mathrm{m,ref}$',
+            r'$\omega_\mathrm{m}$',
+            r'$\hat \omega_\mathrm{m}$',
+        ])
     # ax1.step(ctrl.t, ctrl.w_s, where='post')  # Stator frequency
     ax1.set_xlim(t_range)
     ax1.set_xticklabels([])
@@ -62,10 +62,14 @@ def plot(sim):
     ax2.plot(mdl.t, mdl.tau_M)
     try:
         ax2.step(ctrl.t, ctrl.tau_M_ref_lim)  # Limited torque reference
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$',
-                    r'$\tau_\mathrm{M,ref}$'])
     except AttributeError:
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$'])
+        pass
+    ax2.legend(
+        [
+            r'$\tau_\mathrm{L}$',
+            r'$\tau_\mathrm{M}$',
+            r'$\tau_\mathrm{M,ref}$',
+        ])
     ax2.set_xlim(t_range)
     ax2.set_ylabel('Torque (Nm)')
     ax2.set_xticklabels([])
@@ -75,13 +79,16 @@ def plot(sim):
     try:
         ax3.step(ctrl.t, ctrl.i_s_ref.real, '--', where='post')
         ax3.step(ctrl.t, ctrl.i_s_ref.imag, '--', where='post')
-        ax3.legend([r'$i_\mathrm{sd}$', r'$i_\mathrm{sq}$',
-                    r'$i_\mathrm{sd,ref}$', r'$i_\mathrm{sq,ref}$'])
     except AttributeError:
-        ax3.legend([r'$i_\mathrm{sd}$', r'$i_\mathrm{sq}$'])
+        pass
+    ax3.legend(
+        [
+            r'$i_\mathrm{sd}$',
+            r'$i_\mathrm{sq}$',
+            r'$i_\mathrm{sd,ref}$',
+            r'$i_\mathrm{sq,ref}$',
+        ])
     ax3.set_ylabel('Current (A)')
-    ax3.legend([r'$i_\mathrm{sd,ref}$', r'$i_\mathrm{sd}$',
-                r'$i_\mathrm{sq,ref}$', r'$i_\mathrm{sq}$'])
     ax3.set_xlim(t_range)
     ax3.set_xticklabels([])
 
@@ -96,18 +103,22 @@ def plot(sim):
         ax5.plot(mdl.t, np.abs(mdl.psi_s))
         try:
             ax5.step(ctrl.t, np.abs(ctrl.psi_s), where='post')
-            ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
         except AttributeError:
-            ax5.legend([r'$\psi_\mathrm{s}$'])
+            pass
+        ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
     else:
         ax5.plot(mdl.t, np.abs(mdl.psi_ss))
         ax5.plot(mdl.t, np.abs(mdl.psi_Rs))
         try:
-            ax5.plot(ctrl.t, np.abs(ctrl.psi_R))
+            ax5.plot(ctrl.t, np.abs(ctrl.psi_s))
         except AttributeError:
             pass
-        ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$',
-                    r'$\hat \psi_\mathrm{R}$'])
+        ax5.legend(
+            [
+                r'$\psi_\mathrm{s}$',
+                r'$\psi_\mathrm{R}$',
+                r'$\hat \psi_\mathrm{s}$',
+            ])
     ax5.set_xlim(t_range)
     ax5.set_ylabel('Flux linkage (Vs)')
     ax5.set_xlabel('Time (s)')
@@ -128,9 +139,10 @@ def plot_pu(sim):
         Should contain the simulated data.
 
     """
-    mdl = sim.mdl.data      # Continuous-time data
-    ctrl = sim.ctrl.data    # Discrete-time data
-    base = sim.base         # Base values
+    # pylint: disable=too-many-statements
+    mdl = sim.mdl.data  # Continuous-time data
+    ctrl = sim.ctrl.data  # Discrete-time data
+    base = sim.base  # Base values
 
     # Recognize the motor type by checking if the rotor flux data exist
     try:
@@ -139,7 +151,7 @@ def plot_pu(sim):
     except AttributeError:
         motor_type = 'sm'
 
-    t_range = (0, ctrl.t[-1])   # Time span
+    t_range = (0, ctrl.t[-1])  # Time span
 
     fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(8, 10))
 
@@ -149,10 +161,12 @@ def plot_pu(sim):
         ax1.step(ctrl.t, ctrl.w_m/base.w, where='post')
     except AttributeError:
         pass
-    ax1.legend([r'$\omega_\mathrm{m,ref}$',
-                r'$\omega_\mathrm{m}$',
-                r'$\hat \omega_\mathrm{m}$'])
-    # ax1.step(ctrl.t, ctrl.w_s/base.w, where='post')  # Stator frequency
+    ax1.legend(
+        [
+            r'$\omega_\mathrm{m,ref}$',
+            r'$\omega_\mathrm{m}$',
+            r'$\hat \omega_\mathrm{m}$',
+        ])
     ax1.set_xlim(t_range)
     ax1.set_xticklabels([])
     ax1.set_ylabel('Speed (p.u.)')
@@ -161,10 +175,14 @@ def plot_pu(sim):
     ax2.plot(mdl.t, mdl.tau_M/base.tau)
     try:
         ax2.step(ctrl.t, ctrl.tau_M_ref_lim/base.tau)  # Limited torque ref
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$',
-                    r'$\tau_\mathrm{M,ref}$'])
     except AttributeError:
-        ax2.legend([r'$\tau_\mathrm{L}$', r'$\tau_\mathrm{M}$'])
+        pass
+    ax2.legend(
+        [
+            r'$\tau_\mathrm{L}$',
+            r'$\tau_\mathrm{M}$',
+            r'$\tau_\mathrm{M,ref}$',
+        ])
     ax2.set_xlim(t_range)
     ax2.set_ylabel('Torque (p.u.)')
     ax2.set_xticklabels([])
@@ -174,10 +192,15 @@ def plot_pu(sim):
     try:
         ax3.step(ctrl.t, ctrl.i_s_ref.real/base.i, '--', where='post')
         ax3.step(ctrl.t, ctrl.i_s_ref.imag/base.i, '--', where='post')
-        ax3.legend([r'$i_\mathrm{sd}$', r'$i_\mathrm{sq}$',
-                    r'$i_\mathrm{sd,ref}$', r'$i_\mathrm{sq,ref}$'])
     except AttributeError:
-        ax3.legend([r'$i_\mathrm{sd}$', r'$i_\mathrm{sq}$'])
+        pass
+    ax3.legend(
+        [
+            r'$i_\mathrm{sd}$',
+            r'$i_\mathrm{sq}$',
+            r'$i_\mathrm{sd,ref}$',
+            r'$i_\mathrm{sq,ref}$',
+        ])
     ax3.set_ylabel('Current (p.u.)')
     ax3.set_xlim(t_range)
     ax3.set_xticklabels([])
@@ -193,18 +216,22 @@ def plot_pu(sim):
         ax5.plot(mdl.t, np.abs(mdl.psi_s)/base.psi)
         try:
             ax5.step(ctrl.t, np.abs(ctrl.psi_s)/base.psi, where='post')
-            ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
         except AttributeError:
-            ax5.legend([r'$\psi_\mathrm{s}$'])
+            pass
+        ax5.legend([r'$\psi_\mathrm{s}$', r'$\hat\psi_\mathrm{s}$'])
     else:
         ax5.plot(mdl.t, np.abs(mdl.psi_ss)/base.psi)
         ax5.plot(mdl.t, np.abs(mdl.psi_Rs)/base.psi)
         try:
-            ax5.plot(ctrl.t, np.abs(ctrl.psi_R)/base.psi)
+            ax5.plot(ctrl.t, np.abs(ctrl.psi_s)/base.psi)
         except AttributeError:
             pass
-        ax5.legend([r'$\psi_\mathrm{s}$', r'$\psi_\mathrm{R}$',
-                    r'$\hat \psi_\mathrm{R}$'])
+        ax5.legend(
+            [
+                r'$\psi_\mathrm{s}$',
+                r'$\psi_\mathrm{R}$',
+                r'$\hat \psi_\mathrm{s}$',
+            ])
     ax5.set_xlim(t_range)
     ax5.set_ylabel('Flux linkage (p.u.)')
     ax5.set_xlabel('Time (s)')
@@ -227,9 +254,9 @@ def plot_extra_pu(sim, t_zoom=(1.1, 1.125)):
         Time span. The default is (1.1, 1.125).
 
     """
-    mdl = sim.mdl.data      # Continuous-time data
-    ctrl = sim.ctrl.data    # Discrete-time data
-    base = sim.base         # Base values
+    mdl = sim.mdl.data  # Continuous-time data
+    ctrl = sim.ctrl.data  # Discrete-time data
+    base = sim.base  # Base values
 
     # Quantities in stator coordinates
     ctrl.u_ss = np.exp(1j*ctrl.theta_s)*ctrl.u_s
@@ -239,15 +266,13 @@ def plot_extra_pu(sim, t_zoom=(1.1, 1.125)):
     ax1.plot(mdl.t, mdl.u_ss.real/base.u)
     ax1.plot(ctrl.t, ctrl.u_ss.real/base.u)
     ax1.set_xlim(t_zoom)
-    # ax1.set_ylim(-1.5, 1.5)
     ax1.legend([r'$u_\mathrm{sa}$', r'$\hat u_\mathrm{sa}$'])
     ax1.set_ylabel('Voltage (p.u.)')
     ax1.set_xticklabels([])
     ax2.plot(mdl.t, complex2abc(mdl.i_ss).T/base.i)
     ax2.step(ctrl.t, ctrl.i_ss.real/base.i, where='post')
     ax2.set_xlim(t_zoom)
-    ax2.legend([r'$i_\mathrm{sa}$', r'$i_\mathrm{sb}$',
-                r'$i_\mathrm{sc}$'])
+    ax2.legend([r'$i_\mathrm{sa}$', r'$i_\mathrm{sb}$', r'$i_\mathrm{sc}$'])
     ax2.set_ylabel('Current (p.u.)')
     ax2.set_xlabel('Time (s)')
     fig1.align_ylabels()
@@ -263,19 +288,15 @@ def plot_extra_pu(sim, t_zoom=(1.1, 1.125)):
         ax1.plot(mdl.t, mdl.u_dc/base.u)
         ax1.plot(mdl.t, complex2abc(mdl.u_g).T/base.u)
         ax1.set_xlim(t_zoom)
-        # ax1.set_ylim(-1.5, 2)
         ax1.set_xticklabels([])
-        ax1.legend([r'$u_\mathrm{di}$',
-                    r'$u_\mathrm{dc}$',
-                    r'$u_\mathrm{ga}$'])
+        ax1.legend(
+            [r'$u_\mathrm{di}$', r'$u_\mathrm{dc}$', r'$u_\mathrm{ga}$'])
         ax1.set_ylabel('Voltage (p.u.)')
         ax2.plot(mdl.t, mdl.i_L/base.i)
         ax2.plot(mdl.t, mdl.i_dc/base.i)
         ax2.plot(mdl.t, mdl.i_g.real/base.i)
         ax2.set_xlim(t_zoom)
-        ax2.legend([r'$i_\mathrm{L}$',
-                    r'$i_\mathrm{dc}$',
-                    r'$i_\mathrm{ga}$'])
+        ax2.legend([r'$i_\mathrm{L}$', r'$i_\mathrm{dc}$', r'$i_\mathrm{ga}$'])
         ax2.set_ylabel('Current (p.u.)')
         ax2.set_xlabel('Time (s)')
         fig2.align_ylabels()

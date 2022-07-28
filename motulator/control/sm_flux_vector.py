@@ -34,10 +34,8 @@ from motulator.control.sm_vector import SensorlessObserver
 # %%
 @dataclass
 class SynchronousMotorFluxVectorCtrlPars:
-    """
-    Control parameters: flux-vector control for synchronous motor drives.
+    """Control parameters: flux-vector control for synchronous motor drives."""
 
-    """
     # pylint: disable=too-many-instance-attributes
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
@@ -83,17 +81,15 @@ class SynchronousMotorFluxVectorCtrl:
     This class interconnects the subsystems of the control system and
     provides the interface to the solver.
 
+    Parameters
+    ----------
+    pars : SynchronousMotoroFluxVectorCtrlPars
+        Control parameters.
+
     """
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars=SynchronousMotorFluxVectorCtrlPars()):
-        """
-        Parameters
-        ----------
-        pars : SynchronousMotoroFluxVectorCtrlPars
-            Control parameters.
-
-        """
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -112,7 +108,7 @@ class SynchronousMotorFluxVectorCtrl:
 
     def __call__(self, mdl):
         """
-        Main control loop.
+        Run the main control loop.
 
         Parameters
         ----------
@@ -153,14 +149,22 @@ class SynchronousMotorFluxVectorCtrl:
         # Outputs
         tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
         psi_s_ref, tau_M_ref_lim = self.flux_torque_ref(tau_M_ref, w_m, u_dc)
-        u_s_ref = self.flux_torque_ctrl(psi_s_ref, tau_M_ref_lim, psi_s, i_s,
-                                        w_m, u_dc)
+        u_s_ref = self.flux_torque_ctrl(
+            psi_s_ref, tau_M_ref_lim, psi_s, i_s, w_m, u_dc)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
-        data = Bunch(i_s=i_s, u_s=u_s, psi_s=psi_s, psi_s_ref=psi_s_ref,
-                     w_m_ref=w_m_ref, w_m=w_m, theta_m=theta_m, u_dc=u_dc,
-                     tau_M_ref_lim=tau_M_ref_lim, t=self.t)
+        data = Bunch(
+            i_s=i_s,
+            u_s=u_s,
+            psi_s=psi_s,
+            psi_s_ref=psi_s_ref,
+            w_m_ref=w_m_ref,
+            w_m=w_m,
+            theta_m=theta_m,
+            u_dc=u_dc,
+            tau_M_ref_lim=tau_M_ref_lim,
+            t=self.t)
         self._save(data)
 
         # Update states
@@ -176,10 +180,7 @@ class SynchronousMotorFluxVectorCtrl:
             self.data.setdefault(key, []).extend([value])
 
     def post_process(self):
-        """
-        Transform the lists to the ndarray format.
-
-        """
+        """Transform the lists to the ndarray format."""
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
 
@@ -198,14 +199,13 @@ class FluxTorqueCtrl:
 
     # pylint: disable=too-few-public-methods
     def __init__(self, pars):
-
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.p = pars.p
         self.alpha_psi = pars.alpha_psi
+        G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
         c_delta_max = 1.5*pars.p*(
-            pars.psi_f*pars.psi_s_nom/pars.L_d
-            + (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)*pars.psi_s_nom**2)
+            pars.psi_f*pars.psi_s_nom/pars.L_d + G*pars.psi_s_nom**2)
         self.k_tau = pars.alpha_tau_max/c_delta_max
 
     def __call__(self, psi_s_ref, tau_M_ref, psi_s, i_s, w_m, u_dc):
@@ -242,8 +242,9 @@ class FluxTorqueCtrl:
         # Voltage reference
         e_psi = psi_s_ref - np.abs(psi_s)
         delta = np.angle(psi_s)
-        u_s_ref = (self.R_s*i_s + 1j*w_s*psi_s
-                   + self.alpha_psi*e_psi*np.exp(1j*delta))
+        u_s_ref = (
+            self.R_s*i_s + 1j*w_s*psi_s +
+            self.alpha_psi*e_psi*np.exp(1j*delta))
 
         return u_s_ref
 
@@ -316,8 +317,8 @@ class FluxTorqueRef:
 
         # Limit the torque reference according to the MTPV and current limits
         tau_M_lim = self.tau_M_lim(psi_s_ref)
-        tau_M_ref_lim = np.min([tau_M_lim,
-                                np.abs(tau_M_ref)])*np.sign(tau_M_ref)
+        tau_M_ref_lim = np.min([tau_M_lim, np.abs(tau_M_ref)
+                                ])*np.sign(tau_M_ref)
 
         return psi_s_ref, tau_M_ref_lim
 
@@ -327,17 +328,15 @@ class Observer:
     """
     Sensored observer.
 
+    Parameters
+    ----------
+    pars : SynchronousMotoroFluxVectorCtrlPars
+        Control parameters.
+
     """
 
     # pylint: disable=too-few-public-methods
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : SynchronousMotoroFluxVectorCtrlPars
-            Control parameters.
-
-        """
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.L_d = pars.L_d
@@ -365,5 +364,5 @@ class Observer:
         e = self.L_d*i_s.real + 1j*self.L_q*i_s.imag + self.psi_f - self.psi_s
 
         # Update the state
-        self.psi_s += self.T_s*(u_s - self.R_s*i_s - 1j*w_m*self.psi_s
-                                + self.g*e)
+        self.psi_s += self.T_s*(
+            u_s - self.R_s*i_s - 1j*w_m*self.psi_s + self.g*e)

@@ -17,12 +17,9 @@ from motulator.control.common import SpeedCtrl, PWM
 # %%
 @dataclass
 class InductionMotorVectorCtrlPars:
-    """
-    Vector control parameters for an induction motor drive.
+    """Vector control parameters for an induction motor drive."""
 
-    """
     # pylint: disable=too-many-instance-attributes
-
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
         repr=False, default=lambda t: (t > .2)*(2*np.pi*50))
@@ -66,7 +63,6 @@ class InductionMotorVectorCtrl:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars=InductionMotorVectorCtrlPars()):
-
         self.t = 0
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
@@ -84,7 +80,7 @@ class InductionMotorVectorCtrl:
 
     def __call__(self, mdl):
         """
-        Main control loop.
+        Run the main control loop.
 
         Parameters
         ----------
@@ -128,9 +124,18 @@ class InductionMotorVectorCtrl:
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
 
         # Data logging
-        data = Bunch(i_s_ref=i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
-                     w_m=w_m, w_s=w_s, psi_R=psi_R, theta_s=theta_s,
-                     u_dc=u_dc, tau_M_ref_lim=tau_M_ref_lim, t=self.t)
+        data = Bunch(
+            i_s_ref=i_s_ref,
+            i_s=i_s,
+            u_s=u_s,
+            w_m_ref=w_m_ref,
+            w_m=w_m,
+            w_s=w_s,
+            psi_R=psi_R,
+            theta_s=theta_s,
+            u_dc=u_dc,
+            tau_M_ref_lim=tau_M_ref_lim,
+            t=self.t)
         self._save(data)
 
         # Update the states
@@ -148,10 +153,7 @@ class InductionMotorVectorCtrl:
             self.data.setdefault(key, []).extend([value])
 
     def post_process(self):
-        """
-        Transform the lists to the ndarray format.
-
-        """
+        """Transform the lists to the ndarray format."""
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
 
@@ -183,7 +185,6 @@ class CurrentRef:
     """
 
     def __init__(self, pars):
-
         self.T_s = pars.T_s
         self.i_s_max = pars.i_s_max
         self.L_sgm = pars.L_sgm
@@ -219,6 +220,7 @@ class CurrentRef:
             Limited torque reference.
 
         """
+
         def q_axis_current_limit(i_sd_ref, psi_R):
             # Priority given to the d component
             i_sq_max1 = np.sqrt(self.i_s_max**2 - i_sd_ref**2)
@@ -228,17 +230,17 @@ class CurrentRef:
             i_sq_max = np.min([i_sq_max1, i_sq_max2])
             return i_sq_max
 
-        # Current reference
-        if psi_R > 0:
-            i_sq_ref = tau_M_ref/(1.5*self.p*psi_R)
-        else:
-            i_sq_ref = 0
+        # q-axis current reference
+        i_sq_ref = tau_M_ref/(1.5*self.p*psi_R) if psi_R > 0 else 0
+
         # Limit the current
         i_sq_max = q_axis_current_limit(self.i_sd_ref, psi_R)
         if np.abs(i_sq_ref) > i_sq_max:
             i_sq_ref = np.sign(i_sq_ref)*i_sq_max
+
         # Current reference
         i_s_ref = self.i_sd_ref + 1j*i_sq_ref
+
         # Limited torque (for the speed controller)
         tau_M_ref_lim = 1.5*self.p*psi_R*i_sq_ref
 
@@ -257,8 +259,8 @@ class CurrentRef:
 
         """
         u_s_max = u_dc/np.sqrt(3)
-        self.i_sd_ref += self.T_s*self.gain_fw*(u_s_max**2
-                                                - np.abs(u_s_ref)**2)
+        self.i_sd_ref += self.T_s*self.gain_fw*(
+            u_s_max**2 - np.abs(u_s_ref)**2)
         if self.i_sd_ref > self.i_sd_nom:
             self.i_sd_ref = self.i_sd_nom
         elif self.i_sd_ref < -self.i_s_max:
@@ -293,7 +295,6 @@ class CurrentCtrl:
     """
 
     def __init__(self, pars):
-
         self.T_s = pars.T_s
         self.L_sgm = pars.L_sgm
         self.alpha_c = pars.alpha_c
@@ -379,7 +380,6 @@ class SensorlessObserver:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.R_R = pars.R_R
@@ -402,8 +402,6 @@ class SensorlessObserver:
             Stator voltage in estimated rotor flux coordinates.
         i_s : complex
             Stator current in estimated rotor flux coordinates.
-        *_ : not used
-            Provides a compatible interface with the sensored observer.
 
         Returns
         -------
@@ -431,26 +429,21 @@ class SensorlessObserver:
             w_s = self.w_m
 
         # Slip angular frequency (stored for the update method)
-        if self.psi_R > 0:
-            self.w_r = e_r.imag/self.psi_R
-        else:
-            self.w_r = 0
+        self.w_r = e_r.imag/self.psi_R if self.psi_R > 0 else 0
 
         # Increment of the flux magnitude (stored for the update method)
-        self.dpsi_R = ((1 - g.real)*(e_s.real + w_s*self.L_sgm*i_s.imag)
-                       + g.real*e_r.real)
+        self.dpsi_R = (
+            (1 - g.real)*(e_s.real + w_s*self.L_sgm*i_s.imag) +
+            g.real*e_r.real)
 
         return w_s
 
     def update(self, i_s, w_s):
-        """
-        Update the states for the next sampling period.
-
-        """
+        """Update the states for the next sampling period."""
         self.w_m += self.T_s*self.alpha_o*(w_s - self.w_r)
         self.psi_R += self.T_s*self.dpsi_R
         self.theta_s += self.T_s*w_s
-        self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
+        self.theta_s = np.mod(self.theta_s, 2*np.pi)  # Limit to [0, 2*pi]
         self.i_s_old = i_s
 
 
@@ -488,7 +481,6 @@ class Observer:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.R_R = pars.R_R
@@ -537,10 +529,7 @@ class Observer:
         # Angular frequency of the rotor flux vector
         den = self.psi_R + self.L_sgm*((1 - k)*i_s).real
         v = (1 - k)*e_s + k*e_r
-        if den > 0:
-            w_s = v.imag/den
-        else:
-            w_s = w_m
+        w_s = v.imag/den if den > 0 else w_m
 
         # Increment of the flux magnitude (stored for the update method)
         self.dpsi_R = v.real + w_s*self.L_sgm*((1 - k)*i_s).imag
@@ -548,11 +537,8 @@ class Observer:
         return w_s
 
     def update(self, i_s, w_s):
-        """
-        Update the states for the next sampling period.
-
-        """
+        """Update the states for the next sampling period."""
         self.psi_R += self.T_s*self.dpsi_R
         self.theta_s += self.T_s*w_s
-        self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
+        self.theta_s = np.mod(self.theta_s, 2*np.pi)  # Limit to [0, 2*pi]
         self.i_s_old = i_s

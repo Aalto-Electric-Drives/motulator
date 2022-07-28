@@ -26,7 +26,6 @@ class Inverter:
     """
 
     def __init__(self, u_dc=540):
-
         self.u_dc0 = u_dc
         self.q = 0j  # Switching state vector
 
@@ -108,7 +107,6 @@ class FrequencyConverter(Inverter):
     """
 
     def __init__(self, L=2e-3, C=235e-6, U_g=400, f_g=50):
-
         # pylint: disable=super-init-not-called
         self.L, self.C = L, C
         # Initial value of the DC-bus inductor current
@@ -138,9 +136,12 @@ class FrequencyConverter(Inverter):
 
         """
         theta_g = self.w_g*t
-        u_g_abc = self.u_g*np.array([np.cos(theta_g),
-                                     np.cos(theta_g - 2*np.pi/3),
-                                     np.cos(theta_g - 4*np.pi/3)])
+        u_g_abc = self.u_g*np.array(
+            [
+                np.cos(theta_g),
+                np.cos(theta_g - 2*np.pi/3),
+                np.cos(theta_g - 4*np.pi/3)
+            ])
         return u_g_abc
 
     def f(self, t, u_dc, i_L, i_dc):

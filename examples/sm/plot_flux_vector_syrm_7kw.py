@@ -43,10 +43,19 @@ pars = mt.SynchronousMotorFluxVectorCtrlPars(
     psi_s_max=base.psi,
     psi_s_nom=base.psi,
     k_u=1,
-    alpha_psi=2*np.pi*100, alpha_tau_max=2*np.pi*200, alpha_s=2*np.pi*4,
-    tau_M_max=2*base.tau_nom, i_s_max=2*base.i,
-    R_s=.54, L_d=41.5e-3*.9, L_q=6.2e-3, psi_f=0, p=2, J=.015,
-    w_o=2*np.pi*40, zeta_inf=.2)
+    alpha_psi=2*np.pi*100,
+    alpha_tau_max=2*np.pi*200,
+    alpha_s=2*np.pi*4,
+    tau_M_max=2*base.tau_nom,
+    i_s_max=2*base.i,
+    R_s=.54,
+    L_d=41.5e-3*.9,
+    L_q=6.2e-3,
+    psi_f=0,
+    p=2,
+    J=.015,
+    w_o=2*np.pi*40,
+    zeta_inf=.2)
 ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 
 # %%

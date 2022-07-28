@@ -34,8 +34,8 @@ mdl = mt.InductionMotorDriveDiode(motor, mech, conv)
 # %%
 # Control system (parametrized as open-loop V/Hz control).
 
-ctrl = mt.InductionMotorVHzCtrl(mt.InductionMotorVHzCtrlPars(
-    R_s=0, R_R=0, k_u=0, k_w=0))
+ctrl = mt.InductionMotorVHzCtrl(
+    mt.InductionMotorVHzCtrlPars(R_s=0, R_R=0, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference and the external load torque. More complicated

@@ -1,8 +1,6 @@
 # pylint: disable=invalid-name
-"""
-Simulation environment.
+"""Simulation environment."""
 
-"""
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.io import savemat
@@ -17,21 +15,21 @@ class Delay:
 
     This models the computational delay as a ring buffer.
 
+    Parameters
+    ----------
+    length : int, optional
+        Length of the buffer in samples. The default is 1.
+
     """
 
-    # pylint: disable=R0903
+    # pylint: disable=too-few-public-methods
     def __init__(self, length=1, elem=3):
-        """
-        Parameters
-        ----------
-        length : int, optional
-            Length of the buffer in samples. The default is 1.
-
-        """
         self.data = length*[elem*[0]]  # Creates a zero list
 
     def __call__(self, u):
         """
+        Delay the input.
+
         Parameters
         ----------
         u : array_like, shape (elem,)
@@ -59,17 +57,15 @@ class CarrierCmp:
     instants are explicilty computed in the begininning of each sampling
     period, allowing faster simulations.
 
+    Parameters
+    ----------
+    N : int, optional
+        Amount of the counter quantization levels. The default is 2**12.
+
     """
+
     # pylint: disable=too-few-public-methods
-
     def __init__(self, N=2**12):
-        """
-        Parameters
-        ----------
-        N : int, optional
-            Amount of the counter quantization levels. The default is 2**12.
-
-        """
         self.N = N
         self.rising_edge = True  # Stores the carrier direction
 
@@ -154,28 +150,32 @@ class Simulation:
 
     Each simulation object has a system model object and a controller object.
 
+    Parameters
+    ----------
+    mdl : InductionMotorDrive | SynchronousMotorDrive
+        Continuous-time system model.
+    ctrl : SynchronousMotorVectorCtrl | InductionMotorVectorCtrl |
+        InductionMotorVHzCtrl
+        Discrete-time controller.
+    delay : int, optional
+        Amount of computational delays. The default is 1.
+    enable_pwm : bool, optional
+        Enable carrier comparison. The default is False.
+    base : BaseValues, optional
+        Base values for plotting figures.
+    t_stop : float, optional
+        Simulation stop time. The default is 1.
+
     """
 
-    def __init__(self, mdl=None, ctrl=None, delay=1, enable_pwm=False,
-                 base=None, t_stop=1):
-        """
-        Parameters
-        ----------
-        mdl : InductionMotorDrive | SynchronousMotorDrive
-            Continuous-time system model.
-        ctrl : SynchronousMotorVectorCtrl | InductionMotorVectorCtrl |
-            InductionMotorVHzCtrl
-            Discrete-time controller.
-        delay : int, optional
-            Amount of computational delays. The default is 1.
-        enable_pwm : bool, optional
-            Enable carrier comparison. The default is False.
-        base : BaseValues, optional
-            Base values for plotting figures.
-        t_stop : float, optional
-            Simulation stop time. The default is 1.
-
-        """
+    def __init__(
+            self,
+            mdl=None,
+            ctrl=None,
+            delay=1,
+            enable_pwm=False,
+            base=None,
+            t_stop=1):
         # pylint: disable=too-many-arguments
         self.mdl = mdl
         self.ctrl = ctrl
@@ -225,7 +225,7 @@ class Simulation:
                     x0 = self.mdl.get_initial_values()
 
                     # Integrate over t_span
-                    t_span = (self.mdl.t0, self.mdl.t0+t_step)
+                    t_span = (self.mdl.t0, self.mdl.t0 + t_step)
                     sol = solve_ivp(self.mdl.f, t_span, x0, max_step=max_step)
 
                     # Set the new initial values (last points of the solution)
@@ -250,5 +250,5 @@ class Simulation:
             Name for the simulation instance. The default is 'sim'.
 
         """
-        savemat(name+'_mdl_data'+'.mat', self.mdl.data)
-        savemat(name+'_ctrl_data'+'.mat', self.ctrl.data)
+        savemat(name + '_mdl_data' + '.mat', self.mdl.data)
+        savemat(name + '_ctrl_data' + '.mat', self.ctrl.data)

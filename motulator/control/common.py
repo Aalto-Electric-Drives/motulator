@@ -1,8 +1,6 @@
-# pylint: disable=C0103
-"""
-Common control functions and classes.
+# pylint: disable=invalid-name
+"""Common control functions and classes."""
 
-"""
 import numpy as np
 
 from motulator.helpers import complex2abc, abc2complex
@@ -17,16 +15,14 @@ class PWM:
     voltage. The digital delay effects are taken into account in the realized
     voltage.
 
+    Parameters
+    ----------
+    pars : data object
+        Control parameters.
+
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Control parameters.
-
-        """
         self.T_s = pars.T_s
         self.realized_voltage = 0
         self._u_ref_lim_old = 0
@@ -67,7 +63,7 @@ class PWM:
 
     def __call__(self, u_ref, u_dc, theta, w):
         """
-        Compute the duty ratio references and update the state.
+        Compute the duty ratios and update the state.
 
         Parameters
         ----------
@@ -91,10 +87,7 @@ class PWM:
         return d_abc_ref
 
     def output(self, u_ref, u_dc, theta, w):
-        """
-        Compute the duty ratio references and the limited voltage reference.
-
-        """
+        """Compute the duty ratio limited voltage reference."""
         # Advance the angle due to the computational delay (T_s) and
         # the ZOH (PWM) delay (0.5*T_s)
         theta_comp = theta + 1.5*self.T_s*w
@@ -129,16 +122,14 @@ class SpeedCtrl:
     This controller is implemented using the disturbance-observer structure.
     The controller is mathematically identical to the 2DOF PI speed controller.
 
+    Parameters
+    ----------
+    pars : data object
+        Control parameters.
+
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Control parameters.
-
-        """
         self.T_s = pars.T_s
         self.alpha_s = pars.alpha_s
         self.tau_M_max = pars.tau_M_max
@@ -191,22 +182,22 @@ class RateLimiter:
     """
     Rate limiter.
 
+    Parameters
+    ----------
+    pars : data object
+        Control parameters.
+
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Control parameters.
-
-        """
         self.T_s = pars.T_s
         self.limit = pars.rate_limit
         self.y_old = 0
 
     def __call__(self, u):
         """
+        Limit the input signal.
+
         Parameters
         ----------
         u : float

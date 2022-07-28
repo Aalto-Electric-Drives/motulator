@@ -49,7 +49,6 @@ class InductionMotor:
     """
 
     def __init__(self, p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245):
-
         # pylint: disable=too-many-arguments
         self.p = p
         self.R_s, self.R_r = R_s, R_r
@@ -178,19 +177,15 @@ class InductionMotorSaturated(InductionMotor):
 
     """
 
-    def __init__(self,
-                 p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_su=.34, beta=.84, S=7):
-
+    def __init__(
+            self, p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_su=.34, beta=.84, S=7):
         # pylint: disable=too-many-arguments
         super().__init__(p=p, R_s=R_s, R_r=R_r, L_ell=L_ell)
         # Saturation model
         self.L_s = lambda psi: L_su/(1. + (beta*np.abs(psi))**S)
 
     def currents(self, psi_ss, psi_rs):
-        """
-        This method overrides the base class method.
-
-        """
+        """Override the base class method."""
         # Saturated value of the stator inductance.
         L_s = self.L_s(psi_ss)
         # Currents
@@ -224,7 +219,6 @@ class InductionMotorInvGamma(InductionMotor):
     """
 
     def __init__(self, p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224):
-
         # pylint: disable=too-many-arguments, disable=super-init-not-called
         # Convert the inverse-Γ parameters to the Γ parameters
         gamma = L_M/(L_M + L_sgm)  # Magnetic coupling factor
