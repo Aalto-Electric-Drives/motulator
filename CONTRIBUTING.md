@@ -100,7 +100,7 @@ When contributing code, make sure you follow this workflow:
 ## C. Merging your changes with motulator
 
 8. Before merging, confirm that your code runs successfully and doesn't contain any bugs.
-9. motulator has online documentation at https://aalto-electric-drives.github.io/motulator/. To make sure any new methods or classes you added show up there, please read the :ref:`documentation <contributing-to-documentation>` section.
+9. motulator has online documentation at https://aalto-electric-drives.github.io/motulator/. To make sure any new methods or classes you added show up there, please read the [documentation](contributing-to-documentation section).
 10. If you added a major new feature, consider showcasing it in an [example](#example-python-files).
 11. When you feel your code is finished, create a [pull request](https://help.github.com/articles/about-pull-requests/) on [motulator](https://github.com/Aalto-Electric-Drives/motulator).
 12. Once a pull request has been created, it will be reviewed by any member of the community. Changes might be suggested which you can make by simply adding new commits to the branch. When everything's finished, someone with the right GitHub permissions will merge your changes into motulator main repository.
