@@ -158,8 +158,8 @@ class TorqueCharacteristics:
 
         """
         # Replace zeros with epsilon
-        abs_psi_s = (
-            (abs_psi_s > 0)*abs_psi_s + (abs_psi_s <= 0)*float_info.epsilon)
+        abs_psi_s = ((abs_psi_s > 0)*abs_psi_s +
+                     (abs_psi_s <= 0)*float_info.epsilon)
 
         if self.psi_f == 0:
             # SyRM (d-axis aligned with the maximum inductance)
@@ -264,9 +264,8 @@ class TorqueCharacteristics:
         if (self.psi_s_min is not None) and (self.psi_f == 0):
             # Minimum d-axis current for sensorless SyRM drives
             i_sd_min = self.psi_s_min/self.L_d
-            i_s.real = (
-                (i_s.real < i_sd_min)*i_sd_min +
-                (i_s.real >= i_sd_min)*i_s.real)
+            i_s.real = ((i_s.real < i_sd_min)*i_sd_min +
+                        (i_s.real >= i_sd_min)*i_s.real)
 
         psi_s = self.flux(i_s)
         tau_M = self.torque(psi_s)

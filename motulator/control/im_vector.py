@@ -432,9 +432,8 @@ class SensorlessObserver:
         self.w_r = e_r.imag/self.psi_R if self.psi_R > 0 else 0
 
         # Increment of the flux magnitude (stored for the update method)
-        self.dpsi_R = (
-            (1 - g.real)*(e_s.real + w_s*self.L_sgm*i_s.imag) +
-            g.real*e_r.real)
+        self.dpsi_R = ((1 - g.real)*(e_s.real + w_s*self.L_sgm*i_s.imag) +
+                       g.real*e_r.real)
 
         return w_s
 

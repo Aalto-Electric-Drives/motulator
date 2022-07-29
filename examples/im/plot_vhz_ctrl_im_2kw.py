@@ -47,7 +47,7 @@ mdl.mech.tau_L_ext = lambda t: (t > 1.)*base.tau_nom
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, base=base, enable_pwm=True, t_stop=1.5)
+sim = mt.Simulation(mdl, ctrl, enable_pwm=True, t_stop=1.5)
 start_time = time()  # Start the timer
 sim.simulate()
 # Print the execution time
@@ -64,5 +64,5 @@ print('\nExecution time: {:.2f} s'.format((time() - start_time)))
 #    https://doi.org/10.1109/EPE.2007.4417763
 
 # sphinx_gallery_thumbnail_number = 2
-mt.plot_pu(sim)
-mt.plot_extra_pu(sim, t_zoom=(1.1, 1.125))
+mt.plot(sim, base=base)
+mt.plot_extra(sim, t_span=(1.1, 1.125), base=base)

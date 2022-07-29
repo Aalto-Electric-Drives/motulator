@@ -54,11 +54,10 @@ def complex2abc(u):
     array([ 1.       , -0.9330127, -0.0669873])
 
     """
-    return np.array(
-        [
-            u.real, .5*(-u.real + np.sqrt(3)*u.imag),
-            .5*(-u.real - np.sqrt(3)*u.imag)
-        ])
+    return np.array([
+        u.real, .5*(-u.real + np.sqrt(3)*u.imag),
+        .5*(-u.real - np.sqrt(3)*u.imag)
+    ])
 
 
 # %%

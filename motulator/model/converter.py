@@ -136,12 +136,11 @@ class FrequencyConverter(Inverter):
 
         """
         theta_g = self.w_g*t
-        u_g_abc = self.u_g*np.array(
-            [
-                np.cos(theta_g),
-                np.cos(theta_g - 2*np.pi/3),
-                np.cos(theta_g - 4*np.pi/3)
-            ])
+        u_g_abc = self.u_g*np.array([
+            np.cos(theta_g),
+            np.cos(theta_g - 2*np.pi/3),
+            np.cos(theta_g - 4*np.pi/3)
+        ])
         return u_g_abc
 
     def f(self, t, u_dc, i_L, i_dc):

@@ -239,8 +239,7 @@ class InductionMotorDriveDiode(InductionMotorDrive):
         # Voltage at the output of the diode bridge
         self.data.u_di = np.amax(u_g_abc, 0) - np.amin(u_g_abc, 0)
         # Diode briddge switching states (-1, 0, 1)
-        q_g_abc = (
-            (np.amax(u_g_abc, 0) == u_g_abc).astype(int) -
-            (np.amin(u_g_abc, 0) == u_g_abc).astype(int))
+        q_g_abc = ((np.amax(u_g_abc, 0) == u_g_abc).astype(int) -
+                   (np.amin(u_g_abc, 0) == u_g_abc).astype(int))
         # Grid current space vector
         self.data.i_g = abc2complex(q_g_abc)*self.data.i_L

@@ -58,8 +58,7 @@ from motulator.helpers import (
 # Import some default plotting functions
 from motulator.plots import (
     plot,
-    plot_pu,
-    plot_extra_pu,
+    plot_extra,
 )
 
 # Delete imported modules

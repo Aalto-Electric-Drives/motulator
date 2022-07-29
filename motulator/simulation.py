@@ -161,26 +161,17 @@ class Simulation:
         Amount of computational delays. The default is 1.
     enable_pwm : bool, optional
         Enable carrier comparison. The default is False.
-    base : BaseValues, optional
-        Base values for plotting figures.
     t_stop : float, optional
         Simulation stop time. The default is 1.
 
     """
 
     def __init__(
-            self,
-            mdl=None,
-            ctrl=None,
-            delay=1,
-            enable_pwm=False,
-            base=None,
-            t_stop=1):
+            self, mdl=None, ctrl=None, delay=1, enable_pwm=False, t_stop=1):
         # pylint: disable=too-many-arguments
         self.mdl = mdl
         self.ctrl = ctrl
         self.delay = Delay(delay)
-        self.base = base
         self.t_stop = t_stop
         if enable_pwm:
             self.pwm = CarrierCmp()

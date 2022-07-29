@@ -48,15 +48,13 @@ mdl.mech.tau_L_ext = mt.Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, base=base, enable_pwm=False, t_stop=4)
+sim = mt.Simulation(mdl, ctrl, enable_pwm=False, t_stop=4)
 start_time = time()  # Start the timer
 sim.simulate()
 # Print the execution time
 print('\nExecution time: {:.2f} s'.format((time() - start_time)))
 
 # %%
-# Plot results in per-unit values. By uncommenting the second line you can
-# plot the results in SI units.
+# Plot results in per-unit values.
 
-mt.plot_pu(sim)
-# mt.plot(sim)
+mt.plot(sim, base=base)

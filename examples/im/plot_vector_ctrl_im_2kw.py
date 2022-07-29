@@ -79,7 +79,6 @@ mdl.mech.tau_L_ext = lambda t: (t > .75)*base.tau_nom
 sim = mt.Simulation(
     mdl,
     ctrl,
-    base=base,
     enable_pwm=False,  # Enable PWM model
     delay=1,  # Computational delay
     t_stop=1.5)  # Stop time
@@ -92,5 +91,5 @@ print('\nExecution time: {:.2f} s'.format((time() - start_time)))
 # Plot results in per-unit values. By uncommenting the second line you can
 # plot the results in SI units.
 
-mt.plot_pu(sim)
+mt.plot(sim, base=base)
 # mt.plot(sim)

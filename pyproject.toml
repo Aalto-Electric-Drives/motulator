@@ -4,9 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [tool.yapf]
 based_on_style = "pep8"
-spaces_before_comment = 2
 column_limit = 79
 no_spaces_around_selected_binary_operators = "*,/"
 split_before_first_argument = "True"
-# split_all_top_level_comma_separated_values = "True"
+coalesce_brackets = "True"
+spaces_before_comment = 2
+# spaces_before_comment = [5, 9, 13, 17, 21, 25, 29, 33, 37, 41, 45, 49, 53, 57, 61, 65, 69, 73]
 

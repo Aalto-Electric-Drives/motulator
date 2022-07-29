@@ -359,11 +359,10 @@ class CurrentRef:
 
         # Limit the q-axis current reference
         i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M_ref))
-        i_sq_max = np.min(
-            [
-                np.sqrt(self.i_s_max**2 - self.i_sd_ref**2),
-                np.sqrt(self.i_s_max**2 - i_sd_mtpa**2)
-            ])
+        i_sq_max = np.min([
+            np.sqrt(self.i_s_max**2 - self.i_sd_ref**2),
+            np.sqrt(self.i_s_max**2 - i_sd_mtpa**2)
+        ])
         if np.abs(i_sq_ref) > i_sq_max:
             i_sq_ref = np.sign(i_sq_ref)*i_sq_max
 
