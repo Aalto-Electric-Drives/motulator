@@ -287,7 +287,7 @@ class Ctrl:
         Transform the lists to the ndarray format.
 
         This can be run after the simulation has been completed in order to
-        spimplify plotting and analysis of the stored data.
+        simplify plotting and analysis of the stored data.
 
         """
         for key in self.data:
