@@ -7,7 +7,6 @@ implemented in stator coordinates. The default values correspond to a 2.2-kW
 induction motor.
 
 """
-from __future__ import annotations
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
@@ -35,14 +34,13 @@ class InductionMotorDrive:
 
     def __init__(self, motor=None, mech=None, conv=None):
         self.motor = motor
-        self.motor._mech = mech
         self.mech = mech
         self.conv = conv
         self.t0 = 0  # Initial time
-        self.data = Bunch()  # Stores the solution data
         # Store the solution in these lists
+        self.data = Bunch()  # Stores the solution data
         self.data.t, self.data.q = [], []
-        self.data.psi_s, self.data.psi_r = [], []
+        self.data.psi_ss, self.data.psi_rs = [], []
         self.data.theta_M, self.data.w_M = [], []
 
     def get_initial_values(self):
@@ -56,8 +54,8 @@ class InductionMotorDrive:
 
         """
         x0 = [
-            self.motor.psi_s0,
-            self.motor.psi_r0,
+            self.motor.psi_ss0,
+            self.motor.psi_rs0,
             self.mech.w_M0,
             self.mech.theta_M0,
         ]
@@ -74,8 +72,8 @@ class InductionMotorDrive:
 
         """
         self.t0 = t0
-        self.motor.psi_s0 = x0[0]
-        self.motor.psi_r0 = x0[1]
+        self.motor.psi_ss0 = x0[0]
+        self.motor.psi_rs0 = x0[1]
         # x0[2].imag and x0[3].imag are always zero
         self.mech.w_M0 = x0[2].real
         self.mech.theta_M0 = x0[3].real
@@ -100,19 +98,14 @@ class InductionMotorDrive:
 
         """
         # Unpack the states
-        psi_s, psi_r, w_M, theta_M = x
-        theta_m = self.motor.p*theta_M
-
+        psi_ss, psi_rs, w_M, _ = x
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
-        u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
-        i_s, _ = self.motor.currents(psi_s, psi_r)
-        tau_M = self.motor.torque(psi_s, i_s)
-
+        i_ss, _ = self.motor.currents(psi_ss, psi_rs)
+        tau_M = self.motor.torque(psi_ss, i_ss)
         # State derivatives
-        motor_f = self.motor.f(psi_s, psi_r, u_s, w_M)
+        motor_f = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
         mech_f = self.mech.f(t, w_M, tau_M)
-
         # List of state derivatives
         return motor_f + mech_f
 
@@ -128,8 +121,8 @@ class InductionMotorDrive:
         """
         self.data.t.extend(sol.t)
         self.data.q.extend(sol.q)
-        self.data.psi_s.extend(sol.y[0])
-        self.data.psi_r.extend(sol.y[1])
+        self.data.psi_ss.extend(sol.y[0])
+        self.data.psi_rs.extend(sol.y[1])
         self.data.w_M.extend(sol.y[2].real)
         self.data.theta_M.extend(sol.y[3].real)
 
@@ -140,12 +133,12 @@ class InductionMotorDrive:
             self.data[key] = np.asarray(self.data[key])
 
         # Some useful variables
-        self.data.i_s, _ = self.motor.currents(
-            self.data.psi_s, self.data.psi_r)
+        self.data.i_ss, _ = self.motor.currents(
+            self.data.psi_ss, self.data.psi_rs)
         self.data.theta_m = self.motor.p*self.data.theta_M
         self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
         self.data.w_m = self.motor.p*self.data.w_M
-        self.data.tau_M = self.motor.torque(self.data.psi_s, self.data.i_s)
+        self.data.tau_M = self.motor.torque(self.data.psi_ss, self.data.i_ss)
         self.data.tau_L = (
             self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)
         self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
@@ -153,12 +146,12 @@ class InductionMotorDrive:
         # Compute the inverse-Γ rotor flux
         try:
             # Saturable stator inductance
-            L_s = self.motor.L_s(np.abs(self.data.psi_s))
+            L_s = self.motor.L_s(np.abs(self.data.psi_ss))
         except TypeError:
             # Constant stator inductance
             L_s = self.motor.L_s
         gamma = L_s/(L_s + self.motor.L_ell)  # Magnetic coupling factor
-        self.data.psi_R = gamma*self.data.psi_r
+        self.data.psi_Rs = gamma*self.data.psi_rs
 
 
 # %%

@@ -236,6 +236,7 @@ class Ctrl:
     def __init__(self):
         self.t = 0  # Digital clock
         self.data = Bunch()  # Data store
+        self.t_reset = 1e9  # Time at which the clock is reset
 
     def __call__(self, mdl):
         """
@@ -253,7 +254,7 @@ class Ctrl:
         """
         raise NotImplementedError
 
-    def update_clock(self, T_s, t_max=1e9):
+    def update_clock(self, T_s):
         """
         Update the digital clock.
 
@@ -261,11 +262,9 @@ class Ctrl:
         ----------
         T_s : float
             Sampling period.
-        t_max : float, optional
-            Maximum time at which the clock is reset. The default is 1e9.
 
         """
-        if self.t < t_max:
+        if self.t < self.t_reset:
             self.t += T_s
         else:
             self.t = 0

@@ -7,7 +7,6 @@ motors and synchronous reluctance motors. Peak-valued complex space vectors are
 used.
 
 """
-from __future__ import annotations
 import numpy as np
 from scipy import optimize
 

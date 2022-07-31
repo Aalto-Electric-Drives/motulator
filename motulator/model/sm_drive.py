@@ -6,7 +6,6 @@ Peak-valued complex space vectors are used. The default values correspond to a
 2.2-kW permanent-magnet synchronous motor.
 
 """
-from __future__ import annotations
 import numpy as np
 
 from motulator.helpers import Bunch

@@ -9,7 +9,6 @@ vectors are in stationary coordinates. The default values correspond to a
 2.2-kW 400-V motor drive.
 
 """
-from __future__ import annotations
 import numpy as np
 
 
