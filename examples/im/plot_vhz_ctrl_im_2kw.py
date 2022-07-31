@@ -7,9 +7,8 @@ parameters correspond to open-loop V/Hz control.
 
 """
 # %%
-# Import the packages.
+# Import the package.
 
-from time import time
 import motulator as mt
 
 # %%
@@ -47,11 +46,8 @@ mdl.mech.tau_L_ext = lambda t: (t > 1.)*base.tau_nom
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, enable_pwm=True, t_stop=1.5)
-start_time = time()  # Start the timer
-sim.simulate()
-# Print the execution time
-print('\nExecution time: {:.2f} s'.format((time() - start_time)))
+sim = mt.Simulation(mdl, ctrl, enable_pwm=True)
+sim.simulate(t_stop=1.5)
 
 # %%
 # Plot results in per-unit values.

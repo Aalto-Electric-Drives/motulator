@@ -10,9 +10,6 @@ from __future__ import annotations
 import numpy as np
 
 from motulator.helpers import Bunch
-from motulator.model.sm import SynchronousMotor
-from motulator.model.mech import Mechanics
-from motulator.model.converter import Inverter
 
 
 # %%
@@ -35,12 +32,7 @@ class SynchronousMotorDrive:
 
     """
 
-    def __init__(
-            self,
-            motor=SynchronousMotor(),
-            mech=Mechanics(),
-            conv=Inverter(),
-    ):
+    def __init__(self, motor=None, mech=None, conv=None):
         self.motor = motor
         self.motor._mech = mech
         self.mech = mech

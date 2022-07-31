@@ -12,7 +12,6 @@ import numpy as np
 from scipy import optimize
 
 from motulator.helpers import complex2abc
-from motulator.model.mech import Mechanics
 
 
 # %%
@@ -42,14 +41,7 @@ class SynchronousMotor:
     """
 
     def __init__(
-            self,
-            p=3,
-            R_s=3.6,
-            L_d=.036,
-            L_q=.051,
-            psi_f=.545,
-            mech=Mechanics(),
-    ):
+            self, p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, mech=None):
         # pylint: disable=too-many-arguments
         self.p, self.R_s = p, R_s
         self.L_d, self.L_q, self.psi_f = L_d, L_q, psi_f
@@ -211,20 +203,20 @@ class SynchronousMotorSaturated(SynchronousMotor):
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
-            self,
-            p=2,
-            R_s=.54,
-            i_f=0,
-            a_d0=17.4,
-            a_q0=52.1,
-            a_dd=373.,
-            a_qq=658.,
-            a_dq=1120.,
-            S=5,
-            T=1,
-            U=1,
-            V=0,
-            mech=Mechanics(),
+        self,
+        p=2,
+        R_s=.54,
+        i_f=0,
+        a_d0=17.4,
+        a_q0=52.1,
+        a_dd=373.,
+        a_qq=658.,
+        a_dq=1120.,
+        S=5,
+        T=1,
+        U=1,
+        V=0,
+        mech=None,
     ):
         # pylint: disable=too-many-arguments, disable=super-init-not-called
         self.p, self.R_s = p, R_s

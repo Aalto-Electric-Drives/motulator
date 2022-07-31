@@ -10,7 +10,6 @@ drive.
 # %%
 # Import the packages.
 
-from time import time
 import numpy as np
 import motulator as mt
 
@@ -74,22 +73,14 @@ mdl.mech.tau_L_ext = lambda t: (t > .75)*base.tau_nom
 
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM
-# model (which makes simulation slower).
+# model (which makes simulation slower). One-sampling-period compuational delay
+# is modeled.
 
-sim = mt.Simulation(
-    mdl,
-    ctrl,
-    enable_pwm=False,  # Enable PWM model
-    delay=1,  # Computational delay
-    t_stop=1.5)  # Stop time
-start_time = time()  # Start the timer
-sim.simulate()
-# Print the execution time
-print('\nExecution time: {:.2f} s'.format((time() - start_time)))
+sim = mt.Simulation(mdl, ctrl, enable_pwm=False, delay=1)
+sim.simulate(t_stop=1.5)
 
 # %%
-# Plot results in per-unit values. By uncommenting the second line you can
-# plot the results in SI units.
+# Plot results in per-unit values. By omitting the argument `base` you can plot
+# the results in SI units.
 
 mt.plot(sim, base=base)
-# mt.plot(sim)

@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM
+from motulator.control.common import Ctrl, SpeedCtrl, PWM
 from motulator.control.sm_torque import TorqueCharacteristics
 
 
@@ -65,7 +65,7 @@ class SynchronousMotorVectorCtrlPars:
 
 
 # %%
-class SynchronousMotorVectorCtrl:
+class SynchronousMotorVectorCtrl(Ctrl):
     """
     Vector control for a synchronous motor drive.
 
@@ -80,9 +80,8 @@ class SynchronousMotorVectorCtrl:
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, pars=SynchronousMotorVectorCtrlPars()):
-
-        self.t = 0
+    def __init__(self, pars):
+        super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
         self.p = pars.p
@@ -95,7 +94,6 @@ class SynchronousMotorVectorCtrl:
             self.observer = SensorlessObserver(pars)
         else:
             self.observer = None
-        self.data = Bunch()
 
     def __call__(self, mdl):
         """
@@ -144,16 +142,17 @@ class SynchronousMotorVectorCtrl:
 
         # Data logging
         data = Bunch(
-            i_s_ref=i_s_ref,
             i_s=i_s,
-            u_s=u_s,
-            w_m_ref=w_m_ref,
-            w_m=w_m,
+            i_s_ref=i_s_ref,
+            t=self.t,
+            tau_M_ref_lim=tau_M_ref_lim,
             theta_m=theta_m,
             u_dc=u_dc,
-            tau_M_ref_lim=tau_M_ref_lim,
-            t=self.t)
-        self._save(data)
+            u_s=u_s,
+            w_m=w_m,
+            w_m_ref=w_m_ref,
+        )
+        self.save(data)
 
         # Update states
         if self.sensorless:
@@ -162,18 +161,9 @@ class SynchronousMotorVectorCtrl:
         self.current_ref.update(tau_M_ref_lim, u_s_ref, u_dc)
         self.current_ctrl.update(u_s_ref_lim, w_m)
         self.pwm.update(u_s_ref_lim)
-        self.t += self.T_s
+        self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref
-
-    def _save(self, data):
-        for key, value in data.items():
-            self.data.setdefault(key, []).extend([value])
-
-    def post_process(self):
-        """Transform the lists to the ndarray format."""
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
 
 
 # %%

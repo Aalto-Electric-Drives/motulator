@@ -27,7 +27,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
-from motulator.control.common import PWM, RateLimiter
+from motulator.control.common import Ctrl, PWM, RateLimiter
 from motulator.helpers import abc2complex, Bunch
 
 
@@ -53,7 +53,7 @@ class InductionMotorVHzCtrlPars:
 
 
 # %%
-class InductionMotorVHzCtrl:
+class InductionMotorVHzCtrl(Ctrl):
     """
     V/Hz control with the stator current feedback.
 
@@ -66,7 +66,7 @@ class InductionMotorVHzCtrl:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-        self.t = 0
+        super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
         # Instantiate classes
@@ -87,8 +87,6 @@ class InductionMotorVHzCtrl:
         self.i_s_ref = 0j
         self.theta_s = 0
         self.w_r_ref = 0
-        # Data store
-        self.data = Bunch()
 
     def __call__(self, mdl):
         """
@@ -133,24 +131,25 @@ class InductionMotorVHzCtrl:
 
         # Data logging
         data = Bunch(
-            i_s_ref=self.i_s_ref,
             i_s=i_s,
+            i_s_ref=self.i_s_ref,
+            psi_s_ref=self.psi_s_ref,
+            t=self.t,
+            theta_s=self.theta_s,
+            u_dc=u_dc,
             u_s=u_s,
             w_m_ref=w_m_ref,
             w_r=w_r,
             w_s=w_s,
-            psi_s_ref=self.psi_s_ref,
-            theta_s=self.theta_s,
-            u_dc=u_dc,
-            t=self.t)
-        self._save(data)
+        )
+        self.save(data)
 
         # Update the states
         self.i_s_ref += self.T_s*self.alpha_i*(i_s - self.i_s_ref)
         self.w_r_ref += self.T_s*self.alpha_f*(w_r - self.w_r_ref)
         self.theta_s += self.T_s*w_s
         self.theta_s = np.mod(self.theta_s, 2*np.pi)  # Limit to [0, 2*pi]
-        self.t += self.T_s
+        self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref
 
@@ -187,12 +186,3 @@ class InductionMotorVHzCtrl:
         u_s_ref = (
             self.R_s*i_s_ref0 + 1j*w_s*self.psi_s_ref + k*(self.i_s_ref - i_s))
         return u_s_ref
-
-    def _save(self, data):
-        for key, value in data.items():
-            self.data.setdefault(key, []).extend([value])
-
-    def post_process(self):
-        """Transform the lists to the ndarray format."""
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])

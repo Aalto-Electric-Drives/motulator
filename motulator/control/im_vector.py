@@ -11,13 +11,13 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM
+from motulator.control.common import Ctrl, SpeedCtrl, PWM
 
 
 # %%
 @dataclass
 class InductionMotorVectorCtrlPars:
-    """Vector control parameters for an induction motor drive."""
+    """Vector control parameters for induction motor drives."""
 
     # pylint: disable=too-many-instance-attributes
     # Speed reference (in electrical rad/s)
@@ -47,7 +47,7 @@ class InductionMotorVectorCtrlPars:
 
 
 # %%
-class InductionMotorVectorCtrl:
+class InductionMotorVectorCtrl(Ctrl):
     """
     Vector control for an induction motor drive.
 
@@ -62,8 +62,8 @@ class InductionMotorVectorCtrl:
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, pars=InductionMotorVectorCtrlPars()):
-        self.t = 0
+    def __init__(self, pars):
+        super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
         self.sensorless = pars.sensorless
@@ -76,7 +76,6 @@ class InductionMotorVectorCtrl:
         else:
             self.observer = Observer(pars)
         self.pwm = PWM(pars)
-        self.data = Bunch()
 
     def __call__(self, mdl):
         """
@@ -123,20 +122,21 @@ class InductionMotorVectorCtrl:
         u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_s, w_s)
 
-        # Data logging
+        # Save data
         data = Bunch(
-            i_s_ref=i_s_ref,
             i_s=i_s,
-            u_s=u_s,
-            w_m_ref=w_m_ref,
-            w_m=w_m,
-            w_s=w_s,
+            i_s_ref=i_s_ref,
             psi_R=psi_R,
+            t=self.t,
+            tau_M_ref_lim=tau_M_ref_lim,
             theta_s=theta_s,
             u_dc=u_dc,
-            tau_M_ref_lim=tau_M_ref_lim,
-            t=self.t)
-        self._save(data)
+            u_s=u_s,
+            w_m=w_m,
+            w_m_ref=w_m_ref,
+            w_s=w_s,
+        )
+        self.save(data)
 
         # Update the states
         self.pwm.update(u_s_ref_lim)
@@ -144,18 +144,9 @@ class InductionMotorVectorCtrl:
         self.current_ref.update(u_s_ref, u_dc)
         self.current_ctrl.update(u_s_ref_lim, w_s)
         self.observer.update(i_s, w_s)
-        self.t += self.T_s
+        self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref
-
-    def _save(self, data):
-        for key, value in data.items():
-            self.data.setdefault(key, []).extend([value])
-
-    def post_process(self):
-        """Transform the lists to the ndarray format."""
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
 
 
 # %%
@@ -169,7 +160,7 @@ class CurrentRef:
 
     Parameters
     ----------
-    pars : InductionMotorVectorCtrlPars (or its subset)
+    pars : InductionMotorVectorCtrlPars
         Control parameters.
 
     Notes
@@ -279,7 +270,7 @@ class CurrentCtrl:
 
     Parameters
     ----------
-    pars : InductionMotorVectorCtrlPars (or its subset)
+    pars : InductionMotorVectorCtrlPars
         Control parameters.
 
     Notes
@@ -360,7 +351,7 @@ class SensorlessObserver:
 
     Parameters
     ----------
-    pars : InductionMotorVectorCtrlPars (or its subset)
+    pars : InductionMotorVectorCtrlPars
         Control parameters.
 
     Notes
@@ -457,7 +448,7 @@ class Observer:
 
     Parameters
     ----------
-    pars : InductionMotorVectorCtrlPars (or its subset)
+    pars : InductionMotorVectorCtrlPars
         Control parameters.
 
     Notes

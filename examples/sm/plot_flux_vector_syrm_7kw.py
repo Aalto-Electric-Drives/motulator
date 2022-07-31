@@ -11,7 +11,6 @@ account in the control method (only in the system model).
 # %%
 # Import the packages.
 
-from time import time
 import numpy as np
 import motulator as mt
 
@@ -73,11 +72,8 @@ mdl.mech.tau_L_ext = mt.Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, enable_pwm=False, t_stop=4)
-start_time = time()  # Start the timer
-sim.simulate()
-# Print the execution time
-print('\nExecution time: {:.2f} s'.format((time() - start_time)))
+sim = mt.Simulation(mdl, ctrl, enable_pwm=False)
+sim.simulate(t_stop=4)
 
 # %%
 # Plot results in per-unit values.

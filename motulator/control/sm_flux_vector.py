@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import SpeedCtrl, PWM
+from motulator.control.common import Ctrl, SpeedCtrl, PWM
 from motulator.control.sm_torque import TorqueCharacteristics
 from motulator.control.sm_vector import SensorlessObserver
 
@@ -74,7 +74,7 @@ class SynchronousMotorFluxVectorCtrlPars:
 
 
 # %%
-class SynchronousMotorFluxVectorCtrl:
+class SynchronousMotorFluxVectorCtrl(Ctrl):
     """
     Flux-vector control for synchronous motor drives.
 
@@ -89,8 +89,8 @@ class SynchronousMotorFluxVectorCtrl:
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, pars=SynchronousMotorFluxVectorCtrlPars()):
-        self.t = 0
+    def __init__(self, pars):
+        super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
         self.p = pars.p
@@ -104,7 +104,6 @@ class SynchronousMotorFluxVectorCtrl:
         else:
             self.observer = Observer(pars)
         self.flux_torque_ref = FluxTorqueRef(pars)
-        self.data = Bunch()
 
     def __call__(self, mdl):
         """
@@ -156,33 +155,25 @@ class SynchronousMotorFluxVectorCtrl:
         # Data logging
         data = Bunch(
             i_s=i_s,
-            u_s=u_s,
             psi_s=psi_s,
             psi_s_ref=psi_s_ref,
-            w_m_ref=w_m_ref,
-            w_m=w_m,
+            t=self.t,
+            tau_M_ref_lim=tau_M_ref_lim,
             theta_m=theta_m,
             u_dc=u_dc,
-            tau_M_ref_lim=tau_M_ref_lim,
-            t=self.t)
-        self._save(data)
+            u_s=u_s,
+            w_m=w_m,
+            w_m_ref=w_m_ref,
+        )
+        self.save(data)
 
         # Update states
         self.observer.update(u_s, i_s, w_m)
         self.speed_ctrl.update(tau_M_ref_lim)
         self.pwm.update(u_s_ref_lim)
-        self.t += self.T_s
+        self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref
-
-    def _save(self, data):
-        for key, value in data.items():
-            self.data.setdefault(key, []).extend([value])
-
-    def post_process(self):
-        """Transform the lists to the ndarray format."""
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
 
 
 # %%
@@ -263,7 +254,6 @@ class FluxTorqueRef:
 
     # pylint: disable=too-few-public-methods
     def __init__(self, pars):
-
         self.psi_s_min = pars.psi_s_min
         try:
             self.psi_s_max = pars.psi_s_max

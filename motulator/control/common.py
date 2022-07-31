@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from motulator.helpers import complex2abc, abc2complex
+from motulator.helpers import abc2complex, complex2abc, Bunch
 
 
 # %%
@@ -227,3 +227,69 @@ class RateLimiter:
         # Store the limited output
         self.y_old = y
         return y
+
+
+# %%
+class Ctrl:
+    """Base class for main control loops."""
+
+    def __init__(self):
+        self.t = 0  # Digital clock
+        self.data = Bunch()  # Data store
+
+    def __call__(self, mdl):
+        """
+        Run the main control loop.
+
+        The main control loop is callable that returns the sampling
+        period `T_s` (float)  and the duty ratio references `d_abc_ref`
+        (ndarray, shape (3,)) for the next sampling period.
+
+        Parameters
+        ----------
+        mdl : Model
+            System model containing methods for getting the feedback signals.
+
+        """
+        raise NotImplementedError
+
+    def update_clock(self, T_s, t_max=1e9):
+        """
+        Update the digital clock.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period.
+        t_max : float, optional
+            Maximum time at which the clock is reset. The default is 1e9.
+
+        """
+        if self.t < t_max:
+            self.t += T_s
+        else:
+            self.t = 0
+
+    def save(self, data):
+        """
+        Save the internal controller data.
+
+        Parameters
+        ----------
+        data : bunch or dict
+            Contains the data to be saved.
+
+        """
+        for key, value in data.items():
+            self.data.setdefault(key, []).extend([value])
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format.
+
+        This can be run after the simulation has been completed in order to
+        spimplify plotting and analysis of the stored data.
+
+        """
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])

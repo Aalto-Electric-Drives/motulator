@@ -8,9 +8,8 @@ drive.
 """
 
 # %%
-# Import the packages.
+# Import the package.
 
-from time import time
 import motulator as mt
 
 # %%
@@ -43,11 +42,8 @@ mdl.mech.tau_L_ext = lambda t: (t > .8)*base.tau_nom*.7
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, enable_pwm=False, t_stop=1.6)
-start_time = time()  # Start the timer
-sim.simulate()
-# Print the execution time
-print('\nExecution time: {:.2f} s'.format((time() - start_time)))
+sim = mt.Simulation(mdl, ctrl, enable_pwm=False)
+sim.simulate(t_stop=1.6)
 
 # %%
 # Plot results in per-unit values.

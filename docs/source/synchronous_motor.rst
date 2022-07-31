@@ -16,7 +16,7 @@ The voltage equation in rotor coordinates is [1]_
 .. math::
     \frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s} 
 
-where :math:`\boldsymbol{u}_\mathrm{s}` is the stator voltage, :math:`\boldsymbol{i}_\mathrm{s}` is the stator current, and :math:`R_\mathrm{s}` is the stator resistance. The electrical angular speed of the rotor is :math:`\omega_\mathrm{m} = p\omega_\mathrm{M}`, where :math:`\omega_\mathrm{M}` is the mechanical angular speed of the rotor and :math:`p` is the number of pole pairs. In the magnetically linear case, the stator current is 
+where :math:`\boldsymbol{u}_\mathrm{s}` is the stator voltage, :math:`\boldsymbol{i}_\mathrm{s}` is the stator current, and :math:`R_\mathrm{s}` is the stator resistance. The electrical angular speed of the rotor is :math:`\omega_\mathrm{m} = p\omega_\mathrm{M}`, where :math:`\omega_\mathrm{M}` is the mechanical angular speed of the rotor and :math:`p` is the number of pole pairs. In the magnetically linear case, the stator flux linkage is 
 
 .. math::
 	\boldsymbol{\psi}_\mathrm{s} = L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\} + \psi_\mathrm{f} 

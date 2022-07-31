@@ -161,24 +161,19 @@ class Simulation:
         Amount of computational delays. The default is 1.
     enable_pwm : bool, optional
         Enable carrier comparison. The default is False.
-    t_stop : float, optional
-        Simulation stop time. The default is 1.
 
     """
 
-    def __init__(
-            self, mdl=None, ctrl=None, delay=1, enable_pwm=False, t_stop=1):
-        # pylint: disable=too-many-arguments
+    def __init__(self, mdl=None, ctrl=None, delay=1, enable_pwm=False):
         self.mdl = mdl
         self.ctrl = ctrl
         self.delay = Delay(delay)
-        self.t_stop = t_stop
         if enable_pwm:
             self.pwm = CarrierCmp()
         else:
             self.pwm = zoh
 
-    def simulate(self, max_step=np.inf):
+    def simulate(self, t_stop=1, max_step=np.inf):
         """
         Solve the continuous-time model and call the discrete-time controller.
 
@@ -186,6 +181,8 @@ class Simulation:
         ----------
         max_step : float, optional
             Max step size of the solver. The default is inf.
+        t_stop : float, optional
+            Simulation stop time. The default is 1.
 
         Notes
         -----
@@ -194,7 +191,7 @@ class Simulation:
 
         """
         # Simulation loop
-        while self.mdl.t0 <= self.t_stop:
+        while self.mdl.t0 <= t_stop:
 
             # Run the digital controller
             T_s, d_abc_ref = self.ctrl(self.mdl)
