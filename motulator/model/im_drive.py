@@ -101,10 +101,8 @@ class InductionMotorDrive:
         psi_ss, psi_rs, w_M, _ = x
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
-        i_ss, _ = self.motor.currents(psi_ss, psi_rs)
-        tau_M = self.motor.torque(psi_ss, i_ss)
-        # State derivatives
-        motor_f = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
+        # State derivatives plus the outputs for interconnections
+        motor_f, _, tau_M = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
         mech_f = self.mech.f(t, w_M, tau_M)
         # List of state derivatives
         return motor_f + mech_f
@@ -133,12 +131,11 @@ class InductionMotorDrive:
             self.data[key] = np.asarray(self.data[key])
 
         # Some useful variables
-        self.data.i_ss, _ = self.motor.currents(
+        self.data.i_ss, _, self.data.tau_M = self.motor.magnetic(
             self.data.psi_ss, self.data.psi_rs)
         self.data.theta_m = self.motor.p*self.data.theta_M
         self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
         self.data.w_m = self.motor.p*self.data.w_M
-        self.data.tau_M = self.motor.torque(self.data.psi_ss, self.data.i_ss)
         self.data.tau_L = (
             self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)
         self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
@@ -194,15 +191,16 @@ class InductionMotorDriveDiode(InductionMotorDrive):
         """Override the base class."""
         # Unpack the states for better readability
         psi_ss, psi_rs, w_M, _, u_dc, i_L = x
+
         # Interconnections: outputs for computing the state derivatives
-        i_ss, _ = self.motor.currents(psi_ss, psi_rs)
         u_ss = self.conv.ac_voltage(self.conv.q, u_dc)
+        motor_f, i_ss, tau_M = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
         i_dc = self.conv.dc_current(self.conv.q, i_ss)
-        tau_M = self.motor.torque(psi_ss, i_ss)
+
         # Return the list of state derivatives
         return (
-            self.motor.f(psi_ss, psi_rs, u_ss, w_M) +
-            self.mech.f(t, w_M, tau_M) + self.conv.f(t, u_dc, i_L, i_dc))
+            motor_f + self.mech.f(t, w_M, tau_M) +
+            self.conv.f(t, u_dc, i_L, i_dc))
 
     def save(self, sol):
         """Extend the base class."""

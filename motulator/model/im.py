@@ -18,7 +18,8 @@ class InductionMotor:
     Γ-equivalent model of an induction motor.
 
     An induction motor is modeled using the Γ-equivalent model [1]_. The model
-    is implemented in stator coordinates.
+    is implemented in stator coordinates. The flux linkages are used as state
+    variables.
 
     Parameters
     ----------
@@ -76,27 +77,34 @@ class InductionMotor:
         """
         i_rs = (psi_rs - psi_ss)/self.L_ell
         i_ss = psi_ss/self.L_s - i_rs
+
         return i_ss, i_rs
 
-    def torque(self, psi_ss, i_ss):
+    def magnetic(self, psi_ss, psi_rs):
         """
-        Compute the electromagnetic torque.
+        Magnetic model.
 
         Parameters
         ----------
         psi_ss : complex
             Stator flux linkage.
-        i_ss : complex
-            Stator current.
+        psi_rs : complex
+            Rotor flux linkage.
 
         Returns
         -------
+        i_ss : complex
+            Stator current.
+        i_rs : complex
+            Rotor current.
         tau_M : float
             Electromagnetic torque.
 
         """
+        i_ss, i_rs = self.currents(psi_ss, psi_rs)
         tau_M = 1.5*self.p*np.imag(i_ss*np.conj(psi_ss))
-        return tau_M
+
+        return i_ss, i_rs, tau_M
 
     def f(self, psi_ss, psi_rs, u_ss, w_M):
         """
@@ -117,12 +125,24 @@ class InductionMotor:
         -------
         complex list, length 2
             Time derivative of the state vector, [dpsi_ss, dpsi_rs]
+        i_ss : complex
+            Stator current.
+        tau_M : float
+            Electromagnetic torque.
+
+        Notes
+        -----
+        In addition to the state derivatives, this method also returns the
+        output signals (stator current `i_ss` and torque `tau_M`) needed for
+        interconnection with other subsystems. This avoids overlapping
+        computation in simulation.
 
         """
-        i_ss, i_rs = self.currents(psi_ss, psi_rs)
+        i_ss, i_rs, tau_M = self.magnetic(psi_ss, psi_rs)
         dpsi_ss = u_ss - self.R_s*i_ss
         dpsi_rs = -self.R_r*i_rs + 1j*self.p*w_M*psi_rs
-        return [dpsi_ss, dpsi_rs]
+
+        return [dpsi_ss, dpsi_rs], i_ss, tau_M
 
     def meas_currents(self):
         """
@@ -199,7 +219,7 @@ class InductionMotorInvGamma(InductionMotor):
     Inverse-Γ model of an induction motor.
 
     This extends the InductionMotor class (based on the Γ model) by providing
-    the interface for the inverse-Γ model parameters. Linear magnetics are
+    an interface for the inverse-Γ model parameters. Linear magnetics are
     assumed. If magnetic saturation is to be modeled, the Γ model is preferred.
 
     Parameters

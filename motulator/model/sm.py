@@ -18,8 +18,9 @@ class SynchronousMotor:
     """
     Synchronous motor model.
 
-    This models a synchronous motor in rotor coordinates. The default values
-    correspond to a 2.2-kW permanent-magnet synchronous motor.
+    This models a synchronous motor in rotor coordinates. The stator flux
+    linkage is the state variable. The default values correspond to a 2.2-kW
+    permanent-magnet synchronous motor.
 
     Parameters
     ----------
@@ -67,27 +68,28 @@ class SynchronousMotor:
         i_s = (psi_s.real - self.psi_f)/self.L_d + 1j*psi_s.imag/self.L_q
         return i_s
 
-    def torque(self, psi_s, i_s):
+    def magnetic(self, psi_s):
         """
-        Compute the electromagnetic torque.
+        Magnetic model.
 
         Parameters
         ----------
         psi_s : complex
             Stator flux linkage.
-        i_s : complex
-            Stator current.
 
         Returns
         -------
+        i_s : complex
+            Stator current.
         tau_M : float
             Electromagnetic torque.
 
         """
+        i_s = self.current(psi_s)
         tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
-        return tau_M
+        return i_s, tau_M
 
-    def f(self, psi_s, i_s, u_s, w_M):
+    def f(self, psi_s, u_s, w_M):
         """
         Compute the state derivative.
 
@@ -102,12 +104,24 @@ class SynchronousMotor:
 
         Returns
         -------
-        dpsi_s : complex
+        dpsi_s : complex list
             Time derivative of the stator flux linkage.
+        i_s : complex
+            Stator current.
+        tau_M : float
+            Electromagnetic torque.
+
+        Notes
+        -----
+        In addition to the state derivative, this method also returns the
+        output signals (stator current `i_ss` and torque `tau_M`) needed for
+        interconnection with other subsystems. This avoids overlapping
+        computation in simulation.
 
         """
+        i_s, tau_M = self.magnetic(psi_s)
         dpsi_s = u_s - self.R_s*i_s - 1j*self.p*w_M*psi_s
-        return [dpsi_s]
+        return [dpsi_s], i_s, tau_M
 
     def meas_currents(self):
         """

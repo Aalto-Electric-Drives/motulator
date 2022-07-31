@@ -179,10 +179,10 @@ class Simulation:
 
         Parameters
         ----------
-        max_step : float, optional
-            Max step size of the solver. The default is inf.
         t_stop : float, optional
             Simulation stop time. The default is 1.
+        max_step : float, optional
+            Max step size of the solver. The default is inf.
 
         Notes
         -----

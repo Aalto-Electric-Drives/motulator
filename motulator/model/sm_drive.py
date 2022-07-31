@@ -104,11 +104,9 @@ class SynchronousMotorDrive:
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
         u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
-        i_s = self.motor.current(psi_s)
-        tau_M = self.motor.torque(psi_s, i_s)
 
         # State derivatives
-        motor_f = self.motor.f(psi_s, i_s, u_s, w_M)
+        motor_f, i_s, tau_M = self.motor.f(psi_s, u_s, w_M)
         mech_f = self.mech.f(t, w_M, tau_M)
 
         # List of state derivatives
@@ -137,9 +135,8 @@ class SynchronousMotorDrive:
             self.data[key] = np.asarray(self.data[key])
 
         # Compute some useful quantities
-        self.data.i_s = self.motor.current(self.data.psi_s)
+        self.data.i_s, self.data.tau_M = self.motor.magnetic(self.data.psi_s)
         self.data.w_m = self.motor.p*self.data.w_M
-        self.data.tau_M = self.motor.torque(self.data.psi_s, self.data.i_s)
         self.data.tau_L = (
             self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)
         self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
