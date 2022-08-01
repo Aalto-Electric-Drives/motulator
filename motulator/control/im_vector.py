@@ -432,8 +432,8 @@ class SensorlessObserver:
         """Update the states for the next sampling period."""
         self.w_m += self.T_s*self.alpha_o*(w_s - self.w_r)
         self.psi_R += self.T_s*self.dpsi_R
-        self.theta_s += self.T_s*w_s
-        self.theta_s = np.mod(self.theta_s, 2*np.pi)  # Limit to [0, 2*pi]
+        self.theta_s += self.T_s*w_s  # Next line: limit into [-pi, pi)
+        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
         self.i_s_old = i_s
 
 
@@ -529,6 +529,6 @@ class Observer:
     def update(self, i_s, w_s):
         """Update the states for the next sampling period."""
         self.psi_R += self.T_s*self.dpsi_R
-        self.theta_s += self.T_s*w_s
-        self.theta_s = np.mod(self.theta_s, 2*np.pi)  # Limit to [0, 2*pi]
+        self.theta_s += self.T_s*w_s  # Next line: limit into [-pi, pi)
+        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
         self.i_s_old = i_s

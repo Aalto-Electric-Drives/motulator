@@ -121,9 +121,11 @@ class SynchronousMotorVectorCtrl(Ctrl):
         u_dc = mdl.conv.meas_dc_voltage()  # DC-bus voltage
 
         if not self.sensorless:
-            # Measure the rotor speed and position
+            # Measure the rotor speed
             w_m = self.p*mdl.mech.meas_speed()
-            theta_m = self.p*np.mod(mdl.mech.meas_position(), 2*np.pi)
+            # Limit the electrical rotor position into [-pi, pi)
+            theta_m = np.mod(
+                self.p*mdl.mech.meas_position() + np.pi, 2*np.pi) - np.pi
         else:
             # Get the rotor speed and position estimates
             w_m, theta_m = self.observer.w_m, self.observer.theta_m
@@ -465,5 +467,5 @@ class SensorlessObserver:
         # Update the states
         self.psi_s += self.T_s*(u_s - self.R_s*i_s - 1j*w_m*self.psi_s + v)
         self.w_m += self.T_s*self.k_i*eps
-        self.theta_m += self.T_s*w_m
-        self.theta_m = np.mod(self.theta_m, 2*np.pi)  # Limit to [0, 2*pi]
+        self.theta_m += self.T_s*w_m  # Next line: limit into [-pi, pi)
+        self.theta_m = np.mod(self.theta_m + np.pi, 2*np.pi) - np.pi

@@ -147,8 +147,8 @@ class InductionMotorVHzCtrl(Ctrl):
         # Update the states
         self.i_s_ref += self.T_s*self.alpha_i*(i_s - self.i_s_ref)
         self.w_r_ref += self.T_s*self.alpha_f*(w_r - self.w_r_ref)
-        self.theta_s += self.T_s*w_s
-        self.theta_s = np.mod(self.theta_s, 2*np.pi)  # Limit to [0, 2*pi]
+        self.theta_s += self.T_s*w_s  # Next line: limit into [-pi, pi)
+        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
         self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref

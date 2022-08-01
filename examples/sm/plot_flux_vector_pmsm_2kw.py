@@ -29,7 +29,7 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorFluxVectorCtrlPars()
+pars = mt.SynchronousMotorFluxVectorCtrlPars(sensorless=True)
 ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 
 # %%

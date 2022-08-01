@@ -76,9 +76,8 @@ class InductionMotorDrive:
         self.motor.psi_rs0 = x0[1]
         # x0[2].imag and x0[3].imag are always zero
         self.mech.w_M0 = x0[2].real
-        self.mech.theta_M0 = x0[3].real
-        # Limit the angle [0, 2*pi]
-        self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
+        # Limit theta_M0 = x0[3].real into [-pi, pi)
+        self.mech.theta_M0 = np.mod(x0[3].real + np.pi, 2*np.pi) - np.pi
 
     def f(self, t, x):
         """
@@ -133,8 +132,10 @@ class InductionMotorDrive:
         # Some useful variables
         self.data.i_ss, _, self.data.tau_M = self.motor.magnetic(
             self.data.psi_ss, self.data.psi_rs)
-        self.data.theta_m = self.motor.p*self.data.theta_M
-        self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
+        self.data.theta_M = np.mod(  # Limit into [-pi, pi)
+            self.data.theta_M + np.pi, 2*np.pi) - np.pi
+        self.data.theta_m = np.mod(  # Limit into [-pi, pi)
+            self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.w_m = self.motor.p*self.data.w_M
         self.data.tau_L = (
             self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)

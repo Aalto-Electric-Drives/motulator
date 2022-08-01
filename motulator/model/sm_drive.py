@@ -76,9 +76,8 @@ class SynchronousMotorDrive:
         self.motor.psi_s0 = x0[0]
         # x0[1].imag and x0[2].imag are always zero
         self.mech.w_M0 = x0[1].real
-        self.mech.theta_M0 = x0[2].real
-        # Limit the angle [0, 2*pi]
-        self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
+        # Limit theta_M0 = x0[2].real into [-pi, pi)
+        self.mech.theta_M0 = np.mod(x0[2].real + np.pi, 2*np.pi) - np.pi
 
     def f(self, t, x):
         """
@@ -140,5 +139,7 @@ class SynchronousMotorDrive:
         self.data.tau_L = (
             self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)
         self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
-        self.data.theta_m = self.motor.p*self.data.theta_M
-        self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
+        self.data.theta_M = np.mod(  # Limit into [-pi, pi)
+            self.data.theta_M + np.pi, 2*np.pi) - np.pi
+        self.data.theta_m = np.mod(  # Limit into [-pi, pi)
+            self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi

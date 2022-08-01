@@ -135,9 +135,11 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
             # Get the rotor speed and position estimates
             w_m, theta_m = self.observer.w_m, self.observer.theta_m
         else:
-            # Measure the rotor speed and position
+            # Measure the rotor speed
             w_m = self.p*mdl.mech.meas_speed()
-            theta_m = self.p*np.mod(mdl.mech.meas_position(), 2*np.pi)
+            # Limit the electrical rotor position into [-pi, pi)
+            theta_m = np.mod(
+                self.p*mdl.mech.meas_position() + np.pi, 2*np.pi) - np.pi
 
         # Current vector in estimated rotor coordinates
         i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
