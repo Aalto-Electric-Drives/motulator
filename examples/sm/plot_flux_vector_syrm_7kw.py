@@ -53,8 +53,7 @@ pars = mt.SynchronousMotorFluxVectorCtrlPars(
     psi_f=0,
     p=2,
     J=.015,
-    w_o=2*np.pi*40,
-    zeta_inf=.2)
+)
 ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 
 # %%
@@ -72,7 +71,7 @@ mdl.mech.tau_L_ext = mt.Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, enable_pwm=False)
+sim = mt.Simulation(mdl, ctrl, pwm=False)
 sim.simulate(t_stop=4)
 
 # %%

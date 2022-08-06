@@ -54,7 +54,7 @@ class CarrierCmp:
 
     This computes the the switching states and their durations based on the
     duty ratios. Instead of searching for zero crossings, the switching
-    instants are explicilty computed in the beginning of each sampling period,
+    instants are explicitly computed in the beginning of each sampling period,
     allowing faster simulations.
 
     Parameters
@@ -112,7 +112,7 @@ class CarrierCmp:
 
     def __call__(self, T_s, d_abc):
         """
-        Carrier comparison.
+        Compute the switching state durations and vectors.
 
         Parameters
         ----------
@@ -199,16 +199,16 @@ class Simulation:
         Discrete-time controller.
     delay : int, optional
         Amount of computational delays. The default is 1.
-    enable_pwm : bool, optional
+    pwm : bool, optional
         Enable carrier comparison. The default is False.
 
     """
 
-    def __init__(self, mdl=None, ctrl=None, delay=1, enable_pwm=False):
+    def __init__(self, mdl=None, ctrl=None, delay=1, pwm=False):
         self.mdl = mdl
         self.ctrl = ctrl
         self.delay = Delay(delay)
-        if enable_pwm:
+        if pwm:
             self.pwm = CarrierCmp()
         else:
             self.pwm = zoh

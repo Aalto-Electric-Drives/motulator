@@ -77,7 +77,7 @@ mdl.mech.tau_L_ext = lambda t: (t > .75)*base.tau_nom
 # model (which makes simulation slower). One-sampling-period computational
 # delay is modeled.
 
-sim = mt.Simulation(mdl, ctrl, enable_pwm=False, delay=1)
+sim = mt.Simulation(mdl, ctrl, pwm=False, delay=1)
 sim.simulate(t_stop=1.5)
 
 # %%

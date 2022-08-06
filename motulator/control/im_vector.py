@@ -31,6 +31,8 @@ class InductionMotorVectorCtrlPars:
     alpha_c: float = 2*np.pi*200
     alpha_o: float = 2*np.pi*40  # Used only in the sensorless mode
     alpha_s: float = 2*np.pi*4
+    # Sensored observer
+    g = .2  # Used only in the sensored mode
     # Maximum values
     tau_M_max: float = 1.5*14.6
     i_s_max: float = 1.5*np.sqrt(2)*5
@@ -455,11 +457,7 @@ class Observer:
     -----
     This implementation places the pole in synchronous coordinates at::
 
-        s = -R_R/L_M - g*abs(w_m) - 1j*w_s
-
-    The current model would be obtained using k = 1, resulting in the pole at
-    s = -R_R/L_M - 1j*(w_s - w_m). The pure voltage model corresponds to k = 0,
-    resulting in the marginally stable pole at s = -1j*w_s.
+        s = -R_R/L_M - g*abs(w_m) - 1j*(w_s - w_m)
 
     References
     ----------
@@ -475,9 +473,9 @@ class Observer:
         self.R_s = pars.R_s
         self.R_R = pars.R_R
         self.L_sgm = pars.L_sgm
-        self.L_M = pars.L_M
+        self.alpha = pars.R_R/pars.L_M
         # Nonnegative gain for damping
-        self.g = .5
+        self.g = pars.g
         # Initial states
         self.theta_s, self.psi_R, self.i_s_old = 0, 0, 0
         # Store for the update method to avoid recalculation
@@ -502,19 +500,19 @@ class Observer:
             Angular frequency of the rotor flux.
 
         """
-        alpha = self.R_R/self.L_M
-
         # The observer pole could be placed arbitrarily by means of the
-        # observer gain k. The following choice places the pole at
-        # s = -sigma - 1j*w_s, where sigma = alpha + g*abs(w_m). This allows
-        # smooth transition from the current model (at zero speed to the
-        # (damped) voltage model (at higher speeds).
-        k = (alpha + self.g*np.abs(w_m))/(alpha - 1j*w_m)
+        # observer gain k. The current model would be obtained using k = 1,
+        # resulting in the pole at s = -R_R/L_M - 1j*(w_s - w_m). The pure
+        # voltage model corresponds to k = 0, resulting in the marginally
+        # stable pole at s = -1j*w_s.
+
+        # This gain leads to s = -alpha - g*abs(w_m) - 1j*(w_s - w_m)
+        k = 1 + self.g*np.abs(w_m)/(self.alpha - 1j*w_m)
 
         # Induced voltage from the stator quantities
         e_s = u_s - self.R_s*i_s - self.L_sgm*(i_s - self.i_s_old)/self.T_s
         # Induced voltage from the rotor quantities
-        e_r = self.R_R*i_s - (alpha - 1j*w_m)*self.psi_R
+        e_r = self.R_R*i_s - (self.alpha - 1j*w_m)*self.psi_R
 
         # Angular frequency of the rotor flux vector
         den = self.psi_R + self.L_sgm*((1 - k)*i_s).real

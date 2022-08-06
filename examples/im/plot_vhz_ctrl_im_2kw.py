@@ -45,9 +45,10 @@ ctrl.w_m_ref = lambda t: (t > .2)*(1.*base.w)
 mdl.mech.tau_L_ext = lambda t: (t > 1.)*base.tau_nom
 
 # %%
-# Create the simulation object and simulate it.
+# Create the simulation object and simulate it. The option `pwm=True` enables
+# the model for the carrier comparison.
 
-sim = mt.Simulation(mdl, ctrl, enable_pwm=True)
+sim = mt.Simulation(mdl, ctrl, pwm=True)
 t_start = time()  # Start the timer
 sim.simulate(t_stop=1.5)
 print('\nExecution time: {:.2f} s'.format((time() - t_start)))
@@ -59,7 +60,7 @@ print('\nExecution time: {:.2f} s'.format((time() - t_start)))
 #    The DC link of this particular example is actually unstable at 1-p.u.
 #    speed at the rated load torque, since the inverter looks like a negative
 #    resistance to the DC link. You could notice this instability if simulating
-#    a longer period (e.g. set t_stop=2). For more information, see e.g.
+#    a longer period (e.g. set `t_stop=2`). For more information, see e.g.
 #    https://doi.org/10.1109/EPE.2007.4417763
 
 # sphinx_gallery_thumbnail_number = 2

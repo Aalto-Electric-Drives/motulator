@@ -29,7 +29,7 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorFluxVectorCtrlPars(sensorless=True)
+pars = mt.SynchronousMotorFluxVectorCtrlPars(sensorless=True, T_s=250e-6)
 ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 
 # %%
@@ -42,7 +42,7 @@ mdl.mech.tau_L_ext = lambda t: (t > .8)*base.tau_nom*.7
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, enable_pwm=False)
+sim = mt.Simulation(mdl, ctrl, pwm=False)
 sim.simulate(t_stop=1.6)
 
 # %%
