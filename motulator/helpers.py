@@ -1,9 +1,6 @@
-# pylint: disable=C0103
-# pylint: disable=R0903
-"""
-Helper functions and classes.
+# pylint: disable=invalid-name
+"""Helper functions and classes."""
 
-"""
 # %%
 from __future__ import annotations
 from dataclasses import dataclass
@@ -27,6 +24,7 @@ def abc2complex(u):
 
     Examples
     --------
+    >>> from motulator import abc2complex
     >>> y = abc2complex([1, 2, 3])
     >>> y
     (-1-0.5773502691896258j)
@@ -52,14 +50,16 @@ def complex2abc(u):
 
     Examples
     --------
+    >>> from motulator import complex2abc
     >>> y = complex2abc(1-.5j)
     >>> y
     array([ 1.       , -0.9330127, -0.0669873])
 
     """
-    return np.array([u.real,
-                     .5*(-u.real + np.sqrt(3)*u.imag),
-                     .5*(-u.real - np.sqrt(3)*u.imag)])
+    return np.array([
+        u.real, .5*(-u.real + np.sqrt(3)*u.imag),
+        .5*(-u.real - np.sqrt(3)*u.imag)
+    ])
 
 
 # %%
@@ -72,6 +72,7 @@ class BaseValues:
     pairs. They can be used, e.g., for scaling the plotted waveforms.
 
     """
+
     # pylint: disable=too-many-instance-attributes
     U_nom: float
     I_nom: float
@@ -81,6 +82,7 @@ class BaseValues:
     p: int
 
     def __post_init__(self):
+        """Compute the base values."""
         self.u = np.sqrt(2/3)*self.U_nom
         self.i = np.sqrt(2)*self.I_nom
         self.w = 2*np.pi*self.f_nom
@@ -96,29 +98,28 @@ class Sequence:
     """
     Sequence generator.
 
-    This represents a sequence generator. The time array must be increasing.
-    The output values are interpolated between the data points.
+    The time array must be increasing. The output values are interpolated
+    between the data points.
+
+    Parameters
+    ----------
+    times : ndarray
+        Time values.
+    values : ndarray
+        Output values.
+    periodic : bool, optional
+        Enables periodicity. The default is False.
 
     """
 
+    # pylint: disable=too-few-public-methods
     def __init__(self, times, values, periodic=False):
-        """
-        Parameters
-        ----------
-        times : ndarray
-            Time values.
-        values : ndarray
-            Output values.
-        periodic : bool, optional
-            Enables periodicity. The default is False.
-
-        """
         self.times = times
         self.values = values
         if periodic is True:
-            self.__period = times[-1] - times[0]
+            self._period = times[-1] - times[0]
         else:
-            self.__period = None
+            self._period = None
 
     def __call__(self, t):
         """
@@ -135,21 +136,14 @@ class Sequence:
             Interpolated output.
 
         """
-        return np.interp(t, self.times, self.values, period=self.__period)
-
-    def __str__(self):
-        desc = (('Sequence:\n    times={}\n    values={}')
-                .format(self.times, self.values))
-        return desc
+        return np.interp(t, self.times, self.values, period=self._period)
 
 
 # %%
 class Step:
-    """
-    Step function.
+    """Step function."""
 
-    """
-
+    # pylint: disable=too-few-public-methods
     def __init__(self, step_time, step_value, initial_value=0):
         self.step_time = step_time
         self.step_value = step_value
@@ -171,12 +165,6 @@ class Step:
 
         """
         return self.initial_value + (t >= self.step_time)*self.step_value
-
-    def __str__(self):
-        desc = (('Step(step_time={:.1f}, initial_value={:.1f},'
-                ' step_value={:.1f})')
-                .format(self.step_time, self.initial_value, self.step_value))
-        return desc
 
 
 # %%
@@ -218,10 +206,10 @@ class Step:
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 # ----------------------------------------------------------------------------
-# pylint: disable=raise-missing-from
 class Bunch(dict):
     """
     Container object exposing keys as attributes.
+
     Bunch objects are sometimes used as an output for functions and methods.
     They extend dictionaries by enabling values to be accessed by key,
     `bunch["value_key"]`, or by an attribute, `bunch.value_key`.
@@ -256,6 +244,7 @@ class Bunch(dict):
         try:
             return self[key]
         except KeyError:
+            # pylint: disable=raise-missing-from
             raise AttributeError(key)
 
     def __setstate__(self, state):

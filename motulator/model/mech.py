@@ -1,16 +1,8 @@
-# pylint: disable=C0103
-"""
-Continuous-time models for mechanical subsystems.
-
-"""
-
-from __future__ import annotations
-from collections.abc import Callable
-from dataclasses import dataclass, field
+# pylint: disable=invalid-name
+"""Continuous-time models for mechanical subsystems."""
 
 
 # %%
-@dataclass
 class Mechanics:
     """
     Mechanics subsystem.
@@ -27,13 +19,12 @@ class Mechanics:
         External load torque as a function of time, `tau_L_ext(t)`.
 
     """
-    J: float = .015
-    B: float = 0
-    tau_L_ext: Callable[[float], float] = field(repr=False,
-                                                default=lambda t: 0)
-    # Initial values
-    w_M0: float = field(repr=False, default=0)
-    theta_M0: float = field(repr=False, default=0)
+
+    def __init__(self, J=.015, B=0, tau_L_ext=lambda t: 0):
+        self.J, self.B = J, B
+        self.tau_L_ext = tau_L_ext
+        # Initial values
+        self.w_M0, self.theta_M0 = 0, 0
 
     def f(self, t, w_M, tau_M):
         """

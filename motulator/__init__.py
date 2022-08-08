@@ -1,14 +1,9 @@
-"""
-motulator: Motor Drive Simulator in Python
-
-"""
+"""Import simulation environment."""
 import sys
 import os
 
-sys.path.append(
-    os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import simulation environment
 # pylint: disable=wrong-import-position
 from motulator.simulation import Simulation
 
@@ -16,28 +11,40 @@ from motulator.simulation import Simulation
 from motulator.model.mech import Mechanics
 from motulator.model.converter import (
     Inverter,
-    FrequencyConverter)
+    FrequencyConverter,
+)
 from motulator.model.im import (
     InductionMotor,
     InductionMotorSaturated,
-    SaturableStatorInductance,
-    InductionMotorInvGamma)
-from motulator.model.sm import SynchronousMotor
+    InductionMotorInvGamma,
+)
+from motulator.model.sm import (
+    SynchronousMotor,
+    SynchronousMotorSaturated,
+)
 from motulator.model.im_drive import (
     InductionMotorDrive,
-    InductionMotorDriveDiode)
+    InductionMotorDriveDiode,
+)
 from motulator.model.sm_drive import SynchronousMotorDrive
 
 # Import controllers
 from motulator.control.im_vhz import (
     InductionMotorVHzCtrl,
-    InductionMotorVHzCtrlPars)
+    InductionMotorVHzCtrlPars,
+)
 from motulator.control.im_vector import (
     InductionMotorVectorCtrl,
-    InductionMotorVectorCtrlPars)
+    InductionMotorVectorCtrlPars,
+)
 from motulator.control.sm_vector import (
     SynchronousMotorVectorCtrl,
-    SynchronousMotorVectorCtrlPars)
+    SynchronousMotorVectorCtrlPars,
+)
+from motulator.control.sm_flux_vector import (
+    SynchronousMotorFluxVectorCtrl,
+    SynchronousMotorFluxVectorCtrlPars,
+)
 
 # Import other useful stuff
 from motulator.helpers import (
@@ -45,13 +52,14 @@ from motulator.helpers import (
     abc2complex,
     complex2abc,
     Sequence,
-    Step)
+    Step,
+)
 
 # Import some default plotting functions
 from motulator.plots import (
     plot,
-    plot_pu,
-    plot_extra_pu)
+    plot_extra,
+)
 
 # Delete imported modules
 del sys, os

@@ -1,4 +1,4 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
 Power converter models.
 
@@ -9,25 +9,24 @@ vectors are in stationary coordinates. The default values correspond to a
 2.2-kW 400-V motor drive.
 
 """
-from __future__ import annotations
-from dataclasses import dataclass, field
 import numpy as np
 
 
 # %%
-@dataclass
 class Inverter:
     """
     Inverter with constant DC-bus voltage and switching-cycle averaging.
 
     Parameters
     ----------
-    u_dc0 : float
+    u_dc : float
         DC-bus voltage.
 
     """
-    u_dc0: float = 540
-    q: complex = field(repr=False, default=0j)  # Switching state vector
+
+    def __init__(self, u_dc=540):
+        self.u_dc0 = u_dc
+        self.q = 0j  # Switching state vector
 
     @staticmethod
     def ac_voltage(q, u_dc):
@@ -85,7 +84,6 @@ class Inverter:
 
 
 # %%
-@dataclass
 class FrequencyConverter(Inverter):
     """
     Frequency converter.
@@ -106,23 +104,20 @@ class FrequencyConverter(Inverter):
         Grid frequency.
 
     """
-    L: float = 2e-3
-    C: float = 235e-6
-    U_g: float = 400
-    f_g: float = 50
-    # Initial value of the DC-bus inductor current
-    i_L0: float = field(repr=False, default=0)
-    # Initial value of the DC-bus voltage
-    u_dc0: float = field(repr=False, init=False)
-    # Peak-valued line-neutral grid voltage
-    u_g: float = field(repr=False, init=False)
-    # Grid angular frequeyncy
-    w_g: float = field(repr=False, init=False)
 
-    def __post_init__(self):
-        self.u_dc0 = np.sqrt(2)*self.U_g
-        self.u_g = np.sqrt(2/3)*self.U_g
-        self.w_g = 2*np.pi*self.f_g
+    def __init__(self, L=2e-3, C=235e-6, U_g=400, f_g=50):
+        # pylint: disable=super-init-not-called
+        self.L, self.C = L, C
+        # Initial value of the DC-bus inductor current
+        self.i_L0 = 0
+        # Initial value of the DC-bus voltage
+        self.u_dc0 = np.sqrt(2)*U_g
+        # Peak-valued line-neutral grid voltage
+        self.u_g = np.sqrt(2/3)*U_g
+        # Grid angular frequeyncy
+        self.w_g = 2*np.pi*f_g
+        # Switching state vector
+        self.q = 0j
 
     def grid_voltages(self, t):
         """
@@ -140,9 +135,11 @@ class FrequencyConverter(Inverter):
 
         """
         theta_g = self.w_g*t
-        u_g_abc = self.u_g*np.array([np.cos(theta_g),
-                                     np.cos(theta_g - 2*np.pi/3),
-                                     np.cos(theta_g - 4*np.pi/3)])
+        u_g_abc = self.u_g*np.array([
+            np.cos(theta_g),
+            np.cos(theta_g - 2*np.pi/3),
+            np.cos(theta_g - 4*np.pi/3)
+        ])
         return u_g_abc
 
     def f(self, t, u_dc, i_L, i_dc):
