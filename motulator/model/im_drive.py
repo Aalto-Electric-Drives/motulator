@@ -1,24 +1,18 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
-This module contains continuous-time models for induction motor drives.
+Continuous-time models for induction motor drives.
 
 Peak-valued complex space vectors are used. The space vector models are
 implemented in stator coordinates. The default values correspond to a 2.2-kW
 induction motor.
 
 """
-from __future__ import annotations
-from dataclasses import dataclass, field
 import numpy as np
-from sklearn.utils import Bunch
-from helpers import abc2complex
-from model.im import InductionMotor, InductionMotorSaturated
-from model.mech import Mechanics
-from model.converter import Inverter, PWMInverter, FrequencyConverter
+
+from motulator.helpers import abc2complex, Bunch
 
 
 # %%
-@dataclass
 class InductionMotorDrive:
     """
     Continuous-time model for an induction motor drive.
@@ -33,20 +27,18 @@ class InductionMotorDrive:
         Induction motor model.
     mech : Mechanics
         Mechanics model.
-    conv : Inverter | PWMInverter
+    conv : Inverter
         Inverter model.
 
     """
-    motor: InductionMotor | InductionMotorSaturated = InductionMotor()
-    mech: Mechanics = Mechanics()
-    conv: Inverter | PWMInverter = Inverter()
-    # Stores the solution data
-    data: Bunch = field(repr=False, default_factory=Bunch)
-    # Initial time
-    t0: float = field(repr=False, default=0)
 
-    def __post_init__(self):
+    def __init__(self, motor=None, mech=None, conv=None):
+        self.motor = motor
+        self.mech = mech
+        self.conv = conv
+        self.t0 = 0  # Initial time
         # Store the solution in these lists
+        self.data = Bunch()  # Stores the solution data
         self.data.t, self.data.q = [], []
         self.data.psi_ss, self.data.psi_rs = [], []
         self.data.theta_M, self.data.w_M = [], []
@@ -61,8 +53,12 @@ class InductionMotorDrive:
             Initial values of the state variables.
 
         """
-        x0 = [self.motor.psi_ss0, self.motor.psi_rs0,
-              self.mech.w_M0, self.mech.theta_M0]
+        x0 = [
+            self.motor.psi_ss0,
+            self.motor.psi_rs0,
+            self.mech.w_M0,
+            self.mech.theta_M0,
+        ]
         return x0
 
     def set_initial_values(self, t0, x0):
@@ -80,9 +76,8 @@ class InductionMotorDrive:
         self.motor.psi_rs0 = x0[1]
         # x0[2].imag and x0[3].imag are always zero
         self.mech.w_M0 = x0[2].real
-        self.mech.theta_M0 = x0[3].real
-        # Limit the angle [0, 2*pi]
-        self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
+        # Limit theta_M0 = x0[3].real into [-pi, pi)
+        self.mech.theta_M0 = np.mod(x0[3].real + np.pi, 2*np.pi) - np.pi
 
     def f(self, t, x):
         """
@@ -105,10 +100,8 @@ class InductionMotorDrive:
         psi_ss, psi_rs, w_M, _ = x
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
-        i_ss, _ = self.motor.currents(psi_ss, psi_rs)
-        tau_M = self.motor.torque(psi_ss, i_ss)
-        # State derivatives
-        motor_f = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
+        # State derivatives plus the outputs for interconnections
+        motor_f, _, tau_M = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
         mech_f = self.mech.f(t, w_M, tau_M)
         # List of state derivatives
         return motor_f + mech_f
@@ -131,25 +124,24 @@ class InductionMotorDrive:
         self.data.theta_M.extend(sol.y[3].real)
 
     def post_process(self):
-        """
-        Transform the lists to the ndarray format and post-process them.
-
-        """
+        """Transform the lists to the ndarray format and post-process them."""
         # From lists to the ndarray
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
+
         # Some useful variables
-        self.data.i_ss, _ = self.motor.currents(self.data.psi_ss,
-                                                self.data.psi_rs)
-        self.data.theta_m = self.motor.p*self.data.theta_M
-        self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
+        self.data.i_ss, _, self.data.tau_M = self.motor.magnetic(
+            self.data.psi_ss, self.data.psi_rs)
+        self.data.theta_M = np.mod(  # Limit into [-pi, pi)
+            self.data.theta_M + np.pi, 2*np.pi) - np.pi
+        self.data.theta_m = np.mod(  # Limit into [-pi, pi)
+            self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.w_m = self.motor.p*self.data.w_M
-        self.data.tau_M = self.motor.torque(self.data.psi_ss, self.data.i_ss)
-        self.data.tau_L = (self.mech.tau_L_ext(self.data.t)
-                           + self.mech.B*self.data.w_M)
-        self.data.u_ss = self.conv.ac_voltage(self.data.q,
-                                              self.conv.u_dc0)
-        # Compute the inverse-Gamma rotor flux
+        self.data.tau_L = (
+            self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)
+        self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
+
+        # Compute the inverse-Γ rotor flux
         try:
             # Saturable stator inductance
             L_s = self.motor.L_s(np.abs(self.data.psi_ss))
@@ -161,7 +153,6 @@ class InductionMotorDrive:
 
 
 # %%
-@dataclass
 class InductionMotorDriveDiode(InductionMotorDrive):
     """
     Induction motor drive equipped with a diode bridge.
@@ -172,52 +163,54 @@ class InductionMotorDriveDiode(InductionMotorDrive):
 
     Parameters
     ----------
-
+    motor : InductionMotor | InductionMotorSaturated
+        Induction motor model.
+    mech : Mechanics
+        Mechanics model.
     conv : FrequencyConverter
         Frequency converter model.
 
     """
-    conv: FrequencyConverter = None
 
-    def __post_init__(self):
-        # Extends the base class, store the solution in these lists
-        self.data.t, self.data.q = [], []
-        self.data.psi_ss, self.data.psi_rs = [], []
-        self.data.theta_M, self.data.w_M = [], []
+    def __init__(self, motor=None, mech=None, conv=None):
+        super().__init__(motor=motor, mech=mech)
+        self.conv = conv
         self.data.u_dc, self.data.i_L = [], []
 
     def get_initial_values(self):
-        # Extends the base class
+        """Extend the base class."""
         x0 = super().get_initial_values() + [self.conv.u_dc0, self.conv.i_L0]
         return x0
 
     def set_initial_values(self, t0, x0):
-        # Extends the base class
+        """Extend the base class."""
         super().set_initial_values(t0, x0[0:4])
         self.conv.u_dc0 = x0[4].real
         self.conv.i_L0 = x0[5].real
 
     def f(self, t, x):
-        # Overrides the base class, unpack the states for better readability
+        """Override the base class."""
+        # Unpack the states for better readability
         psi_ss, psi_rs, w_M, _, u_dc, i_L = x
+
         # Interconnections: outputs for computing the state derivatives
-        i_ss, _ = self.motor.currents(psi_ss, psi_rs)
         u_ss = self.conv.ac_voltage(self.conv.q, u_dc)
+        motor_f, i_ss, tau_M = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
         i_dc = self.conv.dc_current(self.conv.q, i_ss)
-        tau_M = self.motor.torque(psi_ss, i_ss)
-        # Returns the list of state derivatives
-        return (self.motor.f(psi_ss, psi_rs, u_ss, w_M) +
-                self.mech.f(t, w_M, tau_M) +
-                self.conv.f(t, u_dc, i_L, i_dc))
+
+        # Return the list of state derivatives
+        return (
+            motor_f + self.mech.f(t, w_M, tau_M) +
+            self.conv.f(t, u_dc, i_L, i_dc))
 
     def save(self, sol):
-        # Extends the base class
+        """Extend the base class."""
         super().save(sol)
         self.data.u_dc.extend(sol.y[4].real)
         self.data.i_L.extend(sol.y[5].real)
 
     def post_process(self):
-        # Extends the base class
+        """Extend the base class."""
         super().post_process()
         # From lists to the ndarray
         self.data.u_dc = np.asarray(self.data.u_dc)

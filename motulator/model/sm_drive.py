@@ -1,22 +1,17 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
-This module contains continuous-time models for synchronous motor drives.
+Continuous-time models for synchronous motor drives.
 
 Peak-valued complex space vectors are used. The default values correspond to a
 2.2-kW permanent-magnet synchronous motor.
 
 """
-from __future__ import annotations
-from dataclasses import dataclass, field
 import numpy as np
-from sklearn.utils import Bunch
-from model.sm import SynchronousMotor
-from model.mech import Mechanics
-from model.converter import Inverter, PWMInverter
+
+from motulator.helpers import Bunch
 
 
 # %%
-@dataclass
 class SynchronousMotorDrive:
     """
     Continuous-time model for a synchronous motor drive.
@@ -31,21 +26,22 @@ class SynchronousMotorDrive:
         Synchronous motor model.
     mech : Mechanics
         Mechanics model.
-    conv : Inverter | PWMInverter
+    conv : Inverter
         Inverter model.
 
     """
-    motor: SynchronousMotor = SynchronousMotor()
-    mech: Mechanics = Mechanics()
-    conv: Inverter | PWMInverter = Inverter()
-    # Stores the solution data
-    data: Bunch = field(repr=False, default_factory=Bunch)
-    # Initial time
-    t0: float = field(repr=False, default=0)
 
-    def __post_init__(self):
-        self.motor._mech = self.mech
+    def __init__(self, motor=None, mech=None, conv=None):
+        self.motor = motor
+        self.motor._mech = mech
+        self.mech = mech
+        self.conv = conv
+
+        # Initial time
+        self.t0 = 0
+
         # Store the solution in these lists
+        self.data = Bunch()
         self.data.t, self.data.q = [], []
         self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
 
@@ -59,7 +55,11 @@ class SynchronousMotorDrive:
             Initial values of the state variables.
 
         """
-        x0 = [self.motor.psi_s0, self.mech.w_M0, self.mech.theta_M0]
+        x0 = [
+            self.motor.psi_s0,
+            self.mech.w_M0,
+            self.mech.theta_M0,
+        ]
         return x0
 
     def set_initial_values(self, t0, x0):
@@ -76,9 +76,8 @@ class SynchronousMotorDrive:
         self.motor.psi_s0 = x0[0]
         # x0[1].imag and x0[2].imag are always zero
         self.mech.w_M0 = x0[1].real
-        self.mech.theta_M0 = x0[2].real
-        # Limit the angle [0, 2*pi]
-        self.mech.theta_M0 = np.mod(self.mech.theta_M0, 2*np.pi)
+        # Limit theta_M0 = x0[2].real into [-pi, pi)
+        self.mech.theta_M0 = np.mod(x0[2].real + np.pi, 2*np.pi) - np.pi
 
     def f(self, t, x):
         """
@@ -104,11 +103,9 @@ class SynchronousMotorDrive:
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
         u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
-        i_s = self.motor.current(psi_s)
-        tau_M = self.motor.torque(psi_s, i_s)
 
         # State derivatives
-        motor_f = self.motor.f(psi_s, i_s, u_s, w_M)
+        motor_f, i_s, tau_M = self.motor.f(psi_s, u_s, w_M)
         mech_f = self.mech.f(t, w_M, tau_M)
 
         # List of state derivatives
@@ -131,21 +128,18 @@ class SynchronousMotorDrive:
         self.data.theta_M.extend(sol.y[2].real)
 
     def post_process(self):
-        """
-        Transform the lists to the ndarray format and post-process them.
-
-        """
+        """Transform the lists to the ndarray format and post-process them."""
         # From lists to the ndarray
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
 
         # Compute some useful quantities
-        self.data.i_s = self.motor.current(self.data.psi_s)
+        self.data.i_s, self.data.tau_M = self.motor.magnetic(self.data.psi_s)
         self.data.w_m = self.motor.p*self.data.w_M
-        self.data.tau_M = self.motor.torque(self.data.psi_s, self.data.i_s)
-        self.data.tau_L = (self.mech.tau_L_ext(self.data.t)
-                           + self.mech.B*self.data.w_M)
-        self.data.u_ss = self.conv.ac_voltage(self.data.q,
-                                              self.conv.u_dc0)
-        self.data.theta_m = self.motor.p*self.data.theta_M
-        self.data.theta_m = np.mod(self.data.theta_m, 2*np.pi)
+        self.data.tau_L = (
+            self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)
+        self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
+        self.data.theta_M = np.mod(  # Limit into [-pi, pi)
+            self.data.theta_M + np.pi, 2*np.pi) - np.pi
+        self.data.theta_m = np.mod(  # Limit into [-pi, pi)
+            self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi

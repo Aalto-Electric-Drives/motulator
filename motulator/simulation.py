@@ -1,50 +1,226 @@
-# pylint: disable=C0103
-"""
-This module contains the simulation class.
+# pylint: disable=invalid-name
+"""Simulation environment."""
 
-"""
-
-# %% Imports
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.io import savemat
+
+from motulator.helpers import abc2complex
+
+
+# %%
+class Delay:
+    """
+    Computational delay.
+
+    This models the computational delay as a ring buffer.
+
+    Parameters
+    ----------
+    length : int, optional
+        Length of the buffer in samples. The default is 1.
+
+    """
+
+    # pylint: disable=too-few-public-methods
+    def __init__(self, length=1, elem=3):
+        self.data = length*[elem*[0]]  # Creates a zero list
+
+    def __call__(self, u):
+        """
+        Delay the input.
+
+        Parameters
+        ----------
+        u : array_like, shape (elem,)
+            Input array.
+
+        Returns
+        -------
+        array_like, shape (elem,)
+            Output array.
+
+        """
+        # Add the latest value to the end of the list
+        self.data.append(u)
+        # Pop the first element and return it
+        return self.data.pop(0)
+
+
+# %%
+class CarrierCmp:
+    """
+    Carrier comparison.
+
+    This computes the the switching states and their durations based on the
+    duty ratios. Instead of searching for zero crossings, the switching
+    instants are explicitly computed in the beginning of each sampling period,
+    allowing faster simulations.
+
+    Parameters
+    ----------
+    N : int, optional
+        Amount of the counter quantization levels. The default is 2**12.
+    return_complex : bool, optional
+        Complex switching state space vectors are returned if True. Otherwise
+        phase switching states are returned. The default is True.
+
+    Examples
+    --------
+    >>> from motulator.simulation import CarrierCmp
+    >>> carrier_cmp = CarrierCmp(return_complex=False)
+    >>> # First call gives rising edges
+    >>> t_steps, q_abc = carrier_cmp(1e-3, [.4, .2, .8])
+    >>> # Durations of the switching states
+    >>> t_steps
+    array([0.00019995, 0.00040015, 0.00019995, 0.00019995])
+    >>> # Switching states
+    >>> q_abc
+    array([[0, 0, 0],
+           [0, 0, 1],
+           [1, 0, 1],
+           [1, 1, 1]])
+    >>> # Second call gives falling edges
+    >>> t_steps, q_abc = carrier_cmp(.001, [.4, .2, .8])
+    >>> t_steps
+    array([0.00019995, 0.00019995, 0.00040015, 0.00019995])
+    >>> q_abc
+    array([[1, 1, 1],
+           [1, 0, 1],
+           [0, 0, 1],
+           [0, 0, 0]])
+    >>> # Sum of the step times equals T_s
+    >>> np.sum(t_steps)
+    0.001
+    >>> # 50% duty ratios in all phases
+    >>> t_steps, q_abc = carrier_cmp(1e-3, [.5, .5, .5])
+    >>> t_steps
+    array([0.0005, 0.    , 0.    , 0.0005])
+    >>> q_abc
+    array([[0, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0],
+           [1, 1, 1]])
+
+    """
+
+    # pylint: disable=too-few-public-methods
+    def __init__(self, N=2**12, return_complex=True):
+        self.N = N
+        self.return_complex = return_complex
+        self.rising_edge = True  # Stores the carrier direction
+
+    def __call__(self, T_s, d_abc):
+        """
+        Compute the switching state durations and vectors.
+
+        Parameters
+        ----------
+        T_s : float
+            Half carrier period.
+        d_abc : array_like of floats, shape (3,)
+            Duty ratios in the range [0, 1].
+
+        Returns
+        -------
+        t_steps : ndarray, shape (4,)
+            Switching state durations, `[t0, t1, t2, t3]`.
+        q : complex ndarray, shape (4,)
+            Switching state vectors, `[q0, q1, q2, q3]`, where `q1` and `q2`
+            are active vectors.
+
+        Notes
+        -----
+        No switching (e.g. `d_a == 0` or `d_a == 1`) or simultaneous switchings
+        (e.g. `d_a == d_b`) lead to zeroes in `t_steps`.
+
+        """
+        # Quantize the duty ratios to N levels
+        d_abc = np.round(self.N*np.asarray(d_abc))/self.N
+
+        # Assume falling edge and compute the normalized switching instants:
+        t_n = np.append(0, np.sort(d_abc))
+        # Compute the correponding switching states:
+        q_abc = (t_n[:, np.newaxis] < d_abc).astype(int)
+
+        # Durations of switching states
+        t_steps = T_s*np.diff(t_n, append=1)
+
+        # Flip the sequence if rising edge
+        if self.rising_edge:
+            t_steps = np.flip(t_steps)
+            q_abc = np.flipud(q_abc)
+
+        # Change the carrier direction for the next call
+        self.rising_edge = not self.rising_edge
+
+        return ((t_steps, abc2complex(q_abc.T)) if self.return_complex else
+                (t_steps, q_abc))
+
+
+# %%
+def zoh(T_s, d_abc):
+    """
+    Zero-order hold of the duty ratios over the sampling period.
+
+    Parameters
+    ----------
+    T_s : float
+        Sampling period.
+    d_abc : array_like of floats, shape (3,)
+        Duty ratios in the range [0, 1].
+
+    Returns
+    -------
+    t_steps : ndarray, shape (1,)
+        Sampling period as an array compatible with the solver.
+    q : complex ndarray, shape (1,)
+        Duty ratio vector as an array compatible with the solver.
+
+    """
+    # Shape the output arrays to be compatible with the solver
+    t_steps = np.array([T_s])
+    q = np.array([abc2complex(d_abc)])
+    return t_steps, q
 
 
 # %%
 class Simulation:
     """
-    Simulation class.
+    Simulation environment.
 
     Each simulation object has a system model object and a controller object.
 
+    Parameters
+    ----------
+    mdl : InductionMotorDrive | SynchronousMotorDrive
+        Continuous-time system model.
+    ctrl : Ctrl
+        Discrete-time controller.
+    delay : int, optional
+        Amount of computational delays. The default is 1.
+    pwm : bool, optional
+        Enable carrier comparison. The default is False.
+
     """
 
-    def __init__(self, mdl=None, ctrl=None, base=None, t_stop=1):
-        """
-        Parameters
-        ----------
-        mdl : (InductionMotorDrive | SynchronousMotorDrive)
-            Continuous-time system model.
-        ctrl : (SynchronousMotorVectorCtrl | InductionMotorVectorCtrl |
-                InductionMotorVHzCtrl)
-            Discrete-time controller.
-        base : BaseValues, optional
-            Base values for plotting figures.
-        t_stop : float, optional
-            Simulation stop time. The default is 1.
-
-        """
+    def __init__(self, mdl=None, ctrl=None, delay=1, pwm=False):
         self.mdl = mdl
         self.ctrl = ctrl
-        self.base = base
-        self.t_stop = t_stop
+        self.delay = Delay(delay)
+        if pwm:
+            self.pwm = CarrierCmp()
+        else:
+            self.pwm = zoh
 
-    def simulate(self, max_step=np.inf):
+    def simulate(self, t_stop=1, max_step=np.inf):
         """
         Solve the continuous-time model and call the discrete-time controller.
 
         Parameters
         ----------
+        t_stop : float, optional
+            Simulation stop time. The default is 1.
         max_step : float, optional
             Max step size of the solver. The default is inf.
 
@@ -54,78 +230,39 @@ class Simulation:
         simplicity, only max_step is included as an option of this method.
 
         """
+        # Simulation loop
+        while self.mdl.t0 <= t_stop:
 
-        def solve(d_abc, t_span):
-            """
-            Solve the continuous-time model over t_span.
+            # Run the digital controller
+            T_s, d_abc_ref = self.ctrl(self.mdl)
 
-            Parameters
-            ----------
-            d_abc : array_like of floats, shape (3,)
-                Duty ratio references in the interval [0, 1].
-            t_span : 2-tuple of floats
-                Interval of integration (t0, tf). The solver starts with t=t0
-                and integrates until it reaches t=tf.
+            # Computational delay model
+            d_abc = self.delay(d_abc_ref)
 
-            """
-            # Sampling period
-            T_s = t_span[-1] - t_span[0]
-            # Compute the normalized switching spans and corresponding states
-            tn_sw, q_sw = self.mdl.conv.pwm(d_abc)
-            # Convert the normalized switching spans to seconds
-            t_sw = t_span[0] + T_s*tn_sw
-            # Loop over the switching time spans
-            for i, t_sw_span in enumerate(t_sw):
-                # Update the switching states (constant over the time span)
-                self.mdl.conv.q = q_sw[i]
-                # Skip possible zero time spans
-                if t_sw_span[-1] > t_sw_span[0]:
+            # Carrier comparison
+            t_steps, q = self.pwm(T_s, d_abc)
+
+            # Loop over the sampling period T_s
+            for i, t_step in enumerate(t_steps):
+
+                if t_step > 0:
+                    # Update the switching state
+                    self.mdl.conv.q = q[i]
+
                     # Get initial values
                     x0 = self.mdl.get_initial_values()
-                    # Integrate
-                    sol = solve_ivp(self.mdl.f, t_sw_span, x0,
-                                    max_step=max_step)
+
+                    # Integrate over t_span
+                    t_span = (self.mdl.t0, self.mdl.t0 + t_step)
+                    sol = solve_ivp(self.mdl.f, t_span, x0, max_step=max_step)
+
                     # Set the new initial values (last points of the solution)
-                    t0_new, x0_new = t_sw_span[-1], sol.y[:, -1]
+                    t0_new, x0_new = t_span[-1], sol.y[:, -1]
                     self.mdl.set_initial_values(t0_new, x0_new)
-                    # Data logging
+
+                    # Save the solution
                     sol.q = len(sol.t)*[self.mdl.conv.q]
                     self.mdl.save(sol)
-
-        def sensorless_ctrl():
-            while self.mdl.t0 <= self.t_stop:
-                # Sample the phase currents and the DC-bus voltage
-                i_s_abc_meas = self.mdl.motor.meas_currents()
-                u_dc_meas = self.mdl.conv.meas_dc_voltage()
-                # Run the digital controller
-                d_abc_ref, T_s = self.ctrl(i_s_abc_meas, u_dc_meas)
-                # Model the computational delay
-                d_abc = self.ctrl.delay(d_abc_ref)
-                # Simulate the continuous-time model over the sampling period
-                solve(d_abc, [self.mdl.t0, self.mdl.t0+T_s])
-
-        def sensored_ctrl():
-            while self.mdl.t0 <= self.t_stop:
-                # Sample the phase currents and the DC-bus voltage
-                i_s_abc_meas = self.mdl.motor.meas_currents()
-                u_dc_meas = self.mdl.conv.meas_dc_voltage()
-                # Measure the rotor position (not used in the case of an IM)
-                theta_M_meas = self.mdl.mech.meas_position()
-                # Measure the rotor speed
-                w_M_meas = self.mdl.mech.meas_speed()
-                # Run the digital controller
-                d_abc_ref, T_s = self.ctrl(i_s_abc_meas, u_dc_meas, w_M_meas,
-                                           theta_M_meas)
-                # Model the computational delay
-                d_abc = self.ctrl.delay(d_abc_ref)
-                # Simulate the continuous-time model over the sampling period
-                solve(d_abc, [self.mdl.t0, self.mdl.t0+T_s])
-
-        # Choose the state machine
-        if self.ctrl.sensorless:
-            sensorless_ctrl()
-        else:
-            sensored_ctrl()
 
         # Call the post-processing functions
         self.mdl.post_process()
@@ -141,5 +278,5 @@ class Simulation:
             Name for the simulation instance. The default is 'sim'.
 
         """
-        savemat(name+'_mdl_data'+'.mat', self.mdl.data)
-        savemat(name+'_ctrl_data'+'.mat', self.ctrl.data)
+        savemat(name + '_mdl_data' + '.mat', self.mdl.data)
+        savemat(name + '_ctrl_data' + '.mat', self.ctrl.data)

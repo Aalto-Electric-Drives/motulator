@@ -1,6 +1,6 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
-ThThis module contains power converter models.
+Power converter models.
 
 An inverter with constant DC-bus voltage and a frequency converter with a diode
 front-end rectifier are modeled. Complex space vectors are used also for duty
@@ -9,28 +9,24 @@ vectors are in stationary coordinates. The default values correspond to a
 2.2-kW 400-V motor drive.
 
 """
-from __future__ import annotations
-from dataclasses import dataclass, field
 import numpy as np
-from helpers import abc2complex
 
 
 # %%
-@dataclass
 class Inverter:
     """
     Inverter with constant DC-bus voltage and switching-cycle averaging.
 
     Parameters
     ----------
-    u_dc0 : float
+    u_dc : float
         DC-bus voltage.
 
     """
-    u_dc0: float = 540
-    # Here q is the duty ratio vector. In the subclasses where the PWM is
-    # modeled, the variable `q` refers to the switching state vector.
-    q: complex = field(repr=False, default=0j)
+
+    def __init__(self, u_dc=540):
+        self.u_dc0 = u_dc
+        self.q = 0j  # Switching state vector
 
     @staticmethod
     def ac_voltage(q, u_dc):
@@ -40,7 +36,7 @@ class Inverter:
         Parameters
         ----------
         q : complex
-            Duty ratio vector (switching state vector in subclasses).
+            Switching state vector.
         u_dc : float
             DC-bus voltage.
 
@@ -61,7 +57,7 @@ class Inverter:
         Parameters
         ----------
         q : complex
-            Duty ratio vector (switching state vector in subclasses).
+            Switching state vector.
         i_ac : complex
             AC-side current.
 
@@ -73,30 +69,6 @@ class Inverter:
         """
         i_dc = 1.5*np.real(q*np.conj(i_ac))
         return i_dc
-
-    @staticmethod
-    def pwm(d_abc):
-        """
-        Zero-order hold of the duty ratios over the sampling period.
-
-        The output arrays are compatible with the solver.
-
-        Parameters
-        ----------
-        d_abc : array_like of floats, shape (3,)
-            Duty ratios in the range [0, 1].
-
-        Returns
-        -------
-        tn_sw : ndarray, shape (1,2)
-            Normalized switching instant, tn_sw = [0, 1].
-        q : complex ndarray, shape (1,)
-            Duty ratio vector, having a shape compatible with the solver.
-
-        """
-        tn_sw = np.array([[0, 1]])
-        q = np.array([1])*abc2complex(d_abc)
-        return tn_sw, q
 
     def meas_dc_voltage(self):
         """
@@ -112,80 +84,11 @@ class Inverter:
 
 
 # %%
-@dataclass
-class PWMInverter(Inverter):
-    """
-    PWM inverter with constant DC-bus voltage.
-
-    This extends the Inverter class with pulse-width modulation.
-
-    Parameters
-    ----------
-    N : int, optional
-        Amount of PWM quantization levels. The default is 2**12.
-
-    """
-    N: int = 2**12
-    # Stores the carrier direction
-    falling_edge: bool = field(repr=False, default=False)
-
-    def pwm(self, d_abc):
-        """
-        Compute the normalized switching instants and the switching states.
-
-        Parameters
-        ----------
-        d_abc : array_like of floats, shape (3,)
-            Duty ratios in the range [0, 1].
-
-        Returns
-        -------
-        tn_sw : ndarray, shape (4,2)
-            Normalized switching instants, tn_sw = [0, t1, t2, t3, 1].
-        q : complex ndarray, shape (4,)
-            Switching state vectors corresponding to the switching instants.
-            For example, the switching state q[1] is applied at the interval
-            tn_sw[1].
-
-        Notes
-        -----
-        Switching instants t_sw split the sampling period T_s into
-        four spans. No switching (e.g. da = 0 or da = 1) or simultaneous
-        switching instants (e.g da == db) lead to zero spans, i.e.,
-        t_sw[i] == t_sw[i].
-
-        """
-        # Quantize the duty ratios to N levels
-        d_abc = np.round(self.N*np.asarray(d_abc))/self.N
-        # Initialize the normalized switching instant array
-        tn_sw = np.zeros((4, 2))
-        tn_sw[3, 1] = 1
-        # Could be understood as a carrier comparison
-        if self.falling_edge:
-            # Normalized switching instants (zero crossing instants)
-            tn_sw[1:4, 0] = np.sort(d_abc)
-            tn_sw[0:3, 1] = tn_sw[1:4, 0]
-            # Compute the switching state array
-            q_abc = (tn_sw[:, 0] < d_abc[:, np.newaxis]).astype(int)
-        else:
-            # Rising edge
-            tn_sw[1:4, 0] = np.sort(1 - d_abc)
-            tn_sw[0:3, 1] = tn_sw[1:4, 0]
-            q_abc = (tn_sw[:, 0] >= 1 - d_abc[:, np.newaxis]).astype(int)
-        # Change the carrier direction for the next call
-        self.falling_edge = not self.falling_edge
-        # Switching state space vector
-        q = abc2complex(q_abc)
-        return tn_sw, q
-
-
-# %%
-@dataclass
-class FrequencyConverter(PWMInverter):
+class FrequencyConverter(Inverter):
     """
     Frequency converter.
 
-    This extends the PWMInverter class with models for a strong grid, a
+    This extends the Inverter class with models for a strong grid, a
     three-phase diode-bridge rectifier, an LC filter, and a three-phase
     inverter.
 
@@ -201,23 +104,20 @@ class FrequencyConverter(PWMInverter):
         Grid frequency.
 
     """
-    L: float = 2e-3
-    C: float = 235e-6
-    U_g: float = 400
-    f_g: float = 50
-    # Initial value of the DC-bus inductor current
-    i_L0: float = field(repr=False, default=0)
-    # Initial value of the DC-bus voltage
-    u_dc0: float = field(repr=False, init=False)
-    # Peak-valued line-neutral grid voltage
-    u_g: float = field(repr=False, init=False)
-    # Grid angular frequeyncy
-    w_g: float = field(repr=False, init=False)
 
-    def __post_init__(self):
-        self.u_dc0 = np.sqrt(2)*self.U_g
-        self.u_g = np.sqrt(2/3)*self.U_g
-        self.w_g = 2*np.pi*self.f_g
+    def __init__(self, L=2e-3, C=235e-6, U_g=400, f_g=50):
+        # pylint: disable=super-init-not-called
+        self.L, self.C = L, C
+        # Initial value of the DC-bus inductor current
+        self.i_L0 = 0
+        # Initial value of the DC-bus voltage
+        self.u_dc0 = np.sqrt(2)*U_g
+        # Peak-valued line-neutral grid voltage
+        self.u_g = np.sqrt(2/3)*U_g
+        # Grid angular frequeyncy
+        self.w_g = 2*np.pi*f_g
+        # Switching state vector
+        self.q = 0j
 
     def grid_voltages(self, t):
         """
@@ -235,9 +135,11 @@ class FrequencyConverter(PWMInverter):
 
         """
         theta_g = self.w_g*t
-        u_g_abc = self.u_g*np.array([np.cos(theta_g),
-                                     np.cos(theta_g - 2*np.pi/3),
-                                     np.cos(theta_g - 4*np.pi/3)])
+        u_g_abc = self.u_g*np.array([
+            np.cos(theta_g),
+            np.cos(theta_g - 2*np.pi/3),
+            np.cos(theta_g - 4*np.pi/3)
+        ])
         return u_g_abc
 
     def f(self, t, u_dc, i_L, i_dc):
