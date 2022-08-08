@@ -3,9 +3,9 @@ name: update the gh-pages branch
 on:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
   push:
-    branches: [doc-dev]
+    branches: [main]
   pull_request:
-    branches: [doc-dev]
+    branches: [main]
 
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
     # ===============================
     - name: Commit documentation changes
       run: |
-        git clone https://github.com/JoonaKukkonen/motulator.git --branch gh-pages --single-branch gh-pages
+        git clone https://github.com/Aalto-Electric-Drives/motulator.git --branch gh-pages --single-branch gh-pages
         cp -r docs/build/html/* gh-pages/docs
         cd gh-pages
         touch docs/.nojekyll
