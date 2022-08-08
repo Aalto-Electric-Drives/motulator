@@ -1,11 +1,9 @@
-# pylint: disable=C0103
-"""
-Common control functions and classes.
+# pylint: disable=invalid-name
+"""Common control functions and classes."""
 
-"""
 import numpy as np
 
-from motulator.helpers import complex2abc, abc2complex
+from motulator.helpers import abc2complex, complex2abc, Bunch
 
 
 # %%
@@ -17,16 +15,14 @@ class PWM:
     voltage. The digital delay effects are taken into account in the realized
     voltage.
 
+    Parameters
+    ----------
+    pars : data object
+        Control parameters.
+
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Control parameters.
-
-        """
         self.T_s = pars.T_s
         self.realized_voltage = 0
         self._u_ref_lim_old = 0
@@ -67,7 +63,7 @@ class PWM:
 
     def __call__(self, u_ref, u_dc, theta, w):
         """
-        Compute the duty ratio references and update the state.
+        Compute the duty ratios and update the state.
 
         Parameters
         ----------
@@ -91,10 +87,7 @@ class PWM:
         return d_abc_ref
 
     def output(self, u_ref, u_dc, theta, w):
-        """
-        Compute the duty ratio references and the limited voltage reference.
-
-        """
+        """Compute the duty ratio limited voltage reference."""
         # Advance the angle due to the computational delay (T_s) and
         # the ZOH (PWM) delay (0.5*T_s)
         theta_comp = theta + 1.5*self.T_s*w
@@ -129,22 +122,24 @@ class SpeedCtrl:
     This controller is implemented using the disturbance-observer structure.
     The controller is mathematically identical to the 2DOF PI speed controller.
 
+    Parameters
+    ----------
+    pars : data object
+        Control parameters.
+
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Control parameters.
-
-        """
         self.T_s = pars.T_s
         self.alpha_s = pars.alpha_s
         self.tau_M_max = pars.tau_M_max
         self.J = pars.J
-        self.k = pars.alpha_s*pars.J    # Gain
-        self.tau_l = 0                  # Integral state
+        # Gain
+        self.k = pars.alpha_s*pars.J
+        # Integral state
+        self.tau_l = 0
+        # Load torque estimate (stored for the update method)
+        self.tau_L = 0
 
     def output(self, w_M_ref, w_M):
         """
@@ -161,29 +156,25 @@ class SpeedCtrl:
         -------
         tau_M_ref : float
             Torque reference.
-        tau_L : float
-            Load torque estimate.
 
         """
-        tau_L = self.tau_l - self.alpha_s*self.J*w_M
-        tau_M_ref = self.k*(w_M_ref - w_M) + tau_L
+        self.tau_L = self.tau_l - self.alpha_s*self.J*w_M
+        tau_M_ref = self.k*(w_M_ref - w_M) + self.tau_L
         if np.abs(tau_M_ref) > self.tau_M_max:
             tau_M_ref = np.sign(tau_M_ref)*self.tau_M_max
-        return tau_M_ref, tau_L
+        return tau_M_ref
 
-    def update(self, tau_M, tau_L):
+    def update(self, tau_M_ref_lim):
         """
         Update the integral state.
 
         Parameters
         ----------
-        tau_M : float
+        tau_M_ref_lim : float
             Realized (limited) torque reference.
-        tau_L : float
-            Load torque estimate.
 
         """
-        self.tau_l += self.T_s*self.alpha_s*(tau_M - tau_L)
+        self.tau_l += self.T_s*self.alpha_s*(tau_M_ref_lim - self.tau_L)
 
 
 # %%
@@ -191,22 +182,22 @@ class RateLimiter:
     """
     Rate limiter.
 
+    Parameters
+    ----------
+    pars : data object
+        Control parameters.
+
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Control parameters.
-
-        """
         self.T_s = pars.T_s
         self.limit = pars.rate_limit
         self.y_old = 0
 
     def __call__(self, u):
         """
+        Limit the input signal.
+
         Parameters
         ----------
         u : float
@@ -236,3 +227,68 @@ class RateLimiter:
         # Store the limited output
         self.y_old = y
         return y
+
+
+# %%
+class Ctrl:
+    """Base class for main control loops."""
+
+    def __init__(self):
+        self.t = 0  # Digital clock
+        self.data = Bunch()  # Data store
+        self.t_reset = 1e9  # Time at which the clock is reset
+
+    def __call__(self, mdl):
+        """
+        Run the main control loop.
+
+        The main control loop is callable that returns the sampling
+        period `T_s` (float)  and the duty ratio references `d_abc_ref`
+        (ndarray, shape (3,)) for the next sampling period.
+
+        Parameters
+        ----------
+        mdl : Model
+            System model containing methods for getting the feedback signals.
+
+        """
+        raise NotImplementedError
+
+    def update_clock(self, T_s):
+        """
+        Update the digital clock.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period.
+
+        """
+        if self.t < self.t_reset:
+            self.t += T_s
+        else:
+            self.t = 0
+
+    def save(self, data):
+        """
+        Save the internal controller data.
+
+        Parameters
+        ----------
+        data : bunch or dict
+            Contains the data to be saved.
+
+        """
+        for key, value in data.items():
+            self.data.setdefault(key, []).extend([value])
+
+    def post_process(self):
+        """
+        Transform the lists to the ndarray format.
+
+        This can be run after the simulation has been completed in order to
+        simplify plotting and analysis of the stored data.
+
+        """
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])

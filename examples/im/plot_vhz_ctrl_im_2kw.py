@@ -3,14 +3,14 @@ V/Hz-Controlled 2.2-kW Induction Motor Drive
 ============================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters correspond to an open-loop V/Hz control.
+parameters correspond to open-loop V/Hz control.
 
 """
 # %%
-# Import the packages.
+# Import the package.
 
-from time import time
 import motulator as mt
+from time import time
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -21,11 +21,9 @@ base = mt.BaseValues(
 # %%
 # Create the system model.
 
-# Saturation model
-L_s = mt.SaturableStatorInductance()
 # Γ-equivalent motor model with main-flux saturation included
 motor = mt.InductionMotorSaturated(
-    R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s, p=2)
+    R_s=3.7, R_r=2.5, L_ell=.023, L_su=.34, beta=.84, S=7, p=2)
 # Mechanics model
 mech = mt.Mechanics(J=.015)
 # Frequency converter with a diode bridge
@@ -36,8 +34,8 @@ mdl = mt.InductionMotorDriveDiode(motor, mech, conv)
 # %%
 # Control system (parametrized as open-loop V/Hz control).
 
-ctrl = mt.InductionMotorVHzCtrl(mt.InductionMotorVHzCtrlPars(
-    R_s=0, R_R=0, k_u=0, k_w=0))
+ctrl = mt.InductionMotorVHzCtrl(
+    mt.InductionMotorVHzCtrlPars(R_s=0, R_R=0, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference and the external load torque. More complicated
@@ -47,13 +45,13 @@ ctrl.w_m_ref = lambda t: (t > .2)*(1.*base.w)
 mdl.mech.tau_L_ext = lambda t: (t > 1.)*base.tau_nom
 
 # %%
-# Create the simulation object and simulate it.
+# Create the simulation object and simulate it. The option `pwm=True` enables
+# the model for the carrier comparison.
 
-sim = mt.Simulation(mdl, ctrl, base=base, enable_pwm=True, t_stop=1.5)
-start_time = time()  # Start the timer
-sim.simulate()
-# Print the execution time
-print('\nExecution time: {:.2f} s'.format((time() - start_time)))
+sim = mt.Simulation(mdl, ctrl, pwm=True)
+t_start = time()  # Start the timer
+sim.simulate(t_stop=1.5)
+print('\nExecution time: {:.2f} s'.format((time() - t_start)))
 
 # %%
 # Plot results in per-unit values.
@@ -62,9 +60,9 @@ print('\nExecution time: {:.2f} s'.format((time() - start_time)))
 #    The DC link of this particular example is actually unstable at 1-p.u.
 #    speed at the rated load torque, since the inverter looks like a negative
 #    resistance to the DC link. You could notice this instability if simulating
-#    a longer period (e.g. set t_stop=2). For more information, see e.g.
+#    a longer period (e.g. set `t_stop=2`). For more information, see e.g.
 #    https://doi.org/10.1109/EPE.2007.4417763
 
 # sphinx_gallery_thumbnail_number = 2
-mt.plot_pu(sim)
-mt.plot_extra_pu(sim, t_zoom=(1.1, 1.125))
+mt.plot(sim, base=base)
+mt.plot_extra(sim, t_span=(1.1, 1.125), base=base)

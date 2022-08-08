@@ -1,5 +1,5 @@
 # pylint: disable=C0103
-'''
+"""
 V/Hz control for induction motor drives.
 
 The method is similar to [1]_. Open-loop V/Hz control can be obtained as a
@@ -20,29 +20,26 @@ References
    volts-per-hertz control for induction motors," IEEE J. Emerg. Sel. Topics
    Power Electron., 2022, https://doi.org/10.1109/JESTPE.2021.3060583
 
-'''
+"""
 # %%
 from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
-from motulator.control.common import PWM, RateLimiter
+from motulator.control.common import Ctrl, PWM, RateLimiter
 from motulator.helpers import abc2complex, Bunch
 
 
 # %%
 @dataclass
 class InductionMotorVHzCtrlPars:
-    """
-    V/Hz control parameters.
+    """V/Hz control parameters."""
 
-    """
     # pylint: disable=too-many-instance-attributes
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
         repr=False, default=lambda t: (t > .2)*(2*np.pi*50))
-    sensorless: bool = field(repr=False, default=True)  # Always sensorless
     T_s: float = 250e-6
     psi_s_nom: float = 1.04  # 1 p.u.
     rate_limit: float = 2*np.pi*120
@@ -56,7 +53,7 @@ class InductionMotorVHzCtrlPars:
 
 
 # %%
-class InductionMotorVHzCtrl:
+class InductionMotorVHzCtrl(Ctrl):
     """
     V/Hz control with the stator current feedback.
 
@@ -69,10 +66,9 @@ class InductionMotorVHzCtrl:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-        self.t = 0
+        super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
-        self.sensorless = True
         # Instantiate classes
         self.pwm = PWM(pars)
         self.rate_limiter = RateLimiter(pars)
@@ -91,12 +87,10 @@ class InductionMotorVHzCtrl:
         self.i_s_ref = 0j
         self.theta_s = 0
         self.w_r_ref = 0
-        self.data = Bunch()
-        self.desc = pars.__repr__()
 
     def __call__(self, mdl):
         """
-        Main control loop.
+        Run the main control loop.
 
         Parameters
         ----------
@@ -136,17 +130,26 @@ class InductionMotorVHzCtrl:
         d_abc_ref = self.pwm(u_s_ref, u_dc, self.theta_s, w_s)
 
         # Data logging
-        data = Bunch(i_s_ref=self.i_s_ref, i_s=i_s, u_s=u_s, w_m_ref=w_m_ref,
-                     w_r=w_r, w_s=w_s, psi_s_ref=self.psi_s_ref,
-                     theta_s=self.theta_s, u_dc=u_dc, t=self.t)
-        self._save(data)
+        data = Bunch(
+            i_s=i_s,
+            i_s_ref=self.i_s_ref,
+            psi_s_ref=self.psi_s_ref,
+            t=self.t,
+            theta_s=self.theta_s,
+            u_dc=u_dc,
+            u_s=u_s,
+            w_m_ref=w_m_ref,
+            w_r=w_r,
+            w_s=w_s,
+        )
+        self.save(data)
 
         # Update the states
         self.i_s_ref += self.T_s*self.alpha_i*(i_s - self.i_s_ref)
         self.w_r_ref += self.T_s*self.alpha_f*(w_r - self.w_r_ref)
-        self.theta_s += self.T_s*w_s
-        self.theta_s = np.mod(self.theta_s, 2*np.pi)    # Limit to [0, 2*pi]
-        self.t += self.T_s
+        self.theta_s += self.T_s*w_s  # Next line: limit into [-pi, pi)
+        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
+        self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref
 
@@ -172,10 +175,7 @@ class InductionMotorVHzCtrl:
         return w_s, w_r
 
     def voltage_reference(self, w_s, i_s):
-        """
-        Compute the stator voltage reference.
-
-        """
+        """Compute the stator voltage reference."""
         # Nominal magnetizing current
         i_sd_nom = self.psi_s_ref/(self.L_M + self.L_sgm)
         # Operating-point current for RI compensation
@@ -183,21 +183,6 @@ class InductionMotorVHzCtrl:
         # Term -R_s omitted to avoid problems due to the voltage saturation
         # k = -R_s + k_u*L_sgm*(alpha + 1j*w_m0)
         k = self.k_u*self.L_sgm*(self.R_R/self.L_M + 1j*w_s)
-        u_s_ref = (self.R_s*i_s_ref0 + 1j*w_s*self.psi_s_ref
-                   + k*(self.i_s_ref - i_s))
+        u_s_ref = (
+            self.R_s*i_s_ref0 + 1j*w_s*self.psi_s_ref + k*(self.i_s_ref - i_s))
         return u_s_ref
-
-    def _save(self, data):
-        for key, value in data.items():
-            self.data.setdefault(key, []).extend([value])
-
-    def post_process(self):
-        """
-        Transform the lists to the ndarray format.
-
-        """
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
-
-    def __repr__(self):
-        return self.desc
