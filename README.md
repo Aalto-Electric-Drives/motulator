@@ -1,5 +1,9 @@
 # *motulator:* Motor Drive Simulator in Python
 
+[![Build Status](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml/badge.svg)](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml)
+[![License](https://img.shields.io/github/license/mashape/apistatus)](https://github.com/Aalto-Electric-Drives/motulator/blob/main/LICENSE)
+[![PyPI version shields.io](https://img.shields.io/pypi/v/motulator.svg)](https://pypi.org/project/motulator/)
+
 Introduction
 ------------
 This open-source software includes simulation models for an induction motor, a synchronous reluctance motor, and a permanent-magnet synchronous motor. The motor models are simulated in the continuous-time domain while the control algorithms run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from scipy.integrate.solve_ivp. Simple control algorithms are provided as examples. The documentation is available here:
@@ -40,7 +44,11 @@ This example applies the default settings. The drive system, controller, referen
 
 https://aalto-electric-drives.github.io/motulator/auto_examples/index.html
 
-New system models and controllers can be developed using the existing ones as templates. 
+New system models and controllers can be developed using the existing ones as templates.
+
+Contributing
+---------------
+If you'd like to help us develop motulator, please have a look at these [guidelines](https://github.com/Aalto-Electric-Drives/motulator/blob/main/CONTRIBUTING.md) first.
 
 Acknowledgement
 ---------------
