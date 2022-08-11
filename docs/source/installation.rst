@@ -25,9 +25,3 @@ For macOS, brew and pip can be used
 .. code:: bash
 
    pip install motulator
-
-Using conda
------------
-.. code:: bash
-
-   conda install -c conda-forge motulator
