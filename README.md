@@ -17,7 +17,7 @@ This software can be installed using pip:
 ```bash
 pip install motulator
 ```
-Alternatively, the repository can be cloned. Running `__init__.py` in the folder `motulator` allows importing the package.
+Alternatively, the repository can be cloned.
 
 Usage
 -----
