@@ -28,19 +28,19 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True)
+pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True,use_injection=True)
 ctrl = mt.SynchronousMotorVectorCtrl(pars)
 
 # %%
 # Set the speed reference and the external load torque.
 
 # Speed reference
-times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
+times = np.array([0, .225, .35, .475, .535, .585, .7, .8, 1])*4
+values = np.array([0, 0, .1, .1, 0, -.1, -.1, 0, 0])*base.w
 ctrl.w_m_ref = mt.Sequence(times, values)
 # External load torque
-times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+times = np.array([0, .02, .02, .85, .85, 1])*4
+values = np.array([0, 0, .9, .9, 0, 0])*base.tau_nom
 mdl.mech.tau_L_ext = mt.Sequence(times, values)
 
 # %%

@@ -22,15 +22,16 @@ class SynchronousMotorVectorCtrlPars:
         repr=False, default=lambda t: (t > .2)*(2*np.pi*75))
     # Mode
     sensorless: bool = True
+    use_injection: bool = False
     # Sampling period
-    T_s: float = 250e-6
+    T_s: float = 125e-6
     # Bandwidths
-    alpha_c: float = 2*np.pi*200
+    alpha_c: float = 2*np.pi*100
     alpha_fw: float = 2*np.pi*20
-    alpha_s: float = 2*np.pi*4
+    alpha_s: float = 2*np.pi*2
     # Maximum values
-    tau_M_max: float = 2*14
-    i_s_max: float = 1.5*np.sqrt(2)*5
+    tau_M_max: float = 1.5*14
+    i_s_max: float = 2*np.sqrt(2)*4.3
     psi_s_min: float = 0
     # Voltage margin
     k_u: float = .95
@@ -46,7 +47,10 @@ class SynchronousMotorVectorCtrlPars:
     # Sensorless observer
     w_o: float = 2*np.pi*40  # Used only in the sensorless mode
     zeta_inf: float = .2
-
+    # Square Wave parameters (only used for injection)
+    sw_amplitude: float = 20
+    sw_frequency: float = 1/(2*T_s)
+    alpha_o: float = 2*np.pi*24
     def plot_luts(self, base):
         """
         Plot control look-up tables.
@@ -86,14 +90,21 @@ class SynchronousMotorVectorCtrl(Ctrl):
         self.w_m_ref = pars.w_m_ref
         self.p = pars.p
         self.sensorless = pars.sensorless
+        self.use_injection = pars.use_injection
         self.current_ctrl = CurrentCtrl(pars)
         self.speed_ctrl = SpeedCtrl(pars)
         self.current_ref = CurrentRef(pars)
         self.pwm = PWM(pars)
-        if pars.sensorless:
-            self.observer = SensorlessObserver(pars)
-        else:
+        if not pars.sensorless:
             self.observer = None
+
+        elif self.use_injection:
+                self.Vinj = -pars.sw_amplitude  
+                self.i_s_k = 0                  
+                self.i_s_k1 = 0          
+                self.observer = SensorlessObserverSWInj(pars)      
+        else:
+                self.observer = SensorlessObserver(pars)
 
     def __call__(self, mdl):
         """
@@ -139,7 +150,20 @@ class SynchronousMotorVectorCtrl(Ctrl):
         # Outputs
         tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
         i_s_ref, tau_M_ref_lim = self.current_ref.output(tau_M_ref, w_m, u_dc)
-        u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
+        if not self.use_injection:
+            u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
+        else:
+            # Update square wave voltage
+            self.Vinj = -self.Vinj
+            # Update current samples
+            self.i_s_k2 = self.i_s_k1
+            self.i_s_k1 = self.i_s_k
+            self.i_s_k = i_s
+            # Filter out fundamental current  
+            i_s = (i_s + self.i_s_k1)/2
+            u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
+            u_s_ref += self.Vinj
+
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
@@ -158,7 +182,10 @@ class SynchronousMotorVectorCtrl(Ctrl):
 
         # Update states
         if self.sensorless:
-            self.observer.update(u_s, i_s)
+            if self.use_injection:
+                self.observer.update(i_s, self.i_s_k1, self.i_s_k2)
+            else:
+                self.observer.update(u_s, i_s)
         self.speed_ctrl.update(tau_M_ref_lim)
         self.current_ref.update(tau_M_ref_lim, u_s_ref, u_dc)
         self.current_ctrl.update(u_s_ref_lim, w_m)
@@ -469,3 +496,72 @@ class SensorlessObserver:
         self.w_m += self.T_s*self.k_i*eps
         self.theta_m += self.T_s*w_m  # Next line: limit into [-pi, pi)
         self.theta_m = np.mod(self.theta_m + np.pi, 2*np.pi) - np.pi
+#%%
+class SensorlessObserverSWInj:
+    """
+    A sensorless observer corresponding to the paper "PWM Switching Frequency Signal Injection
+    Sensorless Method in IPMSMs":
+
+    https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6266731
+    """
+
+    def __init__(self, pars):
+        """
+        Parameters
+        ----------
+        pars : data object
+            Controller parameters.
+
+        """
+        self.T_s = pars.T_s
+        self.R_s = pars.R_s
+        self.L_d = pars.L_d
+        self.L_q = pars.L_q
+        self.p   = pars.p
+        self.J   = pars.J
+        self.psi_f = pars.psi_f
+        self.wn = 0.25648*pars.alpha_o
+        self.k_p = 3*self.wn**2
+        self.k_i = self.wn**3
+        self.k_d = 3*self.wn
+        self.Vinj = pars.sw_amplitude
+        # Initial states
+        self.theta_m, self.theta_m_mech, self.w_m, self.dw_m = 0, 0, 0, 0
+
+    def update(self, i_s_k, i_s_k1, i_s_k2):
+        """
+        Update the states for the next sampling period.
+
+        Parameters
+        ----------
+        i_s_k: complex
+            Stator current in estimated rotor coordinates at sample instance k.   
+        i_s_k1 : complex
+            Stator current in estimated rotor coordinates at sample instance k-1.   
+        i_s_k2 : complex
+            Stator current in estimated rotor coordinates at sample instance k-2.
+        """
+        # Calculate current ripple
+        di_s_PN = (i_s_k1 - i_s_k2) - (i_s_k - i_s_k1)    
+        di_s_PN_m = di_s_PN*np.exp(1j*np.pi/4)
+        di_s = np.abs(di_s_PN_m.imag) - np.abs(di_s_PN_m.real)
+
+        psi_s = (self.L_d*i_s_k.real + self.psi_f) + 1j*self.L_q*i_s_k.imag
+
+        # Calculate error gain
+        k = self.L_d*self.L_q/((self.L_q-self.L_d)*self.Vinj*self.T_s*2)
+        
+        # Estimate error in theta_e
+        e = di_s*k
+
+        # Estimate torque for feed-forward
+        tau_est = 1.5*self.p*np.imag(i_s_k*np.conj(psi_s))
+
+        dw_m = self.dw_m + self.k_p*e + tau_est*self.p/self.J
+        w_m = self.w_m + self.k_d*e
+        
+        # Update the integral states
+        self.dw_m += self.k_i*e*self.T_s
+        self.w_m += dw_m*self.T_s
+        self.theta_m += self.T_s*w_m  # Next line: limit into [-pi, pi)
+        self.theta_m = np.mod(self.theta_m, 2*np.pi)
