@@ -32,6 +32,9 @@ class SynchronousMotorVectorCtrlPars:
     # Maximum values
     tau_M_max: float = 1.5*14
     i_s_max: float = 2*np.sqrt(2)*4.3
+
+    # tau_M_max: float = 2*14
+    # i_s_max: float = 1.5*np.sqrt(2)*5
     psi_s_min: float = 0
     # Voltage margin
     k_u: float = .95
@@ -50,7 +53,7 @@ class SynchronousMotorVectorCtrlPars:
     # Square Wave parameters (only used for injection)
     sw_amplitude: float = 20
     sw_frequency: float = 1/(2*T_s)
-    alpha_o: float = 2*np.pi*24
+    alpha_o: float = 2*np.pi*22
     def plot_luts(self, base):
         """
         Plot control look-up tables.
@@ -183,7 +186,7 @@ class SynchronousMotorVectorCtrl(Ctrl):
         # Update states
         if self.sensorless:
             if self.use_injection:
-                self.observer.update(i_s, self.i_s_k1, self.i_s_k2)
+                self.observer.update(self.i_s_k, self.i_s_k1, self.i_s_k2)
             else:
                 self.observer.update(u_s, i_s)
         self.speed_ctrl.update(tau_M_ref_lim)
