@@ -180,8 +180,8 @@ class SignalInjection:
 
         Parameters
         ----------
-        i_sq : float
-            Stator current q-component in estimated rotor coordinates.
+        i_s : complex
+            Stator current in estimated rotor coordinates.
 
         """
         # Update the integral states
@@ -196,8 +196,13 @@ class SignalInjection:
 
         Parameters
         ----------
-        i_s : float
-            Stator current in estimated rotor coordinates.
+        i_s : complex
+            Unfiltered stator current in estimated rotor coordinates.
+
+        Returns
+        -------
+        i_s_filt : complex
+            Filtered stator current in estimated rotor coordinates.
 
         """
         # Filter currents
