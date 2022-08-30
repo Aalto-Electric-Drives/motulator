@@ -45,6 +45,10 @@ from motulator.control.sm_flux_vector import (
     SynchronousMotorFluxVectorCtrl,
     SynchronousMotorFluxVectorCtrlPars,
 )
+from motulator.control.sm_signal_inj import (
+    SynchronousMotorSignalInjectionCtrl,
+    SynchronousMotorSignalInjectionCtrlPars,
+)
 
 # Import other useful stuff
 from motulator.helpers import (
