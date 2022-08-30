@@ -1,5 +1,5 @@
 """
-Vector-Controlled 2.2-kW PMSM Drive
+Vector-controlled 2.2-kW PMSM drive
 ===================================
 
 This example simulates sensorless vector control of a 2.2-kW PMSM drive.

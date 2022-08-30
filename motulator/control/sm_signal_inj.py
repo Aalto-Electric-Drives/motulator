@@ -131,7 +131,7 @@ class SignalInjection:
     Estimate the rotor position error based on signal injection.
 
     This signal injection method estimates the rotor position error based on
-    the injected switching frequency signal, according to [4]_. The estimate
+    the injected switching frequency signal, according to [1]_. The estimate
     can be used in a phase-locked loop or in a state observer to robustify
     low-speed sensorless operation.
 
@@ -142,7 +142,7 @@ class SignalInjection:
 
     References
     ----------
-    .. [4] Kim, Ha, Sul, "PWM switching frequency signal injection sensorless
+    .. [1] Kim, Ha, Sul, "PWM switching frequency signal injection sensorless
        method in IPMSM," IEEE Trans. Ind. Appl., 2012,
        https://doi.org/10.1109/TIA.2012.2210175
 
@@ -151,7 +151,7 @@ class SignalInjection:
     def __init__(self, pars):
         self.u_sd_inj = pars.U_inj
         # Initial states
-        self.i_s_old, self.i_s_older = 0,0
+        self.i_s_old, self.i_s_older = 0, 0
         # Error gain
         self.k = .5*pars.L_d*pars.L_q/((pars.L_q - pars.L_d)*pars.T_s)
 
@@ -192,7 +192,7 @@ class SignalInjection:
 
     def filter_current(self, i_s):
         """
-        Filter the stator current using the previously measured value
+        Filter the stator current using the previously measured value.
 
         Parameters
         ----------
@@ -206,8 +206,9 @@ class SignalInjection:
 
         """
         # Filter currents
-        i_s_filt = (i_s + self.i_s_old)/2
+        i_s_filt = .5*(i_s + self.i_s_old)
         return i_s_filt
+
 
 # %%
 class PhaseLockedLoop:

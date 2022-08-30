@@ -1,5 +1,5 @@
 """
-Flux-Vector Controlled 2.2-kW PMSM Drive
+Flux-vector controlled 2.2-kW PMSM drive
 ========================================
 
 This example simulates sensorless stator-flux-vector control of a 2.2-kW PMSM

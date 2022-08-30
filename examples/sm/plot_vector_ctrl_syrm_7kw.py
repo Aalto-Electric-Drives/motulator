@@ -1,5 +1,5 @@
 """
-Vector-Controlled 6.7-kW SyRM Drive
+Vector-controlled 6.7-kW SyRM drive
 ===================================
 
 This example simulates sensorless vector control of a 6.7-kW SyRM drive.
