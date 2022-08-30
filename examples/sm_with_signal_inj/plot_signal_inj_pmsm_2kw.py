@@ -9,6 +9,7 @@ Square-wave signal injection is used with a simple phase-locked loop.
 
 # %%
 # Import the packages.
+
 import numpy as np
 import motulator as mt
 import matplotlib.pyplot as plt
