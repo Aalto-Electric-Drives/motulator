@@ -121,7 +121,6 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
             theta_s=self.theta_s,
             u_dc=u_dc,
             u_s=u_s,
-            #w_m=self.observer.w_m,
             w_m_ref=w_m_ref,
             w_s=w_s,
             tau_M=tau_M,
