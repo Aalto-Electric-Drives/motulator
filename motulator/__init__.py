@@ -50,6 +50,12 @@ from motulator.control.sm_signal_inj import (
     SynchronousMotorSignalInjectionCtrlPars,
 )
 
+from motulator.control.im_obs_vhz import (
+    InductionMotorVHzObsCtrl,
+    InductionMotorObsVHzCtrlPars,
+)
+
+
 # Import other useful stuff
 from motulator.helpers import (
     BaseValues,
