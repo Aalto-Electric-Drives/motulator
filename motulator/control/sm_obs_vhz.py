@@ -1,5 +1,5 @@
 """
-Observer-based V/Hz control for induction motor drives.
+Observer-based V/Hz control for synchronous motor drives.
 
 References
 ----------
@@ -7,3 +7,5 @@ References
     observer-based V/Hz control for synchronous Motors" in Proc.
     IEEE ECCE, Detroit, MI, Oct. 2022.
 """
+
+# To be implemented..

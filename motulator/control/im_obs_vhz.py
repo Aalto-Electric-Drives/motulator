@@ -34,14 +34,14 @@ class InductionMotorObsVHzCtrlPars:
     rate_limit: float = 2*np.pi*120
     i_s_max: float = 1.5 * np.sqrt(2) * 5
     alpha_f: float = 2*np.pi*1
-    alpha_psi: float = 2*np.pi*100
+    alpha_psi: float = 2*np.pi*20
     k_tau: float = 3.
     slip_compensation: bool = True
     alpha_r: float = 2*np.pi*1
 
     # Observer
-    alpha_o: float = 2*np.pi*10
-    zeta_inf: float = .2
+    alpha_o: float = 2*np.pi*40
+    zeta_inf: float = .7
 
     # Motor parameter estimates (inverse-Γ model)
     R_s: float = 3.7
