@@ -26,7 +26,7 @@ base = mt.BaseValues(
 # Saturated SyRM model
 motor = mt.SynchronousMotorSaturated()
 # Magnetically linear SyRM model
-# motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
+# motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 mech = mt.Mechanics()
 conv = mt.Inverter()
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
@@ -48,7 +48,7 @@ pars = mt.SynchronousMotorFluxVectorCtrlPars(
     tau_M_max=2*base.tau_nom,
     i_s_max=2*base.i,
     R_s=.54,
-    L_d=41.5e-3*.9,
+    L_d=37e-3,
     L_q=6.2e-3,
     psi_f=0,
     p=2,

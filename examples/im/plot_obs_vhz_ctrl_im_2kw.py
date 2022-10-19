@@ -1,6 +1,6 @@
 """
 Observer-based V/Hz control of 2.2-kW induction motor drive
-==============================================
+===========================================================
 
 This example simulates observer-based V/Hz control of a 2.2-kW induction motor
 drive.
@@ -50,6 +50,7 @@ ctrl.w_m_ref = mt.Sequence(times, values)
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 mdl.mech.tau_L_ext = mt.Sequence(times, values)
+
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM
 # model (which makes simulation slower). One-sampling-period computational

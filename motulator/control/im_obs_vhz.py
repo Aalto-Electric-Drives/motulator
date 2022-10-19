@@ -1,13 +1,15 @@
 """
 Observer-based V/Hz control for induction motor drives.
 
-This implements the observer-based V/Hz control method described in [1]_. The state-feedback
-control law is in the alternative form which uses an intermediate stator current reference.
+This implements the observer-based V/Hz control method described in [1]_. The
+state-feedback control law is in the alternative form which uses an
+intermediate stator current reference.
 
 References
 ----------
 .. [1] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-based V/Hz
-    control for Induction Motors" in Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
+    control for induction motors," in Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
+
 """
 
 # %%
@@ -19,10 +21,11 @@ import numpy as np
 from motulator.control.common import Ctrl, PWM, RateLimiter
 from motulator.helpers import abc2complex, Bunch
 
+
 # %%
 @dataclass
 class InductionMotorObsVHzCtrlPars:
-    """Obs. V/Hz control parameters."""
+    """Control parameters."""
 
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
@@ -32,7 +35,7 @@ class InductionMotorObsVHzCtrlPars:
     T_s: float = 250e-6
     psi_s_nom: float = 1.04  # 1 p.u.
     rate_limit: float = 2*np.pi*120
-    i_s_max: float = 1.5 * np.sqrt(2) * 5
+    i_s_max: float = 1.5*np.sqrt(2)*5
     alpha_f: float = 2*np.pi*1
     alpha_psi: float = 2*np.pi*20
     k_tau: float = 3.
@@ -53,6 +56,7 @@ class InductionMotorObsVHzCtrlPars:
     p: int = 2
 
 
+# %%
 class InductionMotorVHzObsCtrl(Ctrl):
     """Observer-based V/Hz control for induction motors."""
 
@@ -107,7 +111,7 @@ class InductionMotorVHzObsCtrl(Ctrl):
         u_dc = mdl.conv.meas_dc_voltage()  # DC-bus voltage
 
         # Space vector and coordinate transformation
-        i_s = np.exp(-1j * self.theta_s) * abc2complex(i_s_abc)
+        i_s = np.exp(-1j*self.theta_s)*abc2complex(i_s_abc)
 
         # Get the states
         u_s = self.pwm.realized_voltage
@@ -116,34 +120,34 @@ class InductionMotorVHzObsCtrl(Ctrl):
         w_r_ref = self.w_r_ref
 
         # Torque estimate (11c)
-        tau_M = 1.5 * self.p * np.imag(i_s * np.conj(psi_R))
+        tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_R))
 
         # Slip frequency compensation (if enabled) for the low-pass filter.
         # Note, could also be based on the low-pass filtered torque.
         psi_R_sqr = np.abs(psi_R)**2
         if self.slip_compensation and psi_R_sqr > 0:
-            w_r = self.R_R * tau_M / (1.5*self.p*psi_R_sqr)
+            w_r = self.R_R*tau_M/(1.5*self.p*psi_R_sqr)
         else:
             w_r = 0
 
-        # Slip compensation. (9) Uses the low-pass filtered slip-estimate w_r_ref
-        # Note if slip compensation disabled w_r_ref == 0
+        # Slip compensation (9). Uses the low-pass filtered slip estimate
+        # w_r_ref. Note if slip compensation disabled w_r_ref == 0.
         w_s_ref = w_m_ref + w_r_ref
 
         # Dynamic frequency (7a)
-        w_s = w_s_ref - self.k_tau * (tau_M - tau_M_ref)
+        w_s = w_s_ref - self.k_tau*(tau_M - tau_M_ref)
 
         # State feedback
         u_s_ref, i_s_ref = self.state_feedback(i_s, psi_R, w_s)
 
         # Duty ratios
-        d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc,
-                                                 self.theta_s, w_s)
+        d_abc_ref, u_s_ref_lim = self.pwm.output(
+            u_s_ref, u_dc, self.theta_s, w_s)
 
         # Data logging
         data = Bunch(
             i_s=i_s,
-            psi_s=psi_R + self.L_sgm * i_s,
+            psi_s=psi_R + self.L_sgm*i_s,
             psi_s_ref=self.psi_s_ref,
             t=self.t,
             theta_s=self.theta_s,
@@ -168,21 +172,20 @@ class InductionMotorVHzObsCtrl(Ctrl):
         return self.T_s, d_abc_ref
 
     def state_feedback(self, i_s, psi_R, w_s):
-        """
-        Compute the stator voltage reference.
-
-        """
+        """Compute the stator voltage reference."""
         # Internal current reference for state feedback (6b)
         i_s_ref = (self.psi_s_ref - psi_R)/self.L_sgm
         # Limit the reference
         if np.abs(i_s_ref) > self.i_s_max:
             i_s_ref = self.i_s_max*i_s_ref/np.abs(i_s_ref)
         # State feedback (6a)
-        u_s_ref = (self.R_s*i_s_ref + 1j*w_s*self.psi_s_ref
-                   + self.L_sgm*self.alpha_psi*(i_s_ref - i_s))
+        u_s_ref = (
+            self.R_s*i_s_ref + 1j*w_s*self.psi_s_ref +
+            self.L_sgm*self.alpha_psi*(i_s_ref - i_s))
         return u_s_ref, i_s_ref
 
 
+# %%
 class SensorlessFluxObserver:
     """
     Sensorless reduced-order flux observer.
@@ -196,9 +199,6 @@ class SensorlessFluxObserver:
     ----------
     pars : InductionMotorVHzObsCtrlPars
         Control parameters.
-
-    Notes
-    -----
 
     References
     ----------
@@ -223,7 +223,7 @@ class SensorlessFluxObserver:
 
     def update(self, u_s, i_s, w_s):
         """
-        Updates the states of the observer.
+        Update the states of the observer.
 
         Parameters
         ----------
@@ -245,16 +245,17 @@ class SensorlessFluxObserver:
         di_s = (i_s - self.i_s_old)/self.T_s
 
         # Error voltage
-        e = (self.L_sgm*(di_s + 1j*w_s*i_s) + (self.R_s + self.R_R)*i_s
-             - (self.alpha - 1j*self.w_m)*self.psi_R - u_s)
+        e = (
+            self.L_sgm*(di_s + 1j*w_s*i_s) + (self.R_s + self.R_R)*i_s -
+            (self.alpha - 1j*self.w_m)*self.psi_R - u_s)
 
         # Error signal
         psi_R_sqr = np.abs(self.psi_R)**2
         err = e*np.conj(self.psi_R)/psi_R_sqr if psi_R_sqr > 0 else 0
 
-         # Update the states
+        # Update the states
         self.w_m -= self.T_s*self.alpha_o*err.imag
-        self.psi_R += self.T_s*(u_s - self.R_s*i_s - self.L_sgm*di_s
-                                - 1j*w_s*(self.psi_R + self.L_sgm*i_s)
-                                + g_o*self.psi_R*err.real)
+        self.psi_R += self.T_s*(
+            u_s - self.R_s*i_s - self.L_sgm*di_s - 1j*w_s*
+            (self.psi_R + self.L_sgm*i_s) + g_o*self.psi_R*err.real)
         self.i_s_old = i_s

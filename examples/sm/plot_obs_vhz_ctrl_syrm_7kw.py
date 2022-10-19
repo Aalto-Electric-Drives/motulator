@@ -1,9 +1,10 @@
 """
-Observer-based V/Hz controlled 2.2-kW PMSM drive
-========================================
+Observer-based V/Hz controlled 6.7-kW SyRM drive
+================================================
 
-This example simulates observer-based V/Hz control of a 6.7-kW SyRM drive.
-drive.
+This example simulates observer-based V/Hz control of a saturated 6.7-kW
+synchronous reluctance motor drive. The saturation is not taken into account
+in the control method (only in the system model).
 
 """
 
@@ -22,7 +23,10 @@ base = mt.BaseValues(
 # %%
 # Configure the system model.
 
-motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
+# Saturated SyRM model
+motor = mt.SynchronousMotorSaturated()
+# Magnetically linear SyRM model
+# motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 mech = mt.Mechanics(J=.015)
 conv = mt.Inverter()
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
@@ -33,10 +37,10 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 pars = mt.SynchronousMotorVHzObsCtrlPars(
     p=2,
     R_s=.54,
-    L_d=41.5e-3,
+    L_d=37e-3,
     L_q=6.2e-3,
     psi_f=0,
-    psi_s_nom=np.sqrt(2/3)*base.U_nom/(2*np.pi*base.f_nom)
+    psi_s_nom=base.psi,
 )
 ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
 
@@ -51,6 +55,7 @@ ctrl.w_m_ref = mt.Sequence(times, values)
 times = np.array([0, .125, .125, .875, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 mdl.mech.tau_L_ext = mt.Sequence(times, values)
+
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM
 # model (which makes simulation slower). One-sampling-period computational
@@ -64,4 +69,3 @@ sim.simulate(t_stop=8)
 # the results in SI units.
 
 mt.plot(sim, base=base)
-

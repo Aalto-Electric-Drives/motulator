@@ -1,10 +1,12 @@
 """
-Observer-based V/Hz control for synchronous motor drives corresponding to [1.]_.
+Observer-based V/Hz control for synchronous motor drives.
+
+This method is based on [1]_.
 
 References
 ----------
-.. [1] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable and passive
-    observer-based V/Hz control for synchronous Motors" in Proc.
+.. [1] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable
+    and passive observer-based V/Hz control for synchronous Motors," in Proc.
     IEEE ECCE, Detroit, MI, Oct. 2022.
 """
 
@@ -15,9 +17,11 @@ import numpy as np
 from motulator.helpers import abc2complex, Bunch
 from motulator.control.common import Ctrl, PWM, RateLimiter
 
+
+# %%
 @dataclass
 class SynchronousMotorVHzObsCtrlPars:
-    """Obs. V/Hz control parameters of synchronous motors."""
+    """Control parameters of synchronous motors."""
 
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
@@ -44,6 +48,7 @@ class SynchronousMotorVHzObsCtrlPars:
     p: int = 3
 
 
+# %%
 class SynchronousMotorVHzObsCtrl(Ctrl):
     """Observer-based V/Hz control for induction motors."""
 
@@ -104,14 +109,15 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
 
         # Dynamic frequency (5a)
-        w_s = w_m_ref - self.k_tau * (tau_M - tau_M_ref)
+        w_s = w_m_ref - self.k_tau*(tau_M - tau_M_ref)
 
         # Voltage reference (4)
-        u_s_ref = self.R_s*i_s + 1j*w_s*self.psi_s_ref + self.alpha_psi*(self.psi_s_ref - psi_s)
+        u_s_ref = self.R_s*i_s + 1j*w_s*self.psi_s_ref + self.alpha_psi*(
+            self.psi_s_ref - psi_s)
 
         # Duty ratios
-        d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc,
-                                                 self.theta_s, w_s)
+        d_abc_ref, u_s_ref_lim = self.pwm.output(
+            u_s_ref, u_dc, self.theta_s, w_s)
         # Data logging
         data = Bunch(
             i_s=i_s,
@@ -139,6 +145,7 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         return self.T_s, d_abc_ref
 
 
+# %%
 class SensorlessFluxObserver:
     """
     Sensorless stator flux observer.
@@ -161,12 +168,6 @@ class SensorlessFluxObserver:
     """
 
     def __init__(self, pars):
-        """
-        Parameters
-        ----------
-        pars : data object
-            Controller parameters.
-        """
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.L_d = pars.L_d
@@ -181,6 +182,7 @@ class SensorlessFluxObserver:
     def update(self, u_s, i_s, w_s):
         """
         Update the states for the next sampling period.
+
         Parameters
         ----------
         u_s : complex
@@ -189,6 +191,7 @@ class SensorlessFluxObserver:
             Stator current.
         w_s : float
             Stator angular frequency.
+
         """
         # Inductance matrix elements
         L_x = self.L_d*np.cos(self.delta)**2 + self.L_q*np.sin(self.delta)**2
@@ -202,8 +205,9 @@ class SensorlessFluxObserver:
         psi_a = psi_F + (L_x - L_y)*np.conj(i_s) + 2j*L_xy*np.conj(i_s)
 
         # Estimation error (6)
-        e = (L_x*i_s.real + 1j*L_y*i_s.imag + 1j*L_xy*np.conj(i_s) + psi_F
-             - self.psi_s)
+        e = (
+            L_x*i_s.real + 1j*L_y*i_s.imag + 1j*L_xy*np.conj(i_s) + psi_F -
+            self.psi_s)
 
         # Pole locations are chosen according to (36), with c = w_m**2
         # and w_inf = inf, and the gain corresponding to (30) is used
@@ -220,4 +224,3 @@ class SensorlessFluxObserver:
         # Update the states
         self.psi_s += self.T_s*(u_s - self.R_s*i_s - 1j*w_s*self.psi_s + v)
         self.delta += self.T_s*w_delta
-
