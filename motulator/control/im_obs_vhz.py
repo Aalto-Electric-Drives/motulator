@@ -1,8 +1,8 @@
 """
 Observer-based V/Hz control for induction motor drives.
 
-This implements the observer-based V/Hz control methdo described in [1]_. The state-feedback control law is in the
-alternative form which uses an intermediate stator current reference.
+This implements the observer-based V/Hz control method described in [1]_. The state-feedback
+control law is in the alternative form which uses an intermediate stator current reference.
 
 References
 ----------
@@ -36,6 +36,8 @@ class InductionMotorObsVHzCtrlPars:
     alpha_f: float = 2*np.pi*1
     alpha_psi: float = 2*np.pi*20
     k_tau: float = 3.
+
+    # Slip compensation
     slip_compensation: bool = True
     alpha_r: float = 2*np.pi*1
 

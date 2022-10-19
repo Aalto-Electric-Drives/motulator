@@ -55,6 +55,10 @@ from motulator.control.im_obs_vhz import (
     InductionMotorObsVHzCtrlPars,
 )
 
+from motulator.control.sm_obs_vhz import (
+    SynchronousMotorVHzObsCtrl,
+    SynchronousMotorVHzObsCtrlPars,
+)
 
 # Import other useful stuff
 from motulator.helpers import (
