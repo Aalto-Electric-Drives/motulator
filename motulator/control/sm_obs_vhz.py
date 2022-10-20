@@ -152,7 +152,9 @@ class SensorlessFluxObserver:
 
     This observer is a variant of [1]_. The observer gain decouples the
     electrical and mechanical dynamics and allows placing the poles of the
-    corresponding linearized estimation error dynamics.
+    corresponding linearized estimation error dynamics. For simplicity, the
+    current model is here implemented in rotor coordinates, however this is
+    mathematically equivalent to controller coordinates implementation in [2]_.
 
     Parameters
     ----------
@@ -161,9 +163,12 @@ class SensorlessFluxObserver:
 
     References
     ----------
-    .. [1] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
-       sensorless synchronous motor drives: Framework for design and analysis,"
-       IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
+    ..  [1] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
+        sensorless synchronous motor drives: Framework for design and analysis,"
+        IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
+    ..  [2] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable
+        and passive observer-based V/Hz control for synchronous Motors," in Proc.
+        IEEE ECCE, Detroit, MI, Oct. 2022.
 
     """
 
@@ -193,31 +198,24 @@ class SensorlessFluxObserver:
             Stator angular frequency.
 
         """
-        # Inductance matrix elements
-        L_x = self.L_d*np.cos(self.delta)**2 + self.L_q*np.sin(self.delta)**2
-        L_y = self.L_d*np.sin(self.delta)**2 + self.L_q*np.cos(self.delta)**2
-        L_xy = .5*(self.L_q - self.L_d)*np.sin(2*self.delta)
+        # Transformations to rotor coordinates
+        i_sr = i_s*np.exp(1j*self.delta)
+        psi_sr = self.psi_s*np.exp(1j*self.delta)
 
-        # PM-flux linkage
-        psi_F = self.psi_f*np.exp(-1j*self.delta)
+        # Auxiliary flux and estimation error in rotor coordinates
+        psi_ar = self.psi_f + (self.L_d - self.L_q)*np.conj(i_sr)
+        e_r = self.L_d*i_sr.real + 1j*self.L_q*i_sr.imag + self.psi_f - psi_sr
 
-        # Auxiliary flux (12)
-        psi_a = psi_F + (L_x - L_y)*np.conj(i_s) + 2j*L_xy*np.conj(i_s)
+        # Auxiliary flux in controller coordinates
+        psi_a = np.exp(-1j*self.delta)*psi_ar
 
-        # Estimation error (6)
-        e = (
-            L_x*i_s.real + 1j*L_y*i_s.imag + 1j*L_xy*np.conj(i_s) + psi_F -
-            self.psi_s)
+        g_o = self.b_p + 2*self.zeta_inf*np.abs(w_s)
 
-        # Pole locations are chosen according to (36), with c = w_m**2
-        # and w_inf = inf, and the gain corresponding to (30) is used
-        k = self.b_p + 2*self.zeta_inf*np.abs(w_s)
-        psi_a_sqr = np.abs(psi_a)**2
-        if psi_a_sqr > 0:
-            # Correction voltage
-            v = k*psi_a*np.real(psi_a*np.conj(e))/psi_a_sqr
-            # Error signal (10)
-            w_delta = -self.alpha_o*np.imag(psi_a*np.conj(e))/psi_a_sqr
+        if np.abs(psi_ar) > 0:
+            # Correction voltage in controller coordinates
+            v = g_o*psi_a*np.real(e_r/psi_ar)
+            # Error signal
+            w_delta = self.alpha_o*np.imag(e_r/psi_ar)
         else:
             v, w_delta = 0, 0
 
