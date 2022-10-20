@@ -163,10 +163,10 @@ class SensorlessFluxObserver:
 
     References
     ----------
-    ..  [1] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
+    .. [1] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
         sensorless synchronous motor drives: Framework for design and analysis,"
         IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
-    ..  [2] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable
+    .. [2] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable
         and passive observer-based V/Hz control for synchronous Motors," in Proc.
         IEEE ECCE, Detroit, MI, Oct. 2022.
 
