@@ -212,6 +212,7 @@ def plot_extra(sim, t_span=(1.1, 1.125), base=None):
         mdl.i_L
     except AttributeError:
         mdl.i_L = None
+
     if mdl.i_L is not None:
 
         fig2, (ax1, ax2) = plt.subplots(2, 1)
@@ -240,7 +241,11 @@ def plot_extra(sim, t_span=(1.1, 1.125), base=None):
         ax1.set_ylabel('Voltage (V)')
         ax2.set_ylabel('Current (A)')
     ax2.set_xlabel('Time (s)')
-    fig2.align_ylabels()
+
+    try:
+        fig2.align_ylabels()
+    except UnboundLocalError:
+        pass
 
     plt.tight_layout()
     plt.show()

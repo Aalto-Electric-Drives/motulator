@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 """
 Observer-based V/Hz control for induction motor drives.
 
@@ -27,6 +28,7 @@ from motulator.helpers import abc2complex, Bunch
 class InductionMotorObsVHzCtrlPars:
     """Control parameters."""
 
+    # pylint: disable=too-many-instance-attributes
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
         repr=False, default=lambda t: (t > .2)*(2*np.pi*50))
@@ -58,8 +60,17 @@ class InductionMotorObsVHzCtrlPars:
 
 # %%
 class InductionMotorVHzObsCtrl(Ctrl):
-    """Observer-based V/Hz control for induction motors."""
+    """
+    Observer-based V/Hz control for induction motors.
 
+    Parameters
+    ----------
+    pars : InductionMotorObsVHzCtrlPars
+        Control parameters.
+
+    """
+
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
         super().__init__()
         # Instantiate classes

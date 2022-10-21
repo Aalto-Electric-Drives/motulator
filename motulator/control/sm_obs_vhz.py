@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 """
 Observer-based V/Hz control for synchronous motor drives.
 
@@ -8,6 +9,7 @@ References
 .. [1] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable
     and passive observer-based V/Hz control for synchronous Motors," in Proc.
     IEEE ECCE, Detroit, MI, Oct. 2022.
+
 """
 
 from typing import Callable
@@ -21,8 +23,9 @@ from motulator.control.common import Ctrl, PWM, RateLimiter
 # %%
 @dataclass
 class SynchronousMotorVHzObsCtrlPars:
-    """Control parameters of synchronous motors."""
+    """Control parameters."""
 
+    # pylint: disable=too-many-instance-attributes
     # Speed reference (in electrical rad/s)
     w_m_ref: Callable[[float], float] = field(
         repr=False, default=lambda t: (t > .2)*(2*np.pi*75))
@@ -50,8 +53,17 @@ class SynchronousMotorVHzObsCtrlPars:
 
 # %%
 class SynchronousMotorVHzObsCtrl(Ctrl):
-    """Observer-based V/Hz control for induction motors."""
+    """
+    Observer-based V/Hz control for synchronous motors.
 
+    Parameters
+    ----------
+    pars : SynchronousMotorVHzObsCtrlPars
+        Control parameters.
+
+    """
+
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
         super().__init__()
         # Instantiate classes
@@ -164,11 +176,12 @@ class SensorlessFluxObserver:
     References
     ----------
     .. [1] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
-        sensorless synchronous motor drives: Framework for design and analysis,"
-        IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
-    .. [2] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable
-        and passive observer-based V/Hz control for synchronous Motors," in Proc.
-        IEEE ECCE, Detroit, MI, Oct. 2022.
+        sensorless synchronous motor drives: Framework for design and
+        analysis," IEEE Trans. Ind. Appl., 2018,
+        https://doi.org/10.1109/TIA.2018.2858753
+    .. [2] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
+        "Stable and passive observer-based V/Hz control for synchronous
+        Motors," in Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
 
     """
 
