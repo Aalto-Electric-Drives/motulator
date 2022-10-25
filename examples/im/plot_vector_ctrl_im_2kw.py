@@ -69,7 +69,7 @@ ctrl.w_m_ref = lambda t: (t > .2)*(.5*base.w)
 mdl.mech.tau_L_t = lambda t: (t > .75)*base.tau_nom
 
 # No load, field-weakening (uncomment to try)
-# mdl.mech.tau_L_ext = lambda t: 0
+# mdl.mech.tau_L_t = lambda t: 0
 # ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
 
 # %%
