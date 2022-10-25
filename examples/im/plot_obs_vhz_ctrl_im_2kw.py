@@ -40,16 +40,24 @@ ctrl = mt.InductionMotorVHzObsCtrl(
     mt.InductionMotorObsVHzCtrlPars(slip_compensation=False))
 
 # %%
-# Set the speed reference and the external load torque.
+# Set the speed reference.
 
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.w_m_ref = mt.Sequence(times, values)
+
+# %%
+# Set the load torque reference
+
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 mdl.mech.tau_L_ext = mt.Sequence(times, values)
+
+# Fan load profile (uncomment to enable)
+#k = base.tau_nom/(0.95*base.w/base.p)**2
+#mdl.mech.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2
 
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM

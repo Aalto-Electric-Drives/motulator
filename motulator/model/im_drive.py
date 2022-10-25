@@ -138,7 +138,7 @@ class InductionMotorDrive:
             self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.w_m = self.motor.p*self.data.w_M
         self.data.tau_L = (
-            self.mech.tau_L_ext(self.data.t) + self.mech.B*self.data.w_M)
+            self.mech.tau_L_ext(self.data.t) + self.mech.tau_L_w(self.data.w_M))
         self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
 
         # Compute the inverse-Γ rotor flux
