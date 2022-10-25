@@ -9,8 +9,9 @@ parameters correspond to open-loop V/Hz control.
 # %%
 # Import the package.
 
-import motulator as mt
+import numpy as np
 from time import time
+import motulator as mt
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -42,7 +43,13 @@ ctrl = mt.InductionMotorVHzCtrl(
 # signals could be defined as functions.
 
 ctrl.w_m_ref = lambda t: (t > .2)*(1.*base.w)
-mdl.mech.tau_L_ext = lambda t: (t > 1.)*base.tau_nom
+
+# Quadratic load torque profile (corresponding to pumps and fans)
+k = base.tau_nom/(0.95*base.w/base.p)**2
+mdl.mech.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2
+
+# Stepwise load torque at t = 1 s, 20% of the rated torque
+mdl.mech.tau_L_t = lambda t: (t > 1.)*base.tau_nom*.2
 
 # %%
 # Create the simulation object and simulate it. The option `pwm=True` enables

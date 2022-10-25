@@ -60,11 +60,11 @@ ctrl.w_m_ref = mt.Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-mdl.mech.tau_L_ext = mt.Sequence(times, values)
+mdl.mech.tau_L_t = mt.Sequence(times, values)
 
 # Simple acceleration and load torque step
 # ctrl.w_m_ref = lambda t: (t > .2)*(.5*base.w)
-# mdl.mech.tau_L_ext = lambda t: (t > .75)*base.tau_nom
+# mdl.mech.tau_L_t = lambda t: (t > .75)*base.tau_nom
 
 # %%
 # Create the simulation object and simulate it.

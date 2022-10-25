@@ -13,18 +13,17 @@ class Mechanics:
     ----------
     J : float
         Total moment of inertia.
-    B : float
-        Viscous damping coefficient.
-    tau_L_ext : function
-        External load torque as a function of time, `tau_L_ext(t)`.
-    tau_L_ext : function
-        Load torque as function of speed, `tau_L_w(w_M)`.
-        For example, tau_L_w = B*w_M, where B is the viscous friction coefficient.
+    tau_L_w : function
+        Load torque as function of speed, `tau_L_w(w_M)`. For example,
+        tau_L_w = B*w_M, where B is the viscous friction coefficient.
+    tau_L_t : function
+        Load torque as a function of time, `tau_L_t(t)`.
+
     """
 
-    def __init__(self, J=.015, tau_L_w = lambda w_M: 0, tau_L_ext=lambda t: 0):
+    def __init__(self, J=.015, tau_L_w=lambda w_M: 0, tau_L_t=lambda t: 0):
         self.J = J
-        self.tau_L_ext = tau_L_ext
+        self.tau_L_t = tau_L_t
         self.tau_L_w = tau_L_w
         # Initial values
         self.w_M0, self.theta_M0 = 0, 0
@@ -48,7 +47,7 @@ class Mechanics:
             Time derivative of the state vector.
 
         """
-        dw_M = (tau_M - self.tau_L_w(w_M) - self.tau_L_ext(t))/self.J
+        dw_M = (tau_M - self.tau_L_w(w_M) - self.tau_L_t(t))/self.J
         dtheta_M = w_M
         return [dw_M, dtheta_M]
 

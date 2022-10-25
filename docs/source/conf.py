@@ -61,7 +61,8 @@ autoapi_python_class_content = 'both'
 # templates_path = ['_templates']
 sphinx_gallery_conf = {
     'examples_dirs': '../../examples',  # path to your example scripts
-    'gallery_dirs': 'auto_examples',  # path to where to save gallery generated output
+    'gallery_dirs':
+    'auto_examples',  # path to where to save gallery generated output
     'nested_sections': False,
 }
 

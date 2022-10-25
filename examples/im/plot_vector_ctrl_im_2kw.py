@@ -66,7 +66,7 @@ ctrl = mt.InductionMotorVectorCtrl(
 
 # Simple acceleration and load torque step
 ctrl.w_m_ref = lambda t: (t > .2)*(.5*base.w)
-mdl.mech.tau_L_ext = lambda t: (t > .75)*base.tau_nom
+mdl.mech.tau_L_t = lambda t: (t > .75)*base.tau_nom
 
 # No load, field-weakening (uncomment to try)
 # mdl.mech.tau_L_ext = lambda t: 0

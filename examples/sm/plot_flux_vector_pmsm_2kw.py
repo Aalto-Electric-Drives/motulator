@@ -37,7 +37,7 @@ ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 
 # Simple acceleration and load torque step
 ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
-mdl.mech.tau_L_ext = lambda t: (t > .8)*base.tau_nom*.7
+mdl.mech.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
 
 # %%
 # Create the simulation object and simulate it.
