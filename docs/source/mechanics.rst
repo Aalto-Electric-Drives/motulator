@@ -11,7 +11,17 @@ where :math:`\omega_\mathrm{M}` is the mechanical angular speed of the rotor, :m
 .. math::
     \tau_\mathrm{L} = \tau_{\mathrm{L},\omega} + \tau_{\mathrm{L},t}
 
-where :math:`\tau_{\mathrm{L},\omega}` is the speed-dependent load torque and :math:`\tau_{\mathrm{L},t}` is the external load torque as a function of time. The most typical speed-dependent load torque terms are viscous friction :math:`\tau_{\mathrm{L},\omega} = b\omega_\mathrm{M}`, e.g. laminar fluid flow in bearings, and quadratic load torque :math:`\tau_{\mathrm{L},\omega} = k\omega_\mathrm{M}^2\mathrm{sign}(\omega_\mathrm{M})`, e.g. pumps, fans, and air resistance in vehicles.
+where :math:`\tau_{\mathrm{L},\omega}` is the speed-dependent load torque and :math:`\tau_{\mathrm{L},t}` is the external load torque as a function of time. One typical speed-dependent load torque component is viscous friction  
+
+.. math::
+    \tau_{\mathrm{L},\omega} = b\omega_\mathrm{M}
+    
+caused, e.g., due to laminar fluid flow in bearings. Another typical component is quadratic load torque
+
+.. math:: 
+    \tau_{\mathrm{L},\omega} = k\omega_\mathrm{M}^2\mathrm{sign}(\omega_\mathrm{M})
+    
+which appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance.
 
 .. figure:: figs/mech_block.svg
    :width: 100%
