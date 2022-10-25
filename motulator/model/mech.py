@@ -15,7 +15,7 @@ class Mechanics:
         Total moment of inertia.
     tau_L_w : function
         Load torque as function of speed, `tau_L_w(w_M)`. For example,
-        tau_L_w = B*w_M, where B is the viscous friction coefficient.
+        tau_L_w = b*w_M, where b is the viscous friction coefficient.
     tau_L_t : function
         Load torque as a function of time, `tau_L_t(t)`.
 
