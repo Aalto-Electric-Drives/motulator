@@ -230,6 +230,20 @@ class Simulation:
         simplicity, only max_step is included as an option of this method.
 
         """
+
+        try:
+            self.simulation_loop(t_stop, max_step)
+        except FloatingPointError:
+            print('Invalid value encountered at %.2f seconds.' % self.mdl.t0)
+        # Call the post-processing functions
+        self.mdl.post_process()
+        self.ctrl.post_process()
+
+    @np.errstate(invalid='raise')
+    def simulation_loop(self, t_stop, max_step):
+        """
+        This function implements the main simulation loop.
+        """
         # Simulation loop
         while self.mdl.t0 <= t_stop:
 
@@ -263,10 +277,6 @@ class Simulation:
                     # Save the solution
                     sol.q = len(sol.t)*[self.mdl.conv.q]
                     self.mdl.save(sol)
-
-        # Call the post-processing functions
-        self.mdl.post_process()
-        self.ctrl.post_process()
 
     def save_mat(self, name='sim'):
         """
