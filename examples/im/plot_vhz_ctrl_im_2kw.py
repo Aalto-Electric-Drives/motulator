@@ -1,6 +1,6 @@
 """
-V/Hz-controlled 2.2-kW induction motor drive
-============================================
+V/Hz control: 2.2-kW induction motor
+====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
 parameters correspond to open-loop V/Hz control.

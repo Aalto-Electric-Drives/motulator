@@ -18,6 +18,7 @@ import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
 from motulator.control.common import Ctrl, PWM, RateLimiter
+from motulator.control.sm_torque import TorqueCharacteristics
 
 
 # %%
@@ -32,8 +33,10 @@ class SynchronousMotorVHzObsCtrlPars:
 
     # Control
     T_s: float = 250e-6
-    psi_s_nom: float = np.sqrt(2/3)*370/(2*np.pi*75)
+    psi_s_max: float = np.sqrt(2/3)*370/(2*np.pi*75)
+    psi_s_min: float = .5*np.sqrt(2/3)*370/(2*np.pi*75)
     rate_limit: float = 2*np.pi*120*10
+    i_s_max: float = 1.5*np.sqrt(2)*5
 
     alpha_psi: float = 2*np.pi*50
     alpha_f: float = 2*np.pi*1
@@ -72,7 +75,6 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.rate_limiter = RateLimiter(pars)
         # Reference
         self.w_m_ref = pars.w_m_ref
-        self.psi_s_ref = pars.psi_s_nom
         # Parameters
         self.T_s = pars.T_s
         self.alpha_f = pars.alpha_f
@@ -81,8 +83,24 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.k_tau = pars.k_tau
         # Motor parameters
         self.R_s = pars.R_s
+        # MTPA
+        tq = TorqueCharacteristics(pars)
+        mtpa = tq.mtpa_locus(i_s_max=pars.i_s_max)
+        self.abs_psi_s_mtpa = mtpa.abs_psi_s_vs_tau_M
+        try:
+            self.psi_s_min = pars.psi_s_min
+        except AttributeError:
+            self.psi_s_min = 0
+        try:
+            self.psi_s_max = pars.psi_s_max
+        except AttributeError:
+            self.psi_s_max = np.inf
         # Initial states
         self.theta_s, self.tau_M_ref = 0, 0
+
+        self.L_d = pars.L_d
+        self.L_q = pars.L_q
+        self.i_s_max = pars.i_s_max
 
     def __call__(self, mdl):
         """
@@ -123,18 +141,24 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         # Dynamic frequency (5a)
         w_s = w_m_ref - self.k_tau*(tau_M - tau_M_ref)
 
+        # Flux reference
+        psi_s_ref = self.abs_psi_s_mtpa(np.abs(tau_M_ref))
+        psi_s_ref = np.max([psi_s_ref, self.psi_s_min])
+        psi_s_ref = np.min([psi_s_ref, self.psi_s_max])
+
         # Voltage reference (4)
-        u_s_ref = self.R_s*i_s + 1j*w_s*self.psi_s_ref + self.alpha_psi*(
-            self.psi_s_ref - psi_s)
+        err = psi_s_ref - psi_s
+        u_s_ref = self.R_s*i_s + 1j*w_s*psi_s_ref + self.alpha_psi*err
 
         # Duty ratios
         d_abc_ref, u_s_ref_lim = self.pwm.output(
             u_s_ref, u_dc, self.theta_s, w_s)
+
         # Data logging
         data = Bunch(
             i_s=i_s,
             psi_s=psi_s,
-            psi_s_ref=self.psi_s_ref,
+            psi_s_ref=psi_s_ref,
             t=self.t,
             theta_s=self.theta_s,
             u_dc=u_dc,
@@ -143,7 +167,6 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
             w_s=w_s,
             tau_M=tau_M,
         )
-
         self.save(data)
 
         # Update the states

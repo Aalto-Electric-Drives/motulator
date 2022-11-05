@@ -1,2 +1,2 @@
-Induction Motor Drives
-----------------------
+Induction Motors
+----------------

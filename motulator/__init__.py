@@ -21,12 +21,21 @@ from motulator.model.im import (
 from motulator.model.sm import (
     SynchronousMotor,
     SynchronousMotorSaturated,
+    SynchronousMotorSaturatedLUT,
 )
 from motulator.model.im_drive import (
     InductionMotorDrive,
     InductionMotorDriveDiode,
 )
 from motulator.model.sm_drive import SynchronousMotorDrive
+
+from motulator.model.sm_flux_maps import (
+    import_syre_data,
+    plot_flux_map,
+    plot_flux_vs_current,
+    invert_flux_map,
+    downsample_flux_map,
+)
 
 # Import controllers
 from motulator.control.im_vhz import (
@@ -40,6 +49,7 @@ from motulator.control.im_vector import (
 from motulator.control.sm_vector import (
     SynchronousMotorVectorCtrl,
     SynchronousMotorVectorCtrlPars,
+    TorqueCharacteristics,
 )
 from motulator.control.sm_flux_vector import (
     SynchronousMotorFluxVectorCtrl,
