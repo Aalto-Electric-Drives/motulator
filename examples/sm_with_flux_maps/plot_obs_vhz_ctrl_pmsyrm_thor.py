@@ -3,17 +3,18 @@ Observer-based V/Hz control: 7.5-kW PM-SyRM
 ===========================================
 
 This example simulates observer-based V/Hz control of a saturated 7.5-kW
-permanent-magnet synchronous reluctance motor. This example machine is known as
-THOR, and its flux maps are from the SyR-e project:
+permanent-magnet synchronous reluctance motor. The flux maps of this example
+motor, known as THOR, are from the SyR-e project:
 
     https://github.com/SyR-e/syre_public
 
-The THOR data has been licensed under the Apache License, Version 2.0. The flux
-maps from other sources can be used in the similar manner. To study the flux
-maps in more detail, see also the module `sm_flux_maps`. It is worth noticing
-that the saturation is not taken into account in the control method, only in
-the system model. Naturally, the control performance can be improved by taking
-the saturation into account in the control algorithm.
+The SyR-e project has been licensed under the Apache License, Version 2.0. We
+acknowledge the developers of the SyR-e project. The flux maps from other
+sources can be used in a similar manner. To study the flux maps in more detail,
+see also the module `sm_flux_maps`. It is worth noticing that the saturation is
+not taken into account in the control method, only in the system model.
+Naturally, the control performance can be improved by taking the saturation
+into account in the control algorithm.
 
 """
 
