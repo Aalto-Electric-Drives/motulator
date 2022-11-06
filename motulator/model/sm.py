@@ -191,7 +191,7 @@ class SynchronousMotorSaturated(SynchronousMotor):
     source `i_f` on the d-axis [3]_. Correspondingly, this approach assumes
     that the MMFs of the d-axis current and of the PMs are in series. This
     model cannot capture the desaturation phenomenon of thin iron ribs [4]_.
-    For such motors, look-up tables can be used (see scipy.interpolate).
+    For such motors, look-up tables can be used.
 
     References
     ----------
@@ -276,7 +276,23 @@ class SynchronousMotorSaturatedLUT(SynchronousMotor):
     Look-up-table-based model of a saturated synchronous motor.
 
     This extends the SynchronousMotor class with a saturation model, where the
-    stator current depends on the stator flux linkage.
+    stator current depends on the stator flux linkage. The coordinates assume
+    the PMSM convention, i.e., that the PM flux is along the d-axis.
+    Unstructured flux map data can be used.
+
+    Parameters
+    ----------
+    p : int
+        Number of pole pairs.
+    R_s : float
+        Stator resistance.
+    psi_s_data : ndarray of complex
+        Stator flux data points for creating the interpolant.
+    i_s_data : ndarray of complex
+        Stator current data values for creating the interpolant.
+    mech : Mechanics
+        Model of the mechanical subsystem, needed only for the coordinate
+        transformation in the measure_currents method.
 
     """
 
@@ -286,15 +302,13 @@ class SynchronousMotorSaturatedLUT(SynchronousMotor):
 
         self.p, self.R_s = p, R_s
 
-        # Create the interpolator
-        self.interpolate_i_s = LinearNDInterpolator(
+        # Create the interpolant
+        self.interp_i_s = LinearNDInterpolator(
             list(zip(psi_s_data.real, psi_s_data.imag)), i_s_data)
 
-        # For the initial value, solve the permanent-magnet flux
+        # Solve the PM flux for the initial value of the stator flux
         psi_d0 = optimize.fmin(
-            lambda psi_d: np.abs(self.interpolate_i_s(psi_d, 0)),
-            0,
-            disp=False)
+            lambda psi_d: np.abs(self.interp_i_s(psi_d, 0)), 0, disp=False)
         self.psi_s0 = complex(psi_d0)
 
         # For the coordinate transformation
@@ -303,7 +317,7 @@ class SynchronousMotorSaturatedLUT(SynchronousMotor):
     def current(self, psi_s):
         """Override the base class method."""
         # Read the current as function of the flux linkage
-        i_s = self.interpolate_i_s(psi_s.real, np.abs(psi_s.imag))
+        i_s = self.interp_i_s(psi_s.real, np.abs(psi_s.imag))
         # Take the sign of the q-axis flux into account
         i_s = i_s.real + 1j*np.sign(psi_s.imag)*i_s.imag
         return i_s

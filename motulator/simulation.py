@@ -230,7 +230,6 @@ class Simulation:
         simplicity, only max_step is included as an option of this method.
 
         """
-
         try:
             self.simulation_loop(t_stop, max_step)
         except FloatingPointError:
@@ -241,10 +240,7 @@ class Simulation:
 
     @np.errstate(invalid='raise')
     def simulation_loop(self, t_stop, max_step):
-        """
-        This function implements the main simulation loop.
-        """
-        # Simulation loop
+        """Run the main simulation loop."""
         while self.mdl.t0 <= t_stop:
 
             # Run the digital controller

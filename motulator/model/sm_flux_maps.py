@@ -26,9 +26,8 @@ def import_syre_data(fname='THOR.mat'):
 
         https://github.com/SyR-e/syre_public
 
-    The default data is for a 7.5-kW PM-SyRM, know as THOR. The imported data
-    is converted to the PMSM coordinate convention, in which the PM flux is
-    along the d axis.
+    The imported data is converted to the PMSM coordinate convention, in which
+    the PM flux is along the d axis.
 
     Parameters
     ----------
@@ -42,9 +41,8 @@ def import_syre_data(fname='THOR.mat'):
 
     Notes
     -----
-    The THOR data has been licensed under the Apache License, Version 2.0. We
-    thank the developers of SyR-e for giving a permission to include this data
-    file as a part of the motulator repository.
+    Some example data files (including THOR.mat) are available in the SyR-e
+    repository, licensed under the Apache License, Version 2.0.
 
     """
     # Read the data from mat-file
@@ -256,11 +254,3 @@ def invert_flux_map(data, N_d=32, N_q=32):
         tau_M=tau_M,
     )
     return inv_data
-
-
-# %%
-if __name__ == '__main__':
-    motor_data = import_syre_data(fname='THOR.mat')
-    # motor_data = downsample_flux_map(data)
-    plot_flux_vs_current(motor_data)
-    plot_flux_map(motor_data)
