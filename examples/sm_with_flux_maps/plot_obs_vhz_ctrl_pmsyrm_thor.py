@@ -19,7 +19,7 @@ into account in the control algorithm.
 """
 
 # %%
-# Import the package.
+# Import the packages.
 
 import numpy as np
 import motulator as mt
@@ -31,7 +31,7 @@ base = mt.BaseValues(
     U_nom=284, I_nom=18, f_nom=100, tau_nom=23.8, P_nom=7.5e3, p=2)
 
 # %%
-# # Load and plot the flux maps.
+# Load and plot the flux maps.
 
 data = mt.import_syre_data(fname='THOR.mat')
 mt.plot_flux_vs_current(data)
