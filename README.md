@@ -52,6 +52,7 @@ If you'd like to help us develop motulator, please have a look at these [guideli
 
 Contributors
 ------------
+Thanks go to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
