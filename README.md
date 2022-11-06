@@ -64,6 +64,7 @@ Contributors
       <td align="center"><a href="https://research.aalto.fi/en/persons/marko-hinkkanen"><img src="https://avatars.githubusercontent.com/u/76600872?v=4?s=50" width="50px;" alt="Marko Hinkkanen"/><br /><sub><b>Marko Hinkkanen</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=mhinkkan" title="Code">💻</a></td>
       <td align="center"><a href="https://github.com/silundbe"><img src="https://avatars.githubusercontent.com/u/81169347?v=4?s=50" width="50px;" alt="silundbe"/><br /><sub><b>silundbe</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=silundbe" title="Code">💻</a></td>
       <td align="center"><a href="https://github.com/JoonaKukkonen"><img src="https://avatars.githubusercontent.com/u/85099403?v=4?s=50" width="50px;" alt="JoonaKukkonen"/><br /><sub><b>JoonaKukkonen</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=JoonaKukkonen" title="Code">💻</a> <a href="#infra-JoonaKukkonen" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center"><a href="https://github.com/jarno-k"><img src="https://avatars.githubusercontent.com/u/84438313?v=4?s=50" width="50px;" alt="jarno-k"/><br /><sub><b>jarno-k</b></sub></a><br /><a href="#ideas-jarno-k" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
