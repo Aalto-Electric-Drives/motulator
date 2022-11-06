@@ -52,6 +52,15 @@
         "code",
         "infra"
       ]
+    },
+    {
+      "login": "jarno-k",
+      "name": "jarno-k",
+      "avatar_url": "https://avatars.githubusercontent.com/u/84438313?v=4",
+      "profile": "https://github.com/jarno-k",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
