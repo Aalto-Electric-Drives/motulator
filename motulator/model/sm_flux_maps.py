@@ -49,13 +49,13 @@ def import_syre_data(fname='THOR.mat'):
     data = loadmat(fname)
 
     # Use the PMSM convention in coordinates
-    i_d = -data['motorModel'][0, 0]["FluxMap_dq"][0, 0]["Iq"]
-    i_q = data['motorModel'][0, 0]["FluxMap_dq"][0, 0]["Id"]
+    i_d = -data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Iq']
+    i_q = data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Id']
     i_s = i_d + 1j*i_q
-    psi_d = -data['motorModel'][0, 0]["FluxMap_dq"][0, 0]["Fq"]
-    psi_q = data['motorModel'][0, 0]["FluxMap_dq"][0, 0]["Fd"]
+    psi_d = -data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Fq']
+    psi_q = data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Fd']
     psi_s = psi_d + 1j*psi_q
-    tau_M = data['motorModel'][0, 0]["FluxMap_dq"][0, 0]["T"]
+    tau_M = data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['T']
 
     data = Bunch(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
     return data
