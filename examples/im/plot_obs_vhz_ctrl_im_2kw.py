@@ -1,6 +1,6 @@
 """
-Observer-based V/Hz control of 2.2-kW induction motor drive
-===========================================================
+Observer-based V/Hz control: 2.2-kW induction motor
+===================================================
 
 This example simulates observer-based V/Hz control of a 2.2-kW induction motor
 drive.

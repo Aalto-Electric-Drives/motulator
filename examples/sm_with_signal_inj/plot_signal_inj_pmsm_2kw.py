@@ -1,6 +1,6 @@
 """
-Vector-controlled 2.2-kW PMSM drive with signal injection
-=========================================================
+Vector control with signal injection: 2.2-kW PMSM
+=================================================
 
 This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 Square-wave signal injection is used with a simple phase-locked loop.

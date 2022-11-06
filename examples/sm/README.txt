@@ -1,2 +1,2 @@
-Synchronous Motor Drives
-------------------------
+Synchronous Motors
+------------------

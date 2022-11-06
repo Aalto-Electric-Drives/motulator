@@ -143,3 +143,4 @@ class SynchronousMotorDrive:
             self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.theta_m = np.mod(  # Limit into [-pi, pi)
             self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
+        self.data.i_ss = self.data.i_s*np.exp(1j*self.data.theta_m)

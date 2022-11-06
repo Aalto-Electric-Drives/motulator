@@ -1,6 +1,6 @@
 """
-Flux-vector-controlled 6.7-kW SyRM drive
-========================================
+Flux-vector control: 6.7-kW SyRM
+================================
 
 This example simulates sensorless stator-flux-vector control of a saturated
 6.7-kW synchronous reluctance motor drive. The saturation is not taken into

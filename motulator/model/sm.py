@@ -9,7 +9,7 @@ used.
 """
 import numpy as np
 from scipy import optimize
-
+from scipy.interpolate import LinearNDInterpolator
 from motulator.helpers import complex2abc
 
 
@@ -245,7 +245,9 @@ class SynchronousMotorSaturated(SynchronousMotor):
             # Solve the stator flux caused by the magnets @ i_s = 0
             psi_d0 = optimize.fmin(
                 lambda psi_d: np.abs(
-                    (a_d0 + a_dd*np.abs(psi_d)**S)*psi_d - i_f), 0)
+                    (a_d0 + a_dd*np.abs(psi_d)**S)*psi_d - i_f),
+                0,
+                disp=False)
             self.psi_s0 = complex(psi_d0)
 
         # For the coordinate transformation
@@ -263,7 +265,45 @@ class SynchronousMotorSaturated(SynchronousMotor):
 
         i_d = (G_dd + G_dq)*psi_s.real - self.i_f
         i_q = (G_qq + G_qd)*psi_s.imag
-
         i_s = i_d + 1j*i_q
 
+        return i_s
+
+
+# %%
+class SynchronousMotorSaturatedLUT(SynchronousMotor):
+    """
+    Look-up-table-based model of a saturated synchronous motor.
+
+    This extends the SynchronousMotor class with a saturation model, where the
+    stator current depends on the stator flux linkage.
+
+    """
+
+    # pylint: disable=too-many-arguments, disable=super-init-not-called
+    def __init__(
+            self, p=2, R_s=.23, psi_s_data=None, i_s_data=None, mech=None):
+
+        self.p, self.R_s = p, R_s
+
+        # Create the interpolator
+        self.interpolate_i_s = LinearNDInterpolator(
+            list(zip(psi_s_data.real, psi_s_data.imag)), i_s_data)
+
+        # For the initial value, solve the permanent-magnet flux
+        psi_d0 = optimize.fmin(
+            lambda psi_d: np.abs(self.interpolate_i_s(psi_d, 0)),
+            0,
+            disp=False)
+        self.psi_s0 = complex(psi_d0)
+
+        # For the coordinate transformation
+        self._mech = mech
+
+    def current(self, psi_s):
+        """Override the base class method."""
+        # Read the current as function of the flux linkage
+        i_s = self.interpolate_i_s(psi_s.real, np.abs(psi_s.imag))
+        # Take the sign of the q-axis flux into account
+        i_s = i_s.real + 1j*np.sign(psi_s.imag)*i_s.imag
         return i_s

@@ -1,6 +1,6 @@
 """
-Vector-controlled 6.7-kW SyRM drive with signal injection
-=========================================================
+Vector control with signal injection: 6.7-kW SyRM 
+=================================================
 
 This example simulates sensorless vector control of a 6.7-kW SyRM drive.
 Square-wave signal injection is used with a simple phase-locked loop.
