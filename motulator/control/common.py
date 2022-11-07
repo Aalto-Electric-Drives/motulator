@@ -337,10 +337,7 @@ class Ctrl:
             Sampling period.
 
         """
-        if self.t < self.t_reset:
-            self.t += T_s
-        else:
-            self.t = 0
+        self.t += T_s if self.t < self.t_reset else 0
 
     def save(self, data):
         """
