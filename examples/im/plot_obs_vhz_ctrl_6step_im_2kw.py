@@ -1,6 +1,6 @@
 """
-Observer-based V/Hz control of 2.2-kW induction motor drive
-===========================================================
+Observer-based V/Hz control up to the 6-step mode: 2.2-kW induction motor
+=========================================================================
 
 This example simulates observer-based V/Hz control of a 2.2-kW induction motor
 drive. The six-step overmodulation is enabled, which increases the fundamental
