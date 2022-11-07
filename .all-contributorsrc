@@ -66,6 +66,16 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "angelicaiaderosa",
+      "name": "angelicaiaderosa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/112799415?v=4",
+      "profile": "https://github.com/angelicaiaderosa",
+      "contributions": [
+        "code",
+        "example"
+      ]
     }
   ],
   "contributorsPerLine": 7,
