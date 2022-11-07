@@ -1,6 +1,6 @@
 """
-V/Hz control up to the six-step mode: 2.2-kW induction motor
-============================================================
+V/Hz control up to the 6-step mode: 2.2-kW induction motor
+==========================================================
 
 This example simulates V/Hz of a 2.2-kW induction motor drive. The six-step
 overmodulation is enabled, which increases the fundamental voltage as well as
