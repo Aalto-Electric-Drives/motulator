@@ -1,6 +1,6 @@
 """
-Observer-based V/Hz controlled 6.7-kW SyRM drive
-================================================
+Observer-based V/Hz control: 6.7-kW SyRM
+========================================
 
 This example simulates observer-based V/Hz control of a saturated 6.7-kW
 synchronous reluctance motor drive. The saturation is not taken into account
@@ -40,7 +40,9 @@ pars = mt.SynchronousMotorVHzObsCtrlPars(
     L_d=37e-3,
     L_q=6.2e-3,
     psi_f=0,
-    psi_s_nom=base.psi,
+    psi_s_max=base.psi,
+    psi_s_min=base.psi,
+    i_s_max=2*base.i,
 )
 ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
 

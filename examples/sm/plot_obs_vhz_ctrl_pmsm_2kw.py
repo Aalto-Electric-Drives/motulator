@@ -1,6 +1,6 @@
 """
-Observer-based V/Hz controlled 2.2-kW PMSM drive
-================================================
+Observer-based V/Hz control: 2.2-kW PMSM
+========================================
 
 This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.
 
@@ -29,7 +29,7 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorVHzObsCtrlPars
+pars = mt.SynchronousMotorVHzObsCtrlPars()
 ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
 
 # %%

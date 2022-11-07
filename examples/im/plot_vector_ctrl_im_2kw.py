@@ -1,6 +1,6 @@
 """
-Vector-controlled 2.2-kW induction motor drive
-==============================================
+Vector control: 2.2-kW induction motor
+======================================
 
 This example simulates sensorless vector control of a 2.2-kW induction motor
 drive.
