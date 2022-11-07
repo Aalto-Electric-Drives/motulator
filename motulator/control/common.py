@@ -24,8 +24,64 @@ class PWM:
 
     def __init__(self, pars):
         self.T_s = pars.T_s
+        try:
+            self.six_step = pars.six_step
+        except AttributeError:
+            self.six_step = False
         self.realized_voltage = 0
         self._u_ref_lim_old = 0
+
+    @staticmethod
+    def six_step_overmodulation(u_s_ref, u_dc):
+        """
+        Overmodulation up to six-step operation.
+
+        This method modifies the angle of the voltage reference vector in the
+        overmodulation region such that the six-step operation is reached [1]_.
+
+        Parameters
+        ----------
+        u_s_ref : complex
+            Voltage reference in stator coordinates.
+
+        Returns
+        -------
+        u_s_ref_mod : complex
+            Voltage reference in stator coordinates.
+
+        References
+        ----------
+        .. [1] Bolognani, Zigliotto, "Novel digital continuous control of SVM
+           inverters in the overmodulation range," IEEE Trans. Ind. Appl.,
+           1997, https://doi.org/10.1109/28.568019
+
+        """
+        # Limited magnitude
+        r = np.min([np.abs(u_s_ref), 2/3*u_dc])
+
+        if np.sqrt(3)*r > u_dc:
+            # Angle and sector of the reference vector
+            theta = np.angle(u_s_ref)
+            sector = np.floor(3*theta/np.pi)
+
+            # Angle reduced to the first sector (at which sector == 0)
+            theta0 = theta - sector*np.pi/3
+
+            # Intersection angle, see Eq. (9)
+            alpha_g = np.pi/6 - np.arccos(u_dc/(np.sqrt(3)*r))
+
+            # Modify the angle according to Eq. (4)
+            if alpha_g <= theta0 <= np.pi/6:
+                theta0 = alpha_g
+            elif np.pi/6 <= theta0 <= np.pi/3 - alpha_g:
+                theta0 = np.pi/3 - alpha_g
+
+            # Modified reference voltage
+            u_s_ref_mod = r*np.exp(1j*(theta0 + sector*np.pi/3))
+        else:
+            u_s_ref_mod = u_s_ref
+
+        return u_s_ref_mod
 
     @staticmethod
     def duty_ratios(u_s_ref, u_dc):
@@ -50,15 +106,19 @@ class PWM:
         """
         # Phase voltages without the zero-sequence voltage
         u_abc = complex2abc(u_s_ref)
+
         # Symmetrization by adding the zero-sequence voltage
         u_0 = .5*(np.amax(u_abc) + np.amin(u_abc))
         u_abc -= u_0
+
         # Preventing overmodulation by means of a minimum phase error method
         m = (2./u_dc)*np.amax(u_abc)
         if m > 1:
             u_abc = u_abc/m
+
         # Duty ratios
         d_abc_ref = .5 + u_abc/u_dc
+
         return d_abc_ref
 
     def __call__(self, u_ref, u_dc, theta, w):
@@ -84,6 +144,7 @@ class PWM:
         """
         d_abc_ref, u_ref_lim = self.output(u_ref, u_dc, theta, w)
         self.update(u_ref_lim)
+
         return d_abc_ref
 
     def output(self, u_ref, u_dc, theta, w):
@@ -91,13 +152,21 @@ class PWM:
         # Advance the angle due to the computational delay (T_s) and
         # the ZOH (PWM) delay (0.5*T_s)
         theta_comp = theta + 1.5*self.T_s*w
+
         # Voltage reference in stator coordinates
         u_s_ref = np.exp(1j*theta_comp)*u_ref
+
+        # Modify angle in the overmodulation region
+        if self.six_step:
+            u_s_ref = self.six_step_overmodulation(u_s_ref, u_dc)
+
         # Duty ratios
         d_abc_ref = self.duty_ratios(u_s_ref, u_dc)
+
         # Realizable voltage
         u_s_ref_lim = abc2complex(d_abc_ref)*u_dc
         u_ref_lim = np.exp(-1j*theta_comp)*u_s_ref_lim
+
         return d_abc_ref, u_ref_lim
 
     def update(self, u_ref_lim):
@@ -112,7 +181,6 @@ class PWM:
         """
         self.realized_voltage = .5*(self._u_ref_lim_old + u_ref_lim)
         self._u_ref_lim_old = u_ref_lim
-
 
 # %%
 class SpeedCtrl:
@@ -160,8 +228,10 @@ class SpeedCtrl:
         """
         self.tau_L = self.tau_l - self.alpha_s*self.J*w_M
         tau_M_ref = self.k*(w_M_ref - w_M) + self.tau_L
+
         if np.abs(tau_M_ref) > self.tau_M_max:
             tau_M_ref = np.sign(tau_M_ref)*self.tau_M_max
+
         return tau_M_ref
 
     def update(self, tau_M_ref_lim):
@@ -216,6 +286,7 @@ class RateLimiter:
 
         """
         rate = (u - self.y_old)/self.T_s
+
         if rate > self.limit:
             # Limit rising rate
             y = self.y_old + self.T_s*self.limit
@@ -224,8 +295,10 @@ class RateLimiter:
             y = self.y_old - self.T_s*self.limit
         else:
             y = u
+
         # Store the limited output
         self.y_old = y
+
         return y
 
 
