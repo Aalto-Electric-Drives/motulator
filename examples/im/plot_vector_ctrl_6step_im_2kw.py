@@ -1,11 +1,13 @@
 """
-Vector-controlled 2.2-kW induction motor drive
-==============================================
+Observer-based V/Hz control of 2.2-kW induction motor drive
+===========================================================
 
-This example simulates sensorless vector control of a 2.2-kW induction motor
-drive.
+This example simulates vector control of a 2.2-kW induction motor
+drive. The six-step overmodulation is enabled but it cannot be reached 
+because of the feedback.
 
 """
+
 
 # %%
 # Import the packages.
