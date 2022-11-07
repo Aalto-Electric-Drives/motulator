@@ -1,8 +1,13 @@
-# -*- coding: utf-8 -*-
 """
-Created on Tue Sep 20 10:22:56 2022
+V/Hz control of 2.2-kW induction motor drive
+===========================================================
 
-@author: angelica
+This example simulates V/Hz of a 2.2-kW induction motor
+drive. The six-step overmodulation is enabled, which increases the fundamental
+voltage as well as the harmonics. Since the PWM is not synchronized with the
+stator freuqency, the harmonic content also depends on the ratoi between the
+stator frequency and the switching frequency.
+
 """
 # %%
 # Import the package.
