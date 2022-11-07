@@ -45,7 +45,7 @@ ctrl = mt.InductionMotorVHzCtrl(
 ctrl.w_m_ref = lambda t: (t > .2)*(1.*base.w)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = base.tau_nom/(0.95*base.w/base.p)**2
+k = 1.1*base.tau_nom/(base.w/base.p)**2
 mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # Stepwise load torque at t = 1 s, 20% of the rated torque

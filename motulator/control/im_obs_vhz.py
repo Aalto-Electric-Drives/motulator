@@ -41,6 +41,7 @@ class InductionMotorObsVHzCtrlPars:
     alpha_f: float = 2*np.pi*1
     alpha_psi: float = 2*np.pi*20
     k_tau: float = 3.
+    six_step: bool = False
 
     # Slip compensation
     slip_compensation: bool = True
