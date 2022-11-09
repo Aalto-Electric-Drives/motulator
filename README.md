@@ -71,6 +71,7 @@ Thanks go to these wonderful people:
     <tr>
       <td align="center"><a href="https://www.kth.se/profile/lucap"><img src="https://avatars.githubusercontent.com/u/64190518?v=4?s=50" width="50px;" alt="Luca Peretti"/><br /><sub><b>Luca Peretti</b></sub></a><br /><a href="#ideas-lucaperetti" title="Ideas, Planning, & Feedback">🤔</a> <a href="#promotion-lucaperetti" title="Promotion">📣</a></td>
       <td align="center"><a href="https://github.com/GianmarioPellegrinoPolito"><img src="https://avatars.githubusercontent.com/u/70333484?v=4?s=50" width="50px;" alt="GianmarioPellegrinoPolito"/><br /><sub><b>GianmarioPellegrinoPolito</b></sub></a><br /><a href="#data-GianmarioPellegrinoPolito" title="Data">🔣</a></td>
+      <td align="center"><a href="http://libera.scuola.steineriana.janua.it/"><img src="https://avatars.githubusercontent.com/u/29262?v=4?s=50" width="50px;" alt="Simone Federici"/><br /><sub><b>Simone Federici</b></sub></a><br /><a href="#data-Simone" title="Data">🔣</a></td>
     </tr>
   </tbody>
 </table>
