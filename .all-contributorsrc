@@ -87,6 +87,15 @@
         "ideas",
         "promotion"
       ]
+    },
+    {
+      "login": "GianmarioPellegrinoPolito",
+      "name": "GianmarioPellegrinoPolito",
+      "avatar_url": "https://avatars.githubusercontent.com/u/70333484?v=4",
+      "profile": "https://github.com/GianmarioPellegrinoPolito",
+      "contributions": [
+        "data"
+      ]
     }
   ],
   "contributorsPerLine": 7,
