@@ -96,6 +96,15 @@
       "contributions": [
         "data"
       ]
+    },
+    {
+      "login": "Simone",
+      "name": "Simone Federici",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29262?v=4",
+      "profile": "http://libera.scuola.steineriana.janua.it/",
+      "contributions": [
+        "data"
+      ]
     }
   ],
   "contributorsPerLine": 7,
