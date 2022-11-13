@@ -250,6 +250,107 @@ def plot_extra(sim, t_span=(1.1, 1.125), base=None):
     plt.tight_layout()
     plt.show()
 
+    
+    
+ # %%
+ def nfft(sim,t_span):
+    """
+    Non-uniformed fast fourier transformer
+    Reference: https://github.com/jakevdp/nfft.git
+
+    Parameters
+    ----------
+    sim : Simulation object
+        Should contain the simulated data.
+    t_span : 2-tuple, optional
+        Time span. The default is (2, 2.36).
+    """
+    mdl = sim.mdl.data  # Continuous-time data
+    ctrl = sim.ctrl.data  # Discrete-time data
+
+    # Check if the time span was given
+    if t_span is None:
+        t_span = (2, 2.36)
+
+    # Quantities in stator coordinates
+    mdl.u_ss = np.exp(1j*mdl.theta_s)*mdl.u_s
+    mdl.i_ss = np.exp(1j*mdl.theta_s)*mdl.i_s
+
+    from numpy.fft import fft, ifft, fftshift, ifftshift
+    from scipy.sparse import csr_matrix
+    def phi(x, n, m, sigma):
+        b = (2 * sigma * m) / ((2 * sigma - 1) * np.pi)
+        return np.exp(-(n * x) ** 2 / b) / np.sqrt(np.pi * b)
+
+    def C_phi(m, sigma):
+        return 4 * np.exp(-m * np.pi * (1 - 1. / (2 * sigma - 1)))
+
+    def m_from_C_phi(C, sigma):
+        return np.ceil(-np.log(0.25 * C) / (np.pi * (1 - 1 / (2 * sigma - 1))))
+
+    def phi_hat(k, n, m, sigma):
+        b = (2 * sigma * m) / ((2 * sigma - 1) * np.pi)
+        return np.exp(-b * (np.pi * k / n) ** 2)
+    
+    def nfft(x, f, N, sigma=2, tol=1E-8):
+       """Alg 3 from https://www-user.tu-chemnitz.de/~potts/paper/nfft3.pdf"""
+        indx_dc = N
+        N = 2 * N
+        n = N * sigma  # size of oversampled grid
+        m = m_from_C_phi(tol / N, sigma)
+
+        # 1. Express f(x) in terms of basis functions phi
+        shift_to_range = lambda x: -0.5 + (x + 0.5) % 1
+        col_ind = np.floor(n * x[:, np.newaxis]).astype(int) + np.arange(-m, m)
+        vals = phi(shift_to_range(x[:, None] - col_ind / n), n, m, sigma)
+        col_ind = (col_ind + n // 2) % n
+        indptr = np.arange(len(x) + 1) * col_ind.shape[1]
+        mat = csr_matrix((vals.ravel(), col_ind.ravel(), indptr), shape=(len(x), n))
+        g = mat.T.dot(f)
+
+        # 2. Compute the Fourier transform of g on the oversampled grid
+        k = -(N // 2) + np.arange(N)
+        g_k_n = fftshift(ifft(ifftshift(g)))  # K has to be symmetrical with the origin
+        g_k = n * g_k_n[(n - N) // 2: (n + N) // 2]
+
+        # 3. Divide by the Fourier transform of the convolution kernel
+        f_k = g_k / phi_hat(k, n, m, sigma)
+        f_k = f_k[indx_dc:]
+        f_k = np.conj(f_k)
+        return f_k
+
+    def find_nearest(array, value):
+        array = np.asarray(array)
+        idx = (np.abs(array - value)).argmin()
+        return idx
+        
+    indx1 = find_nearest(self.t, t_span[0])
+    indx2 = find_nearest(self.t, t_span[-1])
+    N = indx2 - indx1
+
+    u_fft = mdl.u_ss.real[indx1:indx2]
+    i_fft = mdl.i_ss.real[indx1:indx2]
+    t_fft = mdl.t[indx1:indx2]
+    plt.figure(1)
+    k = np.arange(1700)
+    ua_k = nfft(self.t_fft, self.u_fft,len(k))
+    ua_k_abs    = abs(ua_k)/(N/2)
+    ua_k_abs[0] = ua_k_abs[0]/2
+    plt.bar(k,ua_k_abs)
+    import pandas as pd
+    data_df1 = pd.DataFrame(ua_k_abs)
+    data_df2 = pd.DataFrame(ua_k)
+    data_df1.columns = ['absolute values']
+    data_df2.columns = ['complex values']
+    writer = pd.ExcelWriter('u_fft.xlsx')
+    data_df1.to_excel(writer,'page_1',float_format='%.5f')
+    data_df2.to_excel(writer,'page_2', float_format='%.5f')
+    writer.save()
+    plt.legend()
+    plt.show()
+    
+    
+    
 
 # %%
 def save_plot(name):
