@@ -140,6 +140,7 @@ class SynchronousMotorVectorCtrl(Ctrl):
         tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
         i_s_ref, tau_M_ref_lim = self.current_ref.output(tau_M_ref, w_m, u_dc)
         u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
+        u_ss_ref = u_s_ref * np.exp(1j * theta_m)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
@@ -165,7 +166,7 @@ class SynchronousMotorVectorCtrl(Ctrl):
         self.pwm.update(u_s_ref_lim)
         self.update_clock(self.T_s)
 
-        return self.T_s, d_abc_ref
+        return self.T_s, d_abc_ref,u_ss_ref, u_dc
 
 
 # %%
