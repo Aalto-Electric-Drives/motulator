@@ -157,7 +157,7 @@ class InductionMotorDriveDiode(InductionMotorDrive):
     """
     Induction motor drive equipped with a diode bridge.
 
-    This models extends the InductionMotorDrive class with a model for a
+    This model extends the InductionMotorDrive class with a model for a
     three-phase diode bridge fed from stiff supply voltages. The DC bus is
     modeled as an inductor and a capacitor.
 
@@ -227,3 +227,64 @@ class InductionMotorDriveDiode(InductionMotorDrive):
                    (np.amin(u_g_abc, 0) == u_g_abc).astype(int))
         # Grid current space vector
         self.data.i_g = abc2complex(q_g_abc)*self.data.i_L
+
+
+# %%
+class InductionMotorDriveTwoMass(InductionMotorDrive):
+    """
+    Induction motor drive with two-mass mechanics.
+
+    This interconnects the subsystems of an induction motor drive and provides
+    an interface to the solver.
+
+    Parameters
+    ----------
+    motor : InductionMotor | InductionMotorSaturated
+        Induction motor model.
+    mech : MechanicsTwoMass
+        Mechanics model.
+    conv : Inverter
+        Inverter model.
+
+    """
+
+    def __init__(self, motor=None, mech=None, conv=None):
+        super().__init__(motor=motor, mech=mech, conv=conv)
+        self.data.w_L, self.data.theta_ML = [], []
+
+    def get_initial_values(self):
+        """Extend the base class."""
+        x0 = super().get_initial_values() + [self.mech.w_L0,
+                                             self.mech.theta_ML0]
+        return x0
+
+    def set_initial_values(self, t0, x0):
+        """Extend the base class."""
+        super().set_initial_values(t0, x0[0:4])
+        self.mech.w_L0 = x0[4].real
+        self.mech.theta_ML0 = np.mod(x0[5].real + np.pi, 2*np.pi) - np.pi
+
+    def f(self, t, x):
+        """Override the base class."""
+        # Unpack the states
+        psi_ss, psi_rs, w_M, theta_M, w_L, theta_ML = x
+        # Interconnections: outputs for computing the state derivatives
+        u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
+        # State derivatives plus the outputs for interconnections
+        motor_f, _, tau_M = self.motor.f(psi_ss, psi_rs, u_ss, w_M)
+        mech_f = self.mech.f(t, w_M, w_L, theta_ML, tau_M)
+        # List of state derivatives
+        return motor_f + mech_f
+
+    def save(self, sol):
+        """Extend the base class."""
+        super().save(sol)
+        self.data.w_L.extend(sol.y[4].real)
+        self.data.theta_ML.extend(sol.y[5].real)
+
+    def post_process(self):
+        """Extend the base class."""
+        super().post_process()
+        # From lists to the ndarray
+        self.data.w_L = np.asarray(self.data.w_L)
+        self.data.theta_ML = np.asarray(self.data.theta_ML)

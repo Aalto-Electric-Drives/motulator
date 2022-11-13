@@ -105,7 +105,7 @@ class SynchronousMotorDrive:
         u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
 
         # State derivatives
-        motor_f, i_s, tau_M = self.motor.f(psi_s, u_s, w_M)
+        motor_f, _, tau_M = self.motor.f(psi_s, u_s, w_M)
         mech_f = self.mech.f(t, w_M, tau_M)
 
         # List of state derivatives
@@ -144,3 +144,66 @@ class SynchronousMotorDrive:
         self.data.theta_m = np.mod(  # Limit into [-pi, pi)
             self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.i_ss = self.data.i_s*np.exp(1j*self.data.theta_m)
+
+
+# %%
+class SynchronousMotorDriveTwoMass(SynchronousMotorDrive):
+    """
+    Synchronous motor drive with two-mass mechanics.
+
+    This interconnects the subsystems of a synchronous motor drive and provides
+    an interface to the solver.
+
+    Parameters
+    ----------
+    motor : SynchronousMotor
+        Synchronous motor model.
+    mech : MechanicsTwoMass
+        Mechanics model.
+    conv : Inverter
+        Inverter model.
+
+    """
+
+    def __init__(self, motor=None, mech=None, conv=None):
+        super().__init__(motor=motor, mech=mech, conv=conv)
+        self.data.w_L, self.data.theta_ML = [], []
+
+    def get_initial_values(self):
+        """Extend the base class."""
+        x0 = super().get_initial_values() + [self.mech.w_L0,
+                                             self.mech.theta_ML0]
+        return x0
+
+    def set_initial_values(self, t0, x0):
+        """Extend the base class."""
+        super().set_initial_values(t0, x0[0:3])
+        self.mech.w_L0 = x0[3].real
+        self.mech.theta_ML0 = np.mod(x0[4].real + np.pi, 2*np.pi) - np.pi
+
+    def f(self, t, x):
+        """Override the base class."""
+        # Unpack the states
+        psi_s, w_M, theta_M, w_L, theta_ML = x
+        theta_m = self.motor.p*theta_M
+        # Interconnections: outputs for computing the state derivatives
+        u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
+        u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
+        # State derivatives plus the outputs for interconnections
+        motor_f, _, tau_M = self.motor.f(psi_s, u_s, w_M)
+        mech_f = self.mech.f(t, w_M, w_L, theta_ML, tau_M)
+        # List of state derivatives
+        return motor_f + mech_f
+
+    def save(self, sol):
+        """Extend the base class."""
+        super().save(sol)
+        self.data.w_L.extend(sol.y[3].real)
+        self.data.theta_ML.extend(sol.y[4].real)
+
+    def post_process(self):
+        """Extend the base class."""
+        super().post_process()
+        # From lists to the ndarray
+        self.data.w_L = np.asarray(self.data.w_L)
+        self.data.theta_ML = np.asarray(self.data.theta_ML)

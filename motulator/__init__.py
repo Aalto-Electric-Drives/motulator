@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from motulator.simulation import Simulation
 
 # Import system models
-from motulator.model.mech import Mechanics
+from motulator.model.mech import (Mechanics, MechanicsTwoMass)
 from motulator.model.converter import (
     Inverter,
     FrequencyConverter,
@@ -26,9 +26,12 @@ from motulator.model.sm import (
 from motulator.model.im_drive import (
     InductionMotorDrive,
     InductionMotorDriveDiode,
+    InductionMotorDriveTwoMass,
 )
-from motulator.model.sm_drive import SynchronousMotorDrive
-
+from motulator.model.sm_drive import (
+    SynchronousMotorDrive,
+    SynchronousMotorDriveTwoMass,
+)
 from motulator.model.sm_flux_maps import (
     import_syre_data,
     plot_flux_map,
