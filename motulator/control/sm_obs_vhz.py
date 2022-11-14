@@ -35,12 +35,11 @@ class SynchronousMotorVHzObsCtrlPars:
     T_s: float = 250e-6
     psi_s_max: float = np.sqrt(2/3)*370/(2*np.pi*75)
     psi_s_min: float = .5*np.sqrt(2/3)*370/(2*np.pi*75)
-    rate_limit: float = 2*np.pi*120*10
+    rate_limit: float = np.inf
     i_s_max: float = 1.5*np.sqrt(2)*5
-
     alpha_psi: float = 2*np.pi*50
+    alpha_tau_max: float = 2*np.pi*50
     alpha_f: float = 2*np.pi*1
-    k_tau: float = 3.
 
     # Observer
     alpha_o: float = 2*np.pi*20
@@ -75,14 +74,13 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.rate_limiter = RateLimiter(pars)
         # Reference
         self.w_m_ref = pars.w_m_ref
-        # Parameters
+        # Motor parameters
+        self.R_s = pars.R_s
+        self.p = pars.p
+        # Controller parameters
         self.T_s = pars.T_s
         self.alpha_f = pars.alpha_f
         self.alpha_psi = pars.alpha_psi
-        self.p = pars.p
-        self.k_tau = pars.k_tau
-        # Motor parameters
-        self.R_s = pars.R_s
         # MTPA
         tq = TorqueCharacteristics(pars)
         mtpa = tq.mtpa_locus(i_s_max=pars.i_s_max)
@@ -95,6 +93,15 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
             self.psi_s_max = pars.psi_s_max
         except AttributeError:
             self.psi_s_max = np.inf
+        # Gain k_tau
+        abs_psi_s_mtpa0 = self.abs_psi_s_mtpa(0)
+        G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
+        if pars.psi_f > 0:  # PMSM or PM-SyRM
+            c_delta_max = 1.5*pars.p*(
+                pars.psi_f*abs_psi_s_mtpa0/pars.L_d - G*abs_psi_s_mtpa0**2)
+        else:  # SyRM
+            c_delta_max = 1.5*pars.p*G*abs_psi_s_mtpa0**2
+        self.k_tau = pars.alpha_tau_max/c_delta_max
         # Initial states
         self.theta_s, self.tau_M_ref = 0, 0
 
