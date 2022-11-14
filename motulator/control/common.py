@@ -182,6 +182,7 @@ class PWM:
         self.realized_voltage = .5*(self._u_ref_lim_old + u_ref_lim)
         self._u_ref_lim_old = u_ref_lim
 
+
 # %%
 class SpeedCtrl:
     """
