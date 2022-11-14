@@ -36,8 +36,6 @@ from motulator.model.sm_flux_maps import (
     import_syre_data,
     plot_flux_map,
     plot_flux_vs_current,
-    invert_flux_map,
-    downsample_flux_map,
 )
 
 # Import controllers

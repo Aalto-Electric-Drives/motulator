@@ -5,7 +5,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
-from scipy.interpolate import griddata
 from scipy.io import loadmat
 from motulator.helpers import Bunch
 
@@ -158,99 +157,3 @@ def plot_flux_vs_current(data):
     ax.set_xlabel(r'$i_\mathrm{d}$, $i_\mathrm{q}$ (A)')
     ax.set_ylabel(r'$\psi_\mathrm{d}$, $\psi_\mathrm{q}$ (Vs)')
     ax.legend()
-
-
-# %%
-def downsample_flux_map(data, N_d=32, N_q=32):
-    """
-    Downsample the flux map by means of linear interpolation.
-
-    Parameters
-    ----------
-    data : Bunch
-        Flux map data.
-    N_d : int, optional
-        Number of interpolated samples in the d axis. The default is 32.
-    N_q : int, optional
-        Number of interpolated samples in the q axis. The default is 32.
-
-    Returns
-    -------
-    Bunch object with the following fields defined:
-    i_s : complex ndarray, shape (N_d, N_q)
-        Stator current data.
-    psi_s : complex ndarray, shape (N_d, N_q)
-        Stator flux linkage data.
-    tau_M : ndarray, shape (N_d, N_q)
-
-    """
-    # Get the range
-    i_d_max = np.max(data.i_s.real)
-    i_d_min = np.min(data.i_s.real)
-    i_q_max = np.max(data.i_s.imag)
-    i_q_min = np.min(data.i_s.imag)
-
-    # Points at which to interpolate data
-    i_d, i_q = np.mgrid[i_d_min:i_d_max:1j*N_d, i_q_min:i_q_max:1j*N_q]
-
-    # Interpolate data
-    points = (np.ravel(data.i_s.real), np.ravel(data.i_s.imag))
-    psi_s = griddata(points, np.ravel(data.psi_s), (i_d, i_q), method='linear')
-    tau_M = griddata(points, np.ravel(data.tau_M), (i_d, i_q), method='linear')
-    i_s = i_d + 1j*i_q
-
-    downsampled_data = Bunch(
-        i_s=i_s,
-        psi_s=psi_s,
-        tau_M=tau_M,
-    )
-    return downsampled_data
-
-
-# %%
-def invert_flux_map(data, N_d=32, N_q=32):
-    """
-    Compute the inverse flux map by means of linear interpolation.
-
-    Parameters
-    ----------
-    data : Bunch
-        Flux map data.
-    N_d : int, optional
-        Number of interpolated samples in the d axis. The default is 32.
-    N_q : int, optional
-        Number of interpolated samples in the q axis. The default is 32.
-
-    Returns
-    -------
-    Bunch object with the following fields defined:
-    psi_s : complex ndarray, shape (N_d, N_q)
-        Stator flux linkage data.
-    i_s : complex ndarray, shape (N_d, N_q)
-        Stator current data.
-    tau_M : ndarray, shape (N_d, N_q)
-
-    """
-    # Get the range
-    psi_d_max = np.min(np.max(data.psi_s.real, axis=0))
-    psi_d_min = np.max(np.min(data.psi_s.real, axis=0))
-    psi_q_max = np.min(np.max(data.psi_s.imag, axis=1))
-    psi_q_min = np.max(np.min(data.psi_s.imag, axis=1))
-
-    # Points at which to interpolate data
-    psi_d, psi_q = np.mgrid[psi_d_min:psi_d_max:1j*N_d,
-                            psi_q_min:psi_q_max:1j*N_q]
-
-    # Interpolate data
-    points = (np.ravel(data.psi_s.real), np.ravel(data.psi_s.imag))
-    i_s = griddata(points, np.ravel(data.i_s), (psi_d, psi_q), method='linear')
-    tau_M = griddata(
-        points, np.ravel(data.tau_M), (psi_d, psi_q), method='linear')
-    psi_s = psi_d + 1j*psi_q
-
-    inv_data = Bunch(
-        psi_s=psi_s,
-        i_s=i_s,
-        tau_M=tau_M,
-    )
-    return inv_data
