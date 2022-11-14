@@ -98,10 +98,6 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         # Initial states
         self.theta_s, self.tau_M_ref = 0, 0
 
-        self.L_d = pars.L_d
-        self.L_q = pars.L_q
-        self.i_s_max = pars.i_s_max
-
     def __call__(self, mdl):
         """
         Run the main control loop.
