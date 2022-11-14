@@ -38,7 +38,7 @@ pars = mt.SynchronousMotorVHzObsCtrlPars()
 ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
 
 # Default sensorless vector control is unstable (uncomment to try)
-# pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True)
+# pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True, J=0.01)
 # ctrl = mt.SynchronousMotorVectorCtrl(pars)
 
 # %%
