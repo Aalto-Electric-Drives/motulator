@@ -33,7 +33,13 @@ base = mt.BaseValues(
 # %%
 # Load and plot the flux maps.
 
+# Load the data from the MATLAB file
 data = mt.import_syre_data(fname='THOR.mat')
+# You may also downsample or invert the flux map by uncommenting the following
+# lines. Not needed here, but these methods could be useful for other purposes.
+# from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map
+# data = downsample_flux_map(data, N_d=32, N_q=32)
+# data = invert_flux_map(data, N_d=128, N_q=128)
 mt.plot_flux_vs_current(data)
 mt.plot_flux_map(data)
 
