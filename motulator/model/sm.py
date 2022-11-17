@@ -9,7 +9,7 @@ used.
 """
 import numpy as np
 from scipy.optimize import minimize_scalar
-from scipy.interpolate import NearestNDInterpolator
+from scipy.interpolate import LinearNDInterpolator
 from motulator.helpers import complex2abc
 
 
@@ -301,11 +301,11 @@ class SynchronousMotorSaturatedLUT(SynchronousMotor):
         self.p, self.R_s = p, R_s
 
         # Create the interpolant
-        self.interp_i_s = NearestNDInterpolator(
+        self.i_s = LinearNDInterpolator(
             list(zip(psi_s_data.real, psi_s_data.imag)), i_s_data)
 
         # Solve the PM flux for the initial value of the stator flux
-        res = minimize_scalar(lambda psi_d: np.abs(self.interp_i_s(psi_d, 0)),
+        res = minimize_scalar(lambda psi_d: np.abs(self.i_s(psi_d, 0)),
                               bounds=(0, np.max(psi_s_data.real)),
                               method='bounded')
         self.psi_s0 = complex(res.x)
@@ -315,8 +315,5 @@ class SynchronousMotorSaturatedLUT(SynchronousMotor):
 
     def current(self, psi_s):
         """Override the base class method."""
-        # Read the current as function of the flux linkage
-        i_s = self.interp_i_s(psi_s.real, np.abs(psi_s.imag))
-        # Take the sign of the q-axis flux into account
-        i_s = i_s.real + 1j*np.sign(psi_s.imag)*i_s.imag
-        return i_s
+        # Return the current as function of the flux linkage
+        return self.i_s(psi_s.real, psi_s.imag)
