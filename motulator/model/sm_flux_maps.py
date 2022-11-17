@@ -16,7 +16,7 @@ plt.rcParams.update({"text.usetex": False})
 
 
 # %%
-def import_syre_data(fname='THOR.mat'):
+def import_syre_data(fname='THOR.mat', add_negative_q_axis=True):
     """
     Import a flux map from the MATLAB data file in the SyR-e format.
 
@@ -32,6 +32,8 @@ def import_syre_data(fname='THOR.mat'):
     ----------
     fname : str, optional
         MATLAB file name. The default is 'THOR.mat'.
+    add_negative_q_axis : bool, optional
+        Adds the negative q-axis data based on the symmetry.
 
     Returns
     -------
@@ -45,18 +47,35 @@ def import_syre_data(fname='THOR.mat'):
 
     """
     # Read the data from mat-file
-    data = loadmat(fname)
+    mat = loadmat(fname)
 
-    # Use the PMSM convention in coordinates
-    i_d = -data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Iq']
-    i_q = data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Id']
+    # Use the PMSM convention in coordinates. Rotate the matrices by -90 deg
+    # to get monotonically increasing grid data.
+    i_d = -np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Iq'], -1)
+    i_q = np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Id'], -1)
+    psi_d = -np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Fq'], -1)
+    psi_q = np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Fd'], -1)
+    tau_M = np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['T'], -1)
+
+    # Clip the negative q-axis values
+    np.clip(i_q, 0, np.inf, out=i_q)
+    np.clip(psi_q, 0, np.inf, out=psi_q)
+
+    if add_negative_q_axis:
+        # Add the negative q-axis data, flipped based on the symmetry
+        i_d = np.concatenate((np.flipud(i_d), i_d))
+        i_q = np.concatenate((-np.flipud(i_q), i_q))
+        psi_d = np.concatenate((np.flipud(psi_d), psi_d))
+        psi_q = np.concatenate((-np.flipud(psi_q), psi_q))
+        tau_M = np.concatenate((-np.flipud(tau_M), tau_M))
+
+    # Pack the data in the complex form
     i_s = i_d + 1j*i_q
-    psi_d = -data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Fq']
-    psi_q = data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Fd']
     psi_s = psi_d + 1j*psi_q
-    tau_M = data['motorModel'][0, 0]['FluxMap_dq'][0, 0]['T']
 
+    # Pack the to the bunch
     data = Bunch(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
+
     return data
 
 
@@ -115,41 +134,41 @@ def plot_flux_vs_current(data):
 
     """
     # Indices corresponding to i_d = 0 and i_q = 0
-    ind_d_0 = np.argmin(np.abs(data.i_s.real[:, 0]))
-    ind_q_0 = np.argmin(np.abs(data.i_s.imag[0, :]))
+    ind_d_0 = np.argmin(np.abs(data.i_s.real[0, :]))
+    ind_q_0 = np.argmin(np.abs(data.i_s.imag[:, 0]))
     # Indices corresponding to min(i_d) and max(i_d)
-    ind_d_min = np.argmin(data.i_s.real[:, 0])
-    ind_d_max = np.argmax(data.i_s.real[:, 0])
+    ind_d_min = np.argmin(data.i_s.real[0, :])
+    ind_d_max = np.argmax(data.i_s.real[0, :])
 
     fig = plt.figure()
     ax = fig.add_subplot()
     ax.plot(
-        data.i_s.real[:, ind_q_0],
-        data.psi_s.real[:, ind_q_0],
+        data.i_s.real[ind_q_0, :],
+        data.psi_s.real[ind_q_0, :],
         color='r',
         linestyle='-',
         label=r'$\psi_\mathrm{d}(i_\mathrm{d}, 0)$')
     ax.plot(
-        data.i_s.real[:, -1],
-        data.psi_s.real[:, -1],
+        data.i_s.real[-1, :],
+        data.psi_s.real[-1, :],
         color='r',
         linestyle='--',
         label=r'$\psi_\mathrm{d}(i_\mathrm{d}, i_\mathrm{q,max})$')
     ax.plot(
-        data.i_s.imag[ind_d_0, :],
-        data.psi_s.imag[ind_d_0, :],
+        data.i_s.imag[:, ind_d_0],
+        data.psi_s.imag[:, ind_d_0],
         color='b',
         linestyle='-',
         label=r'$\psi_\mathrm{q}(0, i_\mathrm{q})$')
     ax.plot(
-        data.i_s.imag[ind_d_min, :],
-        data.psi_s.imag[ind_d_min, :],
+        data.i_s.imag[:, ind_d_min],
+        data.psi_s.imag[:, ind_d_min],
         color='b',
         linestyle=':',
         label=r'$\psi_\mathrm{q}(i_\mathrm{d,min}, i_\mathrm{q})$')
     ax.plot(
-        data.i_s.imag[ind_d_max, :],
-        data.psi_s.imag[ind_d_max, :],
+        data.i_s.imag[:, ind_d_max],
+        data.psi_s.imag[:, ind_d_max],
         color='b',
         linestyle='--',
         label=r'$\psi_\mathrm{q}(i_\mathrm{d,max}, i_\mathrm{q})$')
