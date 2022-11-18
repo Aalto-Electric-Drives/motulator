@@ -21,15 +21,17 @@ where :math:`\boldsymbol{u}_\mathrm{s}` is the stator voltage, :math:`\boldsymbo
 .. math::
 	\boldsymbol{\psi}_\mathrm{s} = L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\} + \psi_\mathrm{f} 
 
-where :math:`L_\mathrm{d}` is the d-axis inductance, :math:`L_\mathrm{q}` is the q-axis inductance, :math:`\psi_\mathrm{f}` is the permanent-magnet (PM) flux linkage. As special cases, this model represents a surface-PMSM with :math:`L_\mathrm{d} = L_\mathrm{q}` and SyRM with  :math:`\psi_\mathrm{f}=0`. The electromagnetic torque is
+where :math:`L_\mathrm{d}` is the d-axis inductance, :math:`L_\mathrm{q}` is the q-axis inductance, :math:`\psi_\mathrm{f}` is the permanent-magnet (PM) flux linkage. As special cases, this model represents a surface-PMSM with :math:`L_\mathrm{d} = L_\mathrm{q}` and SyRM with :math:`\psi_\mathrm{f}=0`.
+
+.. note::
+    The linear magnetic model can be replaced with nonlinear saturation characteristics  :math:`\boldsymbol{\psi}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}(\boldsymbol{i}_\mathrm{s})`, either in a form of flux maps (see :class:`motulator.model.sm.SynchronousMotorSaturatedLUT`) or explicit functions (see :class:`motulator.model.sm.SynchronousMotorSaturated` corresponding to  [2]_). The module :mod:`motulator.model.sm_flux_maps` contains methods for importing and plotting the flux map data.
+
+The electromagnetic torque is
 
 .. math::
     \tau_\mathrm{M} = \frac{3p}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s} \boldsymbol{\psi}_\mathrm{s}^* \right\}
 
-.. note::
-    The linear magnetic model can be replaced with nonlinear saturation characteristics  :math:`\boldsymbol{i}_\mathrm{s} = \boldsymbol{i}_\mathrm{s}(\boldsymbol{\psi}_\mathrm{s})`, either in a form of explicit functions or look-up tables. The :class:`motulator.model.sm.SynchronousMotorSaturated` provides an example of a saturation model based on explicit functions [2]_.
-
-Since the motor is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from :math:`\tau_\mathrm{M}` to :math:`\omega_\mathrm{m}`.
+Since the motor is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from :math:`\tau_\mathrm{M}` to :math:`\omega_\mathrm{M}`.
 
 .. figure:: figs/sm_block_stat.svg
    :width: 100%
@@ -37,7 +39,7 @@ Since the motor is fed and observed from stator coordinates, the quantities are 
    :alt: Synchronous motor model seen from stator coordinates
    :target: .
 
-   Synchronous motor model seen from stator coordinates. The rotor angular position :math:`\vartheta_\mathrm{m}` is a state of the mechanical subsystem (see e.g. :class:`motulator.model.mech.Mechanics`).
+   Synchronous motor model seen from stator coordinates. The mechanical angle :math:`\vartheta_\mathrm{M}` of the rotor is a state of the mechanical subsystem (see e.g. :class:`motulator.model.mech.Mechanics`).
 
 References
 ----------
