@@ -22,9 +22,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="255.32472"
-     inkscape:cy="124.65933"
+     inkscape:zoom="1.979899"
+     inkscape:cx="199.35374"
+     inkscape:cy="76.166027"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -98,41 +98,6 @@
          d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
          id="path18502-9-5" />
     </marker>
-    <g
-       id="g2171">
-      <symbol
-         overflow="visible"
-         id="symbol2585">
-        <path
-           style="stroke:none"
-           d=""
-           id="path8666" />
-      </symbol>
-      <symbol
-         overflow="visible"
-         id="symbol2221">
-        <path
-           style="stroke:none"
-           d="m 2.9375,-3.71875 h 1.671875 c 0.125,0 0.484375,0 0.484375,-0.34375 0,-0.234375 -0.203125,-0.234375 -0.40625,-0.234375 H 1.90625 c -0.203125,0 -0.59375,0 -1.03125,0.46875 -0.328125,0.359375 -0.609375,0.84375 -0.609375,0.890625 0,0.015625 0,0.109375 0.125,0.109375 0.078125,0 0.09375,-0.046875 0.15625,-0.125 C 1.03125,-3.71875 1.609375,-3.71875 1.8125,-3.71875 h 0.828125 l -0.96875,3.203125 C 1.625,-0.40625 1.5625,-0.1875 1.5625,-0.15625 c 0,0.109375 0.078125,0.28125 0.296875,0.28125 0.328125,0 0.375,-0.28125 0.40625,-0.4375 z m 0,0"
-           id="path8313" />
-      </symbol>
-      <symbol
-         overflow="visible"
-         id="symbol3016">
-        <path
-           style="stroke:none"
-           d=""
-           id="path2179" />
-      </symbol>
-      <symbol
-         overflow="visible"
-         id="symbol6517">
-        <path
-           style="stroke:none"
-           d="m 5.734375,-2.109375 c 0,-0.609375 -0.3125,-0.96875 -1.046875,-0.96875 -0.5625,0 -0.9375,0.296875 -1.125,0.65625 -0.140625,-0.5 -0.515625,-0.65625 -1.015625,-0.65625 -0.578125,0 -0.9375,0.3125 -1.140625,0.6875 v -0.6875 L 0.375,-3 v 0.25 c 0.46875,0 0.53125,0.046875 0.53125,0.390625 v 1.8125 C 0.90625,-0.25 0.828125,-0.25 0.375,-0.25 V 0 C 0.390625,0 0.875,-0.03125 1.171875,-0.03125 1.421875,-0.03125 1.90625,0 1.96875,0 v -0.25 c -0.453125,0 -0.515625,0 -0.515625,-0.296875 V -1.8125 c 0,-0.71875 0.578125,-1.0625 1.03125,-1.0625 0.484375,0 0.546875,0.375 0.546875,0.734375 v 1.59375 C 3.03125,-0.25 2.96875,-0.25 2.515625,-0.25 V 0 C 2.53125,0 3.015625,-0.03125 3.3125,-0.03125 3.5625,-0.03125 4.046875,0 4.109375,0 v -0.25 c -0.453125,0 -0.515625,0 -0.515625,-0.296875 V -1.8125 c 0,-0.71875 0.578125,-1.0625 1.03125,-1.0625 0.484375,0 0.546875,0.375 0.546875,0.734375 v 1.59375 C 5.171875,-0.25 5.109375,-0.25 4.65625,-0.25 V 0 c 0.015625,0 0.5,-0.03125 0.796875,-0.03125 C 5.703125,-0.03125 6.1875,0 6.25,0 v -0.25 c -0.453125,0 -0.515625,0 -0.515625,-0.296875 z m 0,0"
-           id="path1143" />
-      </symbol>
-    </g>
     <g
        id="g8003">
       <symbol
@@ -539,6 +504,60 @@
            id="path9208" />
       </symbol>
     </g>
+    <g
+       id="g1586">
+      <symbol
+         overflow="visible"
+         id="symbol505">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path1313" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol4371">
+        <path
+           style="stroke:none;"
+           d="M 0.453125 1.21875 C 0.375 1.5625 0.34375 1.625 -0.09375 1.625 C -0.203125 1.625 -0.3125 1.625 -0.3125 1.8125 C -0.3125 1.890625 -0.265625 1.9375 -0.1875 1.9375 C 0.078125 1.9375 0.375 1.90625 0.640625 1.90625 C 0.984375 1.90625 1.3125 1.9375 1.640625 1.9375 C 1.6875 1.9375 1.8125 1.9375 1.8125 1.734375 C 1.8125 1.625 1.71875 1.625 1.578125 1.625 C 1.078125 1.625 1.078125 1.5625 1.078125 1.46875 C 1.078125 1.34375 1.5 -0.28125 1.5625 -0.53125 C 1.6875 -0.234375 1.96875 0.109375 2.484375 0.109375 C 3.640625 0.109375 4.890625 -1.34375 4.890625 -2.8125 C 4.890625 -3.75 4.3125 -4.40625 3.5625 -4.40625 C 3.0625 -4.40625 2.578125 -4.046875 2.25 -3.65625 C 2.15625 -4.203125 1.71875 -4.40625 1.359375 -4.40625 C 0.890625 -4.40625 0.703125 -4.015625 0.625 -3.84375 C 0.4375 -3.5 0.3125 -2.90625 0.3125 -2.875 C 0.3125 -2.765625 0.40625 -2.765625 0.421875 -2.765625 C 0.53125 -2.765625 0.53125 -2.78125 0.59375 -3 C 0.765625 -3.703125 0.96875 -4.1875 1.328125 -4.1875 C 1.5 -4.1875 1.640625 -4.109375 1.640625 -3.734375 C 1.640625 -3.5 1.609375 -3.390625 1.5625 -3.21875 Z M 2.203125 -3.109375 C 2.265625 -3.375 2.546875 -3.65625 2.71875 -3.8125 C 3.078125 -4.109375 3.359375 -4.1875 3.53125 -4.1875 C 3.921875 -4.1875 4.171875 -3.84375 4.171875 -3.25 C 4.171875 -2.65625 3.84375 -1.515625 3.65625 -1.140625 C 3.3125 -0.4375 2.84375 -0.109375 2.46875 -0.109375 C 1.8125 -0.109375 1.6875 -0.9375 1.6875 -1 C 1.6875 -1.015625 1.6875 -1.03125 1.71875 -1.15625 Z M 2.203125 -3.109375 "
+           id="path8162" />
+      </symbol>
+    </g>
+    <g
+       id="g174">
+      <symbol
+         overflow="visible"
+         id="symbol8417">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path6465" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol2124">
+        <path
+           style="stroke:none;"
+           d="M 6.03125 -3.703125 C 6.03125 -4.15625 5.859375 -4.40625 5.625 -4.40625 C 5.375 -4.40625 5.109375 -4.171875 5.109375 -3.9375 C 5.109375 -3.84375 5.15625 -3.734375 5.25 -3.640625 C 5.421875 -3.484375 5.609375 -3.21875 5.609375 -2.796875 C 5.609375 -2.40625 5.40625 -1.828125 5.109375 -1.375 C 4.8125 -0.953125 4.4375 -0.609375 3.96875 -0.609375 C 3.40625 -0.609375 3.09375 -0.96875 3 -1.5 C 3.109375 -1.765625 3.34375 -2.40625 3.34375 -2.6875 C 3.34375 -2.796875 3.296875 -2.90625 3.15625 -2.90625 C 3.078125 -2.90625 2.96875 -2.875 2.890625 -2.734375 C 2.78125 -2.53125 2.65625 -1.890625 2.65625 -1.53125 C 2.328125 -1.0625 1.9375 -0.609375 1.3125 -0.609375 C 0.640625 -0.609375 0.4375 -1.203125 0.4375 -1.75 C 0.4375 -3 1.453125 -4.046875 1.453125 -4.171875 C 1.453125 -4.28125 1.375 -4.359375 1.265625 -4.359375 C 1.140625 -4.359375 1.0625 -4.234375 1 -4.140625 C 0.5 -3.40625 0.125 -2.21875 0.125 -1.3125 C 0.125 -0.625 0.34375 0.109375 1.171875 0.109375 C 1.875 0.109375 2.34375 -0.390625 2.703125 -0.9375 C 2.796875 -0.359375 3.1875 0.109375 3.796875 0.109375 C 4.578125 0.109375 5.046875 -0.5 5.40625 -1.25 C 5.65625 -1.734375 6.03125 -3.09375 6.03125 -3.703125 Z M 6.03125 -3.703125 "
+           id="path7826" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol4853">
+        <path
+           style="stroke:none;"
+           d=""
+           id="path8022" />
+      </symbol>
+      <symbol
+         overflow="visible"
+         id="symbol9346">
+        <path
+           style="stroke:none;"
+           d="M 1.921875 -4.609375 C 1.859375 -4.765625 1.796875 -4.765625 1.65625 -4.765625 L 0.4375 -4.765625 L 0.4375 -4.515625 L 0.59375 -4.515625 C 1.140625 -4.515625 1.15625 -4.4375 1.15625 -4.1875 L 1.15625 -0.75 C 1.15625 -0.5625 1.15625 -0.25 0.4375 -0.25 L 0.4375 0 C 0.71875 -0.015625 1 -0.03125 1.28125 -0.03125 C 1.5625 -0.03125 1.84375 -0.015625 2.125 0 L 2.125 -0.25 C 1.421875 -0.25 1.421875 -0.5625 1.421875 -0.75 L 1.421875 -4.4375 L 3.234375 -0.15625 C 3.265625 -0.078125 3.296875 0 3.40625 0 C 3.453125 0 3.515625 -0.015625 3.578125 -0.140625 L 5.421875 -4.5 L 5.421875 -0.5625 C 5.421875 -0.328125 5.40625 -0.25 4.875 -0.25 L 4.703125 -0.25 L 4.703125 0 C 5.03125 -0.015625 5.421875 -0.03125 5.71875 -0.03125 C 6 -0.03125 6.390625 -0.015625 6.71875 0 L 6.71875 -0.25 L 6.5625 -0.25 C 6.015625 -0.25 6 -0.328125 6 -0.5625 L 6 -4.1875 C 6 -4.4375 6.015625 -4.515625 6.5625 -4.515625 L 6.71875 -4.515625 L 6.71875 -4.765625 L 5.515625 -4.765625 C 5.375 -4.765625 5.3125 -4.765625 5.25 -4.625 L 3.578125 -0.671875 Z M 1.921875 -4.609375 "
+           id="path5243" />
+      </symbol>
+    </g>
   </defs>
   <metadata
      id="metadata6786">
@@ -557,9 +576,15 @@
      inkscape:groupmode="layer"
      inkscape:label="Layer 1"
      transform="translate(-95,-785)">
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
+       d="m 205,870.00003 h 25"
+       id="path1745"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
     <g
        id="g3079"
-       transform="matrix(0,1,1,0,-570,718)">
+       transform="matrix(0,1,1,0,-550,718)">
       <path
          style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
          d="m 159.5,830 h 25"
@@ -588,13 +613,13 @@
     </g>
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#DotM);marker-end:url(#Arrow2Mend-9)"
-       d="M 315,910 V 870 H 305"
+       d="M 335,910 V 870 H 325"
        id="path3065"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccc" />
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#DotM);marker-end:url(#Arrow2Mend-9)"
-       d="m 405,910 v 30 h -30"
+       d="m 425,910 v 30 h -30"
        id="path2991"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccc" />
@@ -603,14 +628,14 @@
        inkscape:export-xdpi="300"
        inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
        height="20"
-       x="355"
+       x="375"
        y="930"
        width="20"
        id="rect2550"
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <g
        id="g2612"
-       transform="matrix(1,0,0,-1,130,1865)">
+       transform="matrix(1,0,0,-1,150,1865)">
       <path
          sodipodi:nodetypes="ccc"
          inkscape:connector-curvature="0"
@@ -626,13 +651,13 @@
     </g>
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
-       d="m 220,830 h 32.5"
+       d="M 205,830.00003 272.5,830"
        id="path4648"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
-       d="M 267.5,830 H 285"
+       d="M 287.5,830 H 305"
        id="path4636"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -640,11 +665,11 @@
        sodipodi:nodetypes="ccc"
        inkscape:connector-curvature="0"
        id="path4760"
-       d="m 355,800 h -95 v 22.5"
+       d="m 375,800 h -95 v 22.5"
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Mend-9)" />
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#DotM);marker-end:url(#Arrow2Mend-9)"
-       d="M 405,830 V 800 H 375"
+       d="M 425,830 V 800 H 395"
        id="path4746"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccc" />
@@ -652,21 +677,21 @@
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path4650"
-       d="m 305,830 h 30"
+       d="m 325,830 h 30"
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)" />
     <rect
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4620"
        width="20"
        y="810"
-       x="285"
+       x="305"
        height="40"
        inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
     <g
        id="g4642"
-       transform="matrix(0,0.7272727,-0.7272727,0,52.61212,807.45455)"
+       transform="matrix(0,0.7272727,-0.7272727,0,72.612123,807.45455)"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline">
       <path
          transform="translate(10.5,17.500004)"
@@ -686,7 +711,7 @@
     <ellipse
        ry="7.4999976"
        rx="7.5000033"
-       cy="-260"
+       cy="-280"
        cx="830"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="ellipse4646"
@@ -696,32 +721,32 @@
        inkscape:export-xdpi="300"
        inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
        height="20"
-       x="355"
+       x="375"
        y="790"
        width="20"
        id="rect4589"
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
-       d="m 395,830 h 30"
+       d="m 415,830 h 30"
        id="path4744"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <path
        inkscape:connector-curvature="0"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:0.727273px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 247.72724,814.49996 h 7.27273"
+       d="m 267.72724,814.49996 h 7.27273"
        sodipodi:nodetypes="cc"
        id="path4778" />
     <path
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path989"
-       d="m 395,870 h 30"
+       d="m 415,870 h 30"
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)" />
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,175.48584,727.57328)"
+       transform="matrix(1.25,0,0,1.25,195.48584,727.57328)"
        id="g2446"
        style="stroke-width:0.8">
       <g
@@ -760,7 +785,7 @@
     </g>
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,243.33438,700.83125)"
+       transform="matrix(1.25,0,0,1.25,263.33438,700.83125)"
        id="g2781"
        style="stroke-width:0.8">
       <g
@@ -794,7 +819,7 @@
     </g>
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,107.22656,763.4711)"
+       transform="matrix(1.25,0,0,1.25,137.22656,762.05407)"
        id="g1577"
        style="stroke-width:0.8">
       <g
@@ -831,7 +856,7 @@
        id="rect4748"
        width="20"
        y="-880"
-       x="285"
+       x="305"
        height="20"
        inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
        inkscape:export-xdpi="300"
@@ -839,7 +864,7 @@
        transform="scale(1,-1)" />
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
-       d="m 220,870 h 32.5"
+       d="M 250,870.00003 272.5,870"
        id="path965"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -847,11 +872,11 @@
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path967"
-       d="M 285,870 H 267.5"
+       d="M 305,870 H 287.5"
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Mend-9)" />
     <g
        id="g4319"
-       transform="matrix(0.75,0,0,-0.75,1.25,1066.7716)"
+       transform="matrix(0.75,0,0,-0.75,21.250003,1066.7716)"
        style="stroke-width:1.33333">
       <rect
          style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.77733;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -879,7 +904,7 @@
     <g
        id="g876"
        style="stroke-width:0.8"
-       transform="matrix(1.25,0,0,1.25,179.03906,770.43688)">
+       transform="matrix(1.25,0,0,1.25,199.03906,770.43688)">
       <g
          style="fill:#000000;fill-opacity:1;stroke-width:0.8"
          id="g6147">
@@ -898,7 +923,7 @@
     <g
        id="g1151-3"
        style="display:inline"
-       transform="translate(174.20809,727.31)">
+       transform="translate(158.65081,727.31)">
       <g
          id="g1127">
         <g
@@ -953,7 +978,7 @@
     <g
        id="g1117"
        style="display:inline"
-       transform="translate(340.91902,766.51485)">
+       transform="translate(360.91902,766.51485)">
       <g
          id="g1097">
         <g
@@ -1009,7 +1034,7 @@
     </g>
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,243.33438,840.87029)"
+       transform="matrix(1.25,0,0,1.25,263.33438,840.87029)"
        id="g3411"
        style="display:inline;stroke-width:0.8">
       <g
@@ -1045,7 +1070,7 @@
     </g>
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,203.03212,719.90234)"
+       transform="matrix(1.25,0,0,1.25,223.03212,719.90234)"
        id="g1854"
        style="stroke-width:0.8">
       <g
@@ -1091,7 +1116,7 @@
     </g>
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,203.03212,800.28468)"
+       transform="matrix(1.25,0,0,1.25,223.03212,800.28468)"
        id="g2172"
        style="stroke-width:0.8">
       <g
@@ -1137,7 +1162,7 @@
     </g>
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,298.22984,800)"
+       transform="matrix(1.25,0,0,1.25,318.22984,800)"
        id="g2510"
        style="stroke-width:0.8">
       <g
@@ -1183,7 +1208,7 @@
     </g>
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
-       d="M 267.5,910 H 285"
+       d="M 287.5,910 H 305"
        id="path2536"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -1192,7 +1217,7 @@
        id="rect2540"
        width="20"
        y="890"
-       x="285"
+       x="305"
        height="40"
        inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
        inkscape:export-xdpi="300"
@@ -1200,14 +1225,14 @@
     <ellipse
        ry="7.4999976"
        rx="7.5000033"
-       cy="-260"
+       cy="-280"
        cx="910"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="ellipse2548"
        transform="rotate(90)" />
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,175.48584,807.57328)"
+       transform="matrix(1.25,0,0,1.25,195.48584,807.57328)"
        id="g2566"
        style="stroke-width:0.8">
       <g
@@ -1248,21 +1273,21 @@
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path2967"
-       d="m 305,910 h 30"
+       d="m 325,910 h 30"
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)" />
     <rect
        inkscape:export-ydpi="300"
        inkscape:export-xdpi="300"
        inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
        height="100"
-       x="335"
+       x="355"
        y="820"
        width="60"
        id="rect4628"
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,224.959,762.78125)"
+       transform="matrix(1.25,0,0,1.25,244.959,762.78125)"
        id="g4414"
        style="stroke-width:0.8">
       <g
@@ -1340,7 +1365,7 @@
     </g>
     <g
        inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,233.60372,779.39062)"
+       transform="matrix(1.25,0,0,1.25,253.60372,779.39062)"
        id="g4818"
        style="stroke-width:0.8">
       <g
@@ -1398,13 +1423,13 @@
     </g>
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
-       d="m 395,910 h 30"
+       d="m 415,910 h 30"
        id="path2989"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <g
        inkscape:label=""
-       transform="matrix(1.2,0,0,1.2,301.76231,764.88765)"
+       transform="matrix(1.2,0,0,1.2,321.76231,764.88765)"
        id="g1391"
        style="stroke-width:0.833333">
       <g
@@ -1433,6 +1458,73 @@
              width="100%"
              height="100%"
              style="stroke-width:0.833333" />
+        </g>
+      </g>
+    </g>
+    <rect
+       style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1120"
+       width="20"
+       y="-880"
+       x="230"
+       height="20"
+       inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"
+       transform="scale(1,-1)" />
+    <g
+       inkscape:label=""
+       transform="matrix(1.25,0,0,1.25,122.23242,769.08922)"
+       id="g1412"
+       style="stroke-width:0.8">
+      <g
+         id="g5545"
+         style="stroke-width:0.8">
+        <g
+           style="fill:#000000;fill-opacity:1;stroke-width:0.8"
+           id="g4936">
+          <use
+             xlink:href="#symbol4371"
+             x="91.925003"
+             y="81.962997"
+             id="use9928"
+             width="100%"
+             height="100%"
+             style="stroke-width:0.8" />
+        </g>
+      </g>
+    </g>
+    <g
+       inkscape:label=""
+       transform="matrix(1.25,0,0,1.25,91.669284,762.05407)"
+       id="g1725"
+       style="stroke-width:0.8">
+      <g
+         id="g1394"
+         style="stroke-width:0.8">
+        <g
+           style="fill:#000000;fill-opacity:1;stroke-width:0.8"
+           id="g8361">
+          <use
+             xlink:href="#symbol2124"
+             x="91.925003"
+             y="81.962997"
+             id="use198"
+             width="100%"
+             height="100%"
+             style="stroke-width:0.8" />
+        </g>
+        <g
+           style="fill:#000000;fill-opacity:1;stroke-width:0.8"
+           id="g7040">
+          <use
+             xlink:href="#symbol9346"
+             x="98.126999"
+             y="83.457001"
+             id="use2982"
+             width="100%"
+             height="100%"
+             style="stroke-width:0.8" />
         </g>
       </g>
     </g>
