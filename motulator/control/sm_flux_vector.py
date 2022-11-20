@@ -20,7 +20,7 @@ References
    2019, https://doi.org/10.1109/TIA.2019.2927316
 
 """
-from collections.abc import Callable
+from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
@@ -43,10 +43,9 @@ class SynchronousMotorFluxVectorCtrlPars:
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
-    # Maximum flux
-    psi_s_max: float = np.sqrt(2/3)*370/(2*np.pi*75)
-    # Minimum flux
-    psi_s_min: float = .5*np.sqrt(2/3)*370/(2*np.pi*75)
+    # Flux reference limits
+    psi_s_min: float = None
+    psi_s_max: float = None
     # Voltage marginal
     k_u: float = .9
     # Bandwidths
@@ -195,9 +194,8 @@ class FluxTorqueCtrl:
         self.alpha_psi = pars.alpha_psi
         # Gain k_tau
         G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
-        psi_s0 = np.max([pars.psi_s_min, pars.psi_f])
+        psi_s0 = pars.psi_f if pars.psi_f > 0 else pars.psi_s_min
         if pars.psi_f > 0:  # PMSM or PM-SyRM
-            # c_delta0  = c_delta(abs(psi_s) = psi_s0, delta = 0)
             c_delta0 = 1.5*pars.p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
         else:  # SyRM
             c_delta0 = 1.5*pars.p*G*psi_s0**2

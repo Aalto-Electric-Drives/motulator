@@ -4,7 +4,7 @@ V/Hz control up to the 6-step mode: 2.2-kW induction motor
 
 This example simulates V/Hz of a 2.2-kW induction motor drive. The six-step
 overmodulation is enabled, which increases the fundamental voltage as well as
-the harmonics. Since the PWM is not synchronized with the stator freuqency, the
+the harmonics. Since the PWM is not synchronized with the stator frequency, the
 harmonic content also depends on the ratio between the stator frequency and
 the sampling frequency.
 

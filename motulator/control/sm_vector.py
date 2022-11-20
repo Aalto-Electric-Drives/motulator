@@ -1,8 +1,7 @@
 # pylint: disable=invalid-name
 """Current vector control for synchronous motor drives."""
 
-from __future__ import annotations
-from collections.abc import Callable
+from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
@@ -31,7 +30,7 @@ class SynchronousMotorVectorCtrlPars:
     # Maximum values
     tau_M_max: float = 2*14
     i_s_max: float = 1.5*np.sqrt(2)*5
-    psi_s_min: float = 0
+    psi_s_min: float = None
     # Voltage margin
     k_u: float = .95
     # Nominal values

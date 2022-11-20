@@ -33,8 +33,8 @@ class SynchronousMotorVHzObsCtrlPars:
 
     # Control
     T_s: float = 250e-6
-    psi_s_max: float = np.sqrt(2/3)*370/(2*np.pi*75)
-    psi_s_min: float = .5*np.sqrt(2/3)*370/(2*np.pi*75)
+    psi_s_max: float = None
+    psi_s_min: float = None
     rate_limit: float = np.inf
     i_s_max: float = 1.5*np.sqrt(2)*5
     alpha_psi: float = 2*np.pi*50
@@ -44,7 +44,7 @@ class SynchronousMotorVHzObsCtrlPars:
 
     # Observer
     alpha_o: float = 2*np.pi*20
-    zeta_inf: float = .7
+    zeta_inf: float = .2
 
     # Motor parameter estimates
     R_s: float = 3.6
@@ -85,7 +85,7 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.alpha_psi = pars.alpha_psi
         # Gain k_tau
         G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
-        psi_s0 = np.max([pars.psi_s_min, pars.psi_f])
+        psi_s0 = pars.psi_f if pars.psi_f > 0 else pars.psi_s_min
         if pars.psi_f > 0:  # PMSM or PM-SyRM
             # c_delta0  = c_delta(abs(psi_s) = psi_s0, delta = 0)
             c_delta0 = 1.5*pars.p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
@@ -186,11 +186,9 @@ class FluxTorqueRef:
 
     # pylint: disable=too-few-public-methods
     def __init__(self, pars):
-        self.psi_s_min = pars.psi_s_min
-        try:
-            self.psi_s_max = pars.psi_s_max
-        except AttributeError:
-            self.psi_s_max = np.inf
+        self.psi_s_min = (pars.psi_f if pars.psi_s_min is None
+                          else pars.psi_s_min)
+        self.psi_s_max = np.inf if pars.psi_s_max is None else pars.psi_s_max
         self.k_u = pars.k_u
         # Merged MTPV and current limits
         tq = TorqueCharacteristics(pars)

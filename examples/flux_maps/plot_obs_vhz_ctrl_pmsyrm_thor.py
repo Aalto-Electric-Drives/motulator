@@ -61,17 +61,11 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # Configure the control system.
 
 pars = mt.SynchronousMotorVHzObsCtrlPars(
-    p=2,
-    R_s=.2,
-    L_d=4e-3,
-    L_q=17e-3,
-    psi_f=.134,
+    p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134,
     alpha_psi=2*np.pi*50,
     zeta_inf=.1,
     T_s=250e-6,
     i_s_max=2*base.i,
-    psi_s_min=.134,
-    psi_s_max=1.5*base.psi,
 )
 ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
 
