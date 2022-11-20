@@ -85,12 +85,12 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.alpha_psi = pars.alpha_psi
         # Gain k_tau
         G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
+        psi_s0 = np.max([pars.psi_s_min, pars.psi_f])
         if pars.psi_f > 0:  # PMSM or PM-SyRM
-            # c_delta0 is c_delta @ psi_s = psi_s_min and delta = 0
-            c_delta0 = 1.5*pars.p*(
-                pars.psi_f*pars.psi_s_min/pars.L_d - G*pars.psi_s_min**2)
+            # c_delta0  = c_delta(abs(psi_s) = psi_s0, delta = 0)
+            c_delta0 = 1.5*pars.p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
         else:  # SyRM
-            c_delta0 = 1.5*pars.p*G*pars.psi_s_min**2
+            c_delta0 = 1.5*pars.p*G*psi_s0**2
         self.k_tau = pars.alpha_tau/c_delta0
         # Initial states
         self.theta_s, self.tau_M_ref = 0, 0
