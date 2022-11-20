@@ -35,8 +35,10 @@ base = mt.BaseValues(
 
 # Load the data from the MATLAB file
 data = mt.import_syre_data(fname='THOR.mat')
+
 # You may also downsample or invert the flux map by uncommenting the following
 # lines. Not needed here, but these methods could be useful for other purposes.
+
 # from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map
 # data = downsample_flux_map(data, N_d=32, N_q=32)
 # data = invert_flux_map(data, N_d=128, N_q=128)
@@ -68,7 +70,7 @@ pars = mt.SynchronousMotorVHzObsCtrlPars(
     zeta_inf=.1,
     T_s=250e-6,
     i_s_max=2*base.i,
-    psi_s_min=.3*base.psi,
+    psi_s_min=.134,
     psi_s_max=1.5*base.psi,
 )
 ctrl = mt.SynchronousMotorVHzObsCtrl(pars)

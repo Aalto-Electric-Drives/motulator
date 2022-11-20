@@ -3,9 +3,16 @@
 Torque characteristics for synchronous machines.
 
 This contains computation and plotting of torque characteristics for
-synchronous machines, including the MTPA and MTPV loci. The methods can be used
-to define look-up tables for control as well as to analyze the characteristics.
+synchronous machines, including the MTPA and MTPV loci [1]_. The methods can be
+used to define look-up tables for control and to analyze the characteristics.
 In this version, the magnetic saturation is omitted.
+
+References
+----------
+.. [1] Morimoto, Takeda, Hirasa, Taniguchi, "Expansion of operating limits for
+   permanent magnet motor by current vector control considering inverter
+   capacity," IEEE Trans. Ind. Appl., 1990,
+   https://doi.org/10.1109/28.60058
 
 """
 from sys import float_info
@@ -13,7 +20,6 @@ import numpy as np
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 from cycler import cycler
-
 from motulator.helpers import Bunch
 
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
@@ -442,38 +448,6 @@ class TorqueCharacteristics:
         return Bunch(
             tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s, i_sd_vs_tau_M=i_sd_vs_tau_M)
 
-    def delta_at_zero_torque(self, abs_psi_s):
-        """
-        Compute the load angle value at the zero torque.
-
-        This computes the "nontrivial" load angle value corresponding to the
-        zero electromagnetic torque.
-
-        Parameters
-        ----------
-        abs_psi_s : float
-            Stator flux magnitude.
-
-        Returns
-        -------
-        delta : float
-            Load angle at the zero torque.
-
-        """
-        if self.psi_f > 0:
-            c = ((self.L_q - self.L_d)/self.L_q*abs_psi_s/self.psi_f)**2 - 1
-            if c > 0:
-                if self.L_q > self.L_d:
-                    delta = np.arctan((np.sqrt(c)))
-                else:
-                    delta = np.pi - np.arctan((np.sqrt(c)))
-            else:
-                delta = 0
-        else:
-            delta = 0
-
-        return delta
-
     def plot_flux_loci(self, i_s_max, base, N=20):
         """
         Plot the stator flux linkage loci.
@@ -660,42 +634,3 @@ class TorqueCharacteristics:
         ax.legend(['MTPA', 'MTPV', 'Const current'])
         ax.set_xlabel(r'$\psi_\mathrm{s}$ (p.u.)')
         ax.set_ylabel(r'$\tau_\mathrm{m}$ (p.u.)')
-
-    def plot_angle_torque(self, abs_psi_s, base, N=100):
-        """
-        Plot the electromagnetic torque as a function of the load angle.
-
-        Per-unit quantities are used.
-
-        Parameters
-        ----------
-        abs_psi_s : float
-            Stator flux magnitude.
-        base : object
-            Base values.
-        N : int, optional
-            Amount of points to be evaluated. The default is 100.
-
-        """
-        delta = np.linspace(-np.pi, np.pi, N)
-        psi_s = abs_psi_s*np.exp(1j*delta)
-        tau_M = self.torque(psi_s)
-
-        delta_mtpv = self.mtpv(abs_psi_s)
-        psi_s_mtpv = abs_psi_s*np.exp(1j*delta_mtpv)
-        tau_M_mtpv = self.torque(psi_s_mtpv)
-
-        delta0 = self.delta_at_zero_torque(abs_psi_s)
-        psi_s0 = abs_psi_s*np.exp(1j*delta0)
-        tau_M0 = self.torque(psi_s0)
-
-        _, ax = plt.subplots()
-        ax.plot(180*delta/np.pi, tau_M/base.tau)
-        ax.plot(180*delta_mtpv/np.pi, tau_M_mtpv/base.tau, 'o')
-        ax.plot(180*delta0/np.pi, tau_M0/base.tau, 'x')
-
-        ax.set_xlim([-180, 180])
-        ax.set_xticks([-180, -135, -90, -45, 0, 45, 90, 135, 180])
-        ax.set_xlabel(r'$\delta$ (deg)')
-        ax.set_ylabel(r'$\tau_\mathrm{m}$ (p.u.)')
-        ax.set_title(r'$\psi_\mathrm{s}=$ %1.2f p.u.' % (abs_psi_s/base.psi))

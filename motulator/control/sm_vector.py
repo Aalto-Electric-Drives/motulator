@@ -47,22 +47,6 @@ class SynchronousMotorVectorCtrlPars:
     w_o: float = 2*np.pi*40  # Used only in the sensorless mode
     zeta_inf: float = .2
 
-    def plot_luts(self, base):
-        """
-        Plot control look-up tables.
-
-        Parameters
-        ----------
-        base : BaseValues
-            Base values for scaling the plots.
-
-        """
-        tq = TorqueCharacteristics(self)
-        tq.plot_current_loci(self.i_s_max, base)
-        tq.plot_torque_flux(self.i_s_max, base)
-        tq.plot_torque_current(self.i_s_max, base)
-        # tq.plot_flux_loci(self.i_s_max, base)
-
 
 # %%
 class SynchronousMotorVectorCtrl(Ctrl):
@@ -329,7 +313,6 @@ class CurrentRef:
             Limited torque reference.
 
         """
-
         def limit_torque(tau_M_ref, w_m, u_dc):
             if np.abs(w_m) > 0:
                 psi_s_max = self.k_u*u_dc/np.sqrt(3)/np.abs(w_m)

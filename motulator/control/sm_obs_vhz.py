@@ -38,8 +38,9 @@ class SynchronousMotorVHzObsCtrlPars:
     rate_limit: float = np.inf
     i_s_max: float = 1.5*np.sqrt(2)*5
     alpha_psi: float = 2*np.pi*50
-    alpha_tau_max: float = 2*np.pi*50
+    alpha_tau: float = 2*np.pi*50
     alpha_f: float = 2*np.pi*1
+    k_u: float = 1
 
     # Observer
     alpha_o: float = 2*np.pi*20
@@ -72,6 +73,7 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.observer = SensorlessFluxObserver(pars)
         self.pwm = PWM(pars)
         self.rate_limiter = RateLimiter(pars)
+        self.flux_torque_ref = FluxTorqueRef(pars)
         # Reference
         self.w_m_ref = pars.w_m_ref
         # Motor parameters
@@ -81,27 +83,15 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.T_s = pars.T_s
         self.alpha_f = pars.alpha_f
         self.alpha_psi = pars.alpha_psi
-        # MTPA
-        tq = TorqueCharacteristics(pars)
-        mtpa = tq.mtpa_locus(i_s_max=pars.i_s_max)
-        self.abs_psi_s_mtpa = mtpa.abs_psi_s_vs_tau_M
-        try:
-            self.psi_s_min = pars.psi_s_min
-        except AttributeError:
-            self.psi_s_min = 0
-        try:
-            self.psi_s_max = pars.psi_s_max
-        except AttributeError:
-            self.psi_s_max = np.inf
         # Gain k_tau
-        abs_psi_s_mtpa0 = self.abs_psi_s_mtpa(0)
         G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
         if pars.psi_f > 0:  # PMSM or PM-SyRM
-            c_delta_max = 1.5*pars.p*(
-                pars.psi_f*abs_psi_s_mtpa0/pars.L_d - G*abs_psi_s_mtpa0**2)
+            # c_delta0 is c_delta @ psi_s = psi_s_min and delta = 0
+            c_delta0 = 1.5*pars.p*(
+                pars.psi_f*pars.psi_s_min/pars.L_d - G*pars.psi_s_min**2)
         else:  # SyRM
-            c_delta_max = 1.5*pars.p*G*abs_psi_s_mtpa0**2
-        self.k_tau = pars.alpha_tau_max/c_delta_max
+            c_delta0 = 1.5*pars.p*G*pars.psi_s_min**2
+        self.k_tau = pars.alpha_tau/c_delta0
         # Initial states
         self.theta_s, self.tau_M_ref = 0, 0
 
@@ -138,16 +128,15 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         psi_s = self.observer.psi_s
         tau_M_ref = self.tau_M_ref
 
+        # Limited flux and torque references
+        psi_s_ref, tau_M_ref_lim = self.flux_torque_ref(
+            tau_M_ref, w_m_ref, u_dc)
+
         # Electromagnetic torque (7d)
         tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
 
         # Dynamic frequency (5a)
-        w_s = w_m_ref - self.k_tau*(tau_M - tau_M_ref)
-
-        # Flux reference
-        psi_s_ref = self.abs_psi_s_mtpa(np.abs(tau_M_ref))
-        psi_s_ref = np.max([psi_s_ref, self.psi_s_min])
-        psi_s_ref = np.min([psi_s_ref, self.psi_s_max])
+        w_s = w_m_ref - self.k_tau*(tau_M - tau_M_ref_lim)
 
         # Voltage reference (4)
         err = psi_s_ref - psi_s
@@ -181,6 +170,74 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref
+
+
+# %%
+class FluxTorqueRef:
+    """
+    Flux and torque references.
+
+    Parameters
+    ----------
+    pars : SynchronousMotorVHzObsCtrlPars
+        Control parameters.
+
+    """
+
+    # pylint: disable=too-few-public-methods
+    def __init__(self, pars):
+        self.psi_s_min = pars.psi_s_min
+        try:
+            self.psi_s_max = pars.psi_s_max
+        except AttributeError:
+            self.psi_s_max = np.inf
+        self.k_u = pars.k_u
+        # Merged MTPV and current limits
+        tq = TorqueCharacteristics(pars)
+        lims = tq.mtpv_and_current_limits(i_s_max=pars.i_s_max)
+        self.tau_M_lim = lims.tau_M_vs_abs_psi_s
+        # MTPA locus
+        mtpa = tq.mtpa_locus(i_s_max=pars.i_s_max)
+        self.psi_s_mtpa = mtpa.abs_psi_s_vs_tau_M
+
+    def __call__(self, tau_M_ref, w_m, u_dc):
+        """
+        Calculate the stator flux reference and limit the torque reference.
+
+        Parameters
+        ----------
+        tau_M_ref : float
+            Unlimited torque reference.
+        w_m : float
+            Rotor speed or its reference (in electrical rad/s).
+        u_dc : float
+            DC-bus voltage.
+
+        Returns
+        -------
+        psi_s_ref : float
+            Stator flux reference.
+        tau_M_ref_lim : float
+            Limited torque reference.
+
+        """
+        # Get the MTPA flux
+        psi_s_mtpa = self.psi_s_mtpa(np.abs(tau_M_ref))
+        np.clip(psi_s_mtpa, self.psi_s_min, self.psi_s_max, psi_s_mtpa)
+
+        # Field weakening
+        u_s_max = self.k_u*u_dc/np.sqrt(3)
+        psi_s_max = u_s_max/np.abs(w_m) if np.abs(w_m) > 0 else np.inf
+
+        # Flux reference
+        psi_s_ref = np.min([psi_s_max, psi_s_mtpa])
+
+        # Limit the torque reference according to the MTPV and current limits
+        tau_M_lim = self.tau_M_lim(psi_s_ref)
+        tau_M_ref_lim = np.min([tau_M_lim, np.abs(tau_M_ref)
+                                ])*np.sign(tau_M_ref)
+
+        return psi_s_ref, tau_M_ref_lim
 
 
 # %%
