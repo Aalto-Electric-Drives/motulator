@@ -1,6 +1,6 @@
 """
-Observer-based V/Hz control: 2.2-kW PMSM with two-mass mechanics
-================================================================
+Observer-based V/Hz control: PMSM with 2-mass mechanics
+=======================================================
 
 This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The
 mechanical subsystem is modeled as a two-mass system. The resonance frequency

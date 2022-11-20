@@ -1,8 +1,7 @@
 # pylint: disable=invalid-name
 """Current vector control for synchronous motor drives."""
 
-from __future__ import annotations
-from collections.abc import Callable
+from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
@@ -31,7 +30,7 @@ class SynchronousMotorVectorCtrlPars:
     # Maximum values
     tau_M_max: float = 2*14
     i_s_max: float = 1.5*np.sqrt(2)*5
-    psi_s_min: float = 0
+    psi_s_min: float = None
     # Voltage margin
     k_u: float = .95
     # Nominal values
@@ -46,22 +45,6 @@ class SynchronousMotorVectorCtrlPars:
     # Sensorless observer
     w_o: float = 2*np.pi*40  # Used only in the sensorless mode
     zeta_inf: float = .2
-
-    def plot_luts(self, base):
-        """
-        Plot control look-up tables.
-
-        Parameters
-        ----------
-        base : BaseValues
-            Base values for scaling the plots.
-
-        """
-        tq = TorqueCharacteristics(self)
-        tq.plot_current_loci(self.i_s_max, base)
-        tq.plot_torque_flux(self.i_s_max, base)
-        tq.plot_torque_current(self.i_s_max, base)
-        # tq.plot_flux_loci(self.i_s_max, base)
 
 
 # %%
@@ -329,7 +312,6 @@ class CurrentRef:
             Limited torque reference.
 
         """
-
         def limit_torque(tau_M_ref, w_m, u_dc):
             if np.abs(w_m) > 0:
                 psi_s_max = self.k_u*u_dc/np.sqrt(3)/np.abs(w_m)

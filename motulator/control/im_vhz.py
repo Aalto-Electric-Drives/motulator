@@ -22,8 +22,7 @@ References
 
 """
 # %%
-from __future__ import annotations
-from collections.abc import Callable
+from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
 

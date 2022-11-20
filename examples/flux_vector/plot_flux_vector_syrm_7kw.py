@@ -40,10 +40,9 @@ pars = mt.SynchronousMotorFluxVectorCtrlPars(
     # Disable MTPA since the control system does not consider the saturation
     psi_s_min=base.psi,
     psi_s_max=base.psi,
-    psi_s_nom=base.psi,
     k_u=1,
     alpha_psi=2*np.pi*100,
-    alpha_tau_max=2*np.pi*200,
+    alpha_tau=2*np.pi*200,
     alpha_s=2*np.pi*4,
     tau_M_max=2*base.tau_nom,
     i_s_max=2*base.i,

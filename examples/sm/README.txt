@@ -1,2 +1,0 @@
-Synchronous Motors
-------------------

@@ -1,5 +1,5 @@
 """
-Vector control with signal injection: 6.7-kW SyRM 
+Vector control with signal injection: 6.7-kW SyRM
 =================================================
 
 This example simulates sensorless vector control of a 6.7-kW SyRM drive.
@@ -75,23 +75,14 @@ sim.simulate(t_stop=4)
 # Plot the "basic" figure
 mt.plot(sim, base=base)
 
-
 # Plot also the angles
-def plot(sim, t_span=None):
-    """Plot the angles."""
-    mdl = sim.mdl.data  # Continuous-time data
-    ctrl = sim.ctrl.data  # Discrete-time data
-
-    plt.figure()
-    plt.plot(mdl.t, mdl.theta_m)
-    plt.step(ctrl.t, ctrl.theta_m, where='post')
-    plt.legend([
-        r'$\vartheta_\mathrm{m}$',
-        r'$\hat \vartheta_\mathrm{m}$',
-    ])
-    plt.xlim(t_span)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Electrical angle (rad)')
-
-
-plot(sim, t_span=(0, 4))
+mdl = sim.mdl.data  # Continuous-time data
+ctrl = sim.ctrl.data  # Discrete-time data
+plt.figure()
+plt.plot(mdl.t, mdl.theta_m, label=r'$\vartheta_\mathrm{m}$')
+plt.step(ctrl.t, ctrl.theta_m, where='post',
+         label=r'$\hat \vartheta_\mathrm{m}$')
+plt.legend()
+plt.xlim(0, 4)
+plt.xlabel('Time (s)')
+plt.ylabel('Electrical angle (rad)')

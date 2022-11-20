@@ -5,8 +5,7 @@ Vector control methods for induction motor drives.
 The algorithms are written based on the inverse-Γ model.
 
 """
-from __future__ import annotations
-from collections.abc import Callable
+from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
@@ -213,7 +212,6 @@ class CurrentRef:
             Limited torque reference.
 
         """
-
         def q_axis_current_limit(i_sd_ref, psi_R):
             # Priority given to the d component
             i_sq_max1 = np.sqrt(self.i_s_max**2 - i_sd_ref**2)

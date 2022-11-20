@@ -20,15 +20,14 @@ References
    2019, https://doi.org/10.1109/TIA.2019.2927316
 
 """
-from __future__ import annotations
-from collections.abc import Callable
+from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
 from motulator.helpers import abc2complex, Bunch
 from motulator.control.common import Ctrl, SpeedCtrl, PWM
-from motulator.control.sm_torque import TorqueCharacteristics
 from motulator.control.sm_vector import SensorlessObserver
+from motulator.control.sm_obs_vhz import FluxTorqueRef
 
 
 # %%
@@ -44,17 +43,14 @@ class SynchronousMotorFluxVectorCtrlPars:
     sensorless: bool = True
     # Sampling period
     T_s: float = 250e-6
-    # Nominal flux
-    psi_s_nom: float = np.sqrt(2/3)*370/(2*np.pi*75)
-    # Maximum flux
-    psi_s_max: float = np.sqrt(2/3)*370/(2*np.pi*75)
-    # Minimum flux
-    psi_s_min: float = .5*np.sqrt(2/3)*370/(2*np.pi*75)
+    # Flux reference limits
+    psi_s_min: float = None
+    psi_s_max: float = None
     # Voltage marginal
     k_u: float = .9
     # Bandwidths
     alpha_psi: float = 2*np.pi*100
-    alpha_tau_max: float = 2*np.pi*400
+    alpha_tau: float = 2*np.pi*400
     alpha_s: float = 2*np.pi*4
     # Maximum values
     tau_M_max: float = 1.5*14
@@ -196,10 +192,14 @@ class FluxTorqueCtrl:
         self.R_s = pars.R_s
         self.p = pars.p
         self.alpha_psi = pars.alpha_psi
+        # Gain k_tau
         G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
-        c_delta_max = 1.5*pars.p*(
-            pars.psi_f*pars.psi_s_nom/pars.L_d + G*pars.psi_s_nom**2)
-        self.k_tau = pars.alpha_tau_max/c_delta_max
+        psi_s0 = pars.psi_f if pars.psi_f > 0 else pars.psi_s_min
+        if pars.psi_f > 0:  # PMSM or PM-SyRM
+            c_delta0 = 1.5*pars.p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
+        else:  # SyRM
+            c_delta0 = 1.5*pars.p*G*psi_s0**2
+        self.k_tau = pars.alpha_tau/c_delta0
 
     def __call__(self, psi_s_ref, tau_M_ref, psi_s, i_s, w_m, u_dc):
         """
@@ -240,79 +240,6 @@ class FluxTorqueCtrl:
             self.alpha_psi*e_psi*np.exp(1j*delta))
 
         return u_s_ref
-
-
-# %%
-class FluxTorqueRef:
-    """
-    Flux and torque references.
-
-    Parameters
-    ----------
-    pars : SynchronousMotoroFluxVectorCtrlPars
-        Control parameters.
-
-    """
-
-    # pylint: disable=too-few-public-methods
-    def __init__(self, pars):
-        self.psi_s_min = pars.psi_s_min
-        try:
-            self.psi_s_max = pars.psi_s_max
-        except AttributeError:
-            self.psi_s_max = np.inf
-        self.k_u = pars.k_u
-        # Merged MTPV and current limits
-        tq = TorqueCharacteristics(pars)
-        lims = tq.mtpv_and_current_limits(i_s_max=pars.i_s_max)
-        self.tau_M_lim = lims.tau_M_vs_abs_psi_s
-        # MTPA locus
-        mtpa = tq.mtpa_locus(i_s_max=pars.i_s_max)
-        self.psi_s_mtpa = mtpa.abs_psi_s_vs_tau_M
-
-    def __call__(self, tau_M_ref, w_m, u_dc):
-        """
-        Calculate the stator flux reference and limit the torque reference.
-
-        Parameters
-        ----------
-        tau_M_ref : float
-            Unlimited torque reference.
-        w_m : float
-            Rotor speed (in electrical rad/s).
-        u_dc : float
-            DC-bus voltage.
-
-        Returns
-        -------
-        psi_s_ref : float
-            Stator flux reference.
-        tau_M_ref_lim : float
-            Limited torque reference.
-
-        """
-        # Get the MTPA flux
-        psi_s_mtpa = self.psi_s_mtpa(np.abs(tau_M_ref))
-        # Limit the MTPA flux for sensorless drives
-        psi_s_mtpa = np.max([psi_s_mtpa, self.psi_s_min])
-        # Limit the MTPA flux to avoid magnetic saturation
-        psi_s_mtpa = np.min([psi_s_mtpa, self.psi_s_max])
-
-        # Field weakening
-        if np.abs(w_m) > 0:
-            psi_s_max = self.k_u*u_dc/np.sqrt(3)/np.abs(w_m)
-        else:
-            psi_s_max = np.inf
-
-        # Flux reference
-        psi_s_ref = np.min([psi_s_max, psi_s_mtpa])
-
-        # Limit the torque reference according to the MTPV and current limits
-        tau_M_lim = self.tau_M_lim(psi_s_ref)
-        tau_M_ref_lim = np.min([tau_M_lim, np.abs(tau_M_ref)
-                                ])*np.sign(tau_M_ref)
-
-        return psi_s_ref, tau_M_ref_lim
 
 
 # %%

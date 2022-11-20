@@ -9,13 +9,12 @@ intermediate stator current reference.
 References
 ----------
 .. [1] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-based V/Hz
-    control for induction motors," in Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
+    control for induction motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
 
 """
 
 # %%
-from __future__ import annotations
-from collections.abc import Callable
+from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
 
@@ -150,7 +149,7 @@ class InductionMotorVHzObsCtrl(Ctrl):
         w_s = w_s_ref - self.k_tau*(tau_M - tau_M_ref)
 
         # State feedback
-        u_s_ref, i_s_ref = self.state_feedback(i_s, psi_R, w_s)
+        u_s_ref = self.state_feedback(i_s, psi_R, w_s)
 
         # Duty ratios
         d_abc_ref, u_s_ref_lim = self.pwm.output(
@@ -194,7 +193,7 @@ class InductionMotorVHzObsCtrl(Ctrl):
         u_s_ref = (
             self.R_s*i_s_ref + 1j*w_s*self.psi_s_ref +
             self.L_sgm*self.alpha_psi*(i_s_ref - i_s))
-        return u_s_ref, i_s_ref
+        return u_s_ref
 
 
 # %%
