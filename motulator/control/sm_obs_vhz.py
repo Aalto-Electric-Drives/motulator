@@ -7,7 +7,7 @@ This method is based on [1]_.
 References
 ----------
 .. [1] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable
-    and passive observer-based V/Hz control for synchronous Motors," in Proc.
+    and passive observer-based V/Hz control for synchronous Motors," Proc.
     IEEE ECCE, Detroit, MI, Oct. 2022.
 
 """
@@ -87,7 +87,6 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
         psi_s0 = pars.psi_f if pars.psi_f > 0 else pars.psi_s_min
         if pars.psi_f > 0:  # PMSM or PM-SyRM
-            # c_delta0  = c_delta(abs(psi_s) = psi_s0, delta = 0)
             c_delta0 = 1.5*pars.p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
         else:  # SyRM
             c_delta0 = 1.5*pars.p*G*psi_s0**2
@@ -262,7 +261,7 @@ class SensorlessFluxObserver:
         https://doi.org/10.1109/TIA.2018.2858753
     .. [2] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
         "Stable and passive observer-based V/Hz control for synchronous
-        Motors," in Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
+        Motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
 
     """
 
