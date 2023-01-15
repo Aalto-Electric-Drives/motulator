@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('../../motulator'))
 # -- Project information -----------------------------------------------------
 
 project = 'motulator'
-copyright = '2022, Aalto Electric Drives'
+copyright = '2023, Aalto Electric Drives'
 author = 'Aalto Electric Drives'
 
 # The full version, including alpha/beta/rc tags
