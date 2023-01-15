@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observer-based V/Hz control: 5-kW PM-SyRM &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Observer-based V/Hz control: PMSM with 2-mass mechanics" href="../two_mass_systems/plot_vector_ctrl_pmsm_2kw_two_mass.html" />
+    <link rel="prev" title="Vector control with signal injection: 6.7-kW SyRM" href="../signal_inj/plot_signal_inj_syrm_7kw.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#vector-control">Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#v-hz-control">V/Hz Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#flux-vector-control">Flux Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#signal-injection">Signal Injection</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#flux-maps">Flux Maps</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Observer-based V/Hz control: 5-kW PM-SyRM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#two-mass-systems">Two-Mass Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Examples</a></li>
+      <li class="breadcrumb-item active">Observer-based V/Hz control: 5-kW PM-SyRM</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/auto_examples/flux_maps/plot_obs_vhz_ctrl_pmsyrm_thor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-flux-maps-plot-obs-vhz-ctrl-pmsyrm-thor-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="observer-based-v-hz-control-5-kw-pm-syrm">
+<span id="sphx-glr-auto-examples-flux-maps-plot-obs-vhz-ctrl-pmsyrm-thor-py"></span><h1>Observer-based V/Hz control: 5-kW PM-SyRM<a class="headerlink" href="#observer-based-v-hz-control-5-kw-pm-syrm" title="Permalink to this heading"></a></h1>
+<p>This example simulates observer-based V/Hz control of a saturated 5-kW
+permanent-magnet synchronous reluctance motor. The flux maps of this example
+motor, known as THOR, are from the SyR-e project:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/SyR-e/syre_public">https://github.com/SyR-e/syre_public</a></p>
+</div></blockquote>
+<p>The SyR-e project has been licensed under the Apache License, Version 2.0. We
+acknowledge the developers of the SyR-e project. The flux maps from other
+sources can be used in a similar manner. To study the flux maps in more detail,
+see also the module <cite>sm_flux_maps</cite>. It is worth noticing that the saturation is
+not taken into account in the control method, only in the system model.
+Naturally, the control performance can be improved by taking the saturation
+into account in the control algorithm.</p>
+<p>Import the packages.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">motulator</span> <span class="k">as</span> <span class="nn">mt</span>
+</pre></div>
+</div>
+<p>Compute base values based on the nominal values (just for figures).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">BaseValues</span><span class="p">(</span>
+    <span class="n">U_nom</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">I_nom</span><span class="o">=</span><span class="mf">15.6</span><span class="p">,</span> <span class="n">f_nom</span><span class="o">=</span><span class="mi">85</span><span class="p">,</span> <span class="n">tau_nom</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">P_nom</span><span class="o">=</span><span class="mf">5.07e3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Load and plot the flux maps.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the data from the MATLAB file</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">import_syre_data</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s1">&#39;THOR.mat&#39;</span><span class="p">)</span>
+
+<span class="c1"># You may also downsample or invert the flux map by uncommenting the following</span>
+<span class="c1"># lines. Not needed here, but these methods could be useful for other purposes.</span>
+
+<span class="c1"># from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map</span>
+<span class="c1"># data = downsample_flux_map(data, N_d=32, N_q=32)</span>
+<span class="c1"># data = invert_flux_map(data, N_d=128, N_q=128)</span>
+<span class="n">mt</span><span class="o">.</span><span class="n">plot_flux_vs_current</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">mt</span><span class="o">.</span><span class="n">plot_flux_map</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_001.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_002.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_002.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p>Configure the system model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the motor model</span>
+<span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorSaturatedLUT</span><span class="p">(</span>
+    <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">psi_s_data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">i_s_data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="c1"># Magnetically linear PM-SyRM model</span>
+<span class="c1"># motor = mt.SynchronousMotor(p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)</span>
+<span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.0042</span><span class="p">)</span>
+<span class="n">conv</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">310</span><span class="p">)</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorDrive</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">mech</span><span class="p">,</span> <span class="n">conv</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Configure the control system.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pars</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorVHzObsCtrlPars</span><span class="p">(</span>
+    <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">4e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">17e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.134</span><span class="p">,</span>
+    <span class="n">alpha_psi</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">zeta_inf</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span>
+    <span class="n">T_s</span><span class="o">=</span><span class="mf">250e-6</span><span class="p">,</span>
+    <span class="n">i_s_max</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ctrl</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorVHzObsCtrl</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set the speed reference and the external load torque.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.375</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.625</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">8</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+
+<span class="c1"># Quadratic load torque profile (corresponding to pumps and fans)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span><span class="o">/</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="n">k</span><span class="o">*</span><span class="n">w_M</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">w_M</span><span class="p">)</span>
+
+<span class="c1"># Uncomment to try the rated load torque step at t = 1 s (set k = 0 above)</span>
+<span class="c1"># times = np.array([0, .125, .125, .875, .875, 1])*8</span>
+<span class="c1"># values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom</span>
+<span class="c1"># mdl.mech.tau_L_t = mt.Sequence(times, values)</span>
+</pre></div>
+</div>
+<p>Create the simulation object and simulate it. You can also enable the PWM
+model (which makes simulation slower). One-sampling-period computational
+delay is modeled.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot results in per-unit values. By omitting the argument <cite>base</cite> you can plot
+the results in SI units.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  36.330 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-maps-plot-obs-vhz-ctrl-pmsyrm-thor-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/08b12b26a77791f31e719ecbe6c2d3ef/plot_obs_vhz_ctrl_pmsyrm_thor.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_pmsyrm_thor.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/794aedfc5f5b69b511ae3c73cc3ad635/plot_obs_vhz_ctrl_pmsyrm_thor.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_obs_vhz_ctrl_pmsyrm_thor.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../signal_inj/plot_signal_inj_syrm_7kw.html" class="btn btn-neutral float-left" title="Vector control with signal injection: 6.7-kW SyRM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../two_mass_systems/plot_vector_ctrl_pmsm_2kw_two_mass.html" class="btn btn-neutral float-right" title="Observer-based V/Hz control: PMSM with 2-mass mechanics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

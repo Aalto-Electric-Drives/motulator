@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>motulator.model.converter &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">motulator.model.converter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for motulator.model.converter</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=invalid-name</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Power converter models.</span>
+
+<span class="sd">An inverter with constant DC-bus voltage and a frequency converter with a diode</span>
+<span class="sd">front-end rectifier are modeled. Complex space vectors are used also for duty</span>
+<span class="sd">ratios and switching states, wherever applicable. In this module, all space</span>
+<span class="sd">vectors are in stationary coordinates. The default values correspond to a</span>
+<span class="sd">2.2-kW 400-V motor drive.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Inverter"><a class="viewcode-back" href="../../../autoapi/motulator/model/converter/index.html#motulator.Inverter">[docs]</a><span class="k">class</span> <span class="nc">Inverter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inverter with constant DC-bus voltage and switching-cycle averaging.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    u_dc : float</span>
+<span class="sd">        DC-bus voltage.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_dc0</span> <span class="o">=</span> <span class="n">u_dc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Switching state vector</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Inverter.ac_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/converter/index.html#motulator.Inverter.ac_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">ac_voltage</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the AC-side voltage of a lossless inverter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        q : complex</span>
+<span class="sd">            Switching state vector.</span>
+<span class="sd">        u_dc : float</span>
+<span class="sd">            DC-bus voltage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u_ac : complex</span>
+<span class="sd">            AC-side voltage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">u_ac</span> <span class="o">=</span> <span class="n">q</span><span class="o">*</span><span class="n">u_dc</span>
+        <span class="k">return</span> <span class="n">u_ac</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Inverter.dc_current"><a class="viewcode-back" href="../../../autoapi/motulator/model/converter/index.html#motulator.Inverter.dc_current">[docs]</a>    <span class="k">def</span> <span class="nf">dc_current</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">i_ac</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the DC-side current of a lossless inverter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        q : complex</span>
+<span class="sd">            Switching state vector.</span>
+<span class="sd">        i_ac : complex</span>
+<span class="sd">            AC-side current.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_dc : float</span>
+<span class="sd">            DC-side current.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_ac</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">i_dc</span></div>
+
+<div class="viewcode-block" id="Inverter.meas_dc_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/converter/index.html#motulator.Inverter.meas_dc_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">meas_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measure the DC-bus voltage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            DC-bus voltage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_dc0</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="FrequencyConverter"><a class="viewcode-back" href="../../../autoapi/motulator/model/converter/index.html#motulator.FrequencyConverter">[docs]</a><span class="k">class</span> <span class="nc">FrequencyConverter</span><span class="p">(</span><span class="n">Inverter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Frequency converter.</span>
+
+<span class="sd">    This extends the Inverter class with models for a strong grid, a</span>
+<span class="sd">    three-phase diode-bridge rectifier, an LC filter, and a three-phase</span>
+<span class="sd">    inverter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    L : float</span>
+<span class="sd">        DC-bus inductance.</span>
+<span class="sd">    C : float</span>
+<span class="sd">        DC-bus capacitance.</span>
+<span class="sd">    U_g : float</span>
+<span class="sd">        Grid voltage (line-line, rms).</span>
+<span class="sd">    f_g : float</span>
+<span class="sd">        Grid frequency.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">235e-6</span><span class="p">,</span> <span class="n">U_g</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">f_g</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=super-init-not-called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span>
+        <span class="c1"># Initial value of the DC-bus inductor current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_L0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Initial value of the DC-bus voltage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_dc0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">U_g</span>
+        <span class="c1"># Peak-valued line-neutral grid voltage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">U_g</span>
+        <span class="c1"># Grid angular frequeyncy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f_g</span>
+        <span class="c1"># Switching state vector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+
+<div class="viewcode-block" id="FrequencyConverter.grid_voltages"><a class="viewcode-back" href="../../../autoapi/motulator/model/converter/index.html#motulator.FrequencyConverter.grid_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">grid_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute three-phase grid voltages.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Time.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u_g_abc : ndarray of floats, shape (3,)</span>
+<span class="sd">            The phase voltages.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">theta_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="o">*</span><span class="n">t</span>
+        <span class="n">u_g_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_g</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_g</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_g</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="n">u_g_abc</span></div>
+
+<div class="viewcode-block" id="FrequencyConverter.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/converter/index.html#motulator.FrequencyConverter.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the state derivatives.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Time.</span>
+<span class="sd">        u_dc : float</span>
+<span class="sd">            DC-bus voltage over the capacitor.</span>
+<span class="sd">        i_L : float</span>
+<span class="sd">            DC-bus inductor current.</span>
+<span class="sd">        i_dc : float</span>
+<span class="sd">            Current to the inverter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list, length 2</span>
+<span class="sd">            Time derivative of the state vector, [du_dc, d_iL]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Grid phase voltages</span>
+        <span class="n">u_g_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_voltages</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="c1"># Output voltage of the diode bridge</span>
+        <span class="n">u_di</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">u_g_abc</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">u_g_abc</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># State derivatives</span>
+        <span class="n">du_dc</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_L</span> <span class="o">-</span> <span class="n">i_dc</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+        <span class="n">di_L</span> <span class="o">=</span> <span class="p">(</span><span class="n">u_di</span> <span class="o">-</span> <span class="n">u_dc</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span>
+        <span class="c1"># The inductor current cannot be negative due to the diode bridge</span>
+        <span class="k">if</span> <span class="n">i_L</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">di_L</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">di_L</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">du_dc</span><span class="p">,</span> <span class="n">di_L</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

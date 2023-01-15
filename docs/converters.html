@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Converters &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Mechanics" href="mechanics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mechanics.html">Mechanics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Converters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/converters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="converters">
+<h1>Converters<a class="headerlink" href="#converters" title="Permalink to this heading"></a></h1>
+<p>Models of power converters are given in the module <a class="reference internal" href="autoapi/motulator/model/converter/index.html#module-motulator.model.converter" title="motulator.model.converter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.converter</span></code></a>.</p>
+<div class="section" id="inverter">
+<h2>Inverter<a class="headerlink" href="#inverter" title="Permalink to this heading"></a></h2>
+<p>The figure below shows a three-phase two-level inverter and its equivalent model, where ideal switches  are assumed. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switchings are assumed to be infinitely fast.</p>
+<div class="figure align-center" id="id5">
+<a class="reference external image-reference" href="."><img alt="Three-phase two-level inverter" src="_images/inverter.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Three-phase two-level inverter: (left) main circuit; (right) equivalent model. The DC-bus voltage and currents are <span class="math notranslate nohighlight">\(u_\mathrm{dc}\)</span> and <span class="math notranslate nohighlight">\(i_\mathrm{dc}\)</span>, respectively.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</div>
+</div>
+<div class="section" id="six-pulse-diode-bridge">
+<h2>Six-Pulse Diode Bridge<a class="headerlink" href="#six-pulse-diode-bridge" title="Permalink to this heading"></a></h2>
+<p>The figure below shows a six-pulse diode bridge rectifier, where the inductor <span class="math notranslate nohighlight">\(L\)</span> and the capacitor <span class="math notranslate nohighlight">\(C\)</span> are placed in the DC link. For simplicity, a three-phase supply voltage is assumed to be stiff. The class <a class="reference internal" href="autoapi/motulator/model/converter/index.html#motulator.model.converter.FrequencyConverter" title="motulator.model.converter.FrequencyConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.converter.FrequencyConverter</span></code></a> applies this model as a part of a frequency converter model.</p>
+<div class="figure align-center" id="id6">
+<a class="reference external image-reference" href="."><img alt="Diode bridge" src="_images/diode_bridge.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Six-pulse diode bridge rectifier.</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</div>
+</div>
+<div class="section" id="carrier-comparison">
+<h2>Carrier Comparison<a class="headerlink" href="#carrier-comparison" title="Permalink to this heading"></a></h2>
+<p>The figure below shows an inverter equipped with a generic three-phase load. In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals <span class="math notranslate nohighlight">\(q_\mathrm{a}\)</span>, <span class="math notranslate nohighlight">\(q_\mathrm{b}\)</span>, and <span class="math notranslate nohighlight">\(q_\mathrm{c}\)</span> from duty ratios <span class="math notranslate nohighlight">\(d_\mathrm{a}\)</span>, <span class="math notranslate nohighlight">\(d_\mathrm{b}\)</span>, and <span class="math notranslate nohighlight">\(d_\mathrm{c}\)</span>. The duty ratios are continuous signals in the range [0, 1} while the switching states are either 0 or 1.</p>
+<div class="figure align-center" id="id7">
+<a class="reference external image-reference" href="."><img alt="Inverter and carrier comparison" src="_images/pwm_inverter.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Instantaneous switching states are defined by the carrier comparison. In this example, the switching states are <span class="math notranslate nohighlight">\(q_\mathrm{a}=1\)</span>, <span class="math notranslate nohighlight">\(q_\mathrm{b}=0\)</span>, and <span class="math notranslate nohighlight">\(q_\mathrm{c}=0\)</span>.</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</div>
+<p>The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class <a class="reference internal" href="autoapi/motulator/simulation/index.html#motulator.simulation.CarrierCmp" title="motulator.simulation.CarrierCmp"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.simulation.CarrierCmp</span></code></a>, where the switching instants are explicitly computed in the begininning of each sampling period (instead of searching for zero crossings), allowing faster simulations.</p>
+<div class="figure align-center" id="id8">
+<a class="reference external image-reference" href="."><img alt="Carrier comparison" src="_images/carrier_comparison.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Carrier comparison. The duty ratios are <span class="math notranslate nohighlight">\(d_\mathrm{a}\)</span>, <span class="math notranslate nohighlight">\(d_\mathrm{b}\)</span>, and <span class="math notranslate nohighlight">\(d_\mathrm{c}\)</span> are constant over the sampling period <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> (or, optionally, over the the switching period <span class="math notranslate nohighlight">\(T_\mathrm{sw}=2T_\mathrm{s}\)</span>). The carrier signal is the same for all three phases and varies between 0 and 1.</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
+</div>
+<p>The zero-sequence voltage does not affect the phase currents if the neutral of the load is not connected. Therefore, the reference potential of the phase voltages can be freely chosen when computing the space vector of the converter output voltage. The converter voltage vector in stationary coordinates is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\boldsymbol{u} &amp;= \frac{2}{3}\left(u_\mathrm{an} + u_\mathrm{bn}\mathrm{e}^{\mathrm{j}2\pi/3} + u_\mathrm{cn}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
+    &amp;= \frac{2}{3}\left(u_\mathrm{aN} + u_\mathrm{bN}\mathrm{e}^{\mathrm{j} 2\pi/3} + u_\mathrm{cN}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
+&amp;= \underbrace{\frac{2}{3}\left(q_\mathrm{a} + q_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + q_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{q}}u_\mathrm{dc}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{q}\)</span> is the switching state space vector.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see <a class="reference internal" href="autoapi/motulator/control/common/index.html#motulator.control.common.PWM" title="motulator.control.common.PWM"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.common.PWM</span></code></a>) and discontinuous PWM methods <a class="footnote-reference brackets" href="#id3" id="id1">1</a>, <a class="footnote-reference brackets" href="#id4" id="id2">2</a>.</p>
+<p>The sampling period <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> is returned by the control method, and it does not need to be constant.</p>
+<p>If the zero sequence is of interest, it could be easily added to the inverter model.</p>
+<p>Since the converter models are invariably in stationary coordinates, the space vectors are not marked with the superscript s here to simplify the notation.</p>
+</div>
+</div>
+<div class="section" id="switching-cycle-averaging">
+<h2>Switching-Cycle Averaging<a class="headerlink" href="#switching-cycle-averaging" title="Permalink to this heading"></a></h2>
+<p>If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with zero-order hold (ZOH) of the duty ratios. In this case, the output voltage vector is</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{u} = \underbrace{\frac{2}{3}\left(d_\mathrm{a} + d_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + d_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{d}}u_\mathrm{dc}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{d}\)</span> is the duty ratio space vector. This ZOH is the default option in the class <a class="reference internal" href="autoapi/motulator/simulation/index.html#motulator.simulation.Simulation" title="motulator.simulation.Simulation"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.simulation.Simulation</span></code></a>.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Holtz, “Pulsewidth modulation for electronic power conversion,” Proc. IEEE, 1994, <a class="reference external" href="https://doi.org/10.1109/5.301684">https://doi.org/10.1109/5.301684</a></p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Hava, Kerkman, Lipo, “Simple analytical and graphical methods for carrier-based PWM-VSI drives,” IEEE Trans. Ind. Appl., 1999, <a class="reference external" href="https://doi.org/10.1109/63.737592">https://doi.org/10.1109/63.737592</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mechanics.html" class="btn btn-neutral float-left" title="Mechanics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

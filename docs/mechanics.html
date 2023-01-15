@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mechanics &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Converters" href="converters.html" />
+    <link rel="prev" title="Synchronous Motor" href="synchronous_motor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Mechanics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/mechanics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="mechanics">
+<h1>Mechanics<a class="headerlink" href="#mechanics" title="Permalink to this heading"></a></h1>
+<div class="section" id="stiff-mechanics">
+<h2>Stiff Mechanics<a class="headerlink" href="#stiff-mechanics" title="Permalink to this heading"></a></h2>
+<p>Continuous-time mechanics models are given in the module <a class="reference internal" href="autoapi/motulator/model/mech/index.html#module-motulator.model.mech" title="motulator.model.mech"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.mech</span></code></a>. The stiff rotational mechanics are governed by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &amp;= \tau_\mathrm{M} - \tau_\mathrm{L} \\
+\frac{\mathrm{d}\vartheta_\mathrm{M}}{\mathrm{d} t} &amp;= \omega_\mathrm{M}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\vartheta_\mathrm{M}\)</span> is the mechanical angle of the rotor, <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> is the electromagnetic torque, and <span class="math notranslate nohighlight">\(J\)</span> is the total moment of inertia. The total load torque is</p>
+<div class="math notranslate nohighlight">
+\[\tau_\mathrm{L} = \tau_{\mathrm{L},\omega} + \tau_{\mathrm{L},t}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tau_{\mathrm{L},\omega}\)</span> is the speed-dependent load torque and <span class="math notranslate nohighlight">\(\tau_{\mathrm{L},t}\)</span> is the external load torque as a function of time. One typical speed-dependent load torque component is viscous friction</p>
+<div class="math notranslate nohighlight">
+\[\tau_{\mathrm{L},\omega} = B\omega_\mathrm{M}\]</div>
+<p>where <span class="math notranslate nohighlight">\(B\)</span> is the viscous damping coefficient. Fiscous friction appears, e.g., due to laminar fluid flow in bearings. Another typical component is quadratic load torque</p>
+<div class="math notranslate nohighlight">
+\[\tau_{\mathrm{L},\omega} = k\omega_\mathrm{M}^2\mathrm{sign}(\omega_\mathrm{M})\]</div>
+<p>which appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance.</p>
+<div class="figure align-center" id="id1">
+<a class="reference external image-reference" href="."><img alt="Block diagram of the stiff mechanics." src="_images/mech_block.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Block diagram of the stiff mechanics.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</div>
+</div>
+<div class="section" id="two-mass-system">
+<h2>Two-Mass System<a class="headerlink" href="#two-mass-system" title="Permalink to this heading"></a></h2>
+<p>The two-mass mechanics are governed by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}J_\mathrm{M}\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &amp;= \tau_\mathrm{M} - \tau_\mathrm{S} \\
+J_\mathrm{L}\frac{\mathrm{d}\omega_\mathrm{L}}{\mathrm{d} t} &amp;= \tau_\mathrm{S} - \tau_\mathrm{L} \\
+\frac{\mathrm{d}\vartheta_\mathrm{ML}}{\mathrm{d} t} &amp;= \omega_\mathrm{M} - \omega_\mathrm{L}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{L}\)</span> is the angular speed of the load, <span class="math notranslate nohighlight">\(\vartheta_\mathrm{ML}=\vartheta_\mathrm{M}-\vartheta_\mathrm{L}\)</span> is the twist angle, <span class="math notranslate nohighlight">\(J_\mathrm{M}\)</span> is the moment of inertia of the motor, and <span class="math notranslate nohighlight">\(J_\mathrm{L}\)</span> is the moment of inertia of the load. The shaft torque is</p>
+<div class="math notranslate nohighlight">
+\[\tau_\mathrm{S} = K_\mathrm{S}\vartheta_\mathrm{ML} + C_\mathrm{S}(\omega_\mathrm{M} - \omega_\mathrm{L})\]</div>
+<p>where <span class="math notranslate nohighlight">\(K_\mathrm{S}\)</span> is the torsional stiffness of the shaft, and <span class="math notranslate nohighlight">\(C_\mathrm{S}\)</span> is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanics.</p>
+<div class="figure align-center" id="id2">
+<a class="reference external image-reference" href="."><img alt="Block diagram of the two-mass mechanical system." src="_images/two_mass_block.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Block diagram of the two-mass mechanical system.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="synchronous_motor.html" class="btn btn-neutral float-left" title="Synchronous Motor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="converters.html" class="btn btn-neutral float-right" title="Converters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

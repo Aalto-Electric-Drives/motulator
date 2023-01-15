@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>motulator.control.sm_obs_vhz &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../_static/copybutton.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="motulator.control.sm_signal_inj" href="../sm_signal_inj/index.html" />
+    <link rel="prev" title="motulator.control.sm_flux_vector" href="../sm_flux_vector/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_obs_vhz</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/motulator/control/sm_obs_vhz/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-motulator.control.sm_obs_vhz">
+<span id="motulator-control-sm-obs-vhz"></span><h1><a class="reference internal" href="#module-motulator.control.sm_obs_vhz" title="motulator.control.sm_obs_vhz"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_obs_vhz</span></code></a><a class="headerlink" href="#module-motulator.control.sm_obs_vhz" title="Permalink to this heading"></a></h1>
+<p>Observer-based V/Hz control for synchronous motor drives.</p>
+<p>This method is based on <a class="reference internal" href="#reaf38ba05e63-1" id="id1">[1]</a>.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="reaf38ba05e63-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, “Stable
+and passive observer-based V/Hz control for synchronous Motors,” Proc.
+IEEE ECCE, Detroit, MI, Oct. 2022.</p>
+</dd>
+</dl>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars" title="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVHzObsCtrlPars</span></code></a></p></td>
+<td><p>Control parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrl" title="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVHzObsCtrl</span></code></a></p></td>
+<td><p>Observer-based V/Hz control for synchronous motors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm_obs_vhz.FluxTorqueRef" title="motulator.control.sm_obs_vhz.FluxTorqueRef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxTorqueRef</span></code></a></p></td>
+<td><p>Flux and torque references.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm_obs_vhz.SensorlessFluxObserver" title="motulator.control.sm_obs_vhz.SensorlessFluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SensorlessFluxObserver</span></code></a></p></td>
+<td><p>Sensorless stator flux observer.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm_obs_vhz.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorVHzObsCtrlPars</span></span><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars" title="Permalink to this definition"></a></dt>
+<dd><p>Control parameters.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.w_m_ref">
+<span class="sig-name descname"><span class="pre">w_m_ref</span></span><em class="property"><span class="w"> </span><span class="pre">:Callable[[float],</span> <span class="pre">float]</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.w_m_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.w_m_ref" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.T_s">
+<span class="sig-name descname"><span class="pre">T_s</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.00025</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.T_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.T_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.psi_s_max">
+<span class="sig-name descname"><span class="pre">psi_s_max</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.psi_s_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.psi_s_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.psi_s_min">
+<span class="sig-name descname"><span class="pre">psi_s_min</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.psi_s_min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.psi_s_min" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.rate_limit">
+<span class="sig-name descname"><span class="pre">rate_limit</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.rate_limit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.rate_limit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.i_s_max">
+<span class="sig-name descname"><span class="pre">i_s_max</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.i_s_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.i_s_max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.alpha_psi">
+<span class="sig-name descname"><span class="pre">alpha_psi</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.alpha_psi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.alpha_psi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.alpha_tau">
+<span class="sig-name descname"><span class="pre">alpha_tau</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.alpha_tau"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.alpha_tau" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.alpha_f">
+<span class="sig-name descname"><span class="pre">alpha_f</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.alpha_f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.alpha_f" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.k_u">
+<span class="sig-name descname"><span class="pre">k_u</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span> <span class="pre">=</span> <span class="pre">1</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.k_u"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.k_u" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.alpha_o">
+<span class="sig-name descname"><span class="pre">alpha_o</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.alpha_o"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.alpha_o" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.zeta_inf">
+<span class="sig-name descname"><span class="pre">zeta_inf</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.zeta_inf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.zeta_inf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.R_s">
+<span class="sig-name descname"><span class="pre">R_s</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span> <span class="pre">=</span> <span class="pre">3.6</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.R_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.R_s" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.L_d">
+<span class="sig-name descname"><span class="pre">L_d</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.036</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.L_d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.L_d" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.L_q">
+<span class="sig-name descname"><span class="pre">L_q</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.051</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.L_q"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.L_q" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.psi_f">
+<span class="sig-name descname"><span class="pre">psi_f</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span> <span class="pre">=</span> <span class="pre">0.545</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.psi_f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.psi_f" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.p">
+<span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="w"> </span><span class="pre">:int</span> <span class="pre">=</span> <span class="pre">3</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrlPars.p"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars.p" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm_obs_vhz.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorVHzObsCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrl" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../common/index.html#motulator.control.common.Ctrl" title="motulator.control.common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control.common.Ctrl</span></code></a></p>
+<p>Observer-based V/Hz control for synchronous motors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<a class="reference internal" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars" title="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars"><em>SynchronousMotorVHzObsCtrlPars</em></a>) – Control parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrl.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SynchronousMotorVHzObsCtrl.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrl.__call__" title="Permalink to this definition"></a></dt>
+<dd><p>Run the main control loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mdl</strong> (<a class="reference internal" href="../../index.html#motulator.SynchronousMotorDrive" title="motulator.SynchronousMotorDrive"><em>SynchronousMotorDrive</em></a>) – Continuous-time model of a synchronous motor drive for getting the
+feedback signals.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period.</p></li>
+<li><p><strong>d_abc_ref</strong> (<em>ndarray, shape (3,)</em>) – Duty ratio references.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.FluxTorqueRef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm_obs_vhz.</span></span><span class="sig-name descname"><span class="pre">FluxTorqueRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#FluxTorqueRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.FluxTorqueRef" title="Permalink to this definition"></a></dt>
+<dd><p>Flux and torque references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<a class="reference internal" href="#motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars" title="motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars"><em>SynchronousMotorVHzObsCtrlPars</em></a>) – Control parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.FluxTorqueRef.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#FluxTorqueRef.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.FluxTorqueRef.__call__" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the stator flux reference and limit the torque reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau_M_ref</strong> (<em>float</em>) – Unlimited torque reference.</p></li>
+<li><p><strong>w_m</strong> (<em>float</em>) – Rotor speed or its reference (in electrical rad/s).</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>psi_s_ref</strong> (<em>float</em>) – Stator flux reference.</p></li>
+<li><p><strong>tau_M_ref_lim</strong> (<em>float</em>) – Limited torque reference.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SensorlessFluxObserver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm_obs_vhz.</span></span><span class="sig-name descname"><span class="pre">SensorlessFluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SensorlessFluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SensorlessFluxObserver" title="Permalink to this definition"></a></dt>
+<dd><p>Sensorless stator flux observer.</p>
+<p>This observer is a variant of <a class="reference internal" href="#r235b53b0d214-1" id="id2">[1]</a>. The observer gain decouples the
+electrical and mechanical dynamics and allows placing the poles of the
+corresponding linearized estimation error dynamics. For simplicity, the
+current model is here implemented in rotor coordinates, however this is
+mathematically equivalent to controller coordinates implementation in <a class="reference internal" href="#r235b53b0d214-2" id="id3">[2]</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<em>SynchronousMotorObsVHzCtrlPars</em>) – Control parameters.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r235b53b0d214-1"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dd><p>Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, “Observers for
+sensorless synchronous motor drives: Framework for design and
+analysis,” IEEE Trans. Ind. Appl., 2018,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2018.2858753">https://doi.org/10.1109/TIA.2018.2858753</a></p>
+</dd>
+<dt class="label" id="r235b53b0d214-2"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dd><p>Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
+“Stable and passive observer-based V/Hz control for synchronous
+Motors,” Proc. IEEE ECCE, Detroit, MI, Oct. 2022.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm_obs_vhz.SensorlessFluxObserver.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_obs_vhz.html#SensorlessFluxObserver.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_obs_vhz.SensorlessFluxObserver.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the states for the next sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_s</strong> (<em>complex</em>) – Stator voltage.</p></li>
+<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current.</p></li>
+<li><p><strong>w_s</strong> (<em>float</em>) – Stator angular frequency.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../sm_flux_vector/index.html" class="btn btn-neutral float-left" title="motulator.control.sm_flux_vector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../sm_signal_inj/index.html" class="btn btn-neutral float-right" title="motulator.control.sm_signal_inj" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

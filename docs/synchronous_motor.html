@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synchronous Motor &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Mechanics" href="mechanics.html" />
+    <link rel="prev" title="Induction Motor" href="induction_motor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Synchronous Motor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/synchronous_motor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="synchronous-motor">
+<h1>Synchronous Motor<a class="headerlink" href="#synchronous-motor" title="Permalink to this heading"></a></h1>
+<p>A continuous-time synchronous motor model is given in the module <a class="reference internal" href="autoapi/motulator/model/sm/index.html#module-motulator.model.sm" title="motulator.model.sm"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm</span></code></a>. The model can be parametrized to represent permanent-magnet synchronous motors (PMSMs) and synchronous reluctance motors (SyRMs). Peak-valued complex space vectors are used.</p>
+<div class="figure align-center" id="id5">
+<a class="reference external image-reference" href="."><img alt="Synchronous motor model" src="_images/sm_block_rot.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Block diagram of the motor model in rotor coordinates. The magnetic model includes the flux equation (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</div>
+<p>The voltage equation in rotor coordinates is <a class="footnote-reference brackets" href="#id3" id="id1">1</a></p>
+<div class="math notranslate nohighlight">
+\[\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s}\)</span> is the stator voltage, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}\)</span> is the stator current, and <span class="math notranslate nohighlight">\(R_\mathrm{s}\)</span> is the stator resistance. The electrical angular speed of the rotor is <span class="math notranslate nohighlight">\(\omega_\mathrm{m} = p\omega_\mathrm{M}\)</span>, where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the mechanical angular speed of the rotor and <span class="math notranslate nohighlight">\(p\)</span> is the number of pole pairs. In the magnetically linear case, the stator flux linkage is</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\psi}_\mathrm{s} = L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\} + \psi_\mathrm{f}\]</div>
+<p>where <span class="math notranslate nohighlight">\(L_\mathrm{d}\)</span> is the d-axis inductance, <span class="math notranslate nohighlight">\(L_\mathrm{q}\)</span> is the q-axis inductance, <span class="math notranslate nohighlight">\(\psi_\mathrm{f}\)</span> is the permanent-magnet (PM) flux linkage. As special cases, this model represents a surface-PMSM with <span class="math notranslate nohighlight">\(L_\mathrm{d} = L_\mathrm{q}\)</span> and SyRM with <span class="math notranslate nohighlight">\(\psi_\mathrm{f}=0\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The linear magnetic model can be replaced with nonlinear saturation characteristics  <span class="math notranslate nohighlight">\(\boldsymbol{\psi}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}(\boldsymbol{i}_\mathrm{s})\)</span>, either in a form of flux maps (see <a class="reference internal" href="autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMotorSaturatedLUT" title="motulator.model.sm.SynchronousMotorSaturatedLUT"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.sm.SynchronousMotorSaturatedLUT</span></code></a>) or explicit functions (see <a class="reference internal" href="autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMotorSaturated" title="motulator.model.sm.SynchronousMotorSaturated"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.sm.SynchronousMotorSaturated</span></code></a> corresponding to  <a class="footnote-reference brackets" href="#id4" id="id2">2</a>). The module <a class="reference internal" href="autoapi/motulator/model/sm_flux_maps/index.html#module-motulator.model.sm_flux_maps" title="motulator.model.sm_flux_maps"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm_flux_maps</span></code></a> contains methods for importing and plotting the flux map data.</p>
+</div>
+<p>The electromagnetic torque is</p>
+<div class="math notranslate nohighlight">
+\[\tau_\mathrm{M} = \frac{3p}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s} \boldsymbol{\psi}_\mathrm{s}^* \right\}\]</div>
+<p>Since the motor is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> to <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span>.</p>
+<div class="figure align-center" id="id6">
+<a class="reference external image-reference" href="."><img alt="Synchronous motor model seen from stator coordinates" src="_images/sm_block_stat.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Synchronous motor model seen from stator coordinates. The mechanical angle <span class="math notranslate nohighlight">\(\vartheta_\mathrm{M}\)</span> of the rotor is a state of the mechanical subsystem (see e.g. <a class="reference internal" href="autoapi/motulator/model/mech/index.html#motulator.model.mech.Mechanics" title="motulator.model.mech.Mechanics"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.mech.Mechanics</span></code></a>).</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Jahns, Kliman, Neumann, “Interior permanent-magnet synchronous motors for adjustable-speed drives,” IEEE Trans. Ind. Appl., 1986, <a class="reference external" href="https://doi.org/10.1109/TIA.1986.4504786">https://doi.org/10.1109/TIA.1986.4504786</a></p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi, “Sensorless self-commissioning of synchronous reluctance motors at standstill without rotor locking, ”IEEE Trans. Ind. Appl., 2017, <a class="reference external" href="https://doi.org/10.1109/TIA.2016.2644624">https://doi.org/10.1109/TIA.2016.2644624</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="induction_motor.html" class="btn btn-neutral float-left" title="Induction Motor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mechanics.html" class="btn btn-neutral float-right" title="Mechanics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

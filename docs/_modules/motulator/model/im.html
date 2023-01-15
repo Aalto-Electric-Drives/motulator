@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>motulator.model.im &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">motulator.model.im</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for motulator.model.im</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=invalid-name</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Continuous-time models for induction motors.</span>
+
+<span class="sd">Peak-valued complex space vectors are used. The space vector models are</span>
+<span class="sd">implemented in stator coordinates. The default values correspond to a 2.2-kW</span>
+<span class="sd">induction motor.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">motulator.helpers</span> <span class="kn">import</span> <span class="n">complex2abc</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="InductionMotor"><a class="viewcode-back" href="../../../autoapi/motulator/model/im/index.html#motulator.InductionMotor">[docs]</a><span class="k">class</span> <span class="nc">InductionMotor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Γ-equivalent model of an induction motor.</span>
+
+<span class="sd">    An induction motor is modeled using the Γ-equivalent model [1]_. The model</span>
+<span class="sd">    is implemented in stator coordinates. The flux linkages are used as state</span>
+<span class="sd">    variables.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : int</span>
+<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    R_s : float</span>
+<span class="sd">        Stator resistance.</span>
+<span class="sd">    R_r : float</span>
+<span class="sd">        Rotor resistance.</span>
+<span class="sd">    L_ell : float</span>
+<span class="sd">        Leakage inductance.</span>
+<span class="sd">    L_s : float</span>
+<span class="sd">        Stator inductance.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The Γ model is chosen here since it can be extended with the magnetic</span>
+<span class="sd">    saturation model in a staightforward manner. If the magnetic saturation is</span>
+<span class="sd">    omitted, the Γ model is mathematically identical to the inverse-Γ and T</span>
+<span class="sd">    models [1]_.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Slemon, &quot;Modelling of induction machines for electric drives,&quot; IEEE</span>
+<span class="sd">       Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="mf">.245</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_r</span> <span class="o">=</span> <span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_s</span> <span class="o">=</span> <span class="n">L_ell</span><span class="p">,</span> <span class="n">L_s</span>
+        <span class="c1"># Initial values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_ss0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_rs0</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="n">j</span>
+
+<div class="viewcode-block" id="InductionMotor.currents"><a class="viewcode-back" href="../../../autoapi/motulator/model/im/index.html#motulator.InductionMotor.currents">[docs]</a>    <span class="k">def</span> <span class="nf">currents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the stator and rotor currents.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_ss : complex</span>
+<span class="sd">            Stator flux linkage.</span>
+<span class="sd">        psi_rs : complex</span>
+<span class="sd">            Rotor flux linkage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_ss : complex</span>
+<span class="sd">            Stator current.</span>
+<span class="sd">        i_rs : complex</span>
+<span class="sd">            Rotor current.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_rs</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_rs</span> <span class="o">-</span> <span class="n">psi_ss</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span>
+        <span class="n">i_ss</span> <span class="o">=</span> <span class="n">psi_ss</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_s</span> <span class="o">-</span> <span class="n">i_rs</span>
+
+        <span class="k">return</span> <span class="n">i_ss</span><span class="p">,</span> <span class="n">i_rs</span></div>
+
+<div class="viewcode-block" id="InductionMotor.magnetic"><a class="viewcode-back" href="../../../autoapi/motulator/model/im/index.html#motulator.InductionMotor.magnetic">[docs]</a>    <span class="k">def</span> <span class="nf">magnetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Magnetic model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_ss : complex</span>
+<span class="sd">            Stator flux linkage.</span>
+<span class="sd">        psi_rs : complex</span>
+<span class="sd">            Rotor flux linkage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_ss : complex</span>
+<span class="sd">            Stator current.</span>
+<span class="sd">        i_rs : complex</span>
+<span class="sd">            Rotor current.</span>
+<span class="sd">        tau_M : float</span>
+<span class="sd">            Electromagnetic torque.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_ss</span><span class="p">,</span> <span class="n">i_rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currents</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">)</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_ss</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">i_ss</span><span class="p">,</span> <span class="n">i_rs</span><span class="p">,</span> <span class="n">tau_M</span></div>
+
+<div class="viewcode-block" id="InductionMotor.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/im/index.html#motulator.InductionMotor.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">,</span> <span class="n">u_ss</span><span class="p">,</span> <span class="n">w_M</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the state derivatives.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_ss : complex</span>
+<span class="sd">            Stator flux linkage.</span>
+<span class="sd">        psi_rs : complex</span>
+<span class="sd">            Rotor flux linkage.</span>
+<span class="sd">        u_ss : complex</span>
+<span class="sd">            Stator voltage.</span>
+<span class="sd">        w_M : float</span>
+<span class="sd">            Rotor angular speed (in mechanical rad/s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex list, length 2</span>
+<span class="sd">            Time derivative of the state vector, [dpsi_ss, dpsi_rs]</span>
+<span class="sd">        i_ss : complex</span>
+<span class="sd">            Stator current.</span>
+<span class="sd">        tau_M : float</span>
+<span class="sd">            Electromagnetic torque.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In addition to the state derivatives, this method also returns the</span>
+<span class="sd">        output signals (stator current `i_ss` and torque `tau_M`) needed for</span>
+<span class="sd">        interconnection with other subsystems. This avoids overlapping</span>
+<span class="sd">        computation in simulation.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_ss</span><span class="p">,</span> <span class="n">i_rs</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">)</span>
+        <span class="n">dpsi_ss</span> <span class="o">=</span> <span class="n">u_ss</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_ss</span>
+        <span class="n">dpsi_rs</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">R_r</span><span class="o">*</span><span class="n">i_rs</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">w_M</span><span class="o">*</span><span class="n">psi_rs</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">dpsi_ss</span><span class="p">,</span> <span class="n">dpsi_rs</span><span class="p">],</span> <span class="n">i_ss</span><span class="p">,</span> <span class="n">tau_M</span></div>
+
+<div class="viewcode-block" id="InductionMotor.meas_currents"><a class="viewcode-back" href="../../../autoapi/motulator/model/im/index.html#motulator.InductionMotor.meas_currents">[docs]</a>    <span class="k">def</span> <span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measure the phase currents at the end of the sampling period.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        i_s_abc : 3-tuple of floats</span>
+<span class="sd">            Phase currents.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Stator current space vector in stator coordinates</span>
+        <span class="n">i_ss</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_ss0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_rs0</span><span class="p">)</span>
+        <span class="c1"># Phase currents</span>
+        <span class="n">i_s_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">i_ss</span><span class="p">)</span>  <span class="c1"># + noise + offset ...</span>
+        <span class="k">return</span> <span class="n">i_s_abc</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="InductionMotorSaturated"><a class="viewcode-back" href="../../../autoapi/motulator/model/im/index.html#motulator.InductionMotorSaturated">[docs]</a><span class="k">class</span> <span class="nc">InductionMotorSaturated</span><span class="p">(</span><span class="n">InductionMotor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Γ-equivalent model of an induction motor model with main-flux saturation.</span>
+
+<span class="sd">    This extends the InductionMotor class with a main-flux magnetic saturation</span>
+<span class="sd">    model [2]_::</span>
+
+<span class="sd">        L_s(psi_ss) = L_su/(1 + (beta*abs(psi_ss)**S)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : int</span>
+<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    R_s : float</span>
+<span class="sd">        Stator resistance.</span>
+<span class="sd">    R_r : float</span>
+<span class="sd">        Rotor resistance.</span>
+<span class="sd">    L_ell : float</span>
+<span class="sd">        Leakage inductance.</span>
+<span class="sd">    L_su : float</span>
+<span class="sd">        Unsaturated stator inductance.</span>
+<span class="sd">    beta : float</span>
+<span class="sd">        Positive coefficient.</span>
+<span class="sd">    S : float</span>
+<span class="sd">        Positive coefficient.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [2] Qu, Ranta, Hinkkanen, Luomi, &quot;Loss-minimizing flux level control of</span>
+<span class="sd">       induction motor drives,&quot; IEEE Trans. Ind. Appl., 2012,</span>
+<span class="sd">       https://doi.org/10.1109/TIA.2012.2190818</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_su</span><span class="o">=</span><span class="mf">.34</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">.84</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="n">L_ell</span><span class="p">)</span>
+        <span class="c1"># Saturation model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_s</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">psi</span><span class="p">:</span> <span class="n">L_su</span><span class="o">/</span><span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span><span class="o">**</span><span class="n">S</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InductionMotorSaturated.currents"><a class="viewcode-back" href="../../../autoapi/motulator/model/im/index.html#motulator.InductionMotorSaturated.currents">[docs]</a>    <span class="k">def</span> <span class="nf">currents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override the base class method.&quot;&quot;&quot;</span>
+        <span class="c1"># Saturated value of the stator inductance.</span>
+        <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_s</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">)</span>
+        <span class="c1"># Currents</span>
+        <span class="n">i_rs</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_rs</span> <span class="o">-</span> <span class="n">psi_ss</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span>
+        <span class="n">i_ss</span> <span class="o">=</span> <span class="n">psi_ss</span><span class="o">/</span><span class="n">L_s</span> <span class="o">-</span> <span class="n">i_rs</span>
+        <span class="k">return</span> <span class="n">i_ss</span><span class="p">,</span> <span class="n">i_rs</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="InductionMotorInvGamma"><a class="viewcode-back" href="../../../autoapi/motulator/model/im/index.html#motulator.InductionMotorInvGamma">[docs]</a><span class="k">class</span> <span class="nc">InductionMotorInvGamma</span><span class="p">(</span><span class="n">InductionMotor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inverse-Γ model of an induction motor.</span>
+
+<span class="sd">    This extends the InductionMotor class (based on the Γ model) by providing</span>
+<span class="sd">    an interface for the inverse-Γ model parameters. Linear magnetics are</span>
+<span class="sd">    assumed. If magnetic saturation is to be modeled, the Γ model is preferred.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : int</span>
+<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    R_s : float</span>
+<span class="sd">        Stator resistance.</span>
+<span class="sd">    R_R : float</span>
+<span class="sd">        Rotor resistance.</span>
+<span class="sd">    L_sgm : float</span>
+<span class="sd">        Leakage inductance.</span>
+<span class="sd">    L_M : float</span>
+<span class="sd">        Magnetizing inductance.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=too-many-arguments, disable=super-init-not-called</span>
+        <span class="c1"># Convert the inverse-Γ parameters to the Γ parameters</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">L_M</span><span class="o">/</span><span class="p">(</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">L_sgm</span><span class="p">)</span>  <span class="c1"># Magnetic coupling factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">R_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_s</span> <span class="o">=</span> <span class="n">L_M</span> <span class="o">+</span> <span class="n">L_sgm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span> <span class="o">=</span> <span class="n">L_sgm</span><span class="o">/</span><span class="n">gamma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_r</span> <span class="o">=</span> <span class="n">R_R</span><span class="o">/</span><span class="n">gamma</span><span class="o">**</span><span class="mi">2</span>
+        <span class="c1"># Initial values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_ss0</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_rs0</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># self.psi_rs0 = self.psi_Rs0/gamma</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

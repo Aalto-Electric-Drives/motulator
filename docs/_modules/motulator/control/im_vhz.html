@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>motulator.control.im_vhz &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">motulator.control.im_vhz</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for motulator.control.im_vhz</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=C0103</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">V/Hz control for induction motor drives.</span>
+
+<span class="sd">The method is similar to [1]_. Open-loop V/Hz control can be obtained as a</span>
+<span class="sd">special case by choosing::</span>
+
+<span class="sd">    R_s, R_R = 0, 0</span>
+<span class="sd">    k_u, k_w = 0, 0</span>
+
+<span class="sd">Notes</span>
+<span class="sd">-----</span>
+<span class="sd">The low-pass-filtered values are marked with ref at the end of the variable</span>
+<span class="sd">name. These slowly varying quasi-steady-state quantities can be seen to</span>
+<span class="sd">represent the operating point (marked with the subscript 0 in [1]_).</span>
+
+<span class="sd">References</span>
+<span class="sd">----------</span>
+<span class="sd">.. [1] Hinkkanen, Tiitinen, Mölsä, Harnefors, &quot;On the stability of</span>
+<span class="sd">   volts-per-hertz control for induction motors,&quot; IEEE J. Emerg. Sel. Topics</span>
+<span class="sd">   Power Electron., 2022, https://doi.org/10.1109/JESTPE.2021.3060583</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># %%</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">motulator.control.common</span> <span class="kn">import</span> <span class="n">Ctrl</span><span class="p">,</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">RateLimiter</span>
+<span class="kn">from</span> <span class="nn">motulator.helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">Bunch</span>
+
+
+<span class="c1"># %%</span>
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars"><a class="viewcode-back" href="../../../autoapi/motulator/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars">[docs]</a><span class="k">class</span> <span class="nc">InductionMotorVHzCtrlPars</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;V/Hz control parameters.&quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
+    <span class="c1"># Speed reference (in electrical rad/s)</span>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.w_m_ref"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.w_m_ref">[docs]</a>    <span class="n">w_m_ref</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span><span class="p">))</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.T_s"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.T_s">[docs]</a>    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">250e-6</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.six_step"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.six_step">[docs]</a>    <span class="n">six_step</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.psi_s_nom"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.psi_s_nom">[docs]</a>    <span class="n">psi_s_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.04</span>  <span class="c1"># 1 p.u.</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.rate_limit"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.rate_limit">[docs]</a>    <span class="n">rate_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">120</span></div>
+    <span class="c1"># Motor parameter estimates</span>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.R_s"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.R_s">[docs]</a>    <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.7</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.R_R"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.R_R">[docs]</a>    <span class="n">R_R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.1</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.L_sgm"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.L_sgm">[docs]</a>    <span class="n">L_sgm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.021</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.L_M"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.L_M">[docs]</a>    <span class="n">L_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.224</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.k_u"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.k_u">[docs]</a>    <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span></div>
+<div class="viewcode-block" id="InductionMotorVHzCtrlPars.k_w"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrlPars.k_w">[docs]</a>    <span class="n">k_w</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">4</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="InductionMotorVHzCtrl"><a class="viewcode-back" href="../../../autoapi/motulator/index.html#motulator.control.im_vhz.InductionMotorVHzCtrl">[docs]</a><span class="k">class</span> <span class="nc">InductionMotorVHzCtrl</span><span class="p">(</span><span class="n">Ctrl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    V/Hz control with the stator current feedback.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pars : InductionMotorVHzCtrlPars</span>
+<span class="sd">        Control parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">w_m_ref</span>
+        <span class="c1"># Instantiate classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate_limiter</span> <span class="o">=</span> <span class="n">RateLimiter</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="c1"># Parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_w</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_ref</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_s_nom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">R_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_R</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">R_R</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_sgm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_M</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_M</span>
+        <span class="n">w_rb</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">R_R</span><span class="o">*</span><span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_sgm</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">L_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.1</span><span class="o">*</span><span class="n">w_rb</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_i</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.1</span><span class="o">*</span><span class="n">w_rb</span>
+        <span class="c1"># States</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_r_ref</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="InductionMotorVHzCtrl.__call__"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrl.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run the main control loop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mdl : InductionMotorDrive</span>
+<span class="sd">            Continuous-time model of an induction motor drive for getting the</span>
+<span class="sd">            feedback signals.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        T_s : float</span>
+<span class="sd">            Sampling period.</span>
+<span class="sd">        d_abc_ref : ndarray, shape (3,)</span>
+<span class="sd">            Duty ratio references.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Rate limit the frequency reference</span>
+        <span class="n">w_m_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limiter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_m_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">))</span>
+
+        <span class="c1"># Measure the feedback signals</span>
+        <span class="n">i_s_abc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">()</span>  <span class="c1"># Phase currents</span>
+        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>  <span class="c1"># DC-bus voltage</span>
+
+        <span class="c1"># Space vector transformation</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span><span class="p">)</span><span class="o">*</span><span class="n">abc2complex</span><span class="p">(</span><span class="n">i_s_abc</span><span class="p">)</span>
+
+        <span class="c1"># Slip compensation</span>
+        <span class="n">w_s_ref</span> <span class="o">=</span> <span class="n">w_m_ref</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_r_ref</span>
+
+        <span class="c1"># Dynamic stator frequency and slip frequency</span>
+        <span class="n">w_s</span><span class="p">,</span> <span class="n">w_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stator_freq</span><span class="p">(</span><span class="n">w_s_ref</span><span class="p">,</span> <span class="n">i_s</span><span class="p">)</span>
+
+        <span class="c1"># Voltage reference</span>
+        <span class="n">u_s_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">voltage_reference</span><span class="p">(</span><span class="n">w_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">)</span>
+
+        <span class="c1"># Compute the duty ratios</span>
+        <span class="n">u_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">realized_voltage</span>  <span class="c1"># Used only for datalogging</span>
+        <span class="n">d_abc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span><span class="p">,</span> <span class="n">w_s</span><span class="p">)</span>
+
+        <span class="c1"># Data logging</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
+            <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span>
+            <span class="n">i_s_ref</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span><span class="p">,</span>
+            <span class="n">psi_s_ref</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_ref</span><span class="p">,</span>
+            <span class="n">t</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">theta_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span><span class="p">,</span>
+            <span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">,</span>
+            <span class="n">u_s</span><span class="o">=</span><span class="n">u_s</span><span class="p">,</span>
+            <span class="n">w_m_ref</span><span class="o">=</span><span class="n">w_m_ref</span><span class="p">,</span>
+            <span class="n">w_r</span><span class="o">=</span><span class="n">w_r</span><span class="p">,</span>
+            <span class="n">w_s</span><span class="o">=</span><span class="n">w_s</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Update the states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_i</span><span class="o">*</span><span class="p">(</span><span class="n">i_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_r_ref</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_f</span><span class="o">*</span><span class="p">(</span><span class="n">w_r</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_r_ref</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="n">w_s</span>  <span class="c1"># Next line: limit into [-pi, pi)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_clock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">d_abc_ref</span></div>
+
+<div class="viewcode-block" id="InductionMotorVHzCtrl.stator_freq"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrl.stator_freq">[docs]</a>    <span class="k">def</span> <span class="nf">stator_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_s_ref</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the dynamic stator frequency.</span>
+
+<span class="sd">        This computes the dynamic stator frequency reference used in the</span>
+<span class="sd">        coordinate transformations.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Operating-point quantities</span>
+        <span class="n">psi_R_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_ref</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span>
+        <span class="n">psi_R_ref_sqr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_R_ref</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="c1"># Compute the dynamic stator frequency</span>
+        <span class="k">if</span> <span class="n">psi_R_ref_sqr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Slip estimate based on the measured current</span>
+            <span class="n">w_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_R</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_R_ref</span><span class="p">))</span><span class="o">/</span><span class="n">psi_R_ref_sqr</span>
+            <span class="c1"># Dynamic frequency</span>
+            <span class="n">w_s</span> <span class="o">=</span> <span class="n">w_s_ref</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_w</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_r_ref</span> <span class="o">-</span> <span class="n">w_r</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">w_s</span><span class="p">,</span> <span class="n">w_r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">w_s</span><span class="p">,</span> <span class="n">w_r</span></div>
+
+<div class="viewcode-block" id="InductionMotorVHzCtrl.voltage_reference"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vhz/index.html#motulator.control.im_vhz.InductionMotorVHzCtrl.voltage_reference">[docs]</a>    <span class="k">def</span> <span class="nf">voltage_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the stator voltage reference.&quot;&quot;&quot;</span>
+        <span class="c1"># Nominal magnetizing current</span>
+        <span class="n">i_sd_nom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_ref</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span><span class="p">)</span>
+        <span class="c1"># Operating-point current for RI compensation</span>
+        <span class="n">i_s_ref0</span> <span class="o">=</span> <span class="n">i_sd_nom</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span><span class="o">.</span><span class="n">imag</span>
+        <span class="c1"># Term -R_s omitted to avoid problems due to the voltage saturation</span>
+        <span class="c1"># k = -R_s + k_u*L_sgm*(alpha + 1j*w_m0)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R_R</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_s</span><span class="p">)</span>
+        <span class="n">u_s_ref</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_s_ref0</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_ref</span> <span class="o">+</span> <span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">-</span> <span class="n">i_s</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">u_s_ref</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

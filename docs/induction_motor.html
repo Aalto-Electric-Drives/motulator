@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Induction Motor &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Synchronous Motor" href="synchronous_motor.html" />
+    <link rel="prev" title="Motor Drive System" href="system.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="system.html">Motor Drive System</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Induction Motor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/induction_motor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="induction-motor">
+<h1>Induction Motor<a class="headerlink" href="#induction-motor" title="Permalink to this heading"></a></h1>
+<p>Continuous-time induction motor models are given in the module <a class="reference internal" href="autoapi/motulator/model/im/index.html#module-motulator.model.im" title="motulator.model.im"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.im</span></code></a>. Peak-valued complex space vectors are used. The models are implemented in stator coordinates. A Γ-equivalent model is used since it can be extended with the magnetic saturation model in a staightforward manner <a class="footnote-reference brackets" href="#id3" id="id1">1</a>.</p>
+<div class="figure align-center" id="id5">
+<a class="reference external image-reference" href="."><img alt="Gamma-model of an induction motor" src="_images/im_gamma.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Γ model.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</div>
+<div class="figure align-center" id="id6">
+<a class="reference external image-reference" href="."><img alt="Block diagram of an induction motor model" src="_images/im_block.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Block diagram of the motor model. The magnetic model includes the flux equations (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</div>
+<p>The voltage equations are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}^\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s}^\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s}^\mathrm{s} \\
+\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{r}^\mathrm{s}}{\mathrm{d} t} &amp;= -R_\mathrm{r}\boldsymbol{i}_\mathrm{r}^\mathrm{s} + \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{r}^\mathrm{s}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s}^\mathrm{s}\)</span> is the stator voltage, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}^\mathrm{s}\)</span> is the stator current, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{r}^\mathrm{s}\)</span> is the rotor current, <span class="math notranslate nohighlight">\(R_\mathrm{s}\)</span> is the stator resistance, and <span class="math notranslate nohighlight">\(R_\mathrm{r}\)</span> is the rotor resistance. The electrical angular speed of the rotor is <span class="math notranslate nohighlight">\(\omega_\mathrm{m} = p\omega_\mathrm{M}\)</span>, where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the mechanical angular speed of the rotor and <span class="math notranslate nohighlight">\(p\)</span> is the number of pole pairs. The stator flux linkage <span class="math notranslate nohighlight">\(\boldsymbol{\psi}_\mathrm{s}^\mathrm{s}\)</span> and the rotor flux linkage <span class="math notranslate nohighlight">\(\boldsymbol{\psi}_\mathrm{r}^\mathrm{s}\)</span>, respectively, are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\boldsymbol{\psi}_\mathrm{s}^\mathrm{s} &amp;= L_\mathrm{s}(\boldsymbol{i}_\mathrm{s}^\mathrm{s} + \boldsymbol{i}_\mathrm{r}^\mathrm{s} ) \\
+\boldsymbol{\psi}_\mathrm{r}^\mathrm{s} &amp;= \boldsymbol{\psi}_\mathrm{s}^\mathrm{s} + L_\ell\boldsymbol{i}_\mathrm{r}^\mathrm{s}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(L_\mathrm{s}\)</span> is the stator inductance and <span class="math notranslate nohighlight">\(L_\ell\)</span> is the leakage inductance. This linear magnetic model is applied in the class <a class="reference internal" href="autoapi/motulator/model/im/index.html#motulator.model.im.InductionMotor" title="motulator.model.im.InductionMotor"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.im.InductionMotor</span></code></a>. The electromagnetic torque is</p>
+<div class="math notranslate nohighlight">
+\[\tau_\mathrm{M} = \frac{3p}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s}^\mathrm{s} (\boldsymbol{\psi}_\mathrm{s}^\mathrm{s})^* \right\}\]</div>
+<p>The class <a class="reference internal" href="autoapi/motulator/model/im/index.html#motulator.model.im.InductionMotorSaturated" title="motulator.model.im.InductionMotorSaturated"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.im.InductionMotorSaturated</span></code></a> extends the model with the main flux saturation, <span class="math notranslate nohighlight">\(L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})\)</span> <a class="footnote-reference brackets" href="#id4" id="id2">2</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the magnetic saturation is omitted, the Γ model is mathematically identical to the inverse-Γ and
+T models. For example, the parameters of the Γ model can be transformed to those of the inverse-Γ
+model parameters as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}L_\sigma &amp;= \left(\frac{L_\mathrm{s}}{L_\mathrm{s} + L_\ell}\right)L_\ell \\
+R_\mathrm{R} &amp;= \left(\frac{L_\mathrm{s}}{L_\mathrm{s} + L_\ell}\right)^2 R_\mathrm{r} \\
+L_\mathrm{M} &amp;=  L_\mathrm{s} - L_\sigma\end{split}\]</div>
+<div class="figure align-center" id="id7">
+<a class="reference external image-reference" href="."><img alt="Inverse-Gamma model of an induction motor" src="_images/im_inv_gamma.svg" width="100%" /></a>
+<p class="caption"><span class="caption-text">Inverse-Γ model.</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</div>
+<p>Example control methods in the module <a class="reference internal" href="autoapi/motulator/control/im_vector/index.html#module-motulator.control.im_vector" title="motulator.control.im_vector"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im_vector</span></code></a> are based on the
+inverse-Γ model.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Slemon, “Modelling of induction machines for electric drives,” IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.1109/28.44251">https://doi.org/10.1109/28.44251</a>.</p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Qu, Ranta, Hinkkanen, Luomi, “Loss-minimizing flux level control of
+induction motor drives,” IEEE Trans. Ind. Appl., 2021,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="system.html" class="btn btn-neutral float-left" title="Motor Drive System" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="synchronous_motor.html" class="btn btn-neutral float-right" title="Synchronous Motor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

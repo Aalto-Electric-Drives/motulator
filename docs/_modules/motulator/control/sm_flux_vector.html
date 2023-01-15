@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>motulator.control.sm_flux_vector &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">motulator.control.sm_flux_vector</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for motulator.control.sm_flux_vector</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=invalid-name</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Flux-vector control for synchronous motor drives.</span>
+
+<span class="sd">This implements a simplified version of stator-flux-vector control [1]_. The</span>
+<span class="sd">rotor coordinates are used in this implementation [2]_. One control variable is</span>
+<span class="sd">the stator-flux magnitude and another is the electromagnetic torque. The latter</span>
+<span class="sd">choice differs from [1]_ and [2]_, where the torque-producing current component</span>
+<span class="sd">is used. Furthermore, here proportional control is used for simplicity. The</span>
+<span class="sd">magnetic saturation is not considered in this implementation.</span>
+
+<span class="sd">References</span>
+<span class="sd">----------</span>
+<span class="sd">.. [1] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented control of</span>
+<span class="sd">   IPM drives with variable DC link in the field-weakening region,” IEEE Trans.</span>
+<span class="sd">   Ind. Appl., 2009, https://doi.org/10.1109/TIA.2009.2027167</span>
+
+<span class="sd">.. [2] Awan, Hinkkanen, Bojoi, Pellegrino, &quot;Stator-flux-oriented control of</span>
+<span class="sd">   synchronous motors: A systematic design procedure,&quot; IEEE Trans. Ind. Appl.,</span>
+<span class="sd">   2019, https://doi.org/10.1109/TIA.2019.2927316</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">motulator.helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">Bunch</span>
+<span class="kn">from</span> <span class="nn">motulator.control.common</span> <span class="kn">import</span> <span class="n">Ctrl</span><span class="p">,</span> <span class="n">SpeedCtrl</span><span class="p">,</span> <span class="n">PWM</span>
+<span class="kn">from</span> <span class="nn">motulator.control.sm_vector</span> <span class="kn">import</span> <span class="n">SensorlessObserver</span>
+<span class="kn">from</span> <span class="nn">motulator.control.sm_obs_vhz</span> <span class="kn">import</span> <span class="n">FluxTorqueRef</span>
+
+
+<span class="c1"># %%</span>
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars"><a class="viewcode-back" href="../../../autoapi/motulator/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMotorFluxVectorCtrlPars</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control parameters: flux-vector control for synchronous motor drives.&quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
+    <span class="c1"># Speed reference (in electrical rad/s)</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.w_m_ref"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.w_m_ref">[docs]</a>    <span class="n">w_m_ref</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">75</span><span class="p">))</span></div>
+    <span class="c1"># Mode</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.sensorless"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.sensorless">[docs]</a>    <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></div>
+    <span class="c1"># Sampling period</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.T_s"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.T_s">[docs]</a>    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">250e-6</span></div>
+    <span class="c1"># Flux reference limits</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.psi_s_min"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.psi_s_min">[docs]</a>    <span class="n">psi_s_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.psi_s_max"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.psi_s_max">[docs]</a>    <span class="n">psi_s_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="c1"># Voltage marginal</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.k_u"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.k_u">[docs]</a>    <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.9</span></div>
+    <span class="c1"># Bandwidths</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.alpha_psi"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.alpha_psi">[docs]</a>    <span class="n">alpha_psi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">100</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.alpha_tau"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.alpha_tau">[docs]</a>    <span class="n">alpha_tau</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">400</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.alpha_s"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.alpha_s">[docs]</a>    <span class="n">alpha_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">4</span></div>
+    <span class="c1"># Maximum values</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.tau_M_max"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.tau_M_max">[docs]</a>    <span class="n">tau_M_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="mi">14</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.i_s_max"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.i_s_max">[docs]</a>    <span class="n">i_s_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mf">5.</span></div>
+    <span class="c1"># Motor parameter estimates</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.R_s"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.R_s">[docs]</a>    <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.6</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.L_d"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.L_d">[docs]</a>    <span class="n">L_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.036</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.L_q"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.L_q">[docs]</a>    <span class="n">L_q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.051</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.psi_f"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.psi_f">[docs]</a>    <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.545</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.p"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.p">[docs]</a>    <span class="n">p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.J"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.J">[docs]</a>    <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.015</span></div>
+    <span class="c1"># Sensorless observer (used only in the sensorless mode)</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.w_o"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.w_o">[docs]</a>    <span class="n">w_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">40</span></div>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.zeta_inf"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.zeta_inf">[docs]</a>    <span class="n">zeta_inf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.2</span></div>
+    <span class="c1"># Sensored observer (used only in the sensored mode)</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrlPars.g"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars.g">[docs]</a>    <span class="n">g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">15</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrl"><a class="viewcode-back" href="../../../autoapi/motulator/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrl">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMotorFluxVectorCtrl</span><span class="p">(</span><span class="n">Ctrl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Flux-vector control for synchronous motor drives.</span>
+
+<span class="sd">    This class interconnects the subsystems of the control system and</span>
+<span class="sd">    provides the interface to the solver.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pars : SynchronousMotoroFluxVectorCtrlPars</span>
+<span class="sd">        Control parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">w_m_ref</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_q</span><span class="p">,</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">sensorless</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ctrl</span> <span class="o">=</span> <span class="n">FluxTorqueCtrl</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedCtrl</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pars</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">SensorlessObserver</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ref</span> <span class="o">=</span> <span class="n">FluxTorqueRef</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SynchronousMotorFluxVectorCtrl.__call__"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrl.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run the main control loop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mdl : SynchronousMotorDrive</span>
+<span class="sd">            Continuous-time model of a synchronous motor drive for getting the</span>
+<span class="sd">            feedback signals.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        T_s : float</span>
+<span class="sd">            Sampling period.</span>
+<span class="sd">        d_abc_ref : ndarray, shape (3,)</span>
+<span class="sd">            Duty ratio references.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the speed reference</span>
+        <span class="n">w_m_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="c1"># Feedback signals</span>
+        <span class="n">i_s_abc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">()</span>  <span class="c1"># Phase currents</span>
+        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>  <span class="c1"># DC-bus voltage</span>
+        <span class="n">u_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">realized_voltage</span>  <span class="c1"># Realized voltage from PWM</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
+            <span class="c1"># Get the rotor speed and position estimates</span>
+            <span class="n">w_m</span><span class="p">,</span> <span class="n">theta_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">w_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">theta_m</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Measure the rotor speed</span>
+            <span class="n">w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">mdl</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>
+            <span class="c1"># Limit the electrical rotor position into [-pi, pi)</span>
+            <span class="n">theta_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">mdl</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">meas_position</span><span class="p">()</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="c1"># Current vector in estimated rotor coordinates</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta_m</span><span class="p">)</span><span class="o">*</span><span class="n">abc2complex</span><span class="p">(</span><span class="n">i_s_abc</span><span class="p">)</span>
+
+        <span class="c1"># Flux and torque estimates</span>
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">psi_s</span>
+
+        <span class="c1"># Outputs</span>
+        <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">w_m_ref</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">w_m</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">psi_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ref</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+        <span class="n">u_s_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ctrl</span><span class="p">(</span>
+            <span class="n">psi_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+        <span class="n">d_abc_ref</span><span class="p">,</span> <span class="n">u_s_ref_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">w_m</span><span class="p">)</span>
+
+        <span class="c1"># Data logging</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
+            <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span>
+            <span class="n">psi_s</span><span class="o">=</span><span class="n">psi_s</span><span class="p">,</span>
+            <span class="n">psi_s_ref</span><span class="o">=</span><span class="n">psi_s_ref</span><span class="p">,</span>
+            <span class="n">t</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">tau_M_ref_lim</span><span class="o">=</span><span class="n">tau_M_ref_lim</span><span class="p">,</span>
+            <span class="n">theta_m</span><span class="o">=</span><span class="n">theta_m</span><span class="p">,</span>
+            <span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">,</span>
+            <span class="n">u_s</span><span class="o">=</span><span class="n">u_s</span><span class="p">,</span>
+            <span class="n">w_m</span><span class="o">=</span><span class="n">w_m</span><span class="p">,</span>
+            <span class="n">w_m_ref</span><span class="o">=</span><span class="n">w_m_ref</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Update states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tau_M_ref_lim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">u_s_ref_lim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_clock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">d_abc_ref</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="FluxTorqueCtrl"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.FluxTorqueCtrl">[docs]</a><span class="k">class</span> <span class="nc">FluxTorqueCtrl</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stator flux and torque controller.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pars : SynchronousMotoroFluxVectorCtrlPars</span>
+<span class="sd">        Control parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-few-public-methods</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">R_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_psi</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_psi</span>
+        <span class="c1"># Gain k_tau</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span>
+        <span class="n">psi_s0</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span> <span class="k">if</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_s_min</span>
+        <span class="k">if</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># PMSM or PM-SyRM</span>
+            <span class="n">c_delta0</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span><span class="o">*</span><span class="n">psi_s0</span><span class="o">/</span><span class="n">pars</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="n">G</span><span class="o">*</span><span class="n">psi_s0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># SyRM</span>
+            <span class="n">c_delta0</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">G</span><span class="o">*</span><span class="n">psi_s0</span><span class="o">**</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_tau</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_tau</span><span class="o">/</span><span class="n">c_delta0</span>
+
+<div class="viewcode-block" id="FluxTorqueCtrl.__call__"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.FluxTorqueCtrl.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the unlimited voltage reference.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s_ref : float</span>
+<span class="sd">            Stator flux reference (magnitude).</span>
+<span class="sd">        tau_M_ref : float</span>
+<span class="sd">            Torque reference.</span>
+<span class="sd">        psi_s : complex</span>
+<span class="sd">            Stator flux estimate.</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current.</span>
+<span class="sd">        w_m : float</span>
+<span class="sd">            Rotor speed (in electrical rad/s).</span>
+<span class="sd">        u_dc : float</span>
+<span class="sd">            DC-bus voltage.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u_s_ref : complex</span>
+<span class="sd">            Unlimited voltage reference.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Torque estimate</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span>
+
+        <span class="c1"># Stator frequency</span>
+        <span class="n">w_s</span> <span class="o">=</span> <span class="n">w_m</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_tau</span><span class="o">*</span><span class="p">(</span><span class="n">tau_M_ref</span> <span class="o">-</span> <span class="n">tau_M</span><span class="p">)</span>
+
+        <span class="c1"># Voltage reference</span>
+        <span class="n">e_psi</span> <span class="o">=</span> <span class="n">psi_s_ref</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+        <span class="n">u_s_ref</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_s</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_s</span><span class="o">*</span><span class="n">psi_s</span> <span class="o">+</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpha_psi</span><span class="o">*</span><span class="n">e_psi</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">delta</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">u_s_ref</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Observer"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.Observer">[docs]</a><span class="k">class</span> <span class="nc">Observer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sensored observer.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pars : SynchronousMotoroFluxVectorCtrlPars</span>
+<span class="sd">        Control parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-few-public-methods</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">R_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">g</span>
+        <span class="c1"># Initial state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span>
+
+<div class="viewcode-block" id="Observer.update"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.Observer.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the states for the next sampling period.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        u_s : complex</span>
+<span class="sd">            Stator voltage in estimated rotor coordinates.</span>
+<span class="sd">        i_s : complex</span>
+<span class="sd">            Stator current in estimated rotor coordinates.</span>
+<span class="sd">        w_m : float</span>
+<span class="sd">            Rotor speed (in electrical rad/s).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Estimation error</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span>
+
+        <span class="c1"># Update the state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="p">(</span>
+            <span class="n">u_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_s</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_m</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">*</span><span class="n">e</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

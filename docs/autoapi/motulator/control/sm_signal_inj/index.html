@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>motulator.control.sm_signal_inj &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../_static/copybutton.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="motulator.control.sm_torque" href="../sm_torque/index.html" />
+    <link rel="prev" title="motulator.control.sm_obs_vhz" href="../sm_obs_vhz/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_signal_inj</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/motulator/control/sm_signal_inj/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-motulator.control.sm_signal_inj">
+<span id="motulator-control-sm-signal-inj"></span><h1><a class="reference internal" href="#module-motulator.control.sm_signal_inj" title="motulator.control.sm_signal_inj"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_signal_inj</span></code></a><a class="headerlink" href="#module-motulator.control.sm_signal_inj" title="Permalink to this heading"></a></h1>
+<p>Sensorless control with signal injection for synchronous motor drives.</p>
+<p>This module contains a simple example of square-wave signal injection for low-
+speed operation. A phase-locked loop is used to track the rotor position. For
+a wider speed range, signal injection could be combined to a model-based
+observer. The effects of magnetic saturation are not compensated for in this
+version.</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrlPars" title="motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorSignalInjectionCtrlPars</span></code></a></p></td>
+<td><p>Square-wave signal injection parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrl" title="motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorSignalInjectionCtrl</span></code></a></p></td>
+<td><p>Sensorless control with signal injection for a synchronous motor drive.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm_signal_inj.SignalInjection" title="motulator.control.sm_signal_inj.SignalInjection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SignalInjection</span></code></a></p></td>
+<td><p>Estimate the rotor position error based on signal injection.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm_signal_inj.PhaseLockedLoop" title="motulator.control.sm_signal_inj.PhaseLockedLoop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PhaseLockedLoop</span></code></a></p></td>
+<td><p>Simple phase-locked loop for rotor-position estimation.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrlPars">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm_signal_inj.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorSignalInjectionCtrlPars</span></span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#SynchronousMotorSignalInjectionCtrlPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrlPars" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../sm_vector/index.html#motulator.control.sm_vector.SynchronousMotorVectorCtrlPars" title="motulator.control.sm_vector.SynchronousMotorVectorCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control.sm_vector.SynchronousMotorVectorCtrlPars</span></code></a></p>
+<p>Square-wave signal injection parameters.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrlPars.U_inj">
+<span class="sig-name descname"><span class="pre">U_inj</span></span><em class="property"><span class="w"> </span><span class="pre">:float</span> <span class="pre">=</span> <span class="pre">200</span></em><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#SynchronousMotorSignalInjectionCtrlPars.U_inj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrlPars.U_inj" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm_signal_inj.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorSignalInjectionCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#SynchronousMotorSignalInjectionCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrl" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../common/index.html#motulator.control.common.Ctrl" title="motulator.control.common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control.common.Ctrl</span></code></a></p>
+<p>Sensorless control with signal injection for a synchronous motor drive.</p>
+<p>This class interconnects the subsystems of the control system and
+provides the interface to the solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<a class="reference internal" href="../sm_vector/index.html#motulator.control.sm_vector.SynchronousMotorVectorCtrlPars" title="motulator.control.sm_vector.SynchronousMotorVectorCtrlPars"><em>SynchronousMotorVectorCtrlPars</em></a>) – Control parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrl.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#SynchronousMotorSignalInjectionCtrl.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrl.__call__" title="Permalink to this definition"></a></dt>
+<dd><p>Run the main control loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mdl</strong> (<a class="reference internal" href="../../index.html#motulator.SynchronousMotorDrive" title="motulator.SynchronousMotorDrive"><em>SynchronousMotorDrive</em></a>) – Continuous-time model of a synchronous motor drive for getting the
+feedback signals.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period.</p></li>
+<li><p><strong>d_abc_ref</strong> (<em>ndarray, shape (3,)</em>) – Duty ratio references.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.SignalInjection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm_signal_inj.</span></span><span class="sig-name descname"><span class="pre">SignalInjection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#SignalInjection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.SignalInjection" title="Permalink to this definition"></a></dt>
+<dd><p>Estimate the rotor position error based on signal injection.</p>
+<p>This signal injection method estimates the rotor position error based on
+the injected switching frequency signal, according to <a class="reference internal" href="#r50acc62e7f3b-1" id="id1">[1]</a>. The estimate
+can be used in a phase-locked loop or in a state observer to robustify
+low-speed sensorless operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<a class="reference internal" href="#motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrlPars" title="motulator.control.sm_signal_inj.SynchronousMotorSignalInjectionCtrlPars"><em>SynchronousMotorSignalInjectionCtrlPars</em></a>) – Control parameters.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r50acc62e7f3b-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Kim, Ha, Sul, “PWM switching frequency signal injection sensorless
+method in IPMSM,” IEEE Trans. Ind. Appl., 2012,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2012.2210175">https://doi.org/10.1109/TIA.2012.2210175</a></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.SignalInjection.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_sq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#SignalInjection.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.SignalInjection.output" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the rotor position estimation error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i_sq</strong> (<em>float</em>) – Stator current q-component in estimated rotor coordinates.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>err</strong> – Rotor position estimation error.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.SignalInjection.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#SignalInjection.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.SignalInjection.update" title="Permalink to this definition"></a></dt>
+<dd><p>Store the old current values for the next sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i_s</strong> (<em>complex</em>) – Stator current in estimated rotor coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.SignalInjection.filter_current">
+<span class="sig-name descname"><span class="pre">filter_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#SignalInjection.filter_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.SignalInjection.filter_current" title="Permalink to this definition"></a></dt>
+<dd><p>Filter the stator current using the previously measured value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i_s</strong> (<em>complex</em>) – Unfiltered stator current in estimated rotor coordinates.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>i_s_filt</strong> – Filtered stator current in estimated rotor coordinates.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.PhaseLockedLoop">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm_signal_inj.</span></span><span class="sig-name descname"><span class="pre">PhaseLockedLoop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#PhaseLockedLoop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.PhaseLockedLoop" title="Permalink to this definition"></a></dt>
+<dd><p>Simple phase-locked loop for rotor-position estimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pars</strong> (<a class="reference internal" href="../sm_vector/index.html#motulator.control.sm_vector.SynchronousMotorVectorCtrlPars" title="motulator.control.sm_vector.SynchronousMotorVectorCtrlPars"><em>SynchronousMotorVectorCtrlPars</em></a>) – Control parameters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm_signal_inj.PhaseLockedLoop.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">err</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm_signal_inj.html#PhaseLockedLoop.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm_signal_inj.PhaseLockedLoop.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the states for the next sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>err</strong> (<em>Rotor position error.</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../sm_obs_vhz/index.html" class="btn btn-neutral float-left" title="motulator.control.sm_obs_vhz" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../sm_torque/index.html" class="btn btn-neutral float-right" title="motulator.control.sm_torque" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

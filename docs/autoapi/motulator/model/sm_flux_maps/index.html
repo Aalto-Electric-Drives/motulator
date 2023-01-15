@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>motulator.model.sm_flux_maps &mdash; motulator 0.1.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../_static/copybutton.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="motulator.helpers" href="../../helpers/index.html" />
+    <link rel="prev" title="motulator.model.sm_drive" href="../sm_drive/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> motulator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../system.html">Motor Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../induction_motor.html">Induction Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../synchronous_motor.html">Synchronous Motor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../converters.html">Converters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">motulator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></a></li>
+          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm_flux_maps</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/motulator/model/sm_flux_maps/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-motulator.model.sm_flux_maps">
+<span id="motulator-model-sm-flux-maps"></span><h1><a class="reference internal" href="#module-motulator.model.sm_flux_maps" title="motulator.model.sm_flux_maps"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm_flux_maps</span></code></a><a class="headerlink" href="#module-motulator.model.sm_flux_maps" title="Permalink to this heading"></a></h1>
+<p>Import and plot flux maps from the SyR-e project.</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.sm_flux_maps.import_syre_data" title="motulator.model.sm_flux_maps.import_syre_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_syre_data</span></code></a>([fname, add_negative_q_axis])</p></td>
+<td><p>Import a flux map from the MATLAB data file in the SyR-e format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.sm_flux_maps.plot_flux_map" title="motulator.model.sm_flux_maps.plot_flux_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_map</span></code></a>(data)</p></td>
+<td><p>Plot the flux linkage as function of the current.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.sm_flux_maps.plot_torque_map" title="motulator.model.sm_flux_maps.plot_torque_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_torque_map</span></code></a>(data)</p></td>
+<td><p>Plot the torque as function of the current.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.sm_flux_maps.plot_flux_vs_current" title="motulator.model.sm_flux_maps.plot_flux_vs_current"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_vs_current</span></code></a>(data)</p></td>
+<td><p>Plot the flux vs. current characteristics.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.sm_flux_maps.downsample_flux_map" title="motulator.model.sm_flux_maps.downsample_flux_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">downsample_flux_map</span></code></a>(data[, N_d, N_q])</p></td>
+<td><p>Downsample the flux map by means of linear interpolation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.sm_flux_maps.invert_flux_map" title="motulator.model.sm_flux_maps.invert_flux_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">invert_flux_map</span></code></a>(data[, N_d, N_q])</p></td>
+<td><p>Compute the inverse flux map by means of linear interpolation.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.model.sm_flux_maps.import_syre_data">
+<span class="sig-prename descclassname"><span class="pre">motulator.model.sm_flux_maps.</span></span><span class="sig-name descname"><span class="pre">import_syre_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'THOR.mat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_negative_q_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm_flux_maps.html#import_syre_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm_flux_maps.import_syre_data" title="Permalink to this definition"></a></dt>
+<dd><p>Import a flux map from the MATLAB data file in the SyR-e format.</p>
+<p>For more information on the SyR-e project and the MATLAB file format,
+please visit:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/SyR-e/syre_public">https://github.com/SyR-e/syre_public</a></p>
+</div></blockquote>
+<p>The imported data is converted to the PMSM coordinate convention, in which
+the PM flux is along the d axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>str</em><em>, </em><em>optional</em>) – MATLAB file name. The default is ‘THOR.mat’.</p></li>
+<li><p><strong>add_negative_q_axis</strong> (<em>bool</em><em>, </em><em>optional</em>) – Adds the negative q-axis data based on the symmetry.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Bunch object with the following fields defined</em></p></li>
+<li><p><strong>i_s</strong> (<em>complex ndarray</em>) – Stator current data.</p></li>
+<li><p><strong>psi_s</strong> (<em>complex ndarray</em>) – Stator flux linkage data.</p></li>
+<li><p><strong>tau_M</strong> (<em>ndarray</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Some example data files (including THOR.mat) are available in the SyR-e
+repository, licensed under the Apache License, Version 2.0.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.model.sm_flux_maps.plot_flux_map">
+<span class="sig-prename descclassname"><span class="pre">motulator.model.sm_flux_maps.</span></span><span class="sig-name descname"><span class="pre">plot_flux_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm_flux_maps.html#plot_flux_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm_flux_maps.plot_flux_map" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the flux linkage as function of the current.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="../../helpers/index.html#motulator.helpers.Bunch" title="motulator.helpers.Bunch"><em>Bunch</em></a>) – Flux map data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.model.sm_flux_maps.plot_torque_map">
+<span class="sig-prename descclassname"><span class="pre">motulator.model.sm_flux_maps.</span></span><span class="sig-name descname"><span class="pre">plot_torque_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm_flux_maps.html#plot_torque_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm_flux_maps.plot_torque_map" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the torque as function of the current.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="../../helpers/index.html#motulator.helpers.Bunch" title="motulator.helpers.Bunch"><em>Bunch</em></a>) – Flux map data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.model.sm_flux_maps.plot_flux_vs_current">
+<span class="sig-prename descclassname"><span class="pre">motulator.model.sm_flux_maps.</span></span><span class="sig-name descname"><span class="pre">plot_flux_vs_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm_flux_maps.html#plot_flux_vs_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm_flux_maps.plot_flux_vs_current" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the flux vs. current characteristics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="../../helpers/index.html#motulator.helpers.Bunch" title="motulator.helpers.Bunch"><em>Bunch</em></a>) – Flux map data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.model.sm_flux_maps.downsample_flux_map">
+<span class="sig-prename descclassname"><span class="pre">motulator.model.sm_flux_maps.</span></span><span class="sig-name descname"><span class="pre">downsample_flux_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm_flux_maps.html#downsample_flux_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm_flux_maps.downsample_flux_map" title="Permalink to this definition"></a></dt>
+<dd><p>Downsample the flux map by means of linear interpolation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference internal" href="../../helpers/index.html#motulator.helpers.Bunch" title="motulator.helpers.Bunch"><em>Bunch</em></a>) – Flux map data.</p></li>
+<li><p><strong>N_d</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of interpolated samples in the d axis. The default is 32.</p></li>
+<li><p><strong>N_q</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of interpolated samples in the q axis. The default is 32.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Bunch object with the following fields defined</em></p></li>
+<li><p><strong>i_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator current data.</p></li>
+<li><p><strong>psi_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator flux linkage data.</p></li>
+<li><p><strong>tau_M</strong> (<em>ndarray, shape (N_d, N_q)</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.model.sm_flux_maps.invert_flux_map">
+<span class="sig-prename descclassname"><span class="pre">motulator.model.sm_flux_maps.</span></span><span class="sig-name descname"><span class="pre">invert_flux_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm_flux_maps.html#invert_flux_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm_flux_maps.invert_flux_map" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the inverse flux map by means of linear interpolation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference internal" href="../../helpers/index.html#motulator.helpers.Bunch" title="motulator.helpers.Bunch"><em>Bunch</em></a>) – Flux map data.</p></li>
+<li><p><strong>N_d</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of interpolated samples in the d axis. The default is 32.</p></li>
+<li><p><strong>N_q</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of interpolated samples in the q axis. The default is 32.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Bunch object with the following fields defined</em></p></li>
+<li><p><strong>psi_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator flux linkage data.</p></li>
+<li><p><strong>i_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator current data.</p></li>
+<li><p><strong>tau_M</strong> (<em>ndarray, shape (N_d, N_q)</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../sm_drive/index.html" class="btn btn-neutral float-left" title="motulator.model.sm_drive" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../helpers/index.html" class="btn btn-neutral float-right" title="motulator.helpers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
