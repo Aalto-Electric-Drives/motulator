@@ -250,7 +250,7 @@ class SensorlessFluxObserver:
         lambd = self.zeta_inf*np.abs(w_s) + .5*self.alpha
         # Observer gain (without the orthogonal projection which is
         # embedded into the state update)
-        g_o = 2*lambd*(self.alpha + 1j*self.w_m)/(self.alpha**2 + self.w_m**2)
+        g_o = 2*lambd/(self.alpha - 1j*self.w_m)
 
         # Time derivative of the stator current
         di_s = (i_s - self.i_s_old)/self.T_s
@@ -261,8 +261,7 @@ class SensorlessFluxObserver:
             (self.alpha - 1j*self.w_m)*self.psi_R - u_s)
 
         # Error signal
-        psi_R_sqr = np.abs(self.psi_R)**2
-        err = e*np.conj(self.psi_R)/psi_R_sqr if psi_R_sqr > 0 else 0
+        err = e/self.psi_R if np.abs(self.psi_R) > 0 else 0
 
         # Update the states
         self.w_m -= self.T_s*self.alpha_o*err.imag

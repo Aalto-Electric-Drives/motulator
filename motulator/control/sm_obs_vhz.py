@@ -128,14 +128,13 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         tau_M_ref = self.tau_M_ref
 
         # Limited flux and torque references
-        psi_s_ref, tau_M_ref_lim = self.flux_torque_ref(
-            tau_M_ref, w_m_ref, u_dc)
+        psi_s_ref, _ = self.flux_torque_ref(tau_M_ref, w_m_ref, u_dc)
 
         # Electromagnetic torque (7d)
         tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
 
         # Dynamic frequency (5a)
-        w_s = w_m_ref - self.k_tau*(tau_M - tau_M_ref_lim)
+        w_s = w_m_ref - self.k_tau*(tau_M - tau_M_ref)
 
         # Voltage reference (4)
         err = psi_s_ref - psi_s
