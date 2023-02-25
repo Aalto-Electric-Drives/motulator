@@ -131,32 +131,32 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: U_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: I_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: f_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: P_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: tau_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: p
-      :annotation: :int
+      :type: int
 
       
 

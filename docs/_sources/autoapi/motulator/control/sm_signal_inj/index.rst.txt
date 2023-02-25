@@ -58,7 +58,8 @@ Classes
    ..
        !! processed by numpydoc !!
    .. py:attribute:: U_inj
-      :annotation: :float = 200
+      :type: float
+      :value: 200
 
       
 

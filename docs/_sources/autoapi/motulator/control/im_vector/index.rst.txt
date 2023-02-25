@@ -54,87 +54,97 @@ Classes
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: sensorless
-      :annotation: :bool = True
+      :type: bool
+      :value: True
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: alpha_c
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_o
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_s
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: g
-      :annotation: = 0.2
+      :value: 0.2
 
       
 
    .. py:attribute:: tau_M_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: i_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: psi_R_nom
-      :annotation: :float = 0.9
+      :type: float
+      :value: 0.9
 
       
 
    .. py:attribute:: u_dc_nom
-      :annotation: :float = 540
+      :type: float
+      :value: 540
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.7
+      :type: float
+      :value: 3.7
 
       
 
    .. py:attribute:: R_R
-      :annotation: :float = 2.1
+      :type: float
+      :value: 2.1
 
       
 
    .. py:attribute:: L_sgm
-      :annotation: :float = 0.021
+      :type: float
+      :value: 0.021
 
       
 
    .. py:attribute:: L_M
-      :annotation: :float = 0.224
+      :type: float
+      :value: 0.224
 
       
 
    .. py:attribute:: p
-      :annotation: :int = 2
+      :type: int
+      :value: 2
 
       
 
    .. py:attribute:: J
-      :annotation: :float = 0.015
+      :type: float
+      :value: 0.015
 
       
 

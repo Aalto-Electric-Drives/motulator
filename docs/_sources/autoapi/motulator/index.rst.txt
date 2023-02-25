@@ -2299,57 +2299,66 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: six_step
-      :annotation: :bool = False
+      :type: bool
+      :value: False
 
       
 
    .. py:attribute:: psi_s_nom
-      :annotation: :float = 1.04
+      :type: float
+      :value: 1.04
 
       
 
    .. py:attribute:: rate_limit
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.7
+      :type: float
+      :value: 3.7
 
       
 
    .. py:attribute:: R_R
-      :annotation: :float = 2.1
+      :type: float
+      :value: 2.1
 
       
 
    .. py:attribute:: L_sgm
-      :annotation: :float = 0.021
+      :type: float
+      :value: 0.021
 
       
 
    .. py:attribute:: L_M
-      :annotation: :float = 0.224
+      :type: float
+      :value: 0.224
 
       
 
    .. py:attribute:: k_u
-      :annotation: :float = 1
+      :type: float
+      :value: 1
 
       
 
    .. py:attribute:: k_w
-      :annotation: :float = 4
+      :type: float
+      :value: 4
 
       
 
@@ -2436,87 +2445,97 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: sensorless
-      :annotation: :bool = True
+      :type: bool
+      :value: True
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: alpha_c
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_o
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_s
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: g
-      :annotation: = 0.2
+      :value: 0.2
 
       
 
    .. py:attribute:: tau_M_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: i_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: psi_R_nom
-      :annotation: :float = 0.9
+      :type: float
+      :value: 0.9
 
       
 
    .. py:attribute:: u_dc_nom
-      :annotation: :float = 540
+      :type: float
+      :value: 540
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.7
+      :type: float
+      :value: 3.7
 
       
 
    .. py:attribute:: R_R
-      :annotation: :float = 2.1
+      :type: float
+      :value: 2.1
 
       
 
    .. py:attribute:: L_sgm
-      :annotation: :float = 0.021
+      :type: float
+      :value: 0.021
 
       
 
    .. py:attribute:: L_M
-      :annotation: :float = 0.224
+      :type: float
+      :value: 0.224
 
       
 
    .. py:attribute:: p
-      :annotation: :int = 2
+      :type: int
+      :value: 2
 
       
 
    .. py:attribute:: J
-      :annotation: :float = 0.015
+      :type: float
+      :value: 0.015
 
       
 
@@ -2603,97 +2622,107 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: sensorless
-      :annotation: :bool = True
+      :type: bool
+      :value: True
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: alpha_c
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_fw
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_s
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: tau_M_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: i_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: psi_s_min
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: k_u
-      :annotation: :float = 0.95
+      :type: float
+      :value: 0.95
 
       
 
    .. py:attribute:: w_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.6
+      :type: float
+      :value: 3.6
 
       
 
    .. py:attribute:: L_d
-      :annotation: :float = 0.036
+      :type: float
+      :value: 0.036
 
       
 
    .. py:attribute:: L_q
-      :annotation: :float = 0.051
+      :type: float
+      :value: 0.051
 
       
 
    .. py:attribute:: psi_f
-      :annotation: :float = 0.545
+      :type: float
+      :value: 0.545
 
       
 
    .. py:attribute:: p
-      :annotation: :int = 3
+      :type: int
+      :value: 3
 
       
 
    .. py:attribute:: J
-      :annotation: :float = 0.015
+      :type: float
+      :value: 0.015
 
       
 
    .. py:attribute:: w_o
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: zeta_inf
-      :annotation: :float = 0.2
+      :type: float
+      :value: 0.2
 
       
 
@@ -3246,102 +3275,112 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: sensorless
-      :annotation: :bool = True
+      :type: bool
+      :value: True
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: psi_s_min
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: psi_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: k_u
-      :annotation: :float = 0.9
+      :type: float
+      :value: 0.9
 
       
 
    .. py:attribute:: alpha_psi
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_tau
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_s
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: tau_M_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: i_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.6
+      :type: float
+      :value: 3.6
 
       
 
    .. py:attribute:: L_d
-      :annotation: :float = 0.036
+      :type: float
+      :value: 0.036
 
       
 
    .. py:attribute:: L_q
-      :annotation: :float = 0.051
+      :type: float
+      :value: 0.051
 
       
 
    .. py:attribute:: psi_f
-      :annotation: :float = 0.545
+      :type: float
+      :value: 0.545
 
       
 
    .. py:attribute:: p
-      :annotation: :int = 3
+      :type: int
+      :value: 3
 
       
 
    .. py:attribute:: J
-      :annotation: :float = 0.015
+      :type: float
+      :value: 0.015
 
       
 
    .. py:attribute:: w_o
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: zeta_inf
-      :annotation: :float = 0.2
+      :type: float
+      :value: 0.2
 
       
 
    .. py:attribute:: g
-      :annotation: :float
+      :type: float
 
       
 
@@ -3430,7 +3469,8 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: U_inj
-      :annotation: :float = 200
+      :type: float
+      :value: 200
 
       
 
@@ -3537,92 +3577,103 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: psi_s_nom
-      :annotation: :float = 1.04
+      :type: float
+      :value: 1.04
 
       
 
    .. py:attribute:: rate_limit
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: i_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_f
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_psi
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: k_tau
-      :annotation: :float = 3.0
+      :type: float
+      :value: 3.0
 
       
 
    .. py:attribute:: six_step
-      :annotation: :bool = False
+      :type: bool
+      :value: False
 
       
 
    .. py:attribute:: slip_compensation
-      :annotation: :bool = True
+      :type: bool
+      :value: True
 
       
 
    .. py:attribute:: alpha_r
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_o
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: zeta_inf
-      :annotation: :float = 0.7
+      :type: float
+      :value: 0.7
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.7
+      :type: float
+      :value: 3.7
 
       
 
    .. py:attribute:: R_R
-      :annotation: :float = 2.1
+      :type: float
+      :value: 2.1
 
       
 
    .. py:attribute:: L_sgm
-      :annotation: :float = 0.021
+      :type: float
+      :value: 0.021
 
       
 
    .. py:attribute:: L_M
-      :annotation: :float = 0.224
+      :type: float
+      :value: 0.224
 
       
 
    .. py:attribute:: p
-      :annotation: :int = 2
+      :type: int
+      :value: 2
 
       
 
@@ -3706,87 +3757,95 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: psi_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: psi_s_min
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: rate_limit
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: i_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_psi
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_tau
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_f
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: k_u
-      :annotation: :float = 1
+      :type: float
+      :value: 1
 
       
 
    .. py:attribute:: alpha_o
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: zeta_inf
-      :annotation: :float = 0.2
+      :type: float
+      :value: 0.2
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.6
+      :type: float
+      :value: 3.6
 
       
 
    .. py:attribute:: L_d
-      :annotation: :float = 0.036
+      :type: float
+      :value: 0.036
 
       
 
    .. py:attribute:: L_q
-      :annotation: :float = 0.051
+      :type: float
+      :value: 0.051
 
       
 
    .. py:attribute:: psi_f
-      :annotation: :float = 0.545
+      :type: float
+      :value: 0.545
 
       
 
    .. py:attribute:: p
-      :annotation: :int = 3
+      :type: int
+      :value: 3
 
       
 
@@ -3816,32 +3875,32 @@ Functions
    ..
        !! processed by numpydoc !!
    .. py:attribute:: U_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: I_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: f_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: P_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: tau_nom
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: p
-      :annotation: :int
+      :type: int
 
       
 

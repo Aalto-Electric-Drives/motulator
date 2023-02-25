@@ -66,57 +66,66 @@ Classes
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: six_step
-      :annotation: :bool = False
+      :type: bool
+      :value: False
 
       
 
    .. py:attribute:: psi_s_nom
-      :annotation: :float = 1.04
+      :type: float
+      :value: 1.04
 
       
 
    .. py:attribute:: rate_limit
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.7
+      :type: float
+      :value: 3.7
 
       
 
    .. py:attribute:: R_R
-      :annotation: :float = 2.1
+      :type: float
+      :value: 2.1
 
       
 
    .. py:attribute:: L_sgm
-      :annotation: :float = 0.021
+      :type: float
+      :value: 0.021
 
       
 
    .. py:attribute:: L_M
-      :annotation: :float = 0.224
+      :type: float
+      :value: 0.224
 
       
 
    .. py:attribute:: k_u
-      :annotation: :float = 1
+      :type: float
+      :value: 1
 
       
 
    .. py:attribute:: k_w
-      :annotation: :float = 4
+      :type: float
+      :value: 4
 
       
 

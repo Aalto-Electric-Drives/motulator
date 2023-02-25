@@ -67,102 +67,112 @@ Classes
    ..
        !! processed by numpydoc !!
    .. py:attribute:: w_m_ref
-      :annotation: :Callable[[float], float]
+      :type: Callable[[float], float]
 
       
 
    .. py:attribute:: sensorless
-      :annotation: :bool = True
+      :type: bool
+      :value: True
 
       
 
    .. py:attribute:: T_s
-      :annotation: :float = 0.00025
+      :type: float
+      :value: 0.00025
 
       
 
    .. py:attribute:: psi_s_min
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: psi_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: k_u
-      :annotation: :float = 0.9
+      :type: float
+      :value: 0.9
 
       
 
    .. py:attribute:: alpha_psi
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_tau
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: alpha_s
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: tau_M_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: i_s_max
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: R_s
-      :annotation: :float = 3.6
+      :type: float
+      :value: 3.6
 
       
 
    .. py:attribute:: L_d
-      :annotation: :float = 0.036
+      :type: float
+      :value: 0.036
 
       
 
    .. py:attribute:: L_q
-      :annotation: :float = 0.051
+      :type: float
+      :value: 0.051
 
       
 
    .. py:attribute:: psi_f
-      :annotation: :float = 0.545
+      :type: float
+      :value: 0.545
 
       
 
    .. py:attribute:: p
-      :annotation: :int = 3
+      :type: int
+      :value: 3
 
       
 
    .. py:attribute:: J
-      :annotation: :float = 0.015
+      :type: float
+      :value: 0.015
 
       
 
    .. py:attribute:: w_o
-      :annotation: :float
+      :type: float
 
       
 
    .. py:attribute:: zeta_inf
-      :annotation: :float = 0.2
+      :type: float
+      :value: 0.2
 
       
 
    .. py:attribute:: g
-      :annotation: :float
+      :type: float
 
       
 
