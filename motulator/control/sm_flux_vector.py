@@ -90,7 +90,6 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
         self.p = pars.p
-        self.L_d, self.L_q, self.psi_f = pars.L_d, pars.L_q, pars.psi_f
         self.sensorless = pars.sensorless
         self.flux_torque_ctrl = FluxTorqueCtrl(pars)
         self.speed_ctrl = SpeedCtrl(pars)
