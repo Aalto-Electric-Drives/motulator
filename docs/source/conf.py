@@ -39,14 +39,11 @@ extensions = [
     'sphinx.ext.napoleon', 'sphinx.ext.viewcode', 'numpydoc',
     'sphinx_copybutton', 'sphinx.ext.mathjax', 'sphinx_gallery.gen_gallery'
 ]
-#, 'sphinx.ext.autodoc', 'sphinx.ext.autosummary', 'nbsphinx', MyST-NB]
+
 extensions.append('autoapi.extension')
 autoapi_type = 'python'
-# autoapi_dirs = ['../..']
-# autoapi_root = '../../motulator'
 autoapi_dirs = ['../../motulator']
 autodoc_typehints = 'description'
-# autoapi_add_toctree_entry = False
 autoapi_options = [
     'members',
     'show-inheritance',
@@ -56,9 +53,8 @@ autoapi_options = [
     'special-members',
 ]  # 'private-members',
 autoapi_python_class_content = 'both'
-#autoapi_python_class_content = 'class'
-# Add any paths that contain templates here, relative to this directory.
-# templates_path = ['_templates']
+autoapi_keep_files = 'True'
+
 from sphinx_gallery.sorting import ExplicitOrder
 sphinx_gallery_conf = {
     'examples_dirs': '../../examples',  # path to your example scripts
