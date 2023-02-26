@@ -7,3 +7,4 @@ sphinx-rtd-theme
 numpy
 scipy
 matplotlib
+esbonio
