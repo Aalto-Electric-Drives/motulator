@@ -200,13 +200,27 @@ class SpeedCtrl:
 
     def __init__(self, pars):
         self.T_s = pars.T_s
-        self.alpha_s = pars.alpha_s
-        self.tau_M_max = pars.tau_M_max
-        self.J = pars.J
-        # Gain
-        self.k = pars.alpha_s*pars.J
+        try:
+            self.tau_M_max = pars.tau_M_max
+        except AttributeError:
+            # No maximum torque limit
+            self.tau_M_max = np.inf
+        try:
+            # Gains for the 2DOF PI controller
+            self.alpha = pars.alpha_s
+            self.k_t = pars.alpha_s*pars.J
+            self.k_p = 2*pars.alpha_s*pars.J
+        except AttributeError:
+            # alpha_s or J not defined, try to use k_t, k_p, k_i
+            try:
+                self.k_t = pars.k_t
+                self.k_p = pars.k_p
+                self.alpha = pars.k_i/pars.k_t
+            except AttributeError:
+                print("No speed controller gains found.")
+   
         # Integral state
-        self.tau_l = 0
+        self.tau_i = 0
         # Load torque estimate (stored for the update method)
         self.tau_L = 0
 
@@ -227,8 +241,8 @@ class SpeedCtrl:
             Torque reference.
 
         """
-        self.tau_L = self.tau_l - self.alpha_s*self.J*w_M
-        tau_M_ref = self.k*(w_M_ref - w_M) + self.tau_L
+        self.tau_L = self.tau_i - (self.k_p - self.k_t)*w_M
+        tau_M_ref = self.k_t*(w_M_ref - w_M) + self.tau_L
 
         if np.abs(tau_M_ref) > self.tau_M_max:
             tau_M_ref = np.sign(tau_M_ref)*self.tau_M_max
@@ -245,7 +259,7 @@ class SpeedCtrl:
             Realized (limited) torque reference.
 
         """
-        self.tau_l += self.T_s*self.alpha_s*(tau_M_ref_lim - self.tau_L)
+        self.tau_i += self.T_s*self.alpha*(tau_M_ref_lim - self.tau_L)
 
 
 # %%
