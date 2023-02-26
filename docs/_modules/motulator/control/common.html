@@ -52,7 +52,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">System Models</span></p>
@@ -62,6 +61,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../synchronous_motor.html">Synchronous Motor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../mechanics.html">Mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../converters.html">Converters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Controllers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../2dof_pi_ctrl.html">2DOF PI Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
 </ul>
 
         </div>
@@ -291,13 +295,27 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_s</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_max</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">tau_M_max</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">J</span>
-        <span class="c1"># Gain</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_s</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">J</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_max</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">tau_M_max</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c1"># No maximum torque limit</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Gains for the 2DOF PI controller</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_s</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k_t</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_s</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">J</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">alpha_s</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">J</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c1"># alpha_s or J not defined, try to use k_t, k_p, k_i</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">k_t</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_t</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_p</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_i</span><span class="o">/</span><span class="n">pars</span><span class="o">.</span><span class="n">k_t</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No speed controller gains found.&quot;</span><span class="p">)</span>
+   
         <span class="c1"># Integral state</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_l</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># Load torque estimate (stored for the update method)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -318,8 +336,8 @@
 <span class="sd">            Torque reference.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_l</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="o">*</span><span class="n">w_M</span>
-        <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">w_M_ref</span> <span class="o">-</span> <span class="n">w_M</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_i</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_t</span><span class="p">)</span><span class="o">*</span><span class="n">w_M</span>
+        <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_t</span><span class="o">*</span><span class="p">(</span><span class="n">w_M_ref</span> <span class="o">-</span> <span class="n">w_M</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span>
 
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_max</span><span class="p">:</span>
             <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">tau_M_max</span>
@@ -336,7 +354,7 @@
 <span class="sd">            Realized (limited) torque reference.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_l</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_s</span><span class="o">*</span><span class="p">(</span><span class="n">tau_M_ref_lim</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_i</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">*</span><span class="p">(</span><span class="n">tau_M_ref_lim</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># %%</span>

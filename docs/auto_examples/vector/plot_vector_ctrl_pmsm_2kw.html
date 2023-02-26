@@ -51,24 +51,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html#vector-control">Vector Control</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Vector control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_syrm_7kw.html">Vector control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsyrm_thor.html">Vector control: 5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_im_2kw.html">Vector control: 2.2-kW induction motor</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#v-hz-control">V/Hz Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#flux-vector-control">Flux Vector Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#signal-injection">Signal Injection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#flux-maps">Flux Maps</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#two-mass-systems">Two-Mass Systems</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">System Models</span></p>
@@ -78,6 +63,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../../synchronous_motor.html">Synchronous Motor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../mechanics.html">Mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../converters.html">Converters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Controllers</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../2dof_pi_ctrl.html">2DOF PI Controller</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Vector control: 2.2-kW PMSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_vector_ctrl_syrm_7kw.html">Vector control: 6.7-kW SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_vector_ctrl_pmsyrm_thor.html">Vector control: 5-kW PM-SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_vector_ctrl_im_2kw.html">Vector control: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signal_inj/plot_signal_inj_pmsm_2kw.html">Vector control with signal injection: 2.2-kW PMSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signal_inj/plot_signal_inj_syrm_7kw.html">Vector control with signal injection: 6.7-kW SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flux_maps/plot_obs_vhz_ctrl_pmsyrm_thor.html">Observer-based V/Hz control: 5-kW PM-SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../two_mass_systems/plot_vector_ctrl_pmsm_2kw_two_mass.html">Observer-based V/Hz control: PMSM with 2-mass mechanics</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -155,7 +162,7 @@ to download the full example code</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" alt="plot vector ctrl pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.183 seconds)</p>
+<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" alt="plot vector ctrl pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  21.703 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-pmsm-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/33c3e58b193eb317d00dc39d7c8aea3c/plot_vector_ctrl_pmsm_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vector_ctrl_pmsm_2kw.py</span></code></a></p>

@@ -11,7 +11,6 @@ This open-source software includes simulation models for an induction motor, a s
 
    installation
    usage
-   auto_examples/index
    autoapi/index
 
 .. toctree::
@@ -25,6 +24,15 @@ This open-source software includes simulation models for an induction motor, a s
    synchronous_motor
    mechanics
    converters
+
+.. toctree::
+   :titlesonly:
+   :caption: Controllers
+   :name: controllers
+   :maxdepth: 2
+
+   2dof_pi_ctrl
+   auto_examples/index
 
 Acknowledgement
 ---------------
