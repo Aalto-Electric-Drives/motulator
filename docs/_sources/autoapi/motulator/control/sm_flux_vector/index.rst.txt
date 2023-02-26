@@ -260,7 +260,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: __call__(psi_s_ref, tau_M_ref, psi_s, i_s, w_m, u_dc)
+   .. py:method:: __call__(psi_s_ref, tau_M_ref, psi_s, i_s, w_m)
 
       
       Compute the unlimited voltage reference.
@@ -275,8 +275,6 @@ Classes
       :type i_s: complex
       :param w_m: Rotor speed (in electrical rad/s).
       :type w_m: float
-      :param u_dc: DC-bus voltage.
-      :type u_dc: float
 
       :returns: **u_s_ref** -- Unlimited voltage reference.
       :rtype: complex

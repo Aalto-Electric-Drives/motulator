@@ -237,7 +237,7 @@
         <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">w_m_ref</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">w_m</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
         <span class="n">psi_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ref</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
         <span class="n">u_s_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ctrl</span><span class="p">(</span>
-            <span class="n">psi_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+            <span class="n">psi_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">)</span>
         <span class="n">d_abc_ref</span><span class="p">,</span> <span class="n">u_s_ref_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">w_m</span><span class="p">)</span>
 
         <span class="c1"># Data logging</span>
@@ -291,7 +291,7 @@
             <span class="n">c_delta0</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">pars</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">G</span><span class="o">*</span><span class="n">psi_s0</span><span class="o">**</span><span class="mi">2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_tau</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_tau</span><span class="o">/</span><span class="n">c_delta0</span>
 
-<div class="viewcode-block" id="FluxTorqueCtrl.__call__"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.FluxTorqueCtrl.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="FluxTorqueCtrl.__call__"><a class="viewcode-back" href="../../../autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.FluxTorqueCtrl.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the unlimited voltage reference.</span>
 
@@ -307,8 +307,6 @@
 <span class="sd">            Stator current.</span>
 <span class="sd">        w_m : float</span>
 <span class="sd">            Rotor speed (in electrical rad/s).</span>
-<span class="sd">        u_dc : float</span>
-<span class="sd">            DC-bus voltage.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
