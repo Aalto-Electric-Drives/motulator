@@ -1,3 +1,5 @@
+# pylint: skip-file
+
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -28,13 +30,13 @@ release = '0.1.2'
 # -- General configuration ---------------------------------------------------
 
 # This value contains a list of modules to be mocked up.
-# This is useful when some external dependencies are not met at build time and break the building process.
-# You may only specify the root package of the dependencies themselves and omit the sub-modules:
+# This is useful when some external dependencies are not met at build time and 
+# break the building process. You may only specify the root package of the 
+# dependencies themselves and omit the sub-modules:
 autodoc_mock_imports = ['numpy', 'matplotlib', 'scipy', 'cycler']
 
 # Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
+# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.napoleon', 'sphinx.ext.viewcode', 'numpydoc',
     'sphinx_copybutton', 'sphinx.ext.mathjax', 'sphinx_gallery.gen_gallery'
