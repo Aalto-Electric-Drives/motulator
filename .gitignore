@@ -1,4 +1,13 @@
+# Byte-compiled files
 __pycache__/
 *.pyc
+
+# Distribution
 *.egg-info/
+
+# Environments
 .venv
+
+# Sphinx documentation
+docs/auto_examples/
+docs/build/
