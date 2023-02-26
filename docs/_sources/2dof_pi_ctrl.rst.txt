@@ -1,7 +1,7 @@
 2DOF PI Controller
 ==================
 
-A proportional-integral (PI) controller is widely used in motor drives. The standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degree-of-freedom (2DOF) version has two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately. The 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward. 
+A proportional-integral (PI) controller is widely used in motor drives. The standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degree-of-freedom (2DOF) version has two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately [1]_. The 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward [2]_. 
 
 In the following, we will use the 2DOF PI speed controller as an example, cf. the :class:`motulator.control.common.SpeedCtrl` class. However, the 2DOF PI controller can be used for other control tasks as well. If desired, the 2DOF PI controller can be parametrized to be a 1DOF PI controller.
 
@@ -44,7 +44,7 @@ The above 2DOF PI controller can be equally represented using the disturbance-ob
     \hat \tau_\mathrm{L} &= \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M} \\
     \tau_\mathrm{M,ref} &= k_\mathrm{t}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) + \hat \tau_\mathrm{L} 
 
-where :math:`\alpha = k_\mathrm{i}/k_\mathrm{t}` is the redefined gain and :math:`\hat \tau_\mathrm{L} = \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M}` is the estimated load torque. This structure is more convenient to prevent the integral windup that originates from the actuator saturation; the electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is
+where :math:`\alpha = k_\mathrm{i}/k_\mathrm{t}` is the redefined gain and :math:`\hat \tau_\mathrm{L} = \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M}` is the estimated load torque. This structure is convenient to prevent the integral windup that originates from the actuator saturation [2]_. The electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is
 
 .. math::
     \overline{\tau}_\mathrm{M,ref} = \mathrm{sat}(\tau_\mathrm{M,ref})
@@ -95,3 +95,10 @@ The discrete-time variant of the controller is given by
     \overline{\tau}_\mathrm{M,ref}(k) &= \mathrm{sat}[\tau_\mathrm{M,ref}(k)]
 
 where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. This corresponds to the implementation in the :class:`motulator.control.common.SpeedCtrl` class. 
+
+References
+----------
+
+.. [1] Skogestad and Postlethwaite, "Multivariable Feedback Control: Analysis and Design," West Sussex, England: John Wiley and Sons, 1996
+
+.. [2] Franklin, Powell, and Workman, "Digital Control of Dynamic Systems," 3rd ed., Menlo Park, CA: Addison-Wesley, 1997
