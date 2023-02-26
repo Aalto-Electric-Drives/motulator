@@ -55,7 +55,7 @@ autoapi_options = [
     'special-members',
 ]  # 'private-members',
 autoapi_python_class_content = 'both'
-autoapi_keep_files = 'True'
+autoapi_keep_files = True
 
 from sphinx_gallery.sorting import ExplicitOrder
 sphinx_gallery_conf = {
