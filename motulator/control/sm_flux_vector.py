@@ -146,7 +146,7 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
         tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
         psi_s_ref, tau_M_ref_lim = self.flux_torque_ref(tau_M_ref, w_m, u_dc)
         u_s_ref = self.flux_torque_ctrl(
-            psi_s_ref, tau_M_ref_lim, psi_s, i_s, w_m, u_dc)
+            psi_s_ref, tau_M_ref_lim, psi_s, i_s, w_m)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
@@ -200,7 +200,7 @@ class FluxTorqueCtrl:
             c_delta0 = 1.5*pars.p*G*psi_s0**2
         self.k_tau = pars.alpha_tau/c_delta0
 
-    def __call__(self, psi_s_ref, tau_M_ref, psi_s, i_s, w_m, u_dc):
+    def __call__(self, psi_s_ref, tau_M_ref, psi_s, i_s, w_m):
         """
         Compute the unlimited voltage reference.
 
@@ -216,8 +216,6 @@ class FluxTorqueCtrl:
             Stator current.
         w_m : float
             Rotor speed (in electrical rad/s).
-        u_dc : float
-            DC-bus voltage.
 
         Returns
         -------
