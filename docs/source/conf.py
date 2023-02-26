@@ -1,4 +1,4 @@
-# pylint: skip-file
+# pylint: disable=all
 
 # Configuration file for the Sphinx documentation builder.
 #
