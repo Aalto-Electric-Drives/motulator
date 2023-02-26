@@ -9,5 +9,5 @@ __pycache__/
 .venv
 
 # Sphinx documentation
-docs/auto_examples/
+docs/source/auto_examples/
 docs/build/
