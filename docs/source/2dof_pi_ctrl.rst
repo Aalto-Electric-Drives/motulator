@@ -1,9 +1,7 @@
 2DOF PI Controller
 ==================
 
-A proportional-integral (PI) controller is widely used in motor drives. The standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degree-of-freedom (2DOF) version has two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately [1]_. The 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward [2]_. 
-
-In the following, we will use the 2DOF PI speed controller as an example, cf. the :class:`motulator.control.common.SpeedCtrl` class. However, the 2DOF PI controller can be used for other control tasks as well. If desired, the 2DOF PI controller can be parametrized to be a 1DOF PI controller.
+A proportional-integral (PI) controller is widely used in motor drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degree-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately [1]_. In the following, we will use a speed controller as an example, cf. the :class:`motulator.control.common.SpeedCtrl` class. The presented control design can be extended to many other control tasks as well. 
 
 Continuous-Time Domain
 ----------------------
@@ -13,13 +11,13 @@ Even if controllers operate in the discrete-time domain, they are often designed
 Typical Structure
 """""""""""""""""
 
-The state-space form of the PI speed controller is given by
+The state-space form of a simple 2DOF PI speed controller is given by
 
 .. math::
 	\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
     	\tau_\mathrm{M,ref} &= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i} 
 
-where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angular speed of the rotor, :math:`\omega_\mathrm{M,ref}` is the reference angular speed, and :math:`\tau_\mathrm{i}` is the the integral state. Furhtermore, :math:`k_\mathrm{t}` is the reference feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` results in the standard 1DOF PI controller.
+where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angular speed of the rotor, :math:`\omega_\mathrm{M,ref}` is the reference angular speed, and :math:`\tau_\mathrm{i}` is the the integral state. Furhtermore, :math:`k_\mathrm{t}` is the reference feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` results in the standard 1DOF PI controller. This 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward [2]_. 
 
 ..
     For analysis purposes, the above controller can be presented in the Laplace domain as
@@ -34,8 +32,8 @@ where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angula
 ..
     is the standard PI controller.
 
-Disturbance-Observer-Based Stucture
-"""""""""""""""""""""""""""""""""""
+Disturbance-Observer-Based Structure
+""""""""""""""""""""""""""""""""""""
 
 The above 2DOF PI controller can be equally represented using the disturbance-observer based structure,
 
@@ -59,7 +57,7 @@ The other parts of the above controller are not affected by the saturation. The 
 Gain Selection Example
 """"""""""""""""""""""
 
-For simplicity, let us assume ideal torque control (:math:`\tau_\mathrm{M} = \tau_\mathrm{M,ref}`) and a stiff mechanical system
+For simplicity, let us assume ideal torque control (:math:`\tau_\mathrm{M} = \tau_\mathrm{M,ref}`) and a stiff mechanical system [3]_
 
 .. math::
     J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} = \tau_\mathrm{M} - \tau_\mathrm{L}
@@ -102,3 +100,5 @@ References
 .. [1] Skogestad and Postlethwaite, "Multivariable Feedback Control: Analysis and Design," West Sussex, England: John Wiley and Sons, 1996
 
 .. [2] Franklin, Powell, and Workman, "Digital Control of Dynamic Systems," 3rd ed., Menlo Park, CA: Addison-Wesley, 1997
+
+.. [3] Harnefors, Saarakkala, Hinkkanen, "Speed control of electrical drives using classical control methods," IEEE Trans. Ind. Appl., 2013, https://doi.org/10.1109/TIA.2013.2244194
