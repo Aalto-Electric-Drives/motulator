@@ -97,27 +97,26 @@
              
   <div class="section" id="dof-pi-controller">
 <h1>2DOF PI Controller<a class="headerlink" href="#dof-pi-controller" title="Permalink to this heading"></a></h1>
-<p>A proportional-integral (PI) controller is widely used in motor drives. The standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degree-of-freedom (2DOF) version has two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately <a class="footnote-reference brackets" href="#id4" id="id1">1</a>. The 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward <a class="footnote-reference brackets" href="#id5" id="id2">2</a>.</p>
-<p>In the following, we will use the 2DOF PI speed controller as an example, cf. the <a class="reference internal" href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl" title="motulator.control.common.SpeedCtrl"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.common.SpeedCtrl</span></code></a> class. However, the 2DOF PI controller can be used for other control tasks as well. If desired, the 2DOF PI controller can be parametrized to be a 1DOF PI controller.</p>
+<p>A proportional-integral (PI) controller is widely used in motor drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degree-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately <a class="footnote-reference brackets" href="#id5" id="id1">1</a>. In the following, we will use a speed controller as an example, cf. the <a class="reference internal" href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl" title="motulator.control.common.SpeedCtrl"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.common.SpeedCtrl</span></code></a> class. The presented control design can be extended to many other control tasks as well.</p>
 <div class="section" id="continuous-time-domain">
 <h2>Continuous-Time Domain<a class="headerlink" href="#continuous-time-domain" title="Permalink to this heading"></a></h2>
 <p>Even if controllers operate in the discrete-time domain, they are often designed and analyzed in the continuous-time domain.</p>
 <div class="section" id="typical-structure">
 <h3>Typical Structure<a class="headerlink" href="#typical-structure" title="Permalink to this heading"></a></h3>
-<p>The state-space form of the PI speed controller is given by</p>
+<p>The state-space form of a simple 2DOF PI speed controller is given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &amp;= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
 \tau_\mathrm{M,ref} &amp;= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the measured (or estimated) mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\omega_\mathrm{M,ref}\)</span> is the reference angular speed, and <span class="math notranslate nohighlight">\(\tau_\mathrm{i}\)</span> is the the integral state. Furhtermore, <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> is the reference feedforward gain, <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span> results in the standard 1DOF PI controller.</p>
+<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the measured (or estimated) mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\omega_\mathrm{M,ref}\)</span> is the reference angular speed, and <span class="math notranslate nohighlight">\(\tau_\mathrm{i}\)</span> is the the integral state. Furhtermore, <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> is the reference feedforward gain, <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span> results in the standard 1DOF PI controller. This 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward <a class="footnote-reference brackets" href="#id6" id="id2">2</a>.</p>
 </div>
-<div class="section" id="disturbance-observer-based-stucture">
-<h3>Disturbance-Observer-Based Stucture<a class="headerlink" href="#disturbance-observer-based-stucture" title="Permalink to this heading"></a></h3>
+<div class="section" id="disturbance-observer-based-structure">
+<h3>Disturbance-Observer-Based Structure<a class="headerlink" href="#disturbance-observer-based-structure" title="Permalink to this heading"></a></h3>
 <p>The above 2DOF PI controller can be equally represented using the disturbance-observer based structure,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &amp;= \alpha\left(\tau_\mathrm{M,ref} - \hat \tau_\mathrm{L}\right) \\
 \hat \tau_\mathrm{L} &amp;= \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M} \\
 \tau_\mathrm{M,ref} &amp;= k_\mathrm{t}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) + \hat \tau_\mathrm{L}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\alpha = k_\mathrm{i}/k_\mathrm{t}\)</span> is the redefined gain and <span class="math notranslate nohighlight">\(\hat \tau_\mathrm{L} = \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M}\)</span> is the estimated load torque. This structure is convenient to prevent the integral windup that originates from the actuator saturation <a class="footnote-reference brackets" href="#id5" id="id3">2</a>. The electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is</p>
+<p>where <span class="math notranslate nohighlight">\(\alpha = k_\mathrm{i}/k_\mathrm{t}\)</span> is the redefined gain and <span class="math notranslate nohighlight">\(\hat \tau_\mathrm{L} = \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M}\)</span> is the estimated load torque. This structure is convenient to prevent the integral windup that originates from the actuator saturation <a class="footnote-reference brackets" href="#id6" id="id3">2</a>. The electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is</p>
 <div class="math notranslate nohighlight">
 \[\overline{\tau}_\mathrm{M,ref} = \mathrm{sat}(\tau_\mathrm{M,ref})\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathrm{sat}(\cdot)\)</span> is the saturation function. If this saturation function is known, the anti-windup of the integrator can be implemented simply as</p>
@@ -127,7 +126,7 @@
 </div>
 <div class="section" id="gain-selection-example">
 <h3>Gain Selection Example<a class="headerlink" href="#gain-selection-example" title="Permalink to this heading"></a></h3>
-<p>For simplicity, let us assume ideal torque control (<span class="math notranslate nohighlight">\(\tau_\mathrm{M} = \tau_\mathrm{M,ref}\)</span>) and a stiff mechanical system</p>
+<p>For simplicity, let us assume ideal torque control (<span class="math notranslate nohighlight">\(\tau_\mathrm{M} = \tau_\mathrm{M,ref}\)</span>) and a stiff mechanical system <a class="footnote-reference brackets" href="#id7" id="id4">3</a></p>
 <div class="math notranslate nohighlight">
 \[J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} = \tau_\mathrm{M} - \tau_\mathrm{L}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> is the electromagnetic torque, <span class="math notranslate nohighlight">\(\tau_\mathrm{L}\)</span> is the load torque, and <span class="math notranslate nohighlight">\(J\)</span> is the total moment of inertia. In the Laplace domain, the resulting closed-loop system is given by</p>
@@ -157,11 +156,14 @@ k_\mathrm{i} = \alpha_\mathrm{s}^2 J\]</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
 <dl class="footnote brackets">
-<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Skogestad and Postlethwaite, “Multivariable Feedback Control: Analysis and Design,” West Sussex, England: John Wiley and Sons, 1996</p>
 </dd>
-<dt class="label" id="id5"><span class="brackets">2</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id3">2</a>)</span></dt>
+<dt class="label" id="id6"><span class="brackets">2</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id3">2</a>)</span></dt>
 <dd><p>Franklin, Powell, and Workman, “Digital Control of Dynamic Systems,” 3rd ed., Menlo Park, CA: Addison-Wesley, 1997</p>
+</dd>
+<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
+<dd><p>Harnefors, Saarakkala, Hinkkanen, “Speed control of electrical drives using classical control methods,” IEEE Trans. Ind. Appl., 2013, <a class="reference external" href="https://doi.org/10.1109/TIA.2013.2244194">https://doi.org/10.1109/TIA.2013.2244194</a></p>
 </dd>
 </dl>
 </div>
