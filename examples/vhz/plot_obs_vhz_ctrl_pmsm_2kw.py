@@ -9,8 +9,8 @@ This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.
 # %%
 # Import the package.
 
-import motulator as mt
 import numpy as np
+import motulator as mt
 
 # %%
 # Compute base values based on the nominal values (just for figures).

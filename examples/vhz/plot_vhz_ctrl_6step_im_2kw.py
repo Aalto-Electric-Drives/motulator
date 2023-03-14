@@ -12,9 +12,9 @@ the sampling frequency.
 # %%
 # Import the package.
 
+from time import time
 import numpy as np
 import motulator as mt
-from time import time
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -62,7 +62,7 @@ mdl.mech.tau_L_t = lambda t: (t > 1.)*base.tau_nom*0
 sim = mt.Simulation(mdl, ctrl, pwm=True)
 t_start = time()  # Start the timer
 sim.simulate(t_stop=2)
-print('\nExecution time: {:.2f} s'.format((time() - t_start)))
+print(f'\nExecution time: {(time() - t_start):.2f} s')
 
 # %%
 # Plot results in per-unit values.

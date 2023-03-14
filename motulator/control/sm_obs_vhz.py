@@ -184,8 +184,8 @@ class FluxTorqueRef:
 
     # pylint: disable=too-few-public-methods
     def __init__(self, pars):
-        self.psi_s_min = (pars.psi_f if pars.psi_s_min is None
-                          else pars.psi_s_min)
+        self.psi_s_min = (
+            pars.psi_f if pars.psi_s_min is None else pars.psi_s_min)
         self.psi_s_max = np.inf if pars.psi_s_max is None else pars.psi_s_max
         self.k_u = pars.k_u
         # Merged MTPV and current limits
@@ -219,7 +219,7 @@ class FluxTorqueRef:
         """
         # Get the MTPA flux
         psi_s_mtpa = self.psi_s_mtpa(np.abs(tau_M_ref))
-        np.clip(psi_s_mtpa, self.psi_s_min, self.psi_s_max, psi_s_mtpa)
+        np.clip(psi_s_mtpa, self.psi_s_min, self.psi_s_max, out=psi_s_mtpa)
 
         # Field weakening
         u_s_max = self.k_u*u_dc/np.sqrt(3)

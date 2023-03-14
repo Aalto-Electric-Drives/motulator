@@ -111,8 +111,14 @@ class MechanicsTwoMass(Mechanics):
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, J_M=.005, J_L=.005, K_S=700., C_S=.13,
-                 tau_L_w=lambda w_M: 0, tau_L_t=lambda t: 0):
+    def __init__(
+            self,
+            J_M=.005,
+            J_L=.005,
+            K_S=700.,
+            C_S=.13,
+            tau_L_w=lambda w_M: 0,
+            tau_L_t=lambda t: 0):
         # pylint: disable=too-many-arguments
         # pylint: disable=super-init-not-called
         self.J_M = J_M

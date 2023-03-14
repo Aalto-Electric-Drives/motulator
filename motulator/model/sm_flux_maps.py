@@ -13,7 +13,7 @@ from motulator.helpers import Bunch
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
 plt.rcParams['lines.linewidth'] = 1.
 plt.rcParams['axes.grid'] = True
-plt.rcParams.update({"text.usetex": False})
+plt.rcParams.update({'text.usetex': False})
 
 
 # %%

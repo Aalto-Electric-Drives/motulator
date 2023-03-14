@@ -312,6 +312,7 @@ class CurrentRef:
             Limited torque reference.
 
         """
+
         def limit_torque(tau_M_ref, w_m, u_dc):
             if np.abs(w_m) > 0:
                 psi_s_max = self.k_u*u_dc/np.sqrt(3)/np.abs(w_m)
