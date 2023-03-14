@@ -1,5 +1,6 @@
 numpydoc
-Sphinx==5.3.0
+# Sphinx==5.3.0
+Sphinx
 sphinx-autoapi
 sphinx-copybutton
 sphinx-gallery
