@@ -279,8 +279,8 @@ class TorqueCharacteristics:
         # Create an interpolant that can be used as a look-up table. If needed,
         # more interpolants can be easily added.
         abs_psi_s_vs_tau_M = interp1d(
-            tau_M, np.abs(psi_s), fill_value="extrapolate")
-        i_sd_vs_tau_M = interp1d(tau_M, i_s.real, fill_value="extrapolate")
+            tau_M, np.abs(psi_s), fill_value='extrapolate')
+        i_sd_vs_tau_M = interp1d(tau_M, i_s.real, fill_value='extrapolate')
 
         # Return the result as a bunch object
         return Bunch(
@@ -442,7 +442,7 @@ class TorqueCharacteristics:
             tau_M,
             bounds_error=False,
             fill_value=(tau_M[0], tau_M[-1]))
-        i_sd_vs_tau_M = interp1d(tau_M, i_sd, fill_value="extrapolate")
+        i_sd_vs_tau_M = interp1d(tau_M, i_sd, fill_value='extrapolate')
 
         # Return the result as a bunch object
         return Bunch(

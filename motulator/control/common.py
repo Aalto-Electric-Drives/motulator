@@ -217,8 +217,8 @@ class SpeedCtrl:
                 self.k_p = pars.k_p
                 self.alpha = pars.k_i/pars.k_t
             except AttributeError:
-                print("No speed controller gains found.")
-   
+                print('No speed controller gains found.')
+
         # Integral state
         self.tau_i = 0
         # Load torque estimate (stored for the update method)

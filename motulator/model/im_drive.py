@@ -254,8 +254,9 @@ class InductionMotorDriveTwoMass(InductionMotorDrive):
 
     def get_initial_values(self):
         """Extend the base class."""
-        x0 = super().get_initial_values() + [self.mech.w_L0,
-                                             self.mech.theta_ML0]
+        x0 = super().get_initial_values() + [
+            self.mech.w_L0, self.mech.theta_ML0
+        ]
         return x0
 
     def set_initial_values(self, t0, x0):
@@ -267,7 +268,7 @@ class InductionMotorDriveTwoMass(InductionMotorDrive):
     def f(self, t, x):
         """Override the base class."""
         # Unpack the states
-        psi_ss, psi_rs, w_M, theta_M, w_L, theta_ML = x
+        psi_ss, psi_rs, w_M, _, w_L, theta_ML = x
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
         # State derivatives plus the outputs for interconnections

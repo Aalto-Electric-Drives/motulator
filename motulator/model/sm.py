@@ -244,7 +244,8 @@ class SynchronousMotorSaturated(SynchronousMotor):
         else:
             # Solve the stator flux caused by the magnets @ i_s = 0
             res = minimize_scalar(
-                lambda psi_d: np.abs((a_d0 + a_dd*np.abs(psi_d)**S)*psi_d - i_f))
+                lambda psi_d: np.abs(
+                    (a_d0 + a_dd*np.abs(psi_d)**S)*psi_d - i_f))
             self.psi_s0 = complex(res.x)
             print(self.psi_s0)
 
@@ -305,9 +306,10 @@ class SynchronousMotorSaturatedLUT(SynchronousMotor):
             list(zip(psi_s_data.real, psi_s_data.imag)), i_s_data)
 
         # Solve the PM flux for the initial value of the stator flux
-        res = minimize_scalar(lambda psi_d: np.abs(self.i_s(psi_d, 0)),
-                              bounds=(0, np.max(psi_s_data.real)),
-                              method='bounded')
+        res = minimize_scalar(
+            lambda psi_d: np.abs(self.i_s(psi_d, 0)),
+            bounds=(0, np.max(psi_s_data.real)),
+            method='bounded')
         self.psi_s0 = complex(res.x)
 
         # For the coordinate transformation
