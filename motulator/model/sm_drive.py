@@ -51,7 +51,7 @@ class SynchronousMotorDrive:
 
         Returns
         -------
-        x0 : complex list, length 2
+        x0 : complex list, length 3
             Initial values of the state variables.
 
         """
