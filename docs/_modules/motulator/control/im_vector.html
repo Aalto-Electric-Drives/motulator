@@ -307,6 +307,7 @@
 <span class="sd">            Limited torque reference.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">def</span> <span class="nf">q_axis_current_limit</span><span class="p">(</span><span class="n">i_sd_ref</span><span class="p">,</span> <span class="n">psi_R</span><span class="p">):</span>
             <span class="c1"># Priority given to the d component</span>
             <span class="n">i_sq_max1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">i_sd_ref</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>

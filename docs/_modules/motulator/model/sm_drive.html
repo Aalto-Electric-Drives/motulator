@@ -146,7 +146,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        x0 : complex list, length 2</span>
+<span class="sd">        x0 : complex list, length 3</span>
 <span class="sd">            Initial values of the state variables.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -266,8 +266,9 @@
 
 <div class="viewcode-block" id="SynchronousMotorDriveTwoMass.get_initial_values"><a class="viewcode-back" href="../../../autoapi/motulator/model/sm_drive/index.html#motulator.SynchronousMotorDriveTwoMass.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
-        <span class="n">x0</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">w_L0</span><span class="p">,</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">theta_ML0</span><span class="p">]</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">w_L0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">theta_ML0</span>
+        <span class="p">]</span>
         <span class="k">return</span> <span class="n">x0</span></div>
 
 <div class="viewcode-block" id="SynchronousMotorDriveTwoMass.set_initial_values"><a class="viewcode-back" href="../../../autoapi/motulator/model/sm_drive/index.html#motulator.SynchronousMotorDriveTwoMass.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>

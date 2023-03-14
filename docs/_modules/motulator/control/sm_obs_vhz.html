@@ -279,8 +279,8 @@
 
     <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_min</span> <span class="o">=</span> <span class="p">(</span><span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span> <span class="k">if</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_s_min</span> <span class="ow">is</span> <span class="kc">None</span>
-                          <span class="k">else</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_s_min</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_min</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">pars</span><span class="o">.</span><span class="n">psi_f</span> <span class="k">if</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_s_min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_s_min</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_s_max</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_s_max</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_u</span>
         <span class="c1"># Merged MTPV and current limits</span>
@@ -314,7 +314,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get the MTPA flux</span>
         <span class="n">psi_s_mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_mtpa</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">))</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">psi_s_mtpa</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_max</span><span class="p">,</span> <span class="n">psi_s_mtpa</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">psi_s_mtpa</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_max</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">psi_s_mtpa</span><span class="p">)</span>
 
         <span class="c1"># Field weakening</span>
         <span class="n">u_s_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span><span class="o">*</span><span class="n">u_dc</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>

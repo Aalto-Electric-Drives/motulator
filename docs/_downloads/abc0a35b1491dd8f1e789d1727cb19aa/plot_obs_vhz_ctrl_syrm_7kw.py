@@ -11,8 +11,8 @@ in the control method (only in the system model).
 # %%
 # Import the package.
 
-import motulator as mt
 import numpy as np
+import motulator as mt
 
 # %%
 # Compute base values based on the nominal values (just for figures).

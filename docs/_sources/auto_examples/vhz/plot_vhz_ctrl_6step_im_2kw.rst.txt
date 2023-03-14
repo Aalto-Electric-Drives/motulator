@@ -10,7 +10,7 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py>`
+        :ref:`Go to the end <sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py>`
         to download the full example code
 
 .. rst-class:: sphx-glr-example-title
@@ -36,9 +36,9 @@ Import the package.
 .. code-block:: default
 
 
+    from time import time
     import numpy as np
     import motulator as mt
-    from time import time
 
 
 
@@ -151,7 +151,7 @@ the model for the carrier comparison.
     sim = mt.Simulation(mdl, ctrl, pwm=True)
     t_start = time()  # Start the timer
     sim.simulate(t_stop=2)
-    print('\nExecution time: {:.2f} s'.format((time() - t_start)))
+    print(f'\nExecution time: {(time() - t_start):.2f} s')
 
 
 
@@ -162,7 +162,7 @@ the model for the carrier comparison.
  .. code-block:: none
 
 
-    Execution time: 7.00 s
+    Execution time: 7.02 s
 
 
 
@@ -206,7 +206,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.131 seconds)
+   **Total running time of the script:** ( 0 minutes  8.143 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:
@@ -214,6 +214,8 @@ Plot results in per-unit values.
 .. only:: html
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
+
+
 
 
     .. container:: sphx-glr-download sphx-glr-download-python

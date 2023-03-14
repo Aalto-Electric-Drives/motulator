@@ -312,8 +312,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_p</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_i</span><span class="o">/</span><span class="n">pars</span><span class="o">.</span><span class="n">k_t</span>
             <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No speed controller gains found.&quot;</span><span class="p">)</span>
-   
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No speed controller gains found.&#39;</span><span class="p">)</span>
+
         <span class="c1"># Integral state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># Load torque estimate (stored for the update method)</span>

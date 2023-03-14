@@ -3,16 +3,17 @@
 
 .. _sphx_glr_auto_examples_vector_sg_execution_times:
 
+
 Computation times
 =================
-**00:33.867** total execution time for **auto_examples_vector** files:
+**00:33.793** total execution time for **auto_examples_vector** files:
 
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py` (``plot_vector_ctrl_pmsm_2kw.py``)       | 00:13.568 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py` (``plot_vector_ctrl_pmsm_2kw.py``)       | 00:13.404 | 0.0 MB |
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py` (``plot_vector_ctrl_syrm_7kw.py``)       | 00:12.506 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py` (``plot_vector_ctrl_syrm_7kw.py``)       | 00:12.589 | 0.0 MB |
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py` (``plot_vector_ctrl_pmsyrm_thor.py``) | 00:04.538 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py` (``plot_vector_ctrl_pmsyrm_thor.py``) | 00:04.519 | 0.0 MB |
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_im_2kw.py` (``plot_vector_ctrl_im_2kw.py``)           | 00:03.255 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_im_2kw.py` (``plot_vector_ctrl_im_2kw.py``)           | 00:03.281 | 0.0 MB |
 +------------------------------------------------------------------------------------------------------------+-----------+--------+

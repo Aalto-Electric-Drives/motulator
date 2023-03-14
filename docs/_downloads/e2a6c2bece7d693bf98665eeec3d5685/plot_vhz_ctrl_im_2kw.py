@@ -9,8 +9,8 @@ parameters correspond to open-loop V/Hz control.
 # %%
 # Import the package.
 
-import numpy as np
 from time import time
+import numpy as np
 import motulator as mt
 
 # %%
@@ -58,7 +58,7 @@ mdl.mech.tau_L_t = lambda t: (t > 1.)*base.tau_nom*.2
 sim = mt.Simulation(mdl, ctrl, pwm=True)
 t_start = time()  # Start the timer
 sim.simulate(t_stop=1.5)
-print('\nExecution time: {:.2f} s'.format((time() - t_start)))
+print(f'\nExecution time: {(time() - t_start):.2f} s')
 
 # %%
 # Plot results in per-unit values.

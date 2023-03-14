@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 """
 Observer-based V/Hz control: PMSM with 2-mass mechanics
 =======================================================
@@ -14,8 +15,8 @@ torsional damping is set to a smaller value in this example.
 # Import the packages.
 
 import numpy as np
-import motulator as mt
 import matplotlib.pyplot as plt
+import motulator as mt
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -64,55 +65,50 @@ mt.plot(sim, base=base)  # Plot results in per-unit values
 # %%
 # Plot the load speed and the twist angle.
 
-
-def plot(sim, t_span=None):
-    """Plot the load speed and the twist angle."""
-    # Continuous-time data
-    mdl = sim.mdl.data
-    # Plot
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
-    ax1.plot(mdl.t, mdl.w_M, label=r'$\omega_\mathrm{M}$')
-    ax1.plot(mdl.t, mdl.w_L, label=r'$\omega_\mathrm{L}$')
-    ax2.plot(mdl.t, mdl.theta_ML*180/np.pi)
-    ax1.set_xlim(t_span)
-    ax2.set_xlim(t_span)
-    ax1.set_xticklabels([])
-    ax1.set_ylabel(r'$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)')
-    ax2.set_ylabel(r'$\vartheta_\mathrm{ML}$ (deg)')
-    ax2.set_xlabel('Time (s)')
-
-
-plot(sim, t_span=(0, 1.2))
-
+# Continuous-time data
+mdl = sim.mdl.data
+# Time span
+t_span=(0, 1.2)
+# Plot
+_, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
+ax1.plot(mdl.t, mdl.w_M, label=r'$\omega_\mathrm{M}$')
+ax1.plot(mdl.t, mdl.w_L, label=r'$\omega_\mathrm{L}$')
+ax2.plot(mdl.t, mdl.theta_ML*180/np.pi)
+ax1.set_xlim(t_span)
+ax2.set_xlim(t_span)
+ax1.set_xticklabels([])
+ax1.set_ylabel(r'$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)')
+ax2.set_ylabel(r'$\vartheta_\mathrm{ML}$ (deg)')
+ax2.set_xlabel('Time (s)')
+plt.show()
 
 # %%
 # Plot also the frequency response from the electromagnetic torque tau_M to the
 # rotor speed w_M.
 
-def plot_freq_resp(mech, f_span=None, num=200):
-    """Plot the frequency response."""
-    # Parameters
-    J_M, J_L, K_S, C_S = mech.J_M, mech.J_L, mech.K_S, mech.C_S
-    # Frequencies
-    w = 2*np.pi*np.logspace(np.log10(f_span[0]), np.log10(f_span[-1]), num=num)
-    s = 1j*w
-    # Frequency response
-    B = J_L*s**2 + C_S*s + K_S
-    A = s*(J_M*J_L*s**2 + (J_M + J_L)*C_S*s + (J_M + J_L)*K_S)
-    G = B/A
-    # Plot figure
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
-    ax1.loglog(w/(2*np.pi), np.abs(G))
-    ax1.set_xticklabels([])
-    ax2.semilogx(w/(2*np.pi), np.angle(G)*180/np.pi)
-    ax1.set_xlim(f_span)
-    ax2.set_xlim(f_span)
-    ax2.set_ylim([-100, 100])
-    ax2.set_yticks([-90, -45, 0, 45, 90])
-    ax1.set_ylabel(r'Amplitude (rad/(s$\cdot$Nm))')
-    ax2.set_ylabel('Phase (deg)')
-    ax2.set_xlabel('Frequency (Hz)')
-    fig.align_ylabels()
-
-
-plot_freq_resp(mech, f_span=(5, 500))
+# Frequency range and number of points
+f_span = (5, 500)
+num = 200
+# Parameters
+J_M, J_L, K_S, C_S = mech.J_M, mech.J_L, mech.K_S, mech.C_S
+# Frequencies
+w = 2*np.pi*np.logspace(np.log10(f_span[0]), np.log10(f_span[-1]), num=num)
+s = 1j*w
+# Frequency response
+B = J_L*s**2 + C_S*s + K_S
+A = s*(J_M*J_L*s**2 + (J_M + J_L)*C_S*s + (J_M + J_L)*K_S)
+G = B/A
+# Plot figure
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
+ax1.loglog(w/(2*np.pi), np.abs(G))
+ax1.set_xticklabels([])
+ax2.semilogx(w/(2*np.pi), np.angle(G)*180/np.pi)
+ax1.set_xlim(f_span)
+ax2.set_xlim(f_span)
+ax2.set_ylim([-100, 100])
+ax2.set_yticks([-90, -45, 0, 45, 90])
+ax1.set_ylabel(r'Amplitude (rad/(s$\cdot$Nm))')
+ax2.set_ylabel('Phase (deg)')
+ax2.set_xlabel('Frequency (Hz)')
+fig.align_ylabels()
+plt.show()

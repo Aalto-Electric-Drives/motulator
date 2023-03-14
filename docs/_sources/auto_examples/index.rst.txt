@@ -33,7 +33,7 @@ Vector Control
 .. only:: html
 
   .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_thumb.png
-    :alt: Vector control: 2.2-kW PMSM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py`
 
@@ -50,7 +50,7 @@ Vector Control
 .. only:: html
 
   .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_syrm_7kw_thumb.png
-    :alt: Vector control: 6.7-kW SyRM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py`
 
@@ -67,7 +67,7 @@ Vector Control
 .. only:: html
 
   .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsyrm_thor_thumb.png
-    :alt: Vector control: 5-kW PM-SyRM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py`
 
@@ -84,7 +84,7 @@ Vector Control
 .. only:: html
 
   .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_im_2kw_thumb.png
-    :alt: Vector control: 2.2-kW induction motor
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_im_2kw.py`
 
@@ -124,7 +124,7 @@ V/Hz Control
 .. only:: html
 
   .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_thumb.png
-    :alt: Observer-based V/Hz control: 2.2-kW PMSM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py`
 
@@ -141,7 +141,7 @@ V/Hz Control
 .. only:: html
 
   .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_syrm_7kw_thumb.png
-    :alt: Observer-based V/Hz control: 6.7-kW SyRM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vhz_plot_obs_vhz_ctrl_syrm_7kw.py`
 
@@ -158,7 +158,7 @@ V/Hz Control
 .. only:: html
 
   .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_vhz_ctrl_im_2kw_thumb.png
-    :alt: V/Hz control: 2.2-kW induction motor
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py`
 
@@ -175,7 +175,7 @@ V/Hz Control
 .. only:: html
 
   .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_im_2kw_thumb.png
-    :alt: Observer-based V/Hz control: 2.2-kW induction motor
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vhz_plot_obs_vhz_ctrl_im_2kw.py`
 
@@ -192,7 +192,7 @@ V/Hz Control
 .. only:: html
 
   .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_vhz_ctrl_6step_im_2kw_thumb.png
-    :alt: V/Hz control up to the 6-step mode: 2.2-kW induction motor
+    :alt:
 
   :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py`
 
@@ -233,7 +233,7 @@ Flux Vector Control
 .. only:: html
 
   .. image:: /auto_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_pmsm_2kw_thumb.png
-    :alt: Flux-vector control: 2.2-kW PMSM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py`
 
@@ -250,7 +250,7 @@ Flux Vector Control
 .. only:: html
 
   .. image:: /auto_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_syrm_7kw_thumb.png
-    :alt: Flux-vector control: 6.7-kW SyRM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py`
 
@@ -288,7 +288,7 @@ Signal Injection
 .. only:: html
 
   .. image:: /auto_examples/signal_inj/images/thumb/sphx_glr_plot_signal_inj_pmsm_2kw_thumb.png
-    :alt: Vector control with signal injection: 2.2-kW PMSM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_signal_inj_plot_signal_inj_pmsm_2kw.py`
 
@@ -305,7 +305,7 @@ Signal Injection
 .. only:: html
 
   .. image:: /auto_examples/signal_inj/images/thumb/sphx_glr_plot_signal_inj_syrm_7kw_thumb.png
-    :alt: Vector control with signal injection: 6.7-kW SyRM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_signal_inj_plot_signal_inj_syrm_7kw.py`
 
@@ -343,7 +343,7 @@ Flux Maps
 .. only:: html
 
   .. image:: /auto_examples/flux_maps/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_thumb.png
-    :alt: Observer-based V/Hz control: 5-kW PM-SyRM
+    :alt:
 
   :ref:`sphx_glr_auto_examples_flux_maps_plot_obs_vhz_ctrl_pmsyrm_thor.py`
 
@@ -380,7 +380,7 @@ Two-Mass Systems
 .. only:: html
 
   .. image:: /auto_examples/two_mass_systems/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_two_mass_thumb.png
-    :alt: Observer-based V/Hz control: PMSM with 2-mass mechanics
+    :alt:
 
   :ref:`sphx_glr_auto_examples_two_mass_systems_plot_vector_ctrl_pmsm_2kw_two_mass.py`
 

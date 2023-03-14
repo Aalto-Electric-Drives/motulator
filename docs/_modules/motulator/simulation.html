@@ -328,7 +328,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">simulation_loop</span><span class="p">(</span><span class="n">t_stop</span><span class="p">,</span> <span class="n">max_step</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FloatingPointError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invalid value encountered at </span><span class="si">%.2f</span><span class="s1"> seconds.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid value encountered at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> seconds.&#39;</span><span class="p">)</span>
         <span class="c1"># Call the post-processing functions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span></div>

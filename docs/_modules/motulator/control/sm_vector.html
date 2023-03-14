@@ -407,6 +407,7 @@
 <span class="sd">            Limited torque reference.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">def</span> <span class="nf">limit_torque</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">psi_s_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span><span class="o">*</span><span class="n">u_dc</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">)</span>

@@ -114,7 +114,7 @@
              
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-6step-im-2kw-py"><span class="std std-ref">here</span></a>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-6step-im-2kw-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="v-hz-control-up-to-the-6-step-mode-2-2-kw-induction-motor">
@@ -125,9 +125,9 @@ the harmonics. Since the PWM is not synchronized with the stator frequency, the
 harmonic content also depends on the ratio between the stator frequency and
 the sampling frequency.</p>
 <p>Import the package.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">motulator</span> <span class="k">as</span> <span class="nn">mt</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
@@ -169,10 +169,10 @@ the model for the carrier comparison.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">t_start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>  <span class="c1"># Start the timer</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Execution time: </span><span class="si">{:.2f}</span><span class="s1"> s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_start</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Execution time: </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t_start</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> s&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Execution time: 7.00 s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Execution time: 7.02 s
 </pre></div>
 </div>
 <p>Plot results in per-unit values.</p>
@@ -185,7 +185,7 @@ the model for the carrier comparison.</p>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_001.png" alt="plot vhz ctrl 6step im 2kw" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_002.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_002.png" alt="plot vhz ctrl 6step im 2kw" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  8.131 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  8.143 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-6step-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/107fbc64ef11ee5f549b21d03ef04624/plot_vhz_ctrl_6step_im_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vhz_ctrl_6step_im_2kw.py</span></code></a></p>
