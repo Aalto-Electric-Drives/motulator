@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """
 Observer-based V/Hz control for synchronous motor drives.
 
@@ -182,7 +181,6 @@ class FluxTorqueRef:
 
     """
 
-    # pylint: disable=too-few-public-methods
     def __init__(self, pars):
         self.psi_s_min = (
             pars.psi_f if pars.psi_s_min is None else pars.psi_s_min)

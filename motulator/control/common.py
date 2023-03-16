@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """Common control functions and classes."""
 
 import numpy as np

@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """
 Continuous-time models for synchronous motors.
 

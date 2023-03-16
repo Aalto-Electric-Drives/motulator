@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """
 Continuous-time models for synchronous motor drives.
 
@@ -7,7 +6,6 @@ Peak-valued complex space vectors are used. The default values correspond to a
 
 """
 import numpy as np
-
 from motulator.helpers import Bunch
 
 

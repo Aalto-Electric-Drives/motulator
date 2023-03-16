@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """
 Observer-based V/Hz control for induction motor drives.
 
@@ -220,7 +219,7 @@ class SensorlessFluxObserver:
 
     """
 
-    # pylint: disable=too-many-instance-attributes, too-few-public-methods
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
         self.T_s = pars.T_s
         self.R_s = pars.R_s

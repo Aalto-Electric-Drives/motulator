@@ -1,4 +1,3 @@
-# pylint: disable=C0103
 """
 V/Hz control for induction motor drives.
 

@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """
 Observer-based V/Hz control: PMSM with 2-mass mechanics
 =======================================================

@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """Simulation environment."""
 
 import numpy as np
@@ -22,7 +21,6 @@ class Delay:
 
     """
 
-    # pylint: disable=too-few-public-methods
     def __init__(self, length=1, elem=3):
         self.data = length*[elem*[0]]  # Creates a zero list
 
@@ -104,7 +102,6 @@ class CarrierCmp:
 
     """
 
-    # pylint: disable=too-few-public-methods
     def __init__(self, N=2**12, return_complex=True):
         self.N = N
         self.return_complex = return_complex
