@@ -61,7 +61,11 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # Configure the control system.
 
 pars = mt.SynchronousMotorVHzObsCtrlPars(
-    p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134,
+    p=2,
+    R_s=.2,
+    L_d=4e-3,
+    L_q=17e-3,
+    psi_f=.134,
     alpha_psi=2*np.pi*50,
     zeta_inf=.1,
     T_s=250e-6,
@@ -85,7 +89,6 @@ mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 # times = np.array([0, .125, .125, .875, .875, 1])*8
 # values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 # mdl.mech.tau_L_t = mt.Sequence(times, values)
-
 
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM
