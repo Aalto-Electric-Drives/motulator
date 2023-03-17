@@ -75,8 +75,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../signal_inj/plot_signal_inj_pmsm_2kw.html">Vector control with signal injection: 2.2-kW PMSM</a></li>
@@ -173,7 +173,11 @@ into account in the control algorithm.</p>
 </div>
 <p>Configure the control system.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pars</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorVHzObsCtrlPars</span><span class="p">(</span>
-    <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">4e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">17e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.134</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+    <span class="n">L_d</span><span class="o">=</span><span class="mf">4e-3</span><span class="p">,</span>
+    <span class="n">L_q</span><span class="o">=</span><span class="mf">17e-3</span><span class="p">,</span>
+    <span class="n">psi_f</span><span class="o">=</span><span class="mf">.134</span><span class="p">,</span>
     <span class="n">alpha_psi</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span><span class="p">,</span>
     <span class="n">zeta_inf</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span>
     <span class="n">T_s</span><span class="o">=</span><span class="mf">250e-6</span><span class="p">,</span>
@@ -210,7 +214,7 @@ the results in SI units.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  55.976 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  32.939 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-maps-plot-obs-vhz-ctrl-pmsyrm-thor-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/08b12b26a77791f31e719ecbe6c2d3ef/plot_obs_vhz_ctrl_pmsyrm_thor.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_pmsyrm_thor.py</span></code></a></p>

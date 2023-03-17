@@ -93,8 +93,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for motulator.control.im_obs_vhz</h1><div class="highlight"><pre>
-<span></span><span class="c1"># pylint: disable=invalid-name</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Observer-based V/Hz control for induction motor drives.</span>
 
 <span class="sd">This implements the observer-based V/Hz control method described in [1]_. The</span>
@@ -315,7 +314,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># pylint: disable=too-many-instance-attributes, too-few-public-methods</span>
+    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">R_s</span>

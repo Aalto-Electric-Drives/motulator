@@ -74,8 +74,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../signal_inj/plot_signal_inj_pmsm_2kw.html">Vector control with signal injection: 2.2-kW PMSM</a></li>
@@ -172,7 +172,7 @@ torsional damping is set to a smaller value in this example.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Continuous-time data</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">data</span>
 <span class="c1"># Time span</span>
-<span class="n">t_span</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+<span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
 <span class="c1"># Plot</span>
 <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\omega_\mathrm</span><span class="si">{M}</span><span class="s1">$&#39;</span><span class="p">)</span>
@@ -217,7 +217,7 @@ rotor speed w_M.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_two_mass_003.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_two_mass_003.png" alt="plot vector ctrl pmsm 2kw two mass" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.203 seconds)</p>
+<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_two_mass_003.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_two_mass_003.png" alt="plot vector ctrl pmsm 2kw two mass" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.922 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-two-mass-systems-plot-vector-ctrl-pmsm-2kw-two-mass-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/d546246324eb6f40e0551f427a372f4b/plot_vector_ctrl_pmsm_2kw_two_mass.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vector_ctrl_pmsm_2kw_two_mass.py</span></code></a></p>

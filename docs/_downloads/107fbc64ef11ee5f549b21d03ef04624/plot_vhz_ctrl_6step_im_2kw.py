@@ -36,8 +36,8 @@ mdl = mt.InductionMotorDrive(motor, mech, conv)  # System model
 # Control system (parametrized as open-loop V/Hz control).
 
 ctrl = mt.InductionMotorVHzCtrl(
-    mt.InductionMotorVHzCtrlPars(R_s=0, R_R=0, k_u=0, k_w=0, six_step=True,
-                                 T_s=250e-6))
+    mt.InductionMotorVHzCtrlPars(
+        R_s=0, R_R=0, k_u=0, k_w=0, six_step=True, T_s=250e-6))
 
 # %%
 # Set the speed reference and the external load torque. More complicated
@@ -53,7 +53,6 @@ k = .2*base.tau_nom/(base.w/base.p)**2
 mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 # External load torque could be set here, now zero
 mdl.mech.tau_L_t = lambda t: (t > 1.)*base.tau_nom*0
-
 
 # %%
 # Create the simulation object and simulate it. The option `pwm=True` enables

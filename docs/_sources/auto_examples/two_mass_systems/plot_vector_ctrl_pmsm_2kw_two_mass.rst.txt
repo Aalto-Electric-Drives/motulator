@@ -27,11 +27,11 @@ of the mechanics is around 85 Hz. The mechanical parameters correspond
 approximately to https://doi.org/10.1109/tia.2015.2416128, except that the
 torsional damping is set to a smaller value in this example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-16
+.. GENERATED FROM PYTHON SOURCE LINES 14-15
 
 Import the packages.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-21
+.. GENERATED FROM PYTHON SOURCE LINES 15-20
 
 .. code-block:: default
 
@@ -47,11 +47,11 @@ Import the packages.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-27
+.. GENERATED FROM PYTHON SOURCE LINES 22-26
 
 .. code-block:: default
 
@@ -66,11 +66,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 27-28
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-35
+.. GENERATED FROM PYTHON SOURCE LINES 28-34
 
 .. code-block:: default
 
@@ -87,11 +87,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-45
+.. GENERATED FROM PYTHON SOURCE LINES 36-44
 
 .. code-block:: default
 
@@ -110,11 +110,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-57
+.. GENERATED FROM PYTHON SOURCE LINES 46-56
 
 .. code-block:: default
 
@@ -135,11 +135,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-65
+.. GENERATED FROM PYTHON SOURCE LINES 58-64
 
 .. code-block:: default
 
@@ -161,11 +161,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 Plot the load speed and the twist angle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-85
+.. GENERATED FROM PYTHON SOURCE LINES 66-84
 
 .. code-block:: default
 
@@ -173,7 +173,7 @@ Plot the load speed and the twist angle.
     # Continuous-time data
     mdl = sim.mdl.data
     # Time span
-    t_span=(0, 1.2)
+    t_span = (0, 1.2)
     # Plot
     _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
     ax1.plot(mdl.t, mdl.w_M, label=r'$\omega_\mathrm{M}$')
@@ -199,12 +199,12 @@ Plot the load speed and the twist angle.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-88
+.. GENERATED FROM PYTHON SOURCE LINES 85-87
 
 Plot also the frequency response from the electromagnetic torque tau_M to the
 rotor speed w_M.
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-115
+.. GENERATED FROM PYTHON SOURCE LINES 87-114
 
 .. code-block:: default
 
@@ -250,7 +250,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.203 seconds)
+   **Total running time of the script:** ( 0 minutes  3.922 seconds)
 
 
 .. _sphx_glr_download_auto_examples_two_mass_systems_plot_vector_ctrl_pmsm_2kw_two_mass.py:

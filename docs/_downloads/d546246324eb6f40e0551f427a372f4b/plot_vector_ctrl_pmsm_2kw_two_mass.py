@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """
 Observer-based V/Hz control: PMSM with 2-mass mechanics
 =======================================================
@@ -68,7 +67,7 @@ mt.plot(sim, base=base)  # Plot results in per-unit values
 # Continuous-time data
 mdl = sim.mdl.data
 # Time span
-t_span=(0, 1.2)
+t_span = (0, 1.2)
 # Plot
 _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
 ax1.plot(mdl.t, mdl.w_M, label=r'$\omega_\mathrm{M}$')

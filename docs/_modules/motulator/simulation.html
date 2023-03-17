@@ -93,8 +93,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for motulator.simulation</h1><div class="highlight"><pre>
-<span></span><span class="c1"># pylint: disable=invalid-name</span>
-<span class="sd">&quot;&quot;&quot;Simulation environment.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Simulation environment.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
@@ -117,7 +116,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">elem</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">length</span><span class="o">*</span><span class="p">[</span><span class="n">elem</span><span class="o">*</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>  <span class="c1"># Creates a zero list</span>
 
@@ -199,7 +197,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span> <span class="n">return_complex</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">return_complex</span> <span class="o">=</span> <span class="n">return_complex</span>

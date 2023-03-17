@@ -61,7 +61,6 @@ tq.plot_torque_flux(pars.i_s_max, base)
 tq.plot_torque_current(pars.i_s_max, base)
 # tq.plot_flux_loci(pars.i_s_max, base)
 
-
 # %%
 # Set the speed reference and the external load torque.
 
@@ -70,7 +69,6 @@ ctrl.w_m_ref = lambda t: (t > .1)*base.w*3
 # Quadratic load torque profile
 k = .05*base.tau_nom/(base.w/base.p)**2
 mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
-
 
 # %%
 # Create the simulation object and simulate it.

@@ -80,8 +80,8 @@ mdl = sim.mdl.data  # Continuous-time data
 ctrl = sim.ctrl.data  # Discrete-time data
 plt.figure()
 plt.plot(mdl.t, mdl.theta_m, label=r'$\vartheta_\mathrm{m}$')
-plt.step(ctrl.t, ctrl.theta_m, where='post',
-         label=r'$\hat \vartheta_\mathrm{m}$')
+plt.step(
+    ctrl.t, ctrl.theta_m, where='post', label=r'$\hat \vartheta_\mathrm{m}$')
 plt.legend()
 plt.xlim(0, 4)
 plt.xlabel('Time (s)')

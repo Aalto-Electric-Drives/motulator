@@ -147,13 +147,17 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-72
+.. GENERATED FROM PYTHON SOURCE LINES 62-76
 
 .. code-block:: default
 
 
     pars = mt.SynchronousMotorVHzObsCtrlPars(
-        p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134,
+        p=2,
+        R_s=.2,
+        L_d=4e-3,
+        L_q=17e-3,
+        psi_f=.134,
         alpha_psi=2*np.pi*50,
         zeta_inf=.1,
         T_s=250e-6,
@@ -168,11 +172,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-74
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-90
+.. GENERATED FROM PYTHON SOURCE LINES 78-93
 
 .. code-block:: default
 
@@ -198,14 +202,13 @@ Set the speed reference and the external load torque.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 91-94
+.. GENERATED FROM PYTHON SOURCE LINES 94-97
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-98
+.. GENERATED FROM PYTHON SOURCE LINES 97-101
 
 .. code-block:: default
 
@@ -220,12 +223,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-101
+.. GENERATED FROM PYTHON SOURCE LINES 102-104
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-103
+.. GENERATED FROM PYTHON SOURCE LINES 104-106
 
 .. code-block:: default
 
@@ -246,7 +249,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  55.976 seconds)
+   **Total running time of the script:** ( 0 minutes  32.939 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_maps_plot_obs_vhz_ctrl_pmsyrm_thor.py:

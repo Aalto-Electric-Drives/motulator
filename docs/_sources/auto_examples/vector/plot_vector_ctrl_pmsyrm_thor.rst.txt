@@ -124,7 +124,7 @@ Configure the control system.
 
 Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-65
+.. GENERATED FROM PYTHON SOURCE LINES 56-64
 
 .. code-block:: default
 
@@ -135,7 +135,6 @@ Plot control characteristics, computed using constant L_d, L_q, and psi_f.
     tq.plot_torque_flux(pars.i_s_max, base)
     tq.plot_torque_current(pars.i_s_max, base)
     # tq.plot_flux_loci(pars.i_s_max, base)
-
 
 
 
@@ -168,11 +167,11 @@ Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-75
+.. GENERATED FROM PYTHON SOURCE LINES 66-73
 
 .. code-block:: default
 
@@ -190,12 +189,11 @@ Set the speed reference and the external load torque.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 74-75
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-81
+.. GENERATED FROM PYTHON SOURCE LINES 75-79
 
 .. code-block:: default
 
@@ -210,11 +208,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-83
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-85
+.. GENERATED FROM PYTHON SOURCE LINES 81-83
 
 .. code-block:: default
 
@@ -235,7 +233,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.446 seconds)
+   **Total running time of the script:** ( 0 minutes  4.179 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:

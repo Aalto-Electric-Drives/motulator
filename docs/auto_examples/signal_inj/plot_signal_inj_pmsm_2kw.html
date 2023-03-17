@@ -75,8 +75,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Vector control with signal injection: 2.2-kW PMSM</a></li>
@@ -179,8 +179,8 @@ Square-wave signal injection is used with a simple phase-locked loop.</p>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># Discrete-time data</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\vartheta_\mathrm</span><span class="si">{m}</span><span class="s1">$&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span>
-         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat \vartheta_\mathrm</span><span class="si">{m}</span><span class="s1">$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+    <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat \vartheta_\mathrm</span><span class="si">{m}</span><span class="s1">$&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
@@ -192,7 +192,7 @@ Square-wave signal injection is used with a simple phase-locked loop.</p>
 <li><img src="../../_images/sphx_glr_plot_signal_inj_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_signal_inj_pmsm_2kw_001.png" alt="plot signal inj pmsm 2kw" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_signal_inj_pmsm_2kw_002.png" srcset="../../_images/sphx_glr_plot_signal_inj_pmsm_2kw_002.png" alt="plot signal inj pmsm 2kw" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  18.080 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.024 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-signal-inj-plot-signal-inj-pmsm-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0caf7e993f270b64263d3eed41903c63/plot_signal_inj_pmsm_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_signal_inj_pmsm_2kw.py</span></code></a></p>
