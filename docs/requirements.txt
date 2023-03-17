@@ -1,0 +1,10 @@
+numpy
+scipy
+matplotlib
+numpydoc
+Sphinx==5.3.0
+sphinx-autoapi
+sphinx-copybutton
+sphinx-gallery
+sphinx-rtd-theme
+esbonio
