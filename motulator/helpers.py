@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """Helper functions and classes."""
 
 # %%
@@ -112,7 +111,6 @@ class Sequence:
 
     """
 
-    # pylint: disable=too-few-public-methods
     def __init__(self, times, values, periodic=False):
         self.times = times
         self.values = values
@@ -143,7 +141,6 @@ class Sequence:
 class Step:
     """Step function."""
 
-    # pylint: disable=too-few-public-methods
     def __init__(self, step_time, step_value, initial_value=0):
         self.step_time = step_time
         self.step_value = step_value

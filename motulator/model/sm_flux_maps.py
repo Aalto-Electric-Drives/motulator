@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """Import and plot flux maps from the SyR-e project."""
 
 # %%

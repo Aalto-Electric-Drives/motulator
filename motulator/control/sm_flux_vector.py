@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """
 Flux-vector control for synchronous motor drives.
 
@@ -185,7 +184,6 @@ class FluxTorqueCtrl:
 
     """
 
-    # pylint: disable=too-few-public-methods
     def __init__(self, pars):
         self.T_s = pars.T_s
         self.R_s = pars.R_s
@@ -251,7 +249,6 @@ class Observer:
 
     """
 
-    # pylint: disable=too-few-public-methods
     def __init__(self, pars):
         self.T_s = pars.T_s
         self.R_s = pars.R_s

@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name
 """Current vector control for synchronous motor drives."""
 
 from typing import Callable
@@ -180,7 +179,6 @@ class CurrentCtrl:
     """
 
     def __init__(self, pars):
-
         self.T_s = pars.T_s
         self.L_d = pars.L_d
         self.L_q = pars.L_q
@@ -270,7 +268,6 @@ class CurrentRef:
 
     # pylint: disable=too-many-instance-attributes
     def __init__(self, pars):
-
         self.T_s = pars.T_s
         self.i_s_max = pars.i_s_max
         self.p = pars.p
@@ -400,9 +397,7 @@ class SensorlessObserver:
     """
 
     # pylint: disable=too-many-instance-attributes
-    # pylint: disable=too-few-public-methods
     def __init__(self, pars):
-
         self.T_s = pars.T_s
         self.R_s = pars.R_s
         self.L_d = pars.L_d

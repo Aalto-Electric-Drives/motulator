@@ -1,4 +1,3 @@
-# pylint: disable=C0103
 """
 Torque characteristics for synchronous machines.
 

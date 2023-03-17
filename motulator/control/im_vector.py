@@ -1,4 +1,3 @@
-# pylint: disable=C0103
 """
 Vector control methods for induction motor drives.
 
