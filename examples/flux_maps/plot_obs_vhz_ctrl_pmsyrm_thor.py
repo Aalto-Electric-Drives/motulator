@@ -28,7 +28,7 @@ import motulator as mt
 # Compute base values based on the nominal values (just for figures).
 
 base = mt.BaseValues(
-    U_nom=220, I_nom=15.6, f_nom=85, tau_nom=19, P_nom=5.07e3, p=2)
+    U_nom=220, I_nom=15.6, f_nom=85, tau_nom=19, P_nom=5.07e3, n_p=2)
 
 # %%
 # Load and plot the flux maps.
@@ -50,9 +50,9 @@ mt.plot_flux_map(data)
 
 # Create the motor model
 motor = mt.SynchronousMotorSaturatedLUT(
-    p=2, R_s=.2, psi_s_data=data.psi_s.ravel(), i_s_data=data.i_s.ravel())
+    n_p=2, R_s=.2, psi_s_data=data.psi_s.ravel(), i_s_data=data.i_s.ravel())
 # Magnetically linear PM-SyRM model
-# motor = mt.SynchronousMotor(p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+# motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 mech = mt.Mechanics(J=.0042)
 conv = mt.Inverter(u_dc=310)
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
@@ -61,7 +61,7 @@ mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 # Configure the control system.
 
 pars = mt.SynchronousMotorVHzObsCtrlPars(
-    p=2,
+    n_p=2,
     R_s=.2,
     L_d=4e-3,
     L_q=17e-3,
@@ -82,7 +82,7 @@ values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.w_m_ref = mt.Sequence(times, values)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = base.tau_nom/(base.w/base.p)**2
+k = base.tau_nom/(base.w/base.n_p)**2
 mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # Uncomment to try the rated load torque step at t = 1 s (set k = 0 above)

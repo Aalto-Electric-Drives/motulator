@@ -165,7 +165,7 @@ class FrequencyConverter(Inverter):
         # Grid phase voltages
         u_g_abc = self.grid_voltages(t)
         # Output voltage of the diode bridge
-        u_di = np.amax(u_g_abc, 0) - np.amin(u_g_abc, 0)
+        u_di = np.amax(u_g_abc, axis=0) - np.amin(u_g_abc, axis=0)
         # State derivatives
         du_dc = (i_L - i_dc)/self.C
         di_L = (u_di - u_dc)/self.L

@@ -41,7 +41,7 @@ class TorqueCharacteristics:
     """
 
     def __init__(self, pars):
-        self.p = pars.p
+        self.n_p = pars.n_p
         self.L_d = pars.L_d
         self.L_q = pars.L_q
         self.psi_f = pars.psi_f
@@ -70,7 +70,7 @@ class TorqueCharacteristics:
 
         """
         i_s = self.current(psi_s)
-        tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
+        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
 
         return tau_M
 

@@ -16,7 +16,6 @@ References
 from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
-
 from motulator.control.common import Ctrl, PWM, RateLimiter
 from motulator.helpers import abc2complex, Bunch
 
@@ -54,7 +53,7 @@ class InductionMotorObsVHzCtrlPars:
     R_R: float = 2.1
     L_sgm: float = .021
     L_M: float = .224
-    p: int = 2
+    n_p: int = 2
 
 
 # %%
@@ -84,7 +83,7 @@ class InductionMotorVHzObsCtrl(Ctrl):
         self.alpha_f = pars.alpha_f
         self.alpha_r = pars.alpha_r
         self.alpha_psi = pars.alpha_psi
-        self.p = pars.p
+        self.n_p = pars.n_p
         self.k_tau = pars.k_tau
         self.i_s_max = pars.i_s_max
         self.slip_compensation = pars.slip_compensation
@@ -130,13 +129,13 @@ class InductionMotorVHzObsCtrl(Ctrl):
         w_r_ref = self.w_r_ref
 
         # Torque estimate (11c)
-        tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_R))
+        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_R))
 
         # Slip frequency compensation (if enabled) for the low-pass filter.
         # Note, could also be based on the low-pass filtered torque.
         psi_R_sqr = np.abs(psi_R)**2
         if self.slip_compensation and psi_R_sqr > 0:
-            w_r = self.R_R*tau_M/(1.5*self.p*psi_R_sqr)
+            w_r = self.R_R*tau_M/(1.5*self.n_p*psi_R_sqr)
         else:
             w_r = 0
 

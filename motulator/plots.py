@@ -4,7 +4,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
-
 from motulator.helpers import Bunch, complex2abc
 
 # Plotting parameters

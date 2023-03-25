@@ -23,7 +23,7 @@ class SynchronousMotor:
 
     Parameters
     ----------
-    p : int
+    n_p : int
         Number of pole pairs.
     R_s : float
         Stator resistance.
@@ -40,9 +40,9 @@ class SynchronousMotor:
     """
 
     def __init__(
-            self, p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, mech=None):
+            self, n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, mech=None):
         # pylint: disable=too-many-arguments
-        self.p, self.R_s = p, R_s
+        self.n_p, self.R_s = n_p, R_s
         self.L_d, self.L_q, self.psi_f = L_d, L_q, psi_f
         # Initial value
         self.psi_s0 = self.psi_f + 0j
@@ -85,7 +85,7 @@ class SynchronousMotor:
 
         """
         i_s = self.current(psi_s)
-        tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
+        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
         return i_s, tau_M
 
     def f(self, psi_s, u_s, w_M):
@@ -119,7 +119,7 @@ class SynchronousMotor:
 
         """
         i_s, tau_M = self.magnetic(psi_s)
-        dpsi_s = u_s - self.R_s*i_s - 1j*self.p*w_M*psi_s
+        dpsi_s = u_s - self.R_s*i_s - 1j*self.n_p*w_M*psi_s
         return [dpsi_s], i_s, tau_M
 
     def meas_currents(self):
@@ -133,7 +133,7 @@ class SynchronousMotor:
 
         """
         i_s0 = self.current(self.psi_s0)
-        theta_m0 = self.p*self._mech.theta_M0
+        theta_m0 = self.n_p*self._mech.theta_M0
         i_s_abc = complex2abc(np.exp(1j*theta_m0)*i_s0)
         return i_s_abc
 
@@ -150,7 +150,7 @@ class SynchronousMotorSaturated(SynchronousMotor):
 
     Parameters
     ----------
-    p : int
+    n_p : int
         Number of pole pairs.
     R_s : float
         Stator resistance.
@@ -216,7 +216,7 @@ class SynchronousMotorSaturated(SynchronousMotor):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        p=2,
+        n_p=2,
         R_s=.54,
         i_f=0,
         a_d0=17.4,
@@ -231,7 +231,7 @@ class SynchronousMotorSaturated(SynchronousMotor):
         mech=None,
     ):
         # pylint: disable=too-many-arguments, disable=super-init-not-called
-        self.p, self.R_s = p, R_s
+        self.n_p, self.R_s = n_p, R_s
         self.i_f, self.a_d0, self.a_q0 = i_f, a_d0, a_q0
         self.a_dd, self.a_qq, self.a_dq = a_dd, a_qq, a_dq
         self.S, self.T, self.U, self.V = S, T, U, V
@@ -280,7 +280,7 @@ class SynchronousMotorSaturatedLUT(SynchronousMotor):
 
     Parameters
     ----------
-    p : int
+    n_p : int
         Number of pole pairs.
     R_s : float
         Stator resistance.
@@ -296,9 +296,9 @@ class SynchronousMotorSaturatedLUT(SynchronousMotor):
 
     # pylint: disable=too-many-arguments, disable=super-init-not-called
     def __init__(
-            self, p=2, R_s=.20, psi_s_data=None, i_s_data=None, mech=None):
+            self, n_p=2, R_s=.20, psi_s_data=None, i_s_data=None, mech=None):
 
-        self.p, self.R_s = p, R_s
+        self.n_p, self.R_s = n_p, R_s
 
         # Create the interpolant
         self.i_s = LinearNDInterpolator(

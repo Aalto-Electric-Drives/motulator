@@ -7,7 +7,6 @@ induction motor.
 
 """
 import numpy as np
-
 from motulator.helpers import complex2abc
 
 
@@ -22,7 +21,7 @@ class InductionMotor:
 
     Parameters
     ----------
-    p : int
+    n_p : int
         Number of pole pairs.
     R_s : float
         Stator resistance.
@@ -47,9 +46,9 @@ class InductionMotor:
 
     """
 
-    def __init__(self, p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245):
+    def __init__(self, n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245):
         # pylint: disable=too-many-arguments
-        self.p = p
+        self.n_p = n_p
         self.R_s, self.R_r = R_s, R_r
         self.L_ell, self.L_s = L_ell, L_s
         # Initial values
@@ -101,7 +100,7 @@ class InductionMotor:
 
         """
         i_ss, i_rs = self.currents(psi_ss, psi_rs)
-        tau_M = 1.5*self.p*np.imag(i_ss*np.conj(psi_ss))
+        tau_M = 1.5*self.n_p*np.imag(i_ss*np.conj(psi_ss))
 
         return i_ss, i_rs, tau_M
 
@@ -139,7 +138,7 @@ class InductionMotor:
         """
         i_ss, i_rs, tau_M = self.magnetic(psi_ss, psi_rs)
         dpsi_ss = u_ss - self.R_s*i_ss
-        dpsi_rs = -self.R_r*i_rs + 1j*self.p*w_M*psi_rs
+        dpsi_rs = -self.R_r*i_rs + 1j*self.n_p*w_M*psi_rs
 
         return [dpsi_ss, dpsi_rs], i_ss, tau_M
 
@@ -172,7 +171,7 @@ class InductionMotorSaturated(InductionMotor):
 
     Parameters
     ----------
-    p : int
+    n_p : int
         Number of pole pairs.
     R_s : float
         Stator resistance.
@@ -196,9 +195,16 @@ class InductionMotorSaturated(InductionMotor):
     """
 
     def __init__(
-            self, p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_su=.34, beta=.84, S=7):
+            self,
+            n_p=2,
+            R_s=3.7,
+            R_r=2.5,
+            L_ell=.023,
+            L_su=.34,
+            beta=.84,
+            S=7):
         # pylint: disable=too-many-arguments
-        super().__init__(p=p, R_s=R_s, R_r=R_r, L_ell=L_ell)
+        super().__init__(n_p=n_p, R_s=R_s, R_r=R_r, L_ell=L_ell)
         # Saturation model
         self.L_s = lambda psi: L_su/(1. + (beta*np.abs(psi))**S)
 
@@ -223,7 +229,7 @@ class InductionMotorInvGamma(InductionMotor):
 
     Parameters
     ----------
-    p : int
+    n_p : int
         Number of pole pairs.
     R_s : float
         Stator resistance.
@@ -236,11 +242,11 @@ class InductionMotorInvGamma(InductionMotor):
 
     """
 
-    def __init__(self, p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224):
+    def __init__(self, n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224):
         # pylint: disable=too-many-arguments, disable=super-init-not-called
         # Convert the inverse-Γ parameters to the Γ parameters
         gamma = L_M/(L_M + L_sgm)  # Magnetic coupling factor
-        self.p = p
+        self.n_p = n_p
         self.R_s = R_s
         self.L_s = L_M + L_sgm
         self.L_ell = L_sgm/gamma

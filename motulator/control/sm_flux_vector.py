@@ -22,7 +22,6 @@ References
 from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
-
 from motulator.helpers import abc2complex, Bunch
 from motulator.control.common import Ctrl, SpeedCtrl, PWM
 from motulator.control.sm_vector import SensorlessObserver
@@ -59,7 +58,7 @@ class SynchronousMotorFluxVectorCtrlPars:
     L_d: float = .036
     L_q: float = .051
     psi_f: float = .545
-    p: int = 3
+    n_p: int = 3
     J: float = .015
     # Sensorless observer (used only in the sensorless mode)
     w_o: float = 2*np.pi*40
@@ -88,7 +87,7 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
         super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
-        self.p = pars.p
+        self.n_p = pars.n_p
         self.sensorless = pars.sensorless
         self.flux_torque_ctrl = FluxTorqueCtrl(pars)
         self.speed_ctrl = SpeedCtrl(pars)
@@ -130,10 +129,10 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
             w_m, theta_m = self.observer.w_m, self.observer.theta_m
         else:
             # Measure the rotor speed
-            w_m = self.p*mdl.mech.meas_speed()
+            w_m = self.n_p*mdl.mech.meas_speed()
             # Limit the electrical rotor position into [-pi, pi)
             theta_m = np.mod(
-                self.p*mdl.mech.meas_position() + np.pi, 2*np.pi) - np.pi
+                self.n_p*mdl.mech.meas_position() + np.pi, 2*np.pi) - np.pi
 
         # Current vector in estimated rotor coordinates
         i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
@@ -142,7 +141,7 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
         psi_s = self.observer.psi_s
 
         # Outputs
-        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
+        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.n_p, w_m/self.n_p)
         psi_s_ref, tau_M_ref_lim = self.flux_torque_ref(tau_M_ref, w_m, u_dc)
         u_s_ref = self.flux_torque_ctrl(
             psi_s_ref, tau_M_ref_lim, psi_s, i_s, w_m)
@@ -187,15 +186,15 @@ class FluxTorqueCtrl:
     def __init__(self, pars):
         self.T_s = pars.T_s
         self.R_s = pars.R_s
-        self.p = pars.p
+        self.n_p = pars.n_p
         self.alpha_psi = pars.alpha_psi
         # Gain k_tau
         G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
         psi_s0 = pars.psi_f if pars.psi_f > 0 else pars.psi_s_min
         if pars.psi_f > 0:  # PMSM or PM-SyRM
-            c_delta0 = 1.5*pars.p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
+            c_delta0 = 1.5*pars.n_p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
         else:  # SyRM
-            c_delta0 = 1.5*pars.p*G*psi_s0**2
+            c_delta0 = 1.5*pars.n_p*G*psi_s0**2
         self.k_tau = pars.alpha_tau/c_delta0
 
     def __call__(self, psi_s_ref, tau_M_ref, psi_s, i_s, w_m):
@@ -222,7 +221,7 @@ class FluxTorqueCtrl:
 
         """
         # Torque estimate
-        tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
+        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
 
         # Stator frequency
         w_s = w_m + self.k_tau*(tau_M_ref - tau_M)

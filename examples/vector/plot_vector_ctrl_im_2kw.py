@@ -22,15 +22,16 @@ base = mt.BaseValues(
     f_nom=50,  # Frequency
     tau_nom=14.6,  # Torque
     P_nom=2.2e3,  # Power
-    p=2)  # Number of pole pairs
+    n_p=2)  # Number of pole pairs
 
 # %%
 # Configure the system model.
 
 # Configure the induction motor using its inverse-Γ parameters
-motor = mt.InductionMotorInvGamma(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, p=2)
+motor = mt.InductionMotorInvGamma(
+    R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 # Alternatively configure the induction motor using its Γ parameters
-# motor = mt.InductionMotor(R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, p=2)
+# motor = mt.InductionMotor(R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)
 
 mech = mt.Mechanics(J=.015)  # Mechanics model
 conv = mt.Inverter(u_dc=540)  # Inverter model
@@ -52,7 +53,7 @@ ctrl = mt.InductionMotorVectorCtrl(
         i_s_max=1.5*base.i,  # Current limit
         tau_M_max=1.5*base.tau_nom,  # Torque limit (for the speed ctrl)
         J=.015,  # Inertia estimate (for the speed ctrl)
-        p=2,  # Number of pole pairs
+        n_p=2,  # Number of pole pairs
         # Inverse-Γ model parameter estimates
         R_s=3.7,
         R_R=2.1,

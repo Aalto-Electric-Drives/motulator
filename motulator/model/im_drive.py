@@ -134,8 +134,8 @@ class InductionMotorDrive:
         self.data.theta_M = np.mod(  # Limit into [-pi, pi)
             self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.theta_m = np.mod(  # Limit into [-pi, pi)
-            self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
-        self.data.w_m = self.motor.p*self.data.w_M
+            self.motor.n_p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
+        self.data.w_m = self.motor.n_p*self.data.w_M
         self.data.tau_L = (
             self.mech.tau_L_t(self.data.t) + self.mech.tau_L_w(self.data.w_M))
         self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
@@ -220,10 +220,10 @@ class InductionMotorDriveDiode(InductionMotorDrive):
         u_g_abc = self.conv.grid_voltages(self.data.t)
         self.data.u_g = abc2complex(u_g_abc)
         # Voltage at the output of the diode bridge
-        self.data.u_di = np.amax(u_g_abc, 0) - np.amin(u_g_abc, 0)
+        self.data.u_di = np.amax(u_g_abc, axis=0) - np.amin(u_g_abc, axis=0)
         # Diode briddge switching states (-1, 0, 1)
-        q_g_abc = ((np.amax(u_g_abc, 0) == u_g_abc).astype(int) -
-                   (np.amin(u_g_abc, 0) == u_g_abc).astype(int))
+        q_g_abc = ((np.amax(u_g_abc, axis=0) == u_g_abc).astype(int) -
+                   (np.amin(u_g_abc, axis=0) == u_g_abc).astype(int))
         # Grid current space vector
         self.data.i_g = abc2complex(q_g_abc)*self.data.i_L
 
