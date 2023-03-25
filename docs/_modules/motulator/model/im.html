@@ -102,7 +102,6 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
 <span class="kn">from</span> <span class="nn">motulator.helpers</span> <span class="kn">import</span> <span class="n">complex2abc</span>
 
 
@@ -117,7 +116,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    p : int</span>
+<span class="sd">    n_p : int</span>
 <span class="sd">        Number of pole pairs.</span>
 <span class="sd">    R_s : float</span>
 <span class="sd">        Stator resistance.</span>
@@ -142,9 +141,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="mf">.245</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="mf">.245</span><span class="p">):</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span> <span class="o">=</span> <span class="n">n_p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_r</span> <span class="o">=</span> <span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_s</span> <span class="o">=</span> <span class="n">L_ell</span><span class="p">,</span> <span class="n">L_s</span>
         <span class="c1"># Initial values</span>
@@ -196,7 +195,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_ss</span><span class="p">,</span> <span class="n">i_rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currents</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">)</span>
-        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_ss</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">))</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_ss</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">i_ss</span><span class="p">,</span> <span class="n">i_rs</span><span class="p">,</span> <span class="n">tau_M</span></div>
 
@@ -234,7 +233,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_ss</span><span class="p">,</span> <span class="n">i_rs</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">)</span>
         <span class="n">dpsi_ss</span> <span class="o">=</span> <span class="n">u_ss</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_ss</span>
-        <span class="n">dpsi_rs</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">R_r</span><span class="o">*</span><span class="n">i_rs</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">w_M</span><span class="o">*</span><span class="n">psi_rs</span>
+        <span class="n">dpsi_rs</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">R_r</span><span class="o">*</span><span class="n">i_rs</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">w_M</span><span class="o">*</span><span class="n">psi_rs</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">dpsi_ss</span><span class="p">,</span> <span class="n">dpsi_rs</span><span class="p">],</span> <span class="n">i_ss</span><span class="p">,</span> <span class="n">tau_M</span></div>
 
@@ -267,7 +266,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    p : int</span>
+<span class="sd">    n_p : int</span>
 <span class="sd">        Number of pole pairs.</span>
 <span class="sd">    R_s : float</span>
 <span class="sd">        Stator resistance.</span>
@@ -291,9 +290,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_su</span><span class="o">=</span><span class="mf">.34</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">.84</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span>
+            <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+            <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span>
+            <span class="n">L_su</span><span class="o">=</span><span class="mf">.34</span><span class="p">,</span>
+            <span class="n">beta</span><span class="o">=</span><span class="mf">.84</span><span class="p">,</span>
+            <span class="n">S</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="n">L_ell</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="n">L_ell</span><span class="p">)</span>
         <span class="c1"># Saturation model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_s</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">psi</span><span class="p">:</span> <span class="n">L_su</span><span class="o">/</span><span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span><span class="o">**</span><span class="n">S</span><span class="p">)</span>
 
@@ -318,7 +324,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    p : int</span>
+<span class="sd">    n_p : int</span>
 <span class="sd">        Number of pole pairs.</span>
 <span class="sd">    R_s : float</span>
 <span class="sd">        Stator resistance.</span>
@@ -331,11 +337,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">):</span>
         <span class="c1"># pylint: disable=too-many-arguments, disable=super-init-not-called</span>
         <span class="c1"># Convert the inverse-Γ parameters to the Γ parameters</span>
         <span class="n">gamma</span> <span class="o">=</span> <span class="n">L_M</span><span class="o">/</span><span class="p">(</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">L_sgm</span><span class="p">)</span>  <span class="c1"># Magnetic coupling factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span> <span class="o">=</span> <span class="n">n_p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">R_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_s</span> <span class="o">=</span> <span class="n">L_M</span> <span class="o">+</span> <span class="n">L_sgm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span> <span class="o">=</span> <span class="n">L_sgm</span><span class="o">/</span><span class="n">gamma</span>

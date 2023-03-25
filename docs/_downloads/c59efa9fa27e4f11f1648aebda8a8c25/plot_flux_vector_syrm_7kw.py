@@ -18,7 +18,7 @@ import motulator as mt
 # Compute base values based on the nominal values (just for figures).
 
 base = mt.BaseValues(
-    U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, p=2)
+    U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, n_p=2)
 
 # %%
 # Configure the system model.
@@ -50,7 +50,7 @@ pars = mt.SynchronousMotorFluxVectorCtrlPars(
     L_d=37e-3,
     L_q=6.2e-3,
     psi_f=0,
-    p=2,
+    n_p=2,
     J=.015,
 )
 ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)

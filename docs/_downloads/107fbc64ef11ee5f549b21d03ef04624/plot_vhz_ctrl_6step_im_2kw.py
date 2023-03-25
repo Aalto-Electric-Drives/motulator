@@ -20,13 +20,14 @@ import motulator as mt
 # Compute base values based on the nominal values (just for figures).
 
 base = mt.BaseValues(
-    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, p=2)
+    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
 
 # %%
 # Create the system model.
 
 # Configure the induction motor using its inverse-Γ parameters
-motor = mt.InductionMotorInvGamma(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, p=2)
+motor = mt.InductionMotorInvGamma(
+    R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 
 mech = mt.Mechanics(J=.016)  # Mechanics model
 conv = mt.Inverter(u_dc=540)  # Inverter model
@@ -49,7 +50,7 @@ values = np.array([0, 0, 1, 1])*base.w*2
 ctrl.w_m_ref = mt.Sequence(times, values)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = .2*base.tau_nom/(base.w/base.p)**2
+k = .2*base.tau_nom/(base.w/base.n_p)**2
 mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 # External load torque could be set here, now zero
 mdl.mech.tau_L_t = lambda t: (t > 1.)*base.tau_nom*0

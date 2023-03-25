@@ -129,7 +129,7 @@ in the control method (only in the system model).</p>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">BaseValues</span><span class="p">(</span>
-    <span class="n">U_nom</span><span class="o">=</span><span class="mi">370</span><span class="p">,</span> <span class="n">I_nom</span><span class="o">=</span><span class="mf">15.5</span><span class="p">,</span> <span class="n">f_nom</span><span class="o">=</span><span class="mf">105.8</span><span class="p">,</span> <span class="n">tau_nom</span><span class="o">=</span><span class="mf">20.1</span><span class="p">,</span> <span class="n">P_nom</span><span class="o">=</span><span class="mf">6.7e3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">U_nom</span><span class="o">=</span><span class="mi">370</span><span class="p">,</span> <span class="n">I_nom</span><span class="o">=</span><span class="mf">15.5</span><span class="p">,</span> <span class="n">f_nom</span><span class="o">=</span><span class="mf">105.8</span><span class="p">,</span> <span class="n">tau_nom</span><span class="o">=</span><span class="mf">20.1</span><span class="p">,</span> <span class="n">P_nom</span><span class="o">=</span><span class="mf">6.7e3</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Configure the system model.</p>
@@ -144,7 +144,7 @@ in the control method (only in the system model).</p>
 </div>
 <p>Configure the control system.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pars</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorVHzObsCtrlPars</span><span class="p">(</span>
-    <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span>
     <span class="n">L_d</span><span class="o">=</span><span class="mf">37e-3</span><span class="p">,</span>
     <span class="n">L_q</span><span class="o">=</span><span class="mf">6.2e-3</span><span class="p">,</span>
@@ -179,7 +179,7 @@ the results in SI units.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_syrm_7kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_syrm_7kw_001.png" alt="plot obs vhz ctrl syrm 7kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  20.561 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_syrm_7kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_syrm_7kw_001.png" alt="plot obs vhz ctrl syrm 7kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  22.745 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-obs-vhz-ctrl-syrm-7kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/abc0a35b1491dd8f1e789d1727cb19aa/plot_obs_vhz_ctrl_syrm_7kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_syrm_7kw.py</span></code></a></p>

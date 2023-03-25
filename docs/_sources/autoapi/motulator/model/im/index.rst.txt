@@ -30,7 +30,7 @@ Classes
 
 
 
-.. py:class:: InductionMotor(p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=0.245)
+.. py:class:: InductionMotor(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=0.245)
 
    
    Γ-equivalent model of an induction motor.
@@ -39,8 +39,8 @@ Classes
    is implemented in stator coordinates. The flux linkages are used as state
    variables.
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param R_r: Rotor resistance.
@@ -207,7 +207,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotorSaturated(p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_su=0.34, beta=0.84, S=7)
+.. py:class:: InductionMotorSaturated(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_su=0.34, beta=0.84, S=7)
 
    Bases: :py:obj:`InductionMotor`
 
@@ -219,8 +219,8 @@ Classes
 
        L_s(psi_ss) = L_su/(1 + (beta*abs(psi_ss)**S)
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param R_r: Rotor resistance.
@@ -280,7 +280,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotorInvGamma(p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)
+.. py:class:: InductionMotorInvGamma(n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)
 
    Bases: :py:obj:`InductionMotor`
 
@@ -291,8 +291,8 @@ Classes
    an interface for the inverse-Γ model parameters. Linear magnetics are
    assumed. If magnetic saturation is to be modeled, the Γ model is preferred.
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param R_R: Rotor resistance.

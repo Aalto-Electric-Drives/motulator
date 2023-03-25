@@ -54,7 +54,7 @@ Compute base values based on the nominal values (just for figures).
 
 
     base = mt.BaseValues(
-        U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, p=2)
+        U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, n_p=2)
 
 
 
@@ -112,7 +112,7 @@ Configure the control system.
         L_d=37e-3,
         L_q=6.2e-3,
         psi_f=0,
-        p=2,
+        n_p=2,
         J=.015,
     )
     ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
@@ -193,7 +193,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.640 seconds)
+   **Total running time of the script:** ( 0 minutes  11.874 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

@@ -105,7 +105,7 @@
 <p>The voltage equation in rotor coordinates is <a class="footnote-reference brackets" href="#id3" id="id1">1</a></p>
 <div class="math notranslate nohighlight">
 \[\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s}\)</span> is the stator voltage, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}\)</span> is the stator current, and <span class="math notranslate nohighlight">\(R_\mathrm{s}\)</span> is the stator resistance. The electrical angular speed of the rotor is <span class="math notranslate nohighlight">\(\omega_\mathrm{m} = p\omega_\mathrm{M}\)</span>, where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the mechanical angular speed of the rotor and <span class="math notranslate nohighlight">\(p\)</span> is the number of pole pairs. In the magnetically linear case, the stator flux linkage is</p>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s}\)</span> is the stator voltage, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}\)</span> is the stator current, and <span class="math notranslate nohighlight">\(R_\mathrm{s}\)</span> is the stator resistance. The electrical angular speed of the rotor is <span class="math notranslate nohighlight">\(\omega_\mathrm{m} = n_\mathrm{p}\omega_\mathrm{M}\)</span>, where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the mechanical angular speed of the rotor and <span class="math notranslate nohighlight">\(n_\mathrm{p}\)</span> is the number of pole pairs. In the magnetically linear case, the stator flux linkage is</p>
 <div class="math notranslate nohighlight">
 \[\boldsymbol{\psi}_\mathrm{s} = L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\} + \psi_\mathrm{f}\]</div>
 <p>where <span class="math notranslate nohighlight">\(L_\mathrm{d}\)</span> is the d-axis inductance, <span class="math notranslate nohighlight">\(L_\mathrm{q}\)</span> is the q-axis inductance, <span class="math notranslate nohighlight">\(\psi_\mathrm{f}\)</span> is the permanent-magnet (PM) flux linkage. As special cases, this model represents a surface-PMSM with <span class="math notranslate nohighlight">\(L_\mathrm{d} = L_\mathrm{q}\)</span> and SyRM with <span class="math notranslate nohighlight">\(\psi_\mathrm{f}=0\)</span>.</p>
@@ -115,7 +115,7 @@
 </div>
 <p>The electromagnetic torque is</p>
 <div class="math notranslate nohighlight">
-\[\tau_\mathrm{M} = \frac{3p}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s} \boldsymbol{\psi}_\mathrm{s}^* \right\}\]</div>
+\[\tau_\mathrm{M} = \frac{3 n_\mathrm{p}}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s} \boldsymbol{\psi}_\mathrm{s}^* \right\}\]</div>
 <p>Since the motor is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> to <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span>.</p>
 <div class="figure align-center" id="id6">
 <a class="reference external image-reference" href="."><img alt="Synchronous motor model seen from stator coordinates" src="_images/sm_block_stat.svg" width="100%" /></a>

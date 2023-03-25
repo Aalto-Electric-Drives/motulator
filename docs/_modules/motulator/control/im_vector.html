@@ -137,7 +137,7 @@
 <div class="viewcode-block" id="InductionMotorVectorCtrlPars.R_R"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.InductionMotorVectorCtrlPars.R_R">[docs]</a>    <span class="n">R_R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.1</span></div>
 <div class="viewcode-block" id="InductionMotorVectorCtrlPars.L_sgm"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.InductionMotorVectorCtrlPars.L_sgm">[docs]</a>    <span class="n">L_sgm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.021</span></div>
 <div class="viewcode-block" id="InductionMotorVectorCtrlPars.L_M"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.InductionMotorVectorCtrlPars.L_M">[docs]</a>    <span class="n">L_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.224</span></div>
-<div class="viewcode-block" id="InductionMotorVectorCtrlPars.p"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.InductionMotorVectorCtrlPars.p">[docs]</a>    <span class="n">p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span></div>
+<div class="viewcode-block" id="InductionMotorVectorCtrlPars.n_p"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.InductionMotorVectorCtrlPars.n_p">[docs]</a>    <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span></div>
 <div class="viewcode-block" id="InductionMotorVectorCtrlPars.J"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.InductionMotorVectorCtrlPars.J">[docs]</a>    <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.015</span></div></div>
 
 
@@ -162,7 +162,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">w_m_ref</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">sensorless</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">n_p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedCtrl</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ref</span> <span class="o">=</span> <span class="n">CurrentRef</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span> <span class="o">=</span> <span class="n">CurrentCtrl</span><span class="p">(</span><span class="n">pars</span><span class="p">)</span>
@@ -198,7 +198,7 @@
         <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>  <span class="c1"># DC-bus voltage</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
-            <span class="n">w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">mdl</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>  <span class="c1"># Rotor speed</span>
+            <span class="n">w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">mdl</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>  <span class="c1"># Rotor speed</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">w_m</span>  <span class="c1"># Get the estimated speed</span>
 
@@ -211,7 +211,7 @@
         <span class="n">i_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta_s</span><span class="p">)</span><span class="o">*</span><span class="n">abc2complex</span><span class="p">(</span><span class="n">i_s_abc</span><span class="p">)</span>
 
         <span class="c1"># Outputs</span>
-        <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">w_m_ref</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">w_m</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">w_m_ref</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="p">,</span> <span class="n">w_m</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span>
         <span class="n">i_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_ref</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">psi_R</span><span class="p">)</span>
         <span class="n">w_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="p">)</span>  <span class="c1"># w_m not used if sensorless</span>
         <span class="n">u_s_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">i_s_ref</span><span class="p">,</span> <span class="n">i_s</span><span class="p">)</span>
@@ -274,7 +274,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">T_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">i_s_max</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_sgm</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">n_p</span>
         <span class="c1"># Local parameters for initializing the constants</span>
         <span class="n">psi_R_nom</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">psi_R_nom</span>
         <span class="n">L_M</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">L_M</span>
@@ -317,7 +317,7 @@
             <span class="k">return</span> <span class="n">i_sq_max</span>
 
         <span class="c1"># q-axis current reference</span>
-        <span class="n">i_sq_ref</span> <span class="o">=</span> <span class="n">tau_M_ref</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">psi_R</span><span class="p">)</span> <span class="k">if</span> <span class="n">psi_R</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">i_sq_ref</span> <span class="o">=</span> <span class="n">tau_M_ref</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">psi_R</span><span class="p">)</span> <span class="k">if</span> <span class="n">psi_R</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
 
         <span class="c1"># Limit the current</span>
         <span class="n">i_sq_max</span> <span class="o">=</span> <span class="n">q_axis_current_limit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span><span class="p">,</span> <span class="n">psi_R</span><span class="p">)</span>
@@ -328,7 +328,7 @@
         <span class="n">i_s_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">i_sq_ref</span>
 
         <span class="c1"># Limited torque (for the speed controller)</span>
-        <span class="n">tau_M_ref_lim</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">psi_R</span><span class="o">*</span><span class="n">i_sq_ref</span>
+        <span class="n">tau_M_ref_lim</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">psi_R</span><span class="o">*</span><span class="n">i_sq_ref</span>
 
         <span class="k">return</span> <span class="n">i_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span></div>
 

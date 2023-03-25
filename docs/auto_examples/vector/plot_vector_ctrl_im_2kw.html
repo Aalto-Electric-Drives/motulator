@@ -133,14 +133,15 @@ drive.</p>
     <span class="n">f_nom</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># Frequency</span>
     <span class="n">tau_nom</span><span class="o">=</span><span class="mf">14.6</span><span class="p">,</span>  <span class="c1"># Torque</span>
     <span class="n">P_nom</span><span class="o">=</span><span class="mf">2.2e3</span><span class="p">,</span>  <span class="c1"># Power</span>
-    <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Number of pole pairs</span>
+    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Number of pole pairs</span>
 </pre></div>
 </div>
 <p>Configure the system model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure the induction motor using its inverse-Γ parameters</span>
-<span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorInvGamma</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorInvGamma</span><span class="p">(</span>
+    <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="c1"># Alternatively configure the induction motor using its Γ parameters</span>
-<span class="c1"># motor = mt.InductionMotor(R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, p=2)</span>
+<span class="c1"># motor = mt.InductionMotor(R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)</span>
 
 <span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>  <span class="c1"># Mechanics model</span>
 <span class="n">conv</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>  <span class="c1"># Inverter model</span>
@@ -161,7 +162,7 @@ parameter errors. This may happen in real drives as well.</p>
         <span class="n">i_s_max</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>  <span class="c1"># Current limit</span>
         <span class="n">tau_M_max</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span><span class="p">,</span>  <span class="c1"># Torque limit (for the speed ctrl)</span>
         <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">,</span>  <span class="c1"># Inertia estimate (for the speed ctrl)</span>
-        <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># Number of pole pairs</span>
+        <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># Number of pole pairs</span>
         <span class="c1"># Inverse-Γ model parameter estimates</span>
         <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span>
         <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span>
@@ -193,7 +194,7 @@ the results in SI units.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_001.png" alt="plot vector ctrl im 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.996 seconds)</p>
+<img src="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_001.png" alt="plot vector ctrl im 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.281 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/5c5462abbacc47f76538a5bef10a227e/plot_vector_ctrl_im_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vector_ctrl_im_2kw.py</span></code></a></p>

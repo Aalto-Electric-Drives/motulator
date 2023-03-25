@@ -17,14 +17,14 @@ import motulator as mt
 # Compute base values based on the nominal values (just for figures).
 
 base = mt.BaseValues(
-    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, p=2)
+    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
 
 # %%
 # Create the system model.
 
 # Γ-equivalent motor model with main-flux saturation included
 motor = mt.InductionMotorSaturated(
-    R_s=3.7, R_r=2.5, L_ell=.023, L_su=.34, beta=.84, S=7, p=2)
+    R_s=3.7, R_r=2.5, L_ell=.023, L_su=.34, beta=.84, S=7, n_p=2)
 # Mechanics model
 mech = mt.Mechanics(J=.015)
 # Frequency converter with a diode bridge
@@ -45,7 +45,7 @@ ctrl = mt.InductionMotorVHzCtrl(
 ctrl.w_m_ref = lambda t: (t > .2)*(1.*base.w)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = 1.1*base.tau_nom/(base.w/base.p)**2
+k = 1.1*base.tau_nom/(base.w/base.n_p)**2
 mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # Stepwise load torque at t = 1 s, 20% of the rated torque

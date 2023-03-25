@@ -57,7 +57,7 @@ Compute base values based on the nominal values (just for figures).
 
 
     base = mt.BaseValues(
-        U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, p=2)
+        U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
 
 
 
@@ -70,13 +70,14 @@ Compute base values based on the nominal values (just for figures).
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-35
+.. GENERATED FROM PYTHON SOURCE LINES 27-36
 
 .. code-block:: default
 
 
     # Configure the induction motor using its inverse-Γ parameters
-    motor = mt.InductionMotorInvGamma(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, p=2)
+    motor = mt.InductionMotorInvGamma(
+        R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 
     mech = mt.Mechanics(J=.016)  # Mechanics model
     conv = mt.Inverter(u_dc=540)  # Inverter model
@@ -89,11 +90,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-42
+.. GENERATED FROM PYTHON SOURCE LINES 38-43
 
 .. code-block:: default
 
@@ -109,12 +110,12 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-45
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
 
 Set the speed reference and the external load torque. More complicated
 signals could be defined as functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-57
+.. GENERATED FROM PYTHON SOURCE LINES 46-58
 
 .. code-block:: default
 
@@ -125,7 +126,7 @@ signals could be defined as functions.
     ctrl.w_m_ref = mt.Sequence(times, values)
 
     # Quadratic load torque profile (corresponding to pumps and fans)
-    k = .2*base.tau_nom/(base.w/base.p)**2
+    k = .2*base.tau_nom/(base.w/base.n_p)**2
     mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
     # External load torque could be set here, now zero
     mdl.mech.tau_L_t = lambda t: (t > 1.)*base.tau_nom*0
@@ -137,12 +138,12 @@ signals could be defined as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-60
+.. GENERATED FROM PYTHON SOURCE LINES 59-61
 
 Create the simulation object and simulate it. The option `pwm=True` enables
 the model for the carrier comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-66
+.. GENERATED FROM PYTHON SOURCE LINES 61-67
 
 .. code-block:: default
 
@@ -161,16 +162,16 @@ the model for the carrier comparison.
  .. code-block:: none
 
 
-    Execution time: 6.31 s
+    Execution time: 6.98 s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-72
+.. GENERATED FROM PYTHON SOURCE LINES 69-73
 
 .. code-block:: default
 
@@ -205,7 +206,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.390 seconds)
+   **Total running time of the script:** ( 0 minutes  8.103 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:

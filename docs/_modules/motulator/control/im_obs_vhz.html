@@ -111,7 +111,6 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
 <span class="kn">from</span> <span class="nn">motulator.control.common</span> <span class="kn">import</span> <span class="n">Ctrl</span><span class="p">,</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">RateLimiter</span>
 <span class="kn">from</span> <span class="nn">motulator.helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">Bunch</span>
 
@@ -149,7 +148,7 @@
 <div class="viewcode-block" id="InductionMotorObsVHzCtrlPars.R_R"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_obs_vhz/index.html#motulator.control.im_obs_vhz.InductionMotorObsVHzCtrlPars.R_R">[docs]</a>    <span class="n">R_R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.1</span></div>
 <div class="viewcode-block" id="InductionMotorObsVHzCtrlPars.L_sgm"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_obs_vhz/index.html#motulator.control.im_obs_vhz.InductionMotorObsVHzCtrlPars.L_sgm">[docs]</a>    <span class="n">L_sgm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.021</span></div>
 <div class="viewcode-block" id="InductionMotorObsVHzCtrlPars.L_M"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_obs_vhz/index.html#motulator.control.im_obs_vhz.InductionMotorObsVHzCtrlPars.L_M">[docs]</a>    <span class="n">L_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">.224</span></div>
-<div class="viewcode-block" id="InductionMotorObsVHzCtrlPars.p"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_obs_vhz/index.html#motulator.control.im_obs_vhz.InductionMotorObsVHzCtrlPars.p">[docs]</a>    <span class="n">p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span></div></div>
+<div class="viewcode-block" id="InductionMotorObsVHzCtrlPars.n_p"><a class="viewcode-back" href="../../../autoapi/motulator/control/im_obs_vhz/index.html#motulator.control.im_obs_vhz.InductionMotorObsVHzCtrlPars.n_p">[docs]</a>    <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span></div></div>
 
 
 <span class="c1"># %%</span>
@@ -179,7 +178,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_f</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_f</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_r</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_r</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_psi</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">alpha_psi</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">n_p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_tau</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">k_tau</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">i_s_max</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">slip_compensation</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">slip_compensation</span>
@@ -225,13 +224,13 @@
         <span class="n">w_r_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_r_ref</span>
 
         <span class="c1"># Torque estimate (11c)</span>
-        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_R</span><span class="p">))</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_R</span><span class="p">))</span>
 
         <span class="c1"># Slip frequency compensation (if enabled) for the low-pass filter.</span>
         <span class="c1"># Note, could also be based on the low-pass filtered torque.</span>
         <span class="n">psi_R_sqr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_R</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">slip_compensation</span> <span class="ow">and</span> <span class="n">psi_R_sqr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">w_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_R</span><span class="o">*</span><span class="n">tau_M</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">psi_R_sqr</span><span class="p">)</span>
+            <span class="n">w_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_R</span><span class="o">*</span><span class="n">tau_M</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">psi_R_sqr</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">w_r</span> <span class="o">=</span> <span class="mi">0</span>
 

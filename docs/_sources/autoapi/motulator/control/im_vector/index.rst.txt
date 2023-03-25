@@ -136,7 +136,7 @@ Classes
 
       
 
-   .. py:attribute:: p
+   .. py:attribute:: n_p
       :type: int
       :value: 2
 

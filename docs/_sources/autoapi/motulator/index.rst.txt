@@ -680,7 +680,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotor(p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=0.245)
+.. py:class:: InductionMotor(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=0.245)
 
    
    Γ-equivalent model of an induction motor.
@@ -689,8 +689,8 @@ Functions
    is implemented in stator coordinates. The flux linkages are used as state
    variables.
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param R_r: Rotor resistance.
@@ -857,7 +857,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotorSaturated(p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_su=0.34, beta=0.84, S=7)
+.. py:class:: InductionMotorSaturated(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_su=0.34, beta=0.84, S=7)
 
    Bases: :py:obj:`InductionMotor`
 
@@ -869,8 +869,8 @@ Functions
 
        L_s(psi_ss) = L_su/(1 + (beta*abs(psi_ss)**S)
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param R_r: Rotor resistance.
@@ -930,7 +930,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotorInvGamma(p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)
+.. py:class:: InductionMotorInvGamma(n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)
 
    Bases: :py:obj:`InductionMotor`
 
@@ -941,8 +941,8 @@ Functions
    an interface for the inverse-Γ model parameters. Linear magnetics are
    assumed. If magnetic saturation is to be modeled, the Γ model is preferred.
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param R_R: Rotor resistance.
@@ -969,7 +969,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SynchronousMotor(p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, mech=None)
+.. py:class:: SynchronousMotor(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, mech=None)
 
    
    Synchronous motor model.
@@ -978,8 +978,8 @@ Functions
    linkage is the state variable. The default values correspond to a 2.2-kW
    permanent-magnet synchronous motor.
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param L_d: d-axis inductance.
@@ -1130,7 +1130,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: SynchronousMotorSaturated(p=2, R_s=0.54, i_f=0, a_d0=17.4, a_q0=52.1, a_dd=373.0, a_qq=658.0, a_dq=1120.0, S=5, T=1, U=1, V=0, mech=None)
+.. py:class:: SynchronousMotorSaturated(n_p=2, R_s=0.54, i_f=0, a_d0=17.4, a_q0=52.1, a_dd=373.0, a_qq=658.0, a_dq=1120.0, S=5, T=1, U=1, V=0, mech=None)
 
    Bases: :py:obj:`SynchronousMotor`
 
@@ -1142,8 +1142,8 @@ Functions
    d-axis. The default values correspond to a 6.7-kW synchronous reluctance
    motor.
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param i_f: Constant current corresponding to the magnetomotive force (MMF) of PMs.
@@ -1243,7 +1243,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: SynchronousMotorSaturatedLUT(p=2, R_s=0.2, psi_s_data=None, i_s_data=None, mech=None)
+.. py:class:: SynchronousMotorSaturatedLUT(n_p=2, R_s=0.2, psi_s_data=None, i_s_data=None, mech=None)
 
    Bases: :py:obj:`SynchronousMotor`
 
@@ -1255,8 +1255,8 @@ Functions
    the PMSM convention, i.e., that the PM flux is along the d-axis.
    Unstructured flux map data can be used.
 
-   :param p: Number of pole pairs.
-   :type p: int
+   :param n_p: Number of pole pairs.
+   :type n_p: int
    :param R_s: Stator resistance.
    :type R_s: float
    :param psi_s_data: Stator flux data points for creating the interpolant.
@@ -2527,7 +2527,7 @@ Functions
 
       
 
-   .. py:attribute:: p
+   .. py:attribute:: n_p
       :type: int
       :value: 2
 
@@ -2703,7 +2703,7 @@ Functions
 
       
 
-   .. py:attribute:: p
+   .. py:attribute:: n_p
       :type: int
       :value: 3
 
@@ -3356,7 +3356,7 @@ Functions
 
       
 
-   .. py:attribute:: p
+   .. py:attribute:: n_p
       :type: int
       :value: 3
 
@@ -3671,7 +3671,7 @@ Functions
 
       
 
-   .. py:attribute:: p
+   .. py:attribute:: n_p
       :type: int
       :value: 2
 
@@ -3843,7 +3843,7 @@ Functions
 
       
 
-   .. py:attribute:: p
+   .. py:attribute:: n_p
       :type: int
       :value: 3
 
@@ -3899,7 +3899,7 @@ Functions
 
       
 
-   .. py:attribute:: p
+   .. py:attribute:: n_p
       :type: int
 
       

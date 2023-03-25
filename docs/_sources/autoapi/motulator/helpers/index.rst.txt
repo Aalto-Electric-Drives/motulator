@@ -155,7 +155,7 @@ Functions
 
       
 
-   .. py:attribute:: p
+   .. py:attribute:: n_p
       :type: int
 
       

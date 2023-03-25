@@ -58,7 +58,7 @@ Compute base values based on the nominal values (just for figures).
         f_nom=50,  # Frequency
         tau_nom=14.6,  # Torque
         P_nom=2.2e3,  # Power
-        p=2)  # Number of pole pairs
+        n_p=2)  # Number of pole pairs
 
 
 
@@ -71,13 +71,14 @@ Compute base values based on the nominal values (just for figures).
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-37
+.. GENERATED FROM PYTHON SOURCE LINES 29-38
 
 .. code-block:: default
 
 
     # Configure the induction motor using its inverse-Γ parameters
-    motor = mt.InductionMotorInvGamma(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, p=2)
+    motor = mt.InductionMotorInvGamma(
+        R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 
     mech = mt.Mechanics(J=.015)  # Mechanics model
     conv = mt.Inverter(u_dc=540)  # Inverter model
@@ -90,11 +91,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-42
+.. GENERATED FROM PYTHON SOURCE LINES 40-43
 
 .. code-block:: default
 
@@ -108,11 +109,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
 Set the speed reference.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-50
+.. GENERATED FROM PYTHON SOURCE LINES 45-51
 
 .. code-block:: default
 
@@ -129,11 +130,11 @@ Set the speed reference.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Set the load torque reference
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-62
+.. GENERATED FROM PYTHON SOURCE LINES 53-63
 
 .. code-block:: default
 
@@ -154,13 +155,13 @@ Set the load torque reference
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-66
+.. GENERATED FROM PYTHON SOURCE LINES 64-67
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-70
+.. GENERATED FROM PYTHON SOURCE LINES 67-71
 
 .. code-block:: default
 
@@ -175,12 +176,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 72-74
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-75
+.. GENERATED FROM PYTHON SOURCE LINES 74-76
 
 .. code-block:: default
 
@@ -201,7 +202,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.234 seconds)
+   **Total running time of the script:** ( 0 minutes  7.965 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_obs_vhz_ctrl_im_2kw.py:

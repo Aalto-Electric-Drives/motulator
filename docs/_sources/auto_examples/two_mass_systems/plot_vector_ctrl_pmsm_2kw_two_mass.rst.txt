@@ -57,7 +57,7 @@ Compute base values based on the nominal values (just for figures).
 
 
     base = mt.BaseValues(
-        U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, p=3)
+        U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
 
 
 
@@ -250,7 +250,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.922 seconds)
+   **Total running time of the script:** ( 0 minutes  4.339 seconds)
 
 
 .. _sphx_glr_download_auto_examples_two_mass_systems_plot_vector_ctrl_pmsm_2kw_two_mass.py:
