@@ -31,7 +31,7 @@ The electromagnetic torque is
 .. math::
     \tau_\mathrm{M} = \frac{3 n_\mathrm{p}}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s} \boldsymbol{\psi}_\mathrm{s}^* \right\}
 
-Since the motor is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from :math:`\tau_\mathrm{M}` to :math:`\omega_\mathrm{M}`.
+Since the motor is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from :math:`\tau_\mathrm{M}` to :math:`\omega_\mathrm{M}`, see the module :mod:`motulator.model.mech`.
 
 .. figure:: figs/sm_block_stat.svg
    :width: 100%
@@ -39,7 +39,7 @@ Since the motor is fed and observed from stator coordinates, the quantities are 
    :alt: Synchronous motor model seen from stator coordinates
    :target: .
 
-   Synchronous motor model seen from stator coordinates. The mechanical angle :math:`\vartheta_\mathrm{M}` of the rotor is a state of the mechanical subsystem (see e.g. :class:`motulator.model.mech.Mechanics`).
+   Synchronous motor model seen from stator coordinates.
 
 References
 ----------
