@@ -14,7 +14,6 @@ References
 from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
-
 from motulator.helpers import abc2complex, Bunch
 from motulator.control.common import Ctrl, PWM, RateLimiter
 from motulator.control.sm_torque import TorqueCharacteristics
@@ -50,7 +49,7 @@ class SynchronousMotorVHzObsCtrlPars:
     L_d: float = .036
     L_q: float = .051
     psi_f: float = .545
-    p: int = 3
+    n_p: int = 3
 
 
 # %%
@@ -77,7 +76,7 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         self.w_m_ref = pars.w_m_ref
         # Motor parameters
         self.R_s = pars.R_s
-        self.p = pars.p
+        self.n_p = pars.n_p
         # Controller parameters
         self.T_s = pars.T_s
         self.alpha_f = pars.alpha_f
@@ -86,9 +85,9 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
         psi_s0 = pars.psi_f if pars.psi_f > 0 else pars.psi_s_min
         if pars.psi_f > 0:  # PMSM or PM-SyRM
-            c_delta0 = 1.5*pars.p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
+            c_delta0 = 1.5*pars.n_p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
         else:  # SyRM
-            c_delta0 = 1.5*pars.p*G*psi_s0**2
+            c_delta0 = 1.5*pars.n_p*G*psi_s0**2
         self.k_tau = pars.alpha_tau/c_delta0
         # Initial states
         self.theta_s, self.tau_M_ref = 0, 0
@@ -130,7 +129,7 @@ class SynchronousMotorVHzObsCtrl(Ctrl):
         psi_s_ref, _ = self.flux_torque_ref(tau_M_ref, w_m_ref, u_dc)
 
         # Electromagnetic torque (7d)
-        tau_M = 1.5*self.p*np.imag(i_s*np.conj(psi_s))
+        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
 
         # Dynamic frequency (5a)
         w_s = w_m_ref - self.k_tau*(tau_M - tau_M_ref)

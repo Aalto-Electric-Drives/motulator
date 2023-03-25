@@ -73,12 +73,13 @@ class BaseValues:
     """
 
     # pylint: disable=too-many-instance-attributes
-    U_nom: float
-    I_nom: float
-    f_nom: float
-    P_nom: float
-    tau_nom: float
-    p: int
+    # Nominal values
+    U_nom: float  # Voltage (rms, line-line)
+    I_nom: float  # Current (rms)
+    f_nom: float  # Frequency
+    P_nom: float  # Power
+    tau_nom: float  # Torque
+    n_p: int  # Number of pole pairs
 
     def __post_init__(self):
         """Compute the base values."""
@@ -86,10 +87,10 @@ class BaseValues:
         self.i = np.sqrt(2)*self.I_nom
         self.w = 2*np.pi*self.f_nom
         self.psi = self.u/self.w
-        self.P = 1.5*self.u*self.i
+        self.p = 1.5*self.u*self.i
         self.Z = self.u/self.i
         self.L = self.Z/self.w
-        self.tau = self.p*self.P/self.w
+        self.tau = self.n_p*self.p/self.w
 
 
 # %%

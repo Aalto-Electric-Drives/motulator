@@ -96,7 +96,7 @@ class SynchronousMotorDrive:
         """
         # Unpack the states
         psi_s, w_M, theta_M = x
-        theta_m = self.motor.p*theta_M
+        theta_m = self.motor.n_p*theta_M
 
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
@@ -133,14 +133,14 @@ class SynchronousMotorDrive:
 
         # Compute some useful quantities
         self.data.i_s, self.data.tau_M = self.motor.magnetic(self.data.psi_s)
-        self.data.w_m = self.motor.p*self.data.w_M
+        self.data.w_m = self.motor.n_p*self.data.w_M
         self.data.tau_L = (
             self.mech.tau_L_t(self.data.t) + self.mech.tau_L_w(self.data.w_M))
         self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
         self.data.theta_M = np.mod(  # Limit into [-pi, pi)
             self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.theta_m = np.mod(  # Limit into [-pi, pi)
-            self.motor.p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
+            self.motor.n_p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.i_ss = self.data.i_s*np.exp(1j*self.data.theta_m)
 
 
@@ -184,7 +184,7 @@ class SynchronousMotorDriveTwoMass(SynchronousMotorDrive):
         """Override the base class."""
         # Unpack the states
         psi_s, w_M, theta_M, w_L, theta_ML = x
-        theta_m = self.motor.p*theta_M
+        theta_m = self.motor.n_p*theta_M
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
         u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates

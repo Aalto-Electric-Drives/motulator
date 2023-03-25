@@ -16,7 +16,7 @@ import motulator as mt
 # Compute base values based on the nominal values (just for figures).
 
 base = mt.BaseValues(
-    U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, p=3)
+    U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
 
 # %%
 # Configure the system model.

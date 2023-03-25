@@ -24,7 +24,6 @@ References
 from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
-
 from motulator.control.common import Ctrl, PWM, RateLimiter
 from motulator.helpers import abc2complex, Bunch
 

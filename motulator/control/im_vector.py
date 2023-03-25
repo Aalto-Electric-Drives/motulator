@@ -42,7 +42,7 @@ class InductionMotorVectorCtrlPars:
     R_R: float = 2.1
     L_sgm: float = .021
     L_M: float = .224
-    p: int = 2
+    n_p: int = 2
     J: float = .015
 
 
@@ -67,7 +67,7 @@ class InductionMotorVectorCtrl(Ctrl):
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
         self.sensorless = pars.sensorless
-        self.p = pars.p
+        self.n_p = pars.n_p
         self.speed_ctrl = SpeedCtrl(pars)
         self.current_ref = CurrentRef(pars)
         self.current_ctrl = CurrentCtrl(pars)
@@ -103,7 +103,7 @@ class InductionMotorVectorCtrl(Ctrl):
         u_dc = mdl.conv.meas_dc_voltage()  # DC-bus voltage
 
         if not self.sensorless:
-            w_m = self.p*mdl.mech.meas_speed()  # Rotor speed
+            w_m = self.n_p*mdl.mech.meas_speed()  # Rotor speed
         else:
             w_m = self.observer.w_m  # Get the estimated speed
 
@@ -116,7 +116,7 @@ class InductionMotorVectorCtrl(Ctrl):
         i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
 
         # Outputs
-        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
+        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.n_p, w_m/self.n_p)
         i_s_ref, tau_M_ref_lim = self.current_ref.output(tau_M_ref, psi_R)
         w_s = self.observer.output(u_s, i_s, w_m)  # w_m not used if sensorless
         u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
@@ -179,7 +179,7 @@ class CurrentRef:
         self.T_s = pars.T_s
         self.i_s_max = pars.i_s_max
         self.L_sgm = pars.L_sgm
-        self.p = pars.p
+        self.n_p = pars.n_p
         # Local parameters for initializing the constants
         psi_R_nom = pars.psi_R_nom
         L_M = pars.L_M
@@ -222,7 +222,7 @@ class CurrentRef:
             return i_sq_max
 
         # q-axis current reference
-        i_sq_ref = tau_M_ref/(1.5*self.p*psi_R) if psi_R > 0 else 0
+        i_sq_ref = tau_M_ref/(1.5*self.n_p*psi_R) if psi_R > 0 else 0
 
         # Limit the current
         i_sq_max = q_axis_current_limit(self.i_sd_ref, psi_R)
@@ -233,7 +233,7 @@ class CurrentRef:
         i_s_ref = self.i_sd_ref + 1j*i_sq_ref
 
         # Limited torque (for the speed controller)
-        tau_M_ref_lim = 1.5*self.p*psi_R*i_sq_ref
+        tau_M_ref_lim = 1.5*self.n_p*psi_R*i_sq_ref
 
         return i_s_ref, tau_M_ref_lim
 

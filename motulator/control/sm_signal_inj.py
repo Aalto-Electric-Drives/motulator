@@ -11,7 +11,6 @@ version.
 
 from dataclasses import dataclass
 import numpy as np
-
 from motulator.helpers import abc2complex, Bunch
 from motulator.control.common import Ctrl, SpeedCtrl, PWM
 from motulator.control.sm_vector import (
@@ -46,7 +45,7 @@ class SynchronousMotorSignalInjectionCtrl(Ctrl):
         super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
-        self.p = pars.p
+        self.n_p = pars.n_p
         self.current_ctrl = CurrentCtrl(pars)
         self.speed_ctrl = SpeedCtrl(pars)
         self.current_ref = CurrentRef(pars)
@@ -89,7 +88,7 @@ class SynchronousMotorSignalInjectionCtrl(Ctrl):
         i_s_filt = self.signal_inj.filter_current(i_s)
 
         # Outputs
-        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
+        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.n_p, w_m/self.n_p)
         i_s_ref, tau_M_ref_lim = self.current_ref.output(tau_M_ref, w_m, u_dc)
         err = self.signal_inj.output(i_s.imag)
         # Superimpose the excitation voltage on the d-axis

@@ -3,7 +3,6 @@
 from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
-
 from motulator.helpers import abc2complex, Bunch
 from motulator.control.common import Ctrl, SpeedCtrl, PWM
 from motulator.control.sm_torque import TorqueCharacteristics
@@ -39,7 +38,7 @@ class SynchronousMotorVectorCtrlPars:
     L_d: float = .036
     L_q: float = .051
     psi_f: float = .545
-    p: int = 3
+    n_p: int = 3
     J: float = .015
     # Sensorless observer
     w_o: float = 2*np.pi*40  # Used only in the sensorless mode
@@ -66,7 +65,7 @@ class SynchronousMotorVectorCtrl(Ctrl):
         super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
-        self.p = pars.p
+        self.n_p = pars.n_p
         self.sensorless = pars.sensorless
         self.current_ctrl = CurrentCtrl(pars)
         self.speed_ctrl = SpeedCtrl(pars)
@@ -104,10 +103,10 @@ class SynchronousMotorVectorCtrl(Ctrl):
 
         if not self.sensorless:
             # Measure the rotor speed
-            w_m = self.p*mdl.mech.meas_speed()
+            w_m = self.n_p*mdl.mech.meas_speed()
             # Limit the electrical rotor position into [-pi, pi)
             theta_m = np.mod(
-                self.p*mdl.mech.meas_position() + np.pi, 2*np.pi) - np.pi
+                self.n_p*mdl.mech.meas_position() + np.pi, 2*np.pi) - np.pi
         else:
             # Get the rotor speed and position estimates
             w_m, theta_m = self.observer.w_m, self.observer.theta_m
@@ -119,7 +118,7 @@ class SynchronousMotorVectorCtrl(Ctrl):
         i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
 
         # Outputs
-        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.p, w_m/self.p)
+        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.n_p, w_m/self.n_p)
         i_s_ref, tau_M_ref_lim = self.current_ref.output(tau_M_ref, w_m, u_dc)
         u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
@@ -270,7 +269,7 @@ class CurrentRef:
     def __init__(self, pars):
         self.T_s = pars.T_s
         self.i_s_max = pars.i_s_max
-        self.p = pars.p
+        self.n_p = pars.n_p
         self.L_d = pars.L_d
         self.L_q = pars.L_q
         self.psi_f = pars.psi_f
@@ -327,7 +326,7 @@ class CurrentRef:
 
         # q-axis current reference
         psi_t = self.psi_f + (self.L_d - self.L_q)*self.i_sd_ref
-        i_sq_ref = tau_M_ref/(1.5*self.p*psi_t) if psi_t != 0 else 0
+        i_sq_ref = tau_M_ref/(1.5*self.n_p*psi_t) if psi_t != 0 else 0
 
         # Limit the q-axis current reference
         i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M_ref))
@@ -342,7 +341,7 @@ class CurrentRef:
         i_s_ref = self.i_sd_ref + 1j*i_sq_ref
 
         # Limited torque (for the speed controller)
-        tau_M_ref_lim = 1.5*self.p*psi_t*i_sq_ref
+        tau_M_ref_lim = 1.5*self.n_p*psi_t*i_sq_ref
 
         return i_s_ref, tau_M_ref_lim
 
