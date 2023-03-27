@@ -25,8 +25,8 @@ base = mt.BaseValues(
 
 # Saturated SyRM model
 motor = mt.SynchronousMotorSaturated()
-# Magnetically linear SyRM model
-# motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+# Magnetically linear SyRM model below (uncomment to try)
+# motor = mt.SynchronousMotor(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 mech = mt.Mechanics()
 conv = mt.Inverter()
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
@@ -40,18 +40,20 @@ pars = mt.SynchronousMotorFluxVectorCtrlPars(
     # Disable MTPA since the control system does not consider the saturation
     psi_s_min=base.psi,
     psi_s_max=base.psi,
-    k_u=1,
-    alpha_psi=2*np.pi*100,
-    alpha_tau=2*np.pi*200,
-    alpha_s=2*np.pi*4,
-    tau_M_max=2*base.tau_nom,
-    i_s_max=2*base.i,
+    # Motor parameter estimates
     R_s=.54,
     L_d=37e-3,
     L_q=6.2e-3,
     psi_f=0,
     n_p=2,
     J=.015,
+    # Other controller parameters
+    alpha_psi=2*np.pi*50,
+    alpha_tau=2*np.pi*50,
+    alpha_s=2*np.pi*4,
+    w_o=2*np.pi*50,
+    tau_M_max=2*base.tau_nom,
+    i_s_max=2*base.i,
 )
 ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 

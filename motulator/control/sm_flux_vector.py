@@ -1,11 +1,10 @@
 """
 Flux-vector control for synchronous motor drives.
 
-This implements a simplified version of stator-flux-vector control [1]_. The
-rotor coordinates are used in this implementation [2]_. One control variable is
-the stator-flux magnitude and another is the electromagnetic torque. The latter
-choice differs from [1]_ and [2]_, where the torque-producing current component
-is used. Furthermore, here proportional control is used for simplicity. The
+This implements a version of stator-flux-vector control [1]_. Rotor coordinates 
+as well as decoupling between the stator flux and torque channels are used [2]_. 
+Here, the stator flux magnitude and the electromagnetic torque are selected as
+controllable variables. Proportional controllers are used for simplicity. The 
 magnetic saturation is not considered in this implementation.
 
 References
@@ -47,8 +46,8 @@ class SynchronousMotorFluxVectorCtrlPars:
     # Voltage marginal
     k_u: float = .9
     # Bandwidths
-    alpha_psi: float = 2*np.pi*100
-    alpha_tau: float = 2*np.pi*400
+    alpha_psi: float = 2*np.pi*150
+    alpha_tau: float = 2*np.pi*50
     alpha_s: float = 2*np.pi*4
     # Maximum values
     tau_M_max: float = 1.5*14
@@ -61,7 +60,7 @@ class SynchronousMotorFluxVectorCtrlPars:
     n_p: int = 3
     J: float = .015
     # Sensorless observer (used only in the sensorless mode)
-    w_o: float = 2*np.pi*40
+    w_o: float = 2*np.pi*100
     zeta_inf: float = .2
     # Sensored observer (used only in the sensored mode)
     g: float = 2*np.pi*15
@@ -87,9 +86,7 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
         super().__init__()
         self.T_s = pars.T_s
         self.w_m_ref = pars.w_m_ref
-        self.n_p = pars.n_p
         self.sensorless = pars.sensorless
-        self.flux_torque_ctrl = FluxTorqueCtrl(pars)
         self.speed_ctrl = SpeedCtrl(pars)
         self.pwm = PWM(pars)
         if pars.sensorless:
@@ -97,6 +94,14 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
         else:
             self.observer = Observer(pars)
         self.flux_torque_ref = FluxTorqueRef(pars)
+        # Bandwidths
+        self.alpha_psi = pars.alpha_psi
+        self.alpha_tau = pars.alpha_tau
+        # Motor parameter estimates
+        self.R_s = pars.R_s
+        self.L_d = pars.L_d
+        self.L_q = pars.L_q
+        self.n_p = pars.n_p
 
     def __call__(self, mdl):
         """
@@ -139,12 +144,30 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
 
         # Flux and torque estimates
         psi_s = self.observer.psi_s
+        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
 
         # Outputs
         tau_M_ref = self.speed_ctrl.output(w_m_ref/self.n_p, w_m/self.n_p)
         psi_s_ref, tau_M_ref_lim = self.flux_torque_ref(tau_M_ref, w_m, u_dc)
-        u_s_ref = self.flux_torque_ctrl(
-            psi_s_ref, tau_M_ref_lim, psi_s, i_s, w_m)
+
+        # Auxiliary current
+        i_a = psi_s.real/self.L_q + 1j*psi_s.imag/self.L_d - i_s
+
+        # Torque-production factor (c_tau = 0 corresponds to the MTPV condition)
+        c_tau = np.real(i_a*np.conj(psi_s))
+
+        # References for the flux and torque controllers
+        v_psi = self.alpha_psi*(psi_s_ref - np.abs(psi_s))
+        v_tau = self.alpha_tau*(tau_M_ref_lim - tau_M)
+        if c_tau > 0:
+            v = (np.abs(psi_s)*i_a*v_psi + 1j*psi_s*v_tau)/c_tau
+        else:
+            v = v_psi
+
+        # Stator voltage reference
+        u_s_ref = self.R_s*i_s + 1j*w_m*psi_s + v
+
+        # PWM output
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
@@ -169,71 +192,6 @@ class SynchronousMotorFluxVectorCtrl(Ctrl):
         self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref
-
-
-# %%
-class FluxTorqueCtrl:
-    """
-    Stator flux and torque controller.
-
-    Parameters
-    ----------
-    pars : SynchronousMotoroFluxVectorCtrlPars
-        Control parameters.
-
-    """
-
-    def __init__(self, pars):
-        self.T_s = pars.T_s
-        self.R_s = pars.R_s
-        self.n_p = pars.n_p
-        self.alpha_psi = pars.alpha_psi
-        # Gain k_tau
-        G = (pars.L_d - pars.L_q)/(pars.L_d*pars.L_q)
-        psi_s0 = pars.psi_f if pars.psi_f > 0 else pars.psi_s_min
-        if pars.psi_f > 0:  # PMSM or PM-SyRM
-            c_delta0 = 1.5*pars.n_p*(pars.psi_f*psi_s0/pars.L_d - G*psi_s0**2)
-        else:  # SyRM
-            c_delta0 = 1.5*pars.n_p*G*psi_s0**2
-        self.k_tau = pars.alpha_tau/c_delta0
-
-    def __call__(self, psi_s_ref, tau_M_ref, psi_s, i_s, w_m):
-        """
-        Compute the unlimited voltage reference.
-
-        Parameters
-        ----------
-        psi_s_ref : float
-            Stator flux reference (magnitude).
-        tau_M_ref : float
-            Torque reference.
-        psi_s : complex
-            Stator flux estimate.
-        i_s : complex
-            Stator current.
-        w_m : float
-            Rotor speed (in electrical rad/s).
-
-        Returns
-        -------
-        u_s_ref : complex
-            Unlimited voltage reference.
-
-        """
-        # Torque estimate
-        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
-
-        # Stator frequency
-        w_s = w_m + self.k_tau*(tau_M_ref - tau_M)
-
-        # Voltage reference
-        e_psi = psi_s_ref - np.abs(psi_s)
-        delta = np.angle(psi_s)
-        u_s_ref = (
-            self.R_s*i_s + 1j*w_s*psi_s +
-            self.alpha_psi*e_psi*np.exp(1j*delta))
-
-        return u_s_ref
 
 
 # %%
