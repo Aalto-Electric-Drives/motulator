@@ -74,8 +74,8 @@ Configure the system model.
 
     # Saturated SyRM model
     motor = mt.SynchronousMotorSaturated()
-    # Magnetically linear SyRM model
-    # motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+    # Magnetically linear SyRM model below (uncomment to try)
+    # motor = mt.SynchronousMotor(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
     mech = mt.Mechanics()
     conv = mt.Inverter()
     mdl = mt.SynchronousMotorDrive(motor, mech, conv)
@@ -91,7 +91,7 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-58
+.. GENERATED FROM PYTHON SOURCE LINES 36-60
 
 .. code-block:: default
 
@@ -102,18 +102,20 @@ Configure the control system.
         # Disable MTPA since the control system does not consider the saturation
         psi_s_min=base.psi,
         psi_s_max=base.psi,
-        k_u=1,
-        alpha_psi=2*np.pi*100,
-        alpha_tau=2*np.pi*200,
-        alpha_s=2*np.pi*4,
-        tau_M_max=2*base.tau_nom,
-        i_s_max=2*base.i,
+        # Motor parameter estimates
         R_s=.54,
         L_d=37e-3,
         L_q=6.2e-3,
         psi_f=0,
         n_p=2,
         J=.015,
+        # Other controller parameters
+        alpha_psi=2*np.pi*50,
+        alpha_tau=2*np.pi*50,
+        alpha_s=2*np.pi*4,
+        w_o=2*np.pi*50,
+        tau_M_max=2*base.tau_nom,
+        i_s_max=2*base.i,
     )
     ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
 
@@ -124,11 +126,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-70
+.. GENERATED FROM PYTHON SOURCE LINES 62-72
 
 .. code-block:: default
 
@@ -149,11 +151,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 74-78
 
 .. code-block:: default
 
@@ -168,11 +170,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-80
+.. GENERATED FROM PYTHON SOURCE LINES 80-82
 
 .. code-block:: default
 
@@ -193,7 +195,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.597 seconds)
+   **Total running time of the script:** ( 0 minutes  13.696 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

@@ -7,11 +7,10 @@
 
    Flux-vector control for synchronous motor drives.
 
-   This implements a simplified version of stator-flux-vector control [Ra0108916492f-1]_. The
-   rotor coordinates are used in this implementation [Ra0108916492f-2]_. One control variable is
-   the stator-flux magnitude and another is the electromagnetic torque. The latter
-   choice differs from [Ra0108916492f-1]_ and [Ra0108916492f-2]_, where the torque-producing current component
-   is used. Furthermore, here proportional control is used for simplicity. The
+   This implements a version of stator-flux-vector control [Ra0108916492f-1]_. Rotor coordinates
+   as well as decoupling between the stator flux and torque channels are used [Ra0108916492f-2]_.
+   Here, the stator flux magnitude and the electromagnetic torque are selected as
+   controllable variables. Proportional controllers are used for simplicity. The
    magnetic saturation is not considered in this implementation.
 
    .. rubric:: References
@@ -38,7 +37,6 @@ Classes
 
    motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrlPars
    motulator.control.sm_flux_vector.SynchronousMotorFluxVectorCtrl
-   motulator.control.sm_flux_vector.FluxTorqueCtrl
    motulator.control.sm_flux_vector.Observer
 
 
@@ -217,67 +215,6 @@ Classes
 
       :returns: * **T_s** (*float*) -- Sampling period.
                 * **d_abc_ref** (*ndarray, shape (3,)*) -- Duty ratio references.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: FluxTorqueCtrl(pars)
-
-   
-   Stator flux and torque controller.
-
-   :param pars: Control parameters.
-   :type pars: SynchronousMotoroFluxVectorCtrlPars
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-   .. py:method:: __call__(psi_s_ref, tau_M_ref, psi_s, i_s, w_m)
-
-      
-      Compute the unlimited voltage reference.
-
-      :param psi_s_ref: Stator flux reference (magnitude).
-      :type psi_s_ref: float
-      :param tau_M_ref: Torque reference.
-      :type tau_M_ref: float
-      :param psi_s: Stator flux estimate.
-      :type psi_s: complex
-      :param i_s: Stator current.
-      :type i_s: complex
-      :param w_m: Rotor speed (in electrical rad/s).
-      :type w_m: float
-
-      :returns: **u_s_ref** -- Unlimited voltage reference.
-      :rtype: complex
 
 
 
