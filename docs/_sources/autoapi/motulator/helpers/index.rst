@@ -1,0 +1,395 @@
+:py:mod:`motulator.helpers`
+===========================
+
+.. py:module:: motulator.helpers
+
+.. autoapi-nested-parse::
+
+   Helper functions and classes.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   motulator.helpers.BaseValues
+   motulator.helpers.Sequence
+   motulator.helpers.Step
+   motulator.helpers.Bunch
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   motulator.helpers.abc2complex
+   motulator.helpers.complex2abc
+
+
+
+.. py:function:: abc2complex(u)
+
+   
+   Transform three-phase quantities to a complex space vector.
+
+   :param u: Phase quantities.
+   :type u: array_like, shape (3,)
+
+   :returns: Complex space vector (peak-value scaling).
+   :rtype: complex
+
+   .. rubric:: Examples
+
+   >>> from motulator import abc2complex
+   >>> y = abc2complex([1, 2, 3])
+   >>> y
+   (-1-0.5773502691896258j)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: complex2abc(u)
+
+   
+   Transform a complex space vector to three-phase quantities.
+
+   :param u: Complex space vector (peak-value scaling).
+   :type u: complex
+
+   :returns: Phase quantities.
+   :rtype: ndarray, shape (3,)
+
+   .. rubric:: Examples
+
+   >>> from motulator import complex2abc
+   >>> y = complex2abc(1-.5j)
+   >>> y
+   array([ 1.       , -0.9330127, -0.0669873])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: BaseValues
+
+   
+   Base values.
+
+   Base values are computed from the nominal values and the number of pole
+   pairs. They can be used, e.g., for scaling the plotted waveforms.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:attribute:: U_nom
+      :type: float
+
+      
+
+   .. py:attribute:: I_nom
+      :type: float
+
+      
+
+   .. py:attribute:: f_nom
+      :type: float
+
+      
+
+   .. py:attribute:: P_nom
+      :type: float
+
+      
+
+   .. py:attribute:: tau_nom
+      :type: float
+
+      
+
+   .. py:attribute:: n_p
+      :type: int
+
+      
+
+   .. py:method:: __post_init__()
+
+      
+      Compute the base values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Sequence(times, values, periodic=False)
+
+   
+   Sequence generator.
+
+   The time array must be increasing. The output values are interpolated
+   between the data points.
+
+   :param times: Time values.
+   :type times: ndarray
+   :param values: Output values.
+   :type values: ndarray
+   :param periodic: Enables periodicity. The default is False.
+   :type periodic: bool, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: __call__(t)
+
+      
+      Interpolate the output.
+
+      :param t: Time.
+      :type t: float
+
+      :returns: Interpolated output.
+      :rtype: float or complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Step(step_time, step_value, initial_value=0)
+
+   
+   Step function.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: __call__(t)
+
+      
+      Step function.
+
+      :param t: Time.
+      :type t: float
+
+      :returns: Step output.
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Bunch(**kwargs)
+
+   Bases: :py:obj:`dict`
+
+   Container object exposing keys as attributes.
+
+   Bunch objects are sometimes used as an output for functions and methods.
+   They extend dictionaries by enabling values to be accessed by key,
+   `bunch["value_key"]`, or by an attribute, `bunch.value_key`.
+
+   .. rubric:: Examples
+
+   >>> from sklearn.utils import Bunch
+   >>> b = Bunch(a=1, b=2)
+   >>> b['b']
+   2
+   >>> b.b
+   2
+   >>> b.a = 3
+   >>> b['a']
+   3
+   >>> b.c = 6
+   >>> b['c']
+   6
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: __setattr__(key, value)
+
+      
+      Implement setattr(self, name, value).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __dir__()
+
+      
+      Default dir() implementation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: __getattr__(key)
+
+
+   .. py:method:: __setstate__(state)
+
+
+

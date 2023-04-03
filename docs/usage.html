@@ -1,101 +1,349 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Usage &mdash; motulator 0.1.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
-      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
-      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
-      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Usage &#8212; motulator 0.1.2 documentation</title>
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
-        <script src="_static/clipboard.min.js"></script>
-        <script src="_static/copybutton.js"></script>
-    <script src="_static/js/theme.js"></script>
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API Reference" href="autoapi/index.html" />
-    <link rel="prev" title="Installation" href="installation.html" /> 
-</head>
+    <link rel="prev" title="Installation" href="installation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
 
-          
-          
-          <a href="index.html" class="icon icon-home">
-            motulator
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul class="current">
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">motulator 0.1.2 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Usage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/motulator/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/motulator/control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/common/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.common</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/im_obs_vhz/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im_obs_vhz</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/im_vector/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im_vector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/im_vhz/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im_vhz</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/sm_flux_vector/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_flux_vector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/sm_obs_vhz/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_obs_vhz</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/sm_signal_inj/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_signal_inj</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/sm_torque/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_torque</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/control/sm_vector/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm_vector</span></code></a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">System Models</span></p>
-<ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/motulator/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/model/converter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.converter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/model/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.im</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/model/im_drive/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.im_drive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/model/mech/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.mech</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/model/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/model/sm_drive/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm_drive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/model/sm_flux_maps/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm_flux_maps</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.helpers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/plots/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.plots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/simulation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.simulation</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="system.html">Motor Drive System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="induction_motor.html">Induction Motor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="synchronous_motor.html">Synchronous Motor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mechanics.html">Mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="converters.html">Converters</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Controllers</span></p>
-<ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Controllers</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="2dof_pi_ctrl.html">2DOF PI Controller</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">Vector control: 2.2-kW PMSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">Vector control: 6.7-kW SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">Vector control: 5-kW PM-SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_im_2kw.html">Vector control: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">Vector control with signal injection: 2.2-kW PMSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/signal_inj/plot_signal_inj_syrm_7kw.html">Vector control with signal injection: 6.7-kW SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/flux_maps/plot_obs_vhz_ctrl_pmsyrm_thor.html">Observer-based V/Hz control: 5-kW PM-SyRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/two_mass_systems/plot_vector_ctrl_pmsm_2kw_two_mass.html">Observer-based V/Hz control: PMSM with 2-mass mechanics</a></li>
+</ul>
+</li>
 </ul>
 
-        </div>
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
       </div>
-    </nav>
+      
+      <main id="main-content" class="bd-main">
+        
+        
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">motulator</a>
-      </nav>
+<div class="sbt-scroll-pixel-helper"></div>
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Usage</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
-      </li>
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/usage.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
   </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <div class="section" id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h1>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Usage</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h1>
 <p>After <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>, motulator can be used by creating a continuous-time system model, a discrete-time controller, and a simulation object, as shown below</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>import<span class="w"> </span>motulator<span class="w"> </span>as<span class="w"> </span>mt
 
@@ -116,37 +364,94 @@ mt.plot<span class="o">(</span>sim<span class="o">)</span>
 </pre></div>
 </div>
 <p>The <a class="reference internal" href="auto_examples/index.html"><span class="doc">Examples</span></a> folder includes a variety of different example scripts to run the simulation. Drive system and controller configurations can be changed as shown in the examples. Furthermore, new features can be added by modifying the source code.</p>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="installation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Installation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="autoapi/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API Reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
 </div>
 
-
-           </div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="autoapi/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aalto Electric Drives
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023, Aalto Electric Drives.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2023, Aalto Electric Drives.</p>
   </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+  <footer class="bd-footer">
+  </footer>
+  </body>
 </html>

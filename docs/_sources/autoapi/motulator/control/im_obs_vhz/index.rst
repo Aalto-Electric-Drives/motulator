@@ -1,0 +1,306 @@
+:py:mod:`motulator.control.im_obs_vhz`
+======================================
+
+.. py:module:: motulator.control.im_obs_vhz
+
+.. autoapi-nested-parse::
+
+   Observer-based V/Hz control for induction motor drives.
+
+   This implements the observer-based V/Hz control method described in [Rdad62c5377b6-1]_. The
+   state-feedback control law is in the alternative form which uses an
+   intermediate stator current reference.
+
+   .. rubric:: References
+
+   .. [Rdad62c5377b6-1] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-based V/Hz
+       control for induction motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   motulator.control.im_obs_vhz.InductionMotorObsVHzCtrlPars
+   motulator.control.im_obs_vhz.InductionMotorVHzObsCtrl
+   motulator.control.im_obs_vhz.SensorlessFluxObserver
+
+
+
+
+.. py:class:: InductionMotorObsVHzCtrlPars
+
+   
+   Control parameters.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:attribute:: w_m_ref
+      :type: Callable[[float], float]
+
+      
+
+   .. py:attribute:: T_s
+      :type: float
+      :value: 0.00025
+
+      
+
+   .. py:attribute:: psi_s_nom
+      :type: float
+      :value: 1.04
+
+      
+
+   .. py:attribute:: rate_limit
+      :type: float
+
+      
+
+   .. py:attribute:: i_s_max
+      :type: float
+
+      
+
+   .. py:attribute:: alpha_f
+      :type: float
+
+      
+
+   .. py:attribute:: alpha_psi
+      :type: float
+
+      
+
+   .. py:attribute:: k_tau
+      :type: float
+      :value: 3.0
+
+      
+
+   .. py:attribute:: six_step
+      :type: bool
+      :value: False
+
+      
+
+   .. py:attribute:: slip_compensation
+      :type: bool
+      :value: True
+
+      
+
+   .. py:attribute:: alpha_r
+      :type: float
+
+      
+
+   .. py:attribute:: alpha_o
+      :type: float
+
+      
+
+   .. py:attribute:: zeta_inf
+      :type: float
+      :value: 0.7
+
+      
+
+   .. py:attribute:: R_s
+      :type: float
+      :value: 3.7
+
+      
+
+   .. py:attribute:: R_R
+      :type: float
+      :value: 2.1
+
+      
+
+   .. py:attribute:: L_sgm
+      :type: float
+      :value: 0.021
+
+      
+
+   .. py:attribute:: L_M
+      :type: float
+      :value: 0.224
+
+      
+
+   .. py:attribute:: n_p
+      :type: int
+      :value: 2
+
+      
+
+
+.. py:class:: InductionMotorVHzObsCtrl(pars)
+
+   Bases: :py:obj:`motulator.control.common.Ctrl`
+
+   
+   Observer-based V/Hz control for induction motors.
+
+   :param pars: Control parameters.
+   :type pars: InductionMotorObsVHzCtrlPars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: __call__(mdl)
+
+      
+      Run the main control loop.
+
+      :param mdl: Continuous-time model of an induction motor drive for getting the
+                  feedback signals.
+      :type mdl: InductionMotorDrive
+
+      :returns: * **T_s** (*float*) -- Sampling period.
+                * **d_abc_ref** (*ndarray, shape (3,)*) -- Duty ratio references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: state_feedback(i_s, psi_R, w_s)
+
+      
+      Compute the stator voltage reference.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SensorlessFluxObserver(pars)
+
+   
+   Sensorless reduced-order flux observer.
+
+   This observer is a variant of [R235b53b0d214-1]_. The observer gain decouples the
+   electrical and mechanical dynamics and allows placing the poles of the
+   corresponding linearized estimation error dynamics. This implementation
+   operates in controller coordinates.
+
+   :param pars: Control parameters.
+   :type pars: InductionMotorVHzObsCtrlPars
+
+   .. rubric:: References
+
+   .. [R235b53b0d214-1] Hinkkanen, Harnefors, Luomi, "Reduced-order flux observers with
+      stator-resistance adaptation for speed-sensorless induction motor
+      drives," IEEE Trans. Power Electron., 2010,
+      https://doi.org/10.1109/TPEL.2009.2039650
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: update(u_s, i_s, w_s)
+
+      
+      Update the states of the observer.
+
+      :param u_s: Stator voltage.
+      :type u_s: complex
+      :param i_s: Stator current.
+      :type i_s: complex
+      :param w_s: Angular frequency of the reference frame.
+      :type w_s: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

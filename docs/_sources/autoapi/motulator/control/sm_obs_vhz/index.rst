@@ -1,0 +1,336 @@
+:py:mod:`motulator.control.sm_obs_vhz`
+======================================
+
+.. py:module:: motulator.control.sm_obs_vhz
+
+.. autoapi-nested-parse::
+
+   Observer-based V/Hz control for synchronous motor drives.
+
+   This method is based on [Reaf38ba05e63-1]_.
+
+   .. rubric:: References
+
+   .. [Reaf38ba05e63-1] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable
+       and passive observer-based V/Hz control for synchronous Motors," Proc.
+       IEEE ECCE, Detroit, MI, Oct. 2022.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrlPars
+   motulator.control.sm_obs_vhz.SynchronousMotorVHzObsCtrl
+   motulator.control.sm_obs_vhz.FluxTorqueRef
+   motulator.control.sm_obs_vhz.SensorlessFluxObserver
+
+
+
+
+.. py:class:: SynchronousMotorVHzObsCtrlPars
+
+   
+   Control parameters.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:attribute:: w_m_ref
+      :type: Callable[[float], float]
+
+      
+
+   .. py:attribute:: T_s
+      :type: float
+      :value: 0.00025
+
+      
+
+   .. py:attribute:: psi_s_max
+      :type: float
+
+      
+
+   .. py:attribute:: psi_s_min
+      :type: float
+
+      
+
+   .. py:attribute:: rate_limit
+      :type: float
+
+      
+
+   .. py:attribute:: i_s_max
+      :type: float
+
+      
+
+   .. py:attribute:: alpha_psi
+      :type: float
+
+      
+
+   .. py:attribute:: alpha_tau
+      :type: float
+
+      
+
+   .. py:attribute:: alpha_f
+      :type: float
+
+      
+
+   .. py:attribute:: k_u
+      :type: float
+      :value: 1
+
+      
+
+   .. py:attribute:: alpha_o
+      :type: float
+
+      
+
+   .. py:attribute:: zeta_inf
+      :type: float
+      :value: 0.2
+
+      
+
+   .. py:attribute:: R_s
+      :type: float
+      :value: 3.6
+
+      
+
+   .. py:attribute:: L_d
+      :type: float
+      :value: 0.036
+
+      
+
+   .. py:attribute:: L_q
+      :type: float
+      :value: 0.051
+
+      
+
+   .. py:attribute:: psi_f
+      :type: float
+      :value: 0.545
+
+      
+
+   .. py:attribute:: n_p
+      :type: int
+      :value: 3
+
+      
+
+
+.. py:class:: SynchronousMotorVHzObsCtrl(pars)
+
+   Bases: :py:obj:`motulator.control.common.Ctrl`
+
+   
+   Observer-based V/Hz control for synchronous motors.
+
+   :param pars: Control parameters.
+   :type pars: SynchronousMotorVHzObsCtrlPars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: __call__(mdl)
+
+      
+      Run the main control loop.
+
+      :param mdl: Continuous-time model of a synchronous motor drive for getting the
+                  feedback signals.
+      :type mdl: SynchronousMotorDrive
+
+      :returns: * **T_s** (*float*) -- Sampling period.
+                * **d_abc_ref** (*ndarray, shape (3,)*) -- Duty ratio references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: FluxTorqueRef(pars)
+
+   
+   Flux and torque references.
+
+   :param pars: Control parameters.
+   :type pars: SynchronousMotorVHzObsCtrlPars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: __call__(tau_M_ref, w_m, u_dc)
+
+      
+      Calculate the stator flux reference and limit the torque reference.
+
+      :param tau_M_ref: Unlimited torque reference.
+      :type tau_M_ref: float
+      :param w_m: Rotor speed or its reference (in electrical rad/s).
+      :type w_m: float
+      :param u_dc: DC-bus voltage.
+      :type u_dc: float
+
+      :returns: * **psi_s_ref** (*float*) -- Stator flux reference.
+                * **tau_M_ref_lim** (*float*) -- Limited torque reference.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SensorlessFluxObserver(pars)
+
+   
+   Sensorless stator flux observer.
+
+   This observer is a variant of [R235b53b0d214-1]_. The observer gain decouples the
+   electrical and mechanical dynamics and allows placing the poles of the
+   corresponding linearized estimation error dynamics. For simplicity, the
+   current model is here implemented in rotor coordinates, however this is
+   mathematically equivalent to controller coordinates implementation in [R235b53b0d214-2]_.
+
+   :param pars: Control parameters.
+   :type pars: SynchronousMotorObsVHzCtrlPars
+
+   .. rubric:: References
+
+   .. [R235b53b0d214-1] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
+       sensorless synchronous motor drives: Framework for design and
+       analysis," IEEE Trans. Ind. Appl., 2018,
+       https://doi.org/10.1109/TIA.2018.2858753
+   .. [R235b53b0d214-2] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
+       "Stable and passive observer-based V/Hz control for synchronous
+       Motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: update(u_s, i_s, w_s)
+
+      
+      Update the states for the next sampling period.
+
+      :param u_s: Stator voltage.
+      :type u_s: complex
+      :param i_s: Stator current.
+      :type i_s: complex
+      :param w_s: Stator angular frequency.
+      :type w_s: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
