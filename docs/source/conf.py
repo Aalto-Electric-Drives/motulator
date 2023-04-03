@@ -30,8 +30,8 @@ release = '0.1.2'
 # -- General configuration ---------------------------------------------------
 
 # This value contains a list of modules to be mocked up.
-# This is useful when some external dependencies are not met at build time and 
-# break the building process. You may only specify the root package of the 
+# This is useful when some external dependencies are not met at build time and
+# break the building process. You may only specify the root package of the
 # dependencies themselves and omit the sub-modules:
 autodoc_mock_imports = ['numpy', 'matplotlib', 'scipy', 'cycler']
 
@@ -58,17 +58,20 @@ autoapi_python_class_content = 'both'
 autoapi_keep_files = True
 
 from sphinx_gallery.sorting import ExplicitOrder
+
 sphinx_gallery_conf = {
-    'examples_dirs': '../../examples',  # path to your example scripts
+    'examples_dirs':
+    '../../examples',  # path to your example scripts
     'gallery_dirs':
     'auto_examples',  # path to where to save gallery generated output
-    'nested_sections': False,
-    'subsection_order': ExplicitOrder(['../../examples/vector',
-				       '../../examples/vhz',
-                                       '../../examples/flux_vector',
-                                       '../../examples/signal_inj',
-                                       '../../examples/flux_maps',
-                                       '../../examples/two_mass_systems']),
+    'nested_sections':
+    False,
+    'subsection_order':
+    ExplicitOrder([
+        '../../examples/vector', '../../examples/vhz',
+        '../../examples/flux_vector', '../../examples/signal_inj',
+        '../../examples/flux_maps', '../../examples/two_mass_systems'
+    ]),
 }
 
 # List of patterns, relative to source directory, that match files and
@@ -81,8 +84,9 @@ exclude_patterns = ['../../.idea', '../../__pycache__', '../../venv']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
 # html_theme = 'alabaster'
+# html_theme = 'sphinx_rtd_theme'
+html_theme = 'sphinx_book_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
