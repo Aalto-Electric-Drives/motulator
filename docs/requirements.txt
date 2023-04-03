@@ -2,9 +2,11 @@ numpy
 scipy
 matplotlib
 numpydoc
-Sphinx==5.3.0
+#Sphinx==5.3.0
+Sphinx
 sphinx-autoapi
 sphinx-copybutton
 sphinx-gallery
-sphinx-rtd-theme
+#sphinx-rtd-theme
+sphinx-book-theme
 esbonio
