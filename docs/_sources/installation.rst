@@ -30,7 +30,7 @@ Several powerful open-source IDEs are available for Python, one of the most popu
 
 3) Launch VS Code from the cloned project's root directory on the command line (or choose the proper directory after launching VS Code).
 4) Create a virtual environment in the workspace using the instructions provided here: https://code.visualstudio.com/docs/python/environments.
-5) Enable installation of suggested requirements in the virtual environment (at least requirements.txt). Alternatively, you may run the command ``pip install -r requirements.txt`` in the VS Code terminal after the virtual environment is created and activated. 
+5) Enable installation of suggested requirements in the virtual environment (at least ``requirements.txt``). Alternatively, you may run the command ``pip install -r requirements.txt`` in the VS Code terminal after the virtual environment is created and activated. 
 
 After completing the above steps, the virtual environment can be found in the ``.venv`` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. If you installed the requirement in ``requirements-dev.txt``, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code). Furthermore, when you start VS Code next time, it will automatically detect the virtual environment and use it.
 
