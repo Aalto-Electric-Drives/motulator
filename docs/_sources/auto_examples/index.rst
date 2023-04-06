@@ -98,15 +98,6 @@ Vector Control
 
     </div>
 
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/vector/plot_vector_ctrl_pmsm_2kw
-   /auto_examples/vector/plot_vector_ctrl_syrm_7kw
-   /auto_examples/vector/plot_vector_ctrl_pmsyrm_thor
-   /auto_examples/vector/plot_vector_ctrl_im_2kw
-
 V/Hz Control
 ------------
 
@@ -206,16 +197,6 @@ V/Hz Control
 
     </div>
 
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw
-   /auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw
-   /auto_examples/vhz/plot_vhz_ctrl_im_2kw
-   /auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw
-   /auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw
-
 Flux Vector Control
 -------------------
 
@@ -263,13 +244,6 @@ Flux Vector Control
 .. raw:: html
 
     </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/flux_vector/plot_flux_vector_pmsm_2kw
-   /auto_examples/flux_vector/plot_flux_vector_syrm_7kw
 
 Signal Injection
 ----------------
@@ -319,13 +293,6 @@ Signal Injection
 
     </div>
 
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/signal_inj/plot_signal_inj_pmsm_2kw
-   /auto_examples/signal_inj/plot_signal_inj_syrm_7kw
-
 Flux Maps
 ---------
 
@@ -356,12 +323,6 @@ Flux Maps
 .. raw:: html
 
     </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/flux_maps/plot_obs_vhz_ctrl_pmsyrm_thor
 
 Two-Mass Systems
 ----------------
@@ -397,8 +358,15 @@ Two-Mass Systems
 
 .. toctree::
    :hidden:
+   :includehidden:
 
-   /auto_examples/two_mass_systems/plot_vector_ctrl_pmsm_2kw_two_mass
+
+   /auto_examples/vector/index.rst
+   /auto_examples/vhz/index.rst
+   /auto_examples/flux_vector/index.rst
+   /auto_examples/signal_inj/index.rst
+   /auto_examples/flux_maps/index.rst
+   /auto_examples/two_mass_systems/index.rst
 
 
 .. only:: html
