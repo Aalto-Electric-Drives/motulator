@@ -6,8 +6,8 @@
 
 Computation times
 =================
-**00:04.768** total execution time for **auto_examples_two_mass_systems** files:
+**00:03.951** total execution time for **auto_examples_two_mass_systems** files:
 
 +----------------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_two_mass_systems_plot_vector_ctrl_pmsm_2kw_two_mass.py` (``plot_vector_ctrl_pmsm_2kw_two_mass.py``) | 00:04.768 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_two_mass_systems_plot_vector_ctrl_pmsm_2kw_two_mass.py` (``plot_vector_ctrl_pmsm_2kw_two_mass.py``) | 00:03.951 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------------------+-----------+--------+

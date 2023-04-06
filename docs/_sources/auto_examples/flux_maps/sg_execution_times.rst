@@ -6,8 +6,8 @@
 
 Computation times
 =================
-**00:39.511** total execution time for **auto_examples_flux_maps** files:
+**00:33.226** total execution time for **auto_examples_flux_maps** files:
 
 +-----------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_flux_maps_plot_obs_vhz_ctrl_pmsyrm_thor.py` (``plot_obs_vhz_ctrl_pmsyrm_thor.py``) | 00:39.511 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_flux_maps_plot_obs_vhz_ctrl_pmsyrm_thor.py` (``plot_obs_vhz_ctrl_pmsyrm_thor.py``) | 00:33.226 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------------+-----------+--------+
