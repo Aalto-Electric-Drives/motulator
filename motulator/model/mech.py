@@ -20,7 +20,8 @@ class Mechanics:
 
     """
 
-    def __init__(self, J=.015, tau_L_w=lambda w_M: 0, tau_L_t=lambda t: 0):
+    def __init__(
+            self, J=.015, tau_L_w=lambda w_M: 0*w_M, tau_L_t=lambda t: 0*t):
         self.J = J
         self.tau_L_t = tau_L_t
         self.tau_L_w = tau_L_w
@@ -116,8 +117,8 @@ class MechanicsTwoMass(Mechanics):
             J_L=.005,
             K_S=700.,
             C_S=.13,
-            tau_L_w=lambda w_M: 0,
-            tau_L_t=lambda t: 0):
+            tau_L_w=lambda w_M: 0*w_M,
+            tau_L_t=lambda t: 0*t):
         # pylint: disable=too-many-arguments
         # pylint: disable=super-init-not-called
         self.J_M = J_M
