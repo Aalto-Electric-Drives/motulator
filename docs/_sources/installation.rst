@@ -19,7 +19,7 @@ Option 2: Clone the Repository
 ------------------------------
 For developers and advanced users, we recommended cloning the repository from GitHub. This option allows you to get the most recent version of the repository. Furthermore, you can then modify the system models and example controllers. It is also advisable to use a virtual environment to avoid conflicts with other Python packages. 
 
-Several powerful open-source IDEs are available for Python, one of the most popular being VS Code (https://code.visualstudio.com). The following instructions are for VS Code:
+Several powerful open-source IDEs are available for Python. The following instructions are for VS Code (https://code.visualstudio.com):
 
 1)	Install VS Code, Python, and ``git`` on your computer. Install also the recommended Python extensions in VS Code.
 2) Clone the project::
