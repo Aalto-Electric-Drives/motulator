@@ -6,10 +6,10 @@
 
 Computation times
 =================
-**00:18.514** total execution time for **auto_examples_flux_vector** files:
+**00:14.968** total execution time for **auto_examples_flux_vector** files:
 
 +-----------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py` (``plot_flux_vector_syrm_7kw.py``) | 00:13.052 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py` (``plot_flux_vector_syrm_7kw.py``) | 00:10.569 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py` (``plot_flux_vector_pmsm_2kw.py``) | 00:05.462 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py` (``plot_flux_vector_pmsm_2kw.py``) | 00:04.399 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------+-----------+--------+

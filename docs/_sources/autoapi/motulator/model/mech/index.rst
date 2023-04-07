@@ -25,7 +25,7 @@ Classes
 
 
 
-.. py:class:: Mechanics(J=0.015, tau_L_w=lambda w_M: 0, tau_L_t=lambda t: 0)
+.. py:class:: Mechanics(J=0.015, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
 
    
    Mechanics subsystem.
@@ -143,7 +143,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: MechanicsTwoMass(J_M=0.005, J_L=0.005, K_S=700.0, C_S=0.13, tau_L_w=lambda w_M: 0, tau_L_t=lambda t: 0)
+.. py:class:: MechanicsTwoMass(J_M=0.005, J_L=0.005, K_S=700.0, C_S=0.13, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
 
    Bases: :py:obj:`Mechanics`
 

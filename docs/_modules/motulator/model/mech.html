@@ -332,7 +332,8 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">,</span> <span class="n">tau_L_w</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tau_L_t</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">,</span> <span class="n">tau_L_w</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">w_M</span><span class="p">,</span> <span class="n">tau_L_t</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">t</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">tau_L_t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="n">tau_L_w</span>
@@ -428,8 +429,8 @@ document.write(`
             <span class="n">J_L</span><span class="o">=</span><span class="mf">.005</span><span class="p">,</span>
             <span class="n">K_S</span><span class="o">=</span><span class="mf">700.</span><span class="p">,</span>
             <span class="n">C_S</span><span class="o">=</span><span class="mf">.13</span><span class="p">,</span>
-            <span class="n">tau_L_w</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="n">tau_L_t</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">tau_L_w</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">w_M</span><span class="p">,</span>
+            <span class="n">tau_L_t</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">t</span><span class="p">):</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="c1"># pylint: disable=super-init-not-called</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">J_M</span> <span class="o">=</span> <span class="n">J_M</span>
