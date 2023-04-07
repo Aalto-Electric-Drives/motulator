@@ -114,6 +114,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "murgui",
+      "name": "murgui",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29175623?v=4",
+      "profile": "https://github.com/murgui",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
