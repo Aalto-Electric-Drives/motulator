@@ -17,7 +17,9 @@ This software can be installed using pip:
 ```bash
 pip install motulator
 ```
-Alternatively, the repository can be cloned.
+Alternatively, the repository can be cloned:
+
+https://aalto-electric-drives.github.io/motulator/installation.html
 
 Usage
 -----
