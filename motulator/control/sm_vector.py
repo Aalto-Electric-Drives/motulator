@@ -4,7 +4,7 @@ from typing import Callable
 from dataclasses import dataclass, field
 import numpy as np
 from motulator.helpers import abc2complex, Bunch
-from motulator.control.common import Ctrl, SpeedCtrl, PWM
+from motulator.control.common import Ctrl, CurrentCtrl, SpeedCtrl, PWM
 from motulator.control.sm_torque import TorqueCharacteristics
 
 
@@ -120,7 +120,7 @@ class SynchronousMotorVectorCtrl(Ctrl):
         # Outputs
         tau_M_ref = self.speed_ctrl.output(w_m_ref/self.n_p, w_m/self.n_p)
         i_s_ref, tau_M_ref_lim = self.current_ref.output(tau_M_ref, w_m, u_dc)
-        u_s_ref = self.current_ctrl.output(i_s_ref, i_s)
+        u_s_ref = self.current_ctrl.output(i_s_ref, i_s, w_m)
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
@@ -147,91 +147,6 @@ class SynchronousMotorVectorCtrl(Ctrl):
         self.update_clock(self.T_s)
 
         return self.T_s, d_abc_ref
-
-
-# %%
-class CurrentCtrl:
-    """
-    2DOF PI current controller.
-
-    This controller corresponds to [1]_. The continuous-time complex-vector
-    design corresponding to (13) is used here. This design could be
-    equivalently presented as a 2DOF PI controller.
-
-    Parameters
-    ----------
-    pars : SynchronousMotorVectorCtrlPars (or its subset)
-        Control parameters.
-
-    Notes
-    -----
-    For better performance at high speeds with low sampling frequencies, the
-    discrete-time design in (18) is recommended. This implementation does not
-    take the magnetic saturation into account.
-
-    References
-    ----------
-    .. [1] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
-       https://doi.org/10.1109/TIA.2019.2919258
-
-    """
-
-    def __init__(self, pars):
-        self.T_s = pars.T_s
-        self.L_d = pars.L_d
-        self.L_q = pars.L_q
-        self.alpha_c = pars.alpha_c
-        # Integral state
-        self.u_i = 0
-        # Memory for the update method
-        self.e = 0
-        self.u_s_ref = 0
-
-    def output(self, i_s_ref, i_s):
-        """
-        Compute the unlimited voltage reference.
-
-        Parameters
-        ----------
-        i_s_ref : complex
-            Current reference.
-        i_s : complex
-            Measured current.
-
-        Returns
-        -------
-        u_s_ref : complex
-            Unlimited voltage reference.
-
-        """
-        # Gains
-        k_t = self.alpha_c
-        k = 2*self.alpha_c
-        # PM-flux linkage cancels out
-        psi_s_ref = self.L_d*i_s_ref.real + 1j*self.L_q*i_s_ref.imag
-        psi_s = self.L_d*i_s.real + 1j*self.L_q*i_s.imag
-        self.u_s_ref = k_t*psi_s_ref - k*psi_s + self.u_i
-        # Error signal (scaled, corresponds to the stator flux linkage).
-        self.e = psi_s_ref - psi_s
-
-        return self.u_s_ref
-
-    def update(self, u_s_ref_lim, w_m):
-        """
-        Update the integral state.
-
-        Parameters
-        ----------
-        u_s_ref_lim : complex
-            Limited voltage reference.
-        w_m : float
-            Angular rotor speed.
-
-        """
-        k_t = self.alpha_c
-        k_i = self.alpha_c*(self.alpha_c + 1j*w_m)
-        self.u_i += self.T_s*k_i*(self.e + (u_s_ref_lim - self.u_s_ref)/k_t)
 
 
 # %%

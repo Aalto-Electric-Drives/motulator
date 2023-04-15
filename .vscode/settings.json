@@ -12,5 +12,6 @@
         "**/site-packages/**/*.py",
         ".vscode/*.py",
         "docs/*"
-    ]
+    ],
+    "esbonio.sphinx.confDir": "${workspaceFolder}/docs/source"
 }

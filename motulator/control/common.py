@@ -133,7 +133,7 @@ class PWM:
         theta : float
             Angle of synchronous coordinates.
         w : float
-            Angular frequency of synchronous coordinates.
+            Angular speed of synchronous coordinates.
 
         Returns
         -------
@@ -212,16 +212,16 @@ class SpeedCtrl:
         except AttributeError:
             # alpha_s or J not defined, try to use k_t, k_p, k_i
             try:
+                # Choosing k_t = k_p yields a regular PI controller
                 self.k_t = pars.k_t
                 self.k_p = pars.k_p
                 self.alpha = pars.k_i/pars.k_t
             except AttributeError:
                 print('No speed controller gains found.')
 
-        # Integral state
-        self.tau_i = 0
-        # Load torque estimate (stored for the update method)
-        self.tau_L = 0
+        # States
+        self.tau_L = 0  # Disturbance estimate, corresponds to the load torque
+        self.tau_i = 0  # Integral state
 
     def output(self, w_M_ref, w_M):
         """
@@ -259,6 +259,122 @@ class SpeedCtrl:
 
         """
         self.tau_i += self.T_s*self.alpha*(tau_M_ref_lim - self.tau_L)
+
+
+# %%
+class CurrentCtrl:
+    """
+    2DOF PI synchronous-frame current controller for three-phase AC machines.
+
+    This controller is mathematically identical to the continuous-time 2DOF PI 
+    controller design in [1]_. The disturbance-observer structure is used here. 
+    The default gains correspond to the complex-vector design, see (13) in [1]_. 
+    If desired, the controller can be parametrized with the IMC gains, see (12).
+    A regular PI controller is obtained as a special case.
+
+    Parameters
+    ----------
+    pars : Data object
+        Control parameters. The following parameters are required:
+
+    Notes
+    -----
+    For better performance at very high speeds with low sampling frequencies, 
+    the discrete-time design in (18) is recommended. This implementation does 
+    not take the magnetic saturation into account.
+
+    References
+    ----------
+    .. [1] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+       https://doi.org/10.1109/TIA.2019.2919258
+
+    """
+
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, pars):
+        self.T_s = pars.T_s
+        try:
+            # Synchronous machine
+            self.L_d = pars.L_d
+            self.L_q = pars.L_q
+        except AttributeError:
+            try:
+                # Induction machine
+                self.L_d = pars.L_sgm
+                self.L_q = pars.L_sgm
+            except AttributeError:
+                print('No inductance parameters found.')
+        self.alpha_c = pars.alpha_c
+        try:
+            # Complex-vector gains for the 2DOF PI controller
+            self.k_t = pars.alpha_c
+            self.k_p = lambda w: 2*pars.alpha_c
+            self.alpha = lambda w: pars.alpha_c + 1j*w
+            # IMC gains for the 2DOF PI controller, for comparison
+            # self.k_t = pars.alpha_c
+            # self.k_p = lambda w: 2*pars.alpha_c - 1j*w
+            # self.alpha = lambda w: pars.alpha_c
+        except AttributeError:
+            # alpha_c not defined, try to use k_t, k_p, k_i
+            try:
+                # Choosing k_t = k_p yields a regular PI controller
+                self.k_t = pars.k_t
+                self.k_p = lambda w: pars.k_p
+                self.alpha = lambda w: pars.k_i/pars.k_t
+            except AttributeError:
+                print('No current controller gains found.')
+
+        # States
+        self.v = 0  # Input-equivalent disturbance estimate
+        self.u_i = 0  # Integral state
+
+    def output(self, i_ref, i, w):
+        """
+        Compute the unlimited voltage reference.
+
+        Parameters
+        ----------
+        i_ref : complex
+            Current reference in synchronous coordinates.
+        i : complex
+            Measured current in synchronous coordinates.
+        w : float
+            Angular speed of the coordinate system.
+
+        Returns
+        -------
+        u_ref : complex
+            Unlimited voltage reference in synchronous coordinates.
+
+        """
+        # Compute the scaled reference and measurement (notice that the PM-flux
+        # linkage or the rotor flux linkage cancels out)
+        psi_ref = self.L_d*i_ref.real + 1j*self.L_q*i_ref.imag
+        psi = self.L_d*i.real + 1j*self.L_q*i.imag
+
+        # Input-equivalent stator voltage disturbance estimate, containing the
+        # back-emf and the resistive voltage drops
+        self.v = self.u_i - (self.k_p(w) - self.k_t)*psi
+
+        # Voltage reference
+        u_ref = self.k_t*(psi_ref - psi) + self.v
+
+        return u_ref
+
+    def update(self, u_ref_lim, w):
+        """
+        Update the integral state.
+
+        Parameters
+        ----------
+        u_ref_lim : complex
+            Limited voltage reference in synchronous coordinates.
+        w : float
+            Angular speed of the coordinate system.
+
+        """
+        self.u_i += self.T_s*self.alpha(w)*(u_ref_lim - self.v)
 
 
 # %%
