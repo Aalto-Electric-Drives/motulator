@@ -11,7 +11,7 @@ Induction Motors
 System Model
 ^^^^^^^^^^^^
 
-The inverse-Γ model of an induction motor is considered (see :doc:`induction_motor`). Using the stator current :math:`\boldsymbol{i}_\mathrm{s}` and the rotor flux linkage :math:`\boldsymbol{\psi}_\mathrm{R}` as state variables, the model can be written as
+The inverse-Γ model of an induction motor is considered (see :doc:`induction_motor`). Using the stator current :math:`\boldsymbol{i}_\mathrm{s}` and the rotor flux linkage :math:`\boldsymbol{\psi}_\mathrm{R}` as state variables, the model in synchronous coordinates rotating at :math:`\omega_\mathrm{s}` can be written as
 
 .. math::
     L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \underbrace{\left(\mathrm{j}\omega_\mathrm{m} - \frac{R_\mathrm{R}}{L_\mathrm{M}}\right)\boldsymbol{\psi}_\mathrm{R}}_{\text{back-emf } \boldsymbol{e}_\mathrm{s}} \\
@@ -146,7 +146,7 @@ where :math:`\hat R_\sigma = 0` is assumed. This choice of using the leakage flu
 Disturbance-Observer Structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The controller :eq:`cc_disturbance` can be equally represented using the disturbance-observer structure,
+The controller :eq:`cc_flux` can be equally represented using the disturbance-observer structure,
 
 .. math::
 	\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &= \boldsymbol{\alpha}_\mathrm{i}\left(\boldsymbol{u}_{\mathrm{s,ref}} - \hat{\boldsymbol{v}}_\mathrm{s}\right) \\
