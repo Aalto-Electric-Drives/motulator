@@ -206,7 +206,7 @@ class SpeedCtrl:
             self.tau_M_max = np.inf
         try:
             # Gains for the 2DOF PI controller
-            self.alpha = pars.alpha_s
+            self.alpha_i = pars.alpha_s
             self.k_t = pars.alpha_s*pars.J
             self.k_p = 2*pars.alpha_s*pars.J
         except AttributeError:
@@ -215,7 +215,7 @@ class SpeedCtrl:
                 # Choosing k_t = k_p yields a regular PI controller
                 self.k_t = pars.k_t
                 self.k_p = pars.k_p
-                self.alpha = pars.k_i/pars.k_t
+                self.alpha_i = pars.k_i/pars.k_t
             except AttributeError:
                 print('No speed controller gains found.')
 
@@ -258,7 +258,7 @@ class SpeedCtrl:
             Realized (limited) torque reference.
 
         """
-        self.tau_i += self.T_s*self.alpha*(tau_M_ref_lim - self.tau_L)
+        self.tau_i += self.T_s*self.alpha_i*(tau_M_ref_lim - self.tau_L)
 
 
 # %%
@@ -295,33 +295,34 @@ class CurrentCtrl:
     def __init__(self, pars):
         self.T_s = pars.T_s
         try:
-            # Synchronous machine
+            # Synchronous motor
             self.L_d = pars.L_d
             self.L_q = pars.L_q
         except AttributeError:
             try:
-                # Induction machine
+                # Induction motor
                 self.L_d = pars.L_sgm
                 self.L_q = pars.L_sgm
             except AttributeError:
                 print('No inductance parameters found.')
         self.alpha_c = pars.alpha_c
+        # Todo: Improve the parametrization of the controllers
         try:
             # Complex-vector gains for the 2DOF PI controller
             self.k_t = pars.alpha_c
             self.k_p = lambda w: 2*pars.alpha_c
-            self.alpha = lambda w: pars.alpha_c + 1j*w
+            self.alpha_i = lambda w: pars.alpha_c + 1j*w
             # IMC gains for the 2DOF PI controller, for comparison
             # self.k_t = pars.alpha_c
             # self.k_p = lambda w: 2*pars.alpha_c - 1j*w
             # self.alpha = lambda w: pars.alpha_c
         except AttributeError:
-            # alpha_c not defined, try to use k_t, k_p, k_i
+            # alpha_c not defined, try to use k_tc k_pc, k_ic
             try:
-                # Choosing k_t = k_p yields a regular PI controller
-                self.k_t = pars.k_t
-                self.k_p = lambda w: pars.k_p
-                self.alpha = lambda w: pars.k_i/pars.k_t
+                # Choosing k_tc = k_pc yields a regular PI controller
+                self.k_t = pars.k_tc
+                self.k_p = lambda w: pars.k_pc
+                self.alpha_i = lambda w: pars.k_ic/pars.k_tc
             except AttributeError:
                 print('No current controller gains found.')
 
@@ -374,7 +375,7 @@ class CurrentCtrl:
             Angular speed of the coordinate system.
 
         """
-        self.u_i += self.T_s*self.alpha(w)*(u_ref_lim - self.v)
+        self.u_i += self.T_s*self.alpha_i(w)*(u_ref_lim - self.v)
 
 
 # %%
