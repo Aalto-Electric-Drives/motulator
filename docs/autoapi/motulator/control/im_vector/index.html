@@ -173,9 +173,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../mechanics.html">Mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../converters.html">Converters</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Controllers</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Algorithms</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../2dof_pi_ctrl.html">2DOF PI Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../current_ctrl.html">Current Control</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">Vector control: 2.2-kW PMSM</a></li>
@@ -389,11 +390,6 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentRef.update"><code class="docutils literal notranslate"><span class="pre">CurrentRef.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentCtrl"><code class="docutils literal notranslate"><span class="pre">CurrentCtrl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentCtrl.output"><code class="docutils literal notranslate"><span class="pre">CurrentCtrl.output()</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentCtrl.update"><code class="docutils literal notranslate"><span class="pre">CurrentCtrl.update()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.SensorlessObserver"><code class="docutils literal notranslate"><span class="pre">SensorlessObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.SensorlessObserver.output"><code class="docutils literal notranslate"><span class="pre">SensorlessObserver.output()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.SensorlessObserver.update"><code class="docutils literal notranslate"><span class="pre">SensorlessObserver.update()</span></code></a></li>
@@ -438,13 +434,10 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.im_vector.CurrentRef" title="motulator.control.im_vector.CurrentRef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentRef</span></code></a></p></td>
 <td><p>Current reference calculation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.im_vector.CurrentCtrl" title="motulator.control.im_vector.CurrentCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentCtrl</span></code></a></p></td>
-<td><p>2DOF PI current controller.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.im_vector.SensorlessObserver" title="motulator.control.im_vector.SensorlessObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SensorlessObserver</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.im_vector.SensorlessObserver" title="motulator.control.im_vector.SensorlessObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SensorlessObserver</span></code></a></p></td>
 <td><p>Sensorless reduced-order flux observer.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.im_vector.Observer" title="motulator.control.im_vector.Observer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Observer</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.im_vector.Observer" title="motulator.control.im_vector.Observer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Observer</span></code></a></p></td>
 <td><p>Sensored reduced-order flux observer.</p></td>
 </tr>
 </tbody>
@@ -634,70 +627,10 @@ IEEE Trans. Ind. Appl., 2006, <a class="reference external" href="https://doi.or
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.control.im_vector.CurrentCtrl">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.im_vector.</span></span><span class="sig-name descname"><span class="pre">CurrentCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/im_vector.html#CurrentCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im_vector.CurrentCtrl" title="Permalink to this definition">#</a></dt>
-<dd><p>2DOF PI current controller.</p>
-<p>This controller corresponds to <a class="reference internal" href="#ra42ac92f4471-2" id="id2">[2]</a>. The continuous-time complex-vector
-design corresponding to (13) is used here. The rotor flux linkage is
-considered as a quasi-constant disturbance. This design could be
-equivalently presented as a 2DOF PI controller.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pars</strong> (<a class="reference internal" href="#motulator.control.im_vector.InductionMotorVectorCtrlPars" title="motulator.control.im_vector.InductionMotorVectorCtrlPars"><em>InductionMotorVectorCtrlPars</em></a>) – Control parameters.</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This implementation does not take the magnetic saturation into account.</p>
-<p class="rubric">References</p>
-<div role="list" class="citation-list">
-<div class="citation" id="ra42ac92f4471-2" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
-<p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of
-saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
-<a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
-</div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.control.im_vector.CurrentCtrl.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/im_vector.html#CurrentCtrl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im_vector.CurrentCtrl.output" title="Permalink to this definition">#</a></dt>
-<dd><p>Compute the unlimited voltage reference.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>i_s_ref</strong> (<em>complex</em>) – Stator current reference.</p></li>
-<li><p><strong>i_s</strong> (<em>complex</em>) – Measured stator current.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u_s_ref</strong> – Unlimited voltage reference.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>complex</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.control.im_vector.CurrentCtrl.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ref_lim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/im_vector.html#CurrentCtrl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im_vector.CurrentCtrl.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Update the integral state.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ref_lim</strong> (<em>complex</em>) – Limited voltage reference.</p></li>
-<li><p><strong>w_s</strong> (<em>float</em>) – Angular stator frequency.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="motulator.control.im_vector.SensorlessObserver">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.im_vector.</span></span><span class="sig-name descname"><span class="pre">SensorlessObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/im_vector.html#SensorlessObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im_vector.SensorlessObserver" title="Permalink to this definition">#</a></dt>
 <dd><p>Sensorless reduced-order flux observer.</p>
-<p>This observer corresponds to <a class="reference internal" href="../sm_vector/index.html#ra040d21f48f0-3" id="id3">[3]</a>. The observer gain decouples the
+<p>This observer corresponds to <a class="reference internal" href="../sm_vector/index.html#ra040d21f48f0-3" id="id2">[3]</a>. The observer gain decouples the
 electrical and mechanical dynamics and allows placing the poles of the
 corresponding linearized estimation error dynamics. This implementation
 operates in estimated rotor flux coordinates.</p>
@@ -707,14 +640,14 @@ operates in estimated rotor flux coordinates.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>This implementation corresponds to (26)-(30) in <a class="reference internal" href="../sm_vector/index.html#ra040d21f48f0-3" id="id4">[3]</a> with the choice
+<p>This implementation corresponds to (26)-(30) in <a class="reference internal" href="../sm_vector/index.html#ra040d21f48f0-3" id="id3">[3]</a> with the choice
 c = w_s**2 in (17). The closed-loop poles, cf. (40), can still be
 affected via the coefficient b &gt; 0.</p>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="ra040d21f48f0-3" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id3">2</a>)</span>
 <p>Hinkkanen, Harnefors, Luomi, “Reduced-order flux observers with
 stator-resistance adaptation for speed-sensorless induction motor
 drives,” IEEE Trans. Power Electron., 2010,
@@ -753,7 +686,7 @@ drives,” IEEE Trans. Power Electron., 2010,
 <dt class="sig sig-object py" id="motulator.control.im_vector.Observer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.im_vector.</span></span><span class="sig-name descname"><span class="pre">Observer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/im_vector.html#Observer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im_vector.Observer" title="Permalink to this definition">#</a></dt>
 <dd><p>Sensored reduced-order flux observer.</p>
-<p>This reduced-order flux observer <a class="reference internal" href="#rf20b6db00950-4" id="id5">[4]</a> uses the measured rotor speed. The
+<p>This reduced-order flux observer <a class="reference internal" href="#rf20b6db00950-4" id="id4">[4]</a> uses the measured rotor speed. The
 selected default gain allows smooth transition from the current model at
 zero speed to the (damped) voltage model at higher speeds.</p>
 <dl class="field-list simple">
@@ -769,7 +702,7 @@ zero speed to the (damped) voltage model at higher speeds.</p>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="rf20b6db00950-4" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Verghese, Sanders, “Observers for flux estimation in induction
 machines,” IEEE Trans. Ind. Electron., 1988,
 <a class="reference external" href="https://doi.org/10.1109/41.3067">https://doi.org/10.1109/41.3067</a></p>
@@ -885,11 +818,6 @@ machines,” IEEE Trans. Ind. Electron., 1988,
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentRef"><code class="docutils literal notranslate"><span class="pre">CurrentRef</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentRef.output"><code class="docutils literal notranslate"><span class="pre">CurrentRef.output()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentRef.update"><code class="docutils literal notranslate"><span class="pre">CurrentRef.update()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentCtrl"><code class="docutils literal notranslate"><span class="pre">CurrentCtrl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentCtrl.output"><code class="docutils literal notranslate"><span class="pre">CurrentCtrl.output()</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.CurrentCtrl.update"><code class="docutils literal notranslate"><span class="pre">CurrentCtrl.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.im_vector.SensorlessObserver"><code class="docutils literal notranslate"><span class="pre">SensorlessObserver</span></code></a><ul class="nav section-nav flex-column">

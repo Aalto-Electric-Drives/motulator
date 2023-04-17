@@ -24,7 +24,6 @@ Classes
    motulator.control.im_vector.InductionMotorVectorCtrlPars
    motulator.control.im_vector.InductionMotorVectorCtrl
    motulator.control.im_vector.CurrentRef
-   motulator.control.im_vector.CurrentCtrl
    motulator.control.im_vector.SensorlessObserver
    motulator.control.im_vector.Observer
 
@@ -285,103 +284,6 @@ Classes
       :type u_s_ref: complex
       :param u_dc: DC-bus voltage.
       :type u_dc: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: CurrentCtrl(pars)
-
-   
-   2DOF PI current controller.
-
-   This controller corresponds to [Ra42ac92f4471-2]_. The continuous-time complex-vector
-   design corresponding to (13) is used here. The rotor flux linkage is
-   considered as a quasi-constant disturbance. This design could be
-   equivalently presented as a 2DOF PI controller.
-
-   :param pars: Control parameters.
-   :type pars: InductionMotorVectorCtrlPars
-
-   .. rubric:: Notes
-
-   This implementation does not take the magnetic saturation into account.
-
-   .. rubric:: References
-
-   .. [Ra42ac92f4471-2] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-      saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
-      https://doi.org/10.1109/TIA.2019.2919258
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-   .. py:method:: output(i_s_ref, i_s)
-
-      
-      Compute the unlimited voltage reference.
-
-      :param i_s_ref: Stator current reference.
-      :type i_s_ref: complex
-      :param i_s: Measured stator current.
-      :type i_s: complex
-
-      :returns: **u_s_ref** -- Unlimited voltage reference.
-      :rtype: complex
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-   .. py:method:: update(u_s_ref_lim, w_s)
-
-      
-      Update the integral state.
-
-      :param u_s_ref_lim: Limited voltage reference.
-      :type u_s_ref_lim: complex
-      :param w_s: Angular stator frequency.
-      :type w_s: float
 
 
 

@@ -170,9 +170,10 @@
 <li class="toctree-l1"><a class="reference internal" href="mechanics.html">Mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="converters.html">Converters</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Controllers</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Algorithms</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="2dof_pi_ctrl.html">2DOF PI Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">Vector control: 2.2-kW PMSM</a></li>
@@ -568,12 +569,8 @@ document.write(`
         <li><a href="autoapi/motulator/index.html#motulator.TorqueCharacteristics.current_limit">(motulator.TorqueCharacteristics method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.CurrentCtrl">CurrentCtrl (class in motulator.control.im_vector)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/control/sm_vector/index.html#motulator.control.sm_vector.CurrentCtrl">(class in motulator.control.sm_vector)</a>
+      <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.CurrentCtrl">CurrentCtrl (class in motulator.control.common)</a>
 </li>
-      </ul></li>
       <li><a href="autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.CurrentRef">CurrentRef (class in motulator.control.im_vector)</a>
 
       <ul>
@@ -1325,12 +1322,12 @@ document.write(`
         <li><a href="autoapi/motulator/control/sm_flux_vector/index.html#motulator.control.sm_flux_vector.Observer">(class in motulator.control.sm_flux_vector)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.PWM.output">output() (motulator.control.common.PWM method)</a>
+      <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.CurrentCtrl.output">output() (motulator.control.common.CurrentCtrl method)</a>
 
       <ul>
-        <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl.output">(motulator.control.common.SpeedCtrl method)</a>
+        <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.PWM.output">(motulator.control.common.PWM method)</a>
 </li>
-        <li><a href="autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.CurrentCtrl.output">(motulator.control.im_vector.CurrentCtrl method)</a>
+        <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl.output">(motulator.control.common.SpeedCtrl method)</a>
 </li>
         <li><a href="autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.CurrentRef.output">(motulator.control.im_vector.CurrentRef method)</a>
 </li>
@@ -1339,8 +1336,6 @@ document.write(`
         <li><a href="autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.SensorlessObserver.output">(motulator.control.im_vector.SensorlessObserver method)</a>
 </li>
         <li><a href="autoapi/motulator/control/sm_signal_inj/index.html#motulator.control.sm_signal_inj.SignalInjection.output">(motulator.control.sm_signal_inj.SignalInjection method)</a>
-</li>
-        <li><a href="autoapi/motulator/control/sm_vector/index.html#motulator.control.sm_vector.CurrentCtrl.output">(motulator.control.sm_vector.CurrentCtrl method)</a>
 </li>
         <li><a href="autoapi/motulator/control/sm_vector/index.html#motulator.control.sm_vector.CurrentRef.output">(motulator.control.sm_vector.CurrentRef method)</a>
 </li>
@@ -1875,14 +1870,14 @@ document.write(`
         <li><a href="autoapi/motulator/helpers/index.html#motulator.helpers.BaseValues.U_nom">(motulator.helpers.BaseValues attribute)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.PWM.update">update() (motulator.control.common.PWM method)</a>
+      <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.CurrentCtrl.update">update() (motulator.control.common.CurrentCtrl method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.PWM.update">(motulator.control.common.PWM method)</a>
+</li>
         <li><a href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl.update">(motulator.control.common.SpeedCtrl method)</a>
 </li>
         <li><a href="autoapi/motulator/control/im_obs_vhz/index.html#motulator.control.im_obs_vhz.SensorlessFluxObserver.update">(motulator.control.im_obs_vhz.SensorlessFluxObserver method)</a>
-</li>
-        <li><a href="autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.CurrentCtrl.update">(motulator.control.im_vector.CurrentCtrl method)</a>
 </li>
         <li><a href="autoapi/motulator/control/im_vector/index.html#motulator.control.im_vector.CurrentRef.update">(motulator.control.im_vector.CurrentRef method)</a>
 </li>
@@ -1897,8 +1892,6 @@ document.write(`
         <li><a href="autoapi/motulator/control/sm_signal_inj/index.html#motulator.control.sm_signal_inj.PhaseLockedLoop.update">(motulator.control.sm_signal_inj.PhaseLockedLoop method)</a>
 </li>
         <li><a href="autoapi/motulator/control/sm_signal_inj/index.html#motulator.control.sm_signal_inj.SignalInjection.update">(motulator.control.sm_signal_inj.SignalInjection method)</a>
-</li>
-        <li><a href="autoapi/motulator/control/sm_vector/index.html#motulator.control.sm_vector.CurrentCtrl.update">(motulator.control.sm_vector.CurrentCtrl method)</a>
 </li>
         <li><a href="autoapi/motulator/control/sm_vector/index.html#motulator.control.sm_vector.CurrentRef.update">(motulator.control.sm_vector.CurrentRef method)</a>
 </li>

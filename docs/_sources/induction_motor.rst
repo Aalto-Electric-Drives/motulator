@@ -39,9 +39,7 @@ where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the le
 The class :class:`motulator.model.im.InductionMotorSaturated` extends the model with the main flux saturation, :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [2]_.
 
 .. note::
-   If the magnetic saturation is omitted, the Γ model is mathematically identical to the inverse-Γ and  
-   T models. For example, the parameters of the Γ model can be transformed to those of the inverse-Γ
-   model parameters as follows:
+   If the magnetic saturation is omitted, the Γ model is mathematically identical to the inverse-Γ and T models. For example, the parameters of the Γ model can be transformed to those of the inverse-Γ model parameters as follows:
 
    .. math::
        L_\sigma &= \left(\frac{L_\mathrm{s}}{L_\mathrm{s} + L_\ell}\right)L_\ell \\

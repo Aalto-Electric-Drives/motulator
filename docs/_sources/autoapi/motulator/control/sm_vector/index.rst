@@ -21,7 +21,6 @@ Classes
 
    motulator.control.sm_vector.SynchronousMotorVectorCtrlPars
    motulator.control.sm_vector.SynchronousMotorVectorCtrl
-   motulator.control.sm_vector.CurrentCtrl
    motulator.control.sm_vector.CurrentRef
    motulator.control.sm_vector.SensorlessObserver
 
@@ -196,104 +195,6 @@ Classes
 
       :returns: * **T_s** (*float*) -- Sampling period.
                 * **d_abc_ref** (*ndarray, shape (3,)*) -- Duty ratio references.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: CurrentCtrl(pars)
-
-   
-   2DOF PI current controller.
-
-   This controller corresponds to [Ra42ac92f4471-1]_. The continuous-time complex-vector
-   design corresponding to (13) is used here. This design could be
-   equivalently presented as a 2DOF PI controller.
-
-   :param pars: Control parameters.
-   :type pars: SynchronousMotorVectorCtrlPars (or its subset)
-
-   .. rubric:: Notes
-
-   For better performance at high speeds with low sampling frequencies, the
-   discrete-time design in (18) is recommended. This implementation does not
-   take the magnetic saturation into account.
-
-   .. rubric:: References
-
-   .. [Ra42ac92f4471-1] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-      saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
-      https://doi.org/10.1109/TIA.2019.2919258
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-   .. py:method:: output(i_s_ref, i_s)
-
-      
-      Compute the unlimited voltage reference.
-
-      :param i_s_ref: Current reference.
-      :type i_s_ref: complex
-      :param i_s: Measured current.
-      :type i_s: complex
-
-      :returns: **u_s_ref** -- Unlimited voltage reference.
-      :rtype: complex
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-   .. py:method:: update(u_s_ref_lim, w_m)
-
-      
-      Update the integral state.
-
-      :param u_s_ref_lim: Limited voltage reference.
-      :type u_s_ref_lim: complex
-      :param w_m: Angular rotor speed.
-      :type w_m: float
 
 
 

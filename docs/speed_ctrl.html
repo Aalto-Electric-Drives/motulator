@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Usage &#8212; motulator 0.1.4 documentation</title>
+    <title>Speed Control &#8212; motulator 0.1.4 documentation</title>
   
   
   
@@ -48,11 +48,12 @@
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'speed_ctrl';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="autoapi/index.html" />
-    <link rel="prev" title="Installation" href="installation.html" />
+    <link rel="next" title="Current Control" href="current_ctrl.html" />
+    <link rel="prev" title="Converters" href="converters.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -130,9 +131,9 @@
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/motulator/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/motulator/control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -174,8 +175,8 @@
 <li class="toctree-l1"><a class="reference internal" href="converters.html">Converters</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Algorithms</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Speed Control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -267,7 +268,7 @@
       
       
       
-      <li><a href="_sources/usage.rst" target="_blank"
+      <li><a href="_sources/speed_ctrl.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -336,7 +337,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -347,11 +350,26 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Usage</h1>
+    <h1>Speed Control</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-domain">Continuous-Time Domain</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-structure">Typical Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-observer-structure">Disturbance-Observer Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection-example">Gain Selection Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-domain">Discrete-Time Domain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -361,28 +379,83 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h1>
-<p>After <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>, motulator can be used by creating a continuous-time system model, a discrete-time controller, and a simulation object, as shown below</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>import<span class="w"> </span>motulator<span class="w"> </span>as<span class="w"> </span>mt
-
-<span class="c1"># Continuous-time model for the drive system</span>
-<span class="nv">motor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mt.InductionMotor<span class="o">()</span><span class="w">     </span><span class="c1"># Motor model</span>
-<span class="nv">mech</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mt.Mechanics<span class="o">()</span><span class="w">           </span><span class="c1"># Mechanics model</span>
-<span class="nv">conv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mt.Inverter<span class="o">()</span><span class="w">            </span><span class="c1"># Converter model</span>
-<span class="nv">mdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mt.InductionMotorDrive<span class="o">(</span>motor,<span class="w"> </span>mech,<span class="w"> </span>conv<span class="o">)</span>
-
-<span class="c1"># Discrete-time controller</span>
-<span class="nv">pars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mt.InductionMotorVectorCtrlPars<span class="o">()</span><span class="w">    </span><span class="c1"># Dataclass of control parameters</span>
-<span class="nv">ctrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mt.InductionMotorVectorCtrl<span class="o">(</span>pars<span class="o">)</span><span class="w">    </span><span class="c1"># Sensorless controller</span>
-
-<span class="c1"># Create a simulation object, simulate, and plot example figures</span>
-<span class="nv">sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mt.Simulation<span class="o">(</span>mdl,<span class="w"> </span>ctrl<span class="o">)</span>
-sim.simulate<span class="o">()</span>
-mt.plot<span class="o">(</span>sim<span class="o">)</span>
-</pre></div>
-</div>
-<p>The <a class="reference internal" href="auto_examples/index.html"><span class="doc">Examples</span></a> folder includes a variety of different example scripts to run the simulation. Drive system and controller configurations can be changed as shown in the examples. Furthermore, new features can be added by modifying the source code.</p>
+  <section id="speed-control">
+<h1>Speed Control<a class="headerlink" href="#speed-control" title="Permalink to this heading">#</a></h1>
+<p>Proportional-integral (PI) control is widely used in motor drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degrees-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately <a class="footnote-reference brackets" href="#id5" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. In the following, we will use a speed controller as an example, cf. the <a class="reference internal" href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl" title="motulator.control.common.SpeedCtrl"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.common.SpeedCtrl</span></code></a> class. The presented control design can be extended to many other control tasks as well.</p>
+<section id="continuous-time-domain">
+<h2>Continuous-Time Domain<a class="headerlink" href="#continuous-time-domain" title="Permalink to this heading">#</a></h2>
+<p>Even if controllers operate in the discrete-time domain, they are often designed and analyzed in the continuous-time domain.</p>
+<section id="typical-structure">
+<h3>Typical Structure<a class="headerlink" href="#typical-structure" title="Permalink to this heading">#</a></h3>
+<p>The state-space form of a simple 2DOF PI speed controller is given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &amp;= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
+\tau_\mathrm{M,ref} &amp;= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the measured (or estimated) mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\omega_\mathrm{M,ref}\)</span> is the reference angular speed, and <span class="math notranslate nohighlight">\(\tau_\mathrm{i}\)</span> is the the integral state. Furthermore, <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> is the reference feedforward gain, <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span> results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward <a class="footnote-reference brackets" href="#id6" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+</section>
+<section id="disturbance-observer-structure">
+<h3>Disturbance-Observer Structure<a class="headerlink" href="#disturbance-observer-structure" title="Permalink to this heading">#</a></h3>
+<p>The above 2DOF PI controller can be equally represented using the disturbance-observer structure,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &amp;= \alpha_\mathrm{i}\left(\tau_\mathrm{M,ref} - \hat \tau_\mathrm{L}\right) \\
+\hat \tau_\mathrm{L} &amp;= \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M} \\
+\tau_\mathrm{M,ref} &amp;= k_\mathrm{t}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) + \hat \tau_\mathrm{L}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha_\mathrm{i} = k_\mathrm{i}/k_\mathrm{t}\)</span> is the redefined integral gain and <span class="math notranslate nohighlight">\(\hat \tau_\mathrm{L}\)</span> is the input-equivalent disturbance estimate (i.e., the load torque estimate). This structure is convenient to prevent the integral windup that originates from the actuator saturation <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is</p>
+<div class="math notranslate nohighlight">
+\[\overline{\tau}_\mathrm{M,ref} = \mathrm{sat}(\tau_\mathrm{M,ref})\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{sat}(\cdot)\)</span> is the saturation function. If this saturation function is known, the anti-windup of the integrator can be implemented simply as</p>
+<div class="math notranslate nohighlight">
+\[\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} = \alpha_\mathrm{i}\left(\overline{\tau}_\mathrm{M,ref} - \hat \tau_\mathrm{L}\right)\]</div>
+<p>The other parts of the above controller are not affected by the saturation. The implementation in the <a class="reference internal" href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl" title="motulator.control.common.SpeedCtrl"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.common.SpeedCtrl</span></code></a> class is based on this disturbance-observer form.</p>
+</section>
+<section id="gain-selection-example">
+<h3>Gain Selection Example<a class="headerlink" href="#gain-selection-example" title="Permalink to this heading">#</a></h3>
+<p>For simplicity, let us assume ideal torque control (<span class="math notranslate nohighlight">\(\tau_\mathrm{M} = \tau_\mathrm{M,ref}\)</span>) and a stiff mechanical system <a class="footnote-reference brackets" href="#id7" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
+<div class="math notranslate nohighlight">
+\[J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} = \tau_\mathrm{M} - \tau_\mathrm{L}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> is the electromagnetic torque, <span class="math notranslate nohighlight">\(\tau_\mathrm{L}\)</span> is the load torque, and <span class="math notranslate nohighlight">\(J\)</span> is the total moment of inertia. In the Laplace domain, the resulting closed-loop system is given by</p>
+<div class="math notranslate nohighlight">
+\[\omega_\mathrm{M}(s) = \frac{k_\mathrm{t} s + k_\mathrm{i}}{J s^2 + k_\mathrm{p} s + k_\mathrm{i}} \omega_\mathrm{M,ref}(s) - \frac{s}{J s^2 + k_\mathrm{p} s + k_\mathrm{i}} \tau_\mathrm{L}(s)\]</div>
+<p>where it can be seen that the gain <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> allows to place the reference-tracking zero.</p>
+<p>The gain selection</p>
+<div class="math notranslate nohighlight">
+\[k_\mathrm{t} = \alpha_\mathrm{s} \hat{J} \qquad
+k_\mathrm{p} = 2\alpha_\mathrm{s} \hat{J} \qquad
+k_\mathrm{i} = \alpha_\mathrm{s}^2 \hat{J}\]</div>
+<p>results in</p>
+<div class="math notranslate nohighlight">
+\[\omega_\mathrm{M}(s) = \frac{\alpha_\mathrm{s}}{s + \alpha_\mathrm{s}} \omega_\mathrm{M,ref}(s) - \frac{s}{J (s + \alpha_\mathrm{s})^2} \tau_\mathrm{L}(s)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha_\mathrm{s}\)</span> is the closed-loop bandwidth of reference tracking and <span class="math notranslate nohighlight">\(\hat{J} = J\)</span> is assumed.</p>
+</section>
+</section>
+<section id="discrete-time-domain">
+<h2>Discrete-Time Domain<a class="headerlink" href="#discrete-time-domain" title="Permalink to this heading">#</a></h2>
+<p>The discrete-time variant of the controller is given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\tau_\mathrm{i}(k+1) &amp;= \tau_\mathrm{i}(k) + T_\mathrm{s} \alpha_\mathrm{i} \left[\overline{\tau}_\mathrm{M,ref}(k) - \hat \tau_\mathrm{L}(k) \right] \\
+\hat \tau_\mathrm{L}(k) &amp;= \tau_\mathrm{i}(k) - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M}(k) \\
+\tau_\mathrm{M,ref}(k) &amp;= k_\mathrm{t}\left[\omega_\mathrm{M,ref}(k) - \omega_\mathrm{M}(k)\right] + \hat \tau_\mathrm{L}(k) \\
+\overline{\tau}_\mathrm{M,ref}(k) &amp;= \mathrm{sat}[\tau_\mathrm{M,ref}(k)]\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> is the sampling period and <span class="math notranslate nohighlight">\(k\)</span> is the discrete-time index. This corresponds to the implementation in the <a class="reference internal" href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl" title="motulator.control.common.SpeedCtrl"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.common.SpeedCtrl</span></code></a> class.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Skogestad, Postlethwaite, “Multivariable Feedback Control: Analysis and Design,” West Sussex, England: John Wiley and Sons, 1996</p>
+</aside>
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id3">2</a>)</span>
+<p>Franklin, Powell, Workman, “Digital Control of Dynamic Systems,” 3rd ed., Menlo Park, CA: Addison-Wesley, 1997</p>
+</aside>
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p>Harnefors, Saarakkala, Hinkkanen, “Speed control of electrical drives using classical control methods,” IEEE Trans. Ind. Appl., 2013, <a class="reference external" href="https://doi.org/10.1109/TIA.2013.2244194">https://doi.org/10.1109/TIA.2013.2244194</a></p>
+</aside>
+</aside>
+</section>
 </section>
 
 
@@ -398,20 +471,20 @@ mt.plot<span class="o">(</span>sim<span class="o">)</span>
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="installation.html"
+       href="converters.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Installation</p>
+        <p class="prev-next-title">Converters</p>
       </div>
     </a>
     <a class="right-next"
-       href="autoapi/index.html"
+       href="current_ctrl.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">API Reference</p>
+        <p class="prev-next-title">Current Control</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -424,6 +497,27 @@ mt.plot<span class="o">(</span>sim<span class="o">)</span>
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-domain">Continuous-Time Domain</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-structure">Typical Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-observer-structure">Disturbance-Observer Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection-example">Gain Selection Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-domain">Discrete-Time Domain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

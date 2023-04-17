@@ -21,6 +21,7 @@ Classes
 
    motulator.control.common.PWM
    motulator.control.common.SpeedCtrl
+   motulator.control.common.CurrentCtrl
    motulator.control.common.RateLimiter
    motulator.control.common.Ctrl
 
@@ -138,7 +139,7 @@ Classes
       :type u_dc: float
       :param theta: Angle of synchronous coordinates.
       :type theta: float
-      :param w: Angular frequency of synchronous coordinates.
+      :param w: Angular speed of synchronous coordinates.
       :type w: float
 
       :returns: **d_abc_ref** -- Duty ratio references.
@@ -274,6 +275,108 @@ Classes
 
       :param tau_M_ref_lim: Realized (limited) torque reference.
       :type tau_M_ref_lim: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: CurrentCtrl(pars)
+
+   
+   2DOF PI synchronous-frame current controller for three-phase AC machines.
+
+   This controller is mathematically identical to the continuous-time 2DOF PI
+   controller design in [Ra42ac92f4471-1]_. The disturbance-observer structure is used here.
+   The default gains correspond to the complex-vector design, see (13) in [Ra42ac92f4471-1]_.
+   If desired, the controller can be parametrized with the IMC gains, see (12).
+   A regular PI controller is obtained as a special case.
+
+   :param pars: Control parameters. The following parameters are required:
+   :type pars: Data object
+
+   .. rubric:: Notes
+
+   For better performance at very high speeds with low sampling frequencies,
+   the discrete-time design in (18) is recommended. This implementation does
+   not take the magnetic saturation into account.
+
+   .. rubric:: References
+
+   .. [Ra42ac92f4471-1] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+      saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+      https://doi.org/10.1109/TIA.2019.2919258
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: output(i_ref, i, w)
+
+      
+      Compute the unlimited voltage reference.
+
+      :param i_ref: Current reference in synchronous coordinates.
+      :type i_ref: complex
+      :param i: Measured current in synchronous coordinates.
+      :type i: complex
+      :param w: Angular speed of the coordinate system.
+      :type w: float
+
+      :returns: **u_ref** -- Unlimited voltage reference in synchronous coordinates.
+      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: update(u_ref_lim, w)
+
+      
+      Update the integral state.
+
+      :param u_ref_lim: Limited voltage reference in synchronous coordinates.
+      :type u_ref_lim: complex
+      :param w: Angular speed of the coordinate system.
+      :type w: float
 
 
 
