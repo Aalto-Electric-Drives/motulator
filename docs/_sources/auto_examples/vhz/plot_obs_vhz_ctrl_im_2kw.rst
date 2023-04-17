@@ -202,7 +202,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.311 seconds)
+   **Total running time of the script:** ( 0 minutes  7.190 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_obs_vhz_ctrl_im_2kw.py:

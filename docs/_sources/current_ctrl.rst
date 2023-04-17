@@ -184,7 +184,7 @@ Discrete-Time Algorithm
 The discrete-time variant of the disturbance-observer form :eq:`cc_disturbance` is given by
 
 .. math::
-	\boldsymbol{u}_\mathrm{i}(k+1) &= \boldsymbol{u}_\mathrm{i}(k) + T_\mathrm{s} \boldsymbol{\alpha} \left[\overline{\boldsymbol{u}}_\mathrm{s,ref}(k) - \hat{\boldsymbol{v}}_\mathrm{s}(k) \right] \\
+	\boldsymbol{u}_\mathrm{i}(k+1) &= \boldsymbol{u}_\mathrm{i}(k) + T_\mathrm{s} \boldsymbol{\alpha}_\mathrm{i} \left[\overline{\boldsymbol{u}}_\mathrm{s,ref}(k) - \hat{\boldsymbol{v}}_\mathrm{s}(k) \right] \\
     \hat{\boldsymbol{v}}_\mathrm{s}(k) &= \boldsymbol{u}_\mathrm{i}(k) - (\boldsymbol{k}_\mathrm{p} - \boldsymbol{k}_\mathrm{t})\hat{\boldsymbol{\psi}}(k) \\
     \boldsymbol{u}_\mathrm{s,ref}(k) &= \boldsymbol{k}_\mathrm{t}\left[\boldsymbol{\psi}_{\mathrm{ref}}(k) - \hat{\boldsymbol{\psi}}(k)\right] + \hat{\boldsymbol{v}}_\mathrm{s} \\
      \overline{\boldsymbol{u}}_\mathrm{s,ref}(k) &= \mathrm{sat}\left[\boldsymbol{u}_\mathrm{s,ref}(k)\right]

@@ -509,7 +509,7 @@ Now the 2DOF PI controller <a class="reference internal" href="#equation-cc">(3)
 <h2>Discrete-Time Algorithm<a class="headerlink" href="#discrete-time-algorithm" title="Permalink to this heading">#</a></h2>
 <p>The discrete-time variant of the disturbance-observer form <a class="reference internal" href="#equation-cc-disturbance">(9)</a> is given by</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\boldsymbol{u}_\mathrm{i}(k+1) &amp;= \boldsymbol{u}_\mathrm{i}(k) + T_\mathrm{s} \boldsymbol{\alpha} \left[\overline{\boldsymbol{u}}_\mathrm{s,ref}(k) - \hat{\boldsymbol{v}}_\mathrm{s}(k) \right] \\
+\[\begin{split}\boldsymbol{u}_\mathrm{i}(k+1) &amp;= \boldsymbol{u}_\mathrm{i}(k) + T_\mathrm{s} \boldsymbol{\alpha}_\mathrm{i} \left[\overline{\boldsymbol{u}}_\mathrm{s,ref}(k) - \hat{\boldsymbol{v}}_\mathrm{s}(k) \right] \\
 \hat{\boldsymbol{v}}_\mathrm{s}(k) &amp;= \boldsymbol{u}_\mathrm{i}(k) - (\boldsymbol{k}_\mathrm{p} - \boldsymbol{k}_\mathrm{t})\hat{\boldsymbol{\psi}}(k) \\
 \boldsymbol{u}_\mathrm{s,ref}(k) &amp;= \boldsymbol{k}_\mathrm{t}\left[\boldsymbol{\psi}_{\mathrm{ref}}(k) - \hat{\boldsymbol{\psi}}(k)\right] + \hat{\boldsymbol{v}}_\mathrm{s} \\
  \overline{\boldsymbol{u}}_\mathrm{s,ref}(k) &amp;= \mathrm{sat}\left[\boldsymbol{u}_\mathrm{s,ref}(k)\right]\end{split}\]</div>
