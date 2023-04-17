@@ -15,7 +15,7 @@ The inverse-Γ model of an induction motor is considered (see :doc:`induction_mo
 
 .. math::
     L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \underbrace{\left(\mathrm{j}\omega_\mathrm{m} - \frac{R_\mathrm{R}}{L_\mathrm{M}}\right)\boldsymbol{\psi}_\mathrm{R}}_{\text{back-emf } \boldsymbol{e}_\mathrm{s}} \\
-	\frac{\mathrm{d} \boldsymbol{\psi}_\mathrm{R}}{\mathrm{d} t} &= R_\mathrm{R}\boldsymbol{i}_\mathrm{s} - \left(\frac{R_\mathrm{R}}{L_\mathrm{M}} - \mathrm{j}\omega_\mathrm{r} \right)\boldsymbol{\psi}_\mathrm{R} 
+	\frac{\mathrm{d} \boldsymbol{\psi}_\mathrm{R}}{\mathrm{d} t} &= R_\mathrm{R}\boldsymbol{i}_\mathrm{s} - \left(\frac{R_\mathrm{R}}{L_\mathrm{M}} + \mathrm{j}\omega_\mathrm{r} \right)\boldsymbol{\psi}_\mathrm{R} 
 
 where :math:`R_\sigma = R_\mathrm{s} + R_\mathrm{R}` is the total resistance and :math:`\omega_\mathrm{r} = \omega_\mathrm{s} - \omega_\mathrm{m}` is the slip angular frequency. The rotor flux linkage :math:`\boldsymbol{\psi}_\mathrm{R}` and the rotor speed :math:`\omega_\mathrm{m}` change slowly as compared to the stator current. 
 
