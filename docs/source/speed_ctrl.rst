@@ -45,12 +45,12 @@ The above 2DOF PI controller can be equally represented using the disturbance-ob
 where :math:`\alpha_\mathrm{i} = k_\mathrm{i}/k_\mathrm{t}` is the redefined integral gain and :math:`\hat \tau_\mathrm{L}` is the input-equivalent disturbance estimate (i.e., the load torque estimate). This structure is convenient to prevent the integral windup that originates from the actuator saturation [2]_. The electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is
 
 .. math::
-    \overline{\tau}_\mathrm{M,ref} = \mathrm{sat}(\tau_\mathrm{M,ref})
+    \bar{\tau}_\mathrm{M,ref} = \mathrm{sat}(\tau_\mathrm{M,ref})
 
 where :math:`\mathrm{sat}(\cdot)` is the saturation function. If this saturation function is known, the anti-windup of the integrator can be implemented simply as
 
 .. math::
-	\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} = \alpha_\mathrm{i}\left(\overline{\tau}_\mathrm{M,ref} - \hat \tau_\mathrm{L}\right) 
+	\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} = \alpha_\mathrm{i}\left(\bar{\tau}_\mathrm{M,ref} - \hat \tau_\mathrm{L}\right) 
 
 The other parts of the above controller are not affected by the saturation. The implementation in the :class:`motulator.control.common.SpeedCtrl` class is based on this disturbance-observer form.
 
@@ -89,10 +89,10 @@ Discrete-Time Algorithm
 The discrete-time variant of the controller is given by
 
 .. math::
-	\tau_\mathrm{i}(k+1) &= \tau_\mathrm{i}(k) + T_\mathrm{s} \alpha_\mathrm{i} \left[\overline{\tau}_\mathrm{M,ref}(k) - \hat \tau_\mathrm{L}(k) \right] \\
+	\tau_\mathrm{i}(k+1) &= \tau_\mathrm{i}(k) + T_\mathrm{s} \alpha_\mathrm{i} \left[\bar{\tau}_\mathrm{M,ref}(k) - \hat \tau_\mathrm{L}(k) \right] \\
     \hat \tau_\mathrm{L}(k) &= \tau_\mathrm{i}(k) - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M}(k) \\
     \tau_\mathrm{M,ref}(k) &= k_\mathrm{t}\left[\omega_\mathrm{M,ref}(k) - \omega_\mathrm{M}(k)\right] + \hat \tau_\mathrm{L}(k) \\
-    \overline{\tau}_\mathrm{M,ref}(k) &= \mathrm{sat}[\tau_\mathrm{M,ref}(k)]
+    \bar{\tau}_\mathrm{M,ref}(k) &= \mathrm{sat}[\tau_\mathrm{M,ref}(k)]
 
 where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. This corresponds to the implementation in the :class:`motulator.control.common.SpeedCtrl` class. 
 
