@@ -395,7 +395,7 @@ document.write(`
 <h2>Induction Motors<a class="headerlink" href="#induction-motors" title="Permalink to this heading">#</a></h2>
 <section id="system-model">
 <h3>System Model<a class="headerlink" href="#system-model" title="Permalink to this heading">#</a></h3>
-<p>The inverse-Γ model of an induction motor is considered (see <a class="reference internal" href="induction_motor.html"><span class="doc">Induction Motor</span></a>). Using the stator current <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}\)</span> and the rotor flux linkage <span class="math notranslate nohighlight">\(\boldsymbol{\psi}_\mathrm{R}\)</span> as state variables, the model can be written as</p>
+<p>The inverse-Γ model of an induction motor is considered (see <a class="reference internal" href="induction_motor.html"><span class="doc">Induction Motor</span></a>). Using the stator current <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}\)</span> and the rotor flux linkage <span class="math notranslate nohighlight">\(\boldsymbol{\psi}_\mathrm{R}\)</span> as state variables, the model in synchronous coordinates rotating at <span class="math notranslate nohighlight">\(\omega_\mathrm{s}\)</span> can be written as</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \underbrace{\left(\mathrm{j}\omega_\mathrm{m} - \frac{R_\mathrm{R}}{L_\mathrm{M}}\right)\boldsymbol{\psi}_\mathrm{R}}_{\text{back-emf } \boldsymbol{e}_\mathrm{s}} \\
     \frac{\mathrm{d} \boldsymbol{\psi}_\mathrm{R}}{\mathrm{d} t} &amp;= R_\mathrm{R}\boldsymbol{i}_\mathrm{s} - \left(\frac{R_\mathrm{R}}{L_\mathrm{M}} - \mathrm{j}\omega_\mathrm{r} \right)\boldsymbol{\psi}_\mathrm{R}\end{split}\]</div>
@@ -483,7 +483,7 @@ Now the 2DOF PI controller <a class="reference internal" href="#equation-cc">(3)
 </section>
 <section id="disturbance-observer-structure">
 <h3>Disturbance-Observer Structure<a class="headerlink" href="#disturbance-observer-structure" title="Permalink to this heading">#</a></h3>
-<p>The controller <a class="reference internal" href="#equation-cc-disturbance">(9)</a> can be equally represented using the disturbance-observer structure,</p>
+<p>The controller <a class="reference internal" href="#equation-cc-flux">(7)</a> can be equally represented using the disturbance-observer structure,</p>
 <div class="math notranslate nohighlight" id="equation-cc-disturbance">
 <span class="eqno">(9)<a class="headerlink" href="#equation-cc-disturbance" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= \boldsymbol{\alpha}_\mathrm{i}\left(\boldsymbol{u}_{\mathrm{s,ref}} - \hat{\boldsymbol{v}}_\mathrm{s}\right) \\
 \hat{\boldsymbol{v}}_\mathrm{s} &amp;= \boldsymbol{u}_\mathrm{i} - (\boldsymbol{k}_\mathrm{p} - \boldsymbol{k}_\mathrm{t})\hat{\boldsymbol{\psi}} \\
