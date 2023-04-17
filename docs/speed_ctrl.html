@@ -360,13 +360,13 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-domain">Continuous-Time Domain</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-design">Continuous-Time Design</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-structure">Typical Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-observer-structure">Disturbance-Observer Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection-example">Gain Selection Example</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-domain">Discrete-Time Domain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-algorithm">Discrete-Time Algorithm</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 </ul>
             </nav>
@@ -382,8 +382,8 @@ document.write(`
   <section id="speed-control">
 <h1>Speed Control<a class="headerlink" href="#speed-control" title="Permalink to this heading">#</a></h1>
 <p>Proportional-integral (PI) control is widely used in motor drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degrees-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately <a class="footnote-reference brackets" href="#id5" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. In the following, we will use a speed controller as an example, cf. the <a class="reference internal" href="autoapi/motulator/control/common/index.html#motulator.control.common.SpeedCtrl" title="motulator.control.common.SpeedCtrl"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.common.SpeedCtrl</span></code></a> class. The presented control design can be extended to many other control tasks as well.</p>
-<section id="continuous-time-domain">
-<h2>Continuous-Time Domain<a class="headerlink" href="#continuous-time-domain" title="Permalink to this heading">#</a></h2>
+<section id="continuous-time-design">
+<h2>Continuous-Time Design<a class="headerlink" href="#continuous-time-design" title="Permalink to this heading">#</a></h2>
 <p>Even if controllers operate in the discrete-time domain, they are often designed and analyzed in the continuous-time domain.</p>
 <section id="typical-structure">
 <h3>Typical Structure<a class="headerlink" href="#typical-structure" title="Permalink to this heading">#</a></h3>
@@ -428,8 +428,8 @@ k_\mathrm{i} = \alpha_\mathrm{s}^2 \hat{J}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\alpha_\mathrm{s}\)</span> is the closed-loop bandwidth of reference tracking and <span class="math notranslate nohighlight">\(\hat{J} = J\)</span> is assumed.</p>
 </section>
 </section>
-<section id="discrete-time-domain">
-<h2>Discrete-Time Domain<a class="headerlink" href="#discrete-time-domain" title="Permalink to this heading">#</a></h2>
+<section id="discrete-time-algorithm">
+<h2>Discrete-Time Algorithm<a class="headerlink" href="#discrete-time-algorithm" title="Permalink to this heading">#</a></h2>
 <p>The discrete-time variant of the controller is given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\tau_\mathrm{i}(k+1) &amp;= \tau_\mathrm{i}(k) + T_\mathrm{s} \alpha_\mathrm{i} \left[\overline{\tau}_\mathrm{M,ref}(k) - \hat \tau_\mathrm{L}(k) \right] \\
@@ -506,13 +506,13 @@ k_\mathrm{i} = \alpha_\mathrm{s}^2 \hat{J}\]</div>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-domain">Continuous-Time Domain</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-design">Continuous-Time Design</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-structure">Typical Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-observer-structure">Disturbance-Observer Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection-example">Gain Selection Example</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-domain">Discrete-Time Domain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-algorithm">Discrete-Time Algorithm</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 </ul>
   </nav></div>

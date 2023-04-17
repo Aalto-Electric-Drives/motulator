@@ -3,7 +3,7 @@ Speed Control
 
 Proportional-integral (PI) control is widely used in motor drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degrees-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately [1]_. In the following, we will use a speed controller as an example, cf. the :class:`motulator.control.common.SpeedCtrl` class. The presented control design can be extended to many other control tasks as well. 
 
-Continuous-Time Domain
+Continuous-Time Design
 ----------------------
 
 Even if controllers operate in the discrete-time domain, they are often designed and analyzed in the continuous-time domain.  
@@ -83,8 +83,8 @@ results in
 
 where :math:`\alpha_\mathrm{s}` is the closed-loop bandwidth of reference tracking and :math:`\hat{J} = J` is assumed.
 
-Discrete-Time Domain
---------------------
+Discrete-Time Algorithm
+-----------------------
 
 The discrete-time variant of the controller is given by
 
