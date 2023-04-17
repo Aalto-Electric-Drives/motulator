@@ -27,11 +27,12 @@ This open-source software includes simulation models for an induction motor, a s
 
 .. toctree::
    :titlesonly:
-   :caption: Controllers
+   :caption: Control Algorithms
    :name: controllers
    :maxdepth: 2
 
-   2dof_pi_ctrl
+   speed_ctrl
+   current_ctrl
    auto_examples/index
 
 Acknowledgement
