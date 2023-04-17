@@ -93,7 +93,7 @@ class SynchronousMotorSignalInjectionCtrl(Ctrl):
         err = self.signal_inj.output(i_s.imag)
         # Superimpose the excitation voltage on the d-axis
         u_s_ref = self.current_ctrl.output(
-            i_s_ref, i_s_filt) + self.signal_inj.u_sd_inj
+            i_s_ref, i_s_filt, w_m) + self.signal_inj.u_sd_inj
         d_abc_ref, u_s_ref_lim = self.pwm.output(u_s_ref, u_dc, theta_m, w_m)
 
         # Data logging
