@@ -157,12 +157,12 @@ The controller :eq:`cc_flux` can be equally represented using the disturbance-ob
 where :math:`\boldsymbol{\alpha}_\mathrm{i} = \boldsymbol{k}_\mathrm{i}/\boldsymbol{k}_\mathrm{t}` is the redefined integral gain and :math:`\hat{\boldsymbol{v}}_\mathrm{s}` is the estimated input disturbance. This structure is convenient to prevent the integral windup that originates from the actuator saturation [4]_. The stator voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is
 
 .. math::
-    \overline{\boldsymbol{u}}_\mathrm{s,ref} = \mathrm{sat}(\boldsymbol{u}_\mathrm{s,ref})
+    \bar{\boldsymbol{u}}_\mathrm{s,ref} = \mathrm{sat}(\boldsymbol{u}_\mathrm{s,ref})
 
 where :math:`\mathrm{sat}(\cdot)` is the saturation function. The limited voltage can be obtained from a pulse-width modulation (PWM) algorithm. The anti-windup of the integrator can be implemented simply as
 
 .. math::
-	\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} = \boldsymbol{\alpha}_\mathrm{i}\left(\overline{\boldsymbol{u}}_\mathrm{s,ref} - \hat{\boldsymbol{v}}_\mathrm{s}\right) 
+	\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} = \boldsymbol{\alpha}_\mathrm{i}\left(\bar{\boldsymbol{u}}_\mathrm{s,ref} - \hat{\boldsymbol{v}}_\mathrm{s}\right) 
 
 The other parts of the above controller are not affected by the saturation. The implementation in the :class:`motulator.control.common.CurrentCtrl` class is based on this disturbance-observer form.
 
@@ -184,10 +184,10 @@ Discrete-Time Algorithm
 The discrete-time variant of the disturbance-observer form :eq:`cc_disturbance` is given by
 
 .. math::
-	\boldsymbol{u}_\mathrm{i}(k+1) &= \boldsymbol{u}_\mathrm{i}(k) + T_\mathrm{s} \boldsymbol{\alpha}_\mathrm{i} \left[\overline{\boldsymbol{u}}_\mathrm{s,ref}(k) - \hat{\boldsymbol{v}}_\mathrm{s}(k) \right] \\
+	\boldsymbol{u}_\mathrm{i}(k+1) &= \boldsymbol{u}_\mathrm{i}(k) + T_\mathrm{s} \boldsymbol{\alpha}_\mathrm{i} \left[\bar{\boldsymbol{u}}_\mathrm{s,ref}(k) - \hat{\boldsymbol{v}}_\mathrm{s}(k) \right] \\
     \hat{\boldsymbol{v}}_\mathrm{s}(k) &= \boldsymbol{u}_\mathrm{i}(k) - (\boldsymbol{k}_\mathrm{p} - \boldsymbol{k}_\mathrm{t})\hat{\boldsymbol{\psi}}(k) \\
     \boldsymbol{u}_\mathrm{s,ref}(k) &= \boldsymbol{k}_\mathrm{t}\left[\boldsymbol{\psi}_{\mathrm{ref}}(k) - \hat{\boldsymbol{\psi}}(k)\right] + \hat{\boldsymbol{v}}_\mathrm{s} \\
-     \overline{\boldsymbol{u}}_\mathrm{s,ref}(k) &= \mathrm{sat}\left[\boldsymbol{u}_\mathrm{s,ref}(k)\right]
+     \bar{\boldsymbol{u}}_\mathrm{s,ref}(k) &= \mathrm{sat}\left[\boldsymbol{u}_\mathrm{s,ref}(k)\right]
 
 where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. Depending on the motor type, either :eq:`flux_mapping_im` or :eq:`flux_mapping_sm` is used to map the stator current to the flux linkage. This discrete-time algorithm corresponds to the implementation in the :class:`motulator.control.common.CurrentCtrl` class. The default gain selection corresponds to the complex-vector gains in :eq:`complex_vector_gains_flux`.
 
