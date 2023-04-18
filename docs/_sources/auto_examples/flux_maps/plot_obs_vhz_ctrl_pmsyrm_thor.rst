@@ -249,7 +249,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  35.236 seconds)
+   **Total running time of the script:** ( 0 minutes  32.816 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_maps_plot_obs_vhz_ctrl_pmsyrm_thor.py:

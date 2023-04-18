@@ -88,9 +88,9 @@ Consider the gains
 where the hat indicates the parameter estimates. Assuming accurate paramater estimates, the closed-loop transfer functions :eq:`Yc` and :eq:`Gc` reduce to
 
 .. math::
-    \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}} 
-    \qquad\qquad
     \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma(s + \alpha_\mathrm{c})^2}
+    \qquad\qquad
+    \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}} 
 
 where :math:`\alpha_\mathrm{c}` is the closed-loop bandwidth for reference tracking. The effect of the resistance is negligible, i.e., :math:`\hat R_\sigma = 0` can be chosen. 
 
@@ -107,11 +107,9 @@ Consider the gains
 Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Yc` and :eq:`Gc` reduce to
 
 .. math::
-    \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}} 
+    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s})}
     \qquad\qquad
-    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s} )}
-
-where :math:`\hat R_\sigma = 0` can be set. 
+    \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}} 
 
 It can be seen that both gain designs result in the first-order reference-tracking dynamics. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately correponds to the open-loop pole.  
 
@@ -125,8 +123,7 @@ Based on :eq:`im_leakage_flux`, both the reference current and the measured curr
     \hat{\boldsymbol{\psi}} &= \hat L_\sigma \boldsymbol{i}_\mathrm{s} 
     :label: flux_mapping_im
 
-where the notation of the leakage flux has been simplified by dropping the subscript :math:`\sigma` (in order to be able to reuse some of the following equations for synchronous motors). 
-Now the 2DOF PI controller :eq:`cc` can be rewritten as
+where the notation of the leakage flux has been simplified by dropping the subscript :math:`\sigma` (in order to be able to reuse some of the following equations for synchronous motors). Now the 2DOF PI controller :eq:`cc` can be rewritten as
 
 .. math::
 	\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &= \boldsymbol{k}_\mathrm{i}\left(\boldsymbol{\psi}_{\mathrm{ref}} - \hat{\boldsymbol{\psi}}\right) \\

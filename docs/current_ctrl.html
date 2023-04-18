@@ -457,9 +457,9 @@ document.write(`
 \boldsymbol{k}'_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma\]</div>
 <p>where the hat indicates the parameter estimates. Assuming accurate paramater estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(4)</a> and <a class="reference internal" href="#equation-gc">(5)</a> reduce to</p>
 <div class="math notranslate nohighlight">
-\[\boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}
+\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma(s + \alpha_\mathrm{c})^2}
 \qquad\qquad
-\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma(s + \alpha_\mathrm{c})^2}\]</div>
+\boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\alpha_\mathrm{c}\)</span> is the closed-loop bandwidth for reference tracking. The effect of the resistance is negligible, i.e., <span class="math notranslate nohighlight">\(\hat R_\sigma = 0\)</span> can be chosen.</p>
 </section>
 <section id="complex-vector-design">
@@ -471,10 +471,9 @@ document.write(`
 \boldsymbol{k}'_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma\]</div>
 <p>Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(4)</a> and <a class="reference internal" href="#equation-gc">(5)</a> reduce to</p>
 <div class="math notranslate nohighlight">
-\[\boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}
+\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s})}
 \qquad\qquad
-\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s} )}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat R_\sigma = 0\)</span> can be set.</p>
+\boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}\]</div>
 <p>It can be seen that both gain designs result in the first-order reference-tracking dynamics. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately correponds to the open-loop pole.</p>
 </section>
 </section>
@@ -484,8 +483,7 @@ document.write(`
 <div class="math notranslate nohighlight" id="equation-flux-mapping-im">
 <span class="eqno">(6)<a class="headerlink" href="#equation-flux-mapping-im" title="Permalink to this equation">#</a></span>\[\begin{split}\boldsymbol{\psi}_{\mathrm{ref}} &amp;= \hat L_\sigma \boldsymbol{i}_\mathrm{s,ref} \\
 \hat{\boldsymbol{\psi}} &amp;= \hat L_\sigma \boldsymbol{i}_\mathrm{s}\end{split}\]</div>
-<p>where the notation of the leakage flux has been simplified by dropping the subscript <span class="math notranslate nohighlight">\(\sigma\)</span> (in order to be able to reuse some of the following equations for synchronous motors).
-Now the 2DOF PI controller <a class="reference internal" href="#equation-cc">(3)</a> can be rewritten as</p>
+<p>where the notation of the leakage flux has been simplified by dropping the subscript <span class="math notranslate nohighlight">\(\sigma\)</span> (in order to be able to reuse some of the following equations for synchronous motors). Now the 2DOF PI controller <a class="reference internal" href="#equation-cc">(3)</a> can be rewritten as</p>
 <div class="math notranslate nohighlight" id="equation-cc-flux">
 <span class="eqno">(7)<a class="headerlink" href="#equation-cc-flux" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= \boldsymbol{k}_\mathrm{i}\left(\boldsymbol{\psi}_{\mathrm{ref}} - \hat{\boldsymbol{\psi}}\right) \\
 \boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}_\mathrm{t}\boldsymbol{\psi}_{\mathrm{ref}} - \boldsymbol{k}_\mathrm{p}\hat{\boldsymbol{\psi}} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>

@@ -162,7 +162,7 @@ the model for the carrier comparison.
  .. code-block:: none
 
 
-    Execution time: 6.69 s
+    Execution time: 6.20 s
 
 
 
@@ -206,7 +206,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.764 seconds)
+   **Total running time of the script:** ( 0 minutes  7.284 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:
