@@ -21,7 +21,6 @@ from motulator.model.im import (
 from motulator.model.sm import (
     SynchronousMotor,
     SynchronousMotorSaturated,
-    SynchronousMotorSaturatedLUT,
 )
 from motulator.model.im_drive import (
     InductionMotorDrive,

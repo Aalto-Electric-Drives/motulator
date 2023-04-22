@@ -1,8 +1,7 @@
 """
 Continuous-time models for synchronous motor drives.
 
-Peak-valued complex space vectors are used. The default values correspond to a
-2.2-kW permanent-magnet synchronous motor.
+Peak-valued complex space vectors are used.
 
 """
 import numpy as np
@@ -29,7 +28,7 @@ class SynchronousMotorDrive:
 
     """
 
-    def __init__(self, motor=None, mech=None, conv=None):
+    def __init__(self, motor, mech, conv):
         self.motor = motor
         self.motor._mech = mech
         self.mech = mech
@@ -66,6 +65,8 @@ class SynchronousMotorDrive:
 
         Parameters
         ----------
+        t0 : float
+            Initial time (s).
         x0 : complex ndarray
             Initial values of the state variables.
 
@@ -84,7 +85,7 @@ class SynchronousMotorDrive:
         Parameters
         ----------
         t : float
-            Time.
+            Time (s).
         x : complex ndarray
             State vector.
 
@@ -163,8 +164,8 @@ class SynchronousMotorDriveTwoMass(SynchronousMotorDrive):
 
     """
 
-    def __init__(self, motor=None, mech=None, conv=None):
-        super().__init__(motor=motor, mech=mech, conv=conv)
+    def __init__(self, motor, mech, conv):
+        super().__init__(motor, mech, conv)
         self.data.w_L, self.data.theta_ML = [], []
 
     def get_initial_values(self):

@@ -2,12 +2,10 @@
 Continuous-time models for induction motor drives.
 
 Peak-valued complex space vectors are used. The space vector models are
-implemented in stator coordinates. The default values correspond to a 2.2-kW
-induction motor.
+implemented in stator coordinates. 
 
 """
 import numpy as np
-
 from motulator.helpers import abc2complex, Bunch
 
 
@@ -31,7 +29,7 @@ class InductionMotorDrive:
 
     """
 
-    def __init__(self, motor=None, mech=None, conv=None):
+    def __init__(self, motor, mech, conv):
         self.motor = motor
         self.mech = mech
         self.conv = conv
@@ -66,6 +64,8 @@ class InductionMotorDrive:
 
         Parameters
         ----------
+        t0 : float
+            Initial time (s).
         x0 : complex ndarray
             Initial values of the state variables.
 
@@ -85,7 +85,7 @@ class InductionMotorDrive:
         Parameters
         ----------
         t : float
-            Time.
+            Time (s).
         x : complex ndarray
             State vector.
 
@@ -171,8 +171,8 @@ class InductionMotorDriveDiode(InductionMotorDrive):
 
     """
 
-    def __init__(self, motor=None, mech=None, conv=None):
-        super().__init__(motor=motor, mech=mech)
+    def __init__(self, motor, mech, conv):
+        super().__init__(motor, mech, conv)
         self.conv = conv
         self.data.u_dc, self.data.i_L = [], []
 
@@ -247,7 +247,7 @@ class InductionMotorDriveTwoMass(InductionMotorDrive):
 
     """
 
-    def __init__(self, motor=None, mech=None, conv=None):
+    def __init__(self, motor, mech, conv):
         super().__init__(motor=motor, mech=mech, conv=conv)
         self.data.w_L, self.data.theta_ML = [], []
 

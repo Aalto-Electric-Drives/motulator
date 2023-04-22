@@ -28,7 +28,7 @@ motor = mt.SynchronousMotorSaturated()
 # Magnetically linear SyRM model below (uncomment to try)
 # motor = mt.SynchronousMotor(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 mech = mt.Mechanics()
-conv = mt.Inverter()
+conv = mt.Inverter(u_dc=540)
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 # %%

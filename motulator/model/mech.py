@@ -11,17 +11,18 @@ class Mechanics:
     Parameters
     ----------
     J : float
-        Total moment of inertia.
-    tau_L_w : function
-        Load torque as function of speed, `tau_L_w(w_M)`. For example,
-        tau_L_w = b*w_M, where b is the viscous friction coefficient.
-    tau_L_t : function
-        Load torque as a function of time, `tau_L_t(t)`.
+        Total moment of inertia (kgm**2).
+    tau_L_w : callable
+        Load torque (Nm) as a function of speed, `tau_L_w(w_M)`. For example,
+        ``tau_L_w = b*w_M``, where `b` is the viscous friction coefficient. The
+        default is zero, ``lambda w_M: 0*w_M``.
+    tau_L_t : callable
+        Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is 
+        zero, ``lambda t: 0*t``.
 
     """
 
-    def __init__(
-            self, J=.015, tau_L_w=lambda w_M: 0*w_M, tau_L_t=lambda t: 0*t):
+    def __init__(self, J, tau_L_w=lambda w_M: 0*w_M, tau_L_t=lambda t: 0*t):
         self.J = J
         self.tau_L_t = tau_L_t
         self.tau_L_w = tau_L_w
@@ -35,11 +36,11 @@ class Mechanics:
         Parameters
         ----------
         t : float
-            Time.
+            Time (s).
         w_M : float
-            Rotor angular speed (in mechanical rad/s).
+            Rotor angular speed (mechanical rad/s).
         tau_M : float
-            Electromagnetic torque.
+            Electromagnetic torque (Nm).
 
         Returns
         -------
@@ -63,7 +64,7 @@ class Mechanics:
         Returns
         -------
         w_M0 : float
-            Rotor angular speed (in mechanical rad/s).
+            Rotor angular speed (mechanical rad/s).
 
         """
         # The quantization noise of an incremental encoder could be modeled
@@ -79,7 +80,7 @@ class Mechanics:
         Returns
         -------
         theta_M0 : float
-            Rotor angle (in mechanical rad).
+            Rotor angle (mechanical rad).
 
         """
         return self.theta_M0
@@ -95,38 +96,33 @@ class MechanicsTwoMass(Mechanics):
     Parameters
     ----------
     J_M : float
-        Moment of inertia of the motor.
+        Motor moment of inertia (kgm**2).
     J_L : float
-        Moment of inertia of the load.
+        Load moment of inertia (kgm**2).
     K_S : float
-        Torsional stiffness of the shaft.
+        Shaft torsional stiffness (Nm).
     C_S : float
-        Torsional damping of the shaft.
-    tau_L_w : function
-        Load torque as function of the load speed, `tau_L_w(w_L)`. For example,
-        tau_L_w = b*w_L, where b is the viscous friction coefficient.
-    tau_L_t : function
-        Load torque as a function of time, `tau_L_t(t)`.
+        Shaft torsional damping (Nms).
+    tau_L_w : callable
+        Load torque (Nm) as a function of the load speed, `tau_L_w(w_L)`, e.g., 
+        ``tau_L_w = B*w_L``, where `B`is the viscous friction coefficient. The
+        default is zero, ``lambda w_L: 0*w_L``.
+    tau_L_t : callable
+        Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is
+        zero, ``lambda t: 0*t``.
 
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(
-            self,
-            J_M=.005,
-            J_L=.005,
-            K_S=700.,
-            C_S=.13,
-            tau_L_w=lambda w_M: 0*w_M,
-            tau_L_t=lambda t: 0*t):
+    def __init__(self, J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None):
         # pylint: disable=too-many-arguments
         # pylint: disable=super-init-not-called
         self.J_M = J_M
         self.J_L = J_L
         self.K_S = K_S
         self.C_S = C_S
-        self.tau_L_t = tau_L_t
-        self.tau_L_w = tau_L_w
+        self.tau_L_w = tau_L_w if tau_L_w is not None else lambda w_L: 0*w_L
+        self.tau_L_t = tau_L_t if tau_L_t is not None else lambda t: 0*t
         # Initial values
         self.w_M0, self.theta_M0, self.w_L0, self.theta_ML0 = 0, 0, 0, 0
 
@@ -139,15 +135,15 @@ class MechanicsTwoMass(Mechanics):
         Parameters
         ----------
         t : float
-            Time.
+            Time (s).
         w_M : float
-            Rotor angular speed (in mechanical rad/s).
+            Rotor angular speed (mechanical rad/s).
         w_L : float
-            Load angular speed (in mechanical rad/s).
+            Load angular speed (mechanical rad/s).
         theta_ML : float
-            Twist angle, theta_M - theta_L (in mechanical rad).
+            Twist angle, theta_M - theta_L (mechanical rad).
         tau_M : float
-            Electromagnetic torque.
+            Electromagnetic torque (Nm).
 
         Returns
         -------
@@ -176,7 +172,7 @@ class MechanicsTwoMass(Mechanics):
         Returns
         -------
         w_L0 : float
-            Load angular speed (in mechanical rad/s).
+            Load angular speed (mechanical rad/s).
 
         """
         return self.w_L0
@@ -190,7 +186,7 @@ class MechanicsTwoMass(Mechanics):
         Returns
         -------
         theta_L0 : float
-            Rotor angle (in mechanical rad).
+            Rotor angle (mechanical rad).
 
         """
         theta_L0 = self.theta_M0 - self.theta_ML0

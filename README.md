@@ -23,26 +23,7 @@ https://aalto-electric-drives.github.io/motulator/installation.html
 
 Usage
 -----
-The following example shows how to create a continuous-time system model, a discrete-time controller, and a simulation object:
-```python3
-import motulator as mt
-
-# Continuous-time model for the drive system
-motor = mt.InductionMotor()     # Motor model
-mech = mt.Mechanics()           # Mechanics model
-conv = mt.Inverter() 	        # Converter model
-mdl = mt.InductionMotorDrive(motor, mech, conv)
-
-# Discrete-time controller 
-pars = mt.InductionMotorVectorCtrlPars() 	# Dataclass of control parameters
-ctrl = mt.InductionMotorVectorCtrl(pars) 	# Sensorless controller
-
-# Create a simulation object, simulate, and plot example figures
-sim = mt.Simulation(mdl, ctrl)
-sim.simulate()
-mt.plot(sim)
-```
-This example applies the default settings. The drive system, controller, reference sequences etc. are easy to configure. The example scripts and Jupyter notebooks can be downloaded here:
+The drive system, controller, reference sequences etc. are easy to configure. As a starting point, example scripts and Jupyter notebooks can be downloaded here:
 
 https://aalto-electric-drives.github.io/motulator/auto_examples/index.html
 

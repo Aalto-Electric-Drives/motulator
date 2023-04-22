@@ -23,7 +23,7 @@ base = mt.BaseValues(
 
 motor = mt.SynchronousMotor()
 mech = mt.Mechanics()
-conv = mt.Inverter()
+conv = mt.Inverter(u_dc=540)
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 # %%

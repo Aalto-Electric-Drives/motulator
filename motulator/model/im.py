@@ -2,8 +2,7 @@
 Continuous-time models for induction motors.
 
 Peak-valued complex space vectors are used. The space vector models are
-implemented in stator coordinates. The default values correspond to a 2.2-kW
-induction motor.
+implemented in stator coordinates. 
 
 """
 import numpy as np
@@ -24,13 +23,13 @@ class InductionMotor:
     n_p : int
         Number of pole pairs.
     R_s : float
-        Stator resistance.
+        Stator resistance (Ohm).
     R_r : float
-        Rotor resistance.
+        Rotor resistance (Ohm).
     L_ell : float
-        Leakage inductance.
+        Leakage inductance (H).
     L_s : float
-        Stator inductance.
+        Stator inductance (H).
 
     Notes
     -----
@@ -46,7 +45,7 @@ class InductionMotor:
 
     """
 
-    def __init__(self, n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245):
+    def __init__(self, n_p, R_s, R_r, L_ell, L_s):
         # pylint: disable=too-many-arguments
         self.n_p = n_p
         self.R_s, self.R_r = R_s, R_r
@@ -61,16 +60,16 @@ class InductionMotor:
         Parameters
         ----------
         psi_ss : complex
-            Stator flux linkage.
+            Stator flux linkage (Vs).
         psi_rs : complex
-            Rotor flux linkage.
+            Rotor flux linkage (Vs).
 
         Returns
         -------
         i_ss : complex
-            Stator current.
+            Stator current (A).
         i_rs : complex
-            Rotor current.
+            Rotor current (A).
 
         """
         i_rs = (psi_rs - psi_ss)/self.L_ell
@@ -85,18 +84,18 @@ class InductionMotor:
         Parameters
         ----------
         psi_ss : complex
-            Stator flux linkage.
+            Stator flux linkage (Vs).
         psi_rs : complex
-            Rotor flux linkage.
+            Rotor flux linkage (Vs).
 
         Returns
         -------
         i_ss : complex
-            Stator current.
+            Stator current (A).
         i_rs : complex
-            Rotor current.
+            Rotor current (A).
         tau_M : float
-            Electromagnetic torque.
+            Electromagnetic torque (Nm).
 
         """
         i_ss, i_rs = self.currents(psi_ss, psi_rs)
@@ -111,22 +110,22 @@ class InductionMotor:
         Parameters
         ----------
         psi_ss : complex
-            Stator flux linkage.
+            Stator flux linkage (Vs).
         psi_rs : complex
-            Rotor flux linkage.
+            Rotor flux linkage (Vs).
         u_ss : complex
-            Stator voltage.
+            Stator voltage (V).
         w_M : float
-            Rotor angular speed (in mechanical rad/s).
+            Rotor angular speed (mechanical rad/s).
 
         Returns
         -------
         complex list, length 2
             Time derivative of the state vector, [dpsi_ss, dpsi_rs]
         i_ss : complex
-            Stator current.
+            Stator current (A).
         tau_M : float
-            Electromagnetic torque.
+            Electromagnetic torque (Nm).
 
         Notes
         -----
@@ -149,7 +148,7 @@ class InductionMotor:
         Returns
         -------
         i_s_abc : 3-tuple of floats
-            Phase currents.
+            Phase currents (A).
 
         """
         # Stator current space vector in stator coordinates
@@ -165,53 +164,29 @@ class InductionMotorSaturated(InductionMotor):
     Γ-equivalent model of an induction motor model with main-flux saturation.
 
     This extends the InductionMotor class with a main-flux magnetic saturation
-    model [2]_::
+    model::
 
-        L_s(psi_ss) = L_su/(1 + (beta*abs(psi_ss)**S)
+        L_s = L_s(abs(psi_ss))
 
     Parameters
     ----------
     n_p : int
         Number of pole pairs.
     R_s : float
-        Stator resistance.
+        Stator resistance (Ohm).
     R_r : float
-        Rotor resistance.
+        Rotor resistance (Ohm).
     L_ell : float
-        Leakage inductance.
-    L_su : float
-        Unsaturated stator inductance.
-    beta : float
-        Positive coefficient.
-    S : float
-        Positive coefficient.
-
-    References
-    ----------
-    .. [2] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
-       induction motor drives," IEEE Trans. Ind. Appl., 2012,
-       https://doi.org/10.1109/TIA.2012.2190818
+        Leakage inductance (H).
+    L_s : Callable[[float], float]
+        Stator inductance (H) as a function of the stator-flux magnitude.
 
     """
-
-    def __init__(
-            self,
-            n_p=2,
-            R_s=3.7,
-            R_r=2.5,
-            L_ell=.023,
-            L_su=.34,
-            beta=.84,
-            S=7):
-        # pylint: disable=too-many-arguments
-        super().__init__(n_p=n_p, R_s=R_s, R_r=R_r, L_ell=L_ell)
-        # Saturation model
-        self.L_s = lambda psi: L_su/(1. + (beta*np.abs(psi))**S)
 
     def currents(self, psi_ss, psi_rs):
         """Override the base class method."""
         # Saturated value of the stator inductance.
-        L_s = self.L_s(psi_ss)
+        L_s = self.L_s(np.abs(psi_ss))
         # Currents
         i_rs = (psi_rs - psi_ss)/self.L_ell
         i_ss = psi_ss/L_s - i_rs
@@ -232,17 +207,17 @@ class InductionMotorInvGamma(InductionMotor):
     n_p : int
         Number of pole pairs.
     R_s : float
-        Stator resistance.
+        Stator resistance (Ohm).
     R_R : float
-        Rotor resistance.
+        Rotor resistance (Ohm).
     L_sgm : float
-        Leakage inductance.
+        Leakage inductance (H).
     L_M : float
-        Magnetizing inductance.
+        Magnetizing inductance (H).
 
     """
 
-    def __init__(self, n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224):
+    def __init__(self, n_p, R_s, R_R, L_sgm, L_M):
         # pylint: disable=too-many-arguments, disable=super-init-not-called
         # Convert the inverse-Γ parameters to the Γ parameters
         gamma = L_M/(L_M + L_sgm)  # Magnetic coupling factor
