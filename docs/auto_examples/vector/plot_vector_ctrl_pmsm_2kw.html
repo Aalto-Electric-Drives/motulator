@@ -187,13 +187,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -395,9 +395,9 @@ to download the full example code</p>
 </pre></div>
 </div>
 <p>Configure the system model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotor</span><span class="p">()</span>
-<span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">()</span>
-<span class="n">conv</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Inverter</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotor</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">.036</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">.051</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.545</span><span class="p">)</span>
+<span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
+<span class="n">conv</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorDrive</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">mech</span><span class="p">,</span> <span class="n">conv</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -426,7 +426,7 @@ to download the full example code</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" alt="plot vector ctrl pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.111 seconds)</p>
+<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" alt="plot vector ctrl pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  15.504 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-pmsm-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/33c3e58b193eb317d00dc39d7c8aea3c/plot_vector_ctrl_pmsm_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vector_ctrl_pmsm_2kw.py</span></code></a></p>

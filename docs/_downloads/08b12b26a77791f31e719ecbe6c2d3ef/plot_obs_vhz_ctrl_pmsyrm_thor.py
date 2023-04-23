@@ -1,6 +1,6 @@
 """
 Observer-based V/Hz control: 5-kW PM-SyRM
-===========================================
+=========================================
 
 This example simulates observer-based V/Hz control of a saturated 5-kW
 permanent-magnet synchronous reluctance motor. The flux maps of this example
@@ -22,6 +22,8 @@ into account in the control algorithm.
 # Import the packages.
 
 import numpy as np
+from scipy.optimize import minimize_scalar
+from scipy.interpolate import LinearNDInterpolator
 import motulator as mt
 
 # %%
@@ -46,11 +48,38 @@ mt.plot_flux_vs_current(data)
 mt.plot_flux_map(data)
 
 # %%
+# Create the saturation model.
+
+# The coordinates assume the PMSM convention, i.e., that the PM flux is along
+# the d-axis. The piecewise linear interpolant `LinearNDInterpolator` is based
+# on triangularization and allows to use unstructured flux map.
+
+# Data points for creating the interpolant
+psi_s_data, i_s_data = data.psi_s.ravel(), data.i_s.ravel()
+
+# Create the interpolant, i_s = current_dq(psi_s.real, psi_s.imag)
+current_dq = LinearNDInterpolator(
+    list(zip(psi_s_data.real, psi_s_data.imag)), i_s_data)
+
+# Solve the PM flux for the initial value of the stator flux
+res = minimize_scalar(
+    lambda psi_d: np.abs(current_dq(psi_d, 0)),
+    bounds=(0, np.max(psi_s_data.real)),
+    method="bounded")
+psi_s0 = complex(res.x)
+
+
+# Package the input such that i_s = i_s(psi_s)
+def i_s(psi_s):
+    """Current as a function of the flux linkage."""
+    return current_dq(psi_s.real, psi_s.imag)
+
+
+# %%
 # Configure the system model.
 
 # Create the motor model
-motor = mt.SynchronousMotorSaturatedLUT(
-    n_p=2, R_s=.2, psi_s_data=data.psi_s.ravel(), i_s_data=data.i_s.ravel())
+motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model
 # motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 mech = mt.Mechanics(J=.0042)

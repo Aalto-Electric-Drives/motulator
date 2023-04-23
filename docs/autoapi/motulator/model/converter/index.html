@@ -187,13 +187,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -408,8 +408,7 @@ document.write(`
 <p>An inverter with constant DC-bus voltage and a frequency converter with a diode
 front-end rectifier are modeled. Complex space vectors are used also for duty
 ratios and switching states, wherever applicable. In this module, all space
-vectors are in stationary coordinates. The default values correspond to a
-2.2-kW 400-V motor drive.</p>
+vectors are in stationary coordinates.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">#</a></h2>
 <section id="classes">
@@ -426,11 +425,11 @@ vectors are in stationary coordinates. The default values correspond to a
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.model.converter.Inverter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.converter.</span></span><span class="sig-name descname"><span class="pre">Inverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">540</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/converter.html#Inverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.converter.Inverter" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.converter.</span></span><span class="sig-name descname"><span class="pre">Inverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/converter.html#Inverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.converter.Inverter" title="Permalink to this definition">#</a></dt>
 <dd><p>Inverter with constant DC-bus voltage and switching-cycle averaging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage.</p>
+<dd class="field-odd"><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V).</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -441,11 +440,11 @@ vectors are in stationary coordinates. The default values correspond to a
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>q</strong> (<em>complex</em>) – Switching state vector.</p></li>
-<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage.</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u_ac</strong> – AC-side voltage.</p>
+<dd class="field-even"><p><strong>u_ac</strong> – AC-side voltage (V).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>complex</p>
@@ -461,11 +460,11 @@ vectors are in stationary coordinates. The default values correspond to a
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>q</strong> (<em>complex</em>) – Switching state vector.</p></li>
-<li><p><strong>i_ac</strong> (<em>complex</em>) – AC-side current.</p></li>
+<li><p><strong>i_ac</strong> (<em>complex</em>) – AC-side current (A).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>i_dc</strong> – DC-side current.</p>
+<dd class="field-even"><p><strong>i_dc</strong> – DC-side current (A).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -479,7 +478,7 @@ vectors are in stationary coordinates. The default values correspond to a
 <dd><p>Measure the DC-bus voltage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DC-bus voltage.</p>
+<dd class="field-odd"><p>DC-bus voltage (V).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -491,7 +490,7 @@ vectors are in stationary coordinates. The default values correspond to a
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.model.converter.FrequencyConverter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.converter.</span></span><span class="sig-name descname"><span class="pre">FrequencyConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.002</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.000235</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/converter.html#FrequencyConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.converter.FrequencyConverter" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.converter.</span></span><span class="sig-name descname"><span class="pre">FrequencyConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/converter.html#FrequencyConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.converter.FrequencyConverter" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.model.converter.Inverter" title="motulator.model.converter.Inverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Inverter</span></code></a></p>
 <p>Frequency converter.</p>
 <p>This extends the Inverter class with models for a strong grid, a
@@ -500,10 +499,10 @@ inverter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>L</strong> (<em>float</em>) – DC-bus inductance.</p></li>
-<li><p><strong>C</strong> (<em>float</em>) – DC-bus capacitance.</p></li>
-<li><p><strong>U_g</strong> (<em>float</em>) – Grid voltage (line-line, rms).</p></li>
-<li><p><strong>f_g</strong> (<em>float</em>) – Grid frequency.</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – DC-bus inductance (H).</p></li>
+<li><p><strong>C</strong> (<em>float</em>) – DC-bus capacitance (F).</p></li>
+<li><p><strong>U_g</strong> (<em>float</em>) – Grid voltage (V, line-line, rms).</p></li>
+<li><p><strong>f_g</strong> (<em>float</em>) – Grid frequency (Hz).</p></li>
 </ul>
 </dd>
 </dl>
@@ -513,10 +512,10 @@ inverter.</p>
 <dd><p>Compute three-phase grid voltages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Time.</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Time (s).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u_g_abc</strong> – The phase voltages.</p>
+<dd class="field-even"><p><strong>u_g_abc</strong> – Phase voltages (V).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ndarray of floats, shape (3,)</p>
@@ -531,14 +530,14 @@ inverter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
-<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage over the capacitor.</p></li>
-<li><p><strong>i_L</strong> (<em>float</em>) – DC-bus inductor current.</p></li>
-<li><p><strong>i_dc</strong> (<em>float</em>) – Current to the inverter.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V) over the capacitor.</p></li>
+<li><p><strong>i_L</strong> (<em>float</em>) – DC-bus inductor current (A).</p></li>
+<li><p><strong>i_dc</strong> (<em>float</em>) – Current to the inverter (A).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Time derivative of the state vector, [du_dc, d_iL]</p>
+<dd class="field-even"><p>Time derivative of the state vector, [du_dc, di_L]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list, length 2</p>

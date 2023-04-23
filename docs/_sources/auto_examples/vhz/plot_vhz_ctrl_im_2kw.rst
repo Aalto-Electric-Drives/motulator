@@ -22,13 +22,14 @@ V/Hz control: 2.2-kW induction motor
 ====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters correspond to open-loop V/Hz control.
+parameters correspond to open-loop V/Hz control. Magnetic saturation of the 
+motor is also modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-11
+.. GENERATED FROM PYTHON SOURCE LINES 11-12
 
 Import the package.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-16
+.. GENERATED FROM PYTHON SOURCE LINES 12-17
 
 .. code-block:: default
 
@@ -44,11 +45,11 @@ Import the package.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: default
 
@@ -63,18 +64,58 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 24-27
+
+The main-flux saturation model is created based on [1]_. For simplicity, the
+parameters are hard-coded in the function below, but this model structure can
+be used also for other induction motors.
+
+.. GENERATED FROM PYTHON SOURCE LINES 27-50
+
+.. code-block:: default
+
+
+
+    def L_s(psi):
+        """
+        Stator inductance saturation model for a 2.2-kW motor.
+
+        Parameters
+        ----------
+        psi : float
+            Magnitude of the stator flux linkage (Vs).
+    
+        Returns
+        -------
+        float
+            Stator inductance (H).
+
+        """
+        # Saturation model parameters for a 2.2-kW induction motor
+        L_su, beta, S = .34, .84, 7
+        # Stator inductance
+        return L_su/(1 + (beta*psi)**S)
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-35
+.. GENERATED FROM PYTHON SOURCE LINES 52-63
 
 .. code-block:: default
 
 
     # Γ-equivalent motor model with main-flux saturation included
     motor = mt.InductionMotorSaturated(
-        R_s=3.7, R_r=2.5, L_ell=.023, L_su=.34, beta=.84, S=7, n_p=2)
+        n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
     # Mechanics model
     mech = mt.Mechanics(J=.015)
     # Frequency converter with a diode bridge
@@ -89,11 +130,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-41
+.. GENERATED FROM PYTHON SOURCE LINES 65-69
 
 .. code-block:: default
 
@@ -108,12 +149,12 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-44
+.. GENERATED FROM PYTHON SOURCE LINES 70-72
 
 Set the speed reference and the external load torque. More complicated
 signals could be defined as functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-54
+.. GENERATED FROM PYTHON SOURCE LINES 72-82
 
 .. code-block:: default
 
@@ -134,12 +175,12 @@ signals could be defined as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-57
+.. GENERATED FROM PYTHON SOURCE LINES 83-85
 
 Create the simulation object and simulate it. The option `pwm=True` enables
 the model for the carrier comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-63
+.. GENERATED FROM PYTHON SOURCE LINES 85-91
 
 .. code-block:: default
 
@@ -158,12 +199,12 @@ the model for the carrier comparison.
  .. code-block:: none
 
 
-    Execution time: 13.53 s
+    Execution time: 16.12 s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-72
+.. GENERATED FROM PYTHON SOURCE LINES 92-99
 
 Plot results in per-unit values.
 
@@ -171,10 +212,9 @@ Plot results in per-unit values.
    The DC link of this particular example is actually unstable at 1-p.u.
    speed at the rated load torque, since the inverter looks like a negative
    resistance to the DC link. You could notice this instability if simulating
-   a longer period (e.g. set `t_stop=2`). For more information, see e.g.
-   https://doi.org/10.1109/EPE.2007.4417763
+   a longer period (e.g. set `t_stop=2`). For more information, see e.g. [2]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 99-104
 
 .. code-block:: default
 
@@ -182,6 +222,7 @@ Plot results in per-unit values.
     # sphinx_gallery_thumbnail_number = 2
     mt.plot(sim, base=base)
     mt.plot_extra(sim, t_span=(1.1, 1.125), base=base)
+
 
 
 
@@ -213,10 +254,21 @@ Plot results in per-unit values.
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 105-113
+
+References
+----------
+.. [1] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
+   induction motor drives," IEEE Trans. Ind. Appl., 2012,
+   https://doi.org/10.1109/TIA.2012.2190818
+.. [2] Hinkkanen, Harnefors, Luomi, "Control of induction motor drives
+   equipped with small DC-Link capacitance," Proc. EPE, 2007,
+   https://doi.org/10.1109/EPE.2007.4417763
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  15.083 seconds)
+   **Total running time of the script:** ( 0 minutes  17.894 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:

@@ -184,13 +184,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -367,10 +367,11 @@ document.write(`
 <span class="sd">    -------</span>
 <span class="sd">    Bunch object with the following fields defined:</span>
 <span class="sd">    i_s : complex ndarray</span>
-<span class="sd">        Stator current data.</span>
+<span class="sd">        Stator current data (A).</span>
 <span class="sd">    psi_s : complex ndarray</span>
-<span class="sd">        Stator flux linkage data.</span>
+<span class="sd">        Stator flux linkage data (Vs).</span>
 <span class="sd">    tau_M : ndarray</span>
+<span class="sd">        Torque data (Nm).</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -525,10 +526,11 @@ document.write(`
 <span class="sd">    -------</span>
 <span class="sd">    Bunch object with the following fields defined:</span>
 <span class="sd">    i_s : complex ndarray, shape (N_d, N_q)</span>
-<span class="sd">        Stator current data.</span>
+<span class="sd">        Stator current data (A).</span>
 <span class="sd">    psi_s : complex ndarray, shape (N_d, N_q)</span>
-<span class="sd">        Stator flux linkage data.</span>
+<span class="sd">        Stator flux linkage data (Vs).</span>
 <span class="sd">    tau_M : ndarray, shape (N_d, N_q)</span>
+<span class="sd">        Torque data (Nm).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Points at which to interpolate data</span>
@@ -563,10 +565,11 @@ document.write(`
 <span class="sd">    -------</span>
 <span class="sd">    Bunch object with the following fields defined:</span>
 <span class="sd">    psi_s : complex ndarray, shape (N_d, N_q)</span>
-<span class="sd">        Stator flux linkage data.</span>
+<span class="sd">        Stator flux linkage data (Vs).</span>
 <span class="sd">    i_s : complex ndarray, shape (N_d, N_q)</span>
-<span class="sd">        Stator current data.</span>
+<span class="sd">        Stator current data (A).</span>
 <span class="sd">    tau_M : ndarray, shape (N_d, N_q)</span>
+<span class="sd">        Torque data (Nm).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Get the range</span>

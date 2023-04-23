@@ -30,10 +30,9 @@ base = mt.BaseValues(
 # Configure the induction motor using its inverse-Γ parameters
 motor = mt.InductionMotorInvGamma(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
-
-mech = mt.Mechanics(J=.015)  # Mechanics model
-conv = mt.Inverter(u_dc=540)  # Inverter model
-mdl = mt.InductionMotorDrive(motor, mech, conv)  # System model
+mech = mt.Mechanics(J=.015)
+conv = mt.Inverter(u_dc=540)
+mdl = mt.InductionMotorDrive(motor, mech, conv)
 
 # %%
 # Configure the control system.

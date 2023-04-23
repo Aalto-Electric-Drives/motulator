@@ -19,7 +19,7 @@
 
 
 Observer-based V/Hz control: 5-kW PM-SyRM
-===========================================
+=========================================
 
 This example simulates observer-based V/Hz control of a saturated 5-kW
 permanent-magnet synchronous reluctance motor. The flux maps of this example
@@ -39,12 +39,14 @@ into account in the control algorithm.
 
 Import the packages.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-27
+.. GENERATED FROM PYTHON SOURCE LINES 23-29
 
 .. code-block:: default
 
 
     import numpy as np
+    from scipy.optimize import minimize_scalar
+    from scipy.interpolate import LinearNDInterpolator
     import motulator as mt
 
 
@@ -54,11 +56,11 @@ Import the packages.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-33
+.. GENERATED FROM PYTHON SOURCE LINES 31-35
 
 .. code-block:: default
 
@@ -73,11 +75,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Load and plot the flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-48
+.. GENERATED FROM PYTHON SOURCE LINES 37-50
 
 .. code-block:: default
 
@@ -118,18 +120,58 @@ Load and plot the flux maps.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
+
+Create the saturation model.
+
+.. GENERATED FROM PYTHON SOURCE LINES 52-78
+
+.. code-block:: default
+
+
+    # The coordinates assume the PMSM convention, i.e., that the PM flux is along
+    # the d-axis. The piecewise linear interpolant `LinearNDInterpolator` is based
+    # on triangularization and allows to use unstructured flux map.
+
+    # Data points for creating the interpolant
+    psi_s_data, i_s_data = data.psi_s.ravel(), data.i_s.ravel()
+
+    # Create the interpolant, i_s = current_dq(psi_s.real, psi_s.imag)
+    current_dq = LinearNDInterpolator(
+        list(zip(psi_s_data.real, psi_s_data.imag)), i_s_data)
+
+    # Solve the PM flux for the initial value of the stator flux
+    res = minimize_scalar(
+        lambda psi_d: np.abs(current_dq(psi_d, 0)),
+        bounds=(0, np.max(psi_s_data.real)),
+        method="bounded")
+    psi_s0 = complex(res.x)
+
+
+    # Package the input such that i_s = i_s(psi_s)
+    def i_s(psi_s):
+        """Current as a function of the flux linkage."""
+        return current_dq(psi_s.real, psi_s.imag)
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-60
+.. GENERATED FROM PYTHON SOURCE LINES 80-89
 
 .. code-block:: default
 
 
     # Create the motor model
-    motor = mt.SynchronousMotorSaturatedLUT(
-        n_p=2, R_s=.2, psi_s_data=data.psi_s.ravel(), i_s_data=data.i_s.ravel())
+    motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
     # Magnetically linear PM-SyRM model
     # motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
     mech = mt.Mechanics(J=.0042)
@@ -143,11 +185,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 90-91
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-76
+.. GENERATED FROM PYTHON SOURCE LINES 91-105
 
 .. code-block:: default
 
@@ -172,11 +214,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 106-107
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-93
+.. GENERATED FROM PYTHON SOURCE LINES 107-122
 
 .. code-block:: default
 
@@ -202,13 +244,13 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-97
+.. GENERATED FROM PYTHON SOURCE LINES 123-126
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-101
+.. GENERATED FROM PYTHON SOURCE LINES 126-130
 
 .. code-block:: default
 
@@ -223,12 +265,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-104
+.. GENERATED FROM PYTHON SOURCE LINES 131-133
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-106
+.. GENERATED FROM PYTHON SOURCE LINES 133-135
 
 .. code-block:: default
 
@@ -249,7 +291,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  32.816 seconds)
+   **Total running time of the script:** ( 0 minutes  41.739 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_maps_plot_obs_vhz_ctrl_pmsyrm_thor.py:

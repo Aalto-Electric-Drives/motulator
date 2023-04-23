@@ -25,20 +25,22 @@ Classes
 
 
 
-.. py:class:: Mechanics(J=0.015, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
+.. py:class:: Mechanics(J, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
 
    
    Mechanics subsystem.
 
    This models an equation of motion for stiff mechanics.
 
-   :param J: Total moment of inertia.
+   :param J: Total moment of inertia (kgm**2).
    :type J: float
-   :param tau_L_w: Load torque as function of speed, `tau_L_w(w_M)`. For example,
-                   tau_L_w = b*w_M, where b is the viscous friction coefficient.
-   :type tau_L_w: function
-   :param tau_L_t: Load torque as a function of time, `tau_L_t(t)`.
-   :type tau_L_t: function
+   :param tau_L_w: Load torque (Nm) as a function of speed, `tau_L_w(w_M)`. For example,
+                   ``tau_L_w = b*w_M``, where `b` is the viscous friction coefficient. The
+                   default is zero, ``lambda w_M: 0*w_M``.
+   :type tau_L_w: callable
+   :param tau_L_t: Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is
+                   zero, ``lambda t: 0*t``.
+   :type tau_L_t: callable
 
 
 
@@ -61,11 +63,11 @@ Classes
       
       Compute the state derivatives.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
-      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :param w_M: Rotor angular speed (mechanical rad/s).
       :type w_M: float
-      :param tau_M: Electromagnetic torque.
+      :param tau_M: Electromagnetic torque (Nm).
       :type tau_M: float
 
       :returns: Time derivatives of the state vector.
@@ -95,7 +97,7 @@ Classes
 
       This returns the rotor speed at the end of the sampling period.
 
-      :returns: **w_M0** -- Rotor angular speed (in mechanical rad/s).
+      :returns: **w_M0** -- Rotor angular speed (mechanical rad/s).
       :rtype: float
 
 
@@ -122,7 +124,7 @@ Classes
 
       This returns the rotor angle at the end of the sampling period.
 
-      :returns: **theta_M0** -- Rotor angle (in mechanical rad).
+      :returns: **theta_M0** -- Rotor angle (mechanical rad).
       :rtype: float
 
 
@@ -143,7 +145,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: MechanicsTwoMass(J_M=0.005, J_L=0.005, K_S=700.0, C_S=0.13, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
+.. py:class:: MechanicsTwoMass(J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None)
 
    Bases: :py:obj:`Mechanics`
 
@@ -152,19 +154,21 @@ Classes
 
    This models an equation of motion for two-mass mechanics.
 
-   :param J_M: Moment of inertia of the motor.
+   :param J_M: Motor moment of inertia (kgm**2).
    :type J_M: float
-   :param J_L: Moment of inertia of the load.
+   :param J_L: Load moment of inertia (kgm**2).
    :type J_L: float
-   :param K_S: Torsional stiffness of the shaft.
+   :param K_S: Shaft torsional stiffness (Nm).
    :type K_S: float
-   :param C_S: Torsional damping of the shaft.
+   :param C_S: Shaft torsional damping (Nms).
    :type C_S: float
-   :param tau_L_w: Load torque as function of the load speed, `tau_L_w(w_L)`. For example,
-                   tau_L_w = b*w_L, where b is the viscous friction coefficient.
-   :type tau_L_w: function
-   :param tau_L_t: Load torque as a function of time, `tau_L_t(t)`.
-   :type tau_L_t: function
+   :param tau_L_w: Load torque (Nm) as a function of the load speed, `tau_L_w(w_L)`, e.g.,
+                   ``tau_L_w = B*w_L``, where `B`is the viscous friction coefficient. The
+                   default is zero, ``lambda w_L: 0*w_L``.
+   :type tau_L_w: callable
+   :param tau_L_t: Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is
+                   zero, ``lambda t: 0*t``.
+   :type tau_L_t: callable
 
 
 
@@ -187,15 +191,15 @@ Classes
       
       Compute the state derivatives.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
-      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :param w_M: Rotor angular speed (mechanical rad/s).
       :type w_M: float
-      :param w_L: Load angular speed (in mechanical rad/s).
+      :param w_L: Load angular speed (mechanical rad/s).
       :type w_L: float
-      :param theta_ML: Twist angle, theta_M - theta_L (in mechanical rad).
+      :param theta_ML: Twist angle, theta_M - theta_L (mechanical rad).
       :type theta_ML: float
-      :param tau_M: Electromagnetic torque.
+      :param tau_M: Electromagnetic torque (Nm).
       :type tau_M: float
 
       :returns: Time derivatives of the state vector.
@@ -225,7 +229,7 @@ Classes
 
       This returns the load speed at the end of the sampling period.
 
-      :returns: **w_L0** -- Load angular speed (in mechanical rad/s).
+      :returns: **w_L0** -- Load angular speed (mechanical rad/s).
       :rtype: float
 
 
@@ -252,7 +256,7 @@ Classes
 
       This returns the load angle at the end of the sampling period.
 
-      :returns: **theta_L0** -- Rotor angle (in mechanical rad).
+      :returns: **theta_L0** -- Rotor angle (mechanical rad).
       :rtype: float
 
 

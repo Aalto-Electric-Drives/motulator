@@ -52,7 +52,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Observer-based V/Hz control: 2.2-kW induction motor" href="plot_obs_vhz_ctrl_im_2kw.html" />
-    <link rel="prev" title="V/Hz control: 2.2-kW induction motor" href="plot_vhz_ctrl_im_2kw.html" />
+    <link rel="prev" title="Observer-based V/Hz control: 2.2-kW PMSM" href="plot_obs_vhz_ctrl_pmsm_2kw.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -187,13 +187,13 @@
 </li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">V/Hz Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -404,9 +404,9 @@ the sampling frequency.</p>
 <span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorInvGamma</span><span class="p">(</span>
     <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.016</span><span class="p">)</span>  <span class="c1"># Mechanics model</span>
-<span class="n">conv</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>  <span class="c1"># Inverter model</span>
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorDrive</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">mech</span><span class="p">,</span> <span class="n">conv</span><span class="p">)</span>  <span class="c1"># System model</span>
+<span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.016</span><span class="p">)</span>
+<span class="n">conv</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorDrive</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">mech</span><span class="p">,</span> <span class="n">conv</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Control system (parametrized as open-loop V/Hz control).</p>
@@ -429,7 +429,7 @@ signals could be defined as functions.</p>
 <span class="n">mdl</span><span class="o">.</span><span class="n">mech</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">)</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span><span class="o">*</span><span class="mi">0</span>
 </pre></div>
 </div>
-<p>Create the simulation object and simulate it. The option <cite>pwm=True</cite> enables
+<p>Create the simulation object and simulate it. The option <code class="docutils literal notranslate"><span class="pre">pwm=True</span></code> enables
 the model for the carrier comparison.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">t_start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>  <span class="c1"># Start the timer</span>
@@ -437,7 +437,7 @@ the model for the carrier comparison.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Execution time: </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t_start</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> s&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Execution time: 6.20 s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Execution time: 7.75 s
 </pre></div>
 </div>
 <p>Plot results in per-unit values.</p>
@@ -450,7 +450,7 @@ the model for the carrier comparison.</p>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_001.png" alt="plot vhz ctrl 6step im 2kw" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_002.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_002.png" alt="plot vhz ctrl 6step im 2kw" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  7.284 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  9.021 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-6step-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/107fbc64ef11ee5f549b21d03ef04624/plot_vhz_ctrl_6step_im_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vhz_ctrl_6step_im_2kw.py</span></code></a></p>
@@ -475,12 +475,12 @@ the model for the carrier comparison.</p>
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="plot_vhz_ctrl_im_2kw.html"
+       href="plot_obs_vhz_ctrl_pmsm_2kw.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">V/Hz control: 2.2-kW induction motor</p>
+        <p class="prev-next-title">Observer-based V/Hz control: 2.2-kW PMSM</p>
       </div>
     </a>
     <a class="right-next"

@@ -187,13 +187,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../auto_examples/flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -427,14 +427,7 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotor.meas_currents"><code class="docutils literal notranslate"><span class="pre">SynchronousMotor.meas_currents()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturated"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturated</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturated.current"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturated.current()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturatedLUT"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturatedLUT</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturatedLUT.current"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturatedLUT.current()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturated"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturated</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.InductionMotorDrive"><code class="docutils literal notranslate"><span class="pre">InductionMotorDrive</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.InductionMotorDrive.get_initial_values"><code class="docutils literal notranslate"><span class="pre">InductionMotorDrive.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.InductionMotorDrive.set_initial_values"><code class="docutils literal notranslate"><span class="pre">InductionMotorDrive.set_initial_values()</span></code></a></li>
@@ -765,76 +758,73 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorSaturated" title="motulator.SynchronousMotorSaturated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorSaturated</span></code></a></p></td>
 <td><p>Model of a saturated synchronous motor.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorSaturatedLUT" title="motulator.SynchronousMotorSaturatedLUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorSaturatedLUT</span></code></a></p></td>
-<td><p>Look-up-table-based model of a saturated synchronous motor.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorDrive" title="motulator.InductionMotorDrive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorDrive</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorDrive" title="motulator.InductionMotorDrive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorDrive</span></code></a></p></td>
 <td><p>Continuous-time model for an induction motor drive.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorDriveDiode" title="motulator.InductionMotorDriveDiode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorDriveDiode</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorDriveDiode" title="motulator.InductionMotorDriveDiode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorDriveDiode</span></code></a></p></td>
 <td><p>Induction motor drive equipped with a diode bridge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorDriveTwoMass" title="motulator.InductionMotorDriveTwoMass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorDriveTwoMass</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorDriveTwoMass" title="motulator.InductionMotorDriveTwoMass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorDriveTwoMass</span></code></a></p></td>
 <td><p>Induction motor drive with two-mass mechanics.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorDrive" title="motulator.SynchronousMotorDrive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorDrive</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorDrive" title="motulator.SynchronousMotorDrive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorDrive</span></code></a></p></td>
 <td><p>Continuous-time model for a synchronous motor drive.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorDriveTwoMass" title="motulator.SynchronousMotorDriveTwoMass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorDriveTwoMass</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorDriveTwoMass" title="motulator.SynchronousMotorDriveTwoMass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorDriveTwoMass</span></code></a></p></td>
 <td><p>Synchronous motor drive with two-mass mechanics.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorVHzCtrl" title="motulator.InductionMotorVHzCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVHzCtrl</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorVHzCtrl" title="motulator.InductionMotorVHzCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVHzCtrl</span></code></a></p></td>
 <td><p>V/Hz control with the stator current feedback.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorVHzCtrlPars" title="motulator.InductionMotorVHzCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVHzCtrlPars</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorVHzCtrlPars" title="motulator.InductionMotorVHzCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVHzCtrlPars</span></code></a></p></td>
 <td><p>V/Hz control parameters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorVectorCtrl" title="motulator.InductionMotorVectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVectorCtrl</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorVectorCtrl" title="motulator.InductionMotorVectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVectorCtrl</span></code></a></p></td>
 <td><p>Vector control for an induction motor drive.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorVectorCtrlPars" title="motulator.InductionMotorVectorCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVectorCtrlPars</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorVectorCtrlPars" title="motulator.InductionMotorVectorCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVectorCtrlPars</span></code></a></p></td>
 <td><p>Vector control parameters for induction motor drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorVectorCtrl" title="motulator.SynchronousMotorVectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVectorCtrl</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorVectorCtrl" title="motulator.SynchronousMotorVectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVectorCtrl</span></code></a></p></td>
 <td><p>Vector control for a synchronous motor drive.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorVectorCtrlPars" title="motulator.SynchronousMotorVectorCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVectorCtrlPars</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorVectorCtrlPars" title="motulator.SynchronousMotorVectorCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVectorCtrlPars</span></code></a></p></td>
 <td><p>Vector control parameters for synchronous motors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.TorqueCharacteristics" title="motulator.TorqueCharacteristics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TorqueCharacteristics</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.TorqueCharacteristics" title="motulator.TorqueCharacteristics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TorqueCharacteristics</span></code></a></p></td>
 <td><p>Compute MTPA and MTPV loci based on the motor parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorFluxVectorCtrl" title="motulator.SynchronousMotorFluxVectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorFluxVectorCtrl</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorFluxVectorCtrl" title="motulator.SynchronousMotorFluxVectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorFluxVectorCtrl</span></code></a></p></td>
 <td><p>Flux-vector control for synchronous motor drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorFluxVectorCtrlPars" title="motulator.SynchronousMotorFluxVectorCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorFluxVectorCtrlPars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorFluxVectorCtrlPars" title="motulator.SynchronousMotorFluxVectorCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorFluxVectorCtrlPars</span></code></a></p></td>
 <td><p>Control parameters: flux-vector control for synchronous motor drives.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorSignalInjectionCtrl" title="motulator.SynchronousMotorSignalInjectionCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorSignalInjectionCtrl</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorSignalInjectionCtrl" title="motulator.SynchronousMotorSignalInjectionCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorSignalInjectionCtrl</span></code></a></p></td>
 <td><p>Sensorless control with signal injection for a synchronous motor drive.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorSignalInjectionCtrlPars" title="motulator.SynchronousMotorSignalInjectionCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorSignalInjectionCtrlPars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorSignalInjectionCtrlPars" title="motulator.SynchronousMotorSignalInjectionCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorSignalInjectionCtrlPars</span></code></a></p></td>
 <td><p>Square-wave signal injection parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorVHzObsCtrl" title="motulator.InductionMotorVHzObsCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVHzObsCtrl</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorVHzObsCtrl" title="motulator.InductionMotorVHzObsCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorVHzObsCtrl</span></code></a></p></td>
 <td><p>Observer-based V/Hz control for induction motors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.InductionMotorObsVHzCtrlPars" title="motulator.InductionMotorObsVHzCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorObsVHzCtrlPars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.InductionMotorObsVHzCtrlPars" title="motulator.InductionMotorObsVHzCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotorObsVHzCtrlPars</span></code></a></p></td>
 <td><p>Control parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorVHzObsCtrl" title="motulator.SynchronousMotorVHzObsCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVHzObsCtrl</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorVHzObsCtrl" title="motulator.SynchronousMotorVHzObsCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVHzObsCtrl</span></code></a></p></td>
 <td><p>Observer-based V/Hz control for synchronous motors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.SynchronousMotorVHzObsCtrlPars" title="motulator.SynchronousMotorVHzObsCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVHzObsCtrlPars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.SynchronousMotorVHzObsCtrlPars" title="motulator.SynchronousMotorVHzObsCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotorVHzObsCtrlPars</span></code></a></p></td>
 <td><p>Control parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.BaseValues" title="motulator.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.BaseValues" title="motulator.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
 <td><p>Base values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.Sequence" title="motulator.Sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.Sequence" title="motulator.Sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a></p></td>
 <td><p>Sequence generator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.Step" title="motulator.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.Step" title="motulator.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
 <td><p>Step function.</p></td>
 </tr>
 </tbody>
@@ -920,16 +910,18 @@ simplicity, only max_step is included as an option of this method.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.Mechanics">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">Mechanics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.015</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">...</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/mech.html#Mechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.Mechanics" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">Mechanics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">...</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/mech.html#Mechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.Mechanics" title="Permalink to this definition">#</a></dt>
 <dd><p>Mechanics subsystem.</p>
 <p>This models an equation of motion for stiff mechanics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J</strong> (<em>float</em>) – Total moment of inertia.</p></li>
-<li><p><strong>tau_L_w</strong> (<em>function</em>) – Load torque as function of speed, <cite>tau_L_w(w_M)</cite>. For example,
-tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
-<li><p><strong>tau_L_t</strong> (<em>function</em>) – Load torque as a function of time, <cite>tau_L_t(t)</cite>.</p></li>
+<li><p><strong>J</strong> (<em>float</em>) – Total moment of inertia (kgm**2).</p></li>
+<li><p><strong>tau_L_w</strong> (<em>callable</em>) – Load torque (Nm) as a function of speed, <cite>tau_L_w(w_M)</cite>. For example,
+<code class="docutils literal notranslate"><span class="pre">tau_L_w</span> <span class="pre">=</span> <span class="pre">b*w_M</span></code>, where <cite>b</cite> is the viscous friction coefficient. The
+default is zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">0*w_M</span></code>.</p></li>
+<li><p><strong>tau_L_t</strong> (<em>callable</em>) – Load torque (Nm) as a function of time, <cite>tau_L_t(t)</cite>. The default is
+zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">0*t</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -940,9 +932,9 @@ tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
-<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (in mechanical rad/s).</p></li>
-<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (mechanical rad/s).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -961,7 +953,7 @@ tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
 <p>This returns the rotor speed at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>w_M0</strong> – Rotor angular speed (in mechanical rad/s).</p>
+<dd class="field-odd"><p><strong>w_M0</strong> – Rotor angular speed (mechanical rad/s).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -976,7 +968,7 @@ tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
 <p>This returns the rotor angle at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>theta_M0</strong> – Rotor angle (in mechanical rad).</p>
+<dd class="field-odd"><p><strong>theta_M0</strong> – Rotor angle (mechanical rad).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -988,20 +980,22 @@ tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.MechanicsTwoMass">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">MechanicsTwoMass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">700.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">...</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/mech.html#MechanicsTwoMass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.MechanicsTwoMass" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">MechanicsTwoMass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/mech.html#MechanicsTwoMass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.MechanicsTwoMass" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.Mechanics" title="motulator.Mechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mechanics</span></code></a></p>
 <p>Two-mass mechanics subsystem.</p>
 <p>This models an equation of motion for two-mass mechanics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J_M</strong> (<em>float</em>) – Moment of inertia of the motor.</p></li>
-<li><p><strong>J_L</strong> (<em>float</em>) – Moment of inertia of the load.</p></li>
-<li><p><strong>K_S</strong> (<em>float</em>) – Torsional stiffness of the shaft.</p></li>
-<li><p><strong>C_S</strong> (<em>float</em>) – Torsional damping of the shaft.</p></li>
-<li><p><strong>tau_L_w</strong> (<em>function</em>) – Load torque as function of the load speed, <cite>tau_L_w(w_L)</cite>. For example,
-tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
-<li><p><strong>tau_L_t</strong> (<em>function</em>) – Load torque as a function of time, <cite>tau_L_t(t)</cite>.</p></li>
+<li><p><strong>J_M</strong> (<em>float</em>) – Motor moment of inertia (kgm**2).</p></li>
+<li><p><strong>J_L</strong> (<em>float</em>) – Load moment of inertia (kgm**2).</p></li>
+<li><p><strong>K_S</strong> (<em>float</em>) – Shaft torsional stiffness (Nm).</p></li>
+<li><p><strong>C_S</strong> (<em>float</em>) – Shaft torsional damping (Nms).</p></li>
+<li><p><strong>tau_L_w</strong> (<em>callable</em>) – Load torque (Nm) as a function of the load speed, <cite>tau_L_w(w_L)</cite>, e.g.,
+<code class="docutils literal notranslate"><span class="pre">tau_L_w</span> <span class="pre">=</span> <span class="pre">B*w_L</span></code>, where <cite>B`is the viscous friction coefficient. The
+default is zero, ``lambda w_L: 0*w_L`</cite>.</p></li>
+<li><p><strong>tau_L_t</strong> (<em>callable</em>) – Load torque (Nm) as a function of time, <cite>tau_L_t(t)</cite>. The default is
+zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">0*t</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1012,11 +1006,11 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
-<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (in mechanical rad/s).</p></li>
-<li><p><strong>w_L</strong> (<em>float</em>) – Load angular speed (in mechanical rad/s).</p></li>
-<li><p><strong>theta_ML</strong> (<em>float</em>) – Twist angle, theta_M - theta_L (in mechanical rad).</p></li>
-<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (mechanical rad/s).</p></li>
+<li><p><strong>w_L</strong> (<em>float</em>) – Load angular speed (mechanical rad/s).</p></li>
+<li><p><strong>theta_ML</strong> (<em>float</em>) – Twist angle, theta_M - theta_L (mechanical rad).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1035,7 +1029,7 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <p>This returns the load speed at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>w_L0</strong> – Load angular speed (in mechanical rad/s).</p>
+<dd class="field-odd"><p><strong>w_L0</strong> – Load angular speed (mechanical rad/s).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -1050,7 +1044,7 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <p>This returns the load angle at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>theta_L0</strong> – Rotor angle (in mechanical rad).</p>
+<dd class="field-odd"><p><strong>theta_L0</strong> – Rotor angle (mechanical rad).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -1062,11 +1056,11 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.Inverter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">Inverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">540</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/converter.html#Inverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.Inverter" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">Inverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/converter.html#Inverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.Inverter" title="Permalink to this definition">#</a></dt>
 <dd><p>Inverter with constant DC-bus voltage and switching-cycle averaging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage.</p>
+<dd class="field-odd"><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V).</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -1077,11 +1071,11 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>q</strong> (<em>complex</em>) – Switching state vector.</p></li>
-<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage.</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u_ac</strong> – AC-side voltage.</p>
+<dd class="field-even"><p><strong>u_ac</strong> – AC-side voltage (V).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>complex</p>
@@ -1097,11 +1091,11 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>q</strong> (<em>complex</em>) – Switching state vector.</p></li>
-<li><p><strong>i_ac</strong> (<em>complex</em>) – AC-side current.</p></li>
+<li><p><strong>i_ac</strong> (<em>complex</em>) – AC-side current (A).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>i_dc</strong> – DC-side current.</p>
+<dd class="field-even"><p><strong>i_dc</strong> – DC-side current (A).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -1115,7 +1109,7 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <dd><p>Measure the DC-bus voltage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DC-bus voltage.</p>
+<dd class="field-odd"><p>DC-bus voltage (V).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -1127,7 +1121,7 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.FrequencyConverter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">FrequencyConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.002</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.000235</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/converter.html#FrequencyConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.FrequencyConverter" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">FrequencyConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/converter.html#FrequencyConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.FrequencyConverter" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.Inverter" title="motulator.Inverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Inverter</span></code></a></p>
 <p>Frequency converter.</p>
 <p>This extends the Inverter class with models for a strong grid, a
@@ -1136,10 +1130,10 @@ inverter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>L</strong> (<em>float</em>) – DC-bus inductance.</p></li>
-<li><p><strong>C</strong> (<em>float</em>) – DC-bus capacitance.</p></li>
-<li><p><strong>U_g</strong> (<em>float</em>) – Grid voltage (line-line, rms).</p></li>
-<li><p><strong>f_g</strong> (<em>float</em>) – Grid frequency.</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – DC-bus inductance (H).</p></li>
+<li><p><strong>C</strong> (<em>float</em>) – DC-bus capacitance (F).</p></li>
+<li><p><strong>U_g</strong> (<em>float</em>) – Grid voltage (V, line-line, rms).</p></li>
+<li><p><strong>f_g</strong> (<em>float</em>) – Grid frequency (Hz).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1149,10 +1143,10 @@ inverter.</p>
 <dd><p>Compute three-phase grid voltages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Time.</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Time (s).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u_g_abc</strong> – The phase voltages.</p>
+<dd class="field-even"><p><strong>u_g_abc</strong> – Phase voltages (V).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ndarray of floats, shape (3,)</p>
@@ -1167,14 +1161,14 @@ inverter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
-<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage over the capacitor.</p></li>
-<li><p><strong>i_L</strong> (<em>float</em>) – DC-bus inductor current.</p></li>
-<li><p><strong>i_dc</strong> (<em>float</em>) – Current to the inverter.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
+<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V) over the capacitor.</p></li>
+<li><p><strong>i_L</strong> (<em>float</em>) – DC-bus inductor current (A).</p></li>
+<li><p><strong>i_dc</strong> (<em>float</em>) – Current to the inverter (A).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Time derivative of the state vector, [du_dc, d_iL]</p>
+<dd class="field-even"><p>Time derivative of the state vector, [du_dc, di_L]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list, length 2</p>
@@ -1186,7 +1180,7 @@ inverter.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.InductionMotor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">InductionMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_ell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.023</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.245</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/im.html#InductionMotor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.InductionMotor" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">InductionMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_ell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/im.html#InductionMotor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.InductionMotor" title="Permalink to this definition">#</a></dt>
 <dd><p>Γ-equivalent model of an induction motor.</p>
 <p>An induction motor is modeled using the Γ-equivalent model <a class="reference internal" href="model/im/index.html#r743146ac54e0-1" id="id1">[1]</a>. The model
 is implemented in stator coordinates. The flux linkages are used as state
@@ -1195,10 +1189,10 @@ variables.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance.</p></li>
-<li><p><strong>R_r</strong> (<em>float</em>) – Rotor resistance.</p></li>
-<li><p><strong>L_ell</strong> (<em>float</em>) – Leakage inductance.</p></li>
-<li><p><strong>L_s</strong> (<em>float</em>) – Stator inductance.</p></li>
+<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ohm).</p></li>
+<li><p><strong>R_r</strong> (<em>float</em>) – Rotor resistance (Ohm).</p></li>
+<li><p><strong>L_ell</strong> (<em>float</em>) – Leakage inductance (H).</p></li>
+<li><p><strong>L_s</strong> (<em>float</em>) – Stator inductance (H).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1223,14 +1217,14 @@ Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage.</p></li>
-<li><p><strong>psi_rs</strong> (<em>complex</em>) – Rotor flux linkage.</p></li>
+<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage (Vs).</p></li>
+<li><p><strong>psi_rs</strong> (<em>complex</em>) – Rotor flux linkage (Vs).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current.</p></li>
-<li><p><strong>i_rs</strong> (<em>complex</em>) – Rotor current.</p></li>
+<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current (A).</p></li>
+<li><p><strong>i_rs</strong> (<em>complex</em>) – Rotor current (A).</p></li>
 </ul>
 </p>
 </dd>
@@ -1244,15 +1238,15 @@ Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage.</p></li>
-<li><p><strong>psi_rs</strong> (<em>complex</em>) – Rotor flux linkage.</p></li>
+<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage (Vs).</p></li>
+<li><p><strong>psi_rs</strong> (<em>complex</em>) – Rotor flux linkage (Vs).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current.</p></li>
-<li><p><strong>i_rs</strong> (<em>complex</em>) – Rotor current.</p></li>
-<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current (A).</p></li>
+<li><p><strong>i_rs</strong> (<em>complex</em>) – Rotor current (A).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
 </p>
 </dd>
@@ -1266,17 +1260,17 @@ Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage.</p></li>
-<li><p><strong>psi_rs</strong> (<em>complex</em>) – Rotor flux linkage.</p></li>
-<li><p><strong>u_ss</strong> (<em>complex</em>) – Stator voltage.</p></li>
-<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (in mechanical rad/s).</p></li>
+<li><p><strong>psi_ss</strong> (<em>complex</em>) – Stator flux linkage (Vs).</p></li>
+<li><p><strong>psi_rs</strong> (<em>complex</em>) – Rotor flux linkage (Vs).</p></li>
+<li><p><strong>u_ss</strong> (<em>complex</em>) – Stator voltage (V).</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (mechanical rad/s).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>complex list, length 2</em> – Time derivative of the state vector, [dpsi_ss, dpsi_rs]</p></li>
-<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current.</p></li>
-<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current (A).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
 </p>
 </dd>
@@ -1294,7 +1288,7 @@ computation in simulation.</p>
 <dd><p>Measure the phase currents at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_s_abc</strong> – Phase currents.</p>
+<dd class="field-odd"><p><strong>i_s_abc</strong> – Phase currents (A).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>3-tuple of floats</p>
@@ -1306,36 +1300,25 @@ computation in simulation.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.InductionMotorSaturated">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">InductionMotorSaturated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_ell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.023</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_su</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.34</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.84</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/im.html#InductionMotorSaturated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.InductionMotorSaturated" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">InductionMotorSaturated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_ell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/im.html#InductionMotorSaturated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.InductionMotorSaturated" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.InductionMotor" title="motulator.InductionMotor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotor</span></code></a></p>
 <p>Γ-equivalent model of an induction motor model with main-flux saturation.</p>
 <p>This extends the InductionMotor class with a main-flux magnetic saturation
-model <a class="reference internal" href="model/im/index.html#r31fc15c1345a-2" id="id3">[2]</a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L_s</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">)</span> <span class="o">=</span> <span class="n">L_su</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">)</span><span class="o">**</span><span class="n">S</span><span class="p">)</span>
+model:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L_s</span> <span class="o">=</span> <span class="n">L_s</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">))</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance.</p></li>
-<li><p><strong>R_r</strong> (<em>float</em>) – Rotor resistance.</p></li>
-<li><p><strong>L_ell</strong> (<em>float</em>) – Leakage inductance.</p></li>
-<li><p><strong>L_su</strong> (<em>float</em>) – Unsaturated stator inductance.</p></li>
-<li><p><strong>beta</strong> (<em>float</em>) – Positive coefficient.</p></li>
-<li><p><strong>S</strong> (<em>float</em>) – Positive coefficient.</p></li>
+<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ohm).</p></li>
+<li><p><strong>R_r</strong> (<em>float</em>) – Rotor resistance (Ohm).</p></li>
+<li><p><strong>L_ell</strong> (<em>float</em>) – Leakage inductance (H).</p></li>
+<li><p><strong>L_s</strong> (<em>callable</em>) – Stator inductance (H) as a function of the stator-flux magnitude.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">References</p>
-<div role="list" class="citation-list">
-<div class="citation" id="r31fc15c1345a-2" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
-<p>Qu, Ranta, Hinkkanen, Luomi, “Loss-minimizing flux level control of
-induction motor drives,” IEEE Trans. Ind. Appl., 2012,
-<a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
-</div>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.InductionMotorSaturated.currents">
 <span class="sig-name descname"><span class="pre">currents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_ss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_rs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motulator.InductionMotorSaturated.currents" title="Permalink to this definition">#</a></dt>
@@ -1346,7 +1329,7 @@ induction motor drives,” IEEE Trans. Ind. Appl., 2012,
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.InductionMotorInvGamma">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">InductionMotorInvGamma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_sgm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.021</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.224</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/im.html#InductionMotorInvGamma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.InductionMotorInvGamma" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">InductionMotorInvGamma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_sgm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/im.html#InductionMotorInvGamma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.InductionMotorInvGamma" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.InductionMotor" title="motulator.InductionMotor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMotor</span></code></a></p>
 <p>Inverse-Γ model of an induction motor.</p>
 <p>This extends the InductionMotor class (based on the Γ model) by providing
@@ -1356,10 +1339,10 @@ assumed. If magnetic saturation is to be modeled, the Γ model is preferred.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance.</p></li>
-<li><p><strong>R_R</strong> (<em>float</em>) – Rotor resistance.</p></li>
-<li><p><strong>L_sgm</strong> (<em>float</em>) – Leakage inductance.</p></li>
-<li><p><strong>L_M</strong> (<em>float</em>) – Magnetizing inductance.</p></li>
+<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ohm).</p></li>
+<li><p><strong>R_R</strong> (<em>float</em>) – Rotor resistance (Ohm).</p></li>
+<li><p><strong>L_sgm</strong> (<em>float</em>) – Leakage inductance (H).</p></li>
+<li><p><strong>L_M</strong> (<em>float</em>) – Magnetizing inductance (H).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1367,21 +1350,18 @@ assumed. If magnetic saturation is to be modeled, the Γ model is preferred.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.SynchronousMotor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.036</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.051</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.545</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mech</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/sm.html#SynchronousMotor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.SynchronousMotor" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/sm.html#SynchronousMotor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.SynchronousMotor" title="Permalink to this definition">#</a></dt>
 <dd><p>Synchronous motor model.</p>
 <p>This models a synchronous motor in rotor coordinates. The stator flux
-linkage is the state variable. The default values correspond to a 2.2-kW
-permanent-magnet synchronous motor.</p>
+linkage is the state variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance.</p></li>
-<li><p><strong>L_d</strong> (<em>float</em>) – d-axis inductance.</p></li>
-<li><p><strong>L_q</strong> (<em>float</em>) – q-axis inductance.</p></li>
-<li><p><strong>psi_f</strong> (<em>float</em>) – PM-flux linkage.</p></li>
-<li><p><strong>mech</strong> (<a class="reference internal" href="#motulator.Mechanics" title="motulator.Mechanics"><em>Mechanics</em></a>) – Model of the mechanical subsystem, needed only for the coordinate
-transformation in the measure_currents method.</p></li>
+<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ohm).</p></li>
+<li><p><strong>L_d</strong> (<em>float</em>) – d-axis inductance (H).</p></li>
+<li><p><strong>L_q</strong> (<em>float</em>) – q-axis inductance (H).</p></li>
+<li><p><strong>psi_f</strong> (<em>float</em>) – PM-flux linkage (Vs).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1391,10 +1371,10 @@ transformation in the measure_currents method.</p></li>
 <dd><p>Compute the stator current.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>psi_s</strong> (<em>complex</em>) – Stator flux linkage.</p>
+<dd class="field-odd"><p><strong>psi_s</strong> (<em>complex</em>) – Stator flux linkage (Vs).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>i_s</strong> – Stator current.</p>
+<dd class="field-even"><p><strong>i_s</strong> – Stator current (A).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>complex</p>
@@ -1408,12 +1388,12 @@ transformation in the measure_currents method.</p></li>
 <dd><p>Magnetic model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>psi_s</strong> (<em>complex</em>) – Stator flux linkage.</p>
+<dd class="field-odd"><p><strong>psi_s</strong> (<em>complex</em>) – Stator flux linkage (Vs).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current.</p></li>
-<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current (A).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
 </p>
 </dd>
@@ -1427,16 +1407,16 @@ transformation in the measure_currents method.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>psi_s</strong> (<em>complex</em>) – Stator flux linkage.</p></li>
-<li><p><strong>u_s</strong> (<em>complex</em>) – Stator voltage.</p></li>
-<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (in mechanical rad/s).</p></li>
+<li><p><strong>psi_s</strong> (<em>complex</em>) – Stator flux linkage (Vs).</p></li>
+<li><p><strong>u_s</strong> (<em>complex</em>) – Stator voltage (V).</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (mechanical rad/s).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>dpsi_s</strong> (<em>complex list</em>) – Time derivative of the stator flux linkage.</p></li>
-<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current.</p></li>
-<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+<li><p><strong>dpsi_s</strong> (<em>complex list</em>) – Time derivative of the stator flux linkage (V).</p></li>
+<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current (A).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
 </p>
 </dd>
@@ -1454,7 +1434,7 @@ computation in simulation.</p>
 <dd><p>Measure the phase currents at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_s_abc</strong> – Phase currents.</p>
+<dd class="field-odd"><p><strong>i_s_abc</strong> – Phase currents (A).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>3-tuple of floats</p>
@@ -1466,108 +1446,27 @@ computation in simulation.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.SynchronousMotorSaturated">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorSaturated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.54</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_d0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">17.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_q0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">52.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_dd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">373.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_qq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">658.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_dq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1120.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mech</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/sm.html#SynchronousMotorSaturated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.SynchronousMotorSaturated" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorSaturated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0j</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/sm.html#SynchronousMotorSaturated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.SynchronousMotorSaturated" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.SynchronousMotor" title="motulator.SynchronousMotor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotor</span></code></a></p>
 <p>Model of a saturated synchronous motor.</p>
-<p>This extends the SynchronousMotor class with an analytical saturation
-model <a class="reference internal" href="model/sm/index.html#r83c7849ec2d6-1" id="id4">[1]</a>, <a class="reference internal" href="model/sm/index.html#r83c7849ec2d6-2" id="id5">[2]</a>. The permanent magnets (PMs) are assumed to be along the
-d-axis. The default values correspond to a 6.7-kW synchronous reluctance
-motor.</p>
+<p>This overrides the linear magnetics model of the SynchronousMotor class
+with a generic saturation model:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i_s</span> <span class="o">=</span> <span class="n">i_s</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The saturation model could be an analytical function or a look-up table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance.</p></li>
-<li><p><strong>i_f</strong> (<em>float</em>) – Constant current corresponding to the magnetomotive force (MMF) of PMs.
-In the magnetically linear case, <cite>i_f = psi_f/L_d</cite>.</p></li>
-<li><p><strong>a_d0</strong> (<em>float</em>) – Nonnegative parameter of the saturation model. In the magnetically
-linear case, <cite>a_d0 = 1/L_d</cite>.</p></li>
-<li><p><strong>a_q0</strong> (<em>float</em>) – Nonnegative parameter of the saturation model. In the magnetically
-linear case, <cite>a_q0 = 1/L_q</cite>.</p></li>
-<li><p><strong>a_dd</strong> (<em>float</em>) – Nonnegative constant defining the d-axis self-saturation together with
-<cite>S</cite>. In the magnetically linear case, <cite>a_dd = 0</cite>.</p></li>
-<li><p><strong>a_qq</strong> (<em>float</em>) – Nonnegative constant defining the q-axis self-saturation together with
-<cite>T</cite>. In the magnetically linear case, <cite>a_qq = 0</cite>.</p></li>
-<li><p><strong>a_dq</strong> (<em>float</em>) – Nonnegative constant defining the cross-saturation together with <cite>U</cite>
-and <cite>V</cite>. In the magnetically linear case, <cite>a_dq = 0</cite>.</p></li>
-<li><p><strong>S</strong> (<em>float</em>) – Nonnegative constant defining the d-axis self-saturation.</p></li>
-<li><p><strong>T</strong> (<em>float</em>) – Nonnegative constant defining the q-axis self-saturation.</p></li>
-<li><p><strong>U</strong> (<em>float</em>) – Nonnegative constant defining the cross-saturation.</p></li>
-<li><p><strong>V</strong> (<em>float</em>) – Nonnegative constant defining the cross-saturation.</p></li>
-<li><p><strong>mech</strong> (<a class="reference internal" href="#motulator.Mechanics" title="motulator.Mechanics"><em>Mechanics</em></a>) – Model of the mechanical subsystem, needed only for the coordinate
-transformation in the measure_currents method.</p></li>
+<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ohm).</p></li>
+<li><p><strong>current</strong> (<em>callable</em>) – Function that computes the stator current <cite>i_s</cite> as a function of the
+stator flux linkage <cite>psi_s</cite>.</p></li>
+<li><p><strong>psi_s0</strong> (<em>complex</em><em>, </em><em>optional</em>) – Initial value of the stator flux linkage (Vs). The default is 0j. For
+PM motors, this should be solved from the the saturation model.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The magnetomotive force (MMF) of the PMs is modeled using constant current
-source <cite>i_f</cite> on the d-axis <a class="reference internal" href="model/sm/index.html#r83c7849ec2d6-3" id="id6">[3]</a>. Correspondingly, this approach assumes
-that the MMFs of the d-axis current and of the PMs are in series. This
-model cannot capture the desaturation phenomenon of thin iron ribs <a class="reference internal" href="model/sm/index.html#r83c7849ec2d6-4" id="id7">[4]</a>.
-For such motors, look-up tables can be used.</p>
-<p class="rubric">References</p>
-<div role="list" class="citation-list">
-<div class="citation" id="r83c7849ec2d6-1" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">1</a><span class="fn-bracket">]</span></span>
-<p>Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi,
-“Sensorless self-commissioning of synchronous reluctance motors at
-standstill without rotor locking, ”IEEE Trans. Ind. Appl., 2017,
-<a class="reference external" href="https://doi.org/10.1109/TIA.2016.2644624">https://doi.org/10.1109/TIA.2016.2644624</a></p>
-</div>
-<div class="citation" id="r83c7849ec2d6-2" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">2</a><span class="fn-bracket">]</span></span>
-<p>Awan, Song, Saarakkala, Hinkkanen, “Optimal torque control of
-saturated synchronous motors: plug-and-play method,” IEEE Trans. Ind.
-Appl., 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2862410">https://doi.org/10.1109/TIA.2018.2862410</a></p>
-</div>
-<div class="citation" id="r83c7849ec2d6-3" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
-<p>Jahns, Kliman, Neumann, “Interior permanent-magnet synchronous
-motors for adjustable-speed drives,” IEEE Trans. Ind. Appl., 1986,
-<a class="reference external" href="https://doi.org/10.1109/TIA.1986.4504786">https://doi.org/10.1109/TIA.1986.4504786</a></p>
-</div>
-<div class="citation" id="r83c7849ec2d6-4" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">4</a><span class="fn-bracket">]</span></span>
-<p>Armando, Guglielmi, Pellegrino, Pastorelli, Vagati, “Accurate
-modeling and performance analysis of IPM-PMASR motors,” IEEE Trans. Ind.
-Appl., 2009, <a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009493">https://doi.org/10.1109/TIA.2008.2009493</a></p>
-</div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.SynchronousMotorSaturated.current">
-<span class="sig-name descname"><span class="pre">current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motulator.SynchronousMotorSaturated.current" title="Permalink to this definition">#</a></dt>
-<dd><p>Override the base class method.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.SynchronousMotorSaturatedLUT">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotorSaturatedLUT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mech</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/sm.html#SynchronousMotorSaturatedLUT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.SynchronousMotorSaturatedLUT" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.SynchronousMotor" title="motulator.SynchronousMotor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMotor</span></code></a></p>
-<p>Look-up-table-based model of a saturated synchronous motor.</p>
-<p>This extends the SynchronousMotor class with a saturation model, where the
-stator current depends on the stator flux linkage. The coordinates assume
-the PMSM convention, i.e., that the PM flux is along the d-axis.
-Unstructured flux map data can be used.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance.</p></li>
-<li><p><strong>psi_s_data</strong> (<em>ndarray</em><em> of </em><em>complex</em>) – Stator flux data points for creating the interpolant.</p></li>
-<li><p><strong>i_s_data</strong> (<em>ndarray</em><em> of </em><em>complex</em>) – Stator current data values for creating the interpolant.</p></li>
-<li><p><strong>mech</strong> (<a class="reference internal" href="#motulator.Mechanics" title="motulator.Mechanics"><em>Mechanics</em></a>) – Model of the mechanical subsystem, needed only for the coordinate
-transformation in the measure_currents method.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.SynchronousMotorSaturatedLUT.current">
-<span class="sig-name descname"><span class="pre">current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motulator.SynchronousMotorSaturatedLUT.current" title="Permalink to this definition">#</a></dt>
-<dd><p>Override the base class method.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -1606,7 +1505,10 @@ a similar template.</p>
 <dd><p>Set the initial values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x0</strong> (<em>complex ndarray</em>) – Initial values of the state variables.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Initial time (s).</p></li>
+<li><p><strong>x0</strong> (<em>complex ndarray</em>) – Initial values of the state variables.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -1618,7 +1520,7 @@ a similar template.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
 <li><p><strong>x</strong> (<em>complex ndarray</em>) – State vector.</p></li>
 </ul>
 </dd>
@@ -1783,7 +1685,10 @@ a similar template.</p>
 <dd><p>Set the initial values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x0</strong> (<em>complex ndarray</em>) – Initial values of the state variables.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t0</strong> (<em>float</em>) – Initial time (s).</p></li>
+<li><p><strong>x0</strong> (<em>complex ndarray</em>) – Initial values of the state variables.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -1795,7 +1700,7 @@ a similar template.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
 <li><p><strong>x</strong> (<em>complex ndarray</em>) – State vector.</p></li>
 </ul>
 </dd>
@@ -1896,9 +1801,9 @@ the PM flux is along the d axis.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>Bunch object with the following fields defined</em></p></li>
-<li><p><strong>i_s</strong> (<em>complex ndarray</em>) – Stator current data.</p></li>
-<li><p><strong>psi_s</strong> (<em>complex ndarray</em>) – Stator flux linkage data.</p></li>
-<li><p><strong>tau_M</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>i_s</strong> (<em>complex ndarray</em>) – Stator current data (A).</p></li>
+<li><p><strong>psi_s</strong> (<em>complex ndarray</em>) – Stator flux linkage data (Vs).</p></li>
+<li><p><strong>tau_M</strong> (<em>ndarray</em>) – Torque data (Nm).</p></li>
 </ul>
 </p>
 </dd>
@@ -3304,14 +3209,7 @@ SI units are used.</p>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotor.meas_currents"><code class="docutils literal notranslate"><span class="pre">SynchronousMotor.meas_currents()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturated"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturated</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturated.current"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturated.current()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturatedLUT"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturatedLUT</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturatedLUT.current"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturatedLUT.current()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.SynchronousMotorSaturated"><code class="docutils literal notranslate"><span class="pre">SynchronousMotorSaturated</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.InductionMotorDrive"><code class="docutils literal notranslate"><span class="pre">InductionMotorDrive</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.InductionMotorDrive.get_initial_values"><code class="docutils literal notranslate"><span class="pre">InductionMotorDrive.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.InductionMotorDrive.set_initial_values"><code class="docutils literal notranslate"><span class="pre">InductionMotorDrive.set_initial_values()</span></code></a></li>

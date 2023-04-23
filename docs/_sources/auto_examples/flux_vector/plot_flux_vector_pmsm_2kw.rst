@@ -70,9 +70,9 @@ Configure the system model.
 .. code-block:: default
 
 
-    motor = mt.SynchronousMotor()
-    mech = mt.Mechanics()
-    conv = mt.Inverter()
+    motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+    mech = mt.Mechanics(J=.015)
+    conv = mt.Inverter(u_dc=540)
     mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 
@@ -165,7 +165,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.415 seconds)
+   **Total running time of the script:** ( 0 minutes  5.542 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py:

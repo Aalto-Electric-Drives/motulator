@@ -79,9 +79,9 @@ Create the system model.
     motor = mt.InductionMotorInvGamma(
         R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 
-    mech = mt.Mechanics(J=.016)  # Mechanics model
-    conv = mt.Inverter(u_dc=540)  # Inverter model
-    mdl = mt.InductionMotorDrive(motor, mech, conv)  # System model
+    mech = mt.Mechanics(J=.016)
+    conv = mt.Inverter(u_dc=540)
+    mdl = mt.InductionMotorDrive(motor, mech, conv)
 
 
 
@@ -140,7 +140,7 @@ signals could be defined as functions.
 
 .. GENERATED FROM PYTHON SOURCE LINES 59-61
 
-Create the simulation object and simulate it. The option `pwm=True` enables
+Create the simulation object and simulate it. The option ``pwm=True`` enables
 the model for the carrier comparison.
 
 .. GENERATED FROM PYTHON SOURCE LINES 61-67
@@ -162,7 +162,7 @@ the model for the carrier comparison.
  .. code-block:: none
 
 
-    Execution time: 6.20 s
+    Execution time: 7.75 s
 
 
 
@@ -206,7 +206,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.284 seconds)
+   **Total running time of the script:** ( 0 minutes  9.021 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:

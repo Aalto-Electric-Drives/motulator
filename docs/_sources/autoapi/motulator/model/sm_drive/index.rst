@@ -7,8 +7,7 @@
 
    Continuous-time models for synchronous motor drives.
 
-   Peak-valued complex space vectors are used. The default values correspond to a
-   2.2-kW permanent-magnet synchronous motor.
+   Peak-valued complex space vectors are used.
 
    ..
        !! processed by numpydoc !!
@@ -90,6 +89,8 @@ Classes
       
       Set the initial values.
 
+      :param t0: Initial time (s).
+      :type t0: float
       :param x0: Initial values of the state variables.
       :type x0: complex ndarray
 
@@ -115,7 +116,7 @@ Classes
       
       Compute the complete state derivative list for the solver.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
       :param x: State vector.
       :type x: complex ndarray

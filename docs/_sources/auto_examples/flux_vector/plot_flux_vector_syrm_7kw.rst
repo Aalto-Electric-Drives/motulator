@@ -63,21 +63,54 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 24-26
 
-Configure the system model.
+Create a saturation model, see the example
+:doc:`/auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw` for further details.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-34
+.. GENERATED FROM PYTHON SOURCE LINES 26-43
 
 .. code-block:: default
 
 
-    # Saturated SyRM model
-    motor = mt.SynchronousMotorSaturated()
-    # Magnetically linear SyRM model below (uncomment to try)
-    # motor = mt.SynchronousMotor(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
-    mech = mt.Mechanics()
-    conv = mt.Inverter()
+
+    def i_s(psi_s):
+        """Magnetic model for a 6.7-kW synchronous reluctance motor."""
+        # Parameters
+        a_d0, a_dd, S = 17.4, 373., 5  # d-axis self-saturation
+        a_q0, a_qq, T = 52.1, 658., 1  # q-axis self-saturation
+        a_dq, U, V = 1120., 1, 0  # Cross-saturation
+        # Inverse inductance functions
+        G_d = a_d0 + a_dd*np.abs(psi_s.real)**S + (
+            a_dq/(V + 2)*np.abs(psi_s.real)**U*np.abs(psi_s.imag)**(V + 2))
+        G_q = a_q0 + a_qq*np.abs(psi_s.imag)**T + (
+            a_dq/(U + 2)*np.abs(psi_s.real)**(U + 2)*np.abs(psi_s.imag)**V)
+        # Stator current
+        return G_d*psi_s.real + 1j*G_q*psi_s.imag
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
+
+Configure the system model.
+
+.. GENERATED FROM PYTHON SOURCE LINES 45-54
+
+.. code-block:: default
+
+
+    motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.54, current=i_s)
+
+    # Magnetically linear SyRM model
+    # motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+    mech = mt.Mechanics(J=.015)
+    conv = mt.Inverter(u_dc=540)
     mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 
@@ -87,11 +120,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-36
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-60
+.. GENERATED FROM PYTHON SOURCE LINES 56-80
 
 .. code-block:: default
 
@@ -126,11 +159,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 81-82
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-72
+.. GENERATED FROM PYTHON SOURCE LINES 82-92
 
 .. code-block:: default
 
@@ -151,11 +184,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-74
+.. GENERATED FROM PYTHON SOURCE LINES 93-94
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-78
+.. GENERATED FROM PYTHON SOURCE LINES 94-98
 
 .. code-block:: default
 
@@ -170,11 +203,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-80
+.. GENERATED FROM PYTHON SOURCE LINES 99-100
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-82
+.. GENERATED FROM PYTHON SOURCE LINES 100-102
 
 .. code-block:: default
 
@@ -195,7 +228,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.611 seconds)
+   **Total running time of the script:** ( 0 minutes  13.914 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

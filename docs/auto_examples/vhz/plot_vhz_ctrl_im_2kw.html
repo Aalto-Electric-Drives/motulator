@@ -51,8 +51,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/vhz/plot_vhz_ctrl_im_2kw';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="V/Hz control up to the 6-step mode: 2.2-kW induction motor" href="plot_vhz_ctrl_6step_im_2kw.html" />
-    <link rel="prev" title="Observer-based V/Hz control: 6.7-kW SyRM" href="plot_obs_vhz_ctrl_syrm_7kw.html" />
+    <link rel="next" title="Observer-based V/Hz control: 6.7-kW SyRM" href="plot_obs_vhz_ctrl_syrm_7kw.html" />
+    <link rel="prev" title="Observer-based V/Hz control: 2.2-kW induction motor" href="plot_obs_vhz_ctrl_im_2kw.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -187,13 +187,13 @@
 </li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">V/Hz Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -351,7 +351,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -367,6 +369,14 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -384,7 +394,8 @@ to download the full example code</p>
 <section class="sphx-glr-example-title" id="v-hz-control-2-2-kw-induction-motor">
 <span id="sphx-glr-auto-examples-vhz-plot-vhz-ctrl-im-2kw-py"></span><h1>V/Hz control: 2.2-kW induction motor<a class="headerlink" href="#v-hz-control-2-2-kw-induction-motor" title="Permalink to this heading">#</a></h1>
 <p>A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters correspond to open-loop V/Hz control.</p>
+parameters correspond to open-loop V/Hz control. Magnetic saturation of the
+motor is also modeled.</p>
 <p>Import the package.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -396,10 +407,34 @@ parameters correspond to open-loop V/Hz control.</p>
     <span class="n">U_nom</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">I_nom</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">f_nom</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tau_nom</span><span class="o">=</span><span class="mf">14.6</span><span class="p">,</span> <span class="n">P_nom</span><span class="o">=</span><span class="mf">2.2e3</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The main-flux saturation model is created based on <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. For simplicity, the
+parameters are hard-coded in the function below, but this model structure can
+be used also for other induction motors.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L_s</span><span class="p">(</span><span class="n">psi</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stator inductance saturation model for a 2.2-kW motor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    psi : float</span>
+<span class="sd">        Magnitude of the stator flux linkage (Vs).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Stator inductance (H).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Saturation model parameters for a 2.2-kW induction motor</span>
+    <span class="n">L_su</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="mf">.34</span><span class="p">,</span> <span class="mf">.84</span><span class="p">,</span> <span class="mi">7</span>
+    <span class="c1"># Stator inductance</span>
+    <span class="k">return</span> <span class="n">L_su</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="n">S</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Create the system model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Γ-equivalent motor model with main-flux saturation included</span>
 <span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorSaturated</span><span class="p">(</span>
-    <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_su</span><span class="o">=</span><span class="mf">.34</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">.84</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">)</span>
 <span class="c1"># Mechanics model</span>
 <span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="c1"># Frequency converter with a diode bridge</span>
@@ -433,7 +468,7 @@ the model for the carrier comparison.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Execution time: </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t_start</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> s&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Execution time: 13.53 s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Execution time: 16.12 s
 </pre></div>
 </div>
 <p>Plot results in per-unit values.</p>
@@ -442,8 +477,7 @@ the model for the carrier comparison.</p>
 <p>The DC link of this particular example is actually unstable at 1-p.u.
 speed at the rated load torque, since the inverter looks like a negative
 resistance to the DC link. You could notice this instability if simulating
-a longer period (e.g. set <cite>t_stop=2</cite>). For more information, see e.g.
-<a class="reference external" href="https://doi.org/10.1109/EPE.2007.4417763">https://doi.org/10.1109/EPE.2007.4417763</a></p>
+a longer period (e.g. set <cite>t_stop=2</cite>). For more information, see e.g. <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
 <span class="n">mt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
@@ -455,7 +489,23 @@ a longer period (e.g. set <cite>t_stop=2</cite>). For more information, see e.g.
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_im_2kw_002.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_im_2kw_002.png" alt="plot vhz ctrl im 2kw" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_im_2kw_003.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_im_2kw_003.png" alt="plot vhz ctrl im 2kw" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  15.083 seconds)</p>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Qu, Ranta, Hinkkanen, Luomi, “Loss-minimizing flux level control of
+induction motor drives,” IEEE Trans. Ind. Appl., 2012,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
+</aside>
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Hinkkanen, Harnefors, Luomi, “Control of induction motor drives
+equipped with small DC-Link capacitance,” Proc. EPE, 2007,
+<a class="reference external" href="https://doi.org/10.1109/EPE.2007.4417763">https://doi.org/10.1109/EPE.2007.4417763</a></p>
+</aside>
+</aside>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  17.894 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e2a6c2bece7d693bf98665eeec3d5685/plot_vhz_ctrl_im_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vhz_ctrl_im_2kw.py</span></code></a></p>
@@ -465,6 +515,7 @@ a longer period (e.g. set <cite>t_stop=2</cite>). For more information, see e.g.
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 
 
@@ -480,20 +531,20 @@ a longer period (e.g. set <cite>t_stop=2</cite>). For more information, see e.g.
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="plot_obs_vhz_ctrl_syrm_7kw.html"
+       href="plot_obs_vhz_ctrl_im_2kw.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Observer-based V/Hz control: 6.7-kW SyRM</p>
+        <p class="prev-next-title">Observer-based V/Hz control: 2.2-kW induction motor</p>
       </div>
     </a>
     <a class="right-next"
-       href="plot_vhz_ctrl_6step_im_2kw.html"
+       href="plot_obs_vhz_ctrl_syrm_7kw.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">V/Hz control up to the 6-step mode: 2.2-kW induction motor</p>
+        <p class="prev-next-title">Observer-based V/Hz control: 6.7-kW SyRM</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -506,6 +557,20 @@ a longer period (e.g. set <cite>t_stop=2</cite>). For more information, see e.g.
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

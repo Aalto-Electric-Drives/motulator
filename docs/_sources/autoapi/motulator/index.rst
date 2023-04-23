@@ -66,7 +66,6 @@ Classes
    motulator.InductionMotorInvGamma
    motulator.SynchronousMotor
    motulator.SynchronousMotorSaturated
-   motulator.SynchronousMotorSaturatedLUT
    motulator.InductionMotorDrive
    motulator.InductionMotorDriveDiode
    motulator.InductionMotorDriveTwoMass
@@ -221,20 +220,22 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: Mechanics(J=0.015, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
+.. py:class:: Mechanics(J, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
 
    
    Mechanics subsystem.
 
    This models an equation of motion for stiff mechanics.
 
-   :param J: Total moment of inertia.
+   :param J: Total moment of inertia (kgm**2).
    :type J: float
-   :param tau_L_w: Load torque as function of speed, `tau_L_w(w_M)`. For example,
-                   tau_L_w = b*w_M, where b is the viscous friction coefficient.
-   :type tau_L_w: function
-   :param tau_L_t: Load torque as a function of time, `tau_L_t(t)`.
-   :type tau_L_t: function
+   :param tau_L_w: Load torque (Nm) as a function of speed, `tau_L_w(w_M)`. For example,
+                   ``tau_L_w = b*w_M``, where `b` is the viscous friction coefficient. The
+                   default is zero, ``lambda w_M: 0*w_M``.
+   :type tau_L_w: callable
+   :param tau_L_t: Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is
+                   zero, ``lambda t: 0*t``.
+   :type tau_L_t: callable
 
 
 
@@ -257,11 +258,11 @@ Functions
       
       Compute the state derivatives.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
-      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :param w_M: Rotor angular speed (mechanical rad/s).
       :type w_M: float
-      :param tau_M: Electromagnetic torque.
+      :param tau_M: Electromagnetic torque (Nm).
       :type tau_M: float
 
       :returns: Time derivatives of the state vector.
@@ -291,7 +292,7 @@ Functions
 
       This returns the rotor speed at the end of the sampling period.
 
-      :returns: **w_M0** -- Rotor angular speed (in mechanical rad/s).
+      :returns: **w_M0** -- Rotor angular speed (mechanical rad/s).
       :rtype: float
 
 
@@ -318,7 +319,7 @@ Functions
 
       This returns the rotor angle at the end of the sampling period.
 
-      :returns: **theta_M0** -- Rotor angle (in mechanical rad).
+      :returns: **theta_M0** -- Rotor angle (mechanical rad).
       :rtype: float
 
 
@@ -339,7 +340,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: MechanicsTwoMass(J_M=0.005, J_L=0.005, K_S=700.0, C_S=0.13, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
+.. py:class:: MechanicsTwoMass(J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None)
 
    Bases: :py:obj:`Mechanics`
 
@@ -348,19 +349,21 @@ Functions
 
    This models an equation of motion for two-mass mechanics.
 
-   :param J_M: Moment of inertia of the motor.
+   :param J_M: Motor moment of inertia (kgm**2).
    :type J_M: float
-   :param J_L: Moment of inertia of the load.
+   :param J_L: Load moment of inertia (kgm**2).
    :type J_L: float
-   :param K_S: Torsional stiffness of the shaft.
+   :param K_S: Shaft torsional stiffness (Nm).
    :type K_S: float
-   :param C_S: Torsional damping of the shaft.
+   :param C_S: Shaft torsional damping (Nms).
    :type C_S: float
-   :param tau_L_w: Load torque as function of the load speed, `tau_L_w(w_L)`. For example,
-                   tau_L_w = b*w_L, where b is the viscous friction coefficient.
-   :type tau_L_w: function
-   :param tau_L_t: Load torque as a function of time, `tau_L_t(t)`.
-   :type tau_L_t: function
+   :param tau_L_w: Load torque (Nm) as a function of the load speed, `tau_L_w(w_L)`, e.g.,
+                   ``tau_L_w = B*w_L``, where `B`is the viscous friction coefficient. The
+                   default is zero, ``lambda w_L: 0*w_L``.
+   :type tau_L_w: callable
+   :param tau_L_t: Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is
+                   zero, ``lambda t: 0*t``.
+   :type tau_L_t: callable
 
 
 
@@ -383,15 +386,15 @@ Functions
       
       Compute the state derivatives.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
-      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :param w_M: Rotor angular speed (mechanical rad/s).
       :type w_M: float
-      :param w_L: Load angular speed (in mechanical rad/s).
+      :param w_L: Load angular speed (mechanical rad/s).
       :type w_L: float
-      :param theta_ML: Twist angle, theta_M - theta_L (in mechanical rad).
+      :param theta_ML: Twist angle, theta_M - theta_L (mechanical rad).
       :type theta_ML: float
-      :param tau_M: Electromagnetic torque.
+      :param tau_M: Electromagnetic torque (Nm).
       :type tau_M: float
 
       :returns: Time derivatives of the state vector.
@@ -421,7 +424,7 @@ Functions
 
       This returns the load speed at the end of the sampling period.
 
-      :returns: **w_L0** -- Load angular speed (in mechanical rad/s).
+      :returns: **w_L0** -- Load angular speed (mechanical rad/s).
       :rtype: float
 
 
@@ -448,7 +451,7 @@ Functions
 
       This returns the load angle at the end of the sampling period.
 
-      :returns: **theta_L0** -- Rotor angle (in mechanical rad).
+      :returns: **theta_L0** -- Rotor angle (mechanical rad).
       :rtype: float
 
 
@@ -469,12 +472,12 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: Inverter(u_dc=540)
+.. py:class:: Inverter(u_dc)
 
    
    Inverter with constant DC-bus voltage and switching-cycle averaging.
 
-   :param u_dc: DC-bus voltage.
+   :param u_dc: DC-bus voltage (V).
    :type u_dc: float
 
 
@@ -501,10 +504,10 @@ Functions
 
       :param q: Switching state vector.
       :type q: complex
-      :param u_dc: DC-bus voltage.
+      :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: **u_ac** -- AC-side voltage.
+      :returns: **u_ac** -- AC-side voltage (V).
       :rtype: complex
 
 
@@ -532,10 +535,10 @@ Functions
 
       :param q: Switching state vector.
       :type q: complex
-      :param i_ac: AC-side current.
+      :param i_ac: AC-side current (A).
       :type i_ac: complex
 
-      :returns: **i_dc** -- DC-side current.
+      :returns: **i_dc** -- DC-side current (A).
       :rtype: float
 
 
@@ -560,7 +563,7 @@ Functions
       
       Measure the DC-bus voltage.
 
-      :returns: DC-bus voltage.
+      :returns: DC-bus voltage (V).
       :rtype: float
 
 
@@ -581,7 +584,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: FrequencyConverter(L=0.002, C=0.000235, U_g=400, f_g=50)
+.. py:class:: FrequencyConverter(L, C, U_g, f_g)
 
    Bases: :py:obj:`Inverter`
 
@@ -592,13 +595,13 @@ Functions
    three-phase diode-bridge rectifier, an LC filter, and a three-phase
    inverter.
 
-   :param L: DC-bus inductance.
+   :param L: DC-bus inductance (H).
    :type L: float
-   :param C: DC-bus capacitance.
+   :param C: DC-bus capacitance (F).
    :type C: float
-   :param U_g: Grid voltage (line-line, rms).
+   :param U_g: Grid voltage (V, line-line, rms).
    :type U_g: float
-   :param f_g: Grid frequency.
+   :param f_g: Grid frequency (Hz).
    :type f_g: float
 
 
@@ -622,10 +625,10 @@ Functions
       
       Compute three-phase grid voltages.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
 
-      :returns: **u_g_abc** -- The phase voltages.
+      :returns: **u_g_abc** -- Phase voltages (V).
       :rtype: ndarray of floats, shape (3,)
 
 
@@ -650,16 +653,16 @@ Functions
       
       Compute the state derivatives.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
-      :param u_dc: DC-bus voltage over the capacitor.
+      :param u_dc: DC-bus voltage (V) over the capacitor.
       :type u_dc: float
-      :param i_L: DC-bus inductor current.
+      :param i_L: DC-bus inductor current (A).
       :type i_L: float
-      :param i_dc: Current to the inverter.
+      :param i_dc: Current to the inverter (A).
       :type i_dc: float
 
-      :returns: Time derivative of the state vector, [du_dc, d_iL]
+      :returns: Time derivative of the state vector, [du_dc, di_L]
       :rtype: list, length 2
 
 
@@ -680,7 +683,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotor(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=0.245)
+.. py:class:: InductionMotor(n_p, R_s, R_r, L_ell, L_s)
 
    
    Γ-equivalent model of an induction motor.
@@ -691,13 +694,13 @@ Functions
 
    :param n_p: Number of pole pairs.
    :type n_p: int
-   :param R_s: Stator resistance.
+   :param R_s: Stator resistance (Ohm).
    :type R_s: float
-   :param R_r: Rotor resistance.
+   :param R_r: Rotor resistance (Ohm).
    :type R_r: float
-   :param L_ell: Leakage inductance.
+   :param L_ell: Leakage inductance (H).
    :type L_ell: float
-   :param L_s: Stator inductance.
+   :param L_s: Stator inductance (H).
    :type L_s: float
 
    .. rubric:: Notes
@@ -733,13 +736,13 @@ Functions
       
       Compute the stator and rotor currents.
 
-      :param psi_ss: Stator flux linkage.
+      :param psi_ss: Stator flux linkage (Vs).
       :type psi_ss: complex
-      :param psi_rs: Rotor flux linkage.
+      :param psi_rs: Rotor flux linkage (Vs).
       :type psi_rs: complex
 
-      :returns: * **i_ss** (*complex*) -- Stator current.
-                * **i_rs** (*complex*) -- Rotor current.
+      :returns: * **i_ss** (*complex*) -- Stator current (A).
+                * **i_rs** (*complex*) -- Rotor current (A).
 
 
 
@@ -763,14 +766,14 @@ Functions
       
       Magnetic model.
 
-      :param psi_ss: Stator flux linkage.
+      :param psi_ss: Stator flux linkage (Vs).
       :type psi_ss: complex
-      :param psi_rs: Rotor flux linkage.
+      :param psi_rs: Rotor flux linkage (Vs).
       :type psi_rs: complex
 
-      :returns: * **i_ss** (*complex*) -- Stator current.
-                * **i_rs** (*complex*) -- Rotor current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
+      :returns: * **i_ss** (*complex*) -- Stator current (A).
+                * **i_rs** (*complex*) -- Rotor current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
 
 
 
@@ -794,18 +797,18 @@ Functions
       
       Compute the state derivatives.
 
-      :param psi_ss: Stator flux linkage.
+      :param psi_ss: Stator flux linkage (Vs).
       :type psi_ss: complex
-      :param psi_rs: Rotor flux linkage.
+      :param psi_rs: Rotor flux linkage (Vs).
       :type psi_rs: complex
-      :param u_ss: Stator voltage.
+      :param u_ss: Stator voltage (V).
       :type u_ss: complex
-      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :param w_M: Rotor angular speed (mechanical rad/s).
       :type w_M: float
 
       :returns: * *complex list, length 2* -- Time derivative of the state vector, [dpsi_ss, dpsi_rs]
-                * **i_ss** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
+                * **i_ss** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
 
       .. rubric:: Notes
 
@@ -836,7 +839,7 @@ Functions
       
       Measure the phase currents at the end of the sampling period.
 
-      :returns: **i_s_abc** -- Phase currents.
+      :returns: **i_s_abc** -- Phase currents (A).
       :rtype: 3-tuple of floats
 
 
@@ -857,7 +860,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotorSaturated(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_su=0.34, beta=0.84, S=7)
+.. py:class:: InductionMotorSaturated(n_p, R_s, R_r, L_ell, L_s)
 
    Bases: :py:obj:`InductionMotor`
 
@@ -865,30 +868,20 @@ Functions
    Γ-equivalent model of an induction motor model with main-flux saturation.
 
    This extends the InductionMotor class with a main-flux magnetic saturation
-   model [R31fc15c1345a-2]_::
+   model::
 
-       L_s(psi_ss) = L_su/(1 + (beta*abs(psi_ss)**S)
+       L_s = L_s(abs(psi_ss))
 
    :param n_p: Number of pole pairs.
    :type n_p: int
-   :param R_s: Stator resistance.
+   :param R_s: Stator resistance (Ohm).
    :type R_s: float
-   :param R_r: Rotor resistance.
+   :param R_r: Rotor resistance (Ohm).
    :type R_r: float
-   :param L_ell: Leakage inductance.
+   :param L_ell: Leakage inductance (H).
    :type L_ell: float
-   :param L_su: Unsaturated stator inductance.
-   :type L_su: float
-   :param beta: Positive coefficient.
-   :type beta: float
-   :param S: Positive coefficient.
-   :type S: float
-
-   .. rubric:: References
-
-   .. [R31fc15c1345a-2] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
-      induction motor drives," IEEE Trans. Ind. Appl., 2012,
-      https://doi.org/10.1109/TIA.2012.2190818
+   :param L_s: Stator inductance (H) as a function of the stator-flux magnitude.
+   :type L_s: callable
 
 
 
@@ -930,7 +923,7 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotorInvGamma(n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)
+.. py:class:: InductionMotorInvGamma(n_p, R_s, R_R, L_sgm, L_M)
 
    Bases: :py:obj:`InductionMotor`
 
@@ -943,13 +936,13 @@ Functions
 
    :param n_p: Number of pole pairs.
    :type n_p: int
-   :param R_s: Stator resistance.
+   :param R_s: Stator resistance (Ohm).
    :type R_s: float
-   :param R_R: Rotor resistance.
+   :param R_R: Rotor resistance (Ohm).
    :type R_R: float
-   :param L_sgm: Leakage inductance.
+   :param L_sgm: Leakage inductance (H).
    :type L_sgm: float
-   :param L_M: Magnetizing inductance.
+   :param L_M: Magnetizing inductance (H).
    :type L_M: float
 
 
@@ -969,28 +962,24 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SynchronousMotor(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, mech=None)
+.. py:class:: SynchronousMotor(n_p, R_s, L_d, L_q, psi_f)
 
    
    Synchronous motor model.
 
    This models a synchronous motor in rotor coordinates. The stator flux
-   linkage is the state variable. The default values correspond to a 2.2-kW
-   permanent-magnet synchronous motor.
+   linkage is the state variable.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
-   :param R_s: Stator resistance.
+   :param R_s: Stator resistance (Ohm).
    :type R_s: float
-   :param L_d: d-axis inductance.
+   :param L_d: d-axis inductance (H).
    :type L_d: float
-   :param L_q: q-axis inductance.
+   :param L_q: q-axis inductance (H).
    :type L_q: float
-   :param psi_f: PM-flux linkage.
+   :param psi_f: PM-flux linkage (Vs).
    :type psi_f: float
-   :param mech: Model of the mechanical subsystem, needed only for the coordinate
-                transformation in the measure_currents method.
-   :type mech: Mechanics
 
 
 
@@ -1013,10 +1002,10 @@ Functions
       
       Compute the stator current.
 
-      :param psi_s: Stator flux linkage.
+      :param psi_s: Stator flux linkage (Vs).
       :type psi_s: complex
 
-      :returns: **i_s** -- Stator current.
+      :returns: **i_s** -- Stator current (A).
       :rtype: complex
 
 
@@ -1041,11 +1030,11 @@ Functions
       
       Magnetic model.
 
-      :param psi_s: Stator flux linkage.
+      :param psi_s: Stator flux linkage (Vs).
       :type psi_s: complex
 
-      :returns: * **i_s** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
+      :returns: * **i_s** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
 
 
 
@@ -1069,16 +1058,16 @@ Functions
       
       Compute the state derivative.
 
-      :param psi_s: Stator flux linkage.
+      :param psi_s: Stator flux linkage (Vs).
       :type psi_s: complex
-      :param u_s: Stator voltage.
+      :param u_s: Stator voltage (V).
       :type u_s: complex
-      :param w_M: Rotor angular speed (in mechanical rad/s).
+      :param w_M: Rotor angular speed (mechanical rad/s).
       :type w_M: float
 
-      :returns: * **dpsi_s** (*complex list*) -- Time derivative of the stator flux linkage.
-                * **i_s** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
+      :returns: * **dpsi_s** (*complex list*) -- Time derivative of the stator flux linkage (V).
+                * **i_s** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
 
       .. rubric:: Notes
 
@@ -1109,7 +1098,7 @@ Functions
       
       Measure the phase currents at the end of the sampling period.
 
-      :returns: **i_s_abc** -- Phase currents.
+      :returns: **i_s_abc** -- Phase currents (A).
       :rtype: 3-tuple of floats
 
 
@@ -1130,78 +1119,30 @@ Functions
           !! processed by numpydoc !!
 
 
-.. py:class:: SynchronousMotorSaturated(n_p=2, R_s=0.54, i_f=0, a_d0=17.4, a_q0=52.1, a_dd=373.0, a_qq=658.0, a_dq=1120.0, S=5, T=1, U=1, V=0, mech=None)
+.. py:class:: SynchronousMotorSaturated(n_p, R_s, current, psi_s0=0j)
 
    Bases: :py:obj:`SynchronousMotor`
 
    
    Model of a saturated synchronous motor.
 
-   This extends the SynchronousMotor class with an analytical saturation
-   model [R83c7849ec2d6-1]_, [R83c7849ec2d6-2]_. The permanent magnets (PMs) are assumed to be along the
-   d-axis. The default values correspond to a 6.7-kW synchronous reluctance
-   motor.
+   This overrides the linear magnetics model of the SynchronousMotor class
+   with a generic saturation model::
+
+       i_s = i_s(psi_s)
+
+   The saturation model could be an analytical function or a look-up table.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
-   :param R_s: Stator resistance.
+   :param R_s: Stator resistance (Ohm).
    :type R_s: float
-   :param i_f: Constant current corresponding to the magnetomotive force (MMF) of PMs.
-               In the magnetically linear case, `i_f = psi_f/L_d`.
-   :type i_f: float
-   :param a_d0: Nonnegative parameter of the saturation model. In the magnetically
-                linear case, `a_d0 = 1/L_d`.
-   :type a_d0: float
-   :param a_q0: Nonnegative parameter of the saturation model. In the magnetically
-                linear case, `a_q0 = 1/L_q`.
-   :type a_q0: float
-   :param a_dd: Nonnegative constant defining the d-axis self-saturation together with
-                `S`. In the magnetically linear case, `a_dd = 0`.
-   :type a_dd: float
-   :param a_qq: Nonnegative constant defining the q-axis self-saturation together with
-                `T`. In the magnetically linear case, `a_qq = 0`.
-   :type a_qq: float
-   :param a_dq: Nonnegative constant defining the cross-saturation together with `U`
-                and `V`. In the magnetically linear case, `a_dq = 0`.
-   :type a_dq: float
-   :param S: Nonnegative constant defining the d-axis self-saturation.
-   :type S: float
-   :param T: Nonnegative constant defining the q-axis self-saturation.
-   :type T: float
-   :param U: Nonnegative constant defining the cross-saturation.
-   :type U: float
-   :param V: Nonnegative constant defining the cross-saturation.
-   :type V: float
-   :param mech: Model of the mechanical subsystem, needed only for the coordinate
-                transformation in the measure_currents method.
-   :type mech: Mechanics
-
-   .. rubric:: Notes
-
-   The magnetomotive force (MMF) of the PMs is modeled using constant current
-   source `i_f` on the d-axis [R83c7849ec2d6-3]_. Correspondingly, this approach assumes
-   that the MMFs of the d-axis current and of the PMs are in series. This
-   model cannot capture the desaturation phenomenon of thin iron ribs [R83c7849ec2d6-4]_.
-   For such motors, look-up tables can be used.
-
-   .. rubric:: References
-
-   .. [R83c7849ec2d6-1] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi,
-      “Sensorless self-commissioning of synchronous reluctance motors at
-      standstill without rotor locking, ”IEEE Trans. Ind. Appl., 2017,
-      https://doi.org/10.1109/TIA.2016.2644624
-
-   .. [R83c7849ec2d6-2] Awan, Song, Saarakkala, Hinkkanen, "Optimal torque control of
-      saturated synchronous motors: plug-and-play method," IEEE Trans. Ind.
-      Appl., 2018, https://doi.org/10.1109/TIA.2018.2862410
-
-   .. [R83c7849ec2d6-3] Jahns, Kliman, Neumann, “Interior permanent-magnet synchronous
-      motors for adjustable-speed drives,” IEEE Trans. Ind. Appl., 1986,
-      https://doi.org/10.1109/TIA.1986.4504786
-
-   .. [R83c7849ec2d6-4] Armando, Guglielmi, Pellegrino, Pastorelli, Vagati, "Accurate
-      modeling and performance analysis of IPM-PMASR motors," IEEE Trans. Ind.
-      Appl., 2009, https://doi.org/10.1109/TIA.2008.2009493
+   :param current: Function that computes the stator current `i_s` as a function of the
+                   stator flux linkage `psi_s`.
+   :type current: callable
+   :param psi_s0: Initial value of the stator flux linkage (Vs). The default is 0j. For
+                  PM motors, this should be solved from the the saturation model.
+   :type psi_s0: complex, optional
 
 
 
@@ -1219,93 +1160,6 @@ Functions
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: current(psi_s)
-
-      
-      Override the base class method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: SynchronousMotorSaturatedLUT(n_p=2, R_s=0.2, psi_s_data=None, i_s_data=None, mech=None)
-
-   Bases: :py:obj:`SynchronousMotor`
-
-   
-   Look-up-table-based model of a saturated synchronous motor.
-
-   This extends the SynchronousMotor class with a saturation model, where the
-   stator current depends on the stator flux linkage. The coordinates assume
-   the PMSM convention, i.e., that the PM flux is along the d-axis.
-   Unstructured flux map data can be used.
-
-   :param n_p: Number of pole pairs.
-   :type n_p: int
-   :param R_s: Stator resistance.
-   :type R_s: float
-   :param psi_s_data: Stator flux data points for creating the interpolant.
-   :type psi_s_data: ndarray of complex
-   :param i_s_data: Stator current data values for creating the interpolant.
-   :type i_s_data: ndarray of complex
-   :param mech: Model of the mechanical subsystem, needed only for the coordinate
-                transformation in the measure_currents method.
-   :type mech: Mechanics
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-   .. py:method:: current(psi_s)
-
-      
-      Override the base class method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
 .. py:class:: InductionMotorDrive(motor=None, mech=None, conv=None)
 
@@ -1369,6 +1223,8 @@ Functions
       
       Set the initial values.
 
+      :param t0: Initial time (s).
+      :type t0: float
       :param x0: Initial values of the state variables.
       :type x0: complex ndarray
 
@@ -1394,7 +1250,7 @@ Functions
       
       Compute the complete state derivative list for the solver.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
       :param x: State vector.
       :type x: complex ndarray
@@ -1829,6 +1685,8 @@ Functions
       
       Set the initial values.
 
+      :param t0: Initial time (s).
+      :type t0: float
       :param x0: Initial values of the state variables.
       :type x0: complex ndarray
 
@@ -1854,7 +1712,7 @@ Functions
       
       Compute the complete state derivative list for the solver.
 
-      :param t: Time.
+      :param t: Time (s).
       :type t: float
       :param x: State vector.
       :type x: complex ndarray
@@ -2096,9 +1954,9 @@ Functions
    :type add_negative_q_axis: bool, optional
 
    :returns: * *Bunch object with the following fields defined*
-             * **i_s** (*complex ndarray*) -- Stator current data.
-             * **psi_s** (*complex ndarray*) -- Stator flux linkage data.
-             * **tau_M** (*ndarray*)
+             * **i_s** (*complex ndarray*) -- Stator current data (A).
+             * **psi_s** (*complex ndarray*) -- Stator flux linkage data (Vs).
+             * **tau_M** (*ndarray*) -- Torque data (Nm).
 
    .. rubric:: Notes
 

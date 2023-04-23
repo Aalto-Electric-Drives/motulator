@@ -187,13 +187,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -447,9 +447,9 @@ the PM flux is along the d axis.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>Bunch object with the following fields defined</em></p></li>
-<li><p><strong>i_s</strong> (<em>complex ndarray</em>) – Stator current data.</p></li>
-<li><p><strong>psi_s</strong> (<em>complex ndarray</em>) – Stator flux linkage data.</p></li>
-<li><p><strong>tau_M</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>i_s</strong> (<em>complex ndarray</em>) – Stator current data (A).</p></li>
+<li><p><strong>psi_s</strong> (<em>complex ndarray</em>) – Stator flux linkage data (Vs).</p></li>
+<li><p><strong>tau_M</strong> (<em>ndarray</em>) – Torque data (Nm).</p></li>
 </ul>
 </p>
 </dd>
@@ -507,9 +507,9 @@ repository, licensed under the Apache License, Version 2.0.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>Bunch object with the following fields defined</em></p></li>
-<li><p><strong>i_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator current data.</p></li>
-<li><p><strong>psi_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator flux linkage data.</p></li>
-<li><p><strong>tau_M</strong> (<em>ndarray, shape (N_d, N_q)</em>)</p></li>
+<li><p><strong>i_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator current data (A).</p></li>
+<li><p><strong>psi_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator flux linkage data (Vs).</p></li>
+<li><p><strong>tau_M</strong> (<em>ndarray, shape (N_d, N_q)</em>) – Torque data (Nm).</p></li>
 </ul>
 </p>
 </dd>
@@ -531,9 +531,9 @@ repository, licensed under the Apache License, Version 2.0.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>Bunch object with the following fields defined</em></p></li>
-<li><p><strong>psi_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator flux linkage data.</p></li>
-<li><p><strong>i_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator current data.</p></li>
-<li><p><strong>tau_M</strong> (<em>ndarray, shape (N_d, N_q)</em>)</p></li>
+<li><p><strong>psi_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator flux linkage data (Vs).</p></li>
+<li><p><strong>i_s</strong> (<em>complex ndarray, shape (N_d, N_q)</em>) – Stator current data (A).</p></li>
+<li><p><strong>tau_M</strong> (<em>ndarray, shape (N_d, N_q)</em>) – Torque data (Nm).</p></li>
 </ul>
 </p>
 </dd>

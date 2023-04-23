@@ -26,9 +26,9 @@ base = mt.BaseValues(
 # %%
 # Configure the system model.
 
-mech = mt.MechanicsTwoMass(J_M=.005, J_L=.005, K_S=700, C_S=.01)
-motor = mt.SynchronousMotor()
-conv = mt.Inverter()
+mech = mt.MechanicsTwoMass(J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
+motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+conv = mt.Inverter(u_dc=540)
 mdl = mt.SynchronousMotorDriveTwoMass(motor, mech, conv)
 
 # %%

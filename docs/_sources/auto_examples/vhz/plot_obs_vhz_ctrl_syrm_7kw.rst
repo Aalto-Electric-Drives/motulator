@@ -63,21 +63,85 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 24-32
 
-Configure the system model.
+A saturation model is created based on [1]_, [2]_. For simplicity, the
+saturation model parameters are hard-coded in function below, but the same
+model structure can also be used for other synchronous motors. For PM motors,
+the magnetomotive force (MMF) of the PMs can be modeled using constant current
+source `i_f` on the d-axis [2], [3]_. Correspondingly, this approach assumes
+that the MMFs of the d-axis current and of the PMs are in series. This model
+cannot capture the desaturation phenomenon of thin iron ribs, see [4]_ for
+details. For such motors, look-up tables can be used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-34
+.. GENERATED FROM PYTHON SOURCE LINES 32-74
 
 .. code-block:: default
 
 
-    # Saturated SyRM model
-    motor = mt.SynchronousMotorSaturated()
+
+    def i_s(psi_s):
+        """
+        Magnetic model for a 6.7-kW synchronous reluctance motor.
+
+        Parameters
+        ----------
+        psi_s : complex
+            Stator flux linkage (Vs).
+
+        Returns
+        -------
+        complex
+            Stator current (A).
+
+        Notes
+        -----
+        For nonzero `i_f`, the initial value of the stator flux linkage `psi_s0` 
+        needs to be solved, e.g., as follows::
+
+        from scipy.optimize import minimize_scalar
+        res = minimize_scalar(
+            lambda psi_d: np.abs(
+                        (a_d0 + a_dd*np.abs(psi_d)**S)*psi_d - i_f))
+        psi_s0 = complex(res.x)
+
+        """
+        # Parameters
+        a_d0, a_dd, S = 17.4, 373., 5  # d-axis self-saturation
+        a_q0, a_qq, T = 52.1, 658., 1  # q-axis self-saturation
+        a_dq, U, V = 1120., 1, 0  # Cross-saturation
+        i_f = 0  # MMF of PMs
+        # Inverse inductance functions
+        G_d = a_d0 + a_dd*np.abs(psi_s.real)**S + (
+            a_dq/(V + 2)*np.abs(psi_s.real)**U*np.abs(psi_s.imag)**(V + 2))
+        G_q = a_q0 + a_qq*np.abs(psi_s.imag)**T + (
+            a_dq/(U + 2)*np.abs(psi_s.real)**(U + 2)*np.abs(psi_s.imag)**V)
+        # Stator current
+        return G_d*psi_s.real - i_f + 1j*G_q*psi_s.imag
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 75-76
+
+Configure the system model.
+
+.. GENERATED FROM PYTHON SOURCE LINES 76-85
+
+.. code-block:: default
+
+
+    motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.54, current=i_s)
+
     # Magnetically linear SyRM model
     # motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
     mech = mt.Mechanics(J=.015)
-    conv = mt.Inverter()
+    conv = mt.Inverter(u_dc=540)
     mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 
@@ -87,11 +151,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-36
+.. GENERATED FROM PYTHON SOURCE LINES 86-87
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-49
+.. GENERATED FROM PYTHON SOURCE LINES 87-100
 
 .. code-block:: default
 
@@ -115,11 +179,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 101-102
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-61
+.. GENERATED FROM PYTHON SOURCE LINES 102-112
 
 .. code-block:: default
 
@@ -140,13 +204,13 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-65
+.. GENERATED FROM PYTHON SOURCE LINES 113-116
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-69
+.. GENERATED FROM PYTHON SOURCE LINES 116-120
 
 .. code-block:: default
 
@@ -161,17 +225,18 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-72
+.. GENERATED FROM PYTHON SOURCE LINES 121-123
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-74
+.. GENERATED FROM PYTHON SOURCE LINES 123-126
 
 .. code-block:: default
 
 
     mt.plot(sim, base=base)
+
 
 
 
@@ -184,10 +249,31 @@ the results in SI units.
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 127-145
+
+References
+----------
+.. [1] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi,
+   “Sensorless self-commissioning of synchronous reluctance motors at
+   standstill without rotor locking, ”IEEE Trans. Ind. Appl., 2017,
+   https://doi.org/10.1109/TIA.2016.2644624
+
+.. [2] Awan, Song, Saarakkala, Hinkkanen, "Optimal torque control of
+   saturated synchronous motors: plug-and-play method," IEEE Trans. Ind.
+   Appl., 2018, https://doi.org/10.1109/TIA.2018.2862410
+
+.. [3] Jahns, Kliman, Neumann, “Interior permanent-magnet synchronous
+   motors for adjustable-speed drives,” IEEE Trans. Ind. Appl., 1986,
+   https://doi.org/10.1109/TIA.1986.4504786
+
+.. [4] Armando, Guglielmi, Pellegrino, Pastorelli, Vagati, "Accurate
+   modeling and performance analysis of IPM-PMASR motors," IEEE Trans. Ind.
+   Appl., 2009, https://doi.org/10.1109/TIA.2008.2009493
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  20.292 seconds)
+   **Total running time of the script:** ( 0 minutes  26.866 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_obs_vhz_ctrl_syrm_7kw.py:

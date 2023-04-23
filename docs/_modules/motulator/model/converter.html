@@ -184,13 +184,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -332,8 +332,7 @@ document.write(`
 <span class="sd">An inverter with constant DC-bus voltage and a frequency converter with a diode</span>
 <span class="sd">front-end rectifier are modeled. Complex space vectors are used also for duty</span>
 <span class="sd">ratios and switching states, wherever applicable. In this module, all space</span>
-<span class="sd">vectors are in stationary coordinates. The default values correspond to a</span>
-<span class="sd">2.2-kW 400-V motor drive.</span>
+<span class="sd">vectors are in stationary coordinates. </span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -347,11 +346,11 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    u_dc : float</span>
-<span class="sd">        DC-bus voltage.</span>
+<span class="sd">        DC-bus voltage (V).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_dc0</span> <span class="o">=</span> <span class="n">u_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Switching state vector</span>
 
@@ -365,12 +364,12 @@ document.write(`
 <span class="sd">        q : complex</span>
 <span class="sd">            Switching state vector.</span>
 <span class="sd">        u_dc : float</span>
-<span class="sd">            DC-bus voltage.</span>
+<span class="sd">            DC-bus voltage (V).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        u_ac : complex</span>
-<span class="sd">            AC-side voltage.</span>
+<span class="sd">            AC-side voltage (V).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">u_ac</span> <span class="o">=</span> <span class="n">q</span><span class="o">*</span><span class="n">u_dc</span>
@@ -386,12 +385,12 @@ document.write(`
 <span class="sd">        q : complex</span>
 <span class="sd">            Switching state vector.</span>
 <span class="sd">        i_ac : complex</span>
-<span class="sd">            AC-side current.</span>
+<span class="sd">            AC-side current (A).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        i_dc : float</span>
-<span class="sd">            DC-side current.</span>
+<span class="sd">            DC-side current (A).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_ac</span><span class="p">))</span>
@@ -404,7 +403,7 @@ document.write(`
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        float</span>
-<span class="sd">            DC-bus voltage.</span>
+<span class="sd">            DC-bus voltage (V).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_dc0</span></div></div>
@@ -422,17 +421,17 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    L : float</span>
-<span class="sd">        DC-bus inductance.</span>
+<span class="sd">        DC-bus inductance (H).</span>
 <span class="sd">    C : float</span>
-<span class="sd">        DC-bus capacitance.</span>
+<span class="sd">        DC-bus capacitance (F).</span>
 <span class="sd">    U_g : float</span>
-<span class="sd">        Grid voltage (line-line, rms).</span>
+<span class="sd">        Grid voltage (V, line-line, rms).</span>
 <span class="sd">    f_g : float</span>
-<span class="sd">        Grid frequency.</span>
+<span class="sd">        Grid frequency (Hz).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">235e-6</span><span class="p">,</span> <span class="n">U_g</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">f_g</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">U_g</span><span class="p">,</span> <span class="n">f_g</span><span class="p">):</span>
         <span class="c1"># pylint: disable=super-init-not-called</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span>
         <span class="c1"># Initial value of the DC-bus inductor current</span>
@@ -453,12 +452,12 @@ document.write(`
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        t : float</span>
-<span class="sd">            Time.</span>
+<span class="sd">            Time (s).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        u_g_abc : ndarray of floats, shape (3,)</span>
-<span class="sd">            The phase voltages.</span>
+<span class="sd">            Phase voltages (V).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">theta_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="o">*</span><span class="n">t</span>
@@ -476,18 +475,18 @@ document.write(`
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        t : float</span>
-<span class="sd">            Time.</span>
+<span class="sd">            Time (s).</span>
 <span class="sd">        u_dc : float</span>
-<span class="sd">            DC-bus voltage over the capacitor.</span>
+<span class="sd">            DC-bus voltage (V) over the capacitor.</span>
 <span class="sd">        i_L : float</span>
-<span class="sd">            DC-bus inductor current.</span>
+<span class="sd">            DC-bus inductor current (A).</span>
 <span class="sd">        i_dc : float</span>
-<span class="sd">            Current to the inverter.</span>
+<span class="sd">            Current to the inverter (A).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list, length 2</span>
-<span class="sd">            Time derivative of the state vector, [du_dc, d_iL]</span>
+<span class="sd">            Time derivative of the state vector, [du_dc, di_L]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Grid phase voltages</span>

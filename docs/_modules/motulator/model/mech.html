@@ -184,13 +184,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -339,20 +339,20 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    J : float</span>
-<span class="sd">        Total moment of inertia.</span>
-<span class="sd">    tau_L_w : function</span>
-<span class="sd">        Load torque as function of speed, `tau_L_w(w_M)`. For example,</span>
-<span class="sd">        tau_L_w = b*w_M, where b is the viscous friction coefficient.</span>
-<span class="sd">    tau_L_t : function</span>
-<span class="sd">        Load torque as a function of time, `tau_L_t(t)`.</span>
+<span class="sd">        Total moment of inertia (kgm**2).</span>
+<span class="sd">    tau_L_w : callable</span>
+<span class="sd">        Load torque (Nm) as a function of speed, `tau_L_w(w_M)`. For example,</span>
+<span class="sd">        ``tau_L_w = b*w_M``, where `b` is the viscous friction coefficient. The</span>
+<span class="sd">        default is zero, ``lambda w_M: 0*w_M``.</span>
+<span class="sd">    tau_L_t : callable</span>
+<span class="sd">        Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is </span>
+<span class="sd">        zero, ``lambda t: 0*t``.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">,</span> <span class="n">tau_L_w</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">w_M</span><span class="p">,</span> <span class="n">tau_L_t</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">tau_L_w</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">w_M</span><span class="p">,</span> <span class="n">tau_L_t</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">t</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">tau_L_t</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="n">tau_L_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="n">tau_L_t</span><span class="p">,</span> <span class="n">tau_L_w</span>
         <span class="c1"># Initial values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_M0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
@@ -363,11 +363,11 @@ document.write(`
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        t : float</span>
-<span class="sd">            Time.</span>
+<span class="sd">            Time (s).</span>
 <span class="sd">        w_M : float</span>
-<span class="sd">            Rotor angular speed (in mechanical rad/s).</span>
+<span class="sd">            Rotor angular speed (mechanical rad/s).</span>
 <span class="sd">        tau_M : float</span>
-<span class="sd">            Electromagnetic torque.</span>
+<span class="sd">            Electromagnetic torque (Nm).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -391,7 +391,7 @@ document.write(`
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        w_M0 : float</span>
-<span class="sd">            Rotor angular speed (in mechanical rad/s).</span>
+<span class="sd">            Rotor angular speed (mechanical rad/s).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># The quantization noise of an incremental encoder could be modeled</span>
@@ -407,7 +407,7 @@ document.write(`
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        theta_M0 : float</span>
-<span class="sd">            Rotor angle (in mechanical rad).</span>
+<span class="sd">            Rotor angle (mechanical rad).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_M0</span></div></div>
@@ -423,38 +423,30 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    J_M : float</span>
-<span class="sd">        Moment of inertia of the motor.</span>
+<span class="sd">        Motor moment of inertia (kgm**2).</span>
 <span class="sd">    J_L : float</span>
-<span class="sd">        Moment of inertia of the load.</span>
+<span class="sd">        Load moment of inertia (kgm**2).</span>
 <span class="sd">    K_S : float</span>
-<span class="sd">        Torsional stiffness of the shaft.</span>
+<span class="sd">        Shaft torsional stiffness (Nm).</span>
 <span class="sd">    C_S : float</span>
-<span class="sd">        Torsional damping of the shaft.</span>
-<span class="sd">    tau_L_w : function</span>
-<span class="sd">        Load torque as function of the load speed, `tau_L_w(w_L)`. For example,</span>
-<span class="sd">        tau_L_w = b*w_L, where b is the viscous friction coefficient.</span>
-<span class="sd">    tau_L_t : function</span>
-<span class="sd">        Load torque as a function of time, `tau_L_t(t)`.</span>
+<span class="sd">        Shaft torsional damping (Nms).</span>
+<span class="sd">    tau_L_w : callable</span>
+<span class="sd">        Load torque (Nm) as a function of the load speed, `tau_L_w(w_L)`, e.g., </span>
+<span class="sd">        ``tau_L_w = B*w_L``, where `B`is the viscous friction coefficient. The</span>
+<span class="sd">        default is zero, ``lambda w_L: 0*w_L``.</span>
+<span class="sd">    tau_L_t : callable</span>
+<span class="sd">        Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is</span>
+<span class="sd">        zero, ``lambda t: 0*t``.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># pylint: disable=too-many-instance-attributes</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">J_M</span><span class="o">=</span><span class="mf">.005</span><span class="p">,</span>
-            <span class="n">J_L</span><span class="o">=</span><span class="mf">.005</span><span class="p">,</span>
-            <span class="n">K_S</span><span class="o">=</span><span class="mf">700.</span><span class="p">,</span>
-            <span class="n">C_S</span><span class="o">=</span><span class="mf">.13</span><span class="p">,</span>
-            <span class="n">tau_L_w</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">w_M</span><span class="p">,</span>
-            <span class="n">tau_L_t</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">J_M</span><span class="p">,</span> <span class="n">J_L</span><span class="p">,</span> <span class="n">K_S</span><span class="p">,</span> <span class="n">C_S</span><span class="p">,</span> <span class="n">tau_L_w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tau_L_t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="c1"># pylint: disable=super-init-not-called</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">J_M</span> <span class="o">=</span> <span class="n">J_M</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">J_L</span> <span class="o">=</span> <span class="n">J_L</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">K_S</span> <span class="o">=</span> <span class="n">K_S</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">C_S</span> <span class="o">=</span> <span class="n">C_S</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">tau_L_t</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="n">tau_L_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">J_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">J_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_S</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_S</span> <span class="o">=</span> <span class="n">J_M</span><span class="p">,</span> <span class="n">J_L</span><span class="p">,</span> <span class="n">K_S</span><span class="p">,</span> <span class="n">C_S</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="n">tau_L_w</span> <span class="k">if</span> <span class="n">tau_L_w</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">w_L</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">w_L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">tau_L_t</span> <span class="k">if</span> <span class="n">tau_L_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">t</span>
         <span class="c1"># Initial values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_M0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_L0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_ML0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
@@ -467,15 +459,15 @@ document.write(`
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        t : float</span>
-<span class="sd">            Time.</span>
+<span class="sd">            Time (s).</span>
 <span class="sd">        w_M : float</span>
-<span class="sd">            Rotor angular speed (in mechanical rad/s).</span>
+<span class="sd">            Rotor angular speed (mechanical rad/s).</span>
 <span class="sd">        w_L : float</span>
-<span class="sd">            Load angular speed (in mechanical rad/s).</span>
+<span class="sd">            Load angular speed (mechanical rad/s).</span>
 <span class="sd">        theta_ML : float</span>
-<span class="sd">            Twist angle, theta_M - theta_L (in mechanical rad).</span>
+<span class="sd">            Twist angle, theta_M - theta_L (mechanical rad).</span>
 <span class="sd">        tau_M : float</span>
-<span class="sd">            Electromagnetic torque.</span>
+<span class="sd">            Electromagnetic torque (Nm).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -504,7 +496,7 @@ document.write(`
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        w_L0 : float</span>
-<span class="sd">            Load angular speed (in mechanical rad/s).</span>
+<span class="sd">            Load angular speed (mechanical rad/s).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_L0</span></div>
@@ -518,7 +510,7 @@ document.write(`
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        theta_L0 : float</span>
-<span class="sd">            Rotor angle (in mechanical rad).</span>
+<span class="sd">            Rotor angle (mechanical rad).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">theta_L0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_M0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_ML0</span>

@@ -187,13 +187,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -422,16 +422,18 @@ document.write(`
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.model.mech.Mechanics">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.mech.</span></span><span class="sig-name descname"><span class="pre">Mechanics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.015</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">...</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/mech.html#Mechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.mech.Mechanics" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.mech.</span></span><span class="sig-name descname"><span class="pre">Mechanics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">...</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/mech.html#Mechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.mech.Mechanics" title="Permalink to this definition">#</a></dt>
 <dd><p>Mechanics subsystem.</p>
 <p>This models an equation of motion for stiff mechanics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J</strong> (<em>float</em>) – Total moment of inertia.</p></li>
-<li><p><strong>tau_L_w</strong> (<em>function</em>) – Load torque as function of speed, <cite>tau_L_w(w_M)</cite>. For example,
-tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
-<li><p><strong>tau_L_t</strong> (<em>function</em>) – Load torque as a function of time, <cite>tau_L_t(t)</cite>.</p></li>
+<li><p><strong>J</strong> (<em>float</em>) – Total moment of inertia (kgm**2).</p></li>
+<li><p><strong>tau_L_w</strong> (<em>callable</em>) – Load torque (Nm) as a function of speed, <cite>tau_L_w(w_M)</cite>. For example,
+<code class="docutils literal notranslate"><span class="pre">tau_L_w</span> <span class="pre">=</span> <span class="pre">b*w_M</span></code>, where <cite>b</cite> is the viscous friction coefficient. The
+default is zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">0*w_M</span></code>.</p></li>
+<li><p><strong>tau_L_t</strong> (<em>callable</em>) – Load torque (Nm) as a function of time, <cite>tau_L_t(t)</cite>. The default is
+zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">0*t</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -442,9 +444,9 @@ tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
-<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (in mechanical rad/s).</p></li>
-<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (mechanical rad/s).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -463,7 +465,7 @@ tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
 <p>This returns the rotor speed at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>w_M0</strong> – Rotor angular speed (in mechanical rad/s).</p>
+<dd class="field-odd"><p><strong>w_M0</strong> – Rotor angular speed (mechanical rad/s).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -478,7 +480,7 @@ tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
 <p>This returns the rotor angle at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>theta_M0</strong> – Rotor angle (in mechanical rad).</p>
+<dd class="field-odd"><p><strong>theta_M0</strong> – Rotor angle (mechanical rad).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -490,20 +492,22 @@ tau_L_w = b*w_M, where b is the viscous friction coefficient.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.model.mech.MechanicsTwoMass">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.mech.</span></span><span class="sig-name descname"><span class="pre">MechanicsTwoMass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">700.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_S</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">...</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/mech.html#MechanicsTwoMass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.mech.MechanicsTwoMass" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.mech.</span></span><span class="sig-name descname"><span class="pre">MechanicsTwoMass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/mech.html#MechanicsTwoMass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.mech.MechanicsTwoMass" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.model.mech.Mechanics" title="motulator.model.mech.Mechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mechanics</span></code></a></p>
 <p>Two-mass mechanics subsystem.</p>
 <p>This models an equation of motion for two-mass mechanics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J_M</strong> (<em>float</em>) – Moment of inertia of the motor.</p></li>
-<li><p><strong>J_L</strong> (<em>float</em>) – Moment of inertia of the load.</p></li>
-<li><p><strong>K_S</strong> (<em>float</em>) – Torsional stiffness of the shaft.</p></li>
-<li><p><strong>C_S</strong> (<em>float</em>) – Torsional damping of the shaft.</p></li>
-<li><p><strong>tau_L_w</strong> (<em>function</em>) – Load torque as function of the load speed, <cite>tau_L_w(w_L)</cite>. For example,
-tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
-<li><p><strong>tau_L_t</strong> (<em>function</em>) – Load torque as a function of time, <cite>tau_L_t(t)</cite>.</p></li>
+<li><p><strong>J_M</strong> (<em>float</em>) – Motor moment of inertia (kgm**2).</p></li>
+<li><p><strong>J_L</strong> (<em>float</em>) – Load moment of inertia (kgm**2).</p></li>
+<li><p><strong>K_S</strong> (<em>float</em>) – Shaft torsional stiffness (Nm).</p></li>
+<li><p><strong>C_S</strong> (<em>float</em>) – Shaft torsional damping (Nms).</p></li>
+<li><p><strong>tau_L_w</strong> (<em>callable</em>) – Load torque (Nm) as a function of the load speed, <cite>tau_L_w(w_L)</cite>, e.g.,
+<code class="docutils literal notranslate"><span class="pre">tau_L_w</span> <span class="pre">=</span> <span class="pre">B*w_L</span></code>, where <cite>B`is the viscous friction coefficient. The
+default is zero, ``lambda w_L: 0*w_L`</cite>.</p></li>
+<li><p><strong>tau_L_t</strong> (<em>callable</em>) – Load torque (Nm) as a function of time, <cite>tau_L_t(t)</cite>. The default is
+zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">0*t</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -514,11 +518,11 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>float</em>) – Time.</p></li>
-<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (in mechanical rad/s).</p></li>
-<li><p><strong>w_L</strong> (<em>float</em>) – Load angular speed (in mechanical rad/s).</p></li>
-<li><p><strong>theta_ML</strong> (<em>float</em>) – Twist angle, theta_M - theta_L (in mechanical rad).</p></li>
-<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Time (s).</p></li>
+<li><p><strong>w_M</strong> (<em>float</em>) – Rotor angular speed (mechanical rad/s).</p></li>
+<li><p><strong>w_L</strong> (<em>float</em>) – Load angular speed (mechanical rad/s).</p></li>
+<li><p><strong>theta_ML</strong> (<em>float</em>) – Twist angle, theta_M - theta_L (mechanical rad).</p></li>
+<li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -537,7 +541,7 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <p>This returns the load speed at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>w_L0</strong> – Load angular speed (in mechanical rad/s).</p>
+<dd class="field-odd"><p><strong>w_L0</strong> – Load angular speed (mechanical rad/s).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
@@ -552,7 +556,7 @@ tau_L_w = b*w_L, where b is the viscous friction coefficient.</p></li>
 <p>This returns the load angle at the end of the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>theta_L0</strong> – Rotor angle (in mechanical rad).</p>
+<dd class="field-odd"><p><strong>theta_L0</strong> – Rotor angle (mechanical rad).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>

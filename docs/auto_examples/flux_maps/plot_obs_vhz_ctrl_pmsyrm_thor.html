@@ -187,13 +187,13 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">Observer-based V/Hz control: 2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">V/Hz control up to the 6-step mode: 2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">Observer-based V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">V/Hz control: 2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw.html">Observer-based V/Hz control: 6.7-kW SyRM</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">Flux-vector control: 2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">Flux-vector control: 6.7-kW SyRM</a></li>
 </ul>
@@ -398,6 +398,8 @@ Naturally, the control performance can be improved by taking the saturation
 into account in the control algorithm.</p>
 <p>Import the packages.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize_scalar</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">LinearNDInterpolator</span>
 <span class="kn">import</span> <span class="nn">motulator</span> <span class="k">as</span> <span class="nn">mt</span>
 </pre></div>
 </div>
@@ -424,10 +426,35 @@ into account in the control algorithm.</p>
 <li><img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_001.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_002.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_002.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-multi-img"/></li>
 </ul>
+<p>Create the saturation model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The coordinates assume the PMSM convention, i.e., that the PM flux is along</span>
+<span class="c1"># the d-axis. The piecewise linear interpolant `LinearNDInterpolator` is based</span>
+<span class="c1"># on triangularization and allows to use unstructured flux map.</span>
+
+<span class="c1"># Data points for creating the interpolant</span>
+<span class="n">psi_s_data</span><span class="p">,</span> <span class="n">i_s_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="c1"># Create the interpolant, i_s = current_dq(psi_s.real, psi_s.imag)</span>
+<span class="n">current_dq</span> <span class="o">=</span> <span class="n">LinearNDInterpolator</span><span class="p">(</span>
+    <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">psi_s_data</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">psi_s_data</span><span class="o">.</span><span class="n">imag</span><span class="p">)),</span> <span class="n">i_s_data</span><span class="p">)</span>
+
+<span class="c1"># Solve the PM flux for the initial value of the stator flux</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">current_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+    <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">psi_s_data</span><span class="o">.</span><span class="n">real</span><span class="p">)),</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;bounded&quot;</span><span class="p">)</span>
+<span class="n">psi_s0</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="c1"># Package the input such that i_s = i_s(psi_s)</span>
+<span class="k">def</span> <span class="nf">i_s</span><span class="p">(</span><span class="n">psi_s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Current as a function of the flux linkage.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">current_dq</span><span class="p">(</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Configure the system model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the motor model</span>
-<span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorSaturatedLUT</span><span class="p">(</span>
-    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">psi_s_data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">i_s_data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">SynchronousMotorSaturated</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">current</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="n">psi_s0</span><span class="p">)</span>
 <span class="c1"># Magnetically linear PM-SyRM model</span>
 <span class="c1"># motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)</span>
 <span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.0042</span><span class="p">)</span>
@@ -478,7 +505,7 @@ the results in SI units.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  32.816 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  41.739 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-maps-plot-obs-vhz-ctrl-pmsyrm-thor-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/08b12b26a77791f31e719ecbe6c2d3ef/plot_obs_vhz_ctrl_pmsyrm_thor.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_pmsyrm_thor.py</span></code></a></p>

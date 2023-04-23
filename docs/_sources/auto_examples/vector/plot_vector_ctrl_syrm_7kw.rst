@@ -72,7 +72,7 @@ Configure the system model.
 
     motor = mt.SynchronousMotor(n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
     mech = mt.Mechanics(J=.015)
-    conv = mt.Inverter()
+    conv = mt.Inverter(u_dc=540)
     mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 
@@ -192,7 +192,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.161 seconds)
+   **Total running time of the script:** ( 0 minutes  14.256 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py:

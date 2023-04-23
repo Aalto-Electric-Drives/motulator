@@ -48,9 +48,9 @@ Functions
    :type add_negative_q_axis: bool, optional
 
    :returns: * *Bunch object with the following fields defined*
-             * **i_s** (*complex ndarray*) -- Stator current data.
-             * **psi_s** (*complex ndarray*) -- Stator flux linkage data.
-             * **tau_M** (*ndarray*)
+             * **i_s** (*complex ndarray*) -- Stator current data (A).
+             * **psi_s** (*complex ndarray*) -- Stator flux linkage data (Vs).
+             * **tau_M** (*ndarray*) -- Torque data (Nm).
 
    .. rubric:: Notes
 
@@ -162,9 +162,9 @@ Functions
    :type N_q: int, optional
 
    :returns: * *Bunch object with the following fields defined*
-             * **i_s** (*complex ndarray, shape (N_d, N_q)*) -- Stator current data.
-             * **psi_s** (*complex ndarray, shape (N_d, N_q)*) -- Stator flux linkage data.
-             * **tau_M** (*ndarray, shape (N_d, N_q)*)
+             * **i_s** (*complex ndarray, shape (N_d, N_q)*) -- Stator current data (A).
+             * **psi_s** (*complex ndarray, shape (N_d, N_q)*) -- Stator flux linkage data (Vs).
+             * **tau_M** (*ndarray, shape (N_d, N_q)*) -- Torque data (Nm).
 
 
 
@@ -196,9 +196,9 @@ Functions
    :type N_q: int, optional
 
    :returns: * *Bunch object with the following fields defined*
-             * **psi_s** (*complex ndarray, shape (N_d, N_q)*) -- Stator flux linkage data.
-             * **i_s** (*complex ndarray, shape (N_d, N_q)*) -- Stator current data.
-             * **tau_M** (*ndarray, shape (N_d, N_q)*)
+             * **psi_s** (*complex ndarray, shape (N_d, N_q)*) -- Stator flux linkage data (Vs).
+             * **i_s** (*complex ndarray, shape (N_d, N_q)*) -- Stator current data (A).
+             * **tau_M** (*ndarray, shape (N_d, N_q)*) -- Torque data (Nm).
 
 
 

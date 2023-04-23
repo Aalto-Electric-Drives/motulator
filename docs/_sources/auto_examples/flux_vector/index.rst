@@ -2,7 +2,7 @@
 
 .. _sphx_glr_auto_examples_flux_vector:
 
-Flux Vector Control
+Flux-Vector Control
 -------------------
 
 
