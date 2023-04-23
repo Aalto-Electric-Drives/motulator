@@ -24,8 +24,7 @@ class Mechanics:
 
     def __init__(self, J, tau_L_w=lambda w_M: 0*w_M, tau_L_t=lambda t: 0*t):
         self.J = J
-        self.tau_L_t = tau_L_t
-        self.tau_L_w = tau_L_w
+        self.tau_L_t, self.tau_L_w = tau_L_t, tau_L_w
         # Initial values
         self.w_M0, self.theta_M0 = 0, 0
 
@@ -117,10 +116,7 @@ class MechanicsTwoMass(Mechanics):
     def __init__(self, J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None):
         # pylint: disable=too-many-arguments
         # pylint: disable=super-init-not-called
-        self.J_M = J_M
-        self.J_L = J_L
-        self.K_S = K_S
-        self.C_S = C_S
+        self.J_M, self.J_L, self.K_S, self.C_S = J_M, J_L, K_S, C_S
         self.tau_L_w = tau_L_w if tau_L_w is not None else lambda w_L: 0*w_L
         self.tau_L_t = tau_L_t if tau_L_t is not None else lambda t: 0*t
         # Initial values

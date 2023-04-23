@@ -178,7 +178,7 @@ class InductionMotorSaturated(InductionMotor):
         Rotor resistance (Ohm).
     L_ell : float
         Leakage inductance (H).
-    L_s : Callable[[float], float]
+    L_s : callable
         Stator inductance (H) as a function of the stator-flux magnitude.
 
     """

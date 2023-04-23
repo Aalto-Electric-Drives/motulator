@@ -30,20 +30,17 @@ class SynchronousMotor:
         q-axis inductance (H).
     psi_f : float
         PM-flux linkage (Vs).
-    mech : Mechanics
-        Model of the mechanical subsystem, needed only for the coordinate
-        transformation in the measure_currents method.
 
     """
 
-    def __init__(self, n_p, R_s, L_d, L_q, psi_f, mech=None):
+    def __init__(self, n_p, R_s, L_d, L_q, psi_f):
         # pylint: disable=too-many-arguments
         self.n_p, self.R_s = n_p, R_s
         self.L_d, self.L_q, self.psi_f = L_d, L_q, psi_f
         # Initial value
-        self.psi_s0 = self.psi_f + 0j
+        self.psi_s0 = complex(psi_f)
         # For the coordinate transformation
-        self._mech = mech
+        self._mech = None
 
     def current(self, psi_s):
         """
@@ -152,24 +149,21 @@ class SynchronousMotorSaturated(SynchronousMotor):
         Number of pole pairs.
     R_s : float
         Stator resistance (Ohm).
-    current : Callable[[complex], complex]
+    current : callable
         Function that computes the stator current `i_s` as a function of the 
         stator flux linkage `psi_s`. 
     psi_s0 : complex, optional
         Initial value of the stator flux linkage (Vs). The default is 0j. For
         PM motors, this should be solved from the the saturation model.
-    mech : Mechanics
-        Model of the mechanical subsystem, needed only for the coordinate
-        transformation in the measure_currents method.
 
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, n_p, R_s, current, psi_s0=0j, mech=None):
+    def __init__(self, n_p, R_s, current, psi_s0=0j):
         # pylint: disable=too-many-arguments, disable=super-init-not-called
         self.n_p, self.R_s = n_p, R_s
         self.current = current
         # For the coordinate transformation
-        self._mech = mech
+        self._mech = None
         # Initial value of the stator flux linkage
-        self.psi_s0 = psi_s0
+        self.psi_s0 = complex(psi_s0)

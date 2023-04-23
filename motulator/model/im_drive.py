@@ -29,7 +29,7 @@ class InductionMotorDrive:
 
     """
 
-    def __init__(self, motor, mech, conv):
+    def __init__(self, motor=None, mech=None, conv=None):
         self.motor = motor
         self.mech = mech
         self.conv = conv
@@ -171,7 +171,7 @@ class InductionMotorDriveDiode(InductionMotorDrive):
 
     """
 
-    def __init__(self, motor, mech, conv):
+    def __init__(self, motor=None, mech=None, conv=None):
         super().__init__(motor, mech, conv)
         self.conv = conv
         self.data.u_dc, self.data.i_L = [], []
@@ -247,8 +247,8 @@ class InductionMotorDriveTwoMass(InductionMotorDrive):
 
     """
 
-    def __init__(self, motor, mech, conv):
-        super().__init__(motor=motor, mech=mech, conv=conv)
+    def __init__(self, motor=None, mech=None, conv=None):
+        super().__init__(motor, mech, conv)
         self.data.w_L, self.data.theta_ML = [], []
 
     def get_initial_values(self):

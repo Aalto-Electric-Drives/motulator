@@ -28,7 +28,7 @@ class SynchronousMotorDrive:
 
     """
 
-    def __init__(self, motor, mech, conv):
+    def __init__(self, motor=None, mech=None, conv=None):
         self.motor = motor
         self.motor._mech = mech
         self.mech = mech
@@ -164,7 +164,7 @@ class SynchronousMotorDriveTwoMass(SynchronousMotorDrive):
 
     """
 
-    def __init__(self, motor, mech, conv):
+    def __init__(self, motor=None, mech=None, conv=None):
         super().__init__(motor, mech, conv)
         self.data.w_L, self.data.theta_ML = [], []
 
