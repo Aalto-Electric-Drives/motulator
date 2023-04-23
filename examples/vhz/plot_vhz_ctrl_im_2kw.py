@@ -50,15 +50,14 @@ def L_s(psi):
 # %%
 # Create the system model.
 
+mdl = mt.InductionMotorDriveDiode()
 # Γ-equivalent motor model with main-flux saturation included
-motor = mt.InductionMotorSaturated(
+mdl.motor = mt.InductionMotorSaturated(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
 # Mechanics model
-mech = mt.Mechanics(J=.015)
+mdl.mech = mt.Mechanics(J=.015)
 # Frequency converter with a diode bridge
-conv = mt.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
-# Collect the system model
-mdl = mt.InductionMotorDriveDiode(motor, mech, conv)
+mdl.conv = mt.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).

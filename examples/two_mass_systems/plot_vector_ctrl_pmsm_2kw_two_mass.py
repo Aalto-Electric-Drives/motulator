@@ -26,10 +26,10 @@ base = mt.BaseValues(
 # %%
 # Configure the system model.
 
-mech = mt.MechanicsTwoMass(J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
-motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-conv = mt.Inverter(u_dc=540)
-mdl = mt.SynchronousMotorDriveTwoMass(motor, mech, conv)
+mdl = mt.SynchronousMotorDriveTwoMass()
+mdl.mech = mt.MechanicsTwoMass(J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
+mdl.motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+mdl.conv = mt.Inverter(u_dc=540)
 
 # %%
 # Configure the control system.
@@ -64,15 +64,11 @@ mt.plot(sim, base=base)  # Plot results in per-unit values
 # %%
 # Plot the load speed and the twist angle.
 
-# Continuous-time data
-mdl = sim.mdl.data
-# Time span
 t_span = (0, 1.2)
-# Plot
 _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
-ax1.plot(mdl.t, mdl.w_M, label=r'$\omega_\mathrm{M}$')
-ax1.plot(mdl.t, mdl.w_L, label=r'$\omega_\mathrm{L}$')
-ax2.plot(mdl.t, mdl.theta_ML*180/np.pi)
+ax1.plot(sim.mdl.data.t, sim.mdl.data.w_M, label=r'$\omega_\mathrm{M}$')
+ax1.plot(sim.mdl.data.t, sim.mdl.data.w_L, label=r'$\omega_\mathrm{L}$')
+ax2.plot(sim.mdl.data.t, sim.mdl.data.theta_ML*180/np.pi)
 ax1.set_xlim(t_span)
 ax2.set_xlim(t_span)
 ax1.set_xticklabels([])
@@ -89,7 +85,7 @@ plt.show()
 f_span = (5, 500)
 num = 200
 # Parameters
-J_M, J_L, K_S, C_S = mech.J_M, mech.J_L, mech.K_S, mech.C_S
+J_M, J_L, K_S, C_S = mdl.mech.J_M, mdl.mech.J_L, mdl.mech.K_S, mdl.mech.C_S
 # Frequencies
 w = 2*np.pi*np.logspace(np.log10(f_span[0]), np.log10(f_span[-1]), num=num)
 s = 1j*w
