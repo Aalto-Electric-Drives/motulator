@@ -4,8 +4,7 @@ Power converter models.
 An inverter with constant DC-bus voltage and a frequency converter with a diode
 front-end rectifier are modeled. Complex space vectors are used also for duty
 ratios and switching states, wherever applicable. In this module, all space
-vectors are in stationary coordinates. The default values correspond to a
-2.2-kW 400-V motor drive.
+vectors are in stationary coordinates. 
 
 """
 import numpy as np
@@ -19,11 +18,11 @@ class Inverter:
     Parameters
     ----------
     u_dc : float
-        DC-bus voltage.
+        DC-bus voltage (V).
 
     """
 
-    def __init__(self, u_dc=540):
+    def __init__(self, u_dc):
         self.u_dc0 = u_dc
         self.q = 0j  # Switching state vector
 
@@ -37,12 +36,12 @@ class Inverter:
         q : complex
             Switching state vector.
         u_dc : float
-            DC-bus voltage.
+            DC-bus voltage (V).
 
         Returns
         -------
         u_ac : complex
-            AC-side voltage.
+            AC-side voltage (V).
 
         """
         u_ac = q*u_dc
@@ -58,12 +57,12 @@ class Inverter:
         q : complex
             Switching state vector.
         i_ac : complex
-            AC-side current.
+            AC-side current (A).
 
         Returns
         -------
         i_dc : float
-            DC-side current.
+            DC-side current (A).
 
         """
         i_dc = 1.5*np.real(q*np.conj(i_ac))
@@ -76,7 +75,7 @@ class Inverter:
         Returns
         -------
         float
-            DC-bus voltage.
+            DC-bus voltage (V).
 
         """
         return self.u_dc0
@@ -94,17 +93,17 @@ class FrequencyConverter(Inverter):
     Parameters
     ----------
     L : float
-        DC-bus inductance.
+        DC-bus inductance (H).
     C : float
-        DC-bus capacitance.
+        DC-bus capacitance (F).
     U_g : float
-        Grid voltage (line-line, rms).
+        Grid voltage (V, line-line, rms).
     f_g : float
-        Grid frequency.
+        Grid frequency (Hz).
 
     """
 
-    def __init__(self, L=2e-3, C=235e-6, U_g=400, f_g=50):
+    def __init__(self, L, C, U_g, f_g):
         # pylint: disable=super-init-not-called
         self.L, self.C = L, C
         # Initial value of the DC-bus inductor current
@@ -125,12 +124,12 @@ class FrequencyConverter(Inverter):
         Parameters
         ----------
         t : float
-            Time.
+            Time (s).
 
         Returns
         -------
         u_g_abc : ndarray of floats, shape (3,)
-            The phase voltages.
+            Phase voltages (V).
 
         """
         theta_g = self.w_g*t
@@ -148,18 +147,18 @@ class FrequencyConverter(Inverter):
         Parameters
         ----------
         t : float
-            Time.
+            Time (s).
         u_dc : float
-            DC-bus voltage over the capacitor.
+            DC-bus voltage (V) over the capacitor.
         i_L : float
-            DC-bus inductor current.
+            DC-bus inductor current (A).
         i_dc : float
-            Current to the inverter.
+            Current to the inverter (A).
 
         Returns
         -------
         list, length 2
-            Time derivative of the state vector, [du_dc, d_iL]
+            Time derivative of the state vector, [du_dc, di_L]
 
         """
         # Grid phase voltages

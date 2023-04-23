@@ -39,10 +39,11 @@ def import_syre_data(fname='THOR.mat', add_negative_q_axis=True):
     -------
     Bunch object with the following fields defined:
     i_s : complex ndarray
-        Stator current data.
+        Stator current data (A).
     psi_s : complex ndarray
-        Stator flux linkage data.
+        Stator flux linkage data (Vs).
     tau_M : ndarray
+        Torque data (Nm).
 
     Notes
     -----
@@ -197,10 +198,11 @@ def downsample_flux_map(data, N_d=32, N_q=32):
     -------
     Bunch object with the following fields defined:
     i_s : complex ndarray, shape (N_d, N_q)
-        Stator current data.
+        Stator current data (A).
     psi_s : complex ndarray, shape (N_d, N_q)
-        Stator flux linkage data.
+        Stator flux linkage data (Vs).
     tau_M : ndarray, shape (N_d, N_q)
+        Torque data (Nm).
 
     """
     # Points at which to interpolate data
@@ -235,10 +237,11 @@ def invert_flux_map(data, N_d=32, N_q=32):
     -------
     Bunch object with the following fields defined:
     psi_s : complex ndarray, shape (N_d, N_q)
-        Stator flux linkage data.
+        Stator flux linkage data (Vs).
     i_s : complex ndarray, shape (N_d, N_q)
-        Stator current data.
+        Stator current data (A).
     tau_M : ndarray, shape (N_d, N_q)
+        Torque data (Nm).
 
     """
     # Get the range

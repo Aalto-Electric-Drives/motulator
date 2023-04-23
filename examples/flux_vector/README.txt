@@ -1,2 +1,2 @@
-Flux Vector Control
+Flux-Vector Control
 -------------------

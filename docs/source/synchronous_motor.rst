@@ -24,7 +24,7 @@ where :math:`\boldsymbol{u}_\mathrm{s}` is the stator voltage, :math:`\boldsymbo
 where :math:`L_\mathrm{d}` is the d-axis inductance, :math:`L_\mathrm{q}` is the q-axis inductance, :math:`\psi_\mathrm{f}` is the permanent-magnet (PM) flux linkage. As special cases, this model represents a surface-PMSM with :math:`L_\mathrm{d} = L_\mathrm{q}` and SyRM with :math:`\psi_\mathrm{f}=0`.
 
 .. note::
-    The linear magnetic model can be replaced with nonlinear saturation characteristics  :math:`\boldsymbol{\psi}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}(\boldsymbol{i}_\mathrm{s})`, either in a form of flux maps (see :class:`motulator.model.sm.SynchronousMotorSaturatedLUT`) or explicit functions (see :class:`motulator.model.sm.SynchronousMotorSaturated` corresponding to  [2]_). The module :mod:`motulator.model.sm_flux_maps` contains methods for importing and plotting the flux map data.
+    The linear magnetic model can be replaced with nonlinear saturation characteristics :math:`\boldsymbol{\psi}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}(\boldsymbol{i}_\mathrm{s})`, either in a form of flux maps or explicit functions [2]_, see :class:`motulator.model.sm.SynchronousMotorSaturated`. The module :mod:`motulator.model.sm_flux_maps` contains methods for importing and plotting the flux map data. See also the examples :doc:`/auto_examples/flux_maps/plot_obs_vhz_ctrl_pmsyrm_thor` and :doc:`/auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw`.
 
 The electromagnetic torque is
 

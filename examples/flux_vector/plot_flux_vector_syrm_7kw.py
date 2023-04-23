@@ -21,14 +21,34 @@ base = mt.BaseValues(
     U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, n_p=2)
 
 # %%
+# Create a saturation model, see the example
+# :doc:`/auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw` for further details.
+
+
+def i_s(psi_s):
+    """Magnetic model for a 6.7-kW synchronous reluctance motor."""
+    # Parameters
+    a_d0, a_dd, S = 17.4, 373., 5  # d-axis self-saturation
+    a_q0, a_qq, T = 52.1, 658., 1  # q-axis self-saturation
+    a_dq, U, V = 1120., 1, 0  # Cross-saturation
+    # Inverse inductance functions
+    G_d = a_d0 + a_dd*np.abs(psi_s.real)**S + (
+        a_dq/(V + 2)*np.abs(psi_s.real)**U*np.abs(psi_s.imag)**(V + 2))
+    G_q = a_q0 + a_qq*np.abs(psi_s.imag)**T + (
+        a_dq/(U + 2)*np.abs(psi_s.real)**(U + 2)*np.abs(psi_s.imag)**V)
+    # Stator current
+    return G_d*psi_s.real + 1j*G_q*psi_s.imag
+
+
+# %%
 # Configure the system model.
 
-# Saturated SyRM model
-motor = mt.SynchronousMotorSaturated()
-# Magnetically linear SyRM model below (uncomment to try)
-# motor = mt.SynchronousMotor(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
-mech = mt.Mechanics()
-conv = mt.Inverter()
+motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.54, current=i_s)
+
+# Magnetically linear SyRM model
+# motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+mech = mt.Mechanics(J=.015)
+conv = mt.Inverter(u_dc=540)
 mdl = mt.SynchronousMotorDrive(motor, mech, conv)
 
 # %%

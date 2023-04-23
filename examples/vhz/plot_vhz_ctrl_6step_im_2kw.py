@@ -29,9 +29,9 @@ base = mt.BaseValues(
 motor = mt.InductionMotorInvGamma(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 
-mech = mt.Mechanics(J=.016)  # Mechanics model
-conv = mt.Inverter(u_dc=540)  # Inverter model
-mdl = mt.InductionMotorDrive(motor, mech, conv)  # System model
+mech = mt.Mechanics(J=.016)
+conv = mt.Inverter(u_dc=540)
+mdl = mt.InductionMotorDrive(motor, mech, conv)
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).
@@ -56,7 +56,7 @@ mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 mdl.mech.tau_L_t = lambda t: (t > 1.)*base.tau_nom*0
 
 # %%
-# Create the simulation object and simulate it. The option `pwm=True` enables
+# Create the simulation object and simulate it. The option ``pwm=True`` enables
 # the model for the carrier comparison.
 
 sim = mt.Simulation(mdl, ctrl, pwm=True)
