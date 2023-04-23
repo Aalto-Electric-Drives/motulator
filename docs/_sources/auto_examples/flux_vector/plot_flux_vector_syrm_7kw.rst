@@ -100,18 +100,17 @@ Create a saturation model, see the example
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-54
+.. GENERATED FROM PYTHON SOURCE LINES 45-53
 
 .. code-block:: default
 
 
-    motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.54, current=i_s)
-
+    mdl = mt.SynchronousMotorDrive()
+    mdl.motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.54, current=i_s)
+    mdl.mech = mt.Mechanics(J=.015)
+    mdl.conv = mt.Inverter(u_dc=540)
     # Magnetically linear SyRM model
-    # motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
-    mech = mt.Mechanics(J=.015)
-    conv = mt.Inverter(u_dc=540)
-    mdl = mt.SynchronousMotorDrive(motor, mech, conv)
+    # mdl.motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 
 
 
@@ -120,11 +119,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-80
+.. GENERATED FROM PYTHON SOURCE LINES 55-79
 
 .. code-block:: default
 
@@ -159,11 +158,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-92
+.. GENERATED FROM PYTHON SOURCE LINES 81-91
 
 .. code-block:: default
 
@@ -184,11 +183,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-94
+.. GENERATED FROM PYTHON SOURCE LINES 92-93
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-98
+.. GENERATED FROM PYTHON SOURCE LINES 93-97
 
 .. code-block:: default
 
@@ -203,11 +202,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-100
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-102
+.. GENERATED FROM PYTHON SOURCE LINES 99-101
 
 .. code-block:: default
 
@@ -228,7 +227,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  13.914 seconds)
+   **Total running time of the script:** ( 0 minutes  11.089 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

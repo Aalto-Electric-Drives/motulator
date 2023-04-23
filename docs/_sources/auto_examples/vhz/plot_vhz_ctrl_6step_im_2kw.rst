@@ -70,18 +70,16 @@ Compute base values based on the nominal values (just for figures).
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-36
+.. GENERATED FROM PYTHON SOURCE LINES 27-34
 
 .. code-block:: default
 
 
-    # Configure the induction motor using its inverse-Γ parameters
-    motor = mt.InductionMotorInvGamma(
+    mdl = mt.InductionMotorDrive()
+    mdl.motor = mt.InductionMotorInvGamma(
         R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
-
-    mech = mt.Mechanics(J=.016)
-    conv = mt.Inverter(u_dc=540)
-    mdl = mt.InductionMotorDrive(motor, mech, conv)
+    mdl.mech = mt.Mechanics(J=.016)
+    mdl.conv = mt.Inverter(u_dc=540)
 
 
 
@@ -90,11 +88,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-43
+.. GENERATED FROM PYTHON SOURCE LINES 36-41
 
 .. code-block:: default
 
@@ -110,12 +108,12 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-46
+.. GENERATED FROM PYTHON SOURCE LINES 42-44
 
 Set the speed reference and the external load torque. More complicated
 signals could be defined as functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-58
+.. GENERATED FROM PYTHON SOURCE LINES 44-56
 
 .. code-block:: default
 
@@ -138,12 +136,12 @@ signals could be defined as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-61
+.. GENERATED FROM PYTHON SOURCE LINES 57-59
 
 Create the simulation object and simulate it. The option ``pwm=True`` enables
 the model for the carrier comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-67
+.. GENERATED FROM PYTHON SOURCE LINES 59-65
 
 .. code-block:: default
 
@@ -162,16 +160,16 @@ the model for the carrier comparison.
  .. code-block:: none
 
 
-    Execution time: 7.75 s
+    Execution time: 6.15 s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 66-67
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-73
+.. GENERATED FROM PYTHON SOURCE LINES 67-71
 
 .. code-block:: default
 
@@ -206,7 +204,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  9.021 seconds)
+   **Total running time of the script:** ( 0 minutes  7.225 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:

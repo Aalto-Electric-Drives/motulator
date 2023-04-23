@@ -1353,7 +1353,7 @@ assumed. If magnetic saturation is to be modeled, the Γ model is preferred.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.</span></span><span class="sig-name descname"><span class="pre">SynchronousMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/motulator/model/sm.html#SynchronousMotor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.SynchronousMotor" title="Permalink to this definition">#</a></dt>
 <dd><p>Synchronous motor model.</p>
 <p>This models a synchronous motor in rotor coordinates. The stator flux
-linkage is the state variable.</p>
+linkage and the electrical angle of the rotor are the state variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1414,7 +1414,7 @@ linkage is the state variable.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>dpsi_s</strong> (<em>complex list</em>) – Time derivative of the stator flux linkage (V).</p></li>
+<li><p><em>complex list, length 2</em> – Time derivative of the state vector, [dpsi_s, dtheta_m0]</p></li>
 <li><p><strong>i_s</strong> (<em>complex</em>) – Stator current (A).</p></li>
 <li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
@@ -1422,8 +1422,8 @@ linkage is the state variable.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>In addition to the state derivative, this method also returns the
-output signals (stator current <cite>i_ss</cite> and torque <cite>tau_M</cite>) needed for
+<p>In addition to the state derivative, this method also returns the output
+signals (stator current <cite>i_ss</cite> and torque <cite>tau_M</cite>) needed for
 interconnection with other subsystems. This avoids overlapping
 computation in simulation.</p>
 </dd></dl>
@@ -1462,8 +1462,8 @@ with a generic saturation model:</p>
 <li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ohm).</p></li>
 <li><p><strong>current</strong> (<em>callable</em>) – Function that computes the stator current <cite>i_s</cite> as a function of the
 stator flux linkage <cite>psi_s</cite>.</p></li>
-<li><p><strong>psi_s0</strong> (<em>complex</em><em>, </em><em>optional</em>) – Initial value of the stator flux linkage (Vs). The default is 0j. For
-PM motors, this should be solved from the the saturation model.</p></li>
+<li><p><strong>psi_s0</strong> (<em>complex</em><em>, </em><em>optional</em>) – Initial value of the stator flux linkage (Vs). For PM motors, this
+should be solved from the the saturation model. The default is 0j.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1674,7 +1674,7 @@ a similar template.</p>
 <dd class="field-odd"><p><strong>x0</strong> – Initial values of the state variables.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>complex list, length 3</p>
+<dd class="field-even"><p>complex list, length 4</p>
 </dd>
 </dl>
 </dd></dl>

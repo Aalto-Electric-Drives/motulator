@@ -75,10 +75,10 @@ Configure the system model.
 .. code-block:: default
 
 
-    mech = mt.MechanicsTwoMass(J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
-    motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-    conv = mt.Inverter(u_dc=540)
-    mdl = mt.SynchronousMotorDriveTwoMass(motor, mech, conv)
+    mdl = mt.SynchronousMotorDriveTwoMass()
+    mdl.mech = mt.MechanicsTwoMass(J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
+    mdl.motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+    mdl.conv = mt.Inverter(u_dc=540)
 
 
 
@@ -165,20 +165,16 @@ Create the simulation object and simulate it.
 
 Plot the load speed and the twist angle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-84
+.. GENERATED FROM PYTHON SOURCE LINES 66-80
 
 .. code-block:: default
 
 
-    # Continuous-time data
-    mdl = sim.mdl.data
-    # Time span
     t_span = (0, 1.2)
-    # Plot
     _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
-    ax1.plot(mdl.t, mdl.w_M, label=r'$\omega_\mathrm{M}$')
-    ax1.plot(mdl.t, mdl.w_L, label=r'$\omega_\mathrm{L}$')
-    ax2.plot(mdl.t, mdl.theta_ML*180/np.pi)
+    ax1.plot(sim.mdl.data.t, sim.mdl.data.w_M, label=r'$\omega_\mathrm{M}$')
+    ax1.plot(sim.mdl.data.t, sim.mdl.data.w_L, label=r'$\omega_\mathrm{L}$')
+    ax2.plot(sim.mdl.data.t, sim.mdl.data.theta_ML*180/np.pi)
     ax1.set_xlim(t_span)
     ax2.set_xlim(t_span)
     ax1.set_xticklabels([])
@@ -199,12 +195,12 @@ Plot the load speed and the twist angle.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-87
+.. GENERATED FROM PYTHON SOURCE LINES 81-83
 
 Plot also the frequency response from the electromagnetic torque tau_M to the
 rotor speed w_M.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-114
+.. GENERATED FROM PYTHON SOURCE LINES 83-110
 
 .. code-block:: default
 
@@ -213,7 +209,7 @@ rotor speed w_M.
     f_span = (5, 500)
     num = 200
     # Parameters
-    J_M, J_L, K_S, C_S = mech.J_M, mech.J_L, mech.K_S, mech.C_S
+    J_M, J_L, K_S, C_S = mdl.mech.J_M, mdl.mech.J_L, mdl.mech.K_S, mdl.mech.C_S
     # Frequencies
     w = 2*np.pi*np.logspace(np.log10(f_span[0]), np.log10(f_span[-1]), num=num)
     s = 1j*w
@@ -250,7 +246,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.836 seconds)
+   **Total running time of the script:** ( 0 minutes  3.882 seconds)
 
 
 .. _sphx_glr_download_auto_examples_two_mass_systems_plot_vector_ctrl_pmsm_2kw_two_mass.py:

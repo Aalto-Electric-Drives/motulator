@@ -35,7 +35,7 @@ Classes
    Synchronous motor model.
 
    This models a synchronous motor in rotor coordinates. The stator flux
-   linkage is the state variable.
+   linkage and the electrical angle of the rotor are the state variables.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -132,14 +132,14 @@ Classes
       :param w_M: Rotor angular speed (mechanical rad/s).
       :type w_M: float
 
-      :returns: * **dpsi_s** (*complex list*) -- Time derivative of the stator flux linkage (V).
+      :returns: * *complex list, length 2* -- Time derivative of the state vector, [dpsi_s, dtheta_m0]
                 * **i_s** (*complex*) -- Stator current (A).
                 * **tau_M** (*float*) -- Electromagnetic torque (Nm).
 
       .. rubric:: Notes
 
-      In addition to the state derivative, this method also returns the
-      output signals (stator current `i_ss` and torque `tau_M`) needed for
+      In addition to the state derivative, this method also returns the output
+      signals (stator current `i_ss` and torque `tau_M`) needed for
       interconnection with other subsystems. This avoids overlapping
       computation in simulation.
 
@@ -207,8 +207,8 @@ Classes
    :param current: Function that computes the stator current `i_s` as a function of the
                    stator flux linkage `psi_s`.
    :type current: callable
-   :param psi_s0: Initial value of the stator flux linkage (Vs). The default is 0j. For
-                  PM motors, this should be solved from the the saturation model.
+   :param psi_s0: Initial value of the stator flux linkage (Vs). For PM motors, this
+                  should be solved from the the saturation model. The default is 0j.
    :type psi_s0: complex, optional
 
 

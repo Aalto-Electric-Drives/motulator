@@ -65,7 +65,7 @@ Classes
       Get the initial values.
 
       :returns: **x0** -- Initial values of the state variables.
-      :rtype: complex list, length 3
+      :rtype: complex list, length 4
 
 
 

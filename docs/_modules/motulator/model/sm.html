@@ -343,8 +343,8 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous motor model.</span>
 
-<span class="sd">    This models a synchronous motor in rotor coordinates. The stator flux</span>
-<span class="sd">    linkage is the state variable. </span>
+<span class="sd">    This models a synchronous motor in rotor coordinates. The stator flux </span>
+<span class="sd">    linkage and the electrical angle of the rotor are the state variables. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -365,10 +365,9 @@ document.write(`
         <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">L_d</span><span class="p">,</span> <span class="n">L_q</span><span class="p">,</span> <span class="n">psi_f</span>
-        <span class="c1"># Initial value</span>
+        <span class="c1"># Initial values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s0</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">psi_f</span><span class="p">)</span>
-        <span class="c1"># For the coordinate transformation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mech</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m0</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="SynchronousMotor.current"><a class="viewcode-back" href="../../../autoapi/motulator/model/sm/index.html#motulator.SynchronousMotor.current">[docs]</a>    <span class="k">def</span> <span class="nf">current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -424,8 +423,8 @@ document.write(`
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        dpsi_s : complex list</span>
-<span class="sd">            Time derivative of the stator flux linkage (V).</span>
+<span class="sd">        complex list, length 2</span>
+<span class="sd">            Time derivative of the state vector, [dpsi_s, dtheta_m0]</span>
 <span class="sd">        i_s : complex</span>
 <span class="sd">            Stator current (A).</span>
 <span class="sd">        tau_M : float</span>
@@ -433,15 +432,16 @@ document.write(`
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        In addition to the state derivative, this method also returns the</span>
-<span class="sd">        output signals (stator current `i_ss` and torque `tau_M`) needed for</span>
-<span class="sd">        interconnection with other subsystems. This avoids overlapping</span>
+<span class="sd">        In addition to the state derivative, this method also returns the output</span>
+<span class="sd">        signals (stator current `i_ss` and torque `tau_M`) needed for </span>
+<span class="sd">        interconnection with other subsystems. This avoids overlapping </span>
 <span class="sd">        computation in simulation.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_s</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
         <span class="n">dpsi_s</span> <span class="o">=</span> <span class="n">u_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_s</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">w_M</span><span class="o">*</span><span class="n">psi_s</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">dpsi_s</span><span class="p">],</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">tau_M</span></div>
+        <span class="n">dtheta_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">w_M</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">dpsi_s</span><span class="p">,</span> <span class="n">dtheta_m</span><span class="p">],</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">tau_M</span></div>
 
 <div class="viewcode-block" id="SynchronousMotor.meas_currents"><a class="viewcode-back" href="../../../autoapi/motulator/model/sm/index.html#motulator.SynchronousMotor.meas_currents">[docs]</a>    <span class="k">def</span> <span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -454,8 +454,7 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_s0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s0</span><span class="p">)</span>
-        <span class="n">theta_m0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_mech</span><span class="o">.</span><span class="n">theta_M0</span>
-        <span class="n">i_s_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta_m0</span><span class="p">)</span><span class="o">*</span><span class="n">i_s0</span><span class="p">)</span>
+        <span class="n">i_s_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m0</span><span class="p">)</span><span class="o">*</span><span class="n">i_s0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">i_s_abc</span></div></div>
 
 
@@ -481,20 +480,18 @@ document.write(`
 <span class="sd">        Function that computes the stator current `i_s` as a function of the </span>
 <span class="sd">        stator flux linkage `psi_s`. </span>
 <span class="sd">    psi_s0 : complex, optional</span>
-<span class="sd">        Initial value of the stator flux linkage (Vs). The default is 0j. For</span>
-<span class="sd">        PM motors, this should be solved from the the saturation model.</span>
+<span class="sd">        Initial value of the stator flux linkage (Vs). For PM motors, this </span>
+<span class="sd">        should be solved from the the saturation model. The default is 0j. </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">):</span>
-        <span class="c1"># pylint: disable=too-many-arguments, disable=super-init-not-called</span>
+        <span class="c1"># disable=super-init-not-called</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">current</span>
-        <span class="c1"># For the coordinate transformation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mech</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1"># Initial value of the stator flux linkage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s0</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">psi_s0</span><span class="p">)</span></div>
+        <span class="c1"># Initial values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s0</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">psi_s0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m0</span> <span class="o">=</span> <span class="mi">0</span></div>
 </pre></div>
 
                 </article>

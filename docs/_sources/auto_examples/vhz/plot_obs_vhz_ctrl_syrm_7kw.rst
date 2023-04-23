@@ -131,19 +131,17 @@ details. For such motors, look-up tables can be used.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-85
+.. GENERATED FROM PYTHON SOURCE LINES 76-84
 
 .. code-block:: default
 
 
-    motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.54, current=i_s)
-
-    # Magnetically linear SyRM model
-    # motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
-    mech = mt.Mechanics(J=.015)
-    conv = mt.Inverter(u_dc=540)
-    mdl = mt.SynchronousMotorDrive(motor, mech, conv)
-
+    mdl = mt.SynchronousMotorDrive()
+    mdl.motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.54, current=i_s)
+    mdl.mech = mt.Mechanics(J=.015)
+    mdl.conv = mt.Inverter(u_dc=540)
+    # Magnetically linear SyRM model for comparison
+    # mdl.motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 
 
 
@@ -151,11 +149,12 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+
+.. GENERATED FROM PYTHON SOURCE LINES 85-86
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-100
+.. GENERATED FROM PYTHON SOURCE LINES 86-99
 
 .. code-block:: default
 
@@ -179,11 +178,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-102
+.. GENERATED FROM PYTHON SOURCE LINES 100-101
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-112
+.. GENERATED FROM PYTHON SOURCE LINES 101-111
 
 .. code-block:: default
 
@@ -204,13 +203,13 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-116
+.. GENERATED FROM PYTHON SOURCE LINES 112-115
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-120
+.. GENERATED FROM PYTHON SOURCE LINES 115-119
 
 .. code-block:: default
 
@@ -225,12 +224,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-123
+.. GENERATED FROM PYTHON SOURCE LINES 120-122
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-126
+.. GENERATED FROM PYTHON SOURCE LINES 122-125
 
 .. code-block:: default
 
@@ -249,7 +248,7 @@ the results in SI units.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-145
+.. GENERATED FROM PYTHON SOURCE LINES 126-144
 
 References
 ----------
@@ -273,7 +272,7 @@ References
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  26.866 seconds)
+   **Total running time of the script:** ( 0 minutes  21.342 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_obs_vhz_ctrl_syrm_7kw.py:

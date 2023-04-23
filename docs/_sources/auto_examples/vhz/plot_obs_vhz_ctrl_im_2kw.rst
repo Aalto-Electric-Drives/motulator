@@ -77,11 +77,11 @@ Configure the system model.
 
 
     # Configure the induction motor using its inverse-Γ parameters
-    motor = mt.InductionMotorInvGamma(
+    mdl = mt.InductionMotorDrive()
+    mdl.motor = mt.InductionMotorInvGamma(
         R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
-    mech = mt.Mechanics(J=.015)
-    conv = mt.Inverter(u_dc=540)
-    mdl = mt.InductionMotorDrive(motor, mech, conv)
+    mdl.mech = mt.Mechanics(J=.015)
+    mdl.conv = mt.Inverter(u_dc=540)
 
 
 
@@ -201,7 +201,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.828 seconds)
+   **Total running time of the script:** ( 0 minutes  7.121 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_obs_vhz_ctrl_im_2kw.py:

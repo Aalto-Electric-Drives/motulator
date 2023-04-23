@@ -79,12 +79,13 @@ def i_s(psi_s):
 # Configure the system model.
 
 # Create the motor model
-motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
+mdl = mt.SynchronousMotorDrive()
+mdl.motor = mt.SynchronousMotorSaturated(
+    n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
+mdl.mech = mt.Mechanics(J=.0042)
+mdl.conv = mt.Inverter(u_dc=310)
 # Magnetically linear PM-SyRM model
-# motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-mech = mt.Mechanics(J=.0042)
-conv = mt.Inverter(u_dc=310)
-mdl = mt.SynchronousMotorDrive(motor, mech, conv)
+# mdl.motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 
 # %%
 # Configure the control system.

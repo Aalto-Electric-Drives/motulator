@@ -71,20 +71,19 @@ Compute base values based on the nominal values (just for figures).
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-40
+.. GENERATED FROM PYTHON SOURCE LINES 29-39
 
 .. code-block:: default
 
 
+    mdl = mt.InductionMotorDrive()
     # Configure the induction motor using its inverse-Γ parameters
-    motor = mt.InductionMotorInvGamma(
+    mdl.motor = mt.InductionMotorInvGamma(
         R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+    mdl.mech = mt.Mechanics(J=.015)  # Mechanics model
+    mdl.conv = mt.Inverter(u_dc=540)  # Inverter model
     # Alternatively configure the induction motor using its Γ parameters
-    # motor = mt.InductionMotor(R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)
-
-    mech = mt.Mechanics(J=.015)  # Mechanics model
-    conv = mt.Inverter(u_dc=540)  # Inverter model
-    mdl = mt.InductionMotorDrive(motor, mech, conv)  # System model
+    # mdl.motor = mt.InductionMotor(R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)
 
 
 
@@ -93,13 +92,13 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-44
+.. GENERATED FROM PYTHON SOURCE LINES 40-43
 
 Configure the control system. You may also try to change the parameters.
 Notice that the drive may become unstable if you for example have too large
 parameter errors. This may happen in real drives as well.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-63
+.. GENERATED FROM PYTHON SOURCE LINES 43-62
 
 .. code-block:: default
 
@@ -129,13 +128,13 @@ parameter errors. This may happen in real drives as well.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-67
+.. GENERATED FROM PYTHON SOURCE LINES 63-66
 
 Set the speed reference and the external load torque. You may also try to
 uncomment the field-weakening sequence. More complicated sequences could be
 created as functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-76
+.. GENERATED FROM PYTHON SOURCE LINES 66-75
 
 .. code-block:: default
 
@@ -155,13 +154,13 @@ created as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-80
+.. GENERATED FROM PYTHON SOURCE LINES 76-79
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-84
+.. GENERATED FROM PYTHON SOURCE LINES 79-83
 
 .. code-block:: default
 
@@ -176,12 +175,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-87
+.. GENERATED FROM PYTHON SOURCE LINES 84-86
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-89
+.. GENERATED FROM PYTHON SOURCE LINES 86-88
 
 .. code-block:: default
 
@@ -202,7 +201,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.730 seconds)
+   **Total running time of the script:** ( 0 minutes  2.955 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw.py:

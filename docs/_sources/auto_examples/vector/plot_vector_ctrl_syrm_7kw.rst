@@ -65,15 +65,16 @@ Compute base values based on the nominal values (just for figures).
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-29
+.. GENERATED FROM PYTHON SOURCE LINES 23-30
 
 .. code-block:: default
 
 
-    motor = mt.SynchronousMotor(n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
-    mech = mt.Mechanics(J=.015)
-    conv = mt.Inverter(u_dc=540)
-    mdl = mt.SynchronousMotorDrive(motor, mech, conv)
+    mdl = mt.SynchronousMotorDrive()
+    mdl.motor = mt.SynchronousMotor(
+        n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
+    mdl.mech = mt.Mechanics(J=.015)
+    mdl.conv = mt.Inverter(u_dc=540)
 
 
 
@@ -82,11 +83,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 Configure the control system. You may also try to change the parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-53
+.. GENERATED FROM PYTHON SOURCE LINES 32-54
 
 .. code-block:: default
 
@@ -119,11 +120,11 @@ Configure the control system. You may also try to change the parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-69
+.. GENERATED FROM PYTHON SOURCE LINES 56-70
 
 .. code-block:: default
 
@@ -148,11 +149,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-71
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-75
+.. GENERATED FROM PYTHON SOURCE LINES 72-76
 
 .. code-block:: default
 
@@ -167,11 +168,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-79
+.. GENERATED FROM PYTHON SOURCE LINES 78-80
 
 .. code-block:: default
 
@@ -192,7 +193,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  14.256 seconds)
+   **Total running time of the script:** ( 0 minutes  11.156 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py:

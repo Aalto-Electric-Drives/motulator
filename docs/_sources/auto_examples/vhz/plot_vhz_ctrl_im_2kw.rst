@@ -108,20 +108,19 @@ be used also for other induction motors.
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-63
+.. GENERATED FROM PYTHON SOURCE LINES 52-62
 
 .. code-block:: default
 
 
+    mdl = mt.InductionMotorDriveDiode()
     # Γ-equivalent motor model with main-flux saturation included
-    motor = mt.InductionMotorSaturated(
+    mdl.motor = mt.InductionMotorSaturated(
         n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
     # Mechanics model
-    mech = mt.Mechanics(J=.015)
+    mdl.mech = mt.Mechanics(J=.015)
     # Frequency converter with a diode bridge
-    conv = mt.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
-    # Collect the system model
-    mdl = mt.InductionMotorDriveDiode(motor, mech, conv)
+    mdl.conv = mt.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
 
 
 
@@ -130,11 +129,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-65
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-69
+.. GENERATED FROM PYTHON SOURCE LINES 64-68
 
 .. code-block:: default
 
@@ -149,12 +148,12 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-72
+.. GENERATED FROM PYTHON SOURCE LINES 69-71
 
 Set the speed reference and the external load torque. More complicated
 signals could be defined as functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-82
+.. GENERATED FROM PYTHON SOURCE LINES 71-81
 
 .. code-block:: default
 
@@ -175,12 +174,12 @@ signals could be defined as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-85
+.. GENERATED FROM PYTHON SOURCE LINES 82-84
 
 Create the simulation object and simulate it. The option `pwm=True` enables
 the model for the carrier comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-91
+.. GENERATED FROM PYTHON SOURCE LINES 84-90
 
 .. code-block:: default
 
@@ -199,12 +198,12 @@ the model for the carrier comparison.
  .. code-block:: none
 
 
-    Execution time: 16.12 s
+    Execution time: 13.47 s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-99
+.. GENERATED FROM PYTHON SOURCE LINES 91-98
 
 Plot results in per-unit values.
 
@@ -214,7 +213,7 @@ Plot results in per-unit values.
    resistance to the DC link. You could notice this instability if simulating
    a longer period (e.g. set `t_stop=2`). For more information, see e.g. [2]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-104
+.. GENERATED FROM PYTHON SOURCE LINES 98-103
 
 .. code-block:: default
 
@@ -254,7 +253,7 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-113
+.. GENERATED FROM PYTHON SOURCE LINES 104-112
 
 References
 ----------
@@ -268,7 +267,7 @@ References
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  17.894 seconds)
+   **Total running time of the script:** ( 0 minutes  14.986 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:

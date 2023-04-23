@@ -72,10 +72,10 @@ Configure the system model.
 
 
     # Configure magnetically linear motor model
-    motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-    mech = mt.Mechanics(J=.0042)
-    conv = mt.Inverter(u_dc=310)
-    mdl = mt.SynchronousMotorDrive(motor, mech, conv)
+    mdl = mt.SynchronousMotorDrive()
+    mdl.motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+    mdl.mech = mt.Mechanics(J=.0042)
+    mdl.conv = mt.Inverter(u_dc=310)
 
 
 
@@ -233,7 +233,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.128 seconds)
+   **Total running time of the script:** ( 0 minutes  4.096 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:

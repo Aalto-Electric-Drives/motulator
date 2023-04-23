@@ -23,10 +23,10 @@ base = mt.BaseValues(
 # Configure the system model.
 
 # Configure magnetically linear motor model
-motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-mech = mt.Mechanics(J=.0042)
-conv = mt.Inverter(u_dc=310)
-mdl = mt.SynchronousMotorDrive(motor, mech, conv)
+mdl = mt.SynchronousMotorDrive()
+mdl.motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+mdl.mech = mt.Mechanics(J=.0042)
+mdl.conv = mt.Inverter(u_dc=310)
 
 # %%
 # Configure the control system.

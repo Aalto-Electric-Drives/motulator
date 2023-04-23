@@ -432,15 +432,14 @@ be used also for other induction motors.</p>
 </pre></div>
 </div>
 <p>Create the system model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Γ-equivalent motor model with main-flux saturation included</span>
-<span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorSaturated</span><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mdl</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorDriveDiode</span><span class="p">()</span>
+<span class="c1"># Γ-equivalent motor model with main-flux saturation included</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">motor</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorSaturated</span><span class="p">(</span>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">)</span>
 <span class="c1"># Mechanics model</span>
-<span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mech</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="c1"># Frequency converter with a diode bridge</span>
-<span class="n">conv</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">FrequencyConverter</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">235e-6</span><span class="p">,</span> <span class="n">U_g</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">f_g</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="c1"># Collect the system model</span>
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">InductionMotorDriveDiode</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">mech</span><span class="p">,</span> <span class="n">conv</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">FrequencyConverter</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">235e-6</span><span class="p">,</span> <span class="n">U_g</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">f_g</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Control system (parametrized as open-loop V/Hz control).</p>
@@ -468,7 +467,7 @@ the model for the carrier comparison.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Execution time: </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t_start</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> s&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Execution time: 16.12 s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Execution time: 13.47 s
 </pre></div>
 </div>
 <p>Plot results in per-unit values.</p>
@@ -505,7 +504,7 @@ equipped with small DC-Link capacitance,” Proc. EPE, 2007,
 <a class="reference external" href="https://doi.org/10.1109/EPE.2007.4417763">https://doi.org/10.1109/EPE.2007.4417763</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  17.894 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  14.986 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e2a6c2bece7d693bf98665eeec3d5685/plot_vhz_ctrl_im_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vhz_ctrl_im_2kw.py</span></code></a></p>
