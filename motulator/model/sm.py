@@ -15,8 +15,8 @@ class SynchronousMotor:
     """
     Synchronous motor model.
 
-    This models a synchronous motor in rotor coordinates. The stator flux
-    linkage is the state variable. 
+    This models a synchronous motor in rotor coordinates. The stator flux 
+    linkage and the electrical angle of the rotor are the state variables. 
 
     Parameters
     ----------
@@ -37,10 +37,9 @@ class SynchronousMotor:
         # pylint: disable=too-many-arguments
         self.n_p, self.R_s = n_p, R_s
         self.L_d, self.L_q, self.psi_f = L_d, L_q, psi_f
-        # Initial value
+        # Initial values
         self.psi_s0 = complex(psi_f)
-        # For the coordinate transformation
-        self._mech = None
+        self.theta_m0 = 0
 
     def current(self, psi_s):
         """
@@ -96,8 +95,8 @@ class SynchronousMotor:
 
         Returns
         -------
-        dpsi_s : complex list
-            Time derivative of the stator flux linkage (V).
+        complex list, length 2
+            Time derivative of the state vector, [dpsi_s, dtheta_m0]
         i_s : complex
             Stator current (A).
         tau_M : float
@@ -105,15 +104,16 @@ class SynchronousMotor:
 
         Notes
         -----
-        In addition to the state derivative, this method also returns the
-        output signals (stator current `i_ss` and torque `tau_M`) needed for
-        interconnection with other subsystems. This avoids overlapping
+        In addition to the state derivative, this method also returns the output
+        signals (stator current `i_ss` and torque `tau_M`) needed for 
+        interconnection with other subsystems. This avoids overlapping 
         computation in simulation.
 
         """
         i_s, tau_M = self.magnetic(psi_s)
         dpsi_s = u_s - self.R_s*i_s - 1j*self.n_p*w_M*psi_s
-        return [dpsi_s], i_s, tau_M
+        dtheta_m = self.n_p*w_M
+        return [dpsi_s, dtheta_m], i_s, tau_M
 
     def meas_currents(self):
         """
@@ -126,8 +126,7 @@ class SynchronousMotor:
 
         """
         i_s0 = self.current(self.psi_s0)
-        theta_m0 = self.n_p*self._mech.theta_M0
-        i_s_abc = complex2abc(np.exp(1j*theta_m0)*i_s0)
+        i_s_abc = complex2abc(np.exp(1j*self.theta_m0)*i_s0)
         return i_s_abc
 
 
@@ -153,17 +152,15 @@ class SynchronousMotorSaturated(SynchronousMotor):
         Function that computes the stator current `i_s` as a function of the 
         stator flux linkage `psi_s`. 
     psi_s0 : complex, optional
-        Initial value of the stator flux linkage (Vs). The default is 0j. For
-        PM motors, this should be solved from the the saturation model.
+        Initial value of the stator flux linkage (Vs). For PM motors, this 
+        should be solved from the the saturation model. The default is 0j. 
 
     """
 
-    # pylint: disable=too-many-instance-attributes
     def __init__(self, n_p, R_s, current, psi_s0=0j):
-        # pylint: disable=too-many-arguments, disable=super-init-not-called
+        # disable=super-init-not-called
         self.n_p, self.R_s = n_p, R_s
         self.current = current
-        # For the coordinate transformation
-        self._mech = None
-        # Initial value of the stator flux linkage
+        # Initial values
         self.psi_s0 = complex(psi_s0)
+        self.theta_m0 = 0

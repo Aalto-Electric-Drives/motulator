@@ -30,7 +30,6 @@ class SynchronousMotorDrive:
 
     def __init__(self, motor=None, mech=None, conv=None):
         self.motor = motor
-        self.motor._mech = mech
         self.mech = mech
         self.conv = conv
 
@@ -40,7 +39,8 @@ class SynchronousMotorDrive:
         # Store the solution in these lists
         self.data = Bunch()
         self.data.t, self.data.q = [], []
-        self.data.psi_s, self.data.theta_M, self.data.w_M = [], [], []
+        self.data.psi_s, self.data.theta_m = [], []
+        self.data.w_M, self.data.theta_M = [], []
 
     def get_initial_values(self):
         """
@@ -48,12 +48,13 @@ class SynchronousMotorDrive:
 
         Returns
         -------
-        x0 : complex list, length 3
+        x0 : complex list, length 4
             Initial values of the state variables.
 
         """
         x0 = [
             self.motor.psi_s0,
+            self.motor.theta_m0,
             self.mech.w_M0,
             self.mech.theta_M0,
         ]
@@ -73,10 +74,12 @@ class SynchronousMotorDrive:
         """
         self.t0 = t0
         self.motor.psi_s0 = x0[0]
-        # x0[1].imag and x0[2].imag are always zero
-        self.mech.w_M0 = x0[1].real
-        # Limit theta_M0 = x0[2].real into [-pi, pi)
-        self.mech.theta_M0 = np.mod(x0[2].real + np.pi, 2*np.pi) - np.pi
+        # x0[1:3].imag are always zero
+        self.motor.theta_m0 = x0[1].real
+        self.mech.w_M0 = x0[2].real
+        # Limit the angles into [-pi, pi)
+        self.mech.theta_m0 = np.mod(x0[1].real + np.pi, 2*np.pi) - np.pi
+        self.mech.theta_M0 = np.mod(x0[3].real + np.pi, 2*np.pi) - np.pi
 
     def f(self, t, x):
         """
@@ -96,8 +99,7 @@ class SynchronousMotorDrive:
 
         """
         # Unpack the states
-        psi_s, w_M, theta_M = x
-        theta_m = self.motor.n_p*theta_M
+        psi_s, theta_m, w_M, _ = x
 
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
@@ -123,8 +125,9 @@ class SynchronousMotorDrive:
         self.data.t.extend(sol.t)
         self.data.q.extend(sol.q)
         self.data.psi_s.extend(sol.y[0])
-        self.data.w_M.extend(sol.y[1].real)
-        self.data.theta_M.extend(sol.y[2].real)
+        self.data.theta_m.extend(sol.y[1].real)
+        self.data.w_M.extend(sol.y[2].real)
+        self.data.theta_M.extend(sol.y[3].real)
 
     def post_process(self):
         """Transform the lists to the ndarray format and post-process them."""
@@ -138,10 +141,10 @@ class SynchronousMotorDrive:
         self.data.tau_L = (
             self.mech.tau_L_t(self.data.t) + self.mech.tau_L_w(self.data.w_M))
         self.data.u_ss = self.conv.ac_voltage(self.data.q, self.conv.u_dc0)
+        self.data.theta_m = np.mod(  # Limit into [-pi, pi)
+            self.data.theta_m + np.pi, 2*np.pi) - np.pi
         self.data.theta_M = np.mod(  # Limit into [-pi, pi)
             self.data.theta_M + np.pi, 2*np.pi) - np.pi
-        self.data.theta_m = np.mod(  # Limit into [-pi, pi)
-            self.motor.n_p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
         self.data.i_ss = self.data.i_s*np.exp(1j*self.data.theta_m)
 
 
@@ -177,15 +180,14 @@ class SynchronousMotorDriveTwoMass(SynchronousMotorDrive):
 
     def set_initial_values(self, t0, x0):
         """Extend the base class."""
-        super().set_initial_values(t0, x0[0:3])
-        self.mech.w_L0 = x0[3].real
-        self.mech.theta_ML0 = np.mod(x0[4].real + np.pi, 2*np.pi) - np.pi
+        super().set_initial_values(t0, x0[0:4])
+        self.mech.w_L0 = x0[4].real
+        self.mech.theta_ML0 = np.mod(x0[5].real + np.pi, 2*np.pi) - np.pi
 
     def f(self, t, x):
         """Override the base class."""
         # Unpack the states
-        psi_s, w_M, theta_M, w_L, theta_ML = x
-        theta_m = self.motor.n_p*theta_M
+        psi_s, theta_m, w_M, theta_M, w_L, theta_ML = x
         # Interconnections: outputs for computing the state derivatives
         u_ss = self.conv.ac_voltage(self.conv.q, self.conv.u_dc0)
         u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
@@ -198,8 +200,8 @@ class SynchronousMotorDriveTwoMass(SynchronousMotorDrive):
     def save(self, sol):
         """Extend the base class."""
         super().save(sol)
-        self.data.w_L.extend(sol.y[3].real)
-        self.data.theta_ML.extend(sol.y[4].real)
+        self.data.w_L.extend(sol.y[4].real)
+        self.data.theta_ML.extend(sol.y[5].real)
 
     def post_process(self):
         """Extend the base class."""

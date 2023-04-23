@@ -24,16 +24,14 @@ base = mt.BaseValues(
 # Configure the system model.
 
 # Magnetically linear SyRM model
-motor = mt.SynchronousMotor(n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
-# You may also try the model of a saturated SyRM below
-# motor = mt.SynchronousMotorSaturated()
-mech = mt.Mechanics(J=.015)
-conv = mt.Inverter(u_dc=540)
-mdl = mt.SynchronousMotorDrive(motor, mech, conv)
+mdl = mt.SynchronousMotorDrive()
+mdl.motor = mt.SynchronousMotor(
+    n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
+mdl.mech = mt.Mechanics(J=.015)
+mdl.conv = mt.Inverter(u_dc=540)
 
 # %%
-# Configure the control system. (Note that the control system does not take
-# the magnetic saturation into account, if you try the saturated model.)
+# Configure the control system.
 
 pars = mt.SynchronousMotorSignalInjectionCtrlPars(
     T_s=250e-6,
