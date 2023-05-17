@@ -1,7 +1,7 @@
 Speed Control
 =============
 
-Proportional-integral (PI) control is widely used in motor drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degrees-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately [1]_. In the following, we will use a speed controller as an example, cf. the :class:`motulator.control.common.SpeedCtrl` class. The presented control design can be extended to many other control tasks as well. 
+Proportional-integral (PI) control is widely used in machine drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degrees-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately [Sko1996]_. In the following, we will use a speed controller as an example, cf. the :class:`motulator.control.common.SpeedCtrl` class. The presented control design can be extended to many other control tasks as well. 
 
 Continuous-Time Design
 ----------------------
@@ -17,7 +17,7 @@ The state-space form of a simple 2DOF PI speed controller is given by
 	\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
     	\tau_\mathrm{M,ref} &= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i} 
 
-where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angular speed of the rotor, :math:`\omega_\mathrm{M,ref}` is the reference angular speed, and :math:`\tau_\mathrm{i}` is the the integral state. Furthermore, :math:`k_\mathrm{t}` is the reference feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward [2]_. 
+where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angular speed of the rotor, :math:`\omega_\mathrm{M,ref}` is the reference angular speed, and :math:`\tau_\mathrm{i}` is the the integral state. Furthermore, :math:`k_\mathrm{t}` is the reference feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward [Fra1997]_. 
 
 ..
     For analysis purposes, the above controller can be presented in the Laplace domain as
@@ -42,7 +42,7 @@ The above 2DOF PI controller can be equally represented using the disturbance-ob
     \hat \tau_\mathrm{L} &= \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M} \\
     \tau_\mathrm{M,ref} &= k_\mathrm{t}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) + \hat \tau_\mathrm{L} 
 
-where :math:`\alpha_\mathrm{i} = k_\mathrm{i}/k_\mathrm{t}` is the redefined integral gain and :math:`\hat \tau_\mathrm{L}` is the input-equivalent disturbance estimate (i.e., the load torque estimate). This structure is convenient to prevent the integral windup that originates from the actuator saturation [2]_. The electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is
+where :math:`\alpha_\mathrm{i} = k_\mathrm{i}/k_\mathrm{t}` is the redefined integral gain and :math:`\hat \tau_\mathrm{L}` is the input-equivalent disturbance estimate (i.e., the load torque estimate). This structure is convenient to prevent the integral windup that originates from the actuator saturation [Fra1997]_. The electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is
 
 .. math::
     \bar{\tau}_\mathrm{M,ref} = \mathrm{sat}(\tau_\mathrm{M,ref})
@@ -57,7 +57,7 @@ The other parts of the above controller are not affected by the saturation. The 
 Gain Selection Example
 ^^^^^^^^^^^^^^^^^^^^^^
 
-For simplicity, let us assume ideal torque control (:math:`\tau_\mathrm{M} = \tau_\mathrm{M,ref}`) and a stiff mechanical system [3]_
+For simplicity, let us assume ideal torque control (:math:`\tau_\mathrm{M} = \tau_\mathrm{M,ref}`) and a stiff mechanical system [Har2013]_
 
 .. math::
     J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} = \tau_\mathrm{M} - \tau_\mathrm{L}
@@ -99,8 +99,8 @@ where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-
 References
 ----------
 
-.. [1] Skogestad, Postlethwaite, "Multivariable Feedback Control: Analysis and Design," West Sussex, England: John Wiley and Sons, 1996
+.. [Sko1996] Skogestad, Postlethwaite, "Multivariable Feedback Control: Analysis and Design," West Sussex, England: John Wiley and Sons, 1996
 
-.. [2] Franklin, Powell, Workman, "Digital Control of Dynamic Systems," 3rd ed., Menlo Park, CA: Addison-Wesley, 1997
+.. [Fra1997] Franklin, Powell, Workman, "Digital Control of Dynamic Systems," 3rd ed., Menlo Park, CA: Addison-Wesley, 1997
 
-.. [3] Harnefors, Saarakkala, Hinkkanen, "Speed control of electrical drives using classical control methods," IEEE Trans. Ind. Appl., 2013, https://doi.org/10.1109/TIA.2013.2244194
+.. [Har2013] Harnefors, Saarakkala, Hinkkanen, "Speed control of electrical drives using classical control methods," IEEE Trans. Ind. Appl., 2013, https://doi.org/10.1109/TIA.2013.2244194

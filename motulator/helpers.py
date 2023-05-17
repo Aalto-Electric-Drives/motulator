@@ -22,7 +22,7 @@ def abc2complex(u):
 
     Examples
     --------
-    >>> from motulator import abc2complex
+    >>> from motulator.helpers import abc2complex
     >>> y = abc2complex([1, 2, 3])
     >>> y
     (-1-0.5773502691896258j)
@@ -48,7 +48,7 @@ def complex2abc(u):
 
     Examples
     --------
-    >>> from motulator import complex2abc
+    >>> from motulator.helpers import complex2abc
     >>> y = complex2abc(1-.5j)
     >>> y
     array([ 1.       , -0.9330127, -0.0669873])
@@ -69,19 +69,51 @@ class BaseValues:
     Base values are computed from the nominal values and the number of pole
     pairs. They can be used, e.g., for scaling the plotted waveforms.
 
+    Parameters
+    ----------
+    U_nom : float
+        Voltage (V, rms, line-line).
+    I_nom : float
+        Current (A, rms).
+    f_nom : float
+        Frequency (Hz).
+    tau_nom : float
+        Torque (Nm).
+    P_nom : float
+        Power (W).
+    n_p : int
+        Number of pole pairs.
+
+    Attributes
+    ----------
+    u : float
+        Base voltage (V, peak, line-neutral).
+    i : float
+        Base current (A, peak).
+    w : float
+        Base angular frequency (rad/s).
+    psi : float
+        Base flux linkage (Vs).
+    p : float
+        Base power (W).
+    Z : float
+        Base impedance (Ω).
+    L : float
+        Base inductance (H).
+    tau : float
+        Base torque (Nm).
+
     """
 
     # pylint: disable=too-many-instance-attributes
-    # Nominal values
-    U_nom: float  # Voltage (rms, line-line)
-    I_nom: float  # Current (rms)
-    f_nom: float  # Frequency
-    P_nom: float  # Power
-    tau_nom: float  # Torque
-    n_p: int  # Number of pole pairs
+    U_nom: float
+    I_nom: float
+    f_nom: float
+    P_nom: float
+    tau_nom: float
+    n_p: int
 
     def __post_init__(self):
-        """Compute the base values."""
         self.u = np.sqrt(2/3)*self.U_nom
         self.i = np.sqrt(2)*self.I_nom
         self.w = 2*np.pi*self.f_nom

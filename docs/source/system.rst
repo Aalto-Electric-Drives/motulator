@@ -1,7 +1,7 @@
-Motor Drive System
-==================
+Drive System
+============
 
-Motor drives are sampled-data systems, consisting of continuous-time systems and discrete-time systems as well as the interfaces between them [1]_, [2]_. The figure below shows a generic example system. The same architecture is used in *motulator*.
+Machine drives are sampled-data systems, consisting of continuous-time systems and discrete-time systems as well as the interfaces between them [Fra1997]_, [Bus2015]_. The figure below shows a generic example system. The same architecture is used in *motulator*.
 
 .. figure:: figs/system.svg
    :width: 100%
@@ -11,7 +11,7 @@ Motor drives are sampled-data systems, consisting of continuous-time systems and
 
    Block diagram of a sampled-data system. Discrete signals and systems are shown in blue, and continuous signals and systems are shown in red. 
 
-The continuous-time system (named `mdl` in the :doc:`auto_examples/index`) is the model of a physical motor drive system, typically consisting of a motor, mechanics, and power converter. The continuous-time system may have external inputs, such as a load torque.
+The continuous-time system (named `mdl` in the :doc:`auto_examples/index`) is the model of a physical machine drive system, typically consisting of a machine, mechanics, and power converter. The continuous-time system may have external inputs, such as a load torque.
 
 The discrete-time controller (named `ctrl` in the :doc:`auto_examples/index`) contains control algorithms, such as the current control and speed control. The reference signals could be, e.g., the speed and flux references. The feedback signal :math:`\boldsymbol{y}(k)` typically contains the measured DC-bus voltage and stator currents. 
 
@@ -20,6 +20,6 @@ Digital control systems typically have a computational delay of one sampling per
 References
 ----------
 
-.. [1] Franklin, Powell, Workman, "Digital Control of Dynamic Systems," Menlo Park, CA, USA: Addison-Wesley, 1997
+.. [Fra1997] Franklin, Powell, Workman, "Digital Control of Dynamic Systems," Menlo Park, CA, USA: Addison-Wesley, 1997
 
-.. [2] Buso, Mattavelli, "Digital Control in Power Electronics," 2nd ed.,  Morgan & Claypool, 2015, https://doi.org/10.2200/S00637ED1V01Y201503PEL007
+.. [Bus2015] Buso, Mattavelli, "Digital Control in Power Electronics," 2nd ed.,  Morgan & Claypool, 2015, https://doi.org/10.2200/S00637ED1V01Y201503PEL007

@@ -45,7 +45,7 @@ class Delay:
 
 
 # %%
-class CarrierCmp:
+class CarrierComparison:
     """
     Carrier comparison.
 
@@ -64,8 +64,8 @@ class CarrierCmp:
 
     Examples
     --------
-    >>> from motulator.simulation import CarrierCmp
-    >>> carrier_cmp = CarrierCmp(return_complex=False)
+    >>> from motulator.simulation import CarrierComparison
+    >>> carrier_cmp = CarrierComparison(return_complex=False)
     >>> # First call gives rising edges
     >>> t_steps, q_abc = carrier_cmp(1e-3, [.4, .2, .8])
     >>> # Durations of the switching states
@@ -104,7 +104,7 @@ class CarrierCmp:
     def __init__(self, N=2**12, return_complex=True):
         self.N = N
         self.return_complex = return_complex
-        self.rising_edge = True  # Stores the carrier direction
+        self._rising_edge = True  # Stores the carrier direction
 
     def __call__(self, T_s, d_abc):
         """
@@ -113,14 +113,14 @@ class CarrierCmp:
         Parameters
         ----------
         T_s : float
-            Half carrier period.
+            Half carrier period (s).
         d_abc : array_like of floats, shape (3,)
             Duty ratios in the range [0, 1].
 
         Returns
         -------
         t_steps : ndarray, shape (4,)
-            Switching state durations, `[t0, t1, t2, t3]`.
+            Switching state durations (s), `[t0, t1, t2, t3]`.
         q : complex ndarray, shape (4,)
             Switching state vectors, `[q0, q1, q2, q3]`, where `q1` and `q2`
             are active vectors.
@@ -143,12 +143,12 @@ class CarrierCmp:
         t_steps = T_s*np.diff(t_n, append=1)
 
         # Flip the sequence if rising edge
-        if self.rising_edge:
+        if self._rising_edge:
             t_steps = np.flip(t_steps)
             q_abc = np.flipud(q_abc)
 
         # Change the carrier direction for the next call
-        self.rising_edge = not self.rising_edge
+        self._rising_edge = not self._rising_edge
 
         return ((t_steps, abc2complex(q_abc.T)) if self.return_complex else
                 (t_steps, q_abc))
@@ -189,7 +189,7 @@ class Simulation:
 
     Parameters
     ----------
-    mdl : InductionMotorDrive | SynchronousMotorDrive
+    mdl : Drive 
         Continuous-time system model.
     ctrl : Ctrl
         Discrete-time controller.
@@ -205,7 +205,7 @@ class Simulation:
         self.ctrl = ctrl
         self.delay = Delay(delay)
         if pwm:
-            self.pwm = CarrierCmp()
+            self.pwm = CarrierComparison()
         else:
             self.pwm = zoh
 
@@ -218,12 +218,12 @@ class Simulation:
         t_stop : float, optional
             Simulation stop time. The default is 1.
         max_step : float, optional
-            Max step size of the solver. The default is inf.
+            Max step size of the solver. The default is `inf`.
 
         Notes
         -----
-        Other options of solve_ivp could be easily changed if needed, but, for
-        simplicity, only max_step is included as an option of this method.
+        Other options of `solve_ivp` could be easily changed if needed, but, for
+        simplicity, only `max_step` is included as an option of this method.
 
         """
         try:
@@ -253,7 +253,7 @@ class Simulation:
 
                 if t_step > 0:
                     # Update the switching state
-                    self.mdl.conv.q = q[i]
+                    self.mdl.converter.q = q[i]
 
                     # Get initial values
                     x0 = self.mdl.get_initial_values()
@@ -267,7 +267,7 @@ class Simulation:
                     self.mdl.set_initial_values(t0_new, x0_new)
 
                     # Save the solution
-                    sol.q = len(sol.t)*[self.mdl.conv.q]
+                    sol.q = len(sol.t)*[self.mdl.converter.q]
                     self.mdl.save(sol)
 
     def save_mat(self, name='sim'):

@@ -15,31 +15,34 @@ torsional damping is set to a smaller value in this example.
 
 import numpy as np
 import matplotlib.pyplot as plt
-import motulator as mt
+import motulator.model.sm as model
+import motulator.control.sm as control
+from motulator.helpers import BaseValues, Sequence
+from motulator.plots import plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = mt.BaseValues(
+base = BaseValues(
     U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
 
 # %%
 # Configure the system model.
 
-mdl = mt.SynchronousMotorDriveTwoMass()
-mdl.mech = mt.MechanicsTwoMass(J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
-mdl.motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-mdl.conv = mt.Inverter(u_dc=540)
+machine = model.SynchronousMachine(
+    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+mechanics = model.MechanicsTwoMass(
+    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
+converter = model.Inverter(u_dc=540)
+mdl = model.DriveTwoMassMechanics(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorVHzObsCtrlPars()
-ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
-
-# Default sensorless vector control is unstable (uncomment to try)
-# pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True, J=0.01)
-# ctrl = mt.SynchronousMotorVectorCtrl(pars)
+par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+ctrl_par = control.ObserverBasedVHzCtrlPars(par, i_s_max=1.5*base.i)
+ctrl = control.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
+#ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -47,19 +50,19 @@ ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
 # Speed reference
 times = np.array([0, .1, .2, 1])
 values = np.array([0, 0, 1, 1])*base.w*.5
-ctrl.w_m_ref = mt.Sequence(times, values)
+ctrl.w_m_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .4, .4, 1])
 values = np.array([0, 0, 1, 1])*base.tau_nom
-mdl.mech.tau_L_t = mt.Sequence(times, values)
+mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl, pwm=False)
 sim.simulate(t_stop=1.2)
 # sphinx_gallery_thumbnail_number = 3
-mt.plot(sim, base=base)  # Plot results in per-unit values
+plot(sim, base)  # Plot results in per-unit values
 
 # %%
 # Plot the load speed and the twist angle.
@@ -85,7 +88,8 @@ plt.show()
 f_span = (5, 500)
 num = 200
 # Parameters
-J_M, J_L, K_S, C_S = mdl.mech.J_M, mdl.mech.J_L, mdl.mech.K_S, mdl.mech.C_S
+J_M, J_L = mdl.mechanics.J_M, mdl.mechanics.J_L
+K_S, C_S = mdl.mechanics.K_S, mdl.mechanics.C_S
 # Frequencies
 w = 2*np.pi*np.logspace(np.log10(f_span[0]), np.log10(f_span[-1]), num=num)
 s = 1j*w

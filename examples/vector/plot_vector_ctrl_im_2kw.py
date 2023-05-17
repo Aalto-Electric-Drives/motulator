@@ -10,78 +10,64 @@ drive.
 # %%
 # Import the packages.
 
-import numpy as np
-import motulator as mt
+import motulator.model.im as model
+import motulator.control.im as control
+from motulator.helpers import BaseValues
+from motulator.plots import plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = mt.BaseValues(
-    U_nom=400,  # Line-line rms voltage
-    I_nom=5,  # Rms current
-    f_nom=50,  # Frequency
-    tau_nom=14.6,  # Torque
-    P_nom=2.2e3,  # Power
-    n_p=2)  # Number of pole pairs
+base = BaseValues(
+    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
 
 # %%
 # Configure the system model.
 
-mdl = mt.InductionMotorDrive()
-# Configure the induction motor using its inverse-Γ parameters
-mdl.motor = mt.InductionMotorInvGamma(
+# Configure the induction machine using its inverse-Γ parameters
+machine = model.InductionMachineInvGamma(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
-mdl.mech = mt.Mechanics(J=.015)  # Mechanics model
-mdl.conv = mt.Inverter(u_dc=540)  # Inverter model
+mechanics = model.Mechanics(J=.015)
+converter = model.Inverter(u_dc=540)
+mdl = model.Drive(machine, mechanics, converter)
 # Alternatively configure the induction motor using its Γ parameters
-# mdl.motor = mt.InductionMotor(R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)
+# mdl.machine = model.InductionMachine(
+#     R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)
 
 # %%
-# Configure the control system. You may also try to change the parameters.
-# Notice that the drive may become unstable if you for example have too large
-# parameter errors. This may happen in real drives as well.
+# Configure the control system.
+# Create the control system
 
-ctrl = mt.InductionMotorVectorCtrl(
-    mt.InductionMotorVectorCtrlPars(
-        sensorless=True,  # Enable sensorless mode
-        T_s=250e-6,  # Sampling period
-        alpha_c=2*np.pi*200,  # Current-control bandwidth
-        alpha_o=2*np.pi*40,  # Observer bandwidth
-        alpha_s=2*np.pi*4,  # Speed-control bandwidth
-        psi_R_nom=.9,  # Nominal rotor flux
-        i_s_max=1.5*base.i,  # Current limit
-        tau_M_max=1.5*base.tau_nom,  # Torque limit (for the speed ctrl)
-        J=.015,  # Inertia estimate (for the speed ctrl)
-        n_p=2,  # Number of pole pairs
-        # Inverse-Γ model parameter estimates
-        R_s=3.7,
-        R_R=2.1,
-        L_sgm=.021,
-        L_M=.224))
+# Machine model parameters
+par = control.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2, J=.015)
+# Set nominal values and limits for reference generation
+ref = control.CurrentReferencePars(
+    par, i_s_max=1.5*base.i, u_s_nom=base.u, w_s_nom=base.w)
+# Create the control system
+ctrl = control.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque. You may also try to
-# uncomment the field-weakening sequence. More complicated sequences could be
-# created as functions.
+# uncomment the field-weakening sequence.
 
 # Simple acceleration and load torque step
 ctrl.w_m_ref = lambda t: (t > .2)*(.5*base.w)
-mdl.mech.tau_L_t = lambda t: (t > .75)*base.tau_nom
+mdl.mechanics.tau_L_t = lambda t: (t > .75)*base.tau_nom
 
 # No load, field-weakening (uncomment to try)
-# mdl.mech.tau_L_t = lambda t: 0
-# ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
+ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
+mdl.mechanics.tau_L_t = lambda t: 0
 
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM
 # model (which makes simulation slower). One-sampling-period computational
 # delay is modeled.
 
-sim = mt.Simulation(mdl, ctrl, pwm=False, delay=1)
+sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
 sim.simulate(t_stop=1.5)
 
 # %%
 # Plot results in per-unit values. By omitting the argument `base` you can plot
 # the results in SI units.
 
-mt.plot(sim, base=base)
+plot(sim, base)

@@ -42,7 +42,7 @@ The figure below shows an inverter equipped with a generic three-phase load. In 
 
    Instantaneous switching states are defined by the carrier comparison. In this example, the switching states are :math:`q_\mathrm{a}=1`, :math:`q_\mathrm{b}=0`, and :math:`q_\mathrm{c}=0`.
 
-The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class :class:`motulator.simulation.CarrierCmp`, where the switching instants are explicitly computed in the begininning of each sampling period (instead of searching for zero crossings), allowing faster simulations.
+The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class :class:`motulator.simulation.CarrierComparison`, where the switching instants are explicitly computed in the begininning of each sampling period (instead of searching for zero crossings), allowing faster simulations.
 
 .. figure:: figs/carrier_comparison.svg
    :width: 100%
@@ -62,7 +62,7 @@ The zero-sequence voltage does not affect the phase currents if the neutral of t
 where :math:`\boldsymbol{q}` is the switching state space vector.
 
 .. note::
-   The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see :class:`motulator.control.common.PWM`) and discontinuous PWM methods [1]_, [2]_.
+   The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see :class:`motulator.control.common.PWM`) and discontinuous PWM methods [Hol1994]_, [Hav1999]_.
 
    The sampling period :math:`T_\mathrm{s}` is returned by the control method, and it does not need to be constant. 
 
@@ -83,6 +83,6 @@ where :math:`\boldsymbol{d}` is the duty ratio space vector. This ZOH is the def
 References
 ----------
 
-.. [1] Holtz, "Pulsewidth modulation for electronic power conversion," Proc. IEEE, 1994, https://doi.org/10.1109/5.301684
+.. [Hol1994] Holtz, "Pulsewidth modulation for electronic power conversion," Proc. IEEE, 1994, https://doi.org/10.1109/5.301684
 
-.. [2] Hava, Kerkman, Lipo, "Simple analytical and graphical methods for carrier-based PWM-VSI drives," IEEE Trans. Ind. Appl., 1999, https://doi.org/10.1109/63.737592
+.. [Hav1999] Hava, Kerkman, Lipo, "Simple analytical and graphical methods for carrier-based PWM-VSI drives," IEEE Trans. Ind. Appl., 1999, https://doi.org/10.1109/63.737592

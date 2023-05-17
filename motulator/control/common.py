@@ -1,32 +1,34 @@
 """Common control functions and classes."""
 
 import numpy as np
-
 from motulator.helpers import abc2complex, complex2abc, Bunch
 
 
 # %%
 class PWM:
     """
-    Duty ratio references and realized voltage for three-phase PWM.
+    Duty ratios and realized voltage for three-phase PWM.
 
-    This contains the computation of the duty ratio references and the realized
-    voltage. The digital delay effects are taken into account in the realized
-    voltage.
+    This contains the computation of the duty ratios and the realized voltage. 
+    The realized voltage is computed based on the measured DC-bus voltage and 
+    the duty ratios. The digital delay effects are taken into account in the 
+    realized voltage, assuming the delay of a single sampling period. The total
+    delay is 1.5 sampling periods due to the PWM (or ZOH) delay.
 
     Parameters
     ----------
-    pars : data object
-        Control parameters.
+    six_step: bool, optional
+        Enable six-step operation in overmodulation. The default is False.
+    
+    Attributes
+    ----------
+    realized_voltage : complex
+        Realized voltage (V) in synchronous coordinates.
 
     """
 
-    def __init__(self, pars):
-        self.T_s = pars.T_s
-        try:
-            self.six_step = pars.six_step
-        except AttributeError:
-            self.six_step = False
+    def __init__(self, six_step=False):
+        self.six_step = six_step
         self.realized_voltage = 0
         self._u_ref_lim_old = 0
 
@@ -36,22 +38,25 @@ class PWM:
         Overmodulation up to six-step operation.
 
         This method modifies the angle of the voltage reference vector in the
-        overmodulation region such that the six-step operation is reached [1]_.
+        overmodulation region such that the six-step operation is reached 
+        [Bol1997]_.
 
         Parameters
         ----------
         u_s_ref : complex
-            Voltage reference in stator coordinates.
+            Reference voltage (V) in stator coordinates.
+        u_dc : float
+            DC-bus voltage (V).
 
         Returns
         -------
         u_s_ref_mod : complex
-            Voltage reference in stator coordinates.
+            Reference voltage (V) in stator coordinates.
 
         References
         ----------
-        .. [1] Bolognani, Zigliotto, "Novel digital continuous control of SVM
-           inverters in the overmodulation range," IEEE Trans. Ind. Appl.,
+        .. [Bol1997] Bolognani, Zigliotto, "Novel digital continuous control of 
+           SVM inverters in the overmodulation range," IEEE Trans. Ind. Appl.,
            1997, https://doi.org/10.1109/28.568019
 
         """
@@ -93,14 +98,14 @@ class PWM:
         Parameters
         ----------
         u_s_ref : complex
-            Voltage reference in stator coordinates.
+            Voltage reference in stator coordinates (V).
         u_dc : float
-            DC-bus voltage.
+            DC-bus voltage (V).
 
         Returns
         -------
-        d_abc_ref : ndarray, shape (3,)
-            Duty ratio references.
+        d_abc : ndarray, shape (3,)
+            Duty ratios.
 
         """
         # Phase voltages without the zero-sequence voltage
@@ -116,41 +121,37 @@ class PWM:
             u_abc = u_abc/m
 
         # Duty ratios
-        d_abc_ref = .5 + u_abc/u_dc
+        d_abc = .5 + u_abc/u_dc
 
-        return d_abc_ref
+        return d_abc
 
-    def __call__(self, u_ref, u_dc, theta, w):
+    # pylint: disable=too-many-arguments
+    def __call__(self, T_s, u_ref, u_dc, theta, w):
         """
         Compute the duty ratios and update the state.
 
         Parameters
         ----------
+        T_s : float
+            Sampling period (s).
         u_ref : complex
-            Voltage reference in synchronous coordinates.
+            Voltage reference in synchronous coordinates (V).
         u_dc : float
             DC-bus voltage.
         theta : float
-            Angle of synchronous coordinates.
+            Angle of synchronous coordinates (rad).
         w : float
-            Angular speed of synchronous coordinates.
+            Angular speed of synchronous coordinates (rad/s).
 
         Returns
         -------
-        d_abc_ref : ndarray, shape (3,)
-            Duty ratio references.
+        d_abc : ndarray, shape (3,)
+            Duty ratios for the next sampling period.
 
         """
-        d_abc_ref, u_ref_lim = self.output(u_ref, u_dc, theta, w)
-        self.update(u_ref_lim)
-
-        return d_abc_ref
-
-    def output(self, u_ref, u_dc, theta, w):
-        """Compute the duty ratio limited voltage reference."""
-        # Advance the angle due to the computational delay (T_s) and
-        # the ZOH (PWM) delay (0.5*T_s)
-        theta_comp = theta + 1.5*self.T_s*w
+        # Advance the angle due to the computational delay (T_s) and the ZOH
+        # (PWM) delay (0.5*T_s)
+        theta_comp = theta + 1.5*T_s*w
 
         # Voltage reference in stator coordinates
         u_s_ref = np.exp(1j*theta_comp)*u_ref
@@ -160,222 +161,234 @@ class PWM:
             u_s_ref = self.six_step_overmodulation(u_s_ref, u_dc)
 
         # Duty ratios
-        d_abc_ref = self.duty_ratios(u_s_ref, u_dc)
+        d_abc = self.duty_ratios(u_s_ref, u_dc)
 
         # Realizable voltage
-        u_s_ref_lim = abc2complex(d_abc_ref)*u_dc
+        u_s_ref_lim = abc2complex(d_abc)*u_dc
         u_ref_lim = np.exp(-1j*theta_comp)*u_s_ref_lim
 
-        return d_abc_ref, u_ref_lim
-
-    def update(self, u_ref_lim):
-        """
-        Update the voltage estimate for the next sampling instant.
-
-        Parameters
-        ----------
-        u_ref_lim : complex
-            Limited voltage reference in synchronous coordinates.
-
-        """
+        # Update the voltage estimate for the next sampling instant.
         self.realized_voltage = .5*(self._u_ref_lim_old + u_ref_lim)
         self._u_ref_lim_old = u_ref_lim
 
+        return d_abc
+
 
 # %%
-class SpeedCtrl:
+class PICtrl:
     """
-    2DOF PI speed controller.
+    2DOF PI controller.
 
-    This controller is implemented using the disturbance-observer structure.
-    The controller is mathematically identical to the 2DOF PI speed controller.
+    This implements a discrete-time 2DOF PI controller, whose continuous-time
+    counterpart is::
+
+        u = k_t*y_ref - k_p*y + (k_i/s)*(y_ref - y)
+
+    where `u` is the controller output, `y_ref` is the reference signal, `y` is
+    the feedback signal, and `1/s` refers to integration. The standard PI
+    controller is obtained by choosing ``k_t = k_p``. The integrator anti-windup 
+    is implemented based on the realized controller output.
+
+    Notes
+    -----
+    This contoller can be used, e.g., as a speed controller. In this case, `y` 
+    corresponds to the rotor angular speed `w_M` and `u` to the torque reference 
+    `tau_M_ref`.
 
     Parameters
     ----------
-    pars : data object
-        Control parameters.
+    k_p : float
+        Proportional gain.
+    k_i : float
+        Integral gain.
+    k_t : float, optional
+        Reference-feedforward gain. The default is `k_p`.
+    u_max : float, optional
+        Maximum controller output. The default is `inf`.
+
+    Attributes
+    ----------
+    v : float
+        Input disturbance estimate.
+    u_i : float
+        Integral state.
 
     """
 
-    def __init__(self, pars):
-        self.T_s = pars.T_s
-        try:
-            self.tau_M_max = pars.tau_M_max
-        except AttributeError:
-            # No maximum torque limit
-            self.tau_M_max = np.inf
-        try:
-            # Gains for the 2DOF PI controller
-            self.alpha_i = pars.alpha_s
-            self.k_t = pars.alpha_s*pars.J
-            self.k_p = 2*pars.alpha_s*pars.J
-        except AttributeError:
-            # alpha_s or J not defined, try to use k_t, k_p, k_i
-            try:
-                # Choosing k_t = k_p yields a regular PI controller
-                self.k_t = pars.k_t
-                self.k_p = pars.k_p
-                self.alpha_i = pars.k_i/pars.k_t
-            except AttributeError:
-                print('No speed controller gains found.')
-
+    def __init__(self, k_p, k_i, k_t=None, u_max=np.inf):
+        self.u_max = u_max
+        # Gains
+        self.k_p = k_p
+        self.k_t = k_t if k_t is not None else k_p
+        self.alpha_i = k_i/k_t  # Inverse of the integration time T_i
         # States
-        self.tau_L = 0  # Disturbance estimate, corresponds to the load torque
-        self.tau_i = 0  # Integral state
+        self.v, self.u_i = 0, 0
 
-    def output(self, w_M_ref, w_M):
+    def output(self, y_ref, y):
         """
-        Compute the torque reference and the load torque estimate.
+        Compute the controller output.
 
         Parameters
         ----------
-        w_M_ref : float
-            Rotor speed reference (in mechanical rad/s).
-        w_M : float
-            Rotor speed (in mechanical rad/s).
+        y_ref : float
+            Reference signal.
+        y : float
+            Feedback signal.
 
         Returns
         -------
-        tau_M_ref : float
-            Torque reference.
+        u : float
+            Controller output.
 
         """
-        self.tau_L = self.tau_i - (self.k_p - self.k_t)*w_M
-        tau_M_ref = self.k_t*(w_M_ref - w_M) + self.tau_L
+        # Estimate of a disturbance input
+        self.v = self.u_i - (self.k_p - self.k_t)*y
 
-        if np.abs(tau_M_ref) > self.tau_M_max:
-            tau_M_ref = np.sign(tau_M_ref)*self.tau_M_max
+        # Controller output
+        u = self.k_t*(y_ref - y) + self.v
 
-        return tau_M_ref
+        # Limit the controller output
+        u = np.clip(u, -self.u_max, self.u_max)
 
-    def update(self, tau_M_ref_lim):
+        return u
+
+    def update(self, T_s, u_lim):
         """
         Update the integral state.
 
         Parameters
         ----------
-        tau_M_ref_lim : float
-            Realized (limited) torque reference.
+        T_s : float
+            Sampling period (s).
+        u_lim : float
+            Realized (limited) controller output. If the actuator does not
+            saturate, ``u_lim = u``.
 
         """
-        self.tau_i += self.T_s*self.alpha_i*(tau_M_ref_lim - self.tau_L)
+        self.u_i += T_s*self.alpha_i*(u_lim - self.v)
 
 
 # %%
-class CurrentCtrl:
+class SpeedCtrl(PICtrl):
     """
-    2DOF PI synchronous-frame current controller for three-phase AC machines.
+    2DOF PI speed controller.
 
-    This controller is mathematically identical to the continuous-time 2DOF PI 
-    controller design in [1]_. The disturbance-observer structure is used here. 
-    The default gains correspond to the complex-vector design, see (13) in [1]_. 
-    If desired, the controller can be parametrized with the IMC gains, see (12).
-    A regular PI controller is obtained as a special case.
+    This provides an interface for a speed controller. The gains are initialized
+    based on the desired closed-loop bandwidth and the rotor inertia estimate.
 
     Parameters
     ----------
-    pars : Data object
-        Control parameters. The following parameters are required:
-
-    Notes
-    -----
-    For better performance at very high speeds with low sampling frequencies, 
-    the discrete-time design in (18) is recommended. This implementation does 
-    not take the magnetic saturation into account.
-
-    References
-    ----------
-    .. [1] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
-       https://doi.org/10.1109/TIA.2019.2919258
+    J : float
+        Total inertia of the rotor (kgm**2).
+    alpha_s : float
+        Closed-loop bandwidth (rad/s). 
+    tau_M_max : float, optional
+        Maximum motor torque (Nm). The default is `inf`.
 
     """
 
-    # pylint: disable=too-many-instance-attributes
-    def __init__(self, pars):
-        self.T_s = pars.T_s
-        try:
-            # Synchronous motor
-            self.L_d = pars.L_d
-            self.L_q = pars.L_q
-        except AttributeError:
-            try:
-                # Induction motor
-                self.L_d = pars.L_sgm
-                self.L_q = pars.L_sgm
-            except AttributeError:
-                print('No inductance parameters found.')
-        self.alpha_c = pars.alpha_c
-        # Todo: Improve the parametrization of the controllers
-        try:
-            # Complex-vector gains for the 2DOF PI controller
-            self.k_t = pars.alpha_c
-            self.k_p = lambda w: 2*pars.alpha_c
-            self.alpha_i = lambda w: pars.alpha_c + 1j*w
-            # IMC gains for the 2DOF PI controller, for comparison
-            # self.k_t = pars.alpha_c
-            # self.k_p = lambda w: 2*pars.alpha_c - 1j*w
-            # self.alpha = lambda w: pars.alpha_c
-        except AttributeError:
-            # alpha_c not defined, try to use k_tc k_pc, k_ic
-            try:
-                # Choosing k_tc = k_pc yields a regular PI controller
-                self.k_t = pars.k_tc
-                self.k_p = lambda w: pars.k_pc
-                self.alpha_i = lambda w: pars.k_ic/pars.k_tc
-            except AttributeError:
-                print('No current controller gains found.')
+    def __init__(self, J, alpha_s, tau_M_max=np.inf):
+        k_p = 2*alpha_s*J
+        k_i = alpha_s**2*J
+        k_t = alpha_s*J
+        super().__init__(k_p, k_i, k_t, tau_M_max)
 
+
+# %%
+class ComplexPICtrl:
+    """
+    2DOF synchronous-frame complex-vector PI controller.
+
+    This implements a discrete-time 2DOF synchronous-frame complex-vector PI
+    controller, whose continuous-time counterpart is [Bri2000]_::
+
+        u = k_t*i_ref - k_p*i + (k_i + 1j*w*k_t)/s*(i_ref - i)
+
+    where `u` is the controller output, `i_ref` is the reference signal, `i` is
+    the feedback signal, `w` is the angular speed of synchronous coordinates, 
+    and `1/s` refers to integration. This algorithm is compatible with both real 
+    and complex signals. The 1DOF version is obtained by setting ``k_t = k_p``. 
+    The integrator anti-windup is implemented based on the realized controller 
+    output.
+
+    Parameters
+    ----------
+    k_p : float
+        Proportional gain.
+    k_i : float
+        Integral gain.
+    k_t : float, optional
+        Reference-feedforward gain. The default is `k_p`.
+
+    Attributes
+    ----------
+    v : complex
+        Input disturbance estimate.
+    u_i : complex
+        Integral state.
+
+    Notes
+    -----
+    This contoller can be used, e.g., as a current controller. In this case, `i`
+    corresponds to the stator current and `u` to the stator voltage.
+    
+    References
+    ----------
+    .. [Bri2000] Briz, Degner, Lorenz, "Analysis and design of current 
+       regulators using complex vectors," IEEE Trans. Ind. Appl., 2000,
+       https://doi.org/10.1109/28.845057
+
+    """
+
+    def __init__(self, k_p, k_i, k_t=None):
+        # Gains
+        self.k_p = k_p
+        self.k_t = k_t if k_t is not None else k_p
+        self.alpha_i = k_i/k_t  # Inverse of the integration time T_i
         # States
-        self.v = 0  # Input-equivalent disturbance estimate
-        self.u_i = 0  # Integral state
+        self.v, self.u_i = 0, 0
 
-    def output(self, i_ref, i, w):
+    def output(self, i_ref, i):
         """
-        Compute the unlimited voltage reference.
+        Compute the controller output.
 
         Parameters
         ----------
         i_ref : complex
-            Current reference in synchronous coordinates.
+            Reference signal.
         i : complex
-            Measured current in synchronous coordinates.
-        w : float
-            Angular speed of the coordinate system.
+            Feedback signal.
 
         Returns
         -------
-        u_ref : complex
-            Unlimited voltage reference in synchronous coordinates.
+        u : complex
+            Controller output.
 
         """
-        # Compute the scaled reference and measurement (notice that the PM-flux
-        # linkage or the rotor flux linkage cancels out)
-        psi_ref = self.L_d*i_ref.real + 1j*self.L_q*i_ref.imag
-        psi = self.L_d*i.real + 1j*self.L_q*i.imag
+        # Disturbance input estimate
+        self.v = self.u_i - (self.k_p - self.k_t)*i
 
-        # Input-equivalent stator voltage disturbance estimate, containing the
-        # back-emf and the resistive voltage drops
-        self.v = self.u_i - (self.k_p(w) - self.k_t)*psi
+        # Controller output
+        u = self.k_t*(i_ref - i) + self.v
 
-        # Voltage reference
-        u_ref = self.k_t*(psi_ref - psi) + self.v
+        return u
 
-        return u_ref
-
-    def update(self, u_ref_lim, w):
+    def update(self, T_s, u_lim, w):
         """
         Update the integral state.
 
         Parameters
         ----------
-        u_ref_lim : complex
-            Limited voltage reference in synchronous coordinates.
+        T_s : float
+            Sampling period (s).
+        u_lim : complex
+            Realized (limited) controller output. If the actuator does not
+            saturate, ``u_lim = u``.
         w : float
-            Angular speed of the coordinate system.
+            Angular speed of the reference frame (rad/s). 
 
         """
-        self.u_i += self.T_s*self.alpha_i(w)*(u_ref_lim - self.v)
+        self.u_i += T_s*(self.alpha_i + 1j*w)*(u_lim - self.v)
 
 
 # %%
@@ -385,17 +398,16 @@ class RateLimiter:
 
     Parameters
     ----------
-    pars : data object
-        Control parameters.
+    rate_limit : float, optional
+        Rate limit. The default is `inf`.
 
     """
 
-    def __init__(self, pars):
-        self.T_s = pars.T_s
-        self.limit = pars.rate_limit
-        self.y_old = 0
+    def __init__(self, rate_limit=np.inf):
+        self.rate_limit = rate_limit
+        self._y_old = 0
 
-    def __call__(self, u):
+    def __call__(self, T_s, u):
         """
         Limit the input signal.
 
@@ -406,6 +418,8 @@ class RateLimiter:
 
         Returns
         -------
+        T_s : float
+            Sampling period (s).
         y : float
             Rate-limited output signal.
 
@@ -416,39 +430,59 @@ class RateLimiter:
         modifications in the class.
 
         """
-        rate = (u - self.y_old)/self.T_s
+        rate = (u - self._y_old)/T_s
 
-        if rate > self.limit:
+        if rate > self.rate_limit:
             # Limit rising rate
-            y = self.y_old + self.T_s*self.limit
-        elif rate < -self.limit:
+            y = self._y_old + T_s*self.rate_limit
+        elif rate < -self.rate_limit:
             # Limit falling rate
-            y = self.y_old - self.T_s*self.limit
+            y = self._y_old - T_s*self.rate_limit
         else:
             y = u
 
         # Store the limited output
-        self.y_old = y
+        self._y_old = y
 
         return y
 
 
 # %%
-class Ctrl:
-    """Base class for main control loops."""
+class Clock:
+    """Digital clock."""
 
     def __init__(self):
-        self.t = 0  # Digital clock
+        self.t = 0
+        self.t_reset = 1e9
+
+    def update(self, T_s):
+        """
+        Update the digital clock.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period (s).
+
+        """
+        self.t += T_s if self.t < self.t_reset else 0
+
+
+# %%
+class Ctrl:
+    """Base class for the control system."""
+
+    def __init__(self):
         self.data = Bunch()  # Data store
-        self.t_reset = 1e9  # Time at which the clock is reset
+        self.clock = Clock()  # Digital clock
 
     def __call__(self, mdl):
         """
         Run the main control loop.
 
         The main control loop is callable that returns the sampling
-        period `T_s` (float)  and the duty ratio references `d_abc_ref`
-        (ndarray, shape (3,)) for the next sampling period.
+        period `T_s` (float)  and the duty ratios `d_abc` (ndarray, shape (3,)) 
+        for the next sampling period.
 
         Parameters
         ----------
@@ -458,21 +492,9 @@ class Ctrl:
         """
         raise NotImplementedError
 
-    def update_clock(self, T_s):
-        """
-        Update the digital clock.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period.
-
-        """
-        self.t += T_s if self.t < self.t_reset else 0
-
     def save(self, data):
         """
-        Save the internal controller data.
+        Save the internal date of the control system.
 
         Parameters
         ----------
@@ -487,8 +509,8 @@ class Ctrl:
         """
         Transform the lists to the ndarray format.
 
-        This can be run after the simulation has been completed in order to
-        simplify plotting and analysis of the stored data.
+        This method can be run after the simulation has been completed in order 
+        to simplify plotting and analysis of the stored data.
 
         """
         for key in self.data:

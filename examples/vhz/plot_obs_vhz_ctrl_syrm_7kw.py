@@ -12,23 +12,26 @@ in the control method (only in the system model).
 # Import the package.
 
 import numpy as np
-import motulator as mt
+import motulator.model.sm as model
+import motulator.control.sm as control
+from motulator.helpers import BaseValues, Sequence
+from motulator.plots import plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = mt.BaseValues(
+base = BaseValues(
     U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, n_p=2)
 
 # %%
-# A saturation model is created based on [1]_, [2]_. For simplicity, the
-# saturation model parameters are hard-coded in function below, but the same
+# A saturation model is created based on [Hin2017]_, [Awa2018]_. For simplicity,
+# the saturation model parameters are hard-coded in function below, but the same
 # model structure can also be used for other synchronous motors. For PM motors,
 # the magnetomotive force (MMF) of the PMs can be modeled using constant current
-# source `i_f` on the d-axis [2], [3]_. Correspondingly, this approach assumes
-# that the MMFs of the d-axis current and of the PMs are in series. This model
-# cannot capture the desaturation phenomenon of thin iron ribs, see [4]_ for
-# details. For such motors, look-up tables can be used.
+# source `i_f` on the d-axis [Awa2018]_, [Jah1986]_. Correspondingly, this
+# approach assumes that the MMFs of the d-axis current and of the PMs are in
+# series. This model cannot capture the desaturation phenomenon of thin iron
+# ribs, see [Arm2009]_ for details. For such motors, look-up tables can be used.
 
 
 def i_s(psi_s):
@@ -73,28 +76,21 @@ def i_s(psi_s):
 
 # %%
 # Configure the system model.
-
-mdl = mt.SynchronousMotorDrive()
-mdl.motor = mt.SynchronousMotorSaturated(n_p=2, R_s=.54, current=i_s)
-mdl.mech = mt.Mechanics(J=.015)
-mdl.conv = mt.Inverter(u_dc=540)
+machine = model.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
 # Magnetically linear SyRM model for comparison
-# mdl.motor = mt.SynchronousMotor(p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+# machine = model.SynchronousMachine(
+#     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+mechanics = model.Mechanics(J=.015)
+converter = model.Inverter(u_dc=540)
+mdl = model.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorVHzObsCtrlPars(
-    n_p=2,
-    R_s=.54,
-    L_d=37e-3,
-    L_q=6.2e-3,
-    psi_f=0,
-    psi_s_max=base.psi,
-    psi_s_min=base.psi,
-    i_s_max=2*base.i,
-)
-ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
+par = control.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+ctrl_par = control.ObserverBasedVHzCtrlPars(
+    par, i_s_max=2*base.i, psi_s_min=base.psi, psi_s_max=base.psi)
+ctrl = control.ObserverBasedVHzCtrl(par, ctrl_par)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -102,42 +98,42 @@ ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = mt.Sequence(times, values)
+ctrl.w_m_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-mdl.mech.tau_L_t = mt.Sequence(times, values)
+mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM
 # model (which makes simulation slower). One-sampling-period computational
 # delay is modeled.
 
-sim = mt.Simulation(mdl, ctrl, pwm=False, delay=1)
+sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
 sim.simulate(t_stop=8)
 
 # %%
 # Plot results in per-unit values. By omitting the argument `base` you can plot
 # the results in SI units.
 
-mt.plot(sim, base=base)
+plot(sim, base)
 
 # %%
 # References
 # ----------
-# .. [1] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi,
+# .. [Hin2017] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi,
 #    “Sensorless self-commissioning of synchronous reluctance motors at
 #    standstill without rotor locking, ”IEEE Trans. Ind. Appl., 2017,
 #    https://doi.org/10.1109/TIA.2016.2644624
 #
-# .. [2] Awan, Song, Saarakkala, Hinkkanen, "Optimal torque control of
+# .. [Awa2018] Awan, Song, Saarakkala, Hinkkanen, "Optimal torque control of
 #    saturated synchronous motors: plug-and-play method," IEEE Trans. Ind.
 #    Appl., 2018, https://doi.org/10.1109/TIA.2018.2862410
 #
-# .. [3] Jahns, Kliman, Neumann, “Interior permanent-magnet synchronous
+# .. [Jah1986] Jahns, Kliman, Neumann, “Interior permanent-magnet synchronous
 #    motors for adjustable-speed drives,” IEEE Trans. Ind. Appl., 1986,
 #    https://doi.org/10.1109/TIA.1986.4504786
 #
-# .. [4] Armando, Guglielmi, Pellegrino, Pastorelli, Vagati, "Accurate
+# .. [Arm2009] Armando, Guglielmi, Pellegrino, Pastorelli, Vagati, "Accurate
 #    modeling and performance analysis of IPM-PMASR motors," IEEE Trans. Ind.
 #    Appl., 2009, https://doi.org/10.1109/TIA.2008.2009493

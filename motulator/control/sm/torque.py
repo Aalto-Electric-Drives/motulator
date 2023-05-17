@@ -1,19 +1,19 @@
 """
 Torque characteristics for synchronous machines.
 
-This contains computation and plotting of torque characteristics for
-synchronous machines, including the MTPA and MTPV loci [1]_. The methods can be
-used to define look-up tables for control and to analyze the characteristics.
-In this version, the magnetic saturation is omitted.
+This contains computation and plotting of torque characteristics for synchronous 
+machines, including the MTPA and MTPV loci [Mor1990]_. The methods can be used 
+to  define look-up tables for control and to analyze the characteristics. This version omits the magnetic saturation.
 
 References
 ----------
-.. [1] Morimoto, Takeda, Hirasa, Taniguchi, "Expansion of operating limits for
-   permanent magnet motor by current vector control considering inverter
+.. [Mor1990] Morimoto, Takeda, Hirasa, Taniguchi, "Expansion of operating limits
+   for permanent magnet motor by current vector control considering inverter
    capacity," IEEE Trans. Ind. Appl., 1990,
    https://doi.org/10.1109/28.60058
 
 """
+
 from sys import float_info
 import numpy as np
 from scipy.interpolate import interp1d
@@ -29,30 +29,22 @@ plt.rcParams.update({"text.usetex": False})  # Disable LaTeX in plots
 # %%
 class TorqueCharacteristics:
     """
-    Compute MTPA and MTPV loci based on the motor parameters.
+    Compute MTPA and MTPV loci based on the machine parameters.
 
     The magnetic saturation is omitted.
 
     Parameters
     ----------
-    pars : data object
-        Motor parameters.
+    par : ModelPars
+        Machine model parameters.
 
     """
 
-    def __init__(self, pars):
-        self.n_p = pars.n_p
-        self.L_d = pars.L_d
-        self.L_q = pars.L_q
-        self.psi_f = pars.psi_f
-        try:
-            self.psi_s_min = pars.psi_s_min
-        except AttributeError:
-            self.psi_s_min = None
-        try:
-            self.psi_s_max = pars.psi_s_max
-        except AttributeError:
-            self.psi_s_max = None
+    def __init__(self, par):
+        self.n_p = par.n_p
+        self.L_d = par.L_d
+        self.L_q = par.L_q
+        self.psi_f = par.psi_f
 
     def torque(self, psi_s):
         """
@@ -232,15 +224,16 @@ class TorqueCharacteristics:
 
         return i_s
 
-    def mtpa_locus(self, i_s_max=1, N=20):
+    def mtpa_locus(self, i_s_max, psi_s_min=None, N=20):
         """
         Compute the MTPA locus.
 
         Parameters
         ----------
-        i_s_max : float, optional
+        i_s_max : float
             Maximum stator current magnitude at which the locus is computed.
-            The default is 1.
+        psi_s_min : float, optional
+            Minimum stator flux magnitude at which the locus is computed.
         N : int, optional
             Amount of points. The default is 20.
 
@@ -253,9 +246,9 @@ class TorqueCharacteristics:
             Stator current.
         tau_M : float
             Electromagnetic torque.
-        abs_psi_s_vs_tau_M : interp1d object
+        abs_psi_s_vs_tau_M : callable
             Stator flux magnitude as a function of the torque.
-        i_sd_vs_tau_M : interp1d object
+        i_sd_vs_tau_M : callable
             d-axis current as a function of the torque.
 
         """
@@ -266,20 +259,22 @@ class TorqueCharacteristics:
         beta = self.mtpa(abs_i_s)
         i_s = abs_i_s*np.exp(1j*beta)
 
-        if (self.psi_s_min is not None) and (self.psi_f == 0):
+        if (psi_s_min is not None) and (self.psi_f == 0):
             # Minimum d-axis current for sensorless SyRM drives
-            i_sd_min = self.psi_s_min/self.L_d
+            i_sd_min = psi_s_min/self.L_d
             i_s.real = ((i_s.real < i_sd_min)*i_sd_min +
                         (i_s.real >= i_sd_min)*i_s.real)
 
         psi_s = self.flux(i_s)
+        abs_psi_s = np.abs(psi_s)
         tau_M = self.torque(psi_s)
 
         # Create an interpolant that can be used as a look-up table. If needed,
         # more interpolants can be easily added.
         abs_psi_s_vs_tau_M = interp1d(
-            tau_M, np.abs(psi_s), fill_value='extrapolate')
-        i_sd_vs_tau_M = interp1d(tau_M, i_s.real, fill_value='extrapolate')
+            tau_M, abs_psi_s, fill_value=abs_psi_s[-1], bounds_error=False)
+        i_sd_vs_tau_M = interp1d(
+            tau_M, i_s.real, fill_value=i_s.real[-1], bounds_error=False)
 
         # Return the result as a bunch object
         return Bunch(
@@ -289,18 +284,17 @@ class TorqueCharacteristics:
             abs_psi_s_vs_tau_M=abs_psi_s_vs_tau_M,
             i_sd_vs_tau_M=i_sd_vs_tau_M)
 
-    def mtpv_locus(self, psi_s_max=1, i_s_max=None, N=20):
+    def mtpv_locus(self, psi_s_max=None, i_s_max=None, N=20):
         """
         Compute the MTPV locus.
 
         Parameters
         ----------
         psi_s_max : float, optional
-            Maximum stator flux magnitude at which the locus is computed. The
-            default is 1.
+            Maximum stator flux magnitude at which the locus is computed. Either
+            psi_s_max or i_s_max must be given.
         i_s_max : float, optional
             Maximum stator current magnitude at which the locus is computed.
-            The default is None.
         N : int, optional
             Amount of points. The default is 20.
 
@@ -318,7 +312,7 @@ class TorqueCharacteristics:
 
         """
         # If i_s_max is given, compute the corresponding MTPV stator flux
-        if i_s_max:
+        if i_s_max is not None:
             i_s_mtpv = self.mtpv_current(i_s_max)
             psi_s_max = np.abs(self.flux(i_s_mtpv))
 
@@ -342,14 +336,14 @@ class TorqueCharacteristics:
             tau_M=tau_M,
             tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s)
 
-    def current_limit(self, i_s_max=1, gamma1=np.pi, gamma2=0, N=20):
+    def current_limit(self, i_s_max, gamma1=np.pi, gamma2=0, N=20):
         """
         Compute the current limit.
 
         Parameters
         ----------
-        i_s_max : float, optional
-            Current limit. The default is 1.
+        i_s_max : float
+            Current limit. 
         gamma1 : float, optional
             Starting angle in radians. The default is 0.
         gamma2 : float, optional
@@ -396,14 +390,14 @@ class TorqueCharacteristics:
             tau_M=tau_M,
             tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s)
 
-    def mtpv_and_current_limits(self, i_s_max=1, N=20):
+    def mtpv_and_current_limits(self, i_s_max, N=20):
         """
         Merge the MTPV and current limits into a single interpolant.
 
         Parameters
         ----------
-        i_s_max : float, optional
-            Current limit. The default is 1.
+        i_s_max : float
+            Current limit.
         N : int, optional
             Amount of points. The default is 20.
 
@@ -457,7 +451,7 @@ class TorqueCharacteristics:
         ----------
         i_s_max : float
             Maximum current at which the loci are evaluated.
-        base : object
+        base : BaseValues
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -504,7 +498,7 @@ class TorqueCharacteristics:
         ----------
         i_s_max : float
             Maximum current at which the loci are evaluated.
-        base : object
+        base : BaseValues
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -550,7 +544,7 @@ class TorqueCharacteristics:
         ----------
         i_s_max : float
             Maximum current at which the loci are evaluated.
-        base : object
+        base : BaseValues
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -606,7 +600,7 @@ class TorqueCharacteristics:
         ----------
         i_s_max : float
             Maximum current at which the loci are evaluated.
-        base : object
+        base : BaseValues
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.

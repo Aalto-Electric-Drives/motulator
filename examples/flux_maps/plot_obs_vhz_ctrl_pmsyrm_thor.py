@@ -13,7 +13,7 @@ acknowledge the developers of the SyR-e project. The flux maps from other
 sources can be used in a similar manner. To study the flux maps in more detail,
 see also the module `sm_flux_maps`. It is worth noticing that the saturation is
 not taken into account in the control method, only in the system model.
-Naturally, the control performance can be improved by taking the saturation
+Naturally, the control performance could be improved by taking the saturation
 into account in the control algorithm.
 
 """
@@ -24,19 +24,22 @@ into account in the control algorithm.
 import numpy as np
 from scipy.optimize import minimize_scalar
 from scipy.interpolate import LinearNDInterpolator
-import motulator as mt
+import motulator.model.sm as model
+import motulator.control.sm as control
+from motulator.helpers import BaseValues, Sequence
+from motulator.plots import plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = mt.BaseValues(
+base = BaseValues(
     U_nom=220, I_nom=15.6, f_nom=85, tau_nom=19, P_nom=5.07e3, n_p=2)
 
 # %%
 # Load and plot the flux maps.
 
 # Load the data from the MATLAB file
-data = mt.import_syre_data(fname='THOR.mat')
+data = model.import_syre_data(fname="THOR.mat")
 
 # You may also downsample or invert the flux map by uncommenting the following
 # lines. Not needed here, but these methods could be useful for other purposes.
@@ -44,8 +47,8 @@ data = mt.import_syre_data(fname='THOR.mat')
 # from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map
 # data = downsample_flux_map(data, N_d=32, N_q=32)
 # data = invert_flux_map(data, N_d=128, N_q=128)
-mt.plot_flux_vs_current(data)
-mt.plot_flux_map(data)
+model.plot_flux_vs_current(data)
+model.plot_flux_map(data)
 
 # %%
 # Create the saturation model.
@@ -79,29 +82,21 @@ def i_s(psi_s):
 # Configure the system model.
 
 # Create the motor model
-mdl = mt.SynchronousMotorDrive()
-mdl.motor = mt.SynchronousMotorSaturated(
+machine = model.SynchronousMachineSaturated(
     n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
-mdl.mech = mt.Mechanics(J=.0042)
-mdl.conv = mt.Inverter(u_dc=310)
 # Magnetically linear PM-SyRM model
-# mdl.motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+# machine = model.SynchronousMachine(
+#     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+mechanics = model.Mechanics(J=.0042)
+converter = model.Inverter(u_dc=310)
+mdl = model.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorVHzObsCtrlPars(
-    n_p=2,
-    R_s=.2,
-    L_d=4e-3,
-    L_q=17e-3,
-    psi_f=.134,
-    alpha_psi=2*np.pi*50,
-    zeta_inf=.1,
-    T_s=250e-6,
-    i_s_max=2*base.i,
-)
-ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
+par = control.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+ctrl_par = control.ObserverBasedVHzCtrlPars(par, i_s_max=2*base.i)
+ctrl = control.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -109,27 +104,27 @@ ctrl = mt.SynchronousMotorVHzObsCtrl(pars)
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = mt.Sequence(times, values)
+ctrl.w_m_ref = Sequence(times, values)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
 k = base.tau_nom/(base.w/base.n_p)**2
-mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
+mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # Uncomment to try the rated load torque step at t = 1 s (set k = 0 above)
 # times = np.array([0, .125, .125, .875, .875, 1])*8
 # values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-# mdl.mech.tau_L_t = mt.Sequence(times, values)
+# mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM
 # model (which makes simulation slower). One-sampling-period computational
 # delay is modeled.
 
-sim = mt.Simulation(mdl, ctrl, pwm=False, delay=1)
+sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
 sim.simulate(t_stop=8)
 
 # %%
 # Plot results in per-unit values. By omitting the argument `base` you can plot
 # the results in SI units.
 
-mt.plot(sim, base=base)
+plot(sim, base)

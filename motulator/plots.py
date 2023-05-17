@@ -14,7 +14,7 @@ plt.rcParams.update({"text.usetex": False})
 
 
 # %%
-def plot(sim, t_span=None, base=None):
+def plot(sim, base=None, t_span=None):
     """
     Plot example figures.
 
@@ -23,12 +23,12 @@ def plot(sim, t_span=None, base=None):
 
     Parameters
     ----------
-    sim : Simulation object
+    sim : Simulation
         Should contain the simulated data.
-    t_span : 2-tuple, optional
-        Time span. The default is (0, sim.ctrl.t[-1]).
     base : BaseValues, optional
         Base values for scaling the waveforms.
+    t_span : 2-tuple, optional
+        Time span. The default is (0, sim.ctrl.t[-1]).
 
     """
     # pylint: disable=too-many-statements
@@ -152,22 +152,26 @@ def plot(sim, t_span=None, base=None):
 
 
 # %%
-def plot_extra(sim, t_span=(1.1, 1.125), base=None):
+def plot_extra(sim, base=None, t_span=None):
     """
     Plot extra waveforms for a motor drive with a diode bridge.
 
     Parameters
     ----------
-    sim : Simulation object
+    sim : Simulation
         Should contain the simulated data.
-    t_span : 2-tuple, optional
-        Time span. The default is (1.1, 1.125).
     base : BaseValues, optional
         Base values for scaling the waveforms.
+    t_span : 2-tuple, optional
+        Time span. The default is (0, sim.ctrl.t[-1]).
 
     """
     mdl = sim.mdl.data  # Continuous-time data
     ctrl = sim.ctrl.data  # Discrete-time data
+
+    # Check if the time span was given
+    if t_span is None:
+        t_span = (0, ctrl.t[-1])
 
     # Check if the base values were iven
     if base is not None:
@@ -255,14 +259,12 @@ def save_plot(name):
     Save figures.
 
     This saves figures in a folder "figures" in the current directory. If the
-    folder doesn't exist, it is created.
+    folder does not exist, it is created.
 
     Parameters
     ----------
     name : string
         Name for the figure
-    plt : object
-        Handle for the figure to be saved
 
     """
     plt.savefig(name + '.pdf')

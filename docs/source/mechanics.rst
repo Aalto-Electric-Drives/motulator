@@ -4,7 +4,7 @@ Mechanics
 Stiff Mechanics
 ---------------
 
-Continuous-time mechanics models are given in the module :mod:`motulator.model.mech`. The stiff rotational mechanics are governed by
+Continuous-time mechanics models are given in the module :mod:`motulator.model.mechanics`. The stiff rotational mechanics are governed by
 
 .. math::
     J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &= \tau_\mathrm{M} - \tau_\mathrm{L} \\
@@ -45,7 +45,7 @@ The two-mass mechanics are governed by
     J_\mathrm{L}\frac{\mathrm{d}\omega_\mathrm{L}}{\mathrm{d} t} &= \tau_\mathrm{S} - \tau_\mathrm{L} \\
     \frac{\mathrm{d}\vartheta_\mathrm{ML}}{\mathrm{d} t} &= \omega_\mathrm{M} - \omega_\mathrm{L}
 
-where :math:`\omega_\mathrm{L}` is the angular speed of the load, :math:`\vartheta_\mathrm{ML}=\vartheta_\mathrm{M}-\vartheta_\mathrm{L}` is the twist angle, :math:`J_\mathrm{M}` is the moment of inertia of the motor, and :math:`J_\mathrm{L}` is the moment of inertia of the load. The shaft torque is 
+where :math:`\omega_\mathrm{L}` is the angular speed of the load, :math:`\vartheta_\mathrm{ML}=\vartheta_\mathrm{M}-\vartheta_\mathrm{L}` is the twist angle, :math:`J_\mathrm{M}` is the moment of inertia of the machine, and :math:`J_\mathrm{L}` is the moment of inertia of the load. The shaft torque is 
 
 .. math::
     \tau_\mathrm{S} = K_\mathrm{S}\vartheta_\mathrm{ML} + C_\mathrm{S}(\omega_\mathrm{M} - \omega_\mathrm{L})

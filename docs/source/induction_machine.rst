@@ -1,12 +1,12 @@
-Induction Motor
-===============
+Induction Machine
+=================
 
-Continuous-time induction motor models are given in the module :mod:`motulator.model.im`. Peak-valued complex space vectors are used. The models are implemented in stator coordinates. A Γ-equivalent model is used since it can be extended with the magnetic saturation model in a staightforward manner [1]_.
+Continuous-time induction machine models are in the package :mod:`motulator.model.im`. Peak-valued complex space vectors are used. The models are implemented in stator coordinates. A Γ-equivalent model is used since it can be extended with the magnetic saturation model in a staightforward manner [Sle1989]_.
 
 .. figure:: figs/im_gamma.svg
    :width: 100%
    :align: center
-   :alt: Gamma-model of an induction motor
+   :alt: Gamma-model of an induction machine
    :target: .
 
    Γ model.
@@ -14,10 +14,10 @@ Continuous-time induction motor models are given in the module :mod:`motulator.m
 .. figure:: figs/im_block.svg
    :width: 100%
    :align: center
-   :alt: Block diagram of an induction motor model
+   :alt: Block diagram of an induction machine model
    :target: .
 
-   Block diagram of the motor model. The magnetic model includes the flux equations (or, optionally, saturation characteristics) and the torque equation.
+   Block diagram of the machine model. The magnetic model includes the flux equations (or, optionally, saturation characteristics) and the torque equation.
 
 The voltage equations are
 
@@ -31,12 +31,12 @@ where :math:`\boldsymbol{u}_\mathrm{s}^\mathrm{s}` is the stator voltage, :math:
     \boldsymbol{\psi}_\mathrm{s}^\mathrm{s} &= L_\mathrm{s}(\boldsymbol{i}_\mathrm{s}^\mathrm{s} + \boldsymbol{i}_\mathrm{r}^\mathrm{s} ) \\
     \boldsymbol{\psi}_\mathrm{r}^\mathrm{s} &= \boldsymbol{\psi}_\mathrm{s}^\mathrm{s} + L_\ell\boldsymbol{i}_\mathrm{r}^\mathrm{s} 
 
-where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the leakage inductance. This linear magnetic model is applied in the class :class:`motulator.model.im.InductionMotor`. The electromagnetic torque is
+where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the leakage inductance. This linear magnetic model is applied in the class :class:`motulator.model.im.InductionMachine`. The electromagnetic torque is
 
 .. math::
     \tau_\mathrm{M} = \frac{3 n_\mathrm{p}}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s}^\mathrm{s} (\boldsymbol{\psi}_\mathrm{s}^\mathrm{s})^* \right\}
 
-The class :class:`motulator.model.im.InductionMotorSaturated` extends the model with the main flux saturation, :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [2]_. See also the example :doc:`/auto_examples/vhz/plot_vhz_ctrl_im_2kw`.
+The class :class:`motulator.model.im.InductionMachineSaturated` extends the model with the main flux saturation, :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [Qu2012]_. See also the example :doc:`/auto_examples/vhz/plot_vhz_ctrl_im_2kw`.
 
 .. note::
    If the magnetic saturation is omitted, the Γ model is mathematically identical to the inverse-Γ and T models. For example, the parameters of the Γ model can be transformed to those of the inverse-Γ model parameters as follows:
@@ -49,19 +49,16 @@ The class :class:`motulator.model.im.InductionMotorSaturated` extends the model 
    .. figure:: figs/im_inv_gamma.svg
       :width: 100%
       :align: center
-      :alt: Inverse-Gamma model of an induction motor
+      :alt: Inverse-Gamma model of an induction machine
       :target: .
 
       Inverse-Γ model.
 
-   Example control methods in the module :mod:`motulator.control.im_vector` are based on the
-   inverse-Γ model.
+   Example control methods in the module :mod:`motulator.control.im.vector` are based on the inverse-Γ model.
 
 References
 ----------
 
-.. [1] Slemon, "Modelling of induction machines for electric drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
+.. [Sle1989] Slemon, "Modelling of induction machines for electric drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
 
-.. [2] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
-   induction motor drives," IEEE Trans. Ind. Appl., 2021,
-   https://doi.org/10.1109/TIA.2012.2190818
+.. [Qu2012] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of induction motor drives," IEEE Trans. Ind. Appl., 2012, https://doi.org/10.1109/TIA.2012.2190818

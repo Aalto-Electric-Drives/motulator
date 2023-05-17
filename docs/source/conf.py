@@ -50,12 +50,12 @@ autoapi_options = [
     'members',
     'show-inheritance',
     'show-module-summary',
-    'imported-members',
-    'undoc-members',
     'special-members',
-]  # 'private-members',
-autoapi_python_class_content = 'both'
-autoapi_keep_files = True
+    'imported-members',
+]  # 'private-members', 'imported-members', 'undoc-members',
+autoapi_python_class_content = 'class'  # 'both'
+autoapi_keep_files = False
+suppress_warnings = ["autoapi"]
 
 from sphinx_gallery.sorting import ExplicitOrder
 
