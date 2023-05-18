@@ -1,6 +1,6 @@
 """
-Vector control: 2.2-kW PMSM
-===========================
+2.2-kW PMSM
+===========
 
 This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 
@@ -10,8 +10,8 @@ This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 # Import the packages.
 
 import numpy as np
-import motulator.model.sm as model
-import motulator.control.sm as control
+import motulator.model as model
+import motulator.control as control
 from motulator.helpers import BaseValues, Sequence
 from motulator.plots import plot
 
@@ -24,18 +24,19 @@ base = BaseValues(
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(
+machine = model.sm.SynchronousMachine(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+mdl = model.sm.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-ref = control.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=1.5*base.i)
-ctrl = control.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+par = control.sm.ModelPars(
+    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+ref = control.sm.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=1.5*base.i)
+ctrl = control.sm.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

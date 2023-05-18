@@ -1,5 +1,5 @@
 """
-V/Hz control: 2.2-kW induction motor
+2.2-kW induction motor, diode bridge
 ====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
@@ -11,8 +11,8 @@ motor is also modeled.
 # Import the package.
 
 import numpy as np
-import motulator.model.im as model
-import motulator.control.im as control
+import motulator.model as model
+import motulator.control as control
 from motulator.helpers import BaseValues
 from motulator.plots import plot, plot_extra
 
@@ -52,21 +52,21 @@ def L_s(psi):
 # %%
 # Create the system model.
 
-machine = model.InductionMachineSaturated(
+machine = model.im.InductionMachineSaturated(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
 # Mechanics model
 mechanics = model.Mechanics(J=.015)
 # Frequency converter with a diode bridge
 converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
-mdl = model.DriveWithDiodeBridge(machine, mechanics, converter)
+mdl = model.im.DriveWithDiodeBridge(machine, mechanics, converter)
 # Γ-equivalent motor model with main-flux saturation included
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).
 
 # Inverse-Γ model parameter estimates
-par = control.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-ctrl = control.VHzCtrl(250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0)
+par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+ctrl = control.im.VHzCtrl(250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0)
 ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 # %%

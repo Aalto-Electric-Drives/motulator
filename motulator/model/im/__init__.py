@@ -1,16 +1,19 @@
-"""This package contains continuous-time system models."""
+"""Continuous-time induction machine models."""
 
-from motulator.simulation import Simulation
-
-# Import system models
-from motulator.model.mechanics import Mechanics, MechanicsTwoMass
-from motulator.model.converter import Inverter, FrequencyConverter
-
-from motulator.model.im.drive import (
-    InductionMachine,
-    InductionMachineSaturated,
-    InductionMachineInvGamma,
+from motulator.model.im._drive import (
     Drive,
     DriveWithDiodeBridge,
     DriveTwoMassMechanics,
+    InductionMachine,
+    InductionMachineSaturated,
+    InductionMachineInvGamma,
 )
+
+__all__ = [
+    "Drive",
+    "DriveWithDiodeBridge",
+    "DriveTwoMassMechanics",
+    "InductionMachine",
+    "InductionMachineSaturated",
+    "InductionMachineInvGamma",
+]

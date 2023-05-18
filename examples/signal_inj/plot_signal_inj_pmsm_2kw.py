@@ -1,6 +1,6 @@
 """
-Vector control with signal injection: 2.2-kW PMSM
-=================================================
+2.2-kW PMSM
+===========
 
 This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 Square-wave signal injection is used with a simple phase-locked loop.
@@ -12,8 +12,8 @@ Square-wave signal injection is used with a simple phase-locked loop.
 
 import numpy as np
 import matplotlib.pyplot as plt
-import motulator.model.sm as model
-import motulator.control.sm as control
+import motulator.model as model
+import motulator.control as control
 from motulator.helpers import BaseValues, Sequence
 from motulator.plots import plot
 
@@ -26,18 +26,19 @@ base = BaseValues(
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(
+machine = model.sm.SynchronousMachine(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+mdl = model.sm.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-ref = control.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=2*base.i)
-ctrl = control.SignalInjectionCtrl(par, ref, T_s=250e-6)
+par = control.sm.ModelPars(
+    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+ref = control.sm.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=2*base.i)
+ctrl = control.sm.SignalInjectionCtrl(par, ref, T_s=250e-6)
 #ctrl.current_ctrl = control.CurrentCtrl(par, 2*np.pi*100)
 
 # %%

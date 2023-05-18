@@ -6,24 +6,22 @@ This open-source software includes simulation models for an induction machine, a
 .. _scipy.integrate.solve_ivp: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html
 
 .. toctree::
+   :titlesonly:
    :caption: Getting Started
+   :name: getting_started
    :maxdepth: 1
 
    installation
    usage
-   autoapi/index
+   auto_examples/index
+   API Reference <autoapi/motulator/index>
 
 .. toctree::
-   :titlesonly:
    :caption: System Models
    :name: models
    :maxdepth: 2
 
-   system
-   induction_machine
-   synchronous_machine
-   mechanics
-   converters
+   model/index
 
 .. toctree::
    :titlesonly:
@@ -31,12 +29,11 @@ This open-source software includes simulation models for an induction machine, a
    :name: controllers
    :maxdepth: 2
 
-   speed_ctrl
-   current_ctrl
-   observer
-   auto_examples/index
+   control/common
+   control/im
+   control/sm
 
-Acknowledgement
----------------
+.. rubric::
+   Acknowledgement
 
 This project has been sponsored by ABB Oy and by the Academy of Finland *Centre of Excellence in High-Speed Electromechanical Energy Conversion Systems*. The example control methods included in this repository are based on published algorithms (available in textbooks and scientific articles). They do not present any proprietary control software.

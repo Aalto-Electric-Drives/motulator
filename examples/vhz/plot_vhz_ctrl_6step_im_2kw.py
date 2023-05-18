@@ -1,20 +1,20 @@
 """
-V/Hz control up to the 6-step mode: 2.2-kW induction motor
-==========================================================
+2.2-kW induction motor, 6-step mode
+===================================
 
 This example simulates V/Hz of a 2.2-kW induction motor drive. The six-step
 overmodulation is enabled, which increases the fundamental voltage as well as
 the harmonics. Since the PWM is not synchronized with the stator frequency, the
-harmonic content also depends on the ratio between the stator frequency and
-the sampling frequency.
+harmonic content also depends on the ratio between the stator frequency and the 
+sampling frequency.
 
 """
 # %%
 # Import the package.
 
 import numpy as np
-import motulator.model.im as model
-import motulator.control.im as control
+import motulator.model as model
+import motulator.control as control
 from motulator.helpers import BaseValues, Sequence
 from motulator.plots import plot, plot_extra
 
@@ -28,17 +28,17 @@ base = BaseValues(
 # Create the system model.
 
 # Configure the induction machine using its inverse-Γ parameters
-machine = model.InductionMachineInvGamma(
+machine = model.im.InductionMachineInvGamma(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+mdl = model.im.Drive(machine, mechanics, converter)
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).
 
-par = control.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-ctrl = control.VHzCtrl(
+par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+ctrl = control.im.VHzCtrl(
     250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0, six_step=True)
 ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 

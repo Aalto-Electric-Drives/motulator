@@ -1,6 +1,6 @@
 """
-Vector control with signal injection: 6.7-kW SyRM
-=================================================
+6.7-kW SyRM
+===========
 
 This example simulates sensorless vector control of a 6.7-kW SyRM drive.
 Square-wave signal injection is used with a simple phase-locked loop.
@@ -12,8 +12,8 @@ Square-wave signal injection is used with a simple phase-locked loop.
 
 import numpy as np
 import matplotlib.pyplot as plt
-import motulator.model.sm as model
-import motulator.control.sm as control
+import motulator.model as model
+import motulator.control as control
 from motulator.helpers import BaseValues, Sequence
 from motulator.plots import plot
 
@@ -26,20 +26,20 @@ base = BaseValues(
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(
+machine = model.sm.SynchronousMachine(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+mdl = model.sm.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-par = control.ModelPars(
+par = control.sm.ModelPars(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, J=.015)
-ref = control.CurrentReferencePars(
+ref = control.sm.CurrentReferencePars(
     par, w_m_nom=base.w, i_s_max=2*base.i, psi_s_min=.5*base.psi)
-ctrl = control.SignalInjectionCtrl(par, ref, T_s=250e-6)
+ctrl = control.sm.SignalInjectionCtrl(par, ref, T_s=250e-6)
 # ctrl.current_ctrl = control.CurrentCtrl(par, 2*np.pi*100)
 # ctrl.signal_inj = control.SignalInjection(par, U_inj=200)
 

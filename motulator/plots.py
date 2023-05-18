@@ -4,7 +4,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
-from motulator.helpers import Bunch, complex2abc
+from motulator.helpers import complex2abc
+from motulator._utils import Bunch
 
 # Plotting parameters
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
@@ -14,6 +15,7 @@ plt.rcParams.update({"text.usetex": False})
 
 
 # %%
+# pylint: disable=too-many-branches
 def plot(sim, base=None, t_span=None):
     """
     Plot example figures.
@@ -152,6 +154,7 @@ def plot(sim, base=None, t_span=None):
 
 
 # %%
+# pylint: disable=too-many-statements
 def plot_extra(sim, base=None, t_span=None):
     """
     Plot extra waveforms for a motor drive with a diode bridge.

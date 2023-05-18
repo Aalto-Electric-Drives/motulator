@@ -25,7 +25,7 @@ copyright = '2023, Aalto Electric Drives'
 author = 'Aalto Electric Drives'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.4'
+release = '0.1.5'
 
 # -- General configuration ---------------------------------------------------
 
@@ -50,12 +50,12 @@ autoapi_options = [
     'members',
     'show-inheritance',
     'show-module-summary',
-    'special-members',
     'imported-members',
-]  # 'private-members', 'imported-members', 'undoc-members',
+]  # 'private-members', 'imported-members', 'undoc-members', 'special-members',
+
 autoapi_python_class_content = 'class'  # 'both'
-autoapi_keep_files = False
-suppress_warnings = ["autoapi"]
+autoapi_keep_files = True
+autoapi_add_toctree_entry = False
 
 from sphinx_gallery.sorting import ExplicitOrder
 
@@ -68,9 +68,11 @@ sphinx_gallery_conf = {
     True,
     'subsection_order':
     ExplicitOrder([
-        '../../examples/vector', '../../examples/vhz',
-        '../../examples/flux_vector', '../../examples/signal_inj',
-        '../../examples/flux_maps', '../../examples/two_mass_systems'
+        '../../examples/vector',
+        '../../examples/vhz',
+        '../../examples/obs_vhz',
+        '../../examples/flux_vector',
+        '../../examples/signal_inj',
     ]),
 }
 

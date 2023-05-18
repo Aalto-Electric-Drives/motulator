@@ -1,6 +1,6 @@
 """
-Flux-vector control: 2.2-kW PMSM
-================================
+2.2-kW PMSM
+===========
 
 This example simulates sensorless stator-flux-vector control of a 2.2-kW PMSM
 drive.
@@ -10,8 +10,8 @@ drive.
 # %%
 # Import the package.
 
-import motulator.model.sm as model
-import motulator.control.sm as control
+import motulator.model as model
+import motulator.control as control
 from motulator.helpers import BaseValues
 from motulator.plots import plot
 
@@ -24,18 +24,19 @@ base = BaseValues(
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(
+machine = model.sm.SynchronousMachine(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+mdl = model.sm.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-ref = control.FluxTorqueReferencePars(par, i_s_max=1.5*base.i, k_u=.9)
-ctrl = control.FluxVectorCtrl(par, ref, sensorless=True)
+par = control.sm.ModelPars(
+    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+ref = control.sm.FluxTorqueReferencePars(par, i_s_max=1.5*base.i, k_u=.9)
+ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

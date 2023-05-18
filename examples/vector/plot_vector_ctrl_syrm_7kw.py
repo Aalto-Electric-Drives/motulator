@@ -1,6 +1,6 @@
 """
-Vector control: 6.7-kW SyRM
-===========================
+6.7-kW SyRM
+===========
 
 This example simulates sensorless vector control of a 6.7-kW SyRM drive.
 
@@ -10,8 +10,8 @@ This example simulates sensorless vector control of a 6.7-kW SyRM drive.
 # Import the packages.
 
 import numpy as np
-import motulator.model.sm as model
-import motulator.control.sm as control
+import motulator.model as model
+import motulator.control as control
 from motulator.helpers import BaseValues, Sequence
 from motulator.plots import plot
 
@@ -24,20 +24,20 @@ base = BaseValues(
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(
+machine = model.sm.SynchronousMachine(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+mdl = model.sm.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system. You may also try to change the parameters.
 
-par = control.ModelPars(
+par = control.sm.ModelPars(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, J=.015)
-ref = control.CurrentReferencePars(
+ref = control.sm.CurrentReferencePars(
     par, w_m_nom=base.w, i_s_max=1.5*base.i, psi_s_min=.5*base.psi, k_u=.9)
-ctrl = control.VectorCtrl(par, ref, T_s=125e-6, sensorless=True)
+ctrl = control.sm.VectorCtrl(par, ref, T_s=125e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

@@ -1,20 +1,24 @@
-"""This package contains continuous-time system models."""
+"""Continuous-time synchronous machine models."""
 
-from motulator.simulation import Simulation
-
-# Import system models
-from motulator.model.mechanics import Mechanics, MechanicsTwoMass
-from motulator.model.converter import Inverter  # , FrequencyConverter
-
-from motulator.model.sm.drive import (
+from motulator.model.sm._drive import (
     Drive,
     DriveTwoMassMechanics,
     SynchronousMachine,
     SynchronousMachineSaturated,
 )
 
-from motulator.model.sm.flux_maps import (
+from motulator.model.sm._flux_maps import (
     import_syre_data,
     plot_flux_map,
     plot_flux_vs_current,
 )
+
+__all__ = [
+    "Drive",
+    "DriveTwoMassMechanics",
+    "SynchronousMachine",
+    "SynchronousMachineSaturated",
+    "import_syre_data",
+    "plot_flux_map",
+    "plot_flux_vs_current",
+]

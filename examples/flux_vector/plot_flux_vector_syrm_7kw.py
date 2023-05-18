@@ -1,6 +1,6 @@
 """
-Flux-vector control: 6.7-kW SyRM
-================================
+6.7-kW SyRM
+===========
 
 This example simulates sensorless stator-flux-vector control of a saturated
 6.7-kW synchronous reluctance motor drive. The saturation is not taken into
@@ -12,8 +12,8 @@ account in the control method (only in the system model).
 # Import the packages.
 
 import numpy as np
-import motulator.model.sm as model
-import motulator.control.sm as control
+import motulator.model as model
+import motulator.control as control
 from motulator.helpers import BaseValues, Sequence
 from motulator.plots import plot
 
@@ -25,7 +25,7 @@ base = BaseValues(
 
 # %%
 # Create a saturation model, see the example
-# :doc:`/auto_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw` for further details.
+# :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` for further details.
 
 
 def i_s(psi_s):
@@ -45,25 +45,26 @@ def i_s(psi_s):
 
 # %%
 # Configure the system model.
-machine = model.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
+machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
 # Magnetically linear SyRM model for comparison
 # machine = model.SynchronousMachine(
 #    n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+mdl = model.sm.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0, J=.015)
+par = control.sm.ModelPars(
+    n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0, J=.015)
 # Disable MTPA since the control system does not consider the saturation
-ref = control.FluxTorqueReferencePars(
+ref = control.sm.FluxTorqueReferencePars(
     par, i_s_max=2*base.i, k_u=.9, psi_s_min=base.psi, psi_s_max=base.psi)
-ctrl = control.FluxVectorCtrl(par, ref, sensorless=True)
+ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
 # Since the saturation is not considered in the control system, the speed
 # estimation bandwidth is set to a lower value
-ctrl.observer = control.SensorlessObserver(par, w_o=2*np.pi*50)
+ctrl.observer = control.sm.Observer(par, w_o=2*np.pi*50)
 
 # %%
 # Set the speed reference and the external load torque.

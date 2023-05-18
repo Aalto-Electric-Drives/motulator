@@ -1,17 +1,17 @@
 """This package contains example controllers for induction machines."""
 
-from motulator.control.im.vector import (
-    ModelPars,
-    CurrentReferencePars,
-    VectorCtrl,
-    CurrentReference,
+from motulator.control.im._vector import (
     CurrentCtrl,
+    CurrentReferencePars,
+    CurrentReference,
+    ModelPars,
     Observer,
+    VectorCtrl,
 )
 
-from motulator.control.im.obs_vhz import (
-    ObserverBasedVHzCtrl, ObserverBasedVHzCtrlPars, SensorlessObserverExtCoord)
+from motulator.control.im._obs_vhz import (
+    FluxObserver, ObserverBasedVHzCtrl, ObserverBasedVHzCtrlPars)
 
-from motulator.control.im.vhz import VHzCtrl
+from motulator.control.im._vhz import VHzCtrl
 
-from motulator.control.common import SpeedCtrl, RateLimiter
+# from motulator.control._common import RateLimiter, SpeedCtrl
