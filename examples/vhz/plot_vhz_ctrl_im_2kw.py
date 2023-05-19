@@ -23,7 +23,7 @@ base = BaseValues(
     U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
 
 # %%
-# The main-flux saturation model is created based on [Qu2012]_. For simplicity,
+# The main-flux saturation model is created based on [#Qu2012]_. For simplicity,
 # the parameters are hardcoded in the function below, but this model structure
 # can be used also for other induction motors.
 
@@ -96,19 +96,19 @@ sim.simulate(t_stop=1.5)
 #    The DC link of this particular example is actually unstable at 1-p.u.
 #    speed at the rated load torque, since the inverter looks like a negative
 #    resistance to the DC link. You could notice this instability if simulating
-#    a longer period (e.g. set `t_stop=2`). For analysis, see e.g., [Hin2007]_.
+#    a longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
 # sphinx_gallery_thumbnail_number = 2
 plot(sim, base=base)
 plot_extra(sim, t_span=(1.1, 1.125), base=base)
 
 # %%
-# References
-# ----------
-# .. [Qu2012] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control
+# .. rubric:: References
+#
+# .. [#Qu2012] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control
 #    of induction motor drives," IEEE Trans. Ind. Appl., 2012,
 #    https://doi.org/10.1109/TIA.2012.2190818
 #
-# .. [Hin2007] Hinkkanen, Harnefors, Luomi, "Control of induction motor drives
+# .. [#Hin2007] Hinkkanen, Harnefors, Luomi, "Control of induction motor drives
 #    equipped with small DC-Link capacitance," Proc. EPE, 2007,
 #    https://doi.org/10.1109/EPE.2007.4417763

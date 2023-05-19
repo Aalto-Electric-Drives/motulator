@@ -17,6 +17,7 @@ This open-source software includes simulation models for an induction machine, a
    API Reference <autoapi/motulator/index>
 
 .. toctree::
+   :titlesonly:
    :caption: System Models
    :name: models
    :maxdepth: 2
@@ -27,7 +28,7 @@ This open-source software includes simulation models for an induction machine, a
    :titlesonly:
    :caption: Control Algorithms
    :name: controllers
-   :maxdepth: 2
+   :maxdepth: 1
 
    control/common
    control/im

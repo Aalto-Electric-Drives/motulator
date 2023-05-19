@@ -4,9 +4,9 @@
 
 This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The
 mechanical subsystem is modeled as a two-mass system. The resonance frequency
-of the mechanics is around 85 Hz. The mechanical parameters correspond
-approximately to https://doi.org/10.1109/tia.2015.2416128, except that the
-torsional damping is set to a smaller value in this example.
+of the mechanics is around 85 Hz. The mechanical parameters correspond to 
+[#Saa2015]_, except that the torsional damping is set to a smaller value in this 
+example.
 
 """
 
@@ -111,3 +111,10 @@ ax2.set_ylabel('Phase (deg)')
 ax2.set_xlabel('Frequency (Hz)')
 fig.align_ylabels()
 plt.show()
+
+# %%
+# .. rubric:: References
+#
+# .. [#Saa2015] Saarakkala, Hinkkanen, "Identification of two-mass mechanical
+#    systems using torque excitation: Design and experimental evaluation," IEEE
+#    Trans. Ind. Appl., 2015, https://doi.org/10.1109/TIA.2015.2416128

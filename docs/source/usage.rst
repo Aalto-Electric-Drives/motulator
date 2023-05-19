@@ -6,22 +6,22 @@ After :doc:`installation`, motulator can be used by creating a continuous-time s
 
    # Import packages
    import numpy as np
-   import motulator.model.im as model  # Induction machine models
-   import motulator.control.im as control  # Induction machine controllers
+   import motulator.model as model  # System models
+   import motulator.control as control  # Controllers
    from motulator.plots import plot  # Plotting functions
 
    # Continuous-time model for the drive system
-   machine = model.InductionMachineInvGamma(
+   machine = model.im.InductionMachineInvGamma(
       R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
    mechanics = model.Mechanics(J=.015)
    converter = model.Inverter(u_dc=540)
-   mdl = model.Drive(machine, mechanics, converter)
+   mdl = model.im.Drive(machine, mechanics, converter)
    
    # Discrete-time controller
-   par = control.ModelPars(
+   par = control.im.ModelPars(
       R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2, J=.015)
-   ref = control.CurrentReferencePars(par, i_s_max=1.5*np.sqrt(2)*5)
-   ctrl = control.VectorCtrl(par, ref)
+   ref = control.im.CurrentReferencePars(par, i_s_max=1.5*np.sqrt(2)*5)
+   ctrl = control.im.VectorCtrl(par, ref)
 
    # Acceleration at t = 0.2 s and load torque step of 14 Nm at t = 0.75 s 
    ctrl.w_m_ref = lambda t: (t > .2)*(2*np.pi*50)

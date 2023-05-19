@@ -1,19 +1,4 @@
-"""
-Sensorless control with signal injection for synchronous machine drives.
-
-This module contains a simple example of square-wave signal injection for low-
-speed operation [#Kim2012]_. A phase-locked loop is used to track the rotor 
-position. For a wider speed range, signal injection could be combined to a 
-model-based observer. The effects of magnetic saturation are not compensated 
-for in this version.
-
-References
-----------
-.. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
-   sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
-   https://doi.org/10.1109/TIA.2012.2210175
-
-"""
+"""Sensorless control with signal injection for synchronous machine drives."""
 
 import numpy as np
 from motulator.helpers import abc2complex
@@ -27,8 +12,21 @@ class SignalInjectionCtrl(Ctrl):
     """
     Sensorless control with signal injection for synchronous machine drives.
 
-    This class interconnects the subsystems of the control system and
-    provides the interface to the solver.
+    This class implements a square-wave signal injection for low-speed 
+    operation according to [#Kim2012]_. A phase-locked loop is used to track 
+    the rotor position. 
+    
+    Notes
+    -----
+    For a wider speed range, signal injection could be combined to a 
+    model-based observer. The effects of magnetic saturation are not
+    compensated for in this version.
+
+    References
+    ----------
+    .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
+       sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
+       https://doi.org/10.1109/TIA.2012.2210175
 
     Parameters
     ----------

@@ -1,15 +1,4 @@
-"""
-Observer-based V/Hz control of synchronous motor drives.
-
-This control method is based on [#Tii2022]_.
-
-References
-----------
-.. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, 
-   "Stable and passive observer-based V/Hz control for synchronous Motors," 
-   Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
-
-"""
+"""Observer-based V/Hz control of synchronous motor drives."""
 
 from dataclasses import dataclass, InitVar
 import numpy as np
@@ -62,12 +51,28 @@ class ObserverBasedVHzCtrl(Ctrl):
     """
     Observer-based V/Hz control for synchronous motors.
 
+    This observer-based V/Hz control control method is based on [#Tii2022]_.
+
     Parameters
     ----------
     par : ModelPars
         Machine model parameters.
-    T_s : float
-        Sampling period (s).
+    ctrl_par : ObserverBasedVHzCtrlPars
+        Control system parameters.
+    T_s : float, optional
+        Sampling period (s). The default is `250e-6`.
+
+    Attributes
+    ----------
+    w_m_ref : callable
+        Rotor speed reference (electrical rad/s).
+
+    References
+    ----------
+    .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, 
+       "Stable and passive observer-based V/Hz control for synchronous Motors," 
+       Proc. IEEE ECCE, Detroit, MI, Oct. 2022, 
+       https://doi.org/10.1109/ECCE50734.2022.9947858
 
     """
 
@@ -178,20 +183,16 @@ class FluxObserver:
 
     The observer gain decouples the electrical and mechanical dynamics and 
     allows placing the poles of the corresponding linearized estimation error 
-    dynamics. For simplicity, the current model is here implemented in rotor 
-    coordinates, however this is mathematically equivalent to controller 
-    coordinates implementation in [#Tii2022]_.
+    dynamics. 
 
     Parameters
     ----------
     par : ModelPars
         Machine model parameters.
-
-    References
-    ----------
-    .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
-       "Stable and passive observer-based V/Hz control for synchronous motors,"
-       Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
+    alpha_o : float, optional
+        Observer gain (rad/s). The default is `2*pi*20`.
+    zeta_inf : float, optional
+        Damping ratio at infinite speed. The default is `0.2`.
 
     """
 
@@ -223,7 +224,8 @@ class FluxObserver:
             Stator angular frequency (rad/s).
 
         """
-        # Transformations to rotor coordinates
+        # Transformations to rotor coordinates. This is mathematically
+        # equivalent to the version in [Tii2022].
         i_sr = i_s*np.exp(1j*self.delta)
         psi_sr = self.psi_s*np.exp(1j*self.delta)
 

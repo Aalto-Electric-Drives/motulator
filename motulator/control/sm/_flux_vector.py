@@ -1,24 +1,4 @@
-"""
-Flux-vector control of synchronous machine drives.
-
-This module cointains a version of stator-flux-vector control [#Pel2009]_. Rotor
-coordinates as well as decoupling between the stator flux and torque channels 
-are used [#Awa2019]_. Here, the stator flux magnitude and the electromagnetic 
-torque are selected as controllable variables. Proportional controllers are 
-used for simplicity. The magnetic saturation is not considered in this
-implementation.
-
-References
-----------
-.. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented 
-   control of IPM drives with variable DC link in the field-weakening region,” 
-   IEEE Trans.Ind. Appl., 2009, https://doi.org/10.1109/TIA.2009.2027167
-
-.. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control 
-   of synchronous motors: A systematic design procedure," IEEE Trans. Ind. 
-   Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
-
-"""
+"""Flux-vector control of synchronous machine drives."""
 
 from dataclasses import dataclass, InitVar
 import numpy as np
@@ -34,8 +14,15 @@ class FluxVectorCtrl(Ctrl):
     """
     Flux-vector control of synchronous machine drives.
 
-    This class interconnects the subsystems of the control system and provides 
-    the interface to the solver.
+    This class implements a variant of stator-flux-vector control [#Pel2009]_. 
+    Rotor coordinates as well as decoupling between the stator flux and torque 
+    channels are used according to [#Awa2019]_. Here, the stator flux magnitude 
+    and the electromagnetic torque are selected as controllable variables. 
+
+    Notes
+    -----
+    Proportional controllers are used for simplicity. The magnetic saturation is 
+    not considered in this implementation.
 
     Parameters
     ----------
@@ -44,13 +31,13 @@ class FluxVectorCtrl(Ctrl):
     ref : FluxTorqueReferencePars
         Reference generation parameters.
     alpha_psi : float, optional
-        Bandwidth of the flux controller (rad/s). The default is 2*np.pi*150.
+        Bandwidth of the flux controller (rad/s). The default is `2*pi*150`.
     alpha_tau : float, optional
-        Bandwidth of the torque controller (rad/s). The default is 2*np.pi*50.
+        Bandwidth of the torque controller (rad/s). The default is `2*pi*50`.
     T_s : float
-        Sampling period (s). The default is 250e-6.
+        Sampling period (s). The default is `250e-6`.
     sensorless : bool, optional
-        If True, sensorless control is used. The default is True.
+        If `True`, sensorless control is used. The default is `True`.
 
     Attributes
     ----------
@@ -64,6 +51,17 @@ class FluxVectorCtrl(Ctrl):
         Speed reference (electrical rad/s) as a function of time (s).
     pwm : PWM
         Pulse-width modulation.
+
+    References
+    ----------
+    .. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented 
+       control of IPM drives with variable DC link in the field-weakening 
+       region,” IEEE Trans.Ind. Appl., 2009, 
+       https://doi.org/10.1109/TIA.2009.2027167
+
+    .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented 
+       control of synchronous motors: A systematic design procedure," IEEE Trans. 
+       Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
     """
 

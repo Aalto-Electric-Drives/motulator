@@ -8,7 +8,8 @@ intermediate stator current reference.
 References
 ----------
 .. [#Tii2022] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-based 
-   V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022.
+   V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022,
+   https://doi.org/10.1109/ECCE50734.2022.9948057
 
 """
 
@@ -34,7 +35,7 @@ class ObserverBasedVHzCtrlPars:
     i_s_max : float, optional
         Maximum stator current (A). The default is `inf`.
     k_tau : float, optional
-        Torque controller gain. The default is 3.
+        Torque controller gain. The default is `3`.
     alpha_psi : float, optional
         Stator flux control bandwidth (rad/s). The default is `2*pi*20`.
     alpha_f : float, optional
