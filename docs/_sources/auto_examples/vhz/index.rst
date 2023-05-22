@@ -1,0 +1,60 @@
+
+
+.. _sphx_glr_auto_examples_vhz:
+
+V/Hz Control
+------------
+
+These examples shows operation of an induction machine under open-loop V/Hz control. Furthermore, a diode front-end rectifier and transition to six-step modulation are also demonstrated. 
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz of a 2.2-kW induction motor drive. The six-step overmodulation is e...">
+
+.. only:: html
+
+  .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_vhz_ctrl_6step_im_2kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, 6-step mode</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters in thi...">
+
+.. only:: html
+
+  .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_vhz_ctrl_im_2kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, diode bridge</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw
+   /auto_examples/vhz/plot_vhz_ctrl_im_2kw
+
