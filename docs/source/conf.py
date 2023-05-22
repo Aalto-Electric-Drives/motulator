@@ -56,7 +56,6 @@ autoapi_options = [
 autoapi_python_class_content = 'class'  # 'both'
 autoapi_keep_files = True
 autoapi_add_toctree_entry = False
-# autoapi_generate_api_docs = False  # Disable automatic API doc generation
 
 from sphinx_gallery.sorting import ExplicitOrder
 
