@@ -213,7 +213,8 @@ class CurrentReferencePars:
     psi_s_min : float, optional
         Minimum stator flux (Vs). The default is `psi_f`.
     w_m_nom : float, optional
-        Nominal rotor angular speed (electrical rad/s).
+        Nominal rotor angular speed (electrical rad/s). Needed if `k_fw` is not
+        directly provided.
     alpha_fw : float, optional
         Field-weakening bandwidth (rad/s). The default is 2*pi*20.
     k_fw : float, optional
@@ -236,8 +237,8 @@ class CurrentReferencePars:
     par: InitVar[ModelPars]
     i_s_max: float
     psi_s_min: float = None
-    w_m_nom: InitVar[float | None] = None
-    alpha_fw: InitVar[float | None] = 2*np.pi*20
+    w_m_nom: InitVar[float] = None
+    alpha_fw: InitVar[float] = 2*np.pi*20
     k_fw: float = None
     k_u: float = 0.95
 
