@@ -1,6 +1,6 @@
 """
-Vector control: 5-kW PM-SyRM
-============================
+5-kW PM-SyRM
+============
 
 This example simulates sensorless vector control of a 5-kW permanent-magnet
 synchronous reluctance motor. Control look-up tables are also plotted.
@@ -8,58 +8,50 @@ synchronous reluctance motor. Control look-up tables are also plotted.
 """
 
 # %%
-# Import the packages.
+# %%
+# Imports.
 
 import numpy as np
-import motulator as mt
+from motulator import model, control
+from motulator import BaseValues, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = mt.BaseValues(
+base = BaseValues(
     U_nom=220, I_nom=15.6, f_nom=85, tau_nom=19, P_nom=5.07e3, n_p=2)
 
 # %%
 # Configure the system model.
 
 # Configure magnetically linear motor model
-mdl = mt.SynchronousMotorDrive()
-mdl.motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-mdl.mech = mt.Mechanics(J=.0042)
-mdl.conv = mt.Inverter(u_dc=310)
+machine = model.sm.SynchronousMachine(
+    n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+mechanics = model.Mechanics(J=.0042)
+converter = model.Inverter(u_dc=310)
+mdl = model.sm.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorVectorCtrlPars(
-    sensorless=True,
-    n_p=2,
-    R_s=.2,
-    L_d=4e-3,
-    L_q=17e-3,
-    psi_f=.134,
-    J=.0042,
-    tau_M_max=2*base.tau_nom,  # Maximum torque
-    i_s_max=2*base.i,  # Maximum current
-    T_s=125e-6,  # Sampling period
-    k_u=.9,  # Voltage margin
-    w_nom=base.w,  # Nominal speed
-    w_o=2*np.pi*200,  # Observer bandwidth
-    alpha_c=2*np.pi*200,  # Current control bandwidth
-    alpha_fw=2*np.pi*20,  # Field-weakening bandwidth
-    alpha_s=2*np.pi*4,  # Speed control bandwidth
-)
-ctrl = mt.SynchronousMotorVectorCtrl(pars)
+par = control.sm.ModelPars(
+    n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134, J=.0042)
+ref = control.sm.CurrentReferencePars(
+    par, w_m_nom=base.w, i_s_max=2*base.i, k_u=.9)
+ctrl = control.sm.VectorCtrl(par, ref, T_s=125e-6, sensorless=True)
+ctrl.observer = control.sm.Observer(par, w_o=2*np.pi*200)
+ctrl.speed_ctrl = control.SpeedCtrl(
+    J=par.J, alpha_s=2*np.pi*4, tau_M_max=1.5*base.tau_nom)
 
 # %%
 # Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
 # sphinx_gallery_thumbnail_number = 1
-tq = mt.TorqueCharacteristics(pars)
-tq.plot_current_loci(pars.i_s_max, base)
-tq.plot_torque_flux(pars.i_s_max, base)
-tq.plot_torque_current(pars.i_s_max, base)
-# tq.plot_flux_loci(pars.i_s_max, base)
+tq = control.sm.TorqueCharacteristics(par)
+tq.plot_current_loci(ctrl.current_ref.i_s_max, base)
+tq.plot_torque_flux(ctrl.current_ref.i_s_max, base)
+tq.plot_torque_current(ctrl.current_ref.i_s_max, base)
+# tq.plot_flux_loci(ctrl.current_ref.i_s_max, base)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -68,15 +60,15 @@ tq.plot_torque_current(pars.i_s_max, base)
 ctrl.w_m_ref = lambda t: (t > .1)*base.w*3
 # Quadratic load torque profile
 k = .05*base.tau_nom/(base.w/base.n_p)**2
-mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
+mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl, pwm=False)
 sim.simulate(t_stop=.6)
 
 # %%
 # Plot results in per-unit values.
 
-mt.plot(sim, base=base)
+plot(sim, base)

@@ -1,36 +1,41 @@
 """
-Vector control: 2.2-kW PMSM
-===========================
+2.2-kW PMSM
+===========
 
 This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 
 """
 
 # %%
-# Import the packages.
+# %%
+# Imports.
 
 import numpy as np
-import motulator as mt
+from motulator import model, control
+from motulator import BaseValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = mt.BaseValues(
+base = BaseValues(
     U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
 
 # %%
 # Configure the system model.
 
-mdl = mt.SynchronousMotorDrive()
-mdl.motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-mdl.mech = mt.Mechanics(J=.015)
-mdl.conv = mt.Inverter(u_dc=540)
+machine = model.sm.SynchronousMachine(
+    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+mechanics = model.Mechanics(J=.015)
+converter = model.Inverter(u_dc=540)
+mdl = model.sm.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
 
-pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True)
-ctrl = mt.SynchronousMotorVectorCtrl(pars)
+par = control.sm.ModelPars(
+    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+ref = control.sm.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=1.5*base.i)
+ctrl = control.sm.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -38,19 +43,18 @@ ctrl = mt.SynchronousMotorVectorCtrl(pars)
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = mt.Sequence(times, values)
+ctrl.w_m_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-mdl.mech.tau_L_t = mt.Sequence(times, values)
+mdl.mechanics.tau_L_t = Sequence(times, values)
+
+# mdl.mechanics.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
+# ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
 
 # %%
 # Create the simulation object and simulate it.
 
-sim = mt.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl, pwm=False)
 sim.simulate(t_stop=4)
-
-# %%
-# Plot results in per-unit values.
-
-mt.plot(sim, base=base)
+plot(sim, base)  # Plot results in per-unit values.
