@@ -6,7 +6,7 @@ The algorithms are written based on the inverse-Γ model.
 """
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator.helpers import abc2complex
+from motulator._helpers import abc2complex
 from motulator.control._common import PWM, Ctrl, ComplexPICtrl, SpeedCtrl
 from motulator._utils import Bunch
 

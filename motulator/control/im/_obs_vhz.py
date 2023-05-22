@@ -17,7 +17,7 @@ References
 from dataclasses import dataclass
 import numpy as np
 from motulator.control._common import Ctrl, PWM, RateLimiter
-from motulator.helpers import abc2complex
+from motulator._helpers import abc2complex
 from motulator._utils import Bunch
 
 

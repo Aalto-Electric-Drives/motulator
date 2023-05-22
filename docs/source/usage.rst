@@ -6,9 +6,9 @@ After :doc:`installation`, motulator can be used by creating a continuous-time s
 
    # Import packages
    import numpy as np
-   import motulator.model as model  # System models
-   import motulator.control as control  # Controllers
-   from motulator.plots import plot  # Plotting functions
+   from motulator import model  # System models
+   from motulator import control  # Controllers
+   from motulator import plot  # Example plotting functions
 
    # Continuous-time model for the drive system
    machine = model.im.InductionMachineInvGamma(

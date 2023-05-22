@@ -1,7 +1,7 @@
 """Sensorless control with signal injection for synchronous machine drives."""
 
 import numpy as np
-from motulator.helpers import abc2complex
+from motulator._helpers import abc2complex
 from motulator.control._common import Ctrl, PWM, SpeedCtrl
 from motulator.control.sm._vector import CurrentCtrl, CurrentReference
 from motulator._utils import Bunch

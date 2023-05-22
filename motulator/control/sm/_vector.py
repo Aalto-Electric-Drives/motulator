@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator.helpers import abc2complex
+from motulator._helpers import abc2complex
 from motulator.control._common import Ctrl, ComplexPICtrl, PWM, SpeedCtrl
 from motulator.control.sm._torque import TorqueCharacteristics
 from motulator._utils import Bunch

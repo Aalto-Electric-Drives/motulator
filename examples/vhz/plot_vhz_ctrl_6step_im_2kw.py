@@ -10,13 +10,12 @@ sampling frequency.
 
 """
 # %%
-# Import the package.
+# %%
+# Imports.
 
 import numpy as np
-import motulator.model as model
-import motulator.control as control
-from motulator.helpers import BaseValues, Sequence
-from motulator.plots import plot, plot_extra
+from motulator import model, control
+from motulator import BaseValues, Sequence, plot, plot_extra
 
 # %%
 # Compute base values based on the nominal values (just for figures).

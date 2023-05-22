@@ -9,13 +9,11 @@ account in the control method (only in the system model).
 """
 
 # %%
-# Import the packages.
+# Imports.
 
 import numpy as np
-import motulator.model as model
-import motulator.control as control
-from motulator.helpers import BaseValues, Sequence
-from motulator.plots import plot
+from motulator import model, control
+from motulator import BaseValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).

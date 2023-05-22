@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.io import savemat
-from motulator.helpers import abc2complex
+from motulator._helpers import abc2complex
 
 
 # %%

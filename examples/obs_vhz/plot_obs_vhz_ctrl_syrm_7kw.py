@@ -1,6 +1,6 @@
 """
-Saturated 6.7-kW SyRM
-=====================
+6.7-kW SyRM, saturated
+======================
 
 This example simulates observer-based V/Hz control of a saturated 6.7-kW
 synchronous reluctance motor drive. The saturation is not taken into account
@@ -9,13 +9,11 @@ in the control method (only in the system model).
 """
 
 # %%
-# Import the package.
+# Imports.
 
 import numpy as np
-import motulator.model as model
-import motulator.control as control
-from motulator.helpers import BaseValues, Sequence
-from motulator.plots import plot
+from motulator import model, control
+from motulator import BaseValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).

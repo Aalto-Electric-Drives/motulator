@@ -13,7 +13,6 @@ This open-source software includes simulation models for an induction machine, a
 
    installation
    usage
-   auto_examples/index
    API Reference <autoapi/motulator/index>
 
 .. toctree::
@@ -33,6 +32,7 @@ This open-source software includes simulation models for an induction machine, a
    control/common
    control/im
    control/sm
+   auto_examples/index
 
 .. rubric::
    Acknowledgement

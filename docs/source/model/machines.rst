@@ -44,7 +44,7 @@ where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the le
     \tau_\mathrm{M} = \frac{3 n_\mathrm{p}}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s}^\mathrm{s} (\boldsymbol{\psi}_\mathrm{s}^\mathrm{s})^* \right\}
     :label: im_torque
 
-The class :class:`motulator.model.im.InductionMachineSaturated` extends the model with the main flux saturation, :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [#Qu2012]_. See also the example :doc:`/auto_examples/vhz/plot_vhz_ctrl_im_2kw`.
+The class :class:`motulator.model.im.InductionMachineSaturated` extends the model with the main flux saturation, :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [#Qu2012]_. See also the example :doc:`/auto_examples/vector/plot_vector_ctrl_im_2kw`.
 
 .. note::
    If the magnetic saturation is omitted, the Γ model is mathematically identical to the inverse-Γ and T models. For example, the parameters of the Γ model can be transformed to those of the inverse-Γ model parameters as follows:

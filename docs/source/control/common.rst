@@ -2,7 +2,7 @@
 Common Methods
 **************
 
-Control methods common to all motor types are described in this section. 
+Control methods common to all motor types are described in this section. This section will be extended and improved in the future. 
 
 .. toctree::
    :titlesonly:

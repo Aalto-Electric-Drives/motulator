@@ -10,6 +10,6 @@ __pycache__/
 
 # Sphinx documentation
 docs/source/_build/
-docs/source/autoapi/
 docs/source/auto_examples/
 docs/build/
+docs/source/autoapi/

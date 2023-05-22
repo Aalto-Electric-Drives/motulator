@@ -1,7 +1,7 @@
 """Common control functions and classes."""
 
 import numpy as np
-from motulator.helpers import abc2complex, complex2abc
+from motulator._helpers import abc2complex, complex2abc
 from motulator._utils import Bunch
 
 

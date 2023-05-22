@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator.helpers import abc2complex
+from motulator._helpers import abc2complex
 from motulator.control._common import Ctrl, PWM, RateLimiter
 from motulator.control.sm._flux_vector import (
     FluxTorqueReference, FluxTorqueReferencePars)

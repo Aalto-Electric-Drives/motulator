@@ -8,12 +8,10 @@ drive.
 """
 
 # %%
-# Import the package.
+# Imports.
 
-import motulator.model as model
-import motulator.control as control
-from motulator.helpers import BaseValues
-from motulator.plots import plot
+from motulator import model, control
+from motulator import BaseValues, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
