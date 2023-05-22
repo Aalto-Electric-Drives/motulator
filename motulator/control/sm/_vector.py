@@ -226,13 +226,14 @@ class CurrentReferencePars:
     i_sd_mtpa : callable
         MTPA d-axis current (A) as a funtion of the torque (Nm).
     tau_M_lim : callable
-        Torque limite (Nm) as a function of the stator flux linkage (Vs). This limit merges the MTPV and current limits.
+        Torque limite (Nm) as a function of the stator flux linkage (Vs). This
+        limit merges the MTPV and current limits.
     i_sd_lim : callable
         d-axis current limit (A) as a function of the stator flux linkage (Vs).
         This limit merges the MTPV and current limits.
     
     """
-    par: InitVar[ModelPars | None]
+    par: InitVar[ModelPars]
     i_s_max: float
     psi_s_min: float = None
     w_m_nom: InitVar[float | None] = None
