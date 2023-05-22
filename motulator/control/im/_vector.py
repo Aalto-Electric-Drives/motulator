@@ -220,8 +220,8 @@ class CurrentReferencePars:
     par: InitVar[ModelPars] = None
     i_s_max: float = None
     u_s_nom: InitVar[float] = np.sqrt(2/3)*400
-    w_s_nom: InitVar[float | None] = 2*np.pi*50
-    psi_R_nom: float | None = None
+    w_s_nom: InitVar[float] = 2*np.pi*50
+    psi_R_nom: float = None
     k_fw: float = None
     k_u: float = 0.95
 
