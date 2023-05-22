@@ -210,7 +210,7 @@ class FluxTorqueReferencePars:
         limit merges the MTPV and current limits. 
 
     """
-    par: InitVar[ModelPars | None]
+    par: InitVar[ModelPars]
     i_s_max: float = None
     psi_s_min: float = None
     psi_s_max: float = np.inf
