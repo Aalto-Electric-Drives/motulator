@@ -18,25 +18,25 @@
 .. _sphx_glr_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:
 
 
-V/Hz control: 2.2-kW induction motor
+2.2-kW induction motor, diode bridge
 ====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters correspond to open-loop V/Hz control. Magnetic saturation of the 
-motor is also modeled.
+parameters in this example yield open-loop V/Hz control. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-12
+.. GENERATED FROM PYTHON SOURCE LINES 10-12
 
-Import the package.
+%%
+Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 12-17
 
 .. code-block:: default
 
 
-    from time import time
     import numpy as np
-    import motulator as mt
+    from motulator import model, control
+    from motulator import BaseValues, plot, plot_extra
 
 
 
@@ -54,7 +54,7 @@ Compute base values based on the nominal values (just for figures).
 .. code-block:: default
 
 
-    base = mt.BaseValues(
+    base = BaseValues(
         U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
 
 
@@ -64,63 +64,23 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-27
-
-The main-flux saturation model is created based on [1]_. For simplicity, the
-parameters are hard-coded in the function below, but this model structure can
-be used also for other induction motors.
-
-.. GENERATED FROM PYTHON SOURCE LINES 27-50
-
-.. code-block:: default
-
-
-
-    def L_s(psi):
-        """
-        Stator inductance saturation model for a 2.2-kW motor.
-
-        Parameters
-        ----------
-        psi : float
-            Magnitude of the stator flux linkage (Vs).
-    
-        Returns
-        -------
-        float
-            Stator inductance (H).
-
-        """
-        # Saturation model parameters for a 2.2-kW induction motor
-        L_su, beta, S = .34, .84, 7
-        # Stator inductance
-        return L_su/(1 + (beta*psi)**S)
-
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-62
+.. GENERATED FROM PYTHON SOURCE LINES 25-35
 
 .. code-block:: default
 
 
-    mdl = mt.InductionMotorDriveDiode()
-    # Γ-equivalent motor model with main-flux saturation included
-    mdl.motor = mt.InductionMotorSaturated(
-        n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
+    # Machine model, using its inverse-Γ parameters
+    machine = model.im.InductionMachineInvGamma(
+        R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
     # Mechanics model
-    mdl.mech = mt.Mechanics(J=.015)
+    mechanics = model.Mechanics(J=.015)
     # Frequency converter with a diode bridge
-    mdl.conv = mt.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
+    converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
+    mdl = model.im.DriveWithDiodeBridge(machine, mechanics, converter)
 
 
 
@@ -129,17 +89,19 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-68
+.. GENERATED FROM PYTHON SOURCE LINES 37-43
 
 .. code-block:: default
 
 
-    ctrl = mt.InductionMotorVHzCtrl(
-        mt.InductionMotorVHzCtrlPars(R_s=0, R_R=0, k_u=0, k_w=0))
+    # Inverse-Γ model parameter estimates
+    par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+    ctrl = control.im.VHzCtrl(250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0)
+    ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 
 
@@ -148,12 +110,12 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-71
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
 
 Set the speed reference and the external load torque. More complicated
 signals could be defined as functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-81
+.. GENERATED FROM PYTHON SOURCE LINES 46-56
 
 .. code-block:: default
 
@@ -162,10 +124,10 @@ signals could be defined as functions.
 
     # Quadratic load torque profile (corresponding to pumps and fans)
     k = 1.1*base.tau_nom/(base.w/base.n_p)**2
-    mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
+    mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
     # Stepwise load torque at t = 1 s, 20% of the rated torque
-    mdl.mech.tau_L_t = lambda t: (t > 1.)*base.tau_nom*.2
+    mdl.mechanics.tau_L_t = lambda t: (t > 1.)*base.tau_nom*.2
 
 
 
@@ -174,36 +136,27 @@ signals could be defined as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-84
+.. GENERATED FROM PYTHON SOURCE LINES 57-59
 
 Create the simulation object and simulate it. The option `pwm=True` enables
 the model for the carrier comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-90
+.. GENERATED FROM PYTHON SOURCE LINES 59-63
 
 .. code-block:: default
 
 
-    sim = mt.Simulation(mdl, ctrl, pwm=True)
-    t_start = time()  # Start the timer
+    sim = model.Simulation(mdl, ctrl, pwm=True)
     sim.simulate(t_stop=1.5)
-    print(f'\nExecution time: {(time() - t_start):.2f} s')
 
 
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    Execution time: 13.47 s
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 91-98
+.. GENERATED FROM PYTHON SOURCE LINES 64-71
 
 Plot results in per-unit values.
 
@@ -211,16 +164,16 @@ Plot results in per-unit values.
    The DC link of this particular example is actually unstable at 1-p.u.
    speed at the rated load torque, since the inverter looks like a negative
    resistance to the DC link. You could notice this instability if simulating
-   a longer period (e.g. set `t_stop=2`). For more information, see e.g. [2]_.
+   a longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-103
+.. GENERATED FROM PYTHON SOURCE LINES 71-76
 
 .. code-block:: default
 
 
     # sphinx_gallery_thumbnail_number = 2
-    mt.plot(sim, base=base)
-    mt.plot_extra(sim, t_span=(1.1, 1.125), base=base)
+    plot(sim, base)
+    plot_extra(sim, t_span=(1.1, 1.125), base=base)
 
 
 
@@ -253,21 +206,18 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-112
+.. GENERATED FROM PYTHON SOURCE LINES 77-82
 
-References
-----------
-.. [1] Qu, Ranta, Hinkkanen, Luomi, "Loss-minimizing flux level control of
-   induction motor drives," IEEE Trans. Ind. Appl., 2012,
-   https://doi.org/10.1109/TIA.2012.2190818
-.. [2] Hinkkanen, Harnefors, Luomi, "Control of induction motor drives
+.. rubric:: References
+
+.. [#Hin2007] Hinkkanen, Harnefors, Luomi, "Control of induction motor drives
    equipped with small DC-Link capacitance," Proc. EPE, 2007,
    https://doi.org/10.1109/EPE.2007.4417763
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  14.986 seconds)
+   **Total running time of the script:** ( 0 minutes  15.048 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:

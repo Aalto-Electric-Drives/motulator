@@ -18,22 +18,23 @@
 .. _sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py:
 
 
-Flux-vector control: 2.2-kW PMSM
-================================
+2.2-kW PMSM
+===========
 
 This example simulates sensorless stator-flux-vector control of a 2.2-kW PMSM
 drive.
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-12
 
-Import the package.
+Imports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-15
+.. GENERATED FROM PYTHON SOURCE LINES 12-16
 
 .. code-block:: default
 
 
-    import motulator as mt
+    from motulator import model, control
+    from motulator import BaseValues, plot
 
 
 
@@ -42,16 +43,16 @@ Import the package.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 18-22
 
 .. code-block:: default
 
 
-    base = mt.BaseValues(
+    base = BaseValues(
         U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
 
 
@@ -61,19 +62,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-29
+.. GENERATED FROM PYTHON SOURCE LINES 24-31
 
 .. code-block:: default
 
 
-    mdl = mt.SynchronousMotorDrive()
-    mdl.motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-    mdl.mech = mt.Mechanics(J=.015)
-    mdl.conv = mt.Inverter(u_dc=540)
+    machine = model.sm.SynchronousMachine(
+        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+    mechanics = model.Mechanics(J=.015)
+    converter = model.Inverter(u_dc=540)
+    mdl = model.sm.Drive(machine, mechanics, converter)
 
 
 
@@ -82,17 +84,19 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-35
+.. GENERATED FROM PYTHON SOURCE LINES 33-39
 
 .. code-block:: default
 
 
-    pars = mt.SynchronousMotorFluxVectorCtrlPars(sensorless=True, T_s=250e-6)
-    ctrl = mt.SynchronousMotorFluxVectorCtrl(pars)
+    par = control.sm.ModelPars(
+        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+    ref = control.sm.FluxTorqueReferencePars(par, i_s_max=1.5*base.i, k_u=.9)
+    ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
 
 
 
@@ -101,18 +105,18 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-42
+.. GENERATED FROM PYTHON SOURCE LINES 41-46
 
 .. code-block:: default
 
 
     # Simple acceleration and load torque step
     ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
-    mdl.mech.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
+    mdl.mechanics.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
 
 
 
@@ -121,16 +125,16 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-48
+.. GENERATED FROM PYTHON SOURCE LINES 48-52
 
 .. code-block:: default
 
 
-    sim = mt.Simulation(mdl, ctrl, pwm=False)
+    sim = model.Simulation(mdl, ctrl, pwm=False)
     sim.simulate(t_stop=1.6)
 
 
@@ -140,16 +144,16 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-52
+.. GENERATED FROM PYTHON SOURCE LINES 54-56
 
 .. code-block:: default
 
 
-    mt.plot(sim, base=base)
+    plot(sim, base)
 
 
 
@@ -165,7 +169,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.380 seconds)
+   **Total running time of the script:** ( 0 minutes  4.683 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py:

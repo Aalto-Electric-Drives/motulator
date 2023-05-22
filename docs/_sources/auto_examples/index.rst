@@ -19,28 +19,12 @@ A collection of Python scripts that demonstrate how to use *motulator*.
 Vector Control
 --------------
 
+These examples are for current vector control of induction machines and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/auto_examples/vector/plot_vector_ctrl_im_2kw`) as well as computation of control look-up tables for synchronous machines (:doc:`/auto_examples/vector/plot_vector_ctrl_pmsyrm_thor`). 
 
 
 .. raw:: html
 
     <div class="sphx-glr-thumbnails">
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive.">
-
-.. only:: html
-
-  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Vector control: 2.2-kW PMSM</div>
-    </div>
 
 
 .. raw:: html
@@ -56,7 +40,24 @@ Vector Control
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Vector control: 6.7-kW SyRM</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive.">
+
+.. only:: html
+
+  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
     </div>
 
 
@@ -73,13 +74,13 @@ Vector Control
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Vector control: 5-kW PM-SyRM</div>
+      <div class="sphx-glr-thumbnail-title">5-kW PM-SyRM</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW induction motor drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW induction motor drive. The magneti...">
 
 .. only:: html
 
@@ -90,7 +91,7 @@ Vector Control
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Vector control: 2.2-kW induction motor</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, saturated</div>
     </div>
 
 
@@ -101,28 +102,12 @@ Vector Control
 V/Hz Control
 ------------
 
+These examples shows operation of an induction machine under open-loop V/Hz control. Furthermore, a diode front-end rectifier and transition to six-step modulation are also demonstrated. 
 
 
 .. raw:: html
 
     <div class="sphx-glr-thumbnails">
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.">
-
-.. only:: html
-
-  .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Observer-based V/Hz control: 2.2-kW PMSM</div>
-    </div>
 
 
 .. raw:: html
@@ -138,30 +123,13 @@ V/Hz Control
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">V/Hz control up to the 6-step mode: 2.2-kW induction motor</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, 6-step mode</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW induction motor drive.">
-
-.. only:: html
-
-  .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_im_2kw_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_vhz_plot_obs_vhz_ctrl_im_2kw.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Observer-based V/Hz control: 2.2-kW induction motor</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters corres...">
+    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters in thi...">
 
 .. only:: html
 
@@ -172,7 +140,64 @@ V/Hz Control
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">V/Hz control: 2.2-kW induction motor</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, diode bridge</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+Observer-Based V/Hz Control
+---------------------------
+
+These examples demonstrate observer-based V/Hz control for induction machines [#Tii2022a]_ and synchronous machines [#Tii2022b]_. The examples :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` and :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor` also present the use of saturation models. The example :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model. 
+
+.. rubric:: References
+
+.. [#Tii2022a] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-based V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9948057
+
+
+.. [#Tii2022b] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable and passive observer-based V/Hz control for synchronous Motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9947858
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.">
+
+.. only:: html
+
+  .. image:: /auto_examples/obs_vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW induction motor drive.">
+
+.. only:: html
+
+  .. image:: /auto_examples/obs_vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_im_2kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor</div>
     </div>
 
 
@@ -182,14 +207,48 @@ V/Hz Control
 
 .. only:: html
 
-  .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_syrm_7kw_thumb.png
+  .. image:: /auto_examples/obs_vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_syrm_7kw_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_vhz_plot_obs_vhz_ctrl_syrm_7kw.py`
+  :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Observer-based V/Hz control: 6.7-kW SyRM</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The mechanical subsy...">
+
+.. only:: html
+
+  .. image:: /auto_examples/obs_vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_two_mass_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, 2-mass mechanics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a saturated 5-kW permanent-magnet synchro...">
+
+.. only:: html
+
+  .. image:: /auto_examples/obs_vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">5-kW PM-SyRM, flux maps from SyR-e</div>
     </div>
 
 
@@ -199,6 +258,23 @@ V/Hz Control
 
 Flux-Vector Control
 -------------------
+
+These examples demonstrate flux-vector control of synchronous machine drives 
+[#Pel2009]_. In the implemented controller, rotor coordinates as well as 
+decoupling between the stator flux and torque channels are used according to 
+[#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic 
+torque are selected as controllable variables. 
+
+.. rubric:: References
+
+.. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented 
+   control of IPM drives with variable DC link in the field-weakening 
+   region,” IEEE Trans.Ind. Appl., 2009, 
+   https://doi.org/10.1109/TIA.2009.2027167
+
+.. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented 
+   control of synchronous motors: A systematic design procedure," IEEE Trans. 
+   Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
 
 
@@ -220,7 +296,7 @@ Flux-Vector Control
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Flux-vector control: 2.2-kW PMSM</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
     </div>
 
 
@@ -237,7 +313,7 @@ Flux-Vector Control
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Flux-vector control: 6.7-kW SyRM</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
     </div>
 
 
@@ -247,6 +323,18 @@ Flux-Vector Control
 
 Signal Injection
 ----------------
+
+These examples demonstrate a square-wave signal injection for low-speed 
+operation based on [#Kim2012]_. A phase-locked loop is used to track the rotor 
+position. For a wider speed range, signal injection could be combined to a 
+model-based observer. The effects of magnetic saturation are not compensated for in 
+this version.
+
+.. rubric:: References
+
+.. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
+   sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
+   https://doi.org/10.1109/TIA.2012.2210175
 
 
 
@@ -268,7 +356,7 @@ Signal Injection
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Vector control with signal injection: 2.2-kW PMSM</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
     </div>
 
 
@@ -285,69 +373,7 @@ Signal Injection
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Vector control with signal injection: 6.7-kW SyRM</div>
-    </div>
-
-
-.. raw:: html
-
-    </div>
-
-Flux Maps
----------
-
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbnails">
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a saturated 5-kW permanent-magnet synchro...">
-
-.. only:: html
-
-  .. image:: /auto_examples/flux_maps/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_flux_maps_plot_obs_vhz_ctrl_pmsyrm_thor.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Observer-based V/Hz control: 5-kW PM-SyRM</div>
-    </div>
-
-
-.. raw:: html
-
-    </div>
-
-Two-Mass Systems
-----------------
-
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbnails">
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The mechanical subsy...">
-
-.. only:: html
-
-  .. image:: /auto_examples/two_mass_systems/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_two_mass_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_two_mass_systems_plot_vector_ctrl_pmsm_2kw_two_mass.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Observer-based V/Hz control: PMSM with 2-mass mechanics</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
     </div>
 
 
@@ -363,10 +389,9 @@ Two-Mass Systems
 
    /auto_examples/vector/index.rst
    /auto_examples/vhz/index.rst
+   /auto_examples/obs_vhz/index.rst
    /auto_examples/flux_vector/index.rst
    /auto_examples/signal_inj/index.rst
-   /auto_examples/flux_maps/index.rst
-   /auto_examples/two_mass_systems/index.rst
 
 
 .. only:: html

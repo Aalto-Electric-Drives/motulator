@@ -5,44 +5,522 @@
 
 .. autoapi-nested-parse::
 
-   Continuous-time models for induction motors.
+   
+   Continuous-time induction machine models.
 
-   Peak-valued complex space vectors are used. The space vector models are
-   implemented in stator coordinates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    ..
        !! processed by numpydoc !!
 
 
-Module Contents
----------------
+Package Contents
+----------------
 
 Classes
 ~~~~~~~
 
 .. autoapisummary::
 
-   motulator.model.im.InductionMotor
-   motulator.model.im.InductionMotorSaturated
-   motulator.model.im.InductionMotorInvGamma
+   motulator.model.im.Drive
+   motulator.model.im.DriveWithDiodeBridge
+   motulator.model.im.DriveTwoMassMechanics
+   motulator.model.im.InductionMachine
+   motulator.model.im.InductionMachineSaturated
+   motulator.model.im.InductionMachineInvGamma
 
 
 
 
-.. py:class:: InductionMotor(n_p, R_s, R_r, L_ell, L_s)
+.. py:class:: Drive(machine=None, mechanics=None, converter=None)
 
    
-   Γ-equivalent model of an induction motor.
+   Continuous-time model for an induction machine drive.
 
-   An induction motor is modeled using the Γ-equivalent model [R743146ac54e0-1]_. The model
-   is implemented in stator coordinates. The flux linkages are used as state
-   variables.
+   This interconnects the subsystems of an induction machine drive and provides
+   an interface to the solver. More complicated systems could be modeled using
+   a similar template.
+
+   :param machine: Induction machine model.
+   :type machine: InductionMachine | InductionMachineSaturated
+   :param mechanics: Mechanics model.
+   :type mechanics: Mechanics
+   :param converver: Inverter model.
+   :type converver: Inverter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: get_initial_values()
+
+      
+      Get the initial values.
+
+      :returns: **x0** -- Initial values of the state variables.
+      :rtype: complex list, length 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_initial_values(t0, x0)
+
+      
+      Set the initial values.
+
+      :param t0: Initial time (s).
+      :type t0: float
+      :param x0: Initial values of the state variables.
+      :type x0: complex ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(t, x)
+
+      
+      Compute the complete state derivative list for the solver.
+
+      :param t: Time (s).
+      :type t: float
+      :param x: State vector.
+      :type x: complex ndarray
+
+      :returns: State derivatives.
+      :rtype: complex list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: save(sol)
+
+      
+      Save the solution.
+
+      :param sol: Solution from the solver.
+      :type sol: Bunch object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: post_process()
+
+      
+      Transform the lists to the ndarray format and post-process them.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveWithDiodeBridge(machine=None, mechanics=None, converter=None)
+
+   Bases: :py:obj:`Drive`
+
+   
+   Induction machine drive equipped with a diode bridge.
+
+   This model extends the DriveWithDiodeBridge class with a model for a
+   three-phase diode bridge fed from stiff supply voltages. The DC bus is
+   modeled as an inductor and a capacitor.
+
+   :param machine: Induction machine model.
+   :type machine: InductionMachine | InductionMachineSaturated
+   :param mechanics: Mechanics model.
+   :type mechanics: Mechanics
+   :param converter: Frequency converter model.
+   :type converter: FrequencyConverter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: get_initial_values()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_initial_values(t0, x0)
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(t, x)
+
+      
+      Override the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: save(sol)
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: post_process()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveTwoMassMechanics(machine=None, mechanics=None, converter=None)
+
+   Bases: :py:obj:`Drive`
+
+   
+   Induction machine drive with two-mass mechanics.
+
+   This interconnects the subsystems of an induction machine drive and provides
+   an interface to the solver.
+
+   :param machine: Induction machine model.
+   :type machine: InductionMachine | InductionMachineSaturated
+   :param mechanics: Mechanics model.
+   :type mechanics: MechanicsTwoMass
+   :param converter: Inverter model.
+   :type converter: Inverter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: get_initial_values()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_initial_values(t0, x0)
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(t, x)
+
+      
+      Override the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: save(sol)
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: post_process()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: InductionMachine(n_p, R_s, R_r, L_ell, L_s)
+
+   
+   Γ-equivalent model of an induction machine.
+
+   An induction machine is modeled using the Γ-equivalent model [R2668301633c9-Sle1989]_. The
+   model is implemented in stator coordinates. The flux linkages are used as
+   state variables.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
-   :param R_s: Stator resistance (Ohm).
+   :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param R_r: Rotor resistance (Ohm).
+   :param R_r: Rotor resistance (Ω).
    :type R_r: float
    :param L_ell: Leakage inductance (H).
    :type L_ell: float
@@ -54,12 +532,12 @@ Classes
    The Γ model is chosen here since it can be extended with the magnetic
    saturation model in a staightforward manner. If the magnetic saturation is
    omitted, the Γ model is mathematically identical to the inverse-Γ and T
-   models [R743146ac54e0-1]_.
+   models [R2668301633c9-Sle1989]_.
 
    .. rubric:: References
 
-   .. [R743146ac54e0-1] Slemon, "Modelling of induction machines for electric drives," IEEE
-      Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
+   .. [R2668301633c9-Sle1989] Slemon, "Modelling of induction machines for electric drives,"
+      IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
 
 
 
@@ -206,23 +684,23 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotorSaturated(n_p, R_s, R_r, L_ell, L_s)
+.. py:class:: InductionMachineSaturated(n_p, R_s, R_r, L_ell, L_s)
 
-   Bases: :py:obj:`InductionMotor`
+   Bases: :py:obj:`InductionMachine`
 
    
-   Γ-equivalent model of an induction motor model with main-flux saturation.
+   Γ-equivalent model of an induction machine model with main-flux saturation.
 
-   This extends the InductionMotor class with a main-flux magnetic saturation
+   This extends the InductionMachine class with a main-flux magnetic saturation
    model::
 
        L_s = L_s(abs(psi_ss))
 
    :param n_p: Number of pole pairs.
    :type n_p: int
-   :param R_s: Stator resistance (Ohm).
+   :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param R_r: Rotor resistance (Ohm).
+   :param R_r: Rotor resistance (Ω).
    :type R_r: float
    :param L_ell: Leakage inductance (H).
    :type L_ell: float
@@ -269,22 +747,22 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMotorInvGamma(n_p, R_s, R_R, L_sgm, L_M)
+.. py:class:: InductionMachineInvGamma(n_p, R_s, R_R, L_sgm, L_M)
 
-   Bases: :py:obj:`InductionMotor`
+   Bases: :py:obj:`InductionMachine`
 
    
-   Inverse-Γ model of an induction motor.
+   Inverse-Γ model of an induction machine.
 
-   This extends the InductionMotor class (based on the Γ model) by providing
+   This extends the InductionMachine class (based on the Γ model) by providing
    an interface for the inverse-Γ model parameters. Linear magnetics are
    assumed. If magnetic saturation is to be modeled, the Γ model is preferred.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
-   :param R_s: Stator resistance (Ohm).
+   :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param R_R: Rotor resistance (Ohm).
+   :param R_R: Rotor resistance (Ω).
    :type R_R: float
    :param L_sgm: Leakage inductance (H).
    :type L_sgm: float

@@ -18,23 +18,25 @@
 .. _sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:
 
 
-Vector control: 5-kW PM-SyRM
-============================
+5-kW PM-SyRM
+============
 
 This example simulates sensorless vector control of a 5-kW permanent-magnet
 synchronous reluctance motor. Control look-up tables are also plotted.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-12
+.. GENERATED FROM PYTHON SOURCE LINES 11-13
 
-Import the packages.
+%%
+Imports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-16
+.. GENERATED FROM PYTHON SOURCE LINES 13-18
 
 .. code-block:: default
 
 
     import numpy as np
-    import motulator as mt
+    from motulator import model, control
+    from motulator import BaseValues, plot
 
 
 
@@ -43,16 +45,16 @@ Import the packages.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: default
 
 
-    base = mt.BaseValues(
+    base = BaseValues(
         U_nom=220, I_nom=15.6, f_nom=85, tau_nom=19, P_nom=5.07e3, n_p=2)
 
 
@@ -62,20 +64,21 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-31
+.. GENERATED FROM PYTHON SOURCE LINES 26-34
 
 .. code-block:: default
 
 
     # Configure magnetically linear motor model
-    mdl = mt.SynchronousMotorDrive()
-    mdl.motor = mt.SynchronousMotor(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-    mdl.mech = mt.Mechanics(J=.0042)
-    mdl.conv = mt.Inverter(u_dc=310)
+    machine = model.sm.SynchronousMachine(
+        n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+    mechanics = model.Mechanics(J=.0042)
+    converter = model.Inverter(u_dc=310)
+    mdl = model.sm.Drive(machine, mechanics, converter)
 
 
 
@@ -84,34 +87,23 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-54
+.. GENERATED FROM PYTHON SOURCE LINES 36-46
 
 .. code-block:: default
 
 
-    pars = mt.SynchronousMotorVectorCtrlPars(
-        sensorless=True,
-        n_p=2,
-        R_s=.2,
-        L_d=4e-3,
-        L_q=17e-3,
-        psi_f=.134,
-        J=.0042,
-        tau_M_max=2*base.tau_nom,  # Maximum torque
-        i_s_max=2*base.i,  # Maximum current
-        T_s=125e-6,  # Sampling period
-        k_u=.9,  # Voltage margin
-        w_nom=base.w,  # Nominal speed
-        w_o=2*np.pi*200,  # Observer bandwidth
-        alpha_c=2*np.pi*200,  # Current control bandwidth
-        alpha_fw=2*np.pi*20,  # Field-weakening bandwidth
-        alpha_s=2*np.pi*4,  # Speed control bandwidth
-    )
-    ctrl = mt.SynchronousMotorVectorCtrl(pars)
+    par = control.sm.ModelPars(
+        n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134, J=.0042)
+    ref = control.sm.CurrentReferencePars(
+        par, w_m_nom=base.w, i_s_max=2*base.i, k_u=.9)
+    ctrl = control.sm.VectorCtrl(par, ref, T_s=125e-6, sensorless=True)
+    ctrl.observer = control.sm.Observer(par, w_o=2*np.pi*200)
+    ctrl.speed_ctrl = control.SpeedCtrl(
+        J=par.J, alpha_s=2*np.pi*4, tau_M_max=1.5*base.tau_nom)
 
 
 
@@ -120,21 +112,21 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-64
+.. GENERATED FROM PYTHON SOURCE LINES 48-56
 
 .. code-block:: default
 
 
     # sphinx_gallery_thumbnail_number = 1
-    tq = mt.TorqueCharacteristics(pars)
-    tq.plot_current_loci(pars.i_s_max, base)
-    tq.plot_torque_flux(pars.i_s_max, base)
-    tq.plot_torque_current(pars.i_s_max, base)
-    # tq.plot_flux_loci(pars.i_s_max, base)
+    tq = control.sm.TorqueCharacteristics(par)
+    tq.plot_current_loci(ctrl.current_ref.i_s_max, base)
+    tq.plot_torque_flux(ctrl.current_ref.i_s_max, base)
+    tq.plot_torque_current(ctrl.current_ref.i_s_max, base)
+    # tq.plot_flux_loci(ctrl.current_ref.i_s_max, base)
 
 
 
@@ -167,11 +159,11 @@ Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-73
+.. GENERATED FROM PYTHON SOURCE LINES 58-65
 
 .. code-block:: default
 
@@ -180,7 +172,7 @@ Set the speed reference and the external load torque.
     ctrl.w_m_ref = lambda t: (t > .1)*base.w*3
     # Quadratic load torque profile
     k = .05*base.tau_nom/(base.w/base.n_p)**2
-    mdl.mech.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
+    mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 
 
@@ -189,16 +181,16 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-75
+.. GENERATED FROM PYTHON SOURCE LINES 66-67
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-79
+.. GENERATED FROM PYTHON SOURCE LINES 67-71
 
 .. code-block:: default
 
 
-    sim = mt.Simulation(mdl, ctrl, pwm=False)
+    sim = model.Simulation(mdl, ctrl, pwm=False)
     sim.simulate(t_stop=.6)
 
 
@@ -208,16 +200,16 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-81
+.. GENERATED FROM PYTHON SOURCE LINES 72-73
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-83
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
 .. code-block:: default
 
 
-    mt.plot(sim, base=base)
+    plot(sim, base)
 
 
 
@@ -233,7 +225,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.096 seconds)
+   **Total running time of the script:** ( 0 minutes  4.344 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:

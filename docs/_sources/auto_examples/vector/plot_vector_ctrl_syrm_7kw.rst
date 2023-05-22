@@ -18,22 +18,24 @@
 .. _sphx_glr_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py:
 
 
-Vector control: 6.7-kW SyRM
-===========================
+6.7-kW SyRM
+===========
 
 This example simulates sensorless vector control of a 6.7-kW SyRM drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-11
+.. GENERATED FROM PYTHON SOURCE LINES 10-12
 
-Import the packages.
+%%
+Imports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-15
+.. GENERATED FROM PYTHON SOURCE LINES 12-17
 
 .. code-block:: default
 
 
     import numpy as np
-    import motulator as mt
+    from motulator import model, control
+    from motulator import BaseValues, Sequence, plot
 
 
 
@@ -42,16 +44,16 @@ Import the packages.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: default
 
 
-    base = mt.BaseValues(
+    base = BaseValues(
         U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, n_p=2)
 
 
@@ -61,20 +63,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-30
+.. GENERATED FROM PYTHON SOURCE LINES 25-32
 
 .. code-block:: default
 
 
-    mdl = mt.SynchronousMotorDrive()
-    mdl.motor = mt.SynchronousMotor(
+    machine = model.sm.SynchronousMachine(
         n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
-    mdl.mech = mt.Mechanics(J=.015)
-    mdl.conv = mt.Inverter(u_dc=540)
+    mechanics = model.Mechanics(J=.015)
+    converter = model.Inverter(u_dc=540)
+    mdl = model.sm.Drive(machine, mechanics, converter)
 
 
 
@@ -83,35 +85,20 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 Configure the control system. You may also try to change the parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-54
+.. GENERATED FROM PYTHON SOURCE LINES 34-41
 
 .. code-block:: default
 
 
-    pars = mt.SynchronousMotorVectorCtrlPars(
-        sensorless=True,
-        T_s=250e-6,
-        alpha_c=2*np.pi*200,
-        alpha_fw=2*np.pi*20,
-        alpha_s=2*np.pi*4,
-        w_o=2*np.pi*80,  # Used only in the sensorless mode
-        tau_M_max=2*base.tau_nom,
-        i_s_max=2*base.i,
-        psi_s_min=.5*base.psi,  # Can be 0 in the sensored mode
-        k_u=.95,
-        w_nom=2*np.pi*105.8,
-        n_p=2,
-        R_s=.54,
-        L_d=41.5e-3,
-        L_q=6.2e-3,
-        psi_f=0,
-        J=.015)
-    ctrl = mt.SynchronousMotorVectorCtrl(pars)
-    # pars.plot_luts(base)  # Plot control look-up tables
+    par = control.sm.ModelPars(
+        n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, J=.015)
+    ref = control.sm.CurrentReferencePars(
+        par, w_m_nom=base.w, i_s_max=1.5*base.i, psi_s_min=.5*base.psi, k_u=.9)
+    ctrl = control.sm.VectorCtrl(par, ref, T_s=125e-6, sensorless=True)
 
 
 
@@ -120,11 +107,11 @@ Configure the control system. You may also try to change the parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-70
+.. GENERATED FROM PYTHON SOURCE LINES 43-53
 
 .. code-block:: default
 
@@ -132,15 +119,11 @@ Set the speed reference and the external load torque.
     # Speed reference
     times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-    ctrl.w_m_ref = mt.Sequence(times, values)
+    ctrl.w_m_ref = Sequence(times, values)
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-    mdl.mech.tau_L_t = mt.Sequence(times, values)
-
-    # Simple acceleration and load torque step
-    # ctrl.w_m_ref = lambda t: (t > .2)*(.5*base.w)
-    # mdl.mech.tau_L_t = lambda t: (t > .75)*base.tau_nom
+    mdl.mechanics.tau_L_t = Sequence(times, values)
 
 
 
@@ -149,16 +132,16 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 55-59
 
 .. code-block:: default
 
 
-    sim = mt.Simulation(mdl, ctrl, pwm=False)
+    sim = model.Simulation(mdl, ctrl, pwm=False)
     sim.simulate(t_stop=4)
 
 
@@ -168,16 +151,16 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-80
+.. GENERATED FROM PYTHON SOURCE LINES 61-63
 
 .. code-block:: default
 
 
-    mt.plot(sim, base=base)
+    plot(sim, base)
 
 
 
@@ -193,7 +176,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.156 seconds)
+   **Total running time of the script:** ( 0 minutes  23.440 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py:

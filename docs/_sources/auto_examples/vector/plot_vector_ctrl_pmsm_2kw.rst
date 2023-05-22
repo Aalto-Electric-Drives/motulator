@@ -18,22 +18,24 @@
 .. _sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:
 
 
-Vector control: 2.2-kW PMSM
-===========================
+2.2-kW PMSM
+===========
 
 This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-11
+.. GENERATED FROM PYTHON SOURCE LINES 10-12
 
-Import the packages.
+%%
+Imports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-15
+.. GENERATED FROM PYTHON SOURCE LINES 12-17
 
 .. code-block:: default
 
 
     import numpy as np
-    import motulator as mt
+    from motulator import model, control
+    from motulator import BaseValues, Sequence, plot
 
 
 
@@ -42,16 +44,16 @@ Import the packages.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: default
 
 
-    base = mt.BaseValues(
+    base = BaseValues(
         U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
 
 
@@ -61,19 +63,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-29
+.. GENERATED FROM PYTHON SOURCE LINES 25-32
 
 .. code-block:: default
 
 
-    mdl = mt.SynchronousMotorDrive()
-    mdl.motor = mt.SynchronousMotor(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-    mdl.mech = mt.Mechanics(J=.015)
-    mdl.conv = mt.Inverter(u_dc=540)
+    machine = model.sm.SynchronousMachine(
+        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+    mechanics = model.Mechanics(J=.015)
+    converter = model.Inverter(u_dc=540)
+    mdl = model.sm.Drive(machine, mechanics, converter)
 
 
 
@@ -82,17 +85,19 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-35
+.. GENERATED FROM PYTHON SOURCE LINES 34-40
 
 .. code-block:: default
 
 
-    pars = mt.SynchronousMotorVectorCtrlPars(sensorless=True)
-    ctrl = mt.SynchronousMotorVectorCtrl(pars)
+    par = control.sm.ModelPars(
+        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+    ref = control.sm.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=1.5*base.i)
+    ctrl = control.sm.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 
 
@@ -101,11 +106,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-47
+.. GENERATED FROM PYTHON SOURCE LINES 42-55
 
 .. code-block:: default
 
@@ -113,11 +118,14 @@ Set the speed reference and the external load torque.
     # Speed reference
     times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-    ctrl.w_m_ref = mt.Sequence(times, values)
+    ctrl.w_m_ref = Sequence(times, values)
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-    mdl.mech.tau_L_t = mt.Sequence(times, values)
+    mdl.mechanics.tau_L_t = Sequence(times, values)
+
+    # mdl.mechanics.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
+    # ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
 
 
 
@@ -126,35 +134,18 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-53
+.. GENERATED FROM PYTHON SOURCE LINES 57-61
 
 .. code-block:: default
 
 
-    sim = mt.Simulation(mdl, ctrl, pwm=False)
+    sim = model.Simulation(mdl, ctrl, pwm=False)
     sim.simulate(t_stop=4)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
-
-Plot results in per-unit values.
-
-.. GENERATED FROM PYTHON SOURCE LINES 55-57
-
-.. code-block:: default
-
-
-    mt.plot(sim, base=base)
+    plot(sim, base)  # Plot results in per-unit values.
 
 
 
@@ -170,7 +161,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  12.108 seconds)
+   **Total running time of the script:** ( 0 minutes  12.731 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:
