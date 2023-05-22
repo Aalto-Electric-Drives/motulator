@@ -1,8 +1,0 @@
-numpydoc
-sphinx-autoapi
-sphinx-copybutton
-sphinx-gallery
-sphinx-rtd-theme
-numpy
-scipy
-matplotlib
