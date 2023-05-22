@@ -217,7 +217,7 @@ class CurrentReferencePars:
         Voltage utilization factor. The default is 0.95.
     
     """
-    par: InitVar[ModelPars | None] = None
+    par: InitVar[ModelPars] = None
     i_s_max: float = None
     u_s_nom: InitVar[float] = np.sqrt(2/3)*400
     w_s_nom: InitVar[float | None] = 2*np.pi*50
