@@ -488,7 +488,7 @@ Classes
    ..
        !! processed by numpydoc !!
 
-.. py:class:: FluxVectorCtrl(par, ref, alpha_psi=2 * np.pi * 150, alpha_tau=2 * np.pi * 50, T_s=0.00025, sensorless=True)
+.. py:class:: FluxVectorCtrl(par, ref, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, T_s=0.00025, sensorless=True)
 
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
@@ -509,9 +509,9 @@ Classes
    :type par: ModelPars
    :param ref: Reference generation parameters.
    :type ref: FluxTorqueReferencePars
-   :param alpha_psi: Bandwidth of the flux controller (rad/s). The default is `2*pi*150`.
+   :param alpha_psi: Bandwidth of the flux controller (rad/s). The default is `2*pi*100`.
    :type alpha_psi: float, optional
-   :param alpha_tau: Bandwidth of the torque controller (rad/s). The default is `2*pi*50`.
+   :param alpha_tau: Bandwidth of the torque controller (rad/s). The default is `2*pi*200`.
    :type alpha_tau: float, optional
    :param T_s: Sampling period (s). The default is `250e-6`.
    :type T_s: float

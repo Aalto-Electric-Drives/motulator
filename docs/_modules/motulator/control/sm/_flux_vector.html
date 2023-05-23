@@ -345,9 +345,9 @@ document.write(`
 <span class="sd">    ref : FluxTorqueReferencePars</span>
 <span class="sd">        Reference generation parameters.</span>
 <span class="sd">    alpha_psi : float, optional</span>
-<span class="sd">        Bandwidth of the flux controller (rad/s). The default is `2*pi*150`.</span>
+<span class="sd">        Bandwidth of the flux controller (rad/s). The default is `2*pi*100`.</span>
 <span class="sd">    alpha_tau : float, optional</span>
-<span class="sd">        Bandwidth of the torque controller (rad/s). The default is `2*pi*50`.</span>
+<span class="sd">        Bandwidth of the torque controller (rad/s). The default is `2*pi*200`.</span>
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s). The default is `250e-6`.</span>
 <span class="sd">    sensorless : bool, optional</span>
@@ -384,8 +384,8 @@ document.write(`
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">par</span><span class="p">,</span>
             <span class="n">ref</span><span class="p">,</span>
-            <span class="n">alpha_psi</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">150</span><span class="p">,</span>
-            <span class="n">alpha_tau</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">alpha_psi</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">alpha_tau</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">200</span><span class="p">,</span>
             <span class="n">T_s</span><span class="o">=</span><span class="mf">250e-6</span><span class="p">,</span>
             <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -457,13 +457,13 @@ document.write(`
         <span class="n">i_a</span> <span class="o">=</span> <span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="n">i_s</span>
 
         <span class="c1"># Torque-production factor (c_tau = 0 corresponds to the MTPV condition)</span>
-        <span class="n">c_tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span>
+        <span class="n">c_tau</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span>
 
         <span class="c1"># References for the flux and torque controllers</span>
         <span class="n">v_psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_psi</span><span class="o">*</span><span class="p">(</span><span class="n">psi_s_ref</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span>
         <span class="n">v_tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_tau</span><span class="o">*</span><span class="p">(</span><span class="n">tau_M_ref_lim</span> <span class="o">-</span> <span class="n">tau_M</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">c_tau</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span><span class="o">*</span><span class="n">i_a</span><span class="o">*</span><span class="n">v_psi</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">psi_s</span><span class="o">*</span><span class="n">v_tau</span><span class="p">)</span><span class="o">/</span><span class="n">c_tau</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span><span class="o">*</span><span class="n">i_a</span><span class="o">*</span><span class="n">v_psi</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">psi_s</span><span class="o">*</span><span class="n">v_tau</span><span class="p">)</span><span class="o">/</span><span class="n">c_tau</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">v_psi</span>
 
