@@ -733,7 +733,7 @@ phase switching states are returned. The default is True.</p></li>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">motulator.simulation</span> <span class="kn">import</span> <span class="n">CarrierComparison</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">motulator.model</span> <span class="kn">import</span> <span class="n">CarrierComparison</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">carrier_cmp</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">(</span><span class="n">return_complex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># First call gives rising edges</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.4</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.8</span><span class="p">])</span>

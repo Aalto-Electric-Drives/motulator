@@ -73,7 +73,7 @@ Classes
 
    .. rubric:: Examples
 
-   >>> from motulator.simulation import CarrierComparison
+   >>> from motulator.model import CarrierComparison
    >>> carrier_cmp = CarrierComparison(return_complex=False)
    >>> # First call gives rising edges
    >>> t_steps, q_abc = carrier_cmp(1e-3, [.4, .2, .8])
