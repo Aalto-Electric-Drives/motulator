@@ -79,7 +79,7 @@ Functions
 
    .. rubric:: Examples
 
-   >>> from motulator.helpers import abc2complex
+   >>> from motulator import abc2complex
    >>> y = abc2complex([1, 2, 3])
    >>> y
    (-1-0.5773502691896258j)
@@ -114,7 +114,7 @@ Functions
 
    .. rubric:: Examples
 
-   >>> from motulator.helpers import complex2abc
+   >>> from motulator import complex2abc
    >>> y = complex2abc(1-.5j)
    >>> y
    array([ 1.       , -0.9330127, -0.0669873])
