@@ -31,9 +31,9 @@ class FluxVectorCtrl(Ctrl):
     ref : FluxTorqueReferencePars
         Reference generation parameters.
     alpha_psi : float, optional
-        Bandwidth of the flux controller (rad/s). The default is `2*pi*150`.
+        Bandwidth of the flux controller (rad/s). The default is `2*pi*100`.
     alpha_tau : float, optional
-        Bandwidth of the torque controller (rad/s). The default is `2*pi*50`.
+        Bandwidth of the torque controller (rad/s). The default is `2*pi*200`.
     T_s : float
         Sampling period (s). The default is `250e-6`.
     sensorless : bool, optional
@@ -70,8 +70,8 @@ class FluxVectorCtrl(Ctrl):
             self,
             par,
             ref,
-            alpha_psi=2*np.pi*150,
-            alpha_tau=2*np.pi*50,
+            alpha_psi=2*np.pi*100,
+            alpha_tau=2*np.pi*200,
             T_s=250e-6,
             sensorless=True):
         super().__init__()
@@ -143,13 +143,13 @@ class FluxVectorCtrl(Ctrl):
         i_a = psi_s.real/self.L_q + 1j*psi_s.imag/self.L_d - i_s
 
         # Torque-production factor (c_tau = 0 corresponds to the MTPV condition)
-        c_tau = np.real(i_a*np.conj(psi_s))
+        c_tau = 1.5*self.n_p*np.real(i_a*np.conj(psi_s))
 
         # References for the flux and torque controllers
         v_psi = self.alpha_psi*(psi_s_ref - np.abs(psi_s))
         v_tau = self.alpha_tau*(tau_M_ref_lim - tau_M)
         if c_tau > 0:
-            v = (np.abs(psi_s)*i_a*v_psi + 1j*psi_s*v_tau)/c_tau
+            v = (1.5*self.n_p*np.abs(psi_s)*i_a*v_psi + 1j*psi_s*v_tau)/c_tau
         else:
             v = v_psi
 
