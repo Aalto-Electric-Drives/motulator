@@ -41,8 +41,8 @@ class FluxVectorCtrl(Ctrl):
 
     Attributes
     ----------
-    observer : Observer | SensorlessObserver
-        Observer.
+    observer : Observer
+        Flux observer, having both sensorless and sensored modes.
     flux_torque_ref : FluxTorqueReference
         Flux and torque reference generator.
     speed_ctrl : SpeedCtrl
