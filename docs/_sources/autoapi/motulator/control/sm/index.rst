@@ -443,9 +443,9 @@ Classes
 
    .. attribute:: observer
 
-      Flux and rotor position observer (set to None in sensored mode).
+      Flux and rotor position observer, used in the sensorless mode only.
 
-      :type: SensorlessObserver | None
+      :type: Observer
 
    .. attribute:: current_ctrl
 

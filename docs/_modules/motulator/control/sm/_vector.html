@@ -375,8 +375,8 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    current_ref : CurrentReference</span>
 <span class="sd">        Current reference generator.</span>
-<span class="sd">    observer : SensorlessObserver | None</span>
-<span class="sd">        Flux and rotor position observer (set to None in sensored mode).</span>
+<span class="sd">    observer : Observer</span>
+<span class="sd">        Flux and rotor position observer, used in the sensorless mode only.</span>
 <span class="sd">    current_ctrl : CurrentCtrl</span>
 <span class="sd">        Current controller.</span>
 <span class="sd">    speed_ctrl : SpeedCtrl </span>
