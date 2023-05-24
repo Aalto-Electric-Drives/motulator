@@ -520,9 +520,9 @@ Classes
 
    .. attribute:: observer
 
-      Observer.
+      Flux observer, having both sensorless and sensored modes.
 
-      :type: Observer | SensorlessObserver
+      :type: Observer
 
    .. attribute:: flux_torque_ref
 
