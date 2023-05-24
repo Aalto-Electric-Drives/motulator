@@ -61,8 +61,8 @@ class VectorCtrl(Ctrl):
     ----------
     current_ref : CurrentReference
         Current reference generator.
-    observer : SensorlessObserver | None
-        Flux and rotor position observer (set to None in sensored mode).
+    observer : Observer
+        Flux and rotor position observer, used in the sensorless mode only.
     current_ctrl : CurrentCtrl
         Current controller.
     speed_ctrl : SpeedCtrl 
