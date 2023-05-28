@@ -7,7 +7,6 @@ This example simulates sensorless vector control of a 6.7-kW SyRM drive.
 """
 
 # %%
-# %%
 # Imports.
 
 import numpy as np

@@ -83,7 +83,7 @@ class VectorCtrl(Ctrl):
         self.current_ref = CurrentReference(par, ref)
         self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
         if sensorless:
-            self.observer = Observer(par, w_o=2*np.pi*100, sensorless=True)
+            self.observer = Observer(par, alpha_o=2*np.pi*100, sensorless=True)
         else:
             self.observer = None
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
@@ -395,22 +395,26 @@ class CurrentReference:
 # %%
 class Observer:
     """
-    Observer for the rotor position and the stator flux linkage.
+    Observer for synchronous machines.
 
-    This observer corresponds to [#Hin2018]_. The observer gain decouples the
-    electrical and mechanical dynamics and allows placing the poles of the
-    corresponding linearized estimation error dynamics. This implementation
-    operates in estimated rotor coordinates. The observer can also be used in
-    the sensored mode by providing the measured rotor speed as an input.
+    This observer estimates the rotor angle, the rotor speed, and the stator 
+    flux linkage. The design is based on [#Hin2018]_. The observer gain 
+    decouples the electrical and mechanical dynamics and allows placing the 
+    poles of the corresponding linearized estimation error dynamics. This 
+    implementation operates in estimated rotor coordinates. The observer can 
+    also be used in the sensored mode by providing the measured rotor speed as 
+    an input.
 
     Parameters
     ----------
     par : ModelPars
         Machine model parameters.
-    w_o : float, optional
-        Observer bandwidth (electrical rad/s).
-    zeta_inf : float, optional
-        Damping ratio at high speed. The default is .2.
+    alpha_o : float, optional
+        Observer bandwidth (electrical rad/s). The default is 2*pi*40.
+    k : callable, optional
+        Observer gain as a function of the rotor angular speed. The default is 
+        ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
+        `sensorless` else ``lambda w_m: 2*pi*15``.
 
     Attributes
     ----------
@@ -430,15 +434,22 @@ class Observer:
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, par, w_o=2*np.pi*40, zeta_inf=.2, sensorless=True):
+    def __init__(self, par, alpha_o=2*np.pi*40, k=None, sensorless=True):
         self.R_s = par.R_s
         self.L_d, self.L_q, self.psi_f = par.L_d, par.L_q, par.psi_f
         self.psi_f = par.psi_f
-        self.k_p = 2*w_o
-        self.k_i = w_o**2
-        self.zeta_inf = zeta_inf
+        self.alpha_o = alpha_o
         self.sensorless = sensorless
-        self.b_p = .5*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
+        self.k1 = k
+        if self.sensorless:
+            if self.k1 is None:  # If not given, use the default gains
+                sigma0 = .25*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
+                self.k1 = lambda w_m: (sigma0 + .2*np.abs(w_m))
+            self.k2 = self.k1
+        else:
+            if self.k1 is None:
+                self.k1 = lambda w_m: 2*np.pi*15
+            self.k2 = 0*self.k1
         # Initial states
         self.theta_m, self.w_m, self.psi_s = 0, 0, par.psi_f
 
@@ -451,9 +462,9 @@ class Observer:
         T_s : float
             Sampling period (s).
         u_s : complex
-            Stator voltage in estimated rotor coordinates.
+            Stator voltage (V) in estimated rotor coordinates.
         i_s : complex
-            Stator current in estimated rotor coordinates.
+            Stator current (A) in estimated rotor coordinates.
         w_m : float, optional
             Rotor angular speed (electrical rad/s). Needed only in the sensored
             mode. The default is None. 
@@ -466,24 +477,21 @@ class Observer:
             # Auxiliary flux
             psi_a = self.psi_f + (self.L_d - self.L_q)*np.conj(i_s)
 
-            # Pole locations are chosen with c = w_m**2
-            k = self.b_p + 2*self.zeta_inf*np.abs(self.w_m)
-            if np.abs(psi_a) > 0:
-                # Correction voltage
-                v = k*psi_a*np.real(e/psi_a)
-                # Error signal
-                eps = -np.imag(e/psi_a)
-            else:
-                v, eps = 0, 0
+            # Observer gains
+            k1 = self.k1(self.w_m)
+            k2 = k1*psi_a/np.conj(psi_a) if np.abs(psi_a) > 0 else k1
 
             # Speed estimation
-            w_m = self.k_p*eps + self.w_m
-            self.w_m += T_s*self.k_i*eps
+            eps = -np.imag(e/psi_a) if np.abs(psi_a) > 0 else 0
+            w_s = 2*self.alpha_o*eps + self.w_m
         else:
-            # Correction voltage
-            v = 2*np.pi*15*e
+            k1, k2 = self.k1, 0
+            w_s = w_m
+            eps = 0
 
         # Update the states
-        self.psi_s += T_s*(u_s - self.R_s*i_s - 1j*w_m*self.psi_s + v)
-        self.theta_m += T_s*w_m  # Next line: limit into [-pi, pi)
+        self.psi_s += T_s*(
+            u_s - self.R_s*i_s - 1j*w_s*self.psi_s + k1*e + k2*np.conj(e))
+        self.w_m += T_s*self.alpha_o**2*eps
+        self.theta_m += T_s*w_s  # Next line: limit into [-pi, pi)
         self.theta_m = np.mod(self.theta_m + np.pi, 2*np.pi) - np.pi

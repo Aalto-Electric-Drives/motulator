@@ -54,12 +54,12 @@ class TorqueCharacteristics:
         Parameters
         ----------
         psi_s : complex
-            Stator flux.
+            Stator flux (Vs).
 
         Returns
         -------
         tau_M : float
-            Electromagnetic torque.
+            Electromagnetic torque (Nm).
 
         """
         i_s = self.current(psi_s)
@@ -74,12 +74,12 @@ class TorqueCharacteristics:
         Parameters
         ----------
         psi_s : complex
-            Stator flux linkage.
+            Stator flux linkage (Vs).
 
         Returns
         -------
         i_s : complex
-            Stator current.
+            Stator current (A).
 
         """
         i_s = (psi_s.real - self.psi_f)/self.L_d + 1j*psi_s.imag/self.L_q
@@ -93,12 +93,12 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s : complex
-            Stator current.
+            Stator current (A).
 
         Returns
         -------
         psi_s : complex
-            Stator flux linkage.
+            Stator flux linkage (Vs).
 
         """
         psi_s = self.L_d*i_s.real + self.psi_f + 1j*self.L_q*i_s.imag
@@ -112,12 +112,12 @@ class TorqueCharacteristics:
         Parameters
         ----------
         abs_i_s : float
-            Stator current magnitude.
+            Stator current magnitude (A).
 
         Returns
         -------
         beta : float
-            MTPA angle of the stator current vector.
+            MTPA angle of the stator current vector (electrical rad).
 
         """
         # Replace zeros with epsilon
@@ -147,12 +147,12 @@ class TorqueCharacteristics:
         Parameters
         ----------
         abs_psi_s : float
-            Stator flux magnitude.
+            Stator flux magnitude (Vs).
 
         Returns
         -------
         delta : float
-            MTPV angle of the stator flux vector.
+            MTPV angle of the stator flux vector (electrical rad).
 
         """
         # Replace zeros with epsilon
@@ -190,12 +190,12 @@ class TorqueCharacteristics:
         Parameters
         ----------
         abs_i_s : float
-            Stator current magnitude.
+            Stator current magnitude (A).
 
         Returns
         -------
         i_s : complex
-            MTPV stator current.
+            MTPV stator current (A).
 
         """
         if self.psi_f == 0:
@@ -232,9 +232,9 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s_max : float
-            Maximum stator current magnitude at which the locus is computed.
+            Maximum stator current magnitude (A) at which the locus is computed.
         psi_s_min : float, optional
-            Minimum stator flux magnitude at which the locus is computed.
+            Minimum stator flux magnitude (Vs) at which the locus is computed.
         N : int, optional
             Amount of points. The default is 20.
 
@@ -242,15 +242,15 @@ class TorqueCharacteristics:
         -------
         Bunch object with the following fields defined:
         psi_s : complex
-            Stator flux.
+            Stator flux (Vs).
         i_s : complex
-            Stator current.
+            Stator current (A).
         tau_M : float
-            Electromagnetic torque.
+            Electromagnetic torque (Nm).
         abs_psi_s_vs_tau_M : callable
-            Stator flux magnitude as a function of the torque.
+            Stator flux magnitude (Vs) as a function of the torque (Nm).
         i_sd_vs_tau_M : callable
-            d-axis current as a function of the torque.
+            d-axis current (A) as a function of the torque (Nm).
 
         """
         # Current  magnitudes
@@ -292,10 +292,10 @@ class TorqueCharacteristics:
         Parameters
         ----------
         psi_s_max : float, optional
-            Maximum stator flux magnitude at which the locus is computed. Either
-            psi_s_max or i_s_max must be given.
+            Maximum stator flux magnitude (Vs) at which the locus is computed. 
+            Either `psi_s_max` or `i_s_max` must be given.
         i_s_max : float, optional
-            Maximum stator current magnitude at which the locus is computed.
+            Maximum stator current magnitude (A) at which the locus is computed.
         N : int, optional
             Amount of points. The default is 20.
 
@@ -303,13 +303,13 @@ class TorqueCharacteristics:
         -------
         Bunch object with the following fields defined:
         psi_s : complex
-            Stator flux.
+            Stator flux (Vs).
         i_s : complex
-            Stator current.
+            Stator current (A).
         tau_M : float
-            Electromagnetic torque.
+            Electromagnetic torque (Nm).
         tau_M_vs_abs_psi_s : interp1d object
-            Torque as a function of the flux magnitude.
+            Torque (Nm) as a function of the flux magnitude (Vs).
 
         """
         # If i_s_max is given, compute the corresponding MTPV stator flux
@@ -344,11 +344,11 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s_max : float
-            Current limit. 
+            Current limit (A). 
         gamma1 : float, optional
-            Starting angle in radians. The default is 0.
+            Starting angle (electrical rad). The default is 0.
         gamma2 : float, optional
-            End angle in radians. The defauls in np.pi.
+            End angle (electrical rad). The defauls in pi.
         N : int, optional
             Amount of points. The default is 20.
 
@@ -356,13 +356,13 @@ class TorqueCharacteristics:
         -------
         Bunch object with the following fields defined:
         psi_s : complex
-            Stator flux.
+            Stator flux (Vs).
         i_s : complex
-            Stator current.
+            Stator current (A).
         tau_M : float
-            Electromagnetic torque.
+            Electromagnetic torque (Nm).
         tau_M_vs_abs_psi_s : interp1d object
-            Torque as a function of the flux magnitude.
+            Torque (Nm) as a function of the flux magnitude (Vs).
 
         """
         if np.isnan(gamma1):
@@ -398,7 +398,7 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s_max : float
-            Current limit.
+            Current limit (A).
         N : int, optional
             Amount of points. The default is 20.
 
@@ -406,9 +406,9 @@ class TorqueCharacteristics:
         -------
         Bunch object with the following fields defined:
         tau_M_vs_abs_psi_s : interp1d object
-            Torque as a function of the flux magnitude.
+            Torque (Nm) as a function of the flux magnitude (Vs).
         i_sd_vs_tau_M : interp1d object
-            d-axis current as a function of the torque.
+            d-axis current (A) as a function of the torque (Nm).
 
         """
         mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
@@ -451,7 +451,7 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s_max : float
-            Maximum current at which the loci are evaluated.
+            Maximum current (A) at which the loci are evaluated.
         base : BaseValues
             Base values.
         N : int, optional
@@ -498,7 +498,7 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s_max : float
-            Maximum current at which the loci are evaluated.
+            Maximum current (A) at which the loci are evaluated.
         base : BaseValues
             Base values.
         N : int, optional
@@ -544,7 +544,7 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s_max : float
-            Maximum current at which the loci are evaluated.
+            Maximum current (A) at which the loci are evaluated.
         base : BaseValues
             Base values.
         N : int, optional
@@ -600,7 +600,7 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s_max : float
-            Maximum current at which the loci are evaluated.
+            Maximum current (A) at which the loci are evaluated.
         base : BaseValues
             Base values.
         N : int, optional

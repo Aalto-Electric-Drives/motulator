@@ -10,7 +10,6 @@ sampling frequency.
 
 """
 # %%
-# %%
 # Imports.
 
 import numpy as np
