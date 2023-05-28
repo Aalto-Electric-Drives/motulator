@@ -95,9 +95,9 @@ Classes
    :type par: ModelPars
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
-   :param u_s_nom: Nominal stator voltage (V). The default is `sqrt(2/3)*400`.
+   :param u_s_nom: Nominal stator voltage (V). The default is sqrt(2/3)*400.
    :type u_s_nom: float, optional
-   :param w_s_nom: Nominal stator angular frequency (rad/s). The default is `2*pi*50`.
+   :param w_s_nom: Nominal stator angular frequency (rad/s). The default is 2*pi*50.
    :type w_s_nom: float, optional
    :param psi_R_nom: Nominal rotor flux linkage (Vs). The default is
                      `(u_s_nom/w_s_nom)/(1 + L_sgm/L_M)`.
@@ -284,10 +284,10 @@ Classes
    :param par: Machine model parameters.
    :type par: ModelPars
    :param k: Observer gain as a function of the rotor angular speed. The default is
-             ``lambda w_m: 1 + .2*abs(w_m)/(R_R/L_M - 1j*w_m)`` if not `sensorless`
-             else
+             ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
+             `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
    :type k: callable, optional
-   :param alpha_o: Observer bandwidth (rad/s). The default is `2*pi*40`.
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
    :type alpha_o: float, optional
    :param sensorless: If True, sensorless mode is used. The default is True.
    :type sensorless: bool, optional
@@ -561,18 +561,18 @@ Classes
 
    :param psi_s_nom: Nominal stator flux linkage (Vs).
    :type psi_s_nom: float
-   :param i_s_max: Maximum stator current (A). The default is `inf`.
+   :param i_s_max: Maximum stator current (A). The default is inf.
    :type i_s_max: float, optional
-   :param k_tau: Torque controller gain. The default is `3`.
+   :param k_tau: Torque controller gain. The default is 3.
    :type k_tau: float, optional
-   :param alpha_psi: Stator flux control bandwidth (rad/s). The default is `2*pi*20`.
+   :param alpha_psi: Stator flux control bandwidth (rad/s). The default is 2*pi*20.
    :type alpha_psi: float, optional
-   :param alpha_f: Torque high-pass filter bandwidth (rad/s). The default is `2*pi*1`.
+   :param alpha_f: Torque high-pass filter bandwidth (rad/s). The default is 2*pi*1.
    :type alpha_f: float, optional
    :param alpha_r: Low-pass-filter bandwidth (rad/s) for slip angular frequency. The
-                   default is `2*pi*1`.
+                   default is 2*pi*1.
    :type alpha_r: float, optional
-   :param slip_compensation: Enable slip compensation. The default is `False`.
+   :param slip_compensation: Enable slip compensation. The default is False.
    :type slip_compensation: bool, optional
 
 

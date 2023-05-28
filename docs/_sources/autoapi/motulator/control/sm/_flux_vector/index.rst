@@ -49,13 +49,13 @@ Classes
    :type par: ModelPars
    :param ref: Reference generation parameters.
    :type ref: FluxTorqueReferencePars
-   :param alpha_psi: Bandwidth of the flux controller (rad/s). The default is `2*pi*100`.
+   :param alpha_psi: Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
    :type alpha_psi: float, optional
-   :param alpha_tau: Bandwidth of the torque controller (rad/s). The default is `2*pi*200`.
+   :param alpha_tau: Bandwidth of the torque controller (rad/s). The default is 2*pi*200.
    :type alpha_tau: float, optional
-   :param T_s: Sampling period (s). The default is `250e-6`.
+   :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float
-   :param sensorless: If `True`, sensorless control is used. The default is `True`.
+   :param sensorless: If True, sensorless control is used. The default is True.
    :type sensorless: bool, optional
 
    .. attribute:: observer
@@ -127,7 +127,7 @@ Classes
    :type i_s_max: float
    :param psi_s_min: Minimum stator flux (Vs). The default is `psi_f`.
    :type psi_s_min: float, optional
-   :param psi_s_max: Maximum stator flux (Vs). The default is `inf`.
+   :param psi_s_max: Maximum stator flux (Vs). The default is inf.
    :type psi_s_max: float, optional
    :param k_u: Voltage utilization factor. The default is 0.95.
    :type k_u: float, optional

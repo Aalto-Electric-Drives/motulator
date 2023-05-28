@@ -7,8 +7,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Overview: module code &#8212; motulator 0.1.5 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Design Notes &#8212; motulator 0.1.5 documentation</title>
   
   
   
@@ -47,9 +48,11 @@
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'control/design_notes';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Speed Control" href="speed_ctrl.html" />
+    <link rel="prev" title="Converters" href="../model/converters.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -152,11 +155,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../model/converters.html">Converters</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../control/design_notes.html">Design Notes</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../control/speed_ctrl.html">Speed Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../control/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../control/observers.html">Observers</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Design Notes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observers.html">Observers</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -251,6 +254,54 @@
 
 
 
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/control/design_notes.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
 <button onclick="toggleFullScreen()"
   class="btn btn-sm btn-fullscreen-button"
   title="Fullscreen mode"
@@ -293,7 +344,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1></h1>
+    <h1>Design Notes</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -307,26 +358,19 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="motulator/_helpers.html">motulator._helpers</a></li>
-<li><a href="motulator/_plots.html">motulator._plots</a></li>
-<li><a href="motulator/_utils.html">motulator._utils</a></li>
-<li><a href="motulator/control/_common.html">motulator.control._common</a></li>
-<li><a href="motulator/control/im/_obs_vhz.html">motulator.control.im._obs_vhz</a></li>
-<li><a href="motulator/control/im/_vector.html">motulator.control.im._vector</a></li>
-<li><a href="motulator/control/im/_vhz.html">motulator.control.im._vhz</a></li>
-<li><a href="motulator/control/sm/_flux_vector.html">motulator.control.sm._flux_vector</a></li>
-<li><a href="motulator/control/sm/_obs_vhz.html">motulator.control.sm._obs_vhz</a></li>
-<li><a href="motulator/control/sm/_signal_inj.html">motulator.control.sm._signal_inj</a></li>
-<li><a href="motulator/control/sm/_torque.html">motulator.control.sm._torque</a></li>
-<li><a href="motulator/control/sm/_vector.html">motulator.control.sm._vector</a></li>
-<li><a href="motulator/model/_converter.html">motulator.model._converter</a></li>
-<li><a href="motulator/model/_mechanics.html">motulator.model._mechanics</a></li>
-<li><a href="motulator/model/_simulation.html">motulator.model._simulation</a></li>
-<li><a href="motulator/model/im/_drive.html">motulator.model.im._drive</a></li>
-<li><a href="motulator/model/sm/_drive.html">motulator.model.sm._drive</a></li>
-<li><a href="motulator/model/sm/_flux_maps.html">motulator.model.sm._flux_maps</a></li>
+  <section id="design-notes">
+<h1>Design Notes<a class="headerlink" href="#design-notes" title="Permalink to this heading">#</a></h1>
+<p>Design notes for selected control methods are provided in this section. The aim of these notes is to link the implemented methods to the theory and to provide a reference for the implementation. Further details are available in the references provided.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observers.html">Observers</a></li>
 </ul>
+</div>
+<p>This section will be extended in the future.</p>
+</section>
+
 
                 </article>
               
@@ -339,6 +383,24 @@ document.write(`
   
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="../model/converters.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Converters</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="speed_ctrl.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Speed Control</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div></div>
   
 </div>

@@ -7,7 +7,6 @@ This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 """
 
 # %%
-# %%
 # Imports.
 
 import numpy as np

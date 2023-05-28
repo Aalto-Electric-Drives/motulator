@@ -45,18 +45,18 @@ Classes
 
    :param psi_s_nom: Nominal stator flux linkage (Vs).
    :type psi_s_nom: float
-   :param i_s_max: Maximum stator current (A). The default is `inf`.
+   :param i_s_max: Maximum stator current (A). The default is inf.
    :type i_s_max: float, optional
-   :param k_tau: Torque controller gain. The default is `3`.
+   :param k_tau: Torque controller gain. The default is 3.
    :type k_tau: float, optional
-   :param alpha_psi: Stator flux control bandwidth (rad/s). The default is `2*pi*20`.
+   :param alpha_psi: Stator flux control bandwidth (rad/s). The default is 2*pi*20.
    :type alpha_psi: float, optional
-   :param alpha_f: Torque high-pass filter bandwidth (rad/s). The default is `2*pi*1`.
+   :param alpha_f: Torque high-pass filter bandwidth (rad/s). The default is 2*pi*1.
    :type alpha_f: float, optional
    :param alpha_r: Low-pass-filter bandwidth (rad/s) for slip angular frequency. The
-                   default is `2*pi*1`.
+                   default is 2*pi*1.
    :type alpha_r: float, optional
-   :param slip_compensation: Enable slip compensation. The default is `False`.
+   :param slip_compensation: Enable slip compensation. The default is False.
    :type slip_compensation: bool, optional
 
 

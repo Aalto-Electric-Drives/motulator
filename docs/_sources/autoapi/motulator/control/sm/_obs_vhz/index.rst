@@ -38,11 +38,11 @@ Classes
    This class extends FluxTorqueReferencePars with the parameters needed for
    the observer-based V/Hz control.
 
-   :param alpha_psi: Flux control bandwidth (rad/s). The default is `2*pi*50`.
+   :param alpha_psi: Flux control bandwidth (rad/s). The default is 2*pi*50.
    :type alpha_psi: float, optional
-   :param alpha_tau: Torque control bandwidth (rad/s). The default is `2*pi*50`.
+   :param alpha_tau: Torque control bandwidth (rad/s). The default is 2*pi*50.
    :type alpha_tau: float
-   :param alpha_f: Bandwidth of the high-pass filter (rad/s). The default is `2*pi*1`.
+   :param alpha_f: Bandwidth of the high-pass filter (rad/s). The default is 2*pi*1.
    :type alpha_f: float, optional
 
 
@@ -75,7 +75,7 @@ Classes
    :type par: ModelPars
    :param ctrl_par: Control system parameters.
    :type ctrl_par: ObserverBasedVHzCtrlPars
-   :param T_s: Sampling period (s). The default is `250e-6`.
+   :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float, optional
 
    .. attribute:: w_m_ref
@@ -119,9 +119,9 @@ Classes
 
    :param par: Machine model parameters.
    :type par: ModelPars
-   :param alpha_o: Observer gain (rad/s). The default is `2*pi*20`.
+   :param alpha_o: Observer gain (rad/s). The default is 2*pi*20.
    :type alpha_o: float, optional
-   :param zeta_inf: Damping ratio at infinite speed. The default is `0.2`.
+   :param zeta_inf: Damping ratio at infinite speed. The default is 0.2.
    :type zeta_inf: float, optional
 
 

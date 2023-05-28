@@ -213,11 +213,11 @@ Classes
    This provides an interface for a speed controller. The gains are initialized
    based on the desired closed-loop bandwidth and the rotor inertia estimate.
 
-   :param J: Total inertia of the rotor (kgm**2).
+   :param J: Total inertia of the rotor (kgm²).
    :type J: float
    :param alpha_s: Closed-loop bandwidth (rad/s).
    :type alpha_s: float
-   :param tau_M_max: Maximum motor torque (Nm). The default is `inf`.
+   :param tau_M_max: Maximum motor torque (Nm). The default is inf.
    :type tau_M_max: float, optional
 
 
@@ -264,7 +264,7 @@ Classes
    :type k_i: float
    :param k_t: Reference-feedforward gain. The default is `k_p`.
    :type k_t: float, optional
-   :param u_max: Maximum controller output. The default is `inf`.
+   :param u_max: Maximum controller output. The default is inf.
    :type u_max: float, optional
 
    .. attribute:: v
@@ -363,7 +363,7 @@ Classes
    The realized voltage is computed based on the measured DC-bus voltage and
    the duty ratios. The digital delay effects are taken into account in the
    realized voltage, assuming the delay of a single sampling period. The total
-   delay is 1.5 sampling periods due to the PWM (or ZOH) delay.
+   delay is 1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.
 
    :param six_step: Enable six-step operation in overmodulation. The default is False.
    :type six_step: bool, optional
@@ -373,6 +373,11 @@ Classes
       Realized voltage (V) in synchronous coordinates.
 
       :type: complex
+
+   .. rubric:: References
+
+   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of
+      full-digital synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl., 2003, https://doi.org/10.1109/TIA.2003.810660
 
 
 

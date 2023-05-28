@@ -137,7 +137,7 @@ Configure the control system.
     ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
     # Since the saturation is not considered in the control system, the speed
     # estimation bandwidth is set to a lower value
-    ctrl.observer = control.sm.Observer(par, w_o=2*np.pi*50)
+    ctrl.observer = control.sm.Observer(par, alpha_o=2*np.pi*50)
 
 
 
@@ -215,7 +215,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  19.588 seconds)
+   **Total running time of the script:** ( 0 minutes  11.797 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

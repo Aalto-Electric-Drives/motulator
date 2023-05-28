@@ -186,9 +186,9 @@ Classes
    :type par: ModelPars
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
-   :param u_s_nom: Nominal stator voltage (V). The default is `sqrt(2/3)*400`.
+   :param u_s_nom: Nominal stator voltage (V). The default is sqrt(2/3)*400.
    :type u_s_nom: float, optional
-   :param w_s_nom: Nominal stator angular frequency (rad/s). The default is `2*pi*50`.
+   :param w_s_nom: Nominal stator angular frequency (rad/s). The default is 2*pi*50.
    :type w_s_nom: float, optional
    :param psi_R_nom: Nominal rotor flux linkage (Vs). The default is
                      `(u_s_nom/w_s_nom)/(1 + L_sgm/L_M)`.
@@ -340,10 +340,10 @@ Classes
    :param par: Machine model parameters.
    :type par: ModelPars
    :param k: Observer gain as a function of the rotor angular speed. The default is
-             ``lambda w_m: 1 + .2*abs(w_m)/(R_R/L_M - 1j*w_m)`` if not `sensorless`
-             else
+             ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
+             `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
    :type k: callable, optional
-   :param alpha_o: Observer bandwidth (rad/s). The default is `2*pi*40`.
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
    :type alpha_o: float, optional
    :param sensorless: If True, sensorless mode is used. The default is True.
    :type sensorless: bool, optional

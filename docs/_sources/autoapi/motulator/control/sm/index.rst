@@ -325,23 +325,27 @@ Classes
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Observer(par, w_o=2 * np.pi * 40, zeta_inf=0.2, sensorless=True)
+.. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, sensorless=True)
 
    
-   Observer for the rotor position and the stator flux linkage.
+   Observer for synchronous machines.
 
-   This observer corresponds to [#Hin2018]_. The observer gain decouples the
-   electrical and mechanical dynamics and allows placing the poles of the
-   corresponding linearized estimation error dynamics. This implementation
-   operates in estimated rotor coordinates. The observer can also be used in
-   the sensored mode by providing the measured rotor speed as an input.
+   This observer estimates the rotor angle, the rotor speed, and the stator
+   flux linkage. The design is based on [#Hin2018]_. The observer gain
+   decouples the electrical and mechanical dynamics and allows placing the
+   poles of the corresponding linearized estimation error dynamics. This
+   implementation operates in estimated rotor coordinates. The observer can
+   also be used in the sensored mode by providing the measured rotor speed as
+   an input.
 
    :param par: Machine model parameters.
    :type par: ModelPars
-   :param w_o: Observer bandwidth (electrical rad/s).
-   :type w_o: float, optional
-   :param zeta_inf: Damping ratio at high speed. The default is .2.
-   :type zeta_inf: float, optional
+   :param alpha_o: Observer bandwidth (electrical rad/s). The default is 2*pi*40.
+   :type alpha_o: float, optional
+   :param k: Observer gain as a function of the rotor angular speed. The default is
+             ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
+             `sensorless` else ``lambda w_m: 2*pi*15``.
+   :type k: callable, optional
 
    .. attribute:: theta_m
 
@@ -390,9 +394,9 @@ Classes
 
       :param T_s: Sampling period (s).
       :type T_s: float
-      :param u_s: Stator voltage in estimated rotor coordinates.
+      :param u_s: Stator voltage (V) in estimated rotor coordinates.
       :type u_s: complex
-      :param i_s: Stator current in estimated rotor coordinates.
+      :param i_s: Stator current (A) in estimated rotor coordinates.
       :type i_s: complex
       :param w_m: Rotor angular speed (electrical rad/s). Needed only in the sensored
                   mode. The default is None.
@@ -509,13 +513,13 @@ Classes
    :type par: ModelPars
    :param ref: Reference generation parameters.
    :type ref: FluxTorqueReferencePars
-   :param alpha_psi: Bandwidth of the flux controller (rad/s). The default is `2*pi*100`.
+   :param alpha_psi: Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
    :type alpha_psi: float, optional
-   :param alpha_tau: Bandwidth of the torque controller (rad/s). The default is `2*pi*200`.
+   :param alpha_tau: Bandwidth of the torque controller (rad/s). The default is 2*pi*200.
    :type alpha_tau: float, optional
-   :param T_s: Sampling period (s). The default is `250e-6`.
+   :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float
-   :param sensorless: If `True`, sensorless control is used. The default is `True`.
+   :param sensorless: If True, sensorless control is used. The default is True.
    :type sensorless: bool, optional
 
    .. attribute:: observer
@@ -616,7 +620,7 @@ Classes
    :type i_s_max: float
    :param psi_s_min: Minimum stator flux (Vs). The default is `psi_f`.
    :type psi_s_min: float, optional
-   :param psi_s_max: Maximum stator flux (Vs). The default is `inf`.
+   :param psi_s_max: Maximum stator flux (Vs). The default is inf.
    :type psi_s_max: float, optional
    :param k_u: Voltage utilization factor. The default is 0.95.
    :type k_u: float, optional
@@ -664,7 +668,7 @@ Classes
    :type par: ModelPars
    :param ctrl_par: Control system parameters.
    :type ctrl_par: ObserverBasedVHzCtrlPars
-   :param T_s: Sampling period (s). The default is `250e-6`.
+   :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float, optional
 
    .. attribute:: w_m_ref
@@ -707,11 +711,11 @@ Classes
    This class extends FluxTorqueReferencePars with the parameters needed for
    the observer-based V/Hz control.
 
-   :param alpha_psi: Flux control bandwidth (rad/s). The default is `2*pi*50`.
+   :param alpha_psi: Flux control bandwidth (rad/s). The default is 2*pi*50.
    :type alpha_psi: float, optional
-   :param alpha_tau: Torque control bandwidth (rad/s). The default is `2*pi*50`.
+   :param alpha_tau: Torque control bandwidth (rad/s). The default is 2*pi*50.
    :type alpha_tau: float
-   :param alpha_f: Bandwidth of the high-pass filter (rad/s). The default is `2*pi*1`.
+   :param alpha_f: Bandwidth of the high-pass filter (rad/s). The default is 2*pi*1.
    :type alpha_f: float, optional
 
 
@@ -742,9 +746,9 @@ Classes
 
    :param par: Machine model parameters.
    :type par: ModelPars
-   :param alpha_o: Observer gain (rad/s). The default is `2*pi*20`.
+   :param alpha_o: Observer gain (rad/s). The default is 2*pi*20.
    :type alpha_o: float, optional
-   :param zeta_inf: Damping ratio at infinite speed. The default is `0.2`.
+   :param zeta_inf: Damping ratio at infinite speed. The default is 0.2.
    :type zeta_inf: float, optional
 
 
@@ -826,10 +830,10 @@ Classes
       
       Compute the torque as a function of the stator flux linkage.
 
-      :param psi_s: Stator flux.
+      :param psi_s: Stator flux (Vs).
       :type psi_s: complex
 
-      :returns: **tau_M** -- Electromagnetic torque.
+      :returns: **tau_M** -- Electromagnetic torque (Nm).
       :rtype: float
 
 
@@ -854,10 +858,10 @@ Classes
       
       Compute the stator current as a function of the stator flux linkage.
 
-      :param psi_s: Stator flux linkage.
+      :param psi_s: Stator flux linkage (Vs).
       :type psi_s: complex
 
-      :returns: **i_s** -- Stator current.
+      :returns: **i_s** -- Stator current (A).
       :rtype: complex
 
 
@@ -882,10 +886,10 @@ Classes
       
       Compute the stator flux linkage as a function of the current.
 
-      :param i_s: Stator current.
+      :param i_s: Stator current (A).
       :type i_s: complex
 
-      :returns: **psi_s** -- Stator flux linkage.
+      :returns: **psi_s** -- Stator flux linkage (Vs).
       :rtype: complex
 
 
@@ -910,10 +914,10 @@ Classes
       
       Compute the MTPA stator current angle.
 
-      :param abs_i_s: Stator current magnitude.
+      :param abs_i_s: Stator current magnitude (A).
       :type abs_i_s: float
 
-      :returns: **beta** -- MTPA angle of the stator current vector.
+      :returns: **beta** -- MTPA angle of the stator current vector (electrical rad).
       :rtype: float
 
 
@@ -938,10 +942,10 @@ Classes
       
       Compute the MTPV stator flux angle.
 
-      :param abs_psi_s: Stator flux magnitude.
+      :param abs_psi_s: Stator flux magnitude (Vs).
       :type abs_psi_s: float
 
-      :returns: **delta** -- MTPV angle of the stator flux vector.
+      :returns: **delta** -- MTPV angle of the stator flux vector (electrical rad).
       :rtype: float
 
 
@@ -973,10 +977,10 @@ Classes
       current. Alternatively just a large enough maximum flux magnitude could
       be used.
 
-      :param abs_i_s: Stator current magnitude.
+      :param abs_i_s: Stator current magnitude (A).
       :type abs_i_s: float
 
-      :returns: **i_s** -- MTPV stator current.
+      :returns: **i_s** -- MTPV stator current (A).
       :rtype: complex
 
 
@@ -1001,19 +1005,19 @@ Classes
       
       Compute the MTPA locus.
 
-      :param i_s_max: Maximum stator current magnitude at which the locus is computed.
+      :param i_s_max: Maximum stator current magnitude (A) at which the locus is computed.
       :type i_s_max: float
-      :param psi_s_min: Minimum stator flux magnitude at which the locus is computed.
+      :param psi_s_min: Minimum stator flux magnitude (Vs) at which the locus is computed.
       :type psi_s_min: float, optional
       :param N: Amount of points. The default is 20.
       :type N: int, optional
 
       :returns: * *Bunch object with the following fields defined*
-                * **psi_s** (*complex*) -- Stator flux.
-                * **i_s** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
-                * **abs_psi_s_vs_tau_M** (*callable*) -- Stator flux magnitude as a function of the torque.
-                * **i_sd_vs_tau_M** (*callable*) -- d-axis current as a function of the torque.
+                * **psi_s** (*complex*) -- Stator flux (Vs).
+                * **i_s** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
+                * **abs_psi_s_vs_tau_M** (*callable*) -- Stator flux magnitude (Vs) as a function of the torque (Nm).
+                * **i_sd_vs_tau_M** (*callable*) -- d-axis current (A) as a function of the torque (Nm).
 
 
 
@@ -1037,19 +1041,19 @@ Classes
       
       Compute the MTPV locus.
 
-      :param psi_s_max: Maximum stator flux magnitude at which the locus is computed. Either
-                        psi_s_max or i_s_max must be given.
+      :param psi_s_max: Maximum stator flux magnitude (Vs) at which the locus is computed.
+                        Either `psi_s_max` or `i_s_max` must be given.
       :type psi_s_max: float, optional
-      :param i_s_max: Maximum stator current magnitude at which the locus is computed.
+      :param i_s_max: Maximum stator current magnitude (A) at which the locus is computed.
       :type i_s_max: float, optional
       :param N: Amount of points. The default is 20.
       :type N: int, optional
 
       :returns: * *Bunch object with the following fields defined*
-                * **psi_s** (*complex*) -- Stator flux.
-                * **i_s** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
-                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque as a function of the flux magnitude.
+                * **psi_s** (*complex*) -- Stator flux (Vs).
+                * **i_s** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
+                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque (Nm) as a function of the flux magnitude (Vs).
 
 
 
@@ -1073,20 +1077,20 @@ Classes
       
       Compute the current limit.
 
-      :param i_s_max: Current limit.
+      :param i_s_max: Current limit (A).
       :type i_s_max: float
-      :param gamma1: Starting angle in radians. The default is 0.
+      :param gamma1: Starting angle (electrical rad). The default is 0.
       :type gamma1: float, optional
-      :param gamma2: End angle in radians. The defauls in np.pi.
+      :param gamma2: End angle (electrical rad). The defauls in pi.
       :type gamma2: float, optional
       :param N: Amount of points. The default is 20.
       :type N: int, optional
 
       :returns: * *Bunch object with the following fields defined*
-                * **psi_s** (*complex*) -- Stator flux.
-                * **i_s** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
-                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque as a function of the flux magnitude.
+                * **psi_s** (*complex*) -- Stator flux (Vs).
+                * **i_s** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
+                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque (Nm) as a function of the flux magnitude (Vs).
 
 
 
@@ -1110,14 +1114,14 @@ Classes
       
       Merge the MTPV and current limits into a single interpolant.
 
-      :param i_s_max: Current limit.
+      :param i_s_max: Current limit (A).
       :type i_s_max: float
       :param N: Amount of points. The default is 20.
       :type N: int, optional
 
       :returns: * *Bunch object with the following fields defined*
-                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque as a function of the flux magnitude.
-                * **i_sd_vs_tau_M** (*interp1d object*) -- d-axis current as a function of the torque.
+                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque (Nm) as a function of the flux magnitude (Vs).
+                * **i_sd_vs_tau_M** (*interp1d object*) -- d-axis current (A) as a function of the torque (Nm).
 
 
 
@@ -1143,7 +1147,7 @@ Classes
 
       Per-unit quantities are used.
 
-      :param i_s_max: Maximum current at which the loci are evaluated.
+      :param i_s_max: Maximum current (A) at which the loci are evaluated.
       :type i_s_max: float
       :param base: Base values.
       :type base: BaseValues
@@ -1174,7 +1178,7 @@ Classes
 
       Per-unit quantities are used.
 
-      :param i_s_max: Maximum current at which the loci are evaluated.
+      :param i_s_max: Maximum current (A) at which the loci are evaluated.
       :type i_s_max: float
       :param base: Base values.
       :type base: BaseValues
@@ -1205,7 +1209,7 @@ Classes
 
       Per-unit quantities are used.
 
-      :param i_s_max: Maximum current at which the loci are evaluated.
+      :param i_s_max: Maximum current (A) at which the loci are evaluated.
       :type i_s_max: float
       :param base: Base values.
       :type base: BaseValues
@@ -1236,7 +1240,7 @@ Classes
 
       Per-unit quantities are used.
 
-      :param i_s_max: Maximum current at which the loci are evaluated.
+      :param i_s_max: Maximum current (A) at which the loci are evaluated.
       :type i_s_max: float
       :param base: Base values.
       :type base: BaseValues

@@ -62,7 +62,7 @@ ref = control.sm.FluxTorqueReferencePars(
 ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
 # Since the saturation is not considered in the control system, the speed
 # estimation bandwidth is set to a lower value
-ctrl.observer = control.sm.Observer(par, w_o=2*np.pi*50)
+ctrl.observer = control.sm.Observer(par, alpha_o=2*np.pi*50)
 
 # %%
 # Set the speed reference and the external load torque.

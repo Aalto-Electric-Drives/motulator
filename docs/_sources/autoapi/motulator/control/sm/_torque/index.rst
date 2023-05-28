@@ -69,10 +69,10 @@ Classes
       
       Compute the torque as a function of the stator flux linkage.
 
-      :param psi_s: Stator flux.
+      :param psi_s: Stator flux (Vs).
       :type psi_s: complex
 
-      :returns: **tau_M** -- Electromagnetic torque.
+      :returns: **tau_M** -- Electromagnetic torque (Nm).
       :rtype: float
 
 
@@ -97,10 +97,10 @@ Classes
       
       Compute the stator current as a function of the stator flux linkage.
 
-      :param psi_s: Stator flux linkage.
+      :param psi_s: Stator flux linkage (Vs).
       :type psi_s: complex
 
-      :returns: **i_s** -- Stator current.
+      :returns: **i_s** -- Stator current (A).
       :rtype: complex
 
 
@@ -125,10 +125,10 @@ Classes
       
       Compute the stator flux linkage as a function of the current.
 
-      :param i_s: Stator current.
+      :param i_s: Stator current (A).
       :type i_s: complex
 
-      :returns: **psi_s** -- Stator flux linkage.
+      :returns: **psi_s** -- Stator flux linkage (Vs).
       :rtype: complex
 
 
@@ -153,10 +153,10 @@ Classes
       
       Compute the MTPA stator current angle.
 
-      :param abs_i_s: Stator current magnitude.
+      :param abs_i_s: Stator current magnitude (A).
       :type abs_i_s: float
 
-      :returns: **beta** -- MTPA angle of the stator current vector.
+      :returns: **beta** -- MTPA angle of the stator current vector (electrical rad).
       :rtype: float
 
 
@@ -181,10 +181,10 @@ Classes
       
       Compute the MTPV stator flux angle.
 
-      :param abs_psi_s: Stator flux magnitude.
+      :param abs_psi_s: Stator flux magnitude (Vs).
       :type abs_psi_s: float
 
-      :returns: **delta** -- MTPV angle of the stator flux vector.
+      :returns: **delta** -- MTPV angle of the stator flux vector (electrical rad).
       :rtype: float
 
 
@@ -216,10 +216,10 @@ Classes
       current. Alternatively just a large enough maximum flux magnitude could
       be used.
 
-      :param abs_i_s: Stator current magnitude.
+      :param abs_i_s: Stator current magnitude (A).
       :type abs_i_s: float
 
-      :returns: **i_s** -- MTPV stator current.
+      :returns: **i_s** -- MTPV stator current (A).
       :rtype: complex
 
 
@@ -244,19 +244,19 @@ Classes
       
       Compute the MTPA locus.
 
-      :param i_s_max: Maximum stator current magnitude at which the locus is computed.
+      :param i_s_max: Maximum stator current magnitude (A) at which the locus is computed.
       :type i_s_max: float
-      :param psi_s_min: Minimum stator flux magnitude at which the locus is computed.
+      :param psi_s_min: Minimum stator flux magnitude (Vs) at which the locus is computed.
       :type psi_s_min: float, optional
       :param N: Amount of points. The default is 20.
       :type N: int, optional
 
       :returns: * *Bunch object with the following fields defined*
-                * **psi_s** (*complex*) -- Stator flux.
-                * **i_s** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
-                * **abs_psi_s_vs_tau_M** (*callable*) -- Stator flux magnitude as a function of the torque.
-                * **i_sd_vs_tau_M** (*callable*) -- d-axis current as a function of the torque.
+                * **psi_s** (*complex*) -- Stator flux (Vs).
+                * **i_s** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
+                * **abs_psi_s_vs_tau_M** (*callable*) -- Stator flux magnitude (Vs) as a function of the torque (Nm).
+                * **i_sd_vs_tau_M** (*callable*) -- d-axis current (A) as a function of the torque (Nm).
 
 
 
@@ -280,19 +280,19 @@ Classes
       
       Compute the MTPV locus.
 
-      :param psi_s_max: Maximum stator flux magnitude at which the locus is computed. Either
-                        psi_s_max or i_s_max must be given.
+      :param psi_s_max: Maximum stator flux magnitude (Vs) at which the locus is computed.
+                        Either `psi_s_max` or `i_s_max` must be given.
       :type psi_s_max: float, optional
-      :param i_s_max: Maximum stator current magnitude at which the locus is computed.
+      :param i_s_max: Maximum stator current magnitude (A) at which the locus is computed.
       :type i_s_max: float, optional
       :param N: Amount of points. The default is 20.
       :type N: int, optional
 
       :returns: * *Bunch object with the following fields defined*
-                * **psi_s** (*complex*) -- Stator flux.
-                * **i_s** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
-                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque as a function of the flux magnitude.
+                * **psi_s** (*complex*) -- Stator flux (Vs).
+                * **i_s** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
+                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque (Nm) as a function of the flux magnitude (Vs).
 
 
 
@@ -316,20 +316,20 @@ Classes
       
       Compute the current limit.
 
-      :param i_s_max: Current limit.
+      :param i_s_max: Current limit (A).
       :type i_s_max: float
-      :param gamma1: Starting angle in radians. The default is 0.
+      :param gamma1: Starting angle (electrical rad). The default is 0.
       :type gamma1: float, optional
-      :param gamma2: End angle in radians. The defauls in np.pi.
+      :param gamma2: End angle (electrical rad). The defauls in pi.
       :type gamma2: float, optional
       :param N: Amount of points. The default is 20.
       :type N: int, optional
 
       :returns: * *Bunch object with the following fields defined*
-                * **psi_s** (*complex*) -- Stator flux.
-                * **i_s** (*complex*) -- Stator current.
-                * **tau_M** (*float*) -- Electromagnetic torque.
-                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque as a function of the flux magnitude.
+                * **psi_s** (*complex*) -- Stator flux (Vs).
+                * **i_s** (*complex*) -- Stator current (A).
+                * **tau_M** (*float*) -- Electromagnetic torque (Nm).
+                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque (Nm) as a function of the flux magnitude (Vs).
 
 
 
@@ -353,14 +353,14 @@ Classes
       
       Merge the MTPV and current limits into a single interpolant.
 
-      :param i_s_max: Current limit.
+      :param i_s_max: Current limit (A).
       :type i_s_max: float
       :param N: Amount of points. The default is 20.
       :type N: int, optional
 
       :returns: * *Bunch object with the following fields defined*
-                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque as a function of the flux magnitude.
-                * **i_sd_vs_tau_M** (*interp1d object*) -- d-axis current as a function of the torque.
+                * **tau_M_vs_abs_psi_s** (*interp1d object*) -- Torque (Nm) as a function of the flux magnitude (Vs).
+                * **i_sd_vs_tau_M** (*interp1d object*) -- d-axis current (A) as a function of the torque (Nm).
 
 
 
@@ -386,7 +386,7 @@ Classes
 
       Per-unit quantities are used.
 
-      :param i_s_max: Maximum current at which the loci are evaluated.
+      :param i_s_max: Maximum current (A) at which the loci are evaluated.
       :type i_s_max: float
       :param base: Base values.
       :type base: BaseValues
@@ -417,7 +417,7 @@ Classes
 
       Per-unit quantities are used.
 
-      :param i_s_max: Maximum current at which the loci are evaluated.
+      :param i_s_max: Maximum current (A) at which the loci are evaluated.
       :type i_s_max: float
       :param base: Base values.
       :type base: BaseValues
@@ -448,7 +448,7 @@ Classes
 
       Per-unit quantities are used.
 
-      :param i_s_max: Maximum current at which the loci are evaluated.
+      :param i_s_max: Maximum current (A) at which the loci are evaluated.
       :type i_s_max: float
       :param base: Base values.
       :type base: BaseValues
@@ -479,7 +479,7 @@ Classes
 
       Per-unit quantities are used.
 
-      :param i_s_max: Maximum current at which the loci are evaluated.
+      :param i_s_max: Maximum current (A) at which the loci are evaluated.
       :type i_s_max: float
       :param base: Base values.
       :type base: BaseValues

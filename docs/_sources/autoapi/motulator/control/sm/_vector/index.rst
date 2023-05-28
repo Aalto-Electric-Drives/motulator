@@ -374,23 +374,27 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: Observer(par, w_o=2 * np.pi * 40, zeta_inf=0.2, sensorless=True)
+.. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, sensorless=True)
 
    
-   Observer for the rotor position and the stator flux linkage.
+   Observer for synchronous machines.
 
-   This observer corresponds to [#Hin2018]_. The observer gain decouples the
-   electrical and mechanical dynamics and allows placing the poles of the
-   corresponding linearized estimation error dynamics. This implementation
-   operates in estimated rotor coordinates. The observer can also be used in
-   the sensored mode by providing the measured rotor speed as an input.
+   This observer estimates the rotor angle, the rotor speed, and the stator
+   flux linkage. The design is based on [#Hin2018]_. The observer gain
+   decouples the electrical and mechanical dynamics and allows placing the
+   poles of the corresponding linearized estimation error dynamics. This
+   implementation operates in estimated rotor coordinates. The observer can
+   also be used in the sensored mode by providing the measured rotor speed as
+   an input.
 
    :param par: Machine model parameters.
    :type par: ModelPars
-   :param w_o: Observer bandwidth (electrical rad/s).
-   :type w_o: float, optional
-   :param zeta_inf: Damping ratio at high speed. The default is .2.
-   :type zeta_inf: float, optional
+   :param alpha_o: Observer bandwidth (electrical rad/s). The default is 2*pi*40.
+   :type alpha_o: float, optional
+   :param k: Observer gain as a function of the rotor angular speed. The default is
+             ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
+             `sensorless` else ``lambda w_m: 2*pi*15``.
+   :type k: callable, optional
 
    .. attribute:: theta_m
 
@@ -439,9 +443,9 @@ Classes
 
       :param T_s: Sampling period (s).
       :type T_s: float
-      :param u_s: Stator voltage in estimated rotor coordinates.
+      :param u_s: Stator voltage (V) in estimated rotor coordinates.
       :type u_s: complex
-      :param i_s: Stator current in estimated rotor coordinates.
+      :param i_s: Stator current (A) in estimated rotor coordinates.
       :type i_s: complex
       :param w_m: Rotor angular speed (electrical rad/s). Needed only in the sensored
                   mode. The default is None.
