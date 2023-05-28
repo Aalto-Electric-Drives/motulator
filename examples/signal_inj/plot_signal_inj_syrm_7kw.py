@@ -8,7 +8,6 @@ Square-wave signal injection is used with a simple phase-locked loop.
 """
 
 # %%
-# %%
 # Imports.
 
 import numpy as np

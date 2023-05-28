@@ -31,13 +31,13 @@ class FluxVectorCtrl(Ctrl):
     ref : FluxTorqueReferencePars
         Reference generation parameters.
     alpha_psi : float, optional
-        Bandwidth of the flux controller (rad/s). The default is `2*pi*100`.
+        Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
     alpha_tau : float, optional
-        Bandwidth of the torque controller (rad/s). The default is `2*pi*200`.
+        Bandwidth of the torque controller (rad/s). The default is 2*pi*200.
     T_s : float
-        Sampling period (s). The default is `250e-6`.
+        Sampling period (s). The default is 250e-6.
     sensorless : bool, optional
-        If `True`, sensorless control is used. The default is `True`.
+        If True, sensorless control is used. The default is True.
 
     Attributes
     ----------
@@ -81,7 +81,8 @@ class FluxVectorCtrl(Ctrl):
         self.n_p = par.n_p
         self.R_s, self.L_d, self.L_q = par.R_s, par.L_d, par.L_q
         # Subsystems
-        self.observer = Observer(par, w_o=2*np.pi*100, sensorless=sensorless)
+        self.observer = Observer(
+            par, alpha_o=2*np.pi*100, sensorless=sensorless)
         self.flux_torque_ref = FluxTorqueReference(ref)
         self.pwm = PWM()
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
@@ -197,7 +198,7 @@ class FluxTorqueReferencePars:
     psi_s_min : float, optional
         Minimum stator flux (Vs). The default is `psi_f`.
     psi_s_max : float, optional
-        Maximum stator flux (Vs). The default is `inf`.
+        Maximum stator flux (Vs). The default is inf.
     k_u : float, optional
         Voltage utilization factor. The default is 0.95.
 

@@ -7,7 +7,6 @@ parameters in this example yield open-loop V/Hz control.
 
 """
 # %%
-# %%
 # Imports.
 
 import numpy as np

@@ -22,11 +22,11 @@ class ObserverBasedVHzCtrlPars(FluxTorqueReferencePars):
     Parameters
     ----------
     alpha_psi : float, optional
-        Flux control bandwidth (rad/s). The default is `2*pi*50`.
+        Flux control bandwidth (rad/s). The default is 2*pi*50.
     alpha_tau : float
-        Torque control bandwidth (rad/s). The default is `2*pi*50`.
+        Torque control bandwidth (rad/s). The default is 2*pi*50.
     alpha_f : float, optional
-        Bandwidth of the high-pass filter (rad/s). The default is `2*pi*1`.
+        Bandwidth of the high-pass filter (rad/s). The default is 2*pi*1.
 
     """
     alpha_psi: float = 2*np.pi*50
@@ -60,7 +60,7 @@ class ObserverBasedVHzCtrl(Ctrl):
     ctrl_par : ObserverBasedVHzCtrlPars
         Control system parameters.
     T_s : float, optional
-        Sampling period (s). The default is `250e-6`.
+        Sampling period (s). The default is 250e-6.
 
     Attributes
     ----------
@@ -190,9 +190,9 @@ class FluxObserver:
     par : ModelPars
         Machine model parameters.
     alpha_o : float, optional
-        Observer gain (rad/s). The default is `2*pi*20`.
+        Observer gain (rad/s). The default is 2*pi*20.
     zeta_inf : float, optional
-        Damping ratio at infinite speed. The default is `0.2`.
+        Damping ratio at infinite speed. The default is 0.2.
 
     """
 

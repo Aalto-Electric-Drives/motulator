@@ -14,7 +14,7 @@ class PWM:
     The realized voltage is computed based on the measured DC-bus voltage and 
     the duty ratios. The digital delay effects are taken into account in the 
     realized voltage, assuming the delay of a single sampling period. The total
-    delay is 1.5 sampling periods due to the PWM (or ZOH) delay.
+    delay is 1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.
 
     Parameters
     ----------
@@ -26,6 +26,11 @@ class PWM:
     realized_voltage : complex
         Realized voltage (V) in synchronous coordinates.
 
+    References
+    ----------
+    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of 
+       full-digital synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl., 2003, https://doi.org/10.1109/TIA.2003.810660
+    
     """
 
     def __init__(self, six_step=False):
@@ -205,7 +210,7 @@ class PICtrl:
     k_t : float, optional
         Reference-feedforward gain. The default is `k_p`.
     u_max : float, optional
-        Maximum controller output. The default is `inf`.
+        Maximum controller output. The default is inf.
 
     Attributes
     ----------
@@ -280,11 +285,11 @@ class SpeedCtrl(PICtrl):
     Parameters
     ----------
     J : float
-        Total inertia of the rotor (kgm**2).
+        Total inertia of the rotor (kgm²).
     alpha_s : float
         Closed-loop bandwidth (rad/s). 
     tau_M_max : float, optional
-        Maximum motor torque (Nm). The default is `inf`.
+        Maximum motor torque (Nm). The default is inf.
 
     """
 

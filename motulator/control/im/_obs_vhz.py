@@ -33,18 +33,18 @@ class ObserverBasedVHzCtrlPars:
     psi_s_nom : float
         Nominal stator flux linkage (Vs). 
     i_s_max : float, optional
-        Maximum stator current (A). The default is `inf`.
+        Maximum stator current (A). The default is inf.
     k_tau : float, optional
-        Torque controller gain. The default is `3`.
+        Torque controller gain. The default is 3.
     alpha_psi : float, optional
-        Stator flux control bandwidth (rad/s). The default is `2*pi*20`.
+        Stator flux control bandwidth (rad/s). The default is 2*pi*20.
     alpha_f : float, optional
-        Torque high-pass filter bandwidth (rad/s). The default is `2*pi*1`.
+        Torque high-pass filter bandwidth (rad/s). The default is 2*pi*1.
     alpha_r : float, optional
         Low-pass-filter bandwidth (rad/s) for slip angular frequency. The
-        default is `2*pi*1`.
+        default is 2*pi*1.
     slip_compensation : bool, optional
-        Enable slip compensation. The default is `False`.
+        Enable slip compensation. The default is False.
 
     """
     # par: InitVar[ModelPars | None] = None
