@@ -251,13 +251,11 @@ The gains of the speed adaptation in :eq:`sm_speed_pos_observer` are selected as
 	\boldsymbol{k}_\mathrm{i} = -\frac{\alpha_\mathrm{o}^2}{\hat{\boldsymbol{\psi}}_\mathrm{a}} \qquad \boldsymbol{k}_\mathrm{p} = -\frac{2\alpha_\mathrm{o}}{\hat{\boldsymbol{\psi}}_\mathrm{a}}
     :label: ki_kp_sensorless
 
-where :math:`\alpha_\mathrm{o}` is the desired speed-estimation bandwidth. The choices :eq:`k1k2_sensorless` and :eq:`ki_kp_sensorless` result in the observer characteristic polynomial :math:`D(s) = (s^2 + 2\sigma s + \omega_\mathrm{m0}^2)(s + \alpha_\mathrm{o})^2`. Furthermore, it can also be shown that the resulting speed-estimation error dynamics are of the first order,
+where :math:`\alpha_\mathrm{o}` is the desired speed-estimation bandwidth. The choices :eq:`k1k2_sensorless` and :eq:`ki_kp_sensorless` result in the observer characteristic polynomial :math:`D(s) = (s^2 + 2\sigma s + \omega_\mathrm{m0}^2)(s + \alpha_\mathrm{o})^2`. Furthermore, it can also be shown that the resulting speed-estimation error dynamics are
 
 .. math:: 
-    \frac{\Delta \hat{\omega}_\mathrm{m}(s)}{\Delta \omega_\mathrm{m}(s)} = \frac{\alpha_\mathrm{o}}{s + \alpha_\mathrm{o}}
+    \frac{\Delta \hat{\omega}_\mathrm{m}(s)}{\Delta \omega_\mathrm{m}(s)} = \frac{\alpha_\mathrm{o}^2}{(s + \alpha_\mathrm{o})^2}
     :label: speed_est_dyn
-
-due to the pole-zero cancellation.
 
 .. note:: 
     The flux linkage :math:`\boldsymbol{\psi}_\mathrm{a}` is called the auxiliary flux linkage in [#Hin2018]_. It is also linked to the maximum-torque-per-ampere (MTPA) condition, which can be compactly expressed as :math:`\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\boldsymbol{\psi}_\mathrm{a}^*\}=0` [#Var2021]_. 
@@ -271,6 +269,3 @@ due to the pole-zero cancellation.
 .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for sensorless synchronous motor drives: Framework for design and analysis," IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
 
 .. [#Var2021] Varatharajan, Pellegrino, Armando, “Direct flux vector control of synchronous motor drives: A small-signal model for optimal reference generation,” IEEE Trans. Power Electron., 2021, https://doi.org/10.1109/TPEL.2021.3067694
-
-
-
