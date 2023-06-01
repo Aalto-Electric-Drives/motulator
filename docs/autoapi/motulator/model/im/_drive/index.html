@@ -442,9 +442,9 @@ implemented in stator coordinates.</p>
 <dt class="sig sig-object py" id="motulator.model.im._drive.InductionMachine">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.im._drive.</span></span><span class="sig-name descname"><span class="pre">InductionMachine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_ell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#InductionMachine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.InductionMachine" title="Permalink to this definition">#</a></dt>
 <dd><p>Γ-equivalent model of an induction machine.</p>
-<p>An induction machine is modeled using the Γ-equivalent model <a class="reference internal" href="../index.html#r2668301633c9-sle1989" id="id1">[Sle1989]</a>. The
-model is implemented in stator coordinates. The flux linkages are used as
-state variables.</p>
+<p>An induction machine is modeled using the Γ-equivalent model <a class="footnote-reference brackets" href="#sle1989" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.
+The model is implemented in stator coordinates. The flux linkages are used
+as state variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -460,16 +460,16 @@ state variables.</p>
 <p>The Γ model is chosen here since it can be extended with the magnetic
 saturation model in a staightforward manner. If the magnetic saturation is
 omitted, the Γ model is mathematically identical to the inverse-Γ and T
-models <a class="reference internal" href="../index.html#r2668301633c9-sle1989" id="id2">[Sle1989]</a>.</p>
+models <a class="footnote-reference brackets" href="#sle1989" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
-<div role="list" class="citation-list">
-<div class="citation" id="r2668301633c9-sle1989" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>Sle1989<span class="fn-bracket">]</span></span>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="sle1989" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
 <p>Slemon, “Modelling of induction machines for electric drives,”
 IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.1109/28.44251">https://doi.org/10.1109/28.44251</a>.</p>
-</div>
-</div>
+</aside>
+</aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.model.im._drive.InductionMachine.currents">
 <span class="sig-name descname"><span class="pre">currents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_ss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_rs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#InductionMachine.currents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.InductionMachine.currents" title="Permalink to this definition">#</a></dt>
