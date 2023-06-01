@@ -15,9 +15,9 @@ class InductionMachine:
     """
     Γ-equivalent model of an induction machine.
 
-    An induction machine is modeled using the Γ-equivalent model [Sle1989]_. The 
-    model is implemented in stator coordinates. The flux linkages are used as 
-    state variables.
+    An induction machine is modeled using the Γ-equivalent model [#Sle1989]_. 
+    The model is implemented in stator coordinates. The flux linkages are used 
+    as state variables.
 
     Parameters
     ----------
@@ -37,11 +37,11 @@ class InductionMachine:
     The Γ model is chosen here since it can be extended with the magnetic
     saturation model in a staightforward manner. If the magnetic saturation is
     omitted, the Γ model is mathematically identical to the inverse-Γ and T
-    models [Sle1989]_.
+    models [#Sle1989]_.
 
     References
     ----------
-    .. [Sle1989] Slemon, "Modelling of induction machines for electric drives," 
+    .. [#Sle1989] Slemon, "Modelling of induction machines for electric drives," 
        IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
 
     """
