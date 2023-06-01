@@ -377,7 +377,8 @@ Classes
    .. rubric:: References
 
    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of
-      full-digital synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl., 2003, https://doi.org/10.1109/TIA.2003.810660
+      full-digital synchronous frame current regulator of PWM AC drives," IEEE
+      Trans. Ind. Appl., 2003, https://doi.org/10.1109/TIA.2003.810660
 
 
 
