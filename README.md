@@ -57,6 +57,7 @@ Thanks go to these wonderful people:
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SimFerr"><img src="https://avatars.githubusercontent.com/u/67151973?v=4?s=50" width="50px;" alt="Simone Ferrari"/><br /><sub><b>Simone Ferrari</b></sub></a><br /><a href="#data-SimFerr" title="Data">🔣</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Jialed0303"><img src="https://avatars.githubusercontent.com/u/118135952?v=4?s=50" width="50px;" alt="Jialed0303"/><br /><sub><b>Jialed0303</b></sub></a><br /><a href="#ideas-Jialed0303" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/murgui"><img src="https://avatars.githubusercontent.com/u/29175623?v=4?s=50" width="50px;" alt="murgui"/><br /><sub><b>murgui</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/issues?q=author%3Amurgui" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/iam-nithin-10"><img src="https://avatars.githubusercontent.com/u/125553207?v=4?s=50" width="50px;" alt="Nithin Valiyaveettil Sadanandan"/><br /><sub><b>Nithin Valiyaveettil Sadanandan</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/issues?q=author%3Aiam-nithin-10" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>
