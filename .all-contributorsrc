@@ -123,6 +123,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "iam-nithin-10",
+      "name": "Nithin Valiyaveettil Sadanandan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/125553207?v=4",
+      "profile": "https://github.com/iam-nithin-10",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -130,5 +139,6 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "projectName": "motulator",
-  "projectOwner": "Aalto-Electric-Drives"
+  "projectOwner": "Aalto-Electric-Drives",
+  "commitType": "docs"
 }
