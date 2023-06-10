@@ -37,7 +37,7 @@ par = control.sm.ModelPars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
 ref = control.sm.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=2*base.i)
 ctrl = control.sm.SignalInjectionCtrl(par, ref, T_s=250e-6)
-#ctrl.current_ctrl = control.CurrentCtrl(par, 2*np.pi*100)
+#ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -69,7 +69,7 @@ ctrl = sim.ctrl.data  # Discrete-time data
 plt.figure()
 plt.plot(mdl.t, mdl.theta_m, label=r"$\vartheta_\mathrm{m}$")
 plt.step(
-    ctrl.t, ctrl.theta_m, where='post', label=r"$\hat \vartheta_\mathrm{m}$")
+    ctrl.t, ctrl.theta_m, where="post", label=r"$\hat \vartheta_\mathrm{m}$")
 plt.legend()
 plt.xlim(0, 4)
 plt.xlabel("Time (s)")

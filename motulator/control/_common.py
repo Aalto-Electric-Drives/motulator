@@ -406,7 +406,7 @@ class RateLimiter:
     Parameters
     ----------
     rate_limit : float, optional
-        Rate limit. The default is `inf`.
+        Rate limit. The default is inf.
 
     """
 

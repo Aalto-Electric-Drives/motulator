@@ -22,8 +22,8 @@ import matplotlib.pyplot as plt
 from cycler import cycler
 from motulator._utils import Bunch
 
-plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
-plt.rcParams['lines.linewidth'] = 1.
+plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")
+plt.rcParams["lines.linewidth"] = 1.
 plt.rcParams.update({"text.usetex": False})  # Disable LaTeX in plots
 
 
@@ -436,7 +436,7 @@ class TorqueCharacteristics:
             tau_M,
             bounds_error=False,
             fill_value=(tau_M[0], tau_M[-1]))
-        i_sd_vs_tau_M = interp1d(tau_M, i_sd, fill_value='extrapolate')
+        i_sd_vs_tau_M = interp1d(tau_M, i_sd, fill_value="extrapolate")
 
         # Return the result as a bunch object
         return Bunch(
@@ -470,24 +470,24 @@ class TorqueCharacteristics:
         # Plot the i_sd--i_sq current plane
         _, ax = plt.subplots()
         ax.plot(
-            mtpa.psi_s.real/base.psi, mtpa.psi_s.imag/base.psi, label='MTPA')
+            mtpa.psi_s.real/base.psi, mtpa.psi_s.imag/base.psi, label="MTPA")
         try:
             ax.plot(
                 mtpv.psi_s.real/base.psi,
                 mtpv.psi_s.imag/base.psi,
-                label='MTPV')
+                label="MTPV")
         except AttributeError:
             pass
         ax.plot(
             clim.psi_s.real/base.psi,
             clim.psi_s.imag/base.psi,
-            label='Const current')
+            label="Const current")
 
         ax.legend()
-        ax.set_xlabel(r'$\psi_\mathrm{sd}$ (p.u.)')
-        ax.set_ylabel(r'$\psi_\mathrm{sq}$ (p.u.)')
+        ax.set_xlabel(r"$\psi_\mathrm{sd}$ (p.u.)")
+        ax.set_ylabel(r"$\psi_\mathrm{sq}$ (p.u.)")
         ax.set_ylim(0, None)
-        ax.set_aspect('equal')
+        ax.set_aspect("equal")
 
     def plot_current_loci(self, i_s_max, base, N=20):
         """
@@ -516,16 +516,16 @@ class TorqueCharacteristics:
 
         # Plot the i_sd--i_sq current plane
         _, ax = plt.subplots()
-        ax.plot(mtpa.i_s.real/base.i, mtpa.i_s.imag/base.i, label='MTPA')
+        ax.plot(mtpa.i_s.real/base.i, mtpa.i_s.imag/base.i, label="MTPA")
         try:
-            ax.plot(mtpv.i_s.real/base.i, mtpv.i_s.imag/base.i, label='MTPV')
+            ax.plot(mtpv.i_s.real/base.i, mtpv.i_s.imag/base.i, label="MTPV")
         except AttributeError:
             pass
         ax.plot(
-            clim.i_s.real/base.i, clim.i_s.imag/base.i, label='Const current')
+            clim.i_s.real/base.i, clim.i_s.imag/base.i, label="Const current")
 
-        ax.set_xlabel(r'$i_\mathrm{sd}$ (p.u.)')
-        ax.set_ylabel(r'$i_\mathrm{sq}$ (p.u.)')
+        ax.set_xlabel(r"$i_\mathrm{sd}$ (p.u.)")
+        ax.set_ylabel(r"$i_\mathrm{sq}$ (p.u.)")
         ax.legend()
         if self.psi_f == 0:
             ax.axis([0, i_s_max/base.i, 0, i_s_max/base.i])
@@ -533,7 +533,7 @@ class TorqueCharacteristics:
             ax.axis([-i_s_max/base.i, 0, 0, i_s_max/base.i])
         else:
             ax.axis([-i_s_max/base.i, i_s_max/base.i, 0, i_s_max/base.i])
-        ax.set_aspect('equal')
+        ax.set_aspect("equal")
 
     def plot_torque_current(self, i_s_max, base, N=20):
         """
@@ -574,8 +574,8 @@ class TorqueCharacteristics:
             ax1.set_ylim(0, None)
         elif self.L_q > self.L_d:
             ax1.set_ylim(None, 0)
-        ax1.legend(['MTPA', 'MTPV', 'Const current'])
-        ax1.set_ylabel(r'$i_\mathrm{sd}$ (p.u.)')
+        ax1.legend(["MTPA", "MTPV", "Const current"])
+        ax1.set_ylabel(r"$i_\mathrm{sd}$ (p.u.)")
 
         # Plot i_sq vs. tau_M
         ax2.plot(mtpa.tau_M/base.tau, mtpa.i_s.imag/base.i)
@@ -587,9 +587,9 @@ class TorqueCharacteristics:
 
         ax2.set_xlim(0, i_s_max/base.i)
         ax2.set_ylim(0, None)
-        ax2.legend(['MTPA', 'MTPV', 'Const current'])
-        ax2.set_ylabel(r'$i_\mathrm{sq}$ (p.u.)')
-        ax2.set_xlabel(r'$\tau_\mathrm{M}$ (p.u.)')
+        ax2.legend(["MTPA", "MTPV", "Const current"])
+        ax2.set_ylabel(r"$i_\mathrm{sq}$ (p.u.)")
+        ax2.set_xlabel(r"$\tau_\mathrm{M}$ (p.u.)")
 
     def plot_torque_flux(self, i_s_max, base, N=20):
         """
@@ -625,6 +625,6 @@ class TorqueCharacteristics:
             pass
         ax.plot(np.abs(clim.psi_s)/base.psi, clim.tau_M/base.tau)
 
-        ax.legend(['MTPA', 'MTPV', 'Const current'])
-        ax.set_xlabel(r'$\psi_\mathrm{s}$ (p.u.)')
-        ax.set_ylabel(r'$\tau_\mathrm{m}$ (p.u.)')
+        ax.legend(["MTPA", "MTPV", "Const current"])
+        ax.set_xlabel(r"$\psi_\mathrm{s}$ (p.u.)")
+        ax.set_ylabel(r"$\tau_\mathrm{m}$ (p.u.)")
