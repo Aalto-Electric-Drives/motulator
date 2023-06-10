@@ -227,7 +227,7 @@ class PICtrl:
         # Gains
         self.k_p = k_p
         self.k_t = k_t if k_t is not None else k_p
-        self.alpha_i = k_i/k_t  # Inverse of the integration time T_i
+        self.alpha_i = k_i/self.k_t  # Inverse of the integration time T_i
         # States
         self.v, self.u_i = 0, 0
 
