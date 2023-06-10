@@ -1,6 +1,6 @@
 """
-6.7-kW SyRM
-===========
+6.7-kW SyRM, saturated
+======================
 
 This example simulates sensorless stator-flux-vector control of a saturated
 6.7-kW synchronous reluctance motor drive. The saturation is not taken into
@@ -43,6 +43,7 @@ def i_s(psi_s):
 
 # %%
 # Configure the system model.
+
 machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
 # Magnetically linear SyRM model for comparison
 # machine = model.SynchronousMachine(

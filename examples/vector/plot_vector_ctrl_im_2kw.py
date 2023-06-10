@@ -69,7 +69,6 @@ mdl = model.im.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
-# Create the control system
 
 # Machine model parameters
 par = control.im.ModelPars(
@@ -79,6 +78,9 @@ ref = control.im.CurrentReferencePars(
     par, i_s_max=1.5*base.i, u_s_nom=base.u, w_s_nom=base.w)
 # Create the control system
 ctrl = control.im.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+# As an example, you may replace the default 2DOF PI speed controller with the
+# regular PI speed controller by uncommenting the following line
+# ctrl.speed_ctrl = control.PICtrl(k_p=1, k_i=1)
 
 # %%
 # Set the speed reference and the external load torque. You may also try to

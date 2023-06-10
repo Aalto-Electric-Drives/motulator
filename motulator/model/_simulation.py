@@ -218,7 +218,7 @@ class Simulation:
         t_stop : float, optional
             Simulation stop time. The default is 1.
         max_step : float, optional
-            Max step size of the solver. The default is `inf`.
+            Max step size of the solver. The default is inf.
 
         Notes
         -----
@@ -229,12 +229,12 @@ class Simulation:
         try:
             self._simulation_loop(t_stop, max_step)
         except FloatingPointError:
-            print(f'Invalid value encountered at {self.mdl.t0:.2f} seconds.')
+            print(f"Invalid value encountered at {self.mdl.t0:.2f} seconds.")
         # Call the post-processing functions
         self.mdl.post_process()
         self.ctrl.post_process()
 
-    @np.errstate(invalid='raise')
+    @np.errstate(invalid="raise")
     def _simulation_loop(self, t_stop, max_step):
         """Run the main simulation loop."""
         while self.mdl.t0 <= t_stop:
@@ -270,15 +270,15 @@ class Simulation:
                     sol.q = len(sol.t)*[self.mdl.converter.q]
                     self.mdl.save(sol)
 
-    def save_mat(self, name='sim'):
+    def save_mat(self, name="sim"):
         """
         Save the simulation data into MATLAB .mat files.
 
         Parameters
         ----------
         name : str, optional
-            Name for the simulation instance. The default is 'sim'.
+            Name for the simulation instance. The default is `sim`.
 
         """
-        savemat(name + '_mdl_data' + '.mat', self.mdl.data)
-        savemat(name + '_ctrl_data' + '.mat', self.ctrl.data)
+        savemat(name + "_mdl_data" + ".mat", self.mdl.data)
+        savemat(name + "_ctrl_data" + ".mat", self.ctrl.data)

@@ -9,14 +9,14 @@ from scipy.interpolate import griddata
 from motulator._utils import Bunch
 
 # Plotting parameters
-plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
-plt.rcParams['lines.linewidth'] = 1.
-plt.rcParams['axes.grid'] = True
-plt.rcParams.update({'text.usetex': False})
+plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")
+plt.rcParams["lines.linewidth"] = 1.
+plt.rcParams["axes.grid"] = True
+plt.rcParams.update({"text.usetex": False})
 
 
 # %%
-def import_syre_data(fname='THOR.mat', add_negative_q_axis=True):
+def import_syre_data(fname, add_negative_q_axis=True):
     """
     Import a flux map from the MATLAB data file in the SyR-e format.
 
@@ -30,8 +30,8 @@ def import_syre_data(fname='THOR.mat', add_negative_q_axis=True):
 
     Parameters
     ----------
-    fname : str, optional
-        MATLAB file name. The default is 'THOR.mat'.
+    fname : str
+        MATLAB file name.
     add_negative_q_axis : bool, optional
         Adds the negative q-axis data based on the symmetry.
 
@@ -56,15 +56,15 @@ def import_syre_data(fname='THOR.mat', add_negative_q_axis=True):
 
     # Use the PMSM convention in coordinates. Rotate the matrices by -90 deg
     # to get monotonically increasing grid data.
-    i_d = -np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Iq'], -1)
-    i_q = np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Id'], -1)
-    psi_d = -np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Fq'], -1)
-    psi_q = np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['Fd'], -1)
-    tau_M = np.rot90(mat['motorModel'][0, 0]['FluxMap_dq'][0, 0]['T'], -1)
+    i_d = -np.rot90(mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["Iq"], -1)
+    i_q = np.rot90(mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["Id"], -1)
+    psi_d = -np.rot90(mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["Fq"], -1)
+    psi_q = np.rot90(mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["Fd"], -1)
+    tau_M = np.rot90(mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["T"], -1)
 
     # Clip the negative q-axis values
-    np.clip(i_q, 0, np.inf, out=i_q)
-    np.clip(psi_q, 0, np.inf, out=psi_q)
+    i_q = np.clip(i_q, 0, np.inf)
+    psi_q = np.clip(psi_q, 0, np.inf)
 
     if add_negative_q_axis:
         # Add the negative q-axis data, flipped based on the symmetry
@@ -93,16 +93,16 @@ def plot_flux_map(data):
 
     """
     fig = plt.figure(figsize=(10, 5))
-    ax1 = fig.add_subplot(1, 2, 1, projection='3d')
-    ax2 = fig.add_subplot(1, 2, 2, projection='3d')
+    ax1 = fig.add_subplot(1, 2, 1, projection="3d")
+    ax2 = fig.add_subplot(1, 2, 2, projection="3d")
     ax1.plot_surface(data.i_s.real, data.i_s.imag, data.psi_s.real)
     ax2.plot_surface(data.i_s.real, data.i_s.imag, data.psi_s.imag)
-    ax1.set_xlabel(r'$i_\mathrm{d}$ (A)')
-    ax1.set_ylabel(r'$i_\mathrm{q}$ (A)')
-    ax1.set_zlabel(r'$\psi_\mathrm{d}$ (Vs)')
-    ax2.set_xlabel(r'$i_\mathrm{d}$ (A)')
-    ax2.set_ylabel(r'$i_\mathrm{q}$ (A)')
-    ax2.set_zlabel(r'$\psi_\mathrm{q}$ (Vs)')
+    ax1.set_xlabel(r"$i_\mathrm{d}$ (A)")
+    ax1.set_ylabel(r"$i_\mathrm{q}$ (A)")
+    ax1.set_zlabel(r"$\psi_\mathrm{d}$ (Vs)")
+    ax2.set_xlabel(r"$i_\mathrm{d}$ (A)")
+    ax2.set_ylabel(r"$i_\mathrm{q}$ (A)")
+    ax2.set_zlabel(r"$\psi_\mathrm{q}$ (Vs)")
 
 
 # %%
@@ -117,11 +117,11 @@ def plot_torque_map(data):
 
     """
     fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
+    ax = fig.add_subplot(projection="3d")
     ax.plot_surface(data.i_s.real, data.i_s.imag, data.tau_M)
-    ax.set_xlabel(r'$i_\mathrm{d}$ (A)')
-    ax.set_ylabel(r'$i_\mathrm{q}$ (A)')
-    ax.set_zlabel(r'$\tau_\mathrm{M}$ (Nm)')
+    ax.set_xlabel(r"$i_\mathrm{d}$ (A)")
+    ax.set_ylabel(r"$i_\mathrm{q}$ (A)")
+    ax.set_zlabel(r"$\tau_\mathrm{M}$ (Nm)")
 
 
 # %%
@@ -147,36 +147,36 @@ def plot_flux_vs_current(data):
     ax.plot(
         data.i_s.real[ind_q_0, :],
         data.psi_s.real[ind_q_0, :],
-        color='r',
-        linestyle='-',
-        label=r'$\psi_\mathrm{d}(i_\mathrm{d}, 0)$')
+        color="r",
+        linestyle="-",
+        label=r"$\psi_\mathrm{d}(i_\mathrm{d}, 0)$")
     ax.plot(
         data.i_s.real[-1, :],
         data.psi_s.real[-1, :],
-        color='r',
-        linestyle='--',
-        label=r'$\psi_\mathrm{d}(i_\mathrm{d}, i_\mathrm{q,max})$')
+        color="r",
+        linestyle="--",
+        label=r"$\psi_\mathrm{d}(i_\mathrm{d}, i_\mathrm{q,max})$")
     ax.plot(
         data.i_s.imag[:, ind_d_0],
         data.psi_s.imag[:, ind_d_0],
-        color='b',
-        linestyle='-',
-        label=r'$\psi_\mathrm{q}(0, i_\mathrm{q})$')
+        color="b",
+        linestyle="-",
+        label=r"$\psi_\mathrm{q}(0, i_\mathrm{q})$")
     ax.plot(
         data.i_s.imag[:, ind_d_min],
         data.psi_s.imag[:, ind_d_min],
-        color='b',
-        linestyle=':',
-        label=r'$\psi_\mathrm{q}(i_\mathrm{d,min}, i_\mathrm{q})$')
+        color="b",
+        linestyle=":",
+        label=r"$\psi_\mathrm{q}(i_\mathrm{d,min}, i_\mathrm{q})$")
     ax.plot(
         data.i_s.imag[:, ind_d_max],
         data.psi_s.imag[:, ind_d_max],
-        color='b',
-        linestyle='--',
-        label=r'$\psi_\mathrm{q}(i_\mathrm{d,max}, i_\mathrm{q})$')
+        color="b",
+        linestyle="--",
+        label=r"$\psi_\mathrm{q}(i_\mathrm{d,max}, i_\mathrm{q})$")
 
-    ax.set_xlabel(r'$i_\mathrm{d}$, $i_\mathrm{q}$ (A)')
-    ax.set_ylabel(r'$\psi_\mathrm{d}$, $\psi_\mathrm{q}$ (Vs)')
+    ax.set_xlabel(r"$i_\mathrm{d}$, $i_\mathrm{q}$ (A)")
+    ax.set_ylabel(r"$\psi_\mathrm{d}$, $\psi_\mathrm{q}$ (Vs)")
     ax.legend()
 
 
@@ -212,8 +212,8 @@ def downsample_flux_map(data, N_d=32, N_q=32):
 
     # Interpolate data
     points = (np.ravel(data.i_s.real), np.ravel(data.i_s.imag))
-    psi_s = griddata(points, np.ravel(data.psi_s), (i_d, i_q), method='linear')
-    tau_M = griddata(points, np.ravel(data.tau_M), (i_d, i_q), method='linear')
+    psi_s = griddata(points, np.ravel(data.psi_s), (i_d, i_q), method="linear")
+    tau_M = griddata(points, np.ravel(data.tau_M), (i_d, i_q), method="linear")
     i_s = i_d + 1j*i_q
 
     return Bunch(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
@@ -257,9 +257,9 @@ def invert_flux_map(data, N_d=32, N_q=32):
 
     # Interpolate data
     points = (np.ravel(data.psi_s.real), np.ravel(data.psi_s.imag))
-    i_s = griddata(points, np.ravel(data.i_s), (psi_d, psi_q), method='linear')
+    i_s = griddata(points, np.ravel(data.i_s), (psi_d, psi_q), method="linear")
     tau_M = griddata(
-        points, np.ravel(data.tau_M), (psi_d, psi_q), method='linear')
+        points, np.ravel(data.tau_M), (psi_d, psi_q), method="linear")
     psi_s = psi_d + 1j*psi_q
 
     return Bunch(psi_s=psi_s, i_s=i_s, tau_M=tau_M)

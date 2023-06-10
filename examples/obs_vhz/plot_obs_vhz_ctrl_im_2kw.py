@@ -48,7 +48,7 @@ values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.w_m_ref = Sequence(times, values)
 
 # %%
-# Set the load torque reference
+# Set the load torque reference.
 
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
