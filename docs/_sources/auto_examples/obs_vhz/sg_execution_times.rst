@@ -6,16 +6,16 @@
 
 Computation times
 =================
-**01:29.159** total execution time for **auto_examples_obs_vhz** files:
+**01:46.829** total execution time for **auto_examples_obs_vhz** files:
 
 +---------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py` (``plot_obs_vhz_ctrl_pmsyrm_thor.py``)             | 00:34.213 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py` (``plot_obs_vhz_ctrl_pmsyrm_thor.py``)             | 00:41.421 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py` (``plot_obs_vhz_ctrl_syrm_7kw.py``)                   | 00:22.047 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py` (``plot_obs_vhz_ctrl_syrm_7kw.py``)                   | 00:26.508 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py` (``plot_obs_vhz_ctrl_pmsm_2kw.py``)                   | 00:21.191 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py` (``plot_obs_vhz_ctrl_pmsm_2kw.py``)                   | 00:24.959 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py` (``plot_obs_vhz_ctrl_im_2kw.py``)                       | 00:07.683 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py` (``plot_obs_vhz_ctrl_im_2kw.py``)                       | 00:09.074 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py` (``plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py``) | 00:04.025 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py` (``plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py``) | 00:04.867 | 0.0 MB |
 +---------------------------------------------------------------------------------------------------------------------------+-----------+--------+
