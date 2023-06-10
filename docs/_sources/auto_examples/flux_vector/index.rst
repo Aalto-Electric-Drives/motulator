@@ -59,7 +59,7 @@ torque are selected as controllable variables.
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated</div>
     </div>
 
 

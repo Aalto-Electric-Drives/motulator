@@ -185,7 +185,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -373,13 +373,14 @@ motor, known as THOR, are from the SyR-e project:</p>
 </div></blockquote>
 <p>The SyR-e project has been licensed under the Apache License, Version 2.0. We
 acknowledge the developers of the SyR-e project. The flux maps from other
-sources can be used in a similar manner. To study the flux maps in more detail,
-see also the module <cite>sm_flux_maps</cite>. It is worth noticing that the saturation is
-not taken into account in the control method, only in the system model.
-Naturally, the control performance could be improved by taking the saturation
-into account in the control algorithm.</p>
+sources can be used in a similar manner. It is worth noticing that the
+saturation is not taken into account in the control method, only in the system
+model. Naturally, the control performance could be improved by taking the
+saturation into account in the control algorithm.</p>
 <p>Imports.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize_scalar</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">LinearNDInterpolator</span>
 <span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
@@ -392,8 +393,10 @@ into account in the control algorithm.</p>
 </pre></div>
 </div>
 <p>Load and plot the flux maps.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the data from the MATLAB file</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">import_syre_data</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s2">&quot;THOR.mat&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the path of this file</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())))</span>
+<span class="c1"># Load the data from the MATLAB file</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">import_syre_data</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;/THOR.mat&quot;</span><span class="p">)</span>
 
 <span class="c1"># You may also downsample or invert the flux map by uncommenting the following</span>
 <span class="c1"># lines. Not needed here, but these methods could be useful for other purposes.</span>
@@ -412,7 +415,7 @@ into account in the control algorithm.</p>
 <p>Create the saturation model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The coordinates assume the PMSM convention, i.e., that the PM flux is along</span>
 <span class="c1"># the d-axis. The piecewise linear interpolant `LinearNDInterpolator` is based</span>
-<span class="c1"># on triangularization and allows to use unstructured flux map.</span>
+<span class="c1"># on triangularization and allows to use unstructured flux maps.</span>
 
 <span class="c1"># Data points for creating the interpolant</span>
 <span class="n">psi_s_data</span><span class="p">,</span> <span class="n">i_s_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
@@ -440,7 +443,7 @@ into account in the control algorithm.</p>
 <span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">SynchronousMachineSaturated</span><span class="p">(</span>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">current</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="n">psi_s0</span><span class="p">)</span>
 <span class="c1"># Magnetically linear PM-SyRM model</span>
-<span class="c1"># machine = model.SynchronousMachine(</span>
+<span class="c1"># machine = model.sm.SynchronousMachine(</span>
 <span class="c1">#     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.0042</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">310</span><span class="p">)</span>
@@ -481,7 +484,7 @@ the results in SI units.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  32.534 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  34.996 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-obs-vhz-plot-obs-vhz-ctrl-pmsyrm-thor-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/32b0d0b5a5953f003c957fd40639cf0f/plot_obs_vhz_ctrl_pmsyrm_thor.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_pmsyrm_thor.py</span></code></a></p>

@@ -18,8 +18,8 @@
 .. _sphx_glr_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:
 
 
-6.7-kW SyRM
-===========
+6.7-kW SyRM, saturated
+======================
 
 This example simulates sensorless stator-flux-vector control of a saturated
 6.7-kW synchronous reluctance motor drive. The saturation is not taken into
@@ -101,9 +101,10 @@ Create a saturation model, see the example
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-54
+.. GENERATED FROM PYTHON SOURCE LINES 46-55
 
 .. code-block:: default
+
 
     machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
     # Magnetically linear SyRM model for comparison
@@ -120,11 +121,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-67
+.. GENERATED FROM PYTHON SOURCE LINES 57-68
 
 .. code-block:: default
 
@@ -146,11 +147,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 69-70
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-79
+.. GENERATED FROM PYTHON SOURCE LINES 70-80
 
 .. code-block:: default
 
@@ -171,11 +172,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-81
+.. GENERATED FROM PYTHON SOURCE LINES 81-82
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-85
+.. GENERATED FROM PYTHON SOURCE LINES 82-86
 
 .. code-block:: default
 
@@ -190,11 +191,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+.. GENERATED FROM PYTHON SOURCE LINES 87-88
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-89
+.. GENERATED FROM PYTHON SOURCE LINES 88-90
 
 .. code-block:: default
 
@@ -215,7 +216,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.268 seconds)
+   **Total running time of the script:** ( 0 minutes  12.067 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

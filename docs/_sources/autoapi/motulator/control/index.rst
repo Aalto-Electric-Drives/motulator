@@ -183,7 +183,7 @@ Classes
    
    Rate limiter.
 
-   :param rate_limit: Rate limit. The default is `inf`.
+   :param rate_limit: Rate limit. The default is inf.
    :type rate_limit: float, optional
 
 

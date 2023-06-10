@@ -185,7 +185,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -402,7 +402,7 @@ drive.</p>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Set the load torque reference</p>
+<p>Set the load torque reference.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># External load torque</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span>
@@ -425,7 +425,7 @@ the results in SI units.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" alt="plot obs vhz ctrl im 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  7.334 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" alt="plot obs vhz ctrl im 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  7.831 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-obs-vhz-plot-obs-vhz-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/08e838bf878827480241fb7f12fd06f3/plot_obs_vhz_ctrl_im_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_im_2kw.py</span></code></a></p>

@@ -10,17 +10,18 @@ motor, known as THOR, are from the SyR-e project:
 
 The SyR-e project has been licensed under the Apache License, Version 2.0. We
 acknowledge the developers of the SyR-e project. The flux maps from other
-sources can be used in a similar manner. To study the flux maps in more detail,
-see also the module `sm_flux_maps`. It is worth noticing that the saturation is
-not taken into account in the control method, only in the system model. 
-Naturally, the control performance could be improved by taking the saturation
-into account in the control algorithm.
+sources can be used in a similar manner. It is worth noticing that the 
+saturation is not taken into account in the control method, only in the system 
+model. Naturally, the control performance could be improved by taking the
+saturation into account in the control algorithm.
 
 """
 
 # %%
 # Imports.
 
+from os import path
+import inspect
 import numpy as np
 from scipy.optimize import minimize_scalar
 from scipy.interpolate import LinearNDInterpolator
@@ -36,8 +37,10 @@ base = BaseValues(
 # %%
 # Load and plot the flux maps.
 
+# Get the path of this file
+p = path.dirname(path.abspath(inspect.getfile(inspect.currentframe())))
 # Load the data from the MATLAB file
-data = model.sm.import_syre_data(fname="THOR.mat")
+data = model.sm.import_syre_data(p + "/THOR.mat")
 
 # You may also downsample or invert the flux map by uncommenting the following
 # lines. Not needed here, but these methods could be useful for other purposes.
@@ -53,7 +56,7 @@ model.sm.plot_flux_map(data)
 
 # The coordinates assume the PMSM convention, i.e., that the PM flux is along
 # the d-axis. The piecewise linear interpolant `LinearNDInterpolator` is based
-# on triangularization and allows to use unstructured flux map.
+# on triangularization and allows to use unstructured flux maps.
 
 # Data points for creating the interpolant
 psi_s_data, i_s_data = data.psi_s.ravel(), data.i_s.ravel()
@@ -83,7 +86,7 @@ def i_s(psi_s):
 machine = model.sm.SynchronousMachineSaturated(
     n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model
-# machine = model.SynchronousMachine(
+# machine = model.sm.SynchronousMachine(
 #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 mechanics = model.Mechanics(J=.0042)
 converter = model.Inverter(u_dc=310)

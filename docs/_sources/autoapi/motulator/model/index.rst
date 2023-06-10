@@ -627,7 +627,7 @@ Classes
 
       :param t_stop: Simulation stop time. The default is 1.
       :type t_stop: float, optional
-      :param max_step: Max step size of the solver. The default is `inf`.
+      :param max_step: Max step size of the solver. The default is inf.
       :type max_step: float, optional
 
       .. rubric:: Notes
@@ -657,7 +657,7 @@ Classes
       
       Save the simulation data into MATLAB .mat files.
 
-      :param name: Name for the simulation instance. The default is 'sim'.
+      :param name: Name for the simulation instance. The default is `sim`.
       :type name: str, optional
 
 

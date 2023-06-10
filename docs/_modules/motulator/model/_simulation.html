@@ -182,7 +182,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -528,7 +528,7 @@ document.write(`
 <span class="sd">        t_stop : float, optional</span>
 <span class="sd">            Simulation stop time. The default is 1.</span>
 <span class="sd">        max_step : float, optional</span>
-<span class="sd">            Max step size of the solver. The default is `inf`.</span>
+<span class="sd">            Max step size of the solver. The default is inf.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -539,12 +539,12 @@ document.write(`
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_simulation_loop</span><span class="p">(</span><span class="n">t_stop</span><span class="p">,</span> <span class="n">max_step</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FloatingPointError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid value encountered at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> seconds.&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid value encountered at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
         <span class="c1"># Call the post-processing functions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span></div>
 
-    <span class="nd">@np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">)</span>
+    <span class="nd">@np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_simulation_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_stop</span><span class="p">,</span> <span class="n">max_step</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the main simulation loop.&quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span> <span class="o">&lt;=</span> <span class="n">t_stop</span><span class="p">:</span>
@@ -580,18 +580,18 @@ document.write(`
                     <span class="n">sol</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">q</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Simulation.save_mat"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Simulation.save_mat">[docs]</a>    <span class="k">def</span> <span class="nf">save_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sim&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Simulation.save_mat"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Simulation.save_mat">[docs]</a>    <span class="k">def</span> <span class="nf">save_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sim&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the simulation data into MATLAB .mat files.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str, optional</span>
-<span class="sd">            Name for the simulation instance. The default is &#39;sim&#39;.</span>
+<span class="sd">            Name for the simulation instance. The default is `sim`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">savemat</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_mdl_data&#39;</span> <span class="o">+</span> <span class="s1">&#39;.mat&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">savemat</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_ctrl_data&#39;</span> <span class="o">+</span> <span class="s1">&#39;.mat&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div></div>
+        <span class="n">savemat</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_mdl_data&quot;</span> <span class="o">+</span> <span class="s2">&quot;.mat&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">savemat</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_ctrl_data&quot;</span> <span class="o">+</span> <span class="s2">&quot;.mat&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div></div>
 </pre></div>
 
                 </article>

@@ -564,7 +564,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:function:: import_syre_data(fname='THOR.mat', add_negative_q_axis=True)
+.. py:function:: import_syre_data(fname, add_negative_q_axis=True)
 
    
    Import a flux map from the MATLAB data file in the SyR-e format.
@@ -577,8 +577,8 @@ Functions
    The imported data is converted to the PMSM coordinate convention, in which
    the PM flux is along the d axis.
 
-   :param fname: MATLAB file name. The default is 'THOR.mat'.
-   :type fname: str, optional
+   :param fname: MATLAB file name.
+   :type fname: str
    :param add_negative_q_axis: Adds the negative q-axis data based on the symmetry.
    :type add_negative_q_axis: bool, optional
 

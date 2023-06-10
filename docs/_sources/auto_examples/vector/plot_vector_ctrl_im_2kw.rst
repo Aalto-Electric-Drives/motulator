@@ -137,12 +137,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Configure the control system.
-Create the control system
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-83
+.. GENERATED FROM PYTHON SOURCE LINES 72-85
 
 .. code-block:: default
 
@@ -155,6 +154,9 @@ Create the control system
         par, i_s_max=1.5*base.i, u_s_nom=base.u, w_s_nom=base.w)
     # Create the control system
     ctrl = control.im.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+    # As an example, you may replace the default 2DOF PI speed controller with the
+    # regular PI speed controller by uncommenting the following line
+    # ctrl.speed_ctrl = control.PICtrl(k_p=1, k_i=1)
 
 
 
@@ -163,12 +165,12 @@ Create the control system
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-86
+.. GENERATED FROM PYTHON SOURCE LINES 86-88
 
 Set the speed reference and the external load torque. You may also try to
 uncomment the field-weakening sequence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-106
+.. GENERATED FROM PYTHON SOURCE LINES 88-108
 
 .. code-block:: default
 
@@ -199,12 +201,12 @@ uncomment the field-weakening sequence.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-109
+.. GENERATED FROM PYTHON SOURCE LINES 109-111
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower).
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-113
+.. GENERATED FROM PYTHON SOURCE LINES 111-115
 
 .. code-block:: default
 
@@ -219,12 +221,12 @@ model (which makes simulation slower).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-116
+.. GENERATED FROM PYTHON SOURCE LINES 116-118
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-119
+.. GENERATED FROM PYTHON SOURCE LINES 118-121
 
 .. code-block:: default
 
@@ -243,7 +245,7 @@ the results in SI units.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-125
+.. GENERATED FROM PYTHON SOURCE LINES 122-127
 
 .. rubric:: References
 
@@ -254,7 +256,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.496 seconds)
+   **Total running time of the script:** ( 0 minutes  3.800 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw.py:

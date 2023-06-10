@@ -131,7 +131,7 @@ Set the speed reference.
 
 .. GENERATED FROM PYTHON SOURCE LINES 51-52
 
-Set the load torque reference
+Set the load torque reference.
 
 .. GENERATED FROM PYTHON SOURCE LINES 52-62
 
@@ -201,7 +201,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.334 seconds)
+   **Total running time of the script:** ( 0 minutes  7.831 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py:

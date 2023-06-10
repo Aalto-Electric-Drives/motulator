@@ -185,7 +185,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -419,8 +419,7 @@ be used also for other induction machines.</p>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">im</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Configure the control system.
-Create the control system</p>
+<p>Configure the control system.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Machine model parameters</span>
 <span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">im</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span>
     <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
@@ -429,6 +428,9 @@ Create the control system</p>
     <span class="n">par</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">u_s_nom</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">w_s_nom</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
 <span class="c1"># Create the control system</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">im</span><span class="o">.</span><span class="n">VectorCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">250e-6</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># As an example, you may replace the default 2DOF PI speed controller with the</span>
+<span class="c1"># regular PI speed controller by uncommenting the following line</span>
+<span class="c1"># ctrl.speed_ctrl = control.PICtrl(k_p=1, k_i=1)</span>
 </pre></div>
 </div>
 <p>Set the speed reference and the external load torque. You may also try to
@@ -473,7 +475,7 @@ of induction motor drives,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.496 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.800 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/5c5462abbacc47f76538a5bef10a227e/plot_vector_ctrl_im_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_vector_ctrl_im_2kw.py</span></code></a></p>

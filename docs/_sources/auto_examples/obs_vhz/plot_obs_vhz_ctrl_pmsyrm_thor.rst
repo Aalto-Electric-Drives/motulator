@@ -29,21 +29,22 @@ motor, known as THOR, are from the SyR-e project:
 
 The SyR-e project has been licensed under the Apache License, Version 2.0. We
 acknowledge the developers of the SyR-e project. The flux maps from other
-sources can be used in a similar manner. To study the flux maps in more detail,
-see also the module `sm_flux_maps`. It is worth noticing that the saturation is
-not taken into account in the control method, only in the system model. 
-Naturally, the control performance could be improved by taking the saturation
-into account in the control algorithm.
+sources can be used in a similar manner. It is worth noticing that the 
+saturation is not taken into account in the control method, only in the system 
+model. Naturally, the control performance could be improved by taking the
+saturation into account in the control algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Imports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-30
+.. GENERATED FROM PYTHON SOURCE LINES 22-31
 
 .. code-block:: default
 
 
+    from os import path
+    import inspect
     import numpy as np
     from scipy.optimize import minimize_scalar
     from scipy.interpolate import LinearNDInterpolator
@@ -57,11 +58,11 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-36
+.. GENERATED FROM PYTHON SOURCE LINES 33-37
 
 .. code-block:: default
 
@@ -76,17 +77,19 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Load and plot the flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-51
+.. GENERATED FROM PYTHON SOURCE LINES 39-54
 
 .. code-block:: default
 
 
+    # Get the path of this file
+    p = path.dirname(path.abspath(inspect.getfile(inspect.currentframe())))
     # Load the data from the MATLAB file
-    data = model.sm.import_syre_data(fname="THOR.mat")
+    data = model.sm.import_syre_data(p + "/THOR.mat")
 
     # You may also downsample or invert the flux map by uncommenting the following
     # lines. Not needed here, but these methods could be useful for other purposes.
@@ -121,18 +124,18 @@ Load and plot the flux maps.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Create the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-79
+.. GENERATED FROM PYTHON SOURCE LINES 56-82
 
 .. code-block:: default
 
 
     # The coordinates assume the PMSM convention, i.e., that the PM flux is along
     # the d-axis. The piecewise linear interpolant `LinearNDInterpolator` is based
-    # on triangularization and allows to use unstructured flux map.
+    # on triangularization and allows to use unstructured flux maps.
 
     # Data points for creating the interpolant
     psi_s_data, i_s_data = data.psi_s.ravel(), data.i_s.ravel()
@@ -162,11 +165,11 @@ Create the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-81
+.. GENERATED FROM PYTHON SOURCE LINES 83-84
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-92
+.. GENERATED FROM PYTHON SOURCE LINES 84-95
 
 .. code-block:: default
 
@@ -175,7 +178,7 @@ Configure the system model.
     machine = model.sm.SynchronousMachineSaturated(
         n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
     # Magnetically linear PM-SyRM model
-    # machine = model.SynchronousMachine(
+    # machine = model.sm.SynchronousMachine(
     #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
     mechanics = model.Mechanics(J=.0042)
     converter = model.Inverter(u_dc=310)
@@ -188,11 +191,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-94
+.. GENERATED FROM PYTHON SOURCE LINES 96-97
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-99
+.. GENERATED FROM PYTHON SOURCE LINES 97-102
 
 .. code-block:: default
 
@@ -208,11 +211,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-101
+.. GENERATED FROM PYTHON SOURCE LINES 103-104
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-116
+.. GENERATED FROM PYTHON SOURCE LINES 104-119
 
 .. code-block:: default
 
@@ -238,13 +241,13 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-120
+.. GENERATED FROM PYTHON SOURCE LINES 120-123
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-124
+.. GENERATED FROM PYTHON SOURCE LINES 123-127
 
 .. code-block:: default
 
@@ -259,12 +262,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-127
+.. GENERATED FROM PYTHON SOURCE LINES 128-130
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-129
+.. GENERATED FROM PYTHON SOURCE LINES 130-132
 
 .. code-block:: default
 
@@ -285,7 +288,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  32.534 seconds)
+   **Total running time of the script:** ( 0 minutes  34.996 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:

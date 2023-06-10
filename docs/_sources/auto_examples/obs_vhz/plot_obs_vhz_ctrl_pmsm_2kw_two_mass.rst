@@ -173,15 +173,15 @@ Plot the load speed and the twist angle.
 
     t_span = (0, 1.2)
     _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
-    ax1.plot(sim.mdl.data.t, sim.mdl.data.w_M, label=r'$\omega_\mathrm{M}$')
-    ax1.plot(sim.mdl.data.t, sim.mdl.data.w_L, label=r'$\omega_\mathrm{L}$')
+    ax1.plot(sim.mdl.data.t, sim.mdl.data.w_M, label=r"$\omega_\mathrm{M}$")
+    ax1.plot(sim.mdl.data.t, sim.mdl.data.w_L, label=r"$\omega_\mathrm{L}$")
     ax2.plot(sim.mdl.data.t, sim.mdl.data.theta_ML*180/np.pi)
     ax1.set_xlim(t_span)
     ax2.set_xlim(t_span)
     ax1.set_xticklabels([])
-    ax1.set_ylabel(r'$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)')
-    ax2.set_ylabel(r'$\vartheta_\mathrm{ML}$ (deg)')
-    ax2.set_xlabel('Time (s)')
+    ax1.set_ylabel(r"$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)")
+    ax2.set_ylabel(r"$\vartheta_\mathrm{ML}$ (deg)")
+    ax2.set_xlabel("Time (s)")
     plt.show()
 
 
@@ -228,9 +228,9 @@ rotor speed w_M.
     ax2.set_xlim(f_span)
     ax2.set_ylim([-100, 100])
     ax2.set_yticks([-90, -45, 0, 45, 90])
-    ax1.set_ylabel(r'Amplitude (rad/(s$\cdot$Nm))')
-    ax2.set_ylabel('Phase (deg)')
-    ax2.set_xlabel('Frequency (Hz)')
+    ax1.set_ylabel(r"Amplitude (rad/(s$\cdot$Nm))")
+    ax2.set_ylabel("Phase (deg)")
+    ax2.set_xlabel("Frequency (Hz)")
     fig.align_ylabels()
     plt.show()
 
@@ -257,7 +257,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.835 seconds)
+   **Total running time of the script:** ( 0 minutes  4.117 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py:
