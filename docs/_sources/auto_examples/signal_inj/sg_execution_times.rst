@@ -6,10 +6,10 @@
 
 Computation times
 =================
-**00:27.865** total execution time for **auto_examples_signal_inj** files:
+**00:21.869** total execution time for **auto_examples_signal_inj** files:
 
 +--------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_signal_inj_plot_signal_inj_pmsm_2kw.py` (``plot_signal_inj_pmsm_2kw.py``) | 00:13.954 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_signal_inj_plot_signal_inj_pmsm_2kw.py` (``plot_signal_inj_pmsm_2kw.py``) | 00:10.942 | 0.0 MB |
 +--------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_signal_inj_plot_signal_inj_syrm_7kw.py` (``plot_signal_inj_syrm_7kw.py``) | 00:13.911 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_signal_inj_plot_signal_inj_syrm_7kw.py` (``plot_signal_inj_syrm_7kw.py``) | 00:10.927 | 0.0 MB |
 +--------------------------------------------------------------------------------------------------------+-----------+--------+
