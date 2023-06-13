@@ -57,6 +57,7 @@ Classes
 
 .. py:class:: Mechanics(J, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
 
+
    
    Mechanics subsystem.
 
@@ -176,6 +177,7 @@ Classes
 
 
 .. py:class:: MechanicsTwoMass(J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None)
+
 
    Bases: :py:obj:`Mechanics`
 
@@ -309,6 +311,7 @@ Classes
 
 .. py:class:: FrequencyConverter(L, C, U_g, f_g)
 
+
    Bases: :py:obj:`Inverter`
 
    
@@ -407,6 +410,7 @@ Classes
 
 
 .. py:class:: Inverter(u_dc)
+
 
    
    Inverter with constant DC-bus voltage and switching-cycle averaging.
@@ -520,6 +524,7 @@ Classes
 
 .. py:class:: CarrierComparison(N=2**12, return_complex=True)
 
+
    
    Carrier comparison.
 
@@ -589,6 +594,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: Simulation(mdl=None, ctrl=None, delay=1, pwm=False)
+
 
    
    Simulation environment.

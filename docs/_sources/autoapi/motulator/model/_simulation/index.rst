@@ -30,6 +30,7 @@ Classes
 
 .. py:class:: Delay(length=1, elem=3)
 
+
    
    Computational delay.
 
@@ -56,6 +57,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CarrierComparison(N=2**12, return_complex=True)
+
 
    
    Carrier comparison.
@@ -126,6 +128,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: Simulation(mdl=None, ctrl=None, delay=1, pwm=False)
+
 
    
    Simulation environment.

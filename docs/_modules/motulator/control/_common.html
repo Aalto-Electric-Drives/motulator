@@ -350,7 +350,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_u_ref_lim_old</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="PWM.six_step_overmodulation"><a class="viewcode-back" href="../../../autoapi/motulator/control/_common/index.html#motulator.control._common.PWM.six_step_overmodulation">[docs]</a>    <span class="k">def</span> <span class="nf">six_step_overmodulation</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="PWM.six_step_overmodulation"><a class="viewcode-back" href="../../../autoapi/motulator/control/index.html#motulator.control._common.PWM.six_step_overmodulation">[docs]</a>    <span class="k">def</span> <span class="nf">six_step_overmodulation</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overmodulation up to six-step operation.</span>
 
@@ -405,7 +405,7 @@ document.write(`
         <span class="k">return</span> <span class="n">u_s_ref_mod</span></div>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="PWM.duty_ratios"><a class="viewcode-back" href="../../../autoapi/motulator/control/_common/index.html#motulator.control._common.PWM.duty_ratios">[docs]</a>    <span class="k">def</span> <span class="nf">duty_ratios</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="PWM.duty_ratios"><a class="viewcode-back" href="../../../autoapi/motulator/control/index.html#motulator.control._common.PWM.duty_ratios">[docs]</a>    <span class="k">def</span> <span class="nf">duty_ratios</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the duty ratios for three-phase PWM.</span>
 
@@ -541,7 +541,7 @@ document.write(`
         <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="PICtrl.output"><a class="viewcode-back" href="../../../autoapi/motulator/control/_common/index.html#motulator.control._common.PICtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="PICtrl.output"><a class="viewcode-back" href="../../../autoapi/motulator/control/index.html#motulator.control._common.PICtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the controller output.</span>
 
@@ -569,7 +569,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">u</span></div>
 
-<div class="viewcode-block" id="PICtrl.update"><a class="viewcode-back" href="../../../autoapi/motulator/control/_common/index.html#motulator.control._common.PICtrl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">u_lim</span><span class="p">):</span>
+<div class="viewcode-block" id="PICtrl.update"><a class="viewcode-back" href="../../../autoapi/motulator/control/index.html#motulator.control._common.PICtrl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">u_lim</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the integral state.</span>
 
@@ -665,7 +665,7 @@ document.write(`
         <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="ComplexPICtrl.output"><a class="viewcode-back" href="../../../autoapi/motulator/control/_common/index.html#motulator.control._common.ComplexPICtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ref</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexPICtrl.output"><a class="viewcode-back" href="../../../autoapi/motulator/control/index.html#motulator.control._common.ComplexPICtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ref</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the controller output.</span>
 
@@ -690,7 +690,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">u</span></div>
 
-<div class="viewcode-block" id="ComplexPICtrl.update"><a class="viewcode-back" href="../../../autoapi/motulator/control/_common/index.html#motulator.control._common.ComplexPICtrl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">u_lim</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<div class="viewcode-block" id="ComplexPICtrl.update"><a class="viewcode-back" href="../../../autoapi/motulator/control/index.html#motulator.control._common.ComplexPICtrl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">u_lim</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the integral state.</span>
 

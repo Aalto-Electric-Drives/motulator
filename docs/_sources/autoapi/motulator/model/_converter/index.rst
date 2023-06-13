@@ -34,6 +34,7 @@ Classes
 
 .. py:class:: Inverter(u_dc)
 
+
    
    Inverter with constant DC-bus voltage and switching-cycle averaging.
 
@@ -145,6 +146,7 @@ Classes
 
 
 .. py:class:: FrequencyConverter(L, C, U_g, f_g)
+
 
    Bases: :py:obj:`Inverter`
 

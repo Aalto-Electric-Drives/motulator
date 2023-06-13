@@ -51,6 +51,7 @@ Classes
 
 .. py:class:: CurrentCtrl(par, alpha_c)
 
+
    Bases: :py:obj:`motulator.control._common.ComplexPICtrl`
 
    
@@ -83,6 +84,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CurrentReferencePars
+
 
    
    Parameters for reference generation.
@@ -125,6 +127,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CurrentReference(par, ref)
+
 
    
    Current reference generation.
@@ -238,6 +241,7 @@ Classes
 
 .. py:class:: ModelPars
 
+
    
    Inverse-Γ model parameters of an induction machine.
 
@@ -272,6 +276,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: Observer(par, k=None, alpha_o=2 * np.pi * 40, sensorless=True)
+
 
    
    Reduced-order flux observer for induction machines.
@@ -342,6 +347,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
+
 
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
@@ -414,6 +420,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: FluxObserver(par, alpha_o, b=None)
+
 
    
    Sensorless reduced-order flux observer in external coordinates.
@@ -501,6 +508,7 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrl(par, ctrl_par, T_s=0.00025)
 
+
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
    
@@ -556,6 +564,7 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrlPars
 
+
    
    Parameters for the control system.
 
@@ -593,6 +602,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: VHzCtrl(T_s, par, psi_s_nom, k_u=1.0, k_w=4.0, six_step=False)
+
 
    Bases: :py:obj:`motulator.control._common.Ctrl`
 

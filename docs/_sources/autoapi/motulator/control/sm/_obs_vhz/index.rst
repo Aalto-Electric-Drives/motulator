@@ -30,6 +30,7 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrlPars
 
+
    Bases: :py:obj:`motulator.control.sm._flux_vector.FluxTorqueReferencePars`
 
    
@@ -63,6 +64,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: ObserverBasedVHzCtrl(par, ctrl_par, T_s=0.00025)
+
 
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
@@ -109,6 +111,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: FluxObserver(par, alpha_o=2 * np.pi * 20, zeta_inf=0.2)
+
 
    
    Sensorless stator flux observer.

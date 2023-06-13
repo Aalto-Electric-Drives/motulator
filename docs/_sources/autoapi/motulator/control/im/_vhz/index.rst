@@ -40,6 +40,7 @@ Classes
 
 .. py:class:: VHzCtrl(T_s, par, psi_s_nom, k_u=1.0, k_w=4.0, six_step=False)
 
+
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
    

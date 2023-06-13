@@ -30,6 +30,7 @@ Classes
 
 .. py:class:: FluxVectorCtrl(par, ref, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, T_s=0.00025, sensorless=True)
 
+
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
    
@@ -118,6 +119,7 @@ Classes
 
 .. py:class:: FluxTorqueReferencePars
 
+
    
    Parameters for reference generation.
 
@@ -163,6 +165,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: FluxTorqueReference(ref)
+
 
    
    Flux and torque references.

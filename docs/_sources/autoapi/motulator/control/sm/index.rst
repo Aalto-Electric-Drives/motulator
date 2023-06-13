@@ -56,6 +56,7 @@ Classes
 
 .. py:class:: CurrentReferencePars
 
+
    
    Parameters for reference generation.
 
@@ -113,6 +114,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CurrentReference(par, ref)
+
 
    
    Current reference calculation.
@@ -223,6 +225,7 @@ Classes
 
 .. py:class:: CurrentCtrl(par, alpha_c)
 
+
    Bases: :py:obj:`motulator.control._common.ComplexPICtrl`
 
    
@@ -292,6 +295,7 @@ Classes
 
 .. py:class:: ModelPars
 
+
    
    Model parameters of a synchronous machine.
 
@@ -326,6 +330,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, sensorless=True)
+
 
    
    Observer for synchronous machines.
@@ -422,6 +427,7 @@ Classes
 
 .. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
 
+
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
    
@@ -493,6 +499,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: FluxVectorCtrl(par, ref, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, T_s=0.00025, sensorless=True)
+
 
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
@@ -582,6 +589,7 @@ Classes
 
 .. py:class:: FluxTorqueReference(ref)
 
+
    
    Flux and torque references.
 
@@ -610,6 +618,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: FluxTorqueReferencePars
+
 
    
    Parameters for reference generation.
@@ -657,6 +666,7 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrl(par, ctrl_par, T_s=0.00025)
 
+
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
    
@@ -703,6 +713,7 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrlPars
 
+
    Bases: :py:obj:`motulator.control.sm._flux_vector.FluxTorqueReferencePars`
 
    
@@ -736,6 +747,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: FluxObserver(par, alpha_o=2 * np.pi * 20, zeta_inf=0.2)
+
 
    
    Sensorless stator flux observer.
@@ -800,6 +812,7 @@ Classes
 
 
 .. py:class:: TorqueCharacteristics(par)
+
 
    
    Compute MTPA and MTPV loci based on the machine parameters.
@@ -1267,6 +1280,7 @@ Classes
 
 .. py:class:: SignalInjectionCtrl(par, ref, T_s=0.00025)
 
+
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
    
@@ -1357,6 +1371,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: SignalInjection(par, U_inj)
+
 
    
    Estimate the rotor position error based on signal injection.

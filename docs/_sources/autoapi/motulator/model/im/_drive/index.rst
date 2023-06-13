@@ -36,6 +36,7 @@ Classes
 
 .. py:class:: InductionMachine(n_p, R_s, R_r, L_ell, L_s)
 
+
    
    Γ-equivalent model of an induction machine.
 
@@ -213,6 +214,7 @@ Classes
 
 .. py:class:: InductionMachineSaturated(n_p, R_s, R_r, L_ell, L_s)
 
+
    Bases: :py:obj:`InductionMachine`
 
    
@@ -276,6 +278,7 @@ Classes
 
 .. py:class:: InductionMachineInvGamma(n_p, R_s, R_R, L_sgm, L_M)
 
+
    Bases: :py:obj:`InductionMachine`
 
    
@@ -314,6 +317,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: Drive(machine=None, mechanics=None, converter=None)
+
 
    
    Continuous-time model for an induction machine drive.
@@ -478,6 +482,7 @@ Classes
 
 .. py:class:: DriveWithDiodeBridge(machine=None, mechanics=None, converter=None)
 
+
    Bases: :py:obj:`Drive`
 
    
@@ -627,6 +632,7 @@ Classes
 
 
 .. py:class:: DriveTwoMassMechanics(machine=None, mechanics=None, converter=None)
+
 
    Bases: :py:obj:`Drive`
 

@@ -29,6 +29,7 @@ Classes
 
 .. py:class:: Mechanics(J, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
 
+
    
    Mechanics subsystem.
 
@@ -148,6 +149,7 @@ Classes
 
 
 .. py:class:: MechanicsTwoMass(J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None)
+
 
    Bases: :py:obj:`Mechanics`
 

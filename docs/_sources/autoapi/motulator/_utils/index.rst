@@ -28,6 +28,7 @@ Classes
 
 .. py:class:: Bunch(**kwargs)
 
+
    Bases: :py:obj:`dict`
 
    

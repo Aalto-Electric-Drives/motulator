@@ -138,6 +138,7 @@ Functions
 
 .. py:class:: BaseValues
 
+
    
    Base values.
 
@@ -224,6 +225,7 @@ Functions
 
 .. py:class:: Sequence(times, values, periodic=False)
 
+
    
    Sequence generator.
 
@@ -255,6 +257,7 @@ Functions
        !! processed by numpydoc !!
 
 .. py:class:: Step(step_time, step_value, initial_value=0)
+
 
    
    Step function.

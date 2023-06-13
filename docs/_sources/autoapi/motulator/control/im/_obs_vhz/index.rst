@@ -40,6 +40,7 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrlPars
 
+
    
    Parameters for the control system.
 
@@ -77,6 +78,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: ObserverBasedVHzCtrl(par, ctrl_par, T_s=0.00025)
+
 
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
@@ -132,6 +134,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: FluxObserver(par, alpha_o, b=None)
+
 
    
    Sensorless reduced-order flux observer in external coordinates.

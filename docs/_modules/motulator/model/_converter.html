@@ -337,7 +337,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Switching state vector</span>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="Inverter.ac_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/_converter/index.html#motulator.model._converter.Inverter.ac_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">ac_voltage</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="Inverter.ac_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.ac_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">ac_voltage</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the AC-side voltage of a lossless inverter.</span>
 
@@ -358,7 +358,7 @@ document.write(`
         <span class="k">return</span> <span class="n">u_ac</span></div>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="Inverter.dc_current"><a class="viewcode-back" href="../../../autoapi/motulator/model/_converter/index.html#motulator.model._converter.Inverter.dc_current">[docs]</a>    <span class="k">def</span> <span class="nf">dc_current</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">i_ac</span><span class="p">):</span>
+<div class="viewcode-block" id="Inverter.dc_current"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.dc_current">[docs]</a>    <span class="k">def</span> <span class="nf">dc_current</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">i_ac</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the DC-side current of a lossless inverter.</span>
 
@@ -378,7 +378,7 @@ document.write(`
         <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_ac</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">i_dc</span></div>
 
-<div class="viewcode-block" id="Inverter.meas_dc_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/_converter/index.html#motulator.model._converter.Inverter.meas_dc_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">meas_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Inverter.meas_dc_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.meas_dc_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">meas_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the DC-bus voltage.</span>
 
@@ -427,7 +427,7 @@ document.write(`
         <span class="c1"># Switching state vector</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
 
-<div class="viewcode-block" id="FrequencyConverter.grid_voltages"><a class="viewcode-back" href="../../../autoapi/motulator/model/_converter/index.html#motulator.model._converter.FrequencyConverter.grid_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">grid_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FrequencyConverter.grid_voltages"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.FrequencyConverter.grid_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">grid_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute three-phase grid voltages.</span>
 
@@ -450,7 +450,7 @@ document.write(`
         <span class="p">])</span>
         <span class="k">return</span> <span class="n">u_g_abc</span></div>
 
-<div class="viewcode-block" id="FrequencyConverter.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/_converter/index.html#motulator.model._converter.FrequencyConverter.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="FrequencyConverter.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.FrequencyConverter.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the state derivatives.</span>
 

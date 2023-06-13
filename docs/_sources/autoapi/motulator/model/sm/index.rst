@@ -55,6 +55,7 @@ Functions
 
 .. py:class:: Drive(machine=None, mechanics=None, converter=None)
 
+
    
    Continuous-time model for a synchronous machine drive.
 
@@ -218,6 +219,7 @@ Functions
 
 .. py:class:: DriveTwoMassMechanics(machine=None, mechanics=None, converter=None)
 
+
    Bases: :py:obj:`Drive`
 
    
@@ -366,6 +368,7 @@ Functions
 
 
 .. py:class:: SynchronousMachine(n_p, R_s, L_d, L_q, psi_f)
+
 
    
    Synchronous machine model.
@@ -523,6 +526,7 @@ Functions
 
 
 .. py:class:: SynchronousMachineSaturated(n_p, R_s, current, psi_s0=0j)
+
 
    Bases: :py:obj:`SynchronousMachine`
 

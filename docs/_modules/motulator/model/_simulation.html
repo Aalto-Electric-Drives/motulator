@@ -519,7 +519,7 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pwm</span> <span class="o">=</span> <span class="n">_zoh</span>
 
-<div class="viewcode-block" id="Simulation.simulate"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Simulation.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_stop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
+<div class="viewcode-block" id="Simulation.simulate"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._simulation.Simulation.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_stop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Solve the continuous-time model and call the discrete-time controller.</span>
 
@@ -580,7 +580,7 @@ document.write(`
                     <span class="n">sol</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">q</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Simulation.save_mat"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Simulation.save_mat">[docs]</a>    <span class="k">def</span> <span class="nf">save_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sim&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="Simulation.save_mat"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._simulation.Simulation.save_mat">[docs]</a>    <span class="k">def</span> <span class="nf">save_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sim&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the simulation data into MATLAB .mat files.</span>
 

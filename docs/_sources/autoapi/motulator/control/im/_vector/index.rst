@@ -35,6 +35,7 @@ Classes
 
 .. py:class:: ModelPars
 
+
    
    Inverse-Γ model parameters of an induction machine.
 
@@ -69,6 +70,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
+
 
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
@@ -142,6 +144,7 @@ Classes
 
 .. py:class:: CurrentCtrl(par, alpha_c)
 
+
    Bases: :py:obj:`motulator.control._common.ComplexPICtrl`
 
    
@@ -174,6 +177,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CurrentReferencePars
+
 
    
    Parameters for reference generation.
@@ -216,6 +220,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CurrentReference(par, ref)
+
 
    
    Current reference generation.
@@ -328,6 +333,7 @@ Classes
 
 
 .. py:class:: Observer(par, k=None, alpha_o=2 * np.pi * 40, sensorless=True)
+
 
    
    Reduced-order flux observer for induction machines.

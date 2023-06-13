@@ -499,7 +499,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span>
 
-<div class="viewcode-block" id="CurrentCtrl.output"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_vector/index.html#motulator.control.sm._vector.CurrentCtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ref</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<div class="viewcode-block" id="CurrentCtrl.output"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._vector.CurrentCtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ref</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
         <span class="c1"># Extends the base class method by transforming the currents to the</span>
         <span class="c1"># flux linkages, which is a simple way to take the saliency into account</span>
         <span class="n">psi_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i_ref</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i_ref</span><span class="o">.</span><span class="n">imag</span>
@@ -619,7 +619,7 @@ document.write(`
         <span class="c1"># State</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="CurrentReference.output"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_vector/index.html#motulator.control.sm._vector.CurrentReference.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="CurrentReference.output"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._vector.CurrentReference.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">w_m</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the stator current reference.</span>
 
@@ -677,7 +677,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">i_s_ref</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span></div>
 
-<div class="viewcode-block" id="CurrentReference.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_vector/index.html#motulator.control.sm._vector.CurrentReference.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="CurrentReference.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._vector.CurrentReference.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">tau_M_ref_lim</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Field-weakening based on the unlimited reference voltage.</span>
 
@@ -763,7 +763,7 @@ document.write(`
         <span class="c1"># Initial states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
 
-<div class="viewcode-block" id="Observer.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_vector/index.html#motulator.control.sm._vector.Observer.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Observer.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._vector.Observer.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_m</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the states for the next sampling period.</span>
 

@@ -477,7 +477,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_old</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_older</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span> <span class="o">=</span> <span class="n">U_inj</span>
 
-<div class="viewcode-block" id="SignalInjection.output"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_signal_inj/index.html#motulator.control.sm._signal_inj.SignalInjection.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">i_sq</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalInjection.output"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._signal_inj.SignalInjection.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">i_sq</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the rotor position estimation error.</span>
 
@@ -499,7 +499,7 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">err</span></div>
 
-<div class="viewcode-block" id="SignalInjection.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_signal_inj/index.html#motulator.control.sm._signal_inj.SignalInjection.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalInjection.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._signal_inj.SignalInjection.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Store the old current values for the next sampling period.</span>
 
@@ -515,7 +515,7 @@ document.write(`
         <span class="c1"># Reverse the d-axis square wave injection voltage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span></div>
 
-<div class="viewcode-block" id="SignalInjection.filter_current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_signal_inj/index.html#motulator.control.sm._signal_inj.SignalInjection.filter_current">[docs]</a>    <span class="k">def</span> <span class="nf">filter_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalInjection.filter_current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._signal_inj.SignalInjection.filter_current">[docs]</a>    <span class="k">def</span> <span class="nf">filter_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter the stator current using the previously measured value.</span>
 

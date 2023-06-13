@@ -33,6 +33,7 @@ Classes
 
 .. py:class:: SynchronousMachine(n_p, R_s, L_d, L_q, psi_f)
 
+
    
    Synchronous machine model.
 
@@ -190,6 +191,7 @@ Classes
 
 .. py:class:: SynchronousMachineSaturated(n_p, R_s, current, psi_s0=0j)
 
+
    Bases: :py:obj:`SynchronousMachine`
 
    
@@ -231,6 +233,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: Drive(machine=None, mechanics=None, converter=None)
+
 
    
    Continuous-time model for a synchronous machine drive.
@@ -394,6 +397,7 @@ Classes
 
 
 .. py:class:: DriveTwoMassMechanics(machine=None, mechanics=None, converter=None)
+
 
    Bases: :py:obj:`Drive`
 

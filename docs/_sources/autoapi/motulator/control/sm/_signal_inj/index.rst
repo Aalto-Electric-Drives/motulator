@@ -30,6 +30,7 @@ Classes
 
 .. py:class:: SignalInjectionCtrl(par, ref, T_s=0.00025)
 
+
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
    
@@ -120,6 +121,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: SignalInjection(par, U_inj)
+
 
    
    Estimate the rotor position error based on signal injection.
@@ -235,6 +237,7 @@ Classes
 
 
 .. py:class:: PhaseLockedLoop(w_o)
+
 
    
    Simple phase-locked loop for rotor-position estimation.

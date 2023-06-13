@@ -56,6 +56,7 @@ Classes
 
 .. py:class:: ComplexPICtrl(k_p, k_i, k_t=None)
 
+
    
    2DOF synchronous-frame complex-vector PI controller.
 
@@ -180,6 +181,7 @@ Classes
 
 .. py:class:: RateLimiter(rate_limit=np.inf)
 
+
    
    Rate limiter.
 
@@ -204,6 +206,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: SpeedCtrl(J, alpha_s, tau_M_max=np.inf)
+
 
    Bases: :py:obj:`PICtrl`
 
@@ -238,6 +241,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: PICtrl(k_p, k_i, k_t=None, u_max=np.inf)
+
 
    
    2DOF PI controller.
@@ -355,6 +359,7 @@ Classes
 
 
 .. py:class:: PWM(six_step=False)
+
 
    
    Duty ratios and realized voltage for three-phase PWM.

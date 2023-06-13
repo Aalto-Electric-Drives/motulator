@@ -33,6 +33,7 @@ Classes
 
 .. py:class:: ModelPars
 
+
    
    Model parameters of a synchronous machine.
 
@@ -67,6 +68,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
+
 
    Bases: :py:obj:`motulator.control._common.Ctrl`
 
@@ -140,6 +142,7 @@ Classes
 
 .. py:class:: CurrentCtrl(par, alpha_c)
 
+
    Bases: :py:obj:`motulator.control._common.ComplexPICtrl`
 
    
@@ -209,6 +212,7 @@ Classes
 
 .. py:class:: CurrentReferencePars
 
+
    
    Parameters for reference generation.
 
@@ -266,6 +270,7 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CurrentReference(par, ref)
+
 
    
    Current reference calculation.
@@ -375,6 +380,7 @@ Classes
 
 
 .. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, sensorless=True)
+
 
    
    Observer for synchronous machines.

@@ -40,6 +40,7 @@ Classes
 
 .. py:class:: TorqueCharacteristics(par)
 
+
    
    Compute MTPA and MTPV loci based on the machine parameters.
 
