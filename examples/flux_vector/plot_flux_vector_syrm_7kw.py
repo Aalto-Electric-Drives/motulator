@@ -46,7 +46,7 @@ def i_s(psi_s):
 
 machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
 # Magnetically linear SyRM model for comparison
-# machine = model.SynchronousMachine(
+# machine = model.sm.SynchronousMachine(
 #    n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
