@@ -1,4 +1,6 @@
-"""Observer-based V/Hz control of synchronous motor drives."""
+"""Observer-based V/Hz control of synchronous motor drives.
+
+"""
 
 from dataclasses import dataclass, InitVar
 import numpy as np
@@ -193,7 +195,7 @@ class FluxObserver:
         Observer gain (rad/s). The default is 2*pi*20.
     zeta_inf : float, optional
         Damping ratio at infinite speed. The default is 0.2.
-
+        
     """
 
     # pylint: disable=too-many-instance-attributes
