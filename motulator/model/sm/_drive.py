@@ -29,6 +29,17 @@ class SynchronousMachine:
         q-axis inductance (H).
     psi_f : float
         PM-flux linkage (Vs).
+    
+    Methods
+    -------
+    current(psi_s)
+        Compute the stator current.
+    magnetic(psi_s)
+        Magnetic model.
+    f(psi_s, u_s, w_M)
+        Compute the state derivative.
+    meas_currents()
+        Measure the phase currents at the end of the sampling period.
 
     """
 
@@ -183,6 +194,19 @@ class Drive:
     converter : Inverter
         Inverter model.
 
+    Methods
+    -------
+    get_initial_values()
+        Get the initial values.
+    set_initial_values(t0, x0)
+        Set the initial values.
+    f(t, x)
+        Compute the state derivative.
+    save(sol)
+        Save the solution.
+    post_process()
+        Transform the lists to the ndarray format and post-process them.
+     
     """
 
     def __init__(self, machine=None, mechanics=None, converter=None):
@@ -324,7 +348,7 @@ class DriveTwoMassMechanics(Drive):
         Mechanics model.
     converter : Inverter
         Inverter model.
-
+    
     """
 
     def __init__(self, machine=None, mechanics=None, converter=None):
@@ -332,20 +356,26 @@ class DriveTwoMassMechanics(Drive):
         self.data.w_L, self.data.theta_ML = [], []
 
     def get_initial_values(self):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         x0 = super().get_initial_values() + [
             self.mechanics.w_L0, self.mechanics.theta_ML0
         ]
         return x0
 
     def set_initial_values(self, t0, x0):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         super().set_initial_values(t0, x0[0:4])
         self.mechanics.w_L0 = x0[4].real
         self.mechanics.theta_ML0 = np.mod(x0[5].real + np.pi, 2*np.pi) - np.pi
 
     def f(self, t, x):
-        """Override the base class."""
+        """Override the base class.
+        
+        """
         # Unpack the states
         psi_s, theta_m, w_M, _, w_L, theta_ML = x
         # Interconnections: outputs for computing the state derivatives
@@ -359,13 +389,17 @@ class DriveTwoMassMechanics(Drive):
         return machine_f + mechanics_f
 
     def save(self, sol):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         super().save(sol)
         self.data.w_L.extend(sol.y[4].real)
         self.data.theta_ML.extend(sol.y[5].real)
 
     def post_process(self):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         super().post_process()
         # From lists to the ndarray
         self.data.w_L = np.asarray(self.data.w_L)
