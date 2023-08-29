@@ -26,6 +26,13 @@ class PWM:
     realized_voltage : complex
         Realized voltage (V) in synchronous coordinates.
 
+    Methods
+    -------
+    six_step_overmodulation(u_s_ref, u_dc)
+        Overmodulation up to six-step operation.
+    duty_ratios(u_s_ref, u_dc)
+        Compute the duty ratios for three-phase PWM.
+    
     References
     ----------
     .. [#Bae2003] Bae, Sul, "A compensation method for time delay of 
@@ -195,13 +202,7 @@ class PICtrl:
     the feedback signal, and `1/s` refers to integration. The standard PI
     controller is obtained by choosing ``k_t = k_p``. The integrator anti-windup 
     is implemented based on the realized controller output.
-
-    Notes
-    -----
-    This contoller can be used, e.g., as a speed controller. In this case, `y` 
-    corresponds to the rotor angular speed `w_M` and `u` to the torque reference 
-    `tau_M_ref`.
-
+    
     Parameters
     ----------
     k_p : float
@@ -219,6 +220,19 @@ class PICtrl:
         Input disturbance estimate.
     u_i : float
         Integral state.
+        
+    Methods
+    -------
+    output(y_ref, y)
+        Compute the controller output.
+    update(T_s, u_lim)
+        Update the controller state.
+    
+    Notes
+    -----
+    This contoller can be used, e.g., as a speed controller. In this case, `y` 
+    corresponds to the rotor angular speed `w_M` and `u` to the torque reference 
+    `tau_M_ref`.
 
     """
 
@@ -333,6 +347,13 @@ class ComplexPICtrl:
         Input disturbance estimate.
     u_i : complex
         Integral state.
+    
+    Methods
+    -------
+    output(i_ref, i)
+        Compute the controller output.
+    update(T_s, u_lim, w)
+        Update the integral state.    
 
     Notes
     -----
@@ -456,7 +477,9 @@ class RateLimiter:
 
 # %%
 class Clock:
-    """Digital clock."""
+    """Digital clock.
+    
+    """
 
     def __init__(self):
         self.t = 0
@@ -477,7 +500,9 @@ class Clock:
 
 # %%
 class Ctrl:
-    """Base class for the control system."""
+    """Base class for the control system.
+    
+    """
 
     def __init__(self):
         self.data = Bunch()  # Data store
