@@ -1,4 +1,6 @@
-"""Simulation environment."""
+"""Simulation environment.
+
+"""
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -197,6 +199,13 @@ class Simulation:
         Amount of computational delays. The default is 1.
     pwm : bool, optional
         Enable carrier comparison. The default is False.
+    
+    Methods
+    -------
+    simulate(t_stop=1, max_step=np.inf)
+        Solve the continuous-time model and call the discrete-time controller.
+    save_mat(name="sim")
+        Save the simulation results into a .mat file.
 
     """
 
