@@ -19,7 +19,16 @@ class Inverter:
     ----------
     u_dc : float
         DC-bus voltage (V).
-
+        
+    Methods
+    -------
+    ac_voltage(q, u_dc)
+        Compute the AC-side voltage of the inverter.
+    dc_current(q, i_ac)
+        Compute the DC-side current of the inverter.
+    meas_dc_voltage()
+        Measure the DC-bus voltage.
+        
     """
 
     def __init__(self, u_dc):
@@ -100,7 +109,14 @@ class FrequencyConverter(Inverter):
         Grid voltage (V, line-line, rms).
     f_g : float
         Grid frequency (Hz).
-
+    
+    Methods
+    -------
+    grid_voltages(t)
+        Compute three-phase grid voltages.
+    f(t, u_dc, i_L, i_dc)
+        Compute the state derivatives.
+        
     """
 
     def __init__(self, L, C, U_g, f_g):
