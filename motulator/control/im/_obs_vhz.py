@@ -226,8 +226,7 @@ class FluxObserver:
         Speed-estimation bandwidth (rad/s).
     b : callable, optional 
         Coefficient (rad/s) of the characteristic polynomial as a function of 
-        the rotor angular speed estimate. The default is 
-        ``lambda w_m: R_R/L_M + .4*abs(w_m)``.
+        the rotor angular speed estimate. 
 
     Attributes
     ----------
@@ -235,11 +234,18 @@ class FluxObserver:
         Rotor flux estimate (Vs).
     w_m : float
         Rotor angular speed estimate (electrical rad/s).
+        
+    Methods
+    -------
+    update(T_s, u_s, i_s, w_s)
+        Update the observer states.
 
     Notes
     -----
     The characteristic polynomial of the observer in synchronous coordinates is 
     ``s**2 + b*s + w_s**2``.  
+    The default of b is 
+    ``lambda w_m: R_R/L_M + .4*abs(w_m)``.
 
     """
 
