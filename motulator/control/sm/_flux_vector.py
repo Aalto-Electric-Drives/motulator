@@ -1,4 +1,6 @@
-"""Flux-vector control of synchronous machine drives."""
+"""Flux-vector control of synchronous machine drives.
+
+"""
 
 from dataclasses import dataclass, InitVar
 import numpy as np
@@ -18,11 +20,6 @@ class FluxVectorCtrl(Ctrl):
     Rotor coordinates as well as decoupling between the stator flux and torque 
     channels are used according to [#Awa2019]_. Here, the stator flux magnitude 
     and the electromagnetic torque are selected as controllable variables. 
-
-    Notes
-    -----
-    Proportional controllers are used for simplicity. The magnetic saturation is 
-    not considered in this implementation.
 
     Parameters
     ----------
@@ -51,6 +48,11 @@ class FluxVectorCtrl(Ctrl):
         Speed reference (electrical rad/s) as a function of time (s).
     pwm : PWM
         Pulse-width modulation.
+    
+     Notes
+    -----
+    Proportional controllers are used for simplicity. The magnetic saturation is 
+    not considered in this implementation.
 
     References
     ----------
