@@ -1,4 +1,6 @@
-"""Sensorless control with signal injection for synchronous machine drives."""
+"""Sensorless control with signal injection for synchronous machine drives.
+
+"""
 
 import numpy as np
 from motulator._helpers import abc2complex
@@ -16,18 +18,6 @@ class SignalInjectionCtrl(Ctrl):
     operation according to [#Kim2012]_. A phase-locked loop is used to track 
     the rotor position. 
     
-    Notes
-    -----
-    For a wider speed range, signal injection could be combined to a 
-    model-based observer. The effects of magnetic saturation are not
-    compensated for in this version.
-
-    References
-    ----------
-    .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
-       sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
-       https://doi.org/10.1109/TIA.2012.2210175
-
     Parameters
     ----------
     T_s : float
@@ -55,6 +45,18 @@ class SignalInjectionCtrl(Ctrl):
         Speed reference (electrical rad/s).
     pwm : PWM
         Pulse-width modulation.
+    
+    Notes
+    -----
+    For a wider speed range, signal injection could be combined to a 
+    model-based observer. The effects of magnetic saturation are not
+    compensated for in this version.
+
+    References
+    ----------
+    .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
+       sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
+       https://doi.org/10.1109/TIA.2012.2210175
 
     """
 
@@ -157,7 +159,16 @@ class SignalInjection:
         Machine model parameters.
     U_inj : float
         Injected voltage amplitude (V).
-
+    
+    Methods
+    -------
+    output(T_s, i_sq)
+        Compute the rotor position estimation error.
+    update(i_s)
+         Store the old current values for the next iteration.
+    filter_current(i_s)
+         Filter the stator current using the previously measured value.
+    
     """
 
     def __init__(self, par, U_inj):
@@ -234,6 +245,11 @@ class PhaseLockedLoop:
     ----------
     w_o : float
         Natural frequency (rad/s).
+        
+    Methods
+    -------
+    update(T_s, err)
+         Update the states for the next sampling period.
 
     """
 
