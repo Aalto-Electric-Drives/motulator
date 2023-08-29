@@ -38,7 +38,38 @@ class TorqueCharacteristics:
     ----------
     par : ModelPars
         Machine model parameters.
-
+    
+    Methods
+    -------
+    torque(self, psi_s)
+        Compute the torque as a function of the stator flux linkage.
+    current(psi_s)
+        Compute the stator current as a function of the stator flux linkage.
+    flux(i_s)
+        Compute the stator flux linkage as a function of the current.
+    mtpa(abs_i_s)
+        Compute the MTPA stator current angle.
+    mtpv(abs_psi_s)
+        Compute the MTPV stator flux angle.
+    mtpv_current(abs_i_s)
+        Compute the MTPV based on the current magnitude.
+    mtpa_locus(i_s_max, psi_s_min=None, N=20)
+        Compute the MTPA locus.
+    mtpv_locus(psi_s_max=None, i_s_max=None, N=20)
+        Compute the MTPV locus.
+    current_limit(i_s_max, gamma1=np.pi, gamma2=0, N=20)  
+        Compute the current limit.
+    mtpv_and_current_limits(i_s_max, N=20)    
+        Merge the MTPV and current limits into a single interpolant.
+    plot_flux_loci(i_s_max, base, N=20)
+        Plot the stator flux linkage loci.
+    plot_current_loci(i_s_max, base, N=20)
+        Plot the current loci.
+    plot_torque_current(i_s_max, base, N=20)
+        Plot torque vs. current characteristics.
+    plot_torque_flux(i_s_max, base, N=20)
+        Plot torque vs. flux characteristics.
+        
     """
 
     def __init__(self, par):
