@@ -1,4 +1,6 @@
-"""Continuous-time models for mechanical subsystems."""
+"""Continuous-time models for mechanical subsystems.
+
+"""
 
 
 # %%
@@ -20,6 +22,15 @@ class Mechanics:
         Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is 
         zero, ``lambda t: 0*t``.
 
+    Methods
+    -------
+    f(t, w_M, tau_M)
+        Compute the state derivatives.
+    meas_speed()   
+        Measure the rotor speed.
+    meas_position()
+        Measure the rotor angle.
+        
     """
 
     def __init__(self, J, tau_L_w=lambda w_M: 0*w_M, tau_L_t=lambda t: 0*t):
@@ -109,6 +120,15 @@ class MechanicsTwoMass(Mechanics):
     tau_L_t : callable
         Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is
         zero, ``lambda t: 0*t``.
+    
+    Methods
+    -------
+    f(t, w_M, w_L, theta_ML, tau_M)
+        Compute the state derivatives.
+    meas_load_speed()
+        Measure the load speed.
+    meas_load_position()
+        Measure the load angle.
 
     """
 
