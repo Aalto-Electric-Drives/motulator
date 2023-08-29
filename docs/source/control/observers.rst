@@ -176,7 +176,7 @@ Observer Structure
 
 The observer is assumed to operate in estimated rotor coordinates, whose d-axis is aligned with the rotor angle estimate :math:`\hat{\vartheta}_\mathrm{m}`. Now, the angle :math:`\delta = \vartheta_\mathrm{m} - \hat{\vartheta}_\mathrm{m}` in the machine model :eq:`sm` corresponds to the estimation error of the rotor angle, which naturally is unknown to the sensorless control system. 
 
-Since the stator current is measured, the observer is fundamentally corrected by means of the current estimation error. However, due to the saliency, it is more convenient to scale the current estimation error by the stator inductance, resulting in the flux linkage error, :math:`\boldsymbol{e}`.   
+Since the stator current is measured, the observer is fundamentally corrected by means of the current estimation error. However, due to the saliency, it is more convenient to scale the current estimation erro by the stator inductance, resulting in the flux linkage error   
 
 .. math::
 	\boldsymbol{e} = \psi_\mathrm{f} + L_\mathrm{d} \mathrm{Re}\{ \boldsymbol{i}_\mathrm{s}\} + \mathrm{j} L_\mathrm{q} \mathrm{Im}\{\boldsymbol{i}_\mathrm{s} \} - \hat{\boldsymbol{\psi}}_\mathrm{s} 
