@@ -1,4 +1,6 @@
-"""Current vector control methods for synchronous machine drives."""
+"""Current vector control methods for synchronous machine drives.
+
+"""
 
 from dataclasses import dataclass, InitVar
 import numpy as np
@@ -275,6 +277,13 @@ class CurrentReference:
         Machine model parameters.
     ref : CurrentReferencePars
         Reference generation parameters.
+        
+    Methods
+    -------
+    output(tau_M_ref, w_m, u_dc)
+        Compute the stator current reference.
+    update(T_s, tau_M_ref_lim, u_s_ref, u_dc)
+        Field-weakening based on the unlimited reference voltage.
 
     Notes
     -----
@@ -424,6 +433,11 @@ class Observer:
         Rotor speed estimate (electrical rad/s).
     psi_s : complex
         Stator flux estimate (Vs).
+        
+    Methods
+    -------
+    update(T_s, u_s, i_s, w_m=None)
+        Update the observer state.
 
     References
     ----------
