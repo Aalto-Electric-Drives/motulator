@@ -31,7 +31,18 @@ class InductionMachine:
         Leakage inductance (H).
     L_s : float
         Stator inductance (H).
-
+        
+    Methods
+    -------
+    currents(psi_ss, psi_rs)
+        Compute the stator and rotor currents.
+    magnetic(psi_ss, psi_rs)
+        Magnetic model.
+    f(psi_ss, psi_rs, u_ss, w_M)
+        Compute the state derivatives.
+    meas_currents()
+        Measure the phase currents at the end of the sampling period.
+    
     Notes
     -----
     The Γ model is chosen here since it can be extended with the magnetic
@@ -185,7 +196,9 @@ class InductionMachineSaturated(InductionMachine):
     """
 
     def currents(self, psi_ss, psi_rs):
-        """Override the base class method."""
+        """Override the base class method.
+        
+        """
         # Saturated value of the stator inductance.
         L_s = self.L_s(np.abs(psi_ss))
         # Currents
@@ -245,6 +258,19 @@ class Drive:
         Mechanics model.
     converver : Inverter
         Inverter model.
+    
+    Methods
+    -------
+    get_initial_values()
+        Get the initial values.
+    set_initial_values(t0, x0)
+        Set the initial values.
+    f(t, x)
+        Compute the complete state derivative list for the solver.
+    save(sol)
+        Save the solution data.
+    post_process()
+        Transform the lists to the ndarray format and post-process them.
 
     """
 
@@ -343,7 +369,9 @@ class Drive:
         self.data.theta_M.extend(sol.y[3].real)
 
     def post_process(self):
-        """Transform the lists to the ndarray format and post-process them."""
+        """Transform the lists to the ndarray format and post-process them.
+        
+        """
         # From lists to the ndarray
         for key in self.data:
             self.data[key] = np.asarray(self.data[key])
@@ -390,7 +418,7 @@ class DriveWithDiodeBridge(Drive):
         Mechanics model.
     converter : FrequencyConverter
         Frequency converter model.
-
+                
     """
 
     def __init__(self, machine=None, mechanics=None, converter=None):
@@ -399,20 +427,26 @@ class DriveWithDiodeBridge(Drive):
         self.data.u_dc, self.data.i_L = [], []
 
     def get_initial_values(self):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         x0 = super().get_initial_values() + [
             self.converter.u_dc0, self.converter.i_L0
         ]
         return x0
 
     def set_initial_values(self, t0, x0):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         super().set_initial_values(t0, x0[0:4])
         self.converter.u_dc0 = x0[4].real
         self.converter.i_L0 = x0[5].real
 
     def f(self, t, x):
-        """Override the base class."""
+        """Override the base class.
+        
+        """
         # Unpack the states for better readability
         psi_ss, psi_rs, w_M, _, u_dc, i_L = x
 
@@ -427,13 +461,17 @@ class DriveWithDiodeBridge(Drive):
             self.converter.f(t, u_dc, i_L, i_dc))
 
     def save(self, sol):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         super().save(sol)
         self.data.u_dc.extend(sol.y[4].real)
         self.data.i_L.extend(sol.y[5].real)
 
     def post_process(self):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         super().post_process()
         # From lists to the ndarray
         self.data.u_dc = np.asarray(self.data.u_dc)
@@ -476,7 +514,9 @@ class DriveTwoMassMechanics(Drive):
         self.data.w_L, self.data.theta_ML = [], []
 
     def get_initial_values(self):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         x0 = super().get_initial_values() + [
             self.mechanics.w_L0, self.mechanics.theta_ML0
         ]
@@ -489,7 +529,9 @@ class DriveTwoMassMechanics(Drive):
         self.mechanics.theta_ML0 = np.mod(x0[5].real + np.pi, 2*np.pi) - np.pi
 
     def f(self, t, x):
-        """Override the base class."""
+        """Override the base class.
+        
+        """
         # Unpack the states
         psi_ss, psi_rs, w_M, _, w_L, theta_ML = x
         # Interconnections: outputs for computing the state derivatives
@@ -502,13 +544,17 @@ class DriveTwoMassMechanics(Drive):
         return machine_f + mechanics_f
 
     def save(self, sol):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         super().save(sol)
         self.data.w_L.extend(sol.y[4].real)
         self.data.theta_ML.extend(sol.y[5].real)
 
     def post_process(self):
-        """Extend the base class."""
+        """Extend the base class.
+        
+        """
         super().post_process()
         # From lists to the ndarray
         self.data.w_L = np.asarray(self.data.w_L)
