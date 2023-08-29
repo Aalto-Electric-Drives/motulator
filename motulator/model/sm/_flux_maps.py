@@ -1,4 +1,6 @@
-"""Import and plot flux maps from the SyR-e project."""
+"""Import and plot flux maps from the SyR-e project.
+
+"""
 
 # %%
 import numpy as np
