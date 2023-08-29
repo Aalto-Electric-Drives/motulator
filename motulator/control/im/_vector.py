@@ -264,7 +264,14 @@ class CurrentReference:
         Machine model parameters.
     ref : CurrentReferencePars
         Reference generation parameters.
-
+    
+    Methods
+    -------
+    output(tau_M_ref, psi_R)
+        Compute the stator current reference.
+    update(T_s, u_s_ref, u_dc)
+        Field-weakening based on the unlimited reference voltage.
+    
     References
     ----------
     .. [#Hin2006] Hinkkanen, Luomi, "Braking scheme for vector-controlled 
