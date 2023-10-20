@@ -39,8 +39,8 @@ Classes
    motulator.control.im.CurrentReferencePars
    motulator.control.im.CurrentReference
    motulator.control.im.ModelPars
-   motulator.control.im.Observer
    motulator.control.im.VectorCtrl
+   motulator.control.im.Observer
    motulator.control.im.FluxObserver
    motulator.control.im.ObserverBasedVHzCtrl
    motulator.control.im.ObserverBasedVHzCtrlPars
@@ -275,77 +275,6 @@ Classes
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Observer(par, k=None, alpha_o=2 * np.pi * 40, sensorless=True)
-
-
-   
-   Reduced-order flux observer for induction machines.
-
-   This class implements a reduced-order flux observer for induction machines.
-   Both sensored and sensorless operation are supported. The observer structure
-   is similar to [#Hin2010]_. Both sensored and sensorless operation are
-   supported. The observer operates in estimated rotor flux coordinates.
-
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param k: Observer gain as a function of the rotor angular speed. The default is
-             ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
-             `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
-   :type k: callable, optional
-   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
-   :type alpha_o: float, optional
-   :param sensorless: If True, sensorless mode is used. The default is True.
-   :type sensorless: bool, optional
-
-   .. attribute:: psi_R
-
-      Rotor flux magnitude estimate (Vs).
-
-      :type: float
-
-   .. attribute:: theta_s
-
-      Rotor flux angle estimate (rad).
-
-      :type: float
-
-   .. attribute:: w_m
-
-      Rotor angular speed estimate (electrical rad/s). In sensored mode, this
-      is the measured low-pass-filtered speed.
-
-      :type: float
-
-   .. rubric:: Notes
-
-   The pure voltage model corresponds to ``k = lambda w_m: 0``, resulting in
-   the marginally stable estimation-error dynamics. The current model is
-   obtained by setting ``k = lambda w_m: 1``.
-
-   .. rubric:: References
-
-   .. [#Hin2010] Hinkkanen, Harnefors, Luomi, "Reduced-order flux observers
-      with stator-resistance adaptation for speed-sensorless induction motor
-      drives," IEEE Trans. Power Electron., 2010,
-      https://doi.org/10.1109/TPEL.2009.2039650
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
 .. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
 
 
@@ -401,6 +330,77 @@ Classes
       Speed reference (electrical rad/s) as a function of time (s).
 
       :type: callable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Observer(par, k=None, alpha_o=2 * np.pi * 40, sensorless=True)
+
+
+   
+   Reduced-order flux observer for induction machines in estimated
+   rotor flux coordinates.
+
+   This class implements a reduced-order flux observer for induction machines.
+   Both sensored and sensorless operation are supported. The observer structure
+   is similar to [#Hin2010]_. The observer operates in estimated rotor flux coordinates.
+
+   :param par: Machine model parameters.
+   :type par: ModelPars
+   :param k: Observer gain as a function of the rotor angular speed. The default is
+             ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
+             `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
+   :type k: callable, optional
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
+   :type alpha_o: float, optional
+   :param sensorless: If True, sensorless mode is used. The default is True.
+   :type sensorless: bool, optional
+
+   .. attribute:: psi_R
+
+      Rotor flux magnitude estimate (Vs).
+
+      :type: float
+
+   .. attribute:: theta_s
+
+      Rotor flux angle estimate (rad).
+
+      :type: float
+
+   .. attribute:: w_m
+
+      Rotor angular speed estimate (electrical rad/s). In sensored mode, this
+      is the measured low-pass-filtered speed.
+
+      :type: float
+
+   .. rubric:: Notes
+
+   The pure voltage model corresponds to ``k = lambda w_m: 0``, resulting in
+   the marginally stable estimation-error dynamics. The current model is
+   obtained by setting ``k = lambda w_m: 1``.
+
+   .. rubric:: References
+
+   .. [#Hin2010] Hinkkanen, Harnefors, Luomi, "Reduced-order flux observers
+      with stator-resistance adaptation for speed-sensorless induction motor
+      drives," IEEE Trans. Power Electron., 2010,
+      https://doi.org/10.1109/TPEL.2009.2039650
 
 
 

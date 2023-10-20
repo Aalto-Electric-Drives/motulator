@@ -18,12 +18,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
 
   
-  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -38,8 +38,9 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
 
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/doctools.js"></script>
@@ -60,6 +61,15 @@
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -267,10 +277,10 @@
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -278,7 +288,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -316,6 +326,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">motulator.control._common</span> <span class="kn">import</span> <span class="n">Ctrl</span><span class="p">,</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">RateLimiter</span>
 <span class="kn">from</span> <span class="nn">motulator.control.sm._flux_vector</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FluxTorqueReference</span><span class="p">,</span> <span class="n">FluxTorqueReferencePars</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">motulator.control.sm._observers</span> <span class="kn">import</span> <span class="n">FluxObserver</span>
 <span class="kn">from</span> <span class="nn">motulator._utils</span> <span class="kn">import</span> <span class="n">Bunch</span>
 
 
@@ -484,81 +495,6 @@ document.write(`
         <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">theta_s</span><span class="p">,</span> <span class="n">w_s</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">d_abc</span></div>
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="FluxObserver"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._obs_vhz.FluxObserver">[docs]</a><span class="k">class</span> <span class="nc">FluxObserver</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sensorless stator flux observer.</span>
-
-<span class="sd">    The observer gain decouples the electrical and mechanical dynamics and </span>
-<span class="sd">    allows placing the poles of the corresponding linearized estimation error </span>
-<span class="sd">    dynamics. </span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    par : ModelPars</span>
-<span class="sd">        Machine model parameters.</span>
-<span class="sd">    alpha_o : float, optional</span>
-<span class="sd">        Observer gain (rad/s). The default is 2*pi*20.</span>
-<span class="sd">    zeta_inf : float, optional</span>
-<span class="sd">        Damping ratio at infinite speed. The default is 0.2.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">20</span><span class="p">,</span> <span class="n">zeta_inf</span><span class="o">=</span><span class="mf">.2</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_d</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">=</span> <span class="n">alpha_o</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_p</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zeta_inf</span> <span class="o">=</span> <span class="n">zeta_inf</span>
-        <span class="c1"># Initial states</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
-
-<div class="viewcode-block" id="FluxObserver.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._obs_vhz.FluxObserver.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_s</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the states for the next sampling period.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        T_s : float</span>
-<span class="sd">            Sampling period (s).</span>
-<span class="sd">        u_s : complex</span>
-<span class="sd">            Stator voltage (V).</span>
-<span class="sd">        i_s : complex</span>
-<span class="sd">            Stator current (A).</span>
-<span class="sd">        w_s : float</span>
-<span class="sd">            Stator angular frequency (rad/s).</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Transformations to rotor coordinates. This is mathematically</span>
-        <span class="c1"># equivalent to the version in [Tii2022].</span>
-        <span class="n">i_sr</span> <span class="o">=</span> <span class="n">i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span>
-        <span class="n">psi_sr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span>
-
-        <span class="c1"># Auxiliary flux and estimation error in rotor coordinates</span>
-        <span class="n">psi_ar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_sr</span><span class="p">)</span>
-        <span class="n">e_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i_sr</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i_sr</span><span class="o">.</span><span class="n">imag</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">-</span> <span class="n">psi_sr</span>
-
-        <span class="c1"># Auxiliary flux in controller coordinates</span>
-        <span class="n">psi_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span><span class="o">*</span><span class="n">psi_ar</span>
-
-        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_p</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">zeta_inf</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_s</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_ar</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># Correction voltage in controller coordinates</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="n">psi_a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">e_r</span><span class="o">/</span><span class="n">psi_ar</span><span class="p">)</span>
-            <span class="c1"># Error signal</span>
-            <span class="n">w_delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">e_r</span><span class="o">/</span><span class="n">psi_ar</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">v</span><span class="p">,</span> <span class="n">w_delta</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-
-        <span class="c1"># Update the states</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="p">(</span><span class="n">u_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_s</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="n">w_delta</span></div></div>
 </pre></div>
 
                 </article>
@@ -566,16 +502,12 @@ document.write(`
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -624,8 +556,8 @@ By Aalto Electric Drives
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
 
   <footer class="bd-footer">
   </footer>

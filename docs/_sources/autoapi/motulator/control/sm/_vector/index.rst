@@ -26,7 +26,6 @@ Classes
    motulator.control.sm._vector.CurrentCtrl
    motulator.control.sm._vector.CurrentReferencePars
    motulator.control.sm._vector.CurrentReference
-   motulator.control.sm._vector.Observer
 
 
 
@@ -360,102 +359,6 @@ Classes
       :type u_s_ref: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, sensorless=True)
-
-
-   
-   Observer for synchronous machines.
-
-   This observer estimates the rotor angle, the rotor speed, and the stator
-   flux linkage. The design is based on [#Hin2018]_. The observer gain
-   decouples the electrical and mechanical dynamics and allows placing the
-   poles of the corresponding linearized estimation error dynamics. This
-   implementation operates in estimated rotor coordinates. The observer can
-   also be used in the sensored mode by providing the measured rotor speed as
-   an input.
-
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param alpha_o: Observer bandwidth (electrical rad/s). The default is 2*pi*40.
-   :type alpha_o: float, optional
-   :param k: Observer gain as a function of the rotor angular speed. The default is
-             ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
-             `sensorless` else ``lambda w_m: 2*pi*15``.
-   :type k: callable, optional
-
-   .. attribute:: theta_m
-
-      Rotor angle estimate (electrical rad).
-
-      :type: float
-
-   .. attribute:: w_m
-
-      Rotor speed estimate (electrical rad/s).
-
-      :type: float
-
-   .. attribute:: psi_s
-
-      Stator flux estimate (Vs).
-
-      :type: complex
-
-   .. rubric:: References
-
-   .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
-      sensorless synchronous motor drives: Framework for design and analysis,"
-      IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-   .. py:method:: update(T_s, u_s, i_s, w_m=None)
-
-      
-      Update the states for the next sampling period.
-
-      :param T_s: Sampling period (s).
-      :type T_s: float
-      :param u_s: Stator voltage (V) in estimated rotor coordinates.
-      :type u_s: complex
-      :param i_s: Stator current (A) in estimated rotor coordinates.
-      :type i_s: complex
-      :param w_m: Rotor angular speed (electrical rad/s). Needed only in the sensored
-                  mode. The default is None.
-      :type w_m: float, optional
 
 
 

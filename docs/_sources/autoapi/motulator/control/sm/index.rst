@@ -39,14 +39,14 @@ Classes
    motulator.control.sm.CurrentReference
    motulator.control.sm.CurrentCtrl
    motulator.control.sm.ModelPars
-   motulator.control.sm.Observer
    motulator.control.sm.VectorCtrl
+   motulator.control.sm.Observer
+   motulator.control.sm.FluxObserver
    motulator.control.sm.FluxVectorCtrl
    motulator.control.sm.FluxTorqueReference
    motulator.control.sm.FluxTorqueReferencePars
    motulator.control.sm.ObserverBasedVHzCtrl
    motulator.control.sm.ObserverBasedVHzCtrlPars
-   motulator.control.sm.FluxObserver
    motulator.control.sm.TorqueCharacteristics
    motulator.control.sm.SignalInjectionCtrl
    motulator.control.sm.SignalInjection
@@ -329,11 +329,84 @@ Classes
    ..
        !! processed by numpydoc !!
 
+.. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
+
+
+   Bases: :py:obj:`motulator.control._common.Ctrl`
+
+   
+   Vector control for synchronous machine drives.
+
+   This class interconnects the subsystems of the control system and
+   provides the interface to the solver.
+
+   :param par: Machine model parameters.
+   :type par: ModelPars
+   :param ref: Reference generation parameters.
+   :type ref: ReferencePars
+   :param T_s: Sampling period (s). The default is 250e-6.
+   :type T_s: float, optional
+   :param sensorless: If True, sensorless control is used. The default is True.
+   :type sensorless: bool, optional
+
+   .. attribute:: current_ref
+
+      Current reference generator.
+
+      :type: CurrentReference
+
+   .. attribute:: observer
+
+      Flux and rotor position observer, used in the sensorless mode only.
+
+      :type: Observer
+
+   .. attribute:: current_ctrl
+
+      Current controller.
+
+      :type: CurrentCtrl
+
+   .. attribute:: speed_ctrl
+
+      Speed controller.
+
+      :type: SpeedCtrl
+
+   .. attribute:: pwm
+
+      Pulse-width modulation.
+
+      :type: PWM
+
+   .. attribute:: w_m_ref
+
+      Speed reference (electrical rad/s) as a function of time (s).
+
+      :type: callable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, sensorless=True)
 
 
    
-   Observer for synchronous machines.
+   Observer for synchronous machines in estimated rotor coordinates.
 
    This observer estimates the rotor angle, the rotor speed, and the stator
    flux linkage. The design is based on [#Hin2018]_. The observer gain
@@ -425,61 +498,45 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
+.. py:class:: FluxObserver(par, alpha_o=2 * np.pi * 20, zeta_inf=0.2)
 
-
-   Bases: :py:obj:`motulator.control._common.Ctrl`
 
    
-   Vector control for synchronous machine drives.
+   Sensorless stator flux observer in external coordinates.
 
-   This class interconnects the subsystems of the control system and
-   provides the interface to the solver.
+   This observer estimates the stator flux linkage and the angle of the coordinate
+   system with respect to the d-axis of the rotor. Speed-estimation is omitted.
+   The observer gain decouples the electrical and mechanical dynamics and allows placing
+   the poles of the corresponding linearized estimation error dynamics. This implementation operates
+   in external coordinates (typically synchronous coordinates defined by reference signals
+   of a control system).
 
    :param par: Machine model parameters.
    :type par: ModelPars
-   :param ref: Reference generation parameters.
-   :type ref: ReferencePars
-   :param T_s: Sampling period (s). The default is 250e-6.
-   :type T_s: float, optional
-   :param sensorless: If True, sensorless control is used. The default is True.
-   :type sensorless: bool, optional
+   :param alpha_o: Observer gain (rad/s). The default is 2*pi*20.
+   :type alpha_o: float, optional
+   :param zeta_inf: Damping ratio at infinite speed. The default is 0.2.
+   :type zeta_inf: float, optional
 
-   .. attribute:: current_ref
+   .. attribute:: delta
 
-      Current reference generator.
+      Angle estimate of the coordinate system with respect
+      to the d-axis of the rotor (electrical rad).
 
-      :type: CurrentReference
+      :type: float
 
-   .. attribute:: observer
+   .. attribute:: psi_s
 
-      Flux and rotor position observer, used in the sensorless mode only.
+      Stator flux estimate (Vs).
 
-      :type: Observer
+      :type: complex
 
-   .. attribute:: current_ctrl
+   .. rubric:: References
 
-      Current controller.
-
-      :type: CurrentCtrl
-
-   .. attribute:: speed_ctrl
-
-      Speed controller.
-
-      :type: SpeedCtrl
-
-   .. attribute:: pwm
-
-      Pulse-width modulation.
-
-      :type: PWM
-
-   .. attribute:: w_m_ref
-
-      Speed reference (electrical rad/s) as a function of time (s).
-
-      :type: callable
+   .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
+      "Stable and passive observer-based V/Hz control for synchronous Motors,"
+      Proc. IEEE ECCE, Detroit, MI, Oct. 2022,
+      https://doi.org/10.1109/ECCE50734.2022.9947858
 
 
 
@@ -497,6 +554,37 @@ Classes
 
    ..
        !! processed by numpydoc !!
+   .. py:method:: update(T_s, u_s, i_s, w_s)
+
+      
+      Update the states for the next sampling period.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param u_s: Stator voltage (V).
+      :type u_s: complex
+      :param i_s: Stator current (A).
+      :type i_s: complex
+      :param w_s: Stator angular frequency (rad/s).
+      :type w_s: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: FluxVectorCtrl(par, ref, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, T_s=0.00025, sensorless=True)
 
@@ -745,71 +833,6 @@ Classes
 
    ..
        !! processed by numpydoc !!
-
-.. py:class:: FluxObserver(par, alpha_o=2 * np.pi * 20, zeta_inf=0.2)
-
-
-   
-   Sensorless stator flux observer.
-
-   The observer gain decouples the electrical and mechanical dynamics and
-   allows placing the poles of the corresponding linearized estimation error
-   dynamics.
-
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param alpha_o: Observer gain (rad/s). The default is 2*pi*20.
-   :type alpha_o: float, optional
-   :param zeta_inf: Damping ratio at infinite speed. The default is 0.2.
-   :type zeta_inf: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-   .. py:method:: update(T_s, u_s, i_s, w_s)
-
-      
-      Update the states for the next sampling period.
-
-      :param T_s: Sampling period (s).
-      :type T_s: float
-      :param u_s: Stator voltage (V).
-      :type u_s: complex
-      :param i_s: Stator current (A).
-      :type i_s: complex
-      :param w_s: Stator angular frequency (rad/s).
-      :type w_s: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
 .. py:class:: TorqueCharacteristics(par)
 

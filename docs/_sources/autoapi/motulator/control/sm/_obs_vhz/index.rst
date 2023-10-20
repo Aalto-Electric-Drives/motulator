@@ -23,7 +23,6 @@ Classes
 
    motulator.control.sm._obs_vhz.ObserverBasedVHzCtrlPars
    motulator.control.sm._obs_vhz.ObserverBasedVHzCtrl
-   motulator.control.sm._obs_vhz.FluxObserver
 
 
 
@@ -109,69 +108,4 @@ Classes
 
    ..
        !! processed by numpydoc !!
-
-.. py:class:: FluxObserver(par, alpha_o=2 * np.pi * 20, zeta_inf=0.2)
-
-
-   
-   Sensorless stator flux observer.
-
-   The observer gain decouples the electrical and mechanical dynamics and
-   allows placing the poles of the corresponding linearized estimation error
-   dynamics.
-
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param alpha_o: Observer gain (rad/s). The default is 2*pi*20.
-   :type alpha_o: float, optional
-   :param zeta_inf: Damping ratio at infinite speed. The default is 0.2.
-   :type zeta_inf: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-   .. py:method:: update(T_s, u_s, i_s, w_s)
-
-      
-      Update the states for the next sampling period.
-
-      :param T_s: Sampling period (s).
-      :type T_s: float
-      :param u_s: Stator voltage (V).
-      :type u_s: complex
-      :param i_s: Stator current (A).
-      :type i_s: complex
-      :param w_s: Stator angular frequency (rad/s).
-      :type w_s: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 

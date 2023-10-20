@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
 
   
-  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -39,8 +39,9 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
 
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/doctools.js"></script>
@@ -63,6 +64,15 @@
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -318,10 +328,10 @@
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -329,7 +339,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -374,13 +384,6 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.ModelPars"><code class="docutils literal notranslate"><span class="pre">ModelPars</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer"><code class="docutils literal notranslate"><span class="pre">Observer</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.theta_m"><code class="docutils literal notranslate"><span class="pre">Observer.theta_m</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.w_m"><code class="docutils literal notranslate"><span class="pre">Observer.w_m</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.psi_s"><code class="docutils literal notranslate"><span class="pre">Observer.psi_s</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.update"><code class="docutils literal notranslate"><span class="pre">Observer.update()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl"><code class="docutils literal notranslate"><span class="pre">VectorCtrl</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.current_ref"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.current_ref</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.observer"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.observer</span></code></a></li>
@@ -388,6 +391,19 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.speed_ctrl"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.speed_ctrl</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.pwm"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.pwm</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.w_m_ref"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.w_m_ref</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer"><code class="docutils literal notranslate"><span class="pre">Observer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.theta_m"><code class="docutils literal notranslate"><span class="pre">Observer.theta_m</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.w_m"><code class="docutils literal notranslate"><span class="pre">Observer.w_m</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.psi_s"><code class="docutils literal notranslate"><span class="pre">Observer.psi_s</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.update"><code class="docutils literal notranslate"><span class="pre">Observer.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver"><code class="docutils literal notranslate"><span class="pre">FluxObserver</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver.delta"><code class="docutils literal notranslate"><span class="pre">FluxObserver.delta</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver.psi_s"><code class="docutils literal notranslate"><span class="pre">FluxObserver.psi_s</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver.update"><code class="docutils literal notranslate"><span class="pre">FluxObserver.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxVectorCtrl"><code class="docutils literal notranslate"><span class="pre">FluxVectorCtrl</span></code></a><ul class="nav section-nav flex-column">
@@ -409,10 +425,6 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.ObserverBasedVHzCtrlPars"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzCtrlPars</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver"><code class="docutils literal notranslate"><span class="pre">FluxObserver</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver.update"><code class="docutils literal notranslate"><span class="pre">FluxObserver.update()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.TorqueCharacteristics"><code class="docutils literal notranslate"><span class="pre">TorqueCharacteristics</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.TorqueCharacteristics.torque"><code class="docutils literal notranslate"><span class="pre">TorqueCharacteristics.torque()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.TorqueCharacteristics.current"><code class="docutils literal notranslate"><span class="pre">TorqueCharacteristics.current()</span></code></a></li>
@@ -482,29 +494,29 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.ModelPars" title="motulator.control.sm.ModelPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelPars</span></code></a></p></td>
 <td><p>Model parameters of a synchronous machine.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.Observer" title="motulator.control.sm.Observer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Observer</span></code></a></p></td>
-<td><p>Observer for synchronous machines.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.VectorCtrl" title="motulator.control.sm.VectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorCtrl</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.VectorCtrl" title="motulator.control.sm.VectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorCtrl</span></code></a></p></td>
 <td><p>Vector control for synchronous machine drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.FluxVectorCtrl" title="motulator.control.sm.FluxVectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorCtrl</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.Observer" title="motulator.control.sm.Observer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Observer</span></code></a></p></td>
+<td><p>Observer for synchronous machines in estimated rotor coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.FluxObserver" title="motulator.control.sm.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
+<td><p>Sensorless stator flux observer in external coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.FluxVectorCtrl" title="motulator.control.sm.FluxVectorCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorCtrl</span></code></a></p></td>
 <td><p>Flux-vector control of synchronous machine drives.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.FluxTorqueReference" title="motulator.control.sm.FluxTorqueReference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxTorqueReference</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.FluxTorqueReference" title="motulator.control.sm.FluxTorqueReference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxTorqueReference</span></code></a></p></td>
 <td><p>Flux and torque references.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.FluxTorqueReferencePars" title="motulator.control.sm.FluxTorqueReferencePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxTorqueReferencePars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.FluxTorqueReferencePars" title="motulator.control.sm.FluxTorqueReferencePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxTorqueReferencePars</span></code></a></p></td>
 <td><p>Parameters for reference generation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.ObserverBasedVHzCtrl" title="motulator.control.sm.ObserverBasedVHzCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzCtrl</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.ObserverBasedVHzCtrl" title="motulator.control.sm.ObserverBasedVHzCtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzCtrl</span></code></a></p></td>
 <td><p>Observer-based V/Hz control for synchronous motors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.ObserverBasedVHzCtrlPars" title="motulator.control.sm.ObserverBasedVHzCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzCtrlPars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.ObserverBasedVHzCtrlPars" title="motulator.control.sm.ObserverBasedVHzCtrlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzCtrlPars</span></code></a></p></td>
 <td><p>Parameters for the control system.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.sm.FluxObserver" title="motulator.control.sm.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
-<td><p>Sensorless stator flux observer.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.sm.TorqueCharacteristics" title="motulator.control.sm.TorqueCharacteristics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TorqueCharacteristics</span></code></a></p></td>
 <td><p>Compute MTPA and MTPV loci based on the machine parameters.</p></td>
@@ -650,7 +662,7 @@ drives with accurate torque regulation,” IEEE Trans. Ind. Appl., 2020,
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.ComplexPICtrl" title="motulator.control._common.ComplexPICtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.ComplexPICtrl</span></code></a></p>
 <p>Current controller for synchronous machines.</p>
 <p>This provides an interface of a current controller for synchronous machines
-<a href="#id12"><span class="problematic" id="id4">[#Awa2019]_</span></a>. The gains are initialized based on the desired closed-loop
+<a href="#id13"><span class="problematic" id="id4">[#Awa2019]_</span></a>. The gains are initialized based on the desired closed-loop
 bandwidth and the inductances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -707,89 +719,6 @@ control of saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 </ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.control.sm.Observer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">Observer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_vector.html#Observer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.Observer" title="Permalink to this definition">#</a></dt>
-<dd><p>Observer for synchronous machines.</p>
-<p>This observer estimates the rotor angle, the rotor speed, and the stator
-flux linkage. The design is based on <a class="footnote-reference brackets" href="#hin2018" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The observer gain
-decouples the electrical and mechanical dynamics and allows placing the
-poles of the corresponding linearized estimation error dynamics. This
-implementation operates in estimated rotor coordinates. The observer can
-also be used in the sensored mode by providing the measured rotor speed as
-an input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.control.sm.ModelPars" title="motulator.control.sm.ModelPars"><em>ModelPars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer bandwidth (electrical rad/s). The default is 2*pi*40.</p></li>
-<li><p><strong>k</strong> (<em>callable</em><em>, </em><em>optional</em>) – Observer gain as a function of the rotor angular speed. The default is
-<code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">0.25*(R_s*(L_d</span> <span class="pre">+</span> <span class="pre">L_q)/(L_d*L_q)</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))</span></code> if
-<cite>sensorless</cite> else <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">2*pi*15</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.control.sm.Observer.theta_m">
-<span class="sig-name descname"><span class="pre">theta_m</span></span><a class="headerlink" href="#motulator.control.sm.Observer.theta_m" title="Permalink to this definition">#</a></dt>
-<dd><p>Rotor angle estimate (electrical rad).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.control.sm.Observer.w_m">
-<span class="sig-name descname"><span class="pre">w_m</span></span><a class="headerlink" href="#motulator.control.sm.Observer.w_m" title="Permalink to this definition">#</a></dt>
-<dd><p>Rotor speed estimate (electrical rad/s).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.control.sm.Observer.psi_s">
-<span class="sig-name descname"><span class="pre">psi_s</span></span><a class="headerlink" href="#motulator.control.sm.Observer.psi_s" title="Permalink to this definition">#</a></dt>
-<dd><p>Stator flux estimate (Vs).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>complex</p>
-</dd>
-</dl>
-</dd></dl>
-
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="hin2018" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">3</a><span class="fn-bracket">]</span></span>
-<p>Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, “Observers for
-sensorless synchronous motor drives: Framework for design and analysis,”
-IEEE Trans. Ind. Appl., 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2858753">https://doi.org/10.1109/TIA.2018.2858753</a></p>
-</aside>
-</aside>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.control.sm.Observer.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_vector.html#Observer.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.Observer.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Update the states for the next sampling period.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
-<li><p><strong>u_s</strong> (<em>complex</em>) – Stator voltage (V) in estimated rotor coordinates.</p></li>
-<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current (A) in estimated rotor coordinates.</p></li>
-<li><p><strong>w_m</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotor angular speed (electrical rad/s). Needed only in the sensored
-mode. The default is None.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -878,13 +807,166 @@ provides the interface to the solver.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm.Observer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">Observer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_observers.html#Observer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.Observer" title="Permalink to this definition">#</a></dt>
+<dd><p>Observer for synchronous machines in estimated rotor coordinates.</p>
+<p>This observer estimates the rotor angle, the rotor speed, and the stator
+flux linkage. The design is based on <a class="footnote-reference brackets" href="#hin2018" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The observer gain
+decouples the electrical and mechanical dynamics and allows placing the
+poles of the corresponding linearized estimation error dynamics. This
+implementation operates in estimated rotor coordinates. The observer can
+also be used in the sensored mode by providing the measured rotor speed as
+an input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.control.sm.ModelPars" title="motulator.control.sm.ModelPars"><em>ModelPars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer bandwidth (electrical rad/s). The default is 2*pi*40.</p></li>
+<li><p><strong>k</strong> (<em>callable</em><em>, </em><em>optional</em>) – Observer gain as a function of the rotor angular speed. The default is
+<code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">0.25*(R_s*(L_d</span> <span class="pre">+</span> <span class="pre">L_q)/(L_d*L_q)</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))</span></code> if
+<cite>sensorless</cite> else <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">2*pi*15</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm.Observer.theta_m">
+<span class="sig-name descname"><span class="pre">theta_m</span></span><a class="headerlink" href="#motulator.control.sm.Observer.theta_m" title="Permalink to this definition">#</a></dt>
+<dd><p>Rotor angle estimate (electrical rad).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm.Observer.w_m">
+<span class="sig-name descname"><span class="pre">w_m</span></span><a class="headerlink" href="#motulator.control.sm.Observer.w_m" title="Permalink to this definition">#</a></dt>
+<dd><p>Rotor speed estimate (electrical rad/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm.Observer.psi_s">
+<span class="sig-name descname"><span class="pre">psi_s</span></span><a class="headerlink" href="#motulator.control.sm.Observer.psi_s" title="Permalink to this definition">#</a></dt>
+<dd><p>Stator flux estimate (Vs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="hin2018" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">3</a><span class="fn-bracket">]</span></span>
+<p>Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, “Observers for
+sensorless synchronous motor drives: Framework for design and analysis,”
+IEEE Trans. Ind. Appl., 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2858753">https://doi.org/10.1109/TIA.2018.2858753</a></p>
+</aside>
+</aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm.Observer.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_observers.html#Observer.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.Observer.update" title="Permalink to this definition">#</a></dt>
+<dd><p>Update the states for the next sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
+<li><p><strong>u_s</strong> (<em>complex</em>) – Stator voltage (V) in estimated rotor coordinates.</p></li>
+<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current (A) in estimated rotor coordinates.</p></li>
+<li><p><strong>w_m</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotor angular speed (electrical rad/s). Needed only in the sensored
+mode. The default is None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.control.sm.FluxObserver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">FluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zeta_inf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_observers.html#FluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.FluxObserver" title="Permalink to this definition">#</a></dt>
+<dd><p>Sensorless stator flux observer in external coordinates.</p>
+<p>This observer estimates the stator flux linkage and the angle of the coordinate
+system with respect to the d-axis of the rotor. Speed-estimation is omitted.
+The observer gain decouples the electrical and mechanical dynamics and allows placing
+the poles of the corresponding linearized estimation error dynamics. This implementation operates
+in external coordinates (typically synchronous coordinates defined by reference signals
+of a control system).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.control.sm.ModelPars" title="motulator.control.sm.ModelPars"><em>ModelPars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer gain (rad/s). The default is 2*pi*20.</p></li>
+<li><p><strong>zeta_inf</strong> (<em>float</em><em>, </em><em>optional</em>) – Damping ratio at infinite speed. The default is 0.2.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm.FluxObserver.delta">
+<span class="sig-name descname"><span class="pre">delta</span></span><a class="headerlink" href="#motulator.control.sm.FluxObserver.delta" title="Permalink to this definition">#</a></dt>
+<dd><p>Angle estimate of the coordinate system with respect
+to the d-axis of the rotor (electrical rad).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.control.sm.FluxObserver.psi_s">
+<span class="sig-name descname"><span class="pre">psi_s</span></span><a class="headerlink" href="#motulator.control.sm.FluxObserver.psi_s" title="Permalink to this definition">#</a></dt>
+<dd><p>Stator flux estimate (Vs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="tii2022" role="note">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<p>Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
+“Stable and passive observer-based V/Hz control for synchronous Motors,”
+Proc. IEEE ECCE, Detroit, MI, Oct. 2022,
+<a class="reference external" href="https://doi.org/10.1109/ECCE50734.2022.9947858">https://doi.org/10.1109/ECCE50734.2022.9947858</a></p>
+</aside>
+</aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.control.sm.FluxObserver.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_observers.html#FluxObserver.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.FluxObserver.update" title="Permalink to this definition">#</a></dt>
+<dd><p>Update the states for the next sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
+<li><p><strong>u_s</strong> (<em>complex</em>) – Stator voltage (V).</p></li>
+<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current (A).</p></li>
+<li><p><strong>w_s</strong> (<em>float</em>) – Stator angular frequency (rad/s).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.control.sm.FluxVectorCtrl">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">FluxVectorCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_psi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_flux_vector.html#FluxVectorCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.FluxVectorCtrl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.Ctrl</span></code></a></p>
 <p>Flux-vector control of synchronous machine drives.</p>
-<p>This class implements a variant of stator-flux-vector control <a class="footnote-reference brackets" href="#pel2009" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.
+<p>This class implements a variant of stator-flux-vector control <a class="footnote-reference brackets" href="#pel2009" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.
 Rotor coordinates as well as decoupling between the stator flux and torque
-channels are used according to <a href="#id13"><span class="problematic" id="id7">[#Awa2019]_</span></a>. Here, the stator flux magnitude
+channels are used according to <a href="#id14"><span class="problematic" id="id7">[#Awa2019]_</span></a>. Here, the stator flux magnitude
 and the electromagnetic torque are selected as controllable variables.</p>
 <p class="rubric">Notes</p>
 <p>Proportional controllers are used for simplicity. The magnetic saturation is
@@ -959,14 +1041,14 @@ not considered in this implementation.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="pel2009" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">5</a><span class="fn-bracket">]</span></span>
 <p>Pellegrino, Armando, Guglielmi, “Direct flux field-oriented
 control of IPM drives with variable DC link in the field-weakening
 region,” IEEE Trans.Ind. Appl., 2009,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2009.2027167">https://doi.org/10.1109/TIA.2009.2027167</a></p>
 </aside>
 <aside class="footnote brackets" id="id8" role="note">
-<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
 <p>Awan, Hinkkanen, Bojoi, Pellegrino, “Stator-flux-oriented
 control of synchronous motors: A systematic design procedure,” IEEE Trans.
 Ind. Appl., 2019, <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2927316">https://doi.org/10.1109/TIA.2019.2927316</a></p>
@@ -1033,7 +1115,7 @@ limit merges the MTPV and current limits.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedVHzCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_obs_vhz.html#ObserverBasedVHzCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.ObserverBasedVHzCtrl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.Ctrl</span></code></a></p>
 <p>Observer-based V/Hz control for synchronous motors.</p>
-<p>This observer-based V/Hz control control method is based on <a class="footnote-reference brackets" href="#tii2022" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
+<p>This observer-based V/Hz control control method is based on <a href="#id15"><span class="problematic" id="id9">[#Tii2022]_</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1056,8 +1138,8 @@ limit merges the MTPV and current limits.</p>
 
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="tii2022" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">6</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
 <p>Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
 “Stable and passive observer-based V/Hz control for synchronous Motors,”
 Proc. IEEE ECCE, Detroit, MI, Oct. 2022,
@@ -1082,40 +1164,6 @@ the observer-based V/Hz control.</p>
 </ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.control.sm.FluxObserver">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">FluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zeta_inf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_obs_vhz.html#FluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.FluxObserver" title="Permalink to this definition">#</a></dt>
-<dd><p>Sensorless stator flux observer.</p>
-<p>The observer gain decouples the electrical and mechanical dynamics and
-allows placing the poles of the corresponding linearized estimation error
-dynamics.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.control.sm.ModelPars" title="motulator.control.sm.ModelPars"><em>ModelPars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer gain (rad/s). The default is 2*pi*20.</p></li>
-<li><p><strong>zeta_inf</strong> (<em>float</em><em>, </em><em>optional</em>) – Damping ratio at infinite speed. The default is 0.2.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.control.sm.FluxObserver.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_obs_vhz.html#FluxObserver.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.FluxObserver.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Update the states for the next sampling period.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
-<li><p><strong>u_s</strong> (<em>complex</em>) – Stator voltage (V).</p></li>
-<li><p><strong>i_s</strong> (<em>complex</em>) – Stator current (A).</p></li>
-<li><p><strong>w_s</strong> (<em>float</em>) – Stator angular frequency (rad/s).</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -1408,7 +1456,7 @@ Either <cite>psi_s_max</cite> or <cite>i_s_max</cite> must be given.</p></li>
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.Ctrl</span></code></a></p>
 <p>Sensorless control with signal injection for synchronous machine drives.</p>
 <p>This class implements a square-wave signal injection for low-speed
-operation according to <a class="footnote-reference brackets" href="#kim2012" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>. A phase-locked loop is used to track
+operation according to <a class="footnote-reference brackets" href="#kim2012" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>. A phase-locked loop is used to track
 the rotor position.</p>
 <p class="rubric">Notes</p>
 <p>For a wider speed range, signal injection could be combined to a
@@ -1417,7 +1465,7 @@ compensated for in this version.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="kim2012" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">7</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">8</a><span class="fn-bracket">]</span></span>
 <p>Kim, Ha, Sul, “PWM switching frequency signal injection
 sensorless method in IPMSM,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2210175">https://doi.org/10.1109/TIA.2012.2210175</a></p>
@@ -1588,11 +1636,10 @@ operation.</p>
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="../im/index.html"
@@ -1612,10 +1659,7 @@ operation.</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -1648,13 +1692,6 @@ operation.</p>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.ModelPars"><code class="docutils literal notranslate"><span class="pre">ModelPars</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer"><code class="docutils literal notranslate"><span class="pre">Observer</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.theta_m"><code class="docutils literal notranslate"><span class="pre">Observer.theta_m</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.w_m"><code class="docutils literal notranslate"><span class="pre">Observer.w_m</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.psi_s"><code class="docutils literal notranslate"><span class="pre">Observer.psi_s</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.update"><code class="docutils literal notranslate"><span class="pre">Observer.update()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl"><code class="docutils literal notranslate"><span class="pre">VectorCtrl</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.current_ref"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.current_ref</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.observer"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.observer</span></code></a></li>
@@ -1662,6 +1699,19 @@ operation.</p>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.speed_ctrl"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.speed_ctrl</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.pwm"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.pwm</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.VectorCtrl.w_m_ref"><code class="docutils literal notranslate"><span class="pre">VectorCtrl.w_m_ref</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer"><code class="docutils literal notranslate"><span class="pre">Observer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.theta_m"><code class="docutils literal notranslate"><span class="pre">Observer.theta_m</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.w_m"><code class="docutils literal notranslate"><span class="pre">Observer.w_m</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.psi_s"><code class="docutils literal notranslate"><span class="pre">Observer.psi_s</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.Observer.update"><code class="docutils literal notranslate"><span class="pre">Observer.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver"><code class="docutils literal notranslate"><span class="pre">FluxObserver</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver.delta"><code class="docutils literal notranslate"><span class="pre">FluxObserver.delta</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver.psi_s"><code class="docutils literal notranslate"><span class="pre">FluxObserver.psi_s</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver.update"><code class="docutils literal notranslate"><span class="pre">FluxObserver.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxVectorCtrl"><code class="docutils literal notranslate"><span class="pre">FluxVectorCtrl</span></code></a><ul class="nav section-nav flex-column">
@@ -1683,10 +1733,6 @@ operation.</p>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.ObserverBasedVHzCtrlPars"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzCtrlPars</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver"><code class="docutils literal notranslate"><span class="pre">FluxObserver</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.FluxObserver.update"><code class="docutils literal notranslate"><span class="pre">FluxObserver.update()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.TorqueCharacteristics"><code class="docutils literal notranslate"><span class="pre">TorqueCharacteristics</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.TorqueCharacteristics.torque"><code class="docutils literal notranslate"><span class="pre">TorqueCharacteristics.torque()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control.sm.TorqueCharacteristics.current"><code class="docutils literal notranslate"><span class="pre">TorqueCharacteristics.current()</span></code></a></li>
@@ -1771,8 +1817,8 @@ By Aalto Electric Drives
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
 
   <footer class="bd-footer">
   </footer>

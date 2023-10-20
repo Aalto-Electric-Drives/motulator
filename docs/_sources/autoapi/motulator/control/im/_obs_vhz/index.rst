@@ -33,7 +33,6 @@ Classes
 
    motulator.control.im._obs_vhz.ObserverBasedVHzCtrlPars
    motulator.control.im._obs_vhz.ObserverBasedVHzCtrl
-   motulator.control.im._obs_vhz.FluxObserver
 
 
 
@@ -132,91 +131,4 @@ Classes
 
    ..
        !! processed by numpydoc !!
-
-.. py:class:: FluxObserver(par, alpha_o, b=None)
-
-
-   
-   Sensorless reduced-order flux observer in external coordinates.
-
-   This is a sensorless reduced-order flux observer in synchronous coordinates
-   for an induction machine. The observer gain decouples the electrical and
-   mechanical dynamics and allows placing the poles of the linearized
-   estimation error dynamics. This implementation operates in external
-   coordinates (typically synchronous coordinates defined by reference signals
-   of a control system).
-
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param alpha_o: Speed-estimation bandwidth (rad/s).
-   :type alpha_o: float
-   :param b: Coefficient (rad/s) of the characteristic polynomial as a function of
-             the rotor angular speed estimate. The default is
-             ``lambda w_m: R_R/L_M + .4*abs(w_m)``.
-   :type b: callable, optional
-
-   .. attribute:: psi_R
-
-      Rotor flux estimate (Vs).
-
-      :type: complex
-
-   .. attribute:: w_m
-
-      Rotor angular speed estimate (electrical rad/s).
-
-      :type: float
-
-   .. rubric:: Notes
-
-   The characteristic polynomial of the observer in synchronous coordinates is
-   ``s**2 + b*s + w_s**2``.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-   .. py:method:: update(T_s, u_s, i_s, w_s)
-
-      
-      Update the states.
-
-      :param T_s: Sampling period (s).
-      :type T_s: float
-      :param u_s: Stator voltage (V) in synchronous coordinates.
-      :type u_s: complex
-      :param i_s: Stator current (A) in synchronous coordinates.
-      :type i_s: complex
-      :param w_s: Angular frequency (rad/s) of the coordinate system.
-      :type w_s: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
