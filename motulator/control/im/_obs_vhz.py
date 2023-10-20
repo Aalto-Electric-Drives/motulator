@@ -17,6 +17,7 @@ References
 from dataclasses import dataclass
 import numpy as np
 from motulator.control._common import Ctrl, PWM, RateLimiter
+from motulator.control.im._observers import FluxObserver
 from motulator._helpers import abc2complex
 from motulator._utils import Bunch
 
@@ -204,92 +205,3 @@ class ObserverBasedVHzCtrl(Ctrl):
             self.R_s*i_s_ref + 1j*w_s*self.psi_s_ref +
             self.L_sgm*self.alpha_psi*(i_s_ref - i_s))
         return u_s_ref
-
-
-# %%
-class FluxObserver:
-    """
-    Sensorless reduced-order flux observer in external coordinates.
-
-    This is a sensorless reduced-order flux observer in synchronous coordinates
-    for an induction machine. The observer gain decouples the electrical and
-    mechanical dynamics and allows placing the poles of the linearized 
-    estimation error dynamics. This implementation operates in external 
-    coordinates (typically synchronous coordinates defined by reference signals 
-    of a control system).
-
-    Parameters
-    ----------
-    par : ModelPars
-        Machine model parameters.
-    alpha_o : float
-        Speed-estimation bandwidth (rad/s).
-    b : callable, optional 
-        Coefficient (rad/s) of the characteristic polynomial as a function of 
-        the rotor angular speed estimate. The default is 
-        ``lambda w_m: R_R/L_M + .4*abs(w_m)``.
-
-    Attributes
-    ----------
-    psi_R : complex
-        Rotor flux estimate (Vs).
-    w_m : float
-        Rotor angular speed estimate (electrical rad/s).
-
-    Notes
-    -----
-    The characteristic polynomial of the observer in synchronous coordinates is 
-    ``s**2 + b*s + w_s**2``.  
-
-    """
-
-    # pylint: disable=too-many-instance-attributes
-    def __init__(self, par, alpha_o, b=None):
-        self.R_s, self.R_R, self.L_sgm = par.R_s, par.R_R, par.L_sgm
-        self.alpha = par.R_R/par.L_M
-        # Design parameters
-        self.alpha_o = alpha_o
-        zeta_inf = .2  # Damping ratio at high speeds
-        self.b = lambda w_m: (
-            self.alpha + 2*zeta_inf*np.abs(w_m) if b is None else b)
-        # States
-        self.psi_R, self.w_m = 0, 0
-        # Previous current, private attribute
-        self._i_s_old = 0
-
-    def update(self, T_s, u_s, i_s, w_s):
-        """
-        Update the states.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-        u_s : complex
-            Stator voltage (V) in synchronous coordinates.
-        i_s : complex
-            Stator current (A) in synchronous coordinates.
-        w_s : float
-            Angular frequency (rad/s) of the coordinate system. 
-
-        """
-        # Observer gain with c = w_s**2 (without the orthogonal projection
-        # which is embedded into the error signal and the state update)
-        g = self.b(self.w_m)/(self.alpha - 1j*self.w_m)
-
-        # Time derivative of the stator current
-        di_s = (i_s - self._i_s_old)/T_s
-
-        # Induced voltage from the rotor quantities
-        e_r = self.R_R*i_s - (self.alpha - 1j*self.w_m)*self.psi_R
-
-        # Induced voltage from stator quantities
-        e_s = u_s - self.R_s*i_s - self.L_sgm*(di_s + 1j*w_s*i_s)
-
-        # Error signal (rad/s)
-        err = (e_s - e_r)/self.psi_R if np.abs(self.psi_R) > 0 else 0
-
-        # Update the states
-        self.psi_R += T_s*(e_s - (1j*w_s + g*err.real)*self.psi_R)
-        self.w_m += T_s*self.alpha_o*err.imag
-        self._i_s_old = i_s

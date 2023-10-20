@@ -6,6 +6,7 @@ from motulator._helpers import abc2complex
 from motulator.control._common import Ctrl, PWM, RateLimiter
 from motulator.control.sm._flux_vector import (
     FluxTorqueReference, FluxTorqueReferencePars)
+from motulator.control.sm._observers import FluxObserver
 from motulator._utils import Bunch
 
 
@@ -174,78 +175,3 @@ class ObserverBasedVHzCtrl(Ctrl):
         d_abc = self.pwm(self.T_s, u_s_ref, u_dc, theta_s, w_s)
 
         return self.T_s, d_abc
-
-
-# %%
-class FluxObserver:
-    """
-    Sensorless stator flux observer.
-
-    The observer gain decouples the electrical and mechanical dynamics and 
-    allows placing the poles of the corresponding linearized estimation error 
-    dynamics. 
-
-    Parameters
-    ----------
-    par : ModelPars
-        Machine model parameters.
-    alpha_o : float, optional
-        Observer gain (rad/s). The default is 2*pi*20.
-    zeta_inf : float, optional
-        Damping ratio at infinite speed. The default is 0.2.
-
-    """
-
-    # pylint: disable=too-many-instance-attributes
-    def __init__(self, par, alpha_o=2*np.pi*20, zeta_inf=.2):
-        self.R_s = par.R_s
-        self.L_d = par.L_d
-        self.L_q = par.L_q
-        self.psi_f = par.psi_f
-        self.alpha_o = alpha_o
-        self.b_p = .5*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
-        self.zeta_inf = zeta_inf
-        # Initial states
-        self.delta, self.psi_s = 0, par.psi_f
-
-    def update(self, T_s, u_s, i_s, w_s):
-        """
-        Update the states for the next sampling period.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-        u_s : complex
-            Stator voltage (V).
-        i_s : complex
-            Stator current (A).
-        w_s : float
-            Stator angular frequency (rad/s).
-
-        """
-        # Transformations to rotor coordinates. This is mathematically
-        # equivalent to the version in [Tii2022].
-        i_sr = i_s*np.exp(1j*self.delta)
-        psi_sr = self.psi_s*np.exp(1j*self.delta)
-
-        # Auxiliary flux and estimation error in rotor coordinates
-        psi_ar = self.psi_f + (self.L_d - self.L_q)*np.conj(i_sr)
-        e_r = self.L_d*i_sr.real + 1j*self.L_q*i_sr.imag + self.psi_f - psi_sr
-
-        # Auxiliary flux in controller coordinates
-        psi_a = np.exp(-1j*self.delta)*psi_ar
-
-        k = self.b_p + 2*self.zeta_inf*np.abs(w_s)
-
-        if np.abs(psi_ar) > 0:
-            # Correction voltage in controller coordinates
-            v = k*psi_a*np.real(e_r/psi_ar)
-            # Error signal
-            w_delta = self.alpha_o*np.imag(e_r/psi_ar)
-        else:
-            v, w_delta = 0, 0
-
-        # Update the states
-        self.psi_s += T_s*(u_s - self.R_s*i_s - 1j*w_s*self.psi_s + v)
-        self.delta += T_s*w_delta

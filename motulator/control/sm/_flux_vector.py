@@ -5,7 +5,8 @@ import numpy as np
 from motulator._helpers import abc2complex
 from motulator.control._common import Ctrl, PWM, SpeedCtrl
 from motulator.control.sm._torque import TorqueCharacteristics
-from motulator.control.sm._vector import Observer, ModelPars
+from motulator.control.sm._vector import ModelPars
+from motulator.control.sm._observers import Observer
 from motulator._utils import Bunch
 
 
