@@ -5,6 +5,7 @@ import numpy as np
 from motulator._helpers import abc2complex
 from motulator.control._common import Ctrl, ComplexPICtrl, PWM, SpeedCtrl
 from motulator.control.sm._torque import TorqueCharacteristics
+from motulator.control.sm._observers import Observer
 from motulator._utils import Bunch
 
 
@@ -390,108 +391,3 @@ class CurrentReference:
         i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M_ref_lim))
         i_sd_lim = self.i_sd_lim(np.abs(tau_M_ref_lim))
         self.i_sd_ref = np.clip(self.i_sd_ref, i_sd_lim, i_sd_mtpa)
-
-
-# %%
-class Observer:
-    """
-    Observer for synchronous machines.
-
-    This observer estimates the rotor angle, the rotor speed, and the stator 
-    flux linkage. The design is based on [#Hin2018]_. The observer gain 
-    decouples the electrical and mechanical dynamics and allows placing the 
-    poles of the corresponding linearized estimation error dynamics. This 
-    implementation operates in estimated rotor coordinates. The observer can 
-    also be used in the sensored mode by providing the measured rotor speed as 
-    an input.
-
-    Parameters
-    ----------
-    par : ModelPars
-        Machine model parameters.
-    alpha_o : float, optional
-        Observer bandwidth (electrical rad/s). The default is 2*pi*40.
-    k : callable, optional
-        Observer gain as a function of the rotor angular speed. The default is 
-        ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
-        `sensorless` else ``lambda w_m: 2*pi*15``.
-
-    Attributes
-    ----------
-    theta_m : float
-        Rotor angle estimate (electrical rad).
-    w_m : float
-        Rotor speed estimate (electrical rad/s).
-    psi_s : complex
-        Stator flux estimate (Vs).
-
-    References
-    ----------
-    .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
-       sensorless synchronous motor drives: Framework for design and analysis,"
-       IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
-
-    """
-
-    # pylint: disable=too-many-instance-attributes
-    def __init__(self, par, alpha_o=2*np.pi*40, k=None, sensorless=True):
-        self.R_s = par.R_s
-        self.L_d, self.L_q, self.psi_f = par.L_d, par.L_q, par.psi_f
-        self.psi_f = par.psi_f
-        self.alpha_o = alpha_o
-        self.sensorless = sensorless
-        self.k1 = k
-        if self.sensorless:
-            if self.k1 is None:  # If not given, use the default gains
-                sigma0 = .25*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
-                self.k1 = lambda w_m: (sigma0 + .2*np.abs(w_m))
-            self.k2 = self.k1
-        else:
-            if self.k1 is None:
-                self.k1 = lambda w_m: 2*np.pi*15
-            self.k2 = 0*self.k1
-        # Initial states
-        self.theta_m, self.w_m, self.psi_s = 0, 0, par.psi_f
-
-    def update(self, T_s, u_s, i_s, w_m=None):
-        """
-        Update the states for the next sampling period.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-        u_s : complex
-            Stator voltage (V) in estimated rotor coordinates.
-        i_s : complex
-            Stator current (A) in estimated rotor coordinates.
-        w_m : float, optional
-            Rotor angular speed (electrical rad/s). Needed only in the sensored
-            mode. The default is None. 
-
-        """
-        # Estimation error
-        e = self.L_d*i_s.real + 1j*self.L_q*i_s.imag + self.psi_f - self.psi_s
-
-        if self.sensorless:
-            # Auxiliary flux
-            psi_a = self.psi_f + (self.L_d - self.L_q)*np.conj(i_s)
-
-            # Observer gains
-            k1 = self.k1(self.w_m)
-            k2 = k1*psi_a/np.conj(psi_a) if np.abs(psi_a) > 0 else k1
-
-            # Speed estimation
-            eps = -np.imag(e/psi_a) if np.abs(psi_a) > 0 else 0
-            w_s = 2*self.alpha_o*eps + self.w_m
-        else:
-            k1, k2 = self.k1, 0
-            w_s = w_m
-            eps = 0
-
-        # Update the states
-        self.psi_s += T_s*(
-            u_s - self.R_s*i_s - 1j*w_s*self.psi_s + k1*e + k2*np.conj(e))
-        self.w_m += T_s*self.alpha_o**2*eps
-        self.theta_m += T_s*w_s  # Next line: limit into [-pi, pi)
-        self.theta_m = np.mod(self.theta_m + np.pi, 2*np.pi) - np.pi
