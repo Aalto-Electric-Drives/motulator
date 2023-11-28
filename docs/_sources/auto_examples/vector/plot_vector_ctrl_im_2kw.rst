@@ -31,7 +31,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-17
 
-.. code-block:: default
+.. code-block:: Python
 
 
     from motulator import model, control
@@ -50,7 +50,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-23
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -75,7 +75,7 @@ be used also for other induction machines.
 
 .. GENERATED FROM PYTHON SOURCE LINES 30-54
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -114,7 +114,7 @@ Create the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 56-70
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Γ-equivalent machine model with main-flux saturation included
@@ -143,7 +143,7 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 72-85
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Machine model parameters
@@ -172,7 +172,7 @@ uncomment the field-weakening sequence.
 
 .. GENERATED FROM PYTHON SOURCE LINES 88-108
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Simple acceleration and load torque step
@@ -208,7 +208,7 @@ model (which makes simulation slower).
 
 .. GENERATED FROM PYTHON SOURCE LINES 111-115
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=False)
@@ -228,7 +228,7 @@ the results in SI units.
 
 .. GENERATED FROM PYTHON SOURCE LINES 118-121
 
-.. code-block:: default
+.. code-block:: Python
 
 
     plot(sim, base)
@@ -256,7 +256,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.085 seconds)
+   **Total running time of the script:** (0 minutes 3.414 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw.py:
@@ -265,16 +265,13 @@ the results in SI units.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_vector_ctrl_im_2kw.ipynb <plot_vector_ctrl_im_2kw.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vector_ctrl_im_2kw.py <plot_vector_ctrl_im_2kw.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_vector_ctrl_im_2kw.ipynb <plot_vector_ctrl_im_2kw.ipynb>`
 
 
 .. only:: html

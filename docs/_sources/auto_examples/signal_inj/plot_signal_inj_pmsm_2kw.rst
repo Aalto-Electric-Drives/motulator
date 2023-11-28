@@ -30,7 +30,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 12-18
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
@@ -51,7 +51,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 20-24
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -70,7 +70,7 @@ Configure the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 26-33
 
-.. code-block:: default
+.. code-block:: Python
 
 
     machine = model.sm.SynchronousMachine(
@@ -92,7 +92,7 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 35-42
 
-.. code-block:: default
+.. code-block:: Python
 
 
     par = control.sm.ModelPars(
@@ -114,7 +114,7 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 44-54
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Speed reference
@@ -139,7 +139,7 @@ Create the simulation object and simulate it.
 
 .. GENERATED FROM PYTHON SOURCE LINES 56-60
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=False)
@@ -158,7 +158,7 @@ Plot results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 62-78
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Plot the "basic" figure
@@ -203,7 +203,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.718 seconds)
+   **Total running time of the script:** (0 minutes 10.687 seconds)
 
 
 .. _sphx_glr_download_auto_examples_signal_inj_plot_signal_inj_pmsm_2kw.py:
@@ -212,16 +212,13 @@ Plot results in per-unit values.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_signal_inj_pmsm_2kw.ipynb <plot_signal_inj_pmsm_2kw.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_signal_inj_pmsm_2kw.py <plot_signal_inj_pmsm_2kw.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_signal_inj_pmsm_2kw.ipynb <plot_signal_inj_pmsm_2kw.ipynb>`
 
 
 .. only:: html

@@ -33,7 +33,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 14-19
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
@@ -53,7 +53,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 21-25
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -72,7 +72,7 @@ Create the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 27-35
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Configure the induction machine using its inverse-Γ parameters
@@ -95,7 +95,7 @@ Control system (parametrized as open-loop V/Hz control).
 
 .. GENERATED FROM PYTHON SOURCE LINES 37-43
 
-.. code-block:: default
+.. code-block:: Python
 
 
     par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
@@ -117,7 +117,7 @@ signals could be defined as functions.
 
 .. GENERATED FROM PYTHON SOURCE LINES 46-58
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Speed reference
@@ -145,7 +145,7 @@ the model for the carrier comparison.
 
 .. GENERATED FROM PYTHON SOURCE LINES 61-65
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=True)
@@ -164,7 +164,7 @@ Plot results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 67-71
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # sphinx_gallery_thumbnail_number = 2
@@ -197,7 +197,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.695 seconds)
+   **Total running time of the script:** (0 minutes 7.187 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:
@@ -206,16 +206,13 @@ Plot results in per-unit values.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_vhz_ctrl_6step_im_2kw.ipynb <plot_vhz_ctrl_6step_im_2kw.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vhz_ctrl_6step_im_2kw.py <plot_vhz_ctrl_6step_im_2kw.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_vhz_ctrl_6step_im_2kw.ipynb <plot_vhz_ctrl_6step_im_2kw.ipynb>`
 
 
 .. only:: html

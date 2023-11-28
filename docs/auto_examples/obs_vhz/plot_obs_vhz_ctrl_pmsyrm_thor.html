@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -39,9 +39,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
-  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -126,9 +126,11 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
   
 
 <a class="navbar-brand logo" href="../../index.html">
+  
   
   
   
@@ -326,6 +328,7 @@
 </button>
 
 
+
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -335,6 +338,7 @@ document.write(`
   </button>
 `);
 </script>
+
 
 <script>
 document.write(`
@@ -388,7 +392,7 @@ saturation is not taken into account in the control method, only in the system
 model. Naturally, the control performance could be improved by taking the
 saturation into account in the control algorithm.</p>
 <p>Imports.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize_scalar</span>
@@ -398,12 +402,12 @@ saturation into account in the control algorithm.</p>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="p">(</span>
     <span class="n">U_nom</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">I_nom</span><span class="o">=</span><span class="mf">15.6</span><span class="p">,</span> <span class="n">f_nom</span><span class="o">=</span><span class="mi">85</span><span class="p">,</span> <span class="n">tau_nom</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">P_nom</span><span class="o">=</span><span class="mf">5.07e3</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Load and plot the flux maps.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the path of this file</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the path of this file</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())))</span>
 <span class="c1"># Load the data from the MATLAB file</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">import_syre_data</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;/THOR.mat&quot;</span><span class="p">)</span>
@@ -423,7 +427,7 @@ saturation into account in the control algorithm.</p>
 <li><img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_002.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_002.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-multi-img"/></li>
 </ul>
 <p>Create the saturation model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The coordinates assume the PMSM convention, i.e., that the PM flux is along</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The coordinates assume the PMSM convention, i.e., that the PM flux is along</span>
 <span class="c1"># the d-axis. The piecewise linear interpolant `LinearNDInterpolator` is based</span>
 <span class="c1"># on triangularization and allows to use unstructured flux maps.</span>
 
@@ -449,7 +453,7 @@ saturation into account in the control algorithm.</p>
 </pre></div>
 </div>
 <p>Configure the system model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the motor model</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the motor model</span>
 <span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">SynchronousMachineSaturated</span><span class="p">(</span>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">current</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="n">psi_s0</span><span class="p">)</span>
 <span class="c1"># Magnetically linear PM-SyRM model</span>
@@ -461,13 +465,13 @@ saturation into account in the control algorithm.</p>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">4e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">17e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.134</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">4e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">17e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.134</span><span class="p">)</span>
 <span class="n">ctrl_par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ObserverBasedVHzCtrlPars</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ObserverBasedVHzCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">ctrl_par</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">250e-6</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Set the speed reference and the external load torque.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.375</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.625</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">8</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
@@ -485,22 +489,22 @@ saturation into account in the control algorithm.</p>
 <p>Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Plot results in per-unit values. By omitting the argument <cite>base</cite> you can plot
 the results in SI units.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 35.580 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsyrm_thor_003.png" alt="plot obs vhz ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 31.414 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-obs-vhz-plot-obs-vhz-ctrl-pmsyrm-thor-py">
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/32b0d0b5a5953f003c957fd40639cf0f/plot_obs_vhz_ctrl_pmsyrm_thor.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_pmsyrm_thor.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/25d1238a73e8b59c79b698bd00e5ad03/plot_obs_vhz_ctrl_pmsyrm_thor.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_obs_vhz_ctrl_pmsyrm_thor.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/32b0d0b5a5953f003c957fd40639cf0f/plot_obs_vhz_ctrl_pmsyrm_thor.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_pmsyrm_thor.py</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -515,7 +519,7 @@ the results in SI units.</p>
               
               
                 <footer class="prev-next-footer">
-                  <!-- Previous / next buttons -->
+                  
 <div class="prev-next-area">
     <a class="left-prev"
        href="plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html"
@@ -558,6 +562,7 @@ By Aalto Electric Drives
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
       © Copyright 2023, Aalto Electric Drives.
@@ -584,8 +589,8 @@ By Aalto Electric Drives
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
 
   <footer class="bd-footer">
   </footer>

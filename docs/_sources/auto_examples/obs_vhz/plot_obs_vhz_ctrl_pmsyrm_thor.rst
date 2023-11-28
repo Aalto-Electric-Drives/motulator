@@ -40,7 +40,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 22-31
 
-.. code-block:: default
+.. code-block:: Python
 
 
     from os import path
@@ -64,7 +64,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 33-37
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -83,7 +83,7 @@ Load and plot the flux maps.
 
 .. GENERATED FROM PYTHON SOURCE LINES 39-54
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Get the path of this file
@@ -130,7 +130,7 @@ Create the saturation model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 56-82
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # The coordinates assume the PMSM convention, i.e., that the PM flux is along
@@ -171,7 +171,7 @@ Configure the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 84-95
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Create the motor model
@@ -197,7 +197,7 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 97-102
 
-.. code-block:: default
+.. code-block:: Python
 
 
     par = control.sm.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
@@ -217,7 +217,7 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 104-119
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Speed reference
@@ -249,7 +249,7 @@ delay is modeled.
 
 .. GENERATED FROM PYTHON SOURCE LINES 123-127
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
@@ -269,7 +269,7 @@ the results in SI units.
 
 .. GENERATED FROM PYTHON SOURCE LINES 130-132
 
-.. code-block:: default
+.. code-block:: Python
 
 
     plot(sim, base)
@@ -288,7 +288,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 35.580 seconds)
+   **Total running time of the script:** (0 minutes 31.414 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:
@@ -297,16 +297,13 @@ the results in SI units.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_obs_vhz_ctrl_pmsyrm_thor.ipynb <plot_obs_vhz_ctrl_pmsyrm_thor.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_obs_vhz_ctrl_pmsyrm_thor.py <plot_obs_vhz_ctrl_pmsyrm_thor.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_obs_vhz_ctrl_pmsyrm_thor.ipynb <plot_obs_vhz_ctrl_pmsyrm_thor.ipynb>`
 
 
 .. only:: html

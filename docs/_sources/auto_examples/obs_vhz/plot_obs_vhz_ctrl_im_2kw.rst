@@ -30,7 +30,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 12-17
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
@@ -50,7 +50,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-23
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -69,7 +69,7 @@ Configure the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 25-33
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Configure the induction machine using its inverse-Γ parameters
@@ -92,7 +92,7 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 35-42
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Inverse-Γ model parameter estimates
@@ -114,7 +114,7 @@ Set the speed reference.
 
 .. GENERATED FROM PYTHON SOURCE LINES 44-50
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Speed reference
@@ -135,7 +135,7 @@ Set the load torque reference.
 
 .. GENERATED FROM PYTHON SOURCE LINES 52-62
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # External load torque
@@ -162,7 +162,7 @@ delay is modeled.
 
 .. GENERATED FROM PYTHON SOURCE LINES 66-70
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
@@ -182,7 +182,7 @@ the results in SI units.
 
 .. GENERATED FROM PYTHON SOURCE LINES 73-75
 
-.. code-block:: default
+.. code-block:: Python
 
 
     plot(sim, base)
@@ -201,7 +201,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.424 seconds)
+   **Total running time of the script:** (0 minutes 6.959 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py:
@@ -210,16 +210,13 @@ the results in SI units.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_obs_vhz_ctrl_im_2kw.ipynb <plot_obs_vhz_ctrl_im_2kw.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_obs_vhz_ctrl_im_2kw.py <plot_obs_vhz_ctrl_im_2kw.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_obs_vhz_ctrl_im_2kw.ipynb <plot_obs_vhz_ctrl_im_2kw.ipynb>`
 
 
 .. only:: html

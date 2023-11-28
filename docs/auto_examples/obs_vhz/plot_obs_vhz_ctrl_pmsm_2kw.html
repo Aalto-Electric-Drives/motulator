@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -39,9 +39,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
-  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -126,9 +126,11 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
   
 
 <a class="navbar-brand logo" href="../../index.html">
+  
   
   
   
@@ -326,6 +328,7 @@
 </button>
 
 
+
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -335,6 +338,7 @@ document.write(`
   </button>
 `);
 </script>
+
 
 <script>
 document.write(`
@@ -377,18 +381,18 @@ to download the full example code</p>
 <span id="sphx-glr-auto-examples-obs-vhz-plot-obs-vhz-ctrl-pmsm-2kw-py"></span><h1>2.2-kW PMSM<a class="headerlink" href="#kw-pmsm" title="Permalink to this heading">#</a></h1>
 <p>This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.</p>
 <p>Imports.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
 <span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">plot</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="p">(</span>
     <span class="n">U_nom</span><span class="o">=</span><span class="mi">370</span><span class="p">,</span> <span class="n">I_nom</span><span class="o">=</span><span class="mf">4.3</span><span class="p">,</span> <span class="n">f_nom</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">tau_nom</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">P_nom</span><span class="o">=</span><span class="mf">2.2e3</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Configure the system model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">SynchronousMachine</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">SynchronousMachine</span><span class="p">(</span>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">.036</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">.051</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.545</span><span class="p">)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
@@ -396,14 +400,14 @@ to download the full example code</p>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">.036</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">.051</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.545</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">.036</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">.051</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.545</span><span class="p">)</span>
 <span class="n">ctrl_par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ObserverBasedVHzCtrlPars</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ObserverBasedVHzCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">ctrl_par</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">250e-6</span><span class="p">)</span>
 <span class="c1">#ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)</span>
 </pre></div>
 </div>
 <p>Set the speed reference and the external load torque.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.375</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.625</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">8</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
@@ -416,22 +420,22 @@ to download the full example code</p>
 <p>Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Plot results in per-unit values. By omitting the argument <cite>base</cite> you can plot
 the results in SI units.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_001.png" alt="plot obs vhz ctrl pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 22.731 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_001.png" alt="plot obs vhz ctrl pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.714 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-obs-vhz-plot-obs-vhz-ctrl-pmsm-2kw-py">
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/ca29cfd822c2ad719f9843bad563bbc2/plot_obs_vhz_ctrl_pmsm_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_pmsm_2kw.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/40a1743246f42299b8096717d9571612/plot_obs_vhz_ctrl_pmsm_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_obs_vhz_ctrl_pmsm_2kw.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ca29cfd822c2ad719f9843bad563bbc2/plot_obs_vhz_ctrl_pmsm_2kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_obs_vhz_ctrl_pmsm_2kw.py</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -446,7 +450,7 @@ the results in SI units.</p>
               
               
                 <footer class="prev-next-footer">
-                  <!-- Previous / next buttons -->
+                  
 <div class="prev-next-area">
     <a class="left-prev"
        href="index.html"
@@ -489,6 +493,7 @@ By Aalto Electric Drives
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
       © Copyright 2023, Aalto Electric Drives.
@@ -515,8 +520,8 @@ By Aalto Electric Drives
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
 
   <footer class="bd-footer">
   </footer>

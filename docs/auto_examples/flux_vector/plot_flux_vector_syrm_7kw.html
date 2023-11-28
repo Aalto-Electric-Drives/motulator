@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -39,9 +39,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
-  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -126,9 +126,11 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
   
 
 <a class="navbar-brand logo" href="../../index.html">
+  
   
   
   
@@ -326,6 +328,7 @@
 </button>
 
 
+
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -335,6 +338,7 @@ document.write(`
   </button>
 `);
 </script>
+
 
 <script>
 document.write(`
@@ -379,19 +383,19 @@ to download the full example code</p>
 6.7-kW synchronous reluctance motor drive. The saturation is not taken into
 account in the control method (only in the system model).</p>
 <p>Imports.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
 <span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">plot</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="p">(</span>
     <span class="n">U_nom</span><span class="o">=</span><span class="mi">370</span><span class="p">,</span> <span class="n">I_nom</span><span class="o">=</span><span class="mf">15.5</span><span class="p">,</span> <span class="n">f_nom</span><span class="o">=</span><span class="mf">105.8</span><span class="p">,</span> <span class="n">tau_nom</span><span class="o">=</span><span class="mf">20.1</span><span class="p">,</span> <span class="n">P_nom</span><span class="o">=</span><span class="mf">6.7e3</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Create a saturation model, see the example
 <a class="reference internal" href="../obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.html"><span class="doc">6.7-kW SyRM, saturated</span></a> for further details.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">i_s</span><span class="p">(</span><span class="n">psi_s</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">i_s</span><span class="p">(</span><span class="n">psi_s</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Magnetic model for a 6.7-kW synchronous reluctance motor.&quot;&quot;&quot;</span>
     <span class="c1"># Parameters</span>
     <span class="n">a_d0</span><span class="p">,</span> <span class="n">a_dd</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="mf">17.4</span><span class="p">,</span> <span class="mf">373.</span><span class="p">,</span> <span class="mi">5</span>  <span class="c1"># d-axis self-saturation</span>
@@ -407,7 +411,7 @@ account in the control method (only in the system model).</p>
 </pre></div>
 </div>
 <p>Configure the system model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">SynchronousMachineSaturated</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">current</span><span class="o">=</span><span class="n">i_s</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">SynchronousMachineSaturated</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">current</span><span class="o">=</span><span class="n">i_s</span><span class="p">)</span>
 <span class="c1"># Magnetically linear SyRM model for comparison</span>
 <span class="c1"># machine = model.sm.SynchronousMachine(</span>
 <span class="c1">#    n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)</span>
@@ -417,7 +421,7 @@ account in the control method (only in the system model).</p>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">37e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">6.2e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="c1"># Disable MTPA since the control system does not consider the saturation</span>
 <span class="n">ref</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">FluxTorqueReferencePars</span><span class="p">(</span>
@@ -429,7 +433,7 @@ account in the control method (only in the system model).</p>
 </pre></div>
 </div>
 <p>Set the speed reference and the external load torque.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.375</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.625</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
@@ -440,21 +444,21 @@ account in the control method (only in the system model).</p>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Plot results in per-unit values.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_flux_vector_syrm_7kw_001.png" srcset="../../_images/sphx_glr_plot_flux_vector_syrm_7kw_001.png" alt="plot flux vector syrm 7kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 12.843 seconds)</p>
+<img src="../../_images/sphx_glr_plot_flux_vector_syrm_7kw_001.png" srcset="../../_images/sphx_glr_plot_flux_vector_syrm_7kw_001.png" alt="plot flux vector syrm 7kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.843 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-vector-plot-flux-vector-syrm-7kw-py">
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/c59efa9fa27e4f11f1648aebda8a8c25/plot_flux_vector_syrm_7kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_flux_vector_syrm_7kw.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e6572a075a4cfc4ead4a22a9a67ff8d4/plot_flux_vector_syrm_7kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_flux_vector_syrm_7kw.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/c59efa9fa27e4f11f1648aebda8a8c25/plot_flux_vector_syrm_7kw.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_flux_vector_syrm_7kw.py</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -469,7 +473,7 @@ account in the control method (only in the system model).</p>
               
               
                 <footer class="prev-next-footer">
-                  <!-- Previous / next buttons -->
+                  
 <div class="prev-next-area">
     <a class="left-prev"
        href="plot_flux_vector_pmsm_2kw.html"
@@ -512,6 +516,7 @@ By Aalto Electric Drives
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
       © Copyright 2023, Aalto Electric Drives.
@@ -538,8 +543,8 @@ By Aalto Electric Drives
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
 
   <footer class="bd-footer">
   </footer>

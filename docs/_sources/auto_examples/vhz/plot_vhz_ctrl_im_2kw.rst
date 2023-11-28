@@ -30,7 +30,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-16
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
@@ -50,7 +50,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 18-22
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -69,7 +69,7 @@ Create the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 24-34
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Machine model, using its inverse-Γ parameters
@@ -94,7 +94,7 @@ Control system (parametrized as open-loop V/Hz control).
 
 .. GENERATED FROM PYTHON SOURCE LINES 36-42
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Inverse-Γ model parameter estimates
@@ -116,7 +116,7 @@ signals could be defined as functions.
 
 .. GENERATED FROM PYTHON SOURCE LINES 45-55
 
-.. code-block:: default
+.. code-block:: Python
 
 
     ctrl.w_m_ref = lambda t: (t > .2)*(1.*base.w)
@@ -142,7 +142,7 @@ the model for the carrier comparison.
 
 .. GENERATED FROM PYTHON SOURCE LINES 58-62
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=True)
@@ -167,7 +167,7 @@ Plot results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 70-75
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # sphinx_gallery_thumbnail_number = 2
@@ -216,7 +216,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 16.349 seconds)
+   **Total running time of the script:** (0 minutes 14.141 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:
@@ -225,16 +225,13 @@ Plot results in per-unit values.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_vhz_ctrl_im_2kw.ipynb <plot_vhz_ctrl_im_2kw.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vhz_ctrl_im_2kw.py <plot_vhz_ctrl_im_2kw.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_vhz_ctrl_im_2kw.ipynb <plot_vhz_ctrl_im_2kw.ipynb>`
 
 
 .. only:: html

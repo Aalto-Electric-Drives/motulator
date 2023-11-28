@@ -1,12 +1,12 @@
 
 :orphan:
 
-.. _sphx_glr_auto_examples_flux_vector_sg_execution_times:
+.. _sphx_glr_auto_examples_sg_execution_times:
 
 
 Computation times
 =================
-**00:15.117** total execution time for 2 files **from auto_examples/flux_vector**:
+**00:00.000** total execution time for 0 files **from auto_examples**:
 
 .. container::
 
@@ -32,9 +32,6 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py` (``plot_flux_vector_syrm_7kw.py``)
-     - 00:10.843
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py` (``plot_flux_vector_pmsm_2kw.py``)
-     - 00:04.273
-     - 0.0
+   * - N/A
+     - N/A
+     - N/A

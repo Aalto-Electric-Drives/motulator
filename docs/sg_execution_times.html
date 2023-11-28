@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Usage &#8212; motulator 0.1.6 documentation</title>
+    <title>Computation times &#8212; motulator 0.1.6 documentation</title>
   
   
   
@@ -49,11 +49,9 @@
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'sg_execution_times';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="motulator" href="autoapi/motulator/index.html" />
-    <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -142,9 +140,9 @@
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/motulator/control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/control/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im</span></code></a></li>
@@ -276,7 +274,7 @@
       
       
       
-      <li><a href="_sources/usage.rst" target="_blank"
+      <li><a href="_sources/sg_execution_times.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -358,7 +356,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Usage</h1>
+    <h1>Computation times</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -372,39 +370,92 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h1>
-<p>After <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>, motulator can be used by creating a continuous-time system model, a discrete-time controller, and a simulation object, as shown below. A 2.2-kW induction motor drive with a sensorless vector controller is used as an example.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import packages</span>
-import<span class="w"> </span>numpy<span class="w"> </span>as<span class="w"> </span>np
-from<span class="w"> </span>motulator<span class="w"> </span>import<span class="w"> </span>model<span class="w">  </span><span class="c1"># System models</span>
-from<span class="w"> </span>motulator<span class="w"> </span>import<span class="w"> </span>control<span class="w">  </span><span class="c1"># Controllers</span>
-from<span class="w"> </span>motulator<span class="w"> </span>import<span class="w"> </span>plot<span class="w">  </span><span class="c1"># Example plotting functions</span>
-
-<span class="c1"># Continuous-time model for the drive system</span>
-<span class="nv">machine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.im.InductionMachineInvGamma<span class="o">(</span>
-<span class="w">   </span><span class="nv">R_s</span><span class="o">=</span><span class="m">3</span>.7,<span class="w"> </span><span class="nv">R_R</span><span class="o">=</span><span class="m">2</span>.1,<span class="w"> </span><span class="nv">L_sgm</span><span class="o">=</span>.021,<span class="w"> </span><span class="nv">L_M</span><span class="o">=</span>.224,<span class="w"> </span><span class="nv">n_p</span><span class="o">=</span><span class="m">2</span><span class="o">)</span>
-<span class="nv">mechanics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Mechanics<span class="o">(</span><span class="nv">J</span><span class="o">=</span>.015<span class="o">)</span>
-<span class="nv">converter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Inverter<span class="o">(</span><span class="nv">u_dc</span><span class="o">=</span><span class="m">540</span><span class="o">)</span>
-<span class="nv">mdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.im.Drive<span class="o">(</span>machine,<span class="w"> </span>mechanics,<span class="w"> </span>converter<span class="o">)</span>
-
-<span class="c1"># Discrete-time controller</span>
-<span class="nv">par</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>control.im.ModelPars<span class="o">(</span>
-<span class="w">   </span><span class="nv">R_s</span><span class="o">=</span><span class="m">3</span>.7,<span class="w"> </span><span class="nv">R_R</span><span class="o">=</span><span class="m">2</span>.1,<span class="w"> </span><span class="nv">L_sgm</span><span class="o">=</span>.021,<span class="w"> </span><span class="nv">L_M</span><span class="o">=</span>.224,<span class="w"> </span><span class="nv">n_p</span><span class="o">=</span><span class="m">2</span>,<span class="w"> </span><span class="nv">J</span><span class="o">=</span>.015<span class="o">)</span>
-<span class="nv">ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>control.im.CurrentReferencePars<span class="o">(</span>par,<span class="w"> </span><span class="nv">i_s_max</span><span class="o">=</span><span class="m">1</span>.5*np.sqrt<span class="o">(</span><span class="m">2</span><span class="o">)</span>*5<span class="o">)</span>
-<span class="nv">ctrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>control.im.VectorCtrl<span class="o">(</span>par,<span class="w"> </span>ref<span class="o">)</span>
-
-<span class="c1"># Acceleration at t = 0.2 s and load torque step of 14 Nm at t = 0.75 s</span>
-ctrl.w_m_ref<span class="w"> </span><span class="o">=</span><span class="w"> </span>lambda<span class="w"> </span>t:<span class="w"> </span><span class="o">(</span>t<span class="w"> </span>&gt;<span class="w"> </span>.2<span class="o">)</span>*<span class="o">(</span><span class="m">2</span>*np.pi*50<span class="o">)</span>
-mdl.mechanics.tau_L_t<span class="w"> </span><span class="o">=</span><span class="w"> </span>lambda<span class="w"> </span>t:<span class="w"> </span><span class="o">(</span>t<span class="w"> </span>&gt;<span class="w"> </span>.75<span class="o">)</span>*14
-
-<span class="c1"># Create a simulation object, simulate, and plot example figures</span>
-<span class="nv">sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Simulation<span class="o">(</span>mdl,<span class="w"> </span>ctrl,<span class="w"> </span><span class="nv">pwm</span><span class="o">=</span>False<span class="o">)</span>
-sim.simulate<span class="o">(</span><span class="nv">t_stop</span><span class="o">=</span><span class="m">1</span>.5<span class="o">)</span>
-plot<span class="o">(</span>sim<span class="o">)</span>
-</pre></div>
+  <section id="computation-times">
+<span id="sphx-glr-sg-execution-times"></span><h1>Computation times<a class="headerlink" href="#computation-times" title="Permalink to this heading">#</a></h1>
+<p><strong>02:59.138</strong> total execution time for 15 files <strong>from all galleries</strong>:</p>
+<div class="docutils container">
+<style scoped>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+</style>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" class="init">
+$(document).ready( function () {
+    $('table.sg-datatable').DataTable({order: [[1, 'desc']]});
+} );
+</script><table class="table table-striped sg-datatable">
+<thead>
+<tr class="row-odd"><th class="head"><p>Example</p></th>
+<th class="head"><p>Time</p></th>
+<th class="head"><p>Mem (MB)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.html#sphx-glr-auto-examples-obs-vhz-plot-obs-vhz-ctrl-pmsyrm-thor-py"><span class="std std-ref">5-kW PM-SyRM, flux maps from SyR-e</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.py</span></code>)</p></td>
+<td><p>00:31.414</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_syrm_7kw.html#sphx-glr-auto-examples-vector-plot-vector-ctrl-syrm-7kw-py"><span class="std std-ref">6.7-kW SyRM</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/vector/plot_vector_ctrl_syrm_7kw.py</span></code>)</p></td>
+<td><p>00:21.787</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.html#sphx-glr-auto-examples-obs-vhz-plot-obs-vhz-ctrl-syrm-7kw-py"><span class="std std-ref">6.7-kW SyRM, saturated</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.py</span></code>)</p></td>
+<td><p>00:19.801</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.html#sphx-glr-auto-examples-obs-vhz-plot-obs-vhz-ctrl-pmsm-2kw-py"><span class="std std-ref">2.2-kW PMSM</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.py</span></code>)</p></td>
+<td><p>00:18.714</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_im_2kw.html#sphx-glr-auto-examples-vhz-plot-vhz-ctrl-im-2kw-py"><span class="std std-ref">2.2-kW induction motor, diode bridge</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/vhz/plot_vhz_ctrl_im_2kw.py</span></code>)</p></td>
+<td><p>00:14.141</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html#sphx-glr-auto-examples-vector-plot-vector-ctrl-pmsm-2kw-py"><span class="std std-ref">2.2-kW PMSM</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/vector/plot_vector_ctrl_pmsm_2kw.py</span></code>)</p></td>
+<td><p>00:11.657</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html#sphx-glr-auto-examples-flux-vector-plot-flux-vector-syrm-7kw-py"><span class="std std-ref">6.7-kW SyRM, saturated</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/flux_vector/plot_flux_vector_syrm_7kw.py</span></code>)</p></td>
+<td><p>00:10.843</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_examples/signal_inj/plot_signal_inj_pmsm_2kw.html#sphx-glr-auto-examples-signal-inj-plot-signal-inj-pmsm-2kw-py"><span class="std std-ref">2.2-kW PMSM</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/signal_inj/plot_signal_inj_pmsm_2kw.py</span></code>)</p></td>
+<td><p>00:10.687</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/signal_inj/plot_signal_inj_syrm_7kw.html#sphx-glr-auto-examples-signal-inj-plot-signal-inj-syrm-7kw-py"><span class="std std-ref">6.7-kW SyRM</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/signal_inj/plot_signal_inj_syrm_7kw.py</span></code>)</p></td>
+<td><p>00:10.536</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html#sphx-glr-auto-examples-vhz-plot-vhz-ctrl-6step-im-2kw-py"><span class="std std-ref">2.2-kW induction motor, 6-step mode</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/vhz/plot_vhz_ctrl_6step_im_2kw.py</span></code>)</p></td>
+<td><p>00:07.187</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.html#sphx-glr-auto-examples-obs-vhz-plot-obs-vhz-ctrl-im-2kw-py"><span class="std std-ref">2.2-kW induction motor</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.py</span></code>)</p></td>
+<td><p>00:06.959</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html#sphx-glr-auto-examples-flux-vector-plot-flux-vector-pmsm-2kw-py"><span class="std std-ref">2.2-kW PMSM</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/flux_vector/plot_flux_vector_pmsm_2kw.py</span></code>)</p></td>
+<td><p>00:04.273</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html#sphx-glr-auto-examples-vector-plot-vector-ctrl-pmsyrm-thor-py"><span class="std std-ref">5-kW PM-SyRM</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/vector/plot_vector_ctrl_pmsyrm_thor.py</span></code>)</p></td>
+<td><p>00:03.968</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html#sphx-glr-auto-examples-obs-vhz-plot-obs-vhz-ctrl-pmsm-2kw-two-mass-py"><span class="std std-ref">2.2-kW PMSM, 2-mass mechanics</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py</span></code>)</p></td>
+<td><p>00:03.756</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_im_2kw.html#sphx-glr-auto-examples-vector-plot-vector-ctrl-im-2kw-py"><span class="std std-ref">2.2-kW induction motor, saturated</span></a> (<code class="docutils literal notranslate"><span class="pre">../../examples/vector/plot_vector_ctrl_im_2kw.py</span></code>)</p></td>
+<td><p>00:03.414</p></td>
+<td><p>0.0</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<p>The <a class="reference internal" href="auto_examples/index.html"><span class="doc">Examples</span></a> folder includes a variety of different example scripts to run the simulation. Drive system and controller configurations can be changed as shown in the examples. Furthermore, new features can be added by modifying the source code.</p>
 </section>
 
 
@@ -418,24 +469,6 @@ plot<span class="o">(</span>sim<span class="o">)</span>
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="installation.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Installation</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="autoapi/motulator/index.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator</span></code></p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               

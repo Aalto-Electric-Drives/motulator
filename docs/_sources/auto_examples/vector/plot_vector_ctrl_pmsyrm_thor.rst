@@ -30,7 +30,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 12-17
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
@@ -50,7 +50,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-23
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -69,7 +69,7 @@ Configure the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 25-33
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Configure magnetically linear motor model
@@ -92,7 +92,7 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 35-45
 
-.. code-block:: default
+.. code-block:: Python
 
 
     par = control.sm.ModelPars(
@@ -117,7 +117,7 @@ Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
 .. GENERATED FROM PYTHON SOURCE LINES 47-55
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # sphinx_gallery_thumbnail_number = 1
@@ -164,7 +164,7 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 57-64
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Acceleration and load torque step
@@ -186,7 +186,7 @@ Create the simulation object and simulate it.
 
 .. GENERATED FROM PYTHON SOURCE LINES 66-70
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=False)
@@ -205,7 +205,7 @@ Plot results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 72-74
 
-.. code-block:: default
+.. code-block:: Python
 
 
     plot(sim, base)
@@ -224,7 +224,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.813 seconds)
+   **Total running time of the script:** (0 minutes 3.968 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:
@@ -233,16 +233,13 @@ Plot results in per-unit values.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_vector_ctrl_pmsyrm_thor.ipynb <plot_vector_ctrl_pmsyrm_thor.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vector_ctrl_pmsyrm_thor.py <plot_vector_ctrl_pmsyrm_thor.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_vector_ctrl_pmsyrm_thor.ipynb <plot_vector_ctrl_pmsyrm_thor.ipynb>`
 
 
 .. only:: html

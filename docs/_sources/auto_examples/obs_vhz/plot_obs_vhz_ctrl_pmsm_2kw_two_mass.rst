@@ -33,7 +33,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 15-21
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
@@ -54,7 +54,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 23-27
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -73,7 +73,7 @@ Configure the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 29-37
 
-.. code-block:: default
+.. code-block:: Python
 
 
     machine = model.sm.SynchronousMachine(
@@ -96,7 +96,7 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 39-45
 
-.. code-block:: default
+.. code-block:: Python
 
 
     par = control.sm.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
@@ -117,7 +117,7 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 47-57
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Speed reference
@@ -142,7 +142,7 @@ Create the simulation object and simulate it.
 
 .. GENERATED FROM PYTHON SOURCE LINES 59-65
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=False)
@@ -168,7 +168,7 @@ Plot the load speed and the twist angle.
 
 .. GENERATED FROM PYTHON SOURCE LINES 67-81
 
-.. code-block:: default
+.. code-block:: Python
 
 
     t_span = (0, 1.2)
@@ -203,7 +203,7 @@ rotor speed w_M.
 
 .. GENERATED FROM PYTHON SOURCE LINES 84-113
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Frequency range and number of points
@@ -257,7 +257,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.451 seconds)
+   **Total running time of the script:** (0 minutes 3.756 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py:
@@ -266,16 +266,13 @@ rotor speed w_M.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_obs_vhz_ctrl_pmsm_2kw_two_mass.ipynb <plot_obs_vhz_ctrl_pmsm_2kw_two_mass.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py <plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_obs_vhz_ctrl_pmsm_2kw_two_mass.ipynb <plot_obs_vhz_ctrl_pmsm_2kw_two_mass.ipynb>`
 
 
 .. only:: html

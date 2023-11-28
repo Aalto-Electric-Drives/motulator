@@ -31,7 +31,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-18
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
@@ -51,7 +51,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 20-24
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -71,7 +71,7 @@ Create a saturation model, see the example
 
 .. GENERATED FROM PYTHON SOURCE LINES 27-44
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -103,7 +103,7 @@ Configure the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 46-55
 
-.. code-block:: default
+.. code-block:: Python
 
 
     machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
@@ -127,7 +127,7 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 57-68
 
-.. code-block:: default
+.. code-block:: Python
 
 
     par = control.sm.ModelPars(
@@ -153,7 +153,7 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 70-80
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Speed reference
@@ -178,7 +178,7 @@ Create the simulation object and simulate it.
 
 .. GENERATED FROM PYTHON SOURCE LINES 82-86
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=False)
@@ -197,7 +197,7 @@ Plot results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 88-90
 
-.. code-block:: default
+.. code-block:: Python
 
 
     plot(sim, base)
@@ -216,7 +216,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.843 seconds)
+   **Total running time of the script:** (0 minutes 10.843 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:
@@ -225,16 +225,13 @@ Plot results in per-unit values.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_flux_vector_syrm_7kw.ipynb <plot_flux_vector_syrm_7kw.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_flux_vector_syrm_7kw.py <plot_flux_vector_syrm_7kw.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_flux_vector_syrm_7kw.ipynb <plot_flux_vector_syrm_7kw.ipynb>`
 
 
 .. only:: html

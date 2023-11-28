@@ -31,7 +31,7 @@ Imports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-18
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
@@ -51,7 +51,7 @@ Compute base values based on the nominal values (just for figures).
 
 .. GENERATED FROM PYTHON SOURCE LINES 20-24
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base = BaseValues(
@@ -78,7 +78,7 @@ look-up tables can be used.
 
 .. GENERATED FROM PYTHON SOURCE LINES 34-76
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -135,7 +135,7 @@ Configure the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 78-86
 
-.. code-block:: default
+.. code-block:: Python
 
     machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
     # Magnetically linear SyRM model for comparison
@@ -158,7 +158,7 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 88-94
 
-.. code-block:: default
+.. code-block:: Python
 
 
     par = control.sm.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
@@ -179,7 +179,7 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 96-106
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Speed reference
@@ -206,7 +206,7 @@ delay is modeled.
 
 .. GENERATED FROM PYTHON SOURCE LINES 110-114
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
@@ -226,7 +226,7 @@ the results in SI units.
 
 .. GENERATED FROM PYTHON SOURCE LINES 117-120
 
-.. code-block:: default
+.. code-block:: Python
 
 
     plot(sim, base)
@@ -267,7 +267,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 23.692 seconds)
+   **Total running time of the script:** (0 minutes 19.801 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py:
@@ -276,16 +276,13 @@ the results in SI units.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_obs_vhz_ctrl_syrm_7kw.ipynb <plot_obs_vhz_ctrl_syrm_7kw.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_obs_vhz_ctrl_syrm_7kw.py <plot_obs_vhz_ctrl_syrm_7kw.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_obs_vhz_ctrl_syrm_7kw.ipynb <plot_obs_vhz_ctrl_syrm_7kw.ipynb>`
 
 
 .. only:: html
