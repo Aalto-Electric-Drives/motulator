@@ -60,7 +60,7 @@ The disturbance rejection depends on the closed-loop admittance
     \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}'_\mathrm{p}) s + \boldsymbol{k}'_\mathrm{i}} 
     :label: Yc
 
-The closed-loop poles can be arbitrarily placed by means of :math:`\boldsymbol{k}'_\mathrm{p}` and :math:`\boldsymbol{k}'_\mathrm{i}`. The rerefence-tracking transfer function is
+The closed-loop poles can be arbitrarily placed by means of :math:`\boldsymbol{k}'_\mathrm{p}` and :math:`\boldsymbol{k}'_\mathrm{i}`. The reference-tracking transfer function is
 
 .. math::
 	\boldsymbol{G}_\mathrm{c}(s) = \frac{s \boldsymbol{k}'_\mathrm{t} + \boldsymbol{k}'_\mathrm{i}}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}'_\mathrm{p}) s + \boldsymbol{k}'_\mathrm{i}}     
@@ -83,7 +83,7 @@ Consider the gains
     \boldsymbol{k}'_\mathrm{i} = \alpha_\mathrm{c}^2 \hat L_\sigma \qquad \qquad
     \boldsymbol{k}'_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma 
 		
-where the hat indicates the parameter estimates. Assuming accurate paramater estimates, the closed-loop transfer functions :eq:`Yc` and :eq:`Gc` reduce to
+where the hat indicates the parameter estimates. Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Yc` and :eq:`Gc` reduce to
 
 .. math::
     \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma(s + \alpha_\mathrm{c})^2}
@@ -109,7 +109,7 @@ Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Y
     \qquad\qquad
     \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}} 
 
-It can be seen that both gain designs result in the first-order reference-tracking dynamics. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately correponds to the open-loop pole.  
+It can be seen that both gain designs result in the first-order reference-tracking dynamics. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole.  
 
 Flux Linkage as an Internal State
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

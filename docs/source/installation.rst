@@ -1,10 +1,18 @@
 Installation
 ============
+First, install Python on your computer. On Windows and Mac systems, you can install Python from the official website (https://www.python.org/). On Linux systems, Python is typically preinstalled. 
+
+For plotting figures in Python, a graphical user interface (GUI) library is required. The *Tkinter* GUI library comes by default with Python on Windows and Mac systems. On some Linux systems, you may need to install it separately. On Ubuntu, you can install it with the command::
+
+   sudo apt install python3-tk
+
+Alternatively, you can use another GUI library such as *PyQt6* (https://pypi.org/project/PyQt6/). 
+
+Install *motulator* using one of the following options. 
 
 Option 1: Use pip
 -----------------
-The simplest way to install *motulator* is to use ``pip``. First, install Python and ``pip`` on your computer (https://www.python.org/).
-Ensure that you have the latest ``pip``, which can be updated with the command::
+The simplest way to install *motulator* is to use ``pip``. Ensure that you have the latest ``pip``, which can be updated with the command::
 
    pip install --upgrade pip
 
@@ -13,7 +21,7 @@ Then, install *motulator*::
    pip install motulator
 
 .. note::
-   instead of global installation described above, using a virtual environment is generally recommended. For more information, see https://packaging.python.org/guides/installing-using-pip-and-virtual-environments. Virtual enviroments are easiest to create and manage using some integrated development enviroment (IDE), see Option 2 below.
+   Instead of global installation described above, using a virtual environment is generally recommended. For more information, see https://packaging.python.org/guides/installing-using-pip-and-virtual-environments. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.
 
 Option 2: Clone the Repository
 ------------------------------

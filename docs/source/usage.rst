@@ -1,6 +1,6 @@
 Usage
 =====
-After :doc:`installation`, motulator can be used by creating a continuous-time system model, a discrete-time controller, and a simulation object, as shown below. A 2.2-kW induction motor drive with a sensorless vector controller is used as an example.
+After :doc:`installation`, *motulator* can be used by creating a continuous-time system model, a discrete-time controller, and a simulation object, as shown below. A 2.2-kW induction motor drive with a sensorless vector controller is used as an example.
 
 .. code:: bash
 

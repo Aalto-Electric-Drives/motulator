@@ -17,7 +17,7 @@ The state-space form of a simple 2DOF PI speed controller is given by
 	\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
     	\tau_\mathrm{M,ref} &= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i} 
 
-where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angular speed of the rotor, :math:`\omega_\mathrm{M,ref}` is the reference angular speed, and :math:`\tau_\mathrm{i}` is the the integral state. Furthermore, :math:`k_\mathrm{t}` is the reference feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward [#Fra1997]_. 
+where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angular speed of the rotor, :math:`\omega_\mathrm{M,ref}` is the reference angular speed, and :math:`\tau_\mathrm{i}` is the the integral state. Furthermore, :math:`k_\mathrm{t}` is the reference feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward [#Fra1997]_. 
 
 ..
     For analysis purposes, the above controller can be presented in the Laplace domain as

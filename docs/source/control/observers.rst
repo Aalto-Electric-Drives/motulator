@@ -154,7 +154,7 @@ In sensorless control of synchronous machine drives, the rotor position and spee
 Machine Model in General Coordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In :doc:`/model/machines`, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at :math:`\vartheta_\mathrm{s}` and rotating at :math:`\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t` with respect to stator coordinates. Furthtermore, the rotor is aligned at :math:`\vartheta_\mathrm{m}` and rotates at :math:`\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t` with respect to stator coordinates. This coordinate transformation results in 
+In :doc:`/model/machines`, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at :math:`\vartheta_\mathrm{s}` and rotating at :math:`\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t` with respect to stator coordinates. Furthermore, the rotor is aligned at :math:`\vartheta_\mathrm{m}` and rotates at :math:`\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t` with respect to stator coordinates. This coordinate transformation results in 
 
 .. math::
     \frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{s}\boldsymbol{\psi}_\mathrm{s} \\
@@ -223,7 +223,7 @@ where :math:`\tilde{\boldsymbol{\psi}}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}
 Sensorless Case
 """""""""""""""
 
-The analysis of the sensorless case is more complicated. Here, the main results are summarized using the complex notation. The following results can be dereived from the linearized form of :eq:`sm` -- :eq:`sm_speed_pos_observer`, cf. further details in [#Hin2018]_
+The analysis of the sensorless case is more complicated. Here, the main results are summarized using the complex notation. The following results can be derived from the linearized form of :eq:`sm` -- :eq:`sm_speed_pos_observer`, see further details in [#Hin2018]_
 
 To decouple the flux estimation from the rotor angle, the gains of :eq:`sm_flux_observer` have to be of the form
 
