@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Installation &#8212; motulator 0.1.6 documentation</title>
+    <title>Installation &#8212; motulator 0.1.7 documentation</title>
   
   
   
@@ -136,7 +136,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.1.6 documentation</p>
+    <p class="title logo__title">motulator 0.1.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -385,10 +385,16 @@ document.write(`
                   
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h1>
+<p>First, install Python on your computer. On Windows and Mac systems, you can install Python from the official website (<a class="reference external" href="https://www.python.org/">https://www.python.org/</a>). On Linux systems, Python is typically preinstalled.</p>
+<p>For plotting figures in Python, a graphical user interface (GUI) library is required. The <em>Tkinter</em> GUI library comes by default with Python on Windows and Mac systems. On some Linux systems, you may need to install it separately. On Ubuntu, you can install it with the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">tk</span>
+</pre></div>
+</div>
+<p>Alternatively, you can use another GUI library such as <em>PyQt6</em> (<a class="reference external" href="https://pypi.org/project/PyQt6/">https://pypi.org/project/PyQt6/</a>).</p>
+<p>Install <em>motulator</em> using one of the following options.</p>
 <section id="option-1-use-pip">
 <h2>Option 1: Use pip<a class="headerlink" href="#option-1-use-pip" title="Permalink to this heading">#</a></h2>
-<p>The simplest way to install <em>motulator</em> is to use <code class="docutils literal notranslate"><span class="pre">pip</span></code>. First, install Python and <code class="docutils literal notranslate"><span class="pre">pip</span></code> on your computer (<a class="reference external" href="https://www.python.org/">https://www.python.org/</a>).
-Ensure that you have the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>, which can be updated with the command:</p>
+<p>The simplest way to install <em>motulator</em> is to use <code class="docutils literal notranslate"><span class="pre">pip</span></code>. Ensure that you have the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>, which can be updated with the command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
 </pre></div>
 </div>
@@ -398,7 +404,7 @@ Ensure that you have the latest <code class="docutils literal notranslate"><span
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>instead of global installation described above, using a virtual environment is generally recommended. For more information, see <a class="reference external" href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments">https://packaging.python.org/guides/installing-using-pip-and-virtual-environments</a>. Virtual enviroments are easiest to create and manage using some integrated development enviroment (IDE), see Option 2 below.</p>
+<p>Instead of global installation described above, using a virtual environment is generally recommended. For more information, see <a class="reference external" href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments">https://packaging.python.org/guides/installing-using-pip-and-virtual-environments</a>. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.</p>
 </div>
 </section>
 <section id="option-2-clone-the-repository">

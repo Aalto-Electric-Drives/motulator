@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Observer Design &#8212; motulator 0.1.6 documentation</title>
+    <title>Observer Design &#8212; motulator 0.1.7 documentation</title>
   
   
   
@@ -137,7 +137,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.1.6 documentation</p>
+    <p class="title logo__title">motulator 0.1.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -518,7 +518,7 @@ document.write(`
 <p>In sensorless control of synchronous machine drives, the rotor position and speed estimates are needed <a class="footnote-reference brackets" href="#jon1989" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#cap2001" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#hin2018" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>. As a side product, the stator flux linkage is also estimated. In the following, an observer design available in the <a class="reference internal" href="../autoapi/motulator/control/sm/index.html#motulator.control.sm.Observer" title="motulator.control.sm.Observer"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.sm.Observer</span></code></a> class is considered, which is based on <a class="footnote-reference brackets" href="#hin2018" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>. This observer implementation also includes a sensored mode.</p>
 <section id="machine-model-in-general-coordinates">
 <h3>Machine Model in General Coordinates<a class="headerlink" href="#machine-model-in-general-coordinates" title="Permalink to this heading">#</a></h3>
-<p>In <a class="reference internal" href="../model/machines.html"><span class="doc">Electric Machines</span></a>, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at <span class="math notranslate nohighlight">\(\vartheta_\mathrm{s}\)</span> and rotating at <span class="math notranslate nohighlight">\(\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t\)</span> with respect to stator coordinates. Furthtermore, the rotor is aligned at <span class="math notranslate nohighlight">\(\vartheta_\mathrm{m}\)</span> and rotates at <span class="math notranslate nohighlight">\(\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t\)</span> with respect to stator coordinates. This coordinate transformation results in</p>
+<p>In <a class="reference internal" href="../model/machines.html"><span class="doc">Electric Machines</span></a>, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at <span class="math notranslate nohighlight">\(\vartheta_\mathrm{s}\)</span> and rotating at <span class="math notranslate nohighlight">\(\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t\)</span> with respect to stator coordinates. Furthermore, the rotor is aligned at <span class="math notranslate nohighlight">\(\vartheta_\mathrm{m}\)</span> and rotates at <span class="math notranslate nohighlight">\(\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t\)</span> with respect to stator coordinates. This coordinate transformation results in</p>
 <div class="math notranslate nohighlight" id="equation-sm">
 <span class="eqno">(15)<a class="headerlink" href="#equation-sm" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{s}\boldsymbol{\psi}_\mathrm{s} \\
 \frac{\mathrm{d}\delta}{\mathrm{d} t} &amp;= \omega_\mathrm{m} - \omega_\mathrm{s}\end{split}\]</div>
@@ -559,7 +559,7 @@ document.write(`
 </section>
 <section id="id17">
 <h4>Sensorless Case<a class="headerlink" href="#id17" title="Permalink to this heading">#</a></h4>
-<p>The analysis of the sensorless case is more complicated. Here, the main results are summarized using the complex notation. The following results can be dereived from the linearized form of <a class="reference internal" href="#equation-sm">(15)</a> – <a class="reference internal" href="#equation-sm-speed-pos-observer">(19)</a>, cf. further details in <a class="footnote-reference brackets" href="#hin2018" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
+<p>The analysis of the sensorless case is more complicated. Here, the main results are summarized using the complex notation. The following results can be derived from the linearized form of <a class="reference internal" href="#equation-sm">(15)</a> – <a class="reference internal" href="#equation-sm-speed-pos-observer">(19)</a>, see further details in <a class="footnote-reference brackets" href="#hin2018" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
 <p>To decouple the flux estimation from the rotor angle, the gains of <a class="reference internal" href="#equation-sm-flux-observer">(18)</a> have to be of the form</p>
 <div class="math notranslate nohighlight" id="equation-k1k2-sensorless">
 <span class="eqno">(21)<a class="headerlink" href="#equation-k1k2-sensorless" title="Permalink to this equation">#</a></span>\[\boldsymbol{k}_1 = \sigma \qquad \boldsymbol{k}_2 = \frac{\sigma\hat{\boldsymbol{\psi}}_\mathrm{a}}{\hat{\boldsymbol{\psi}}_\mathrm{a}^*}\]</div>

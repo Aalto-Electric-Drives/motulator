@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Current Control &#8212; motulator 0.1.6 documentation</title>
+    <title>Current Control &#8212; motulator 0.1.7 documentation</title>
   
   
   
@@ -137,7 +137,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.1.6 documentation</p>
+    <p class="title logo__title">motulator 0.1.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -435,7 +435,7 @@ document.write(`
 <p>The disturbance rejection depends on the closed-loop admittance</p>
 <div class="math notranslate nohighlight" id="equation-yc">
 <span class="eqno">(4)<a class="headerlink" href="#equation-yc" title="Permalink to this equation">#</a></span>\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}'_\mathrm{p}) s + \boldsymbol{k}'_\mathrm{i}}\]</div>
-<p>The closed-loop poles can be arbitrarily placed by means of <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{p}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{i}\)</span>. The rerefence-tracking transfer function is</p>
+<p>The closed-loop poles can be arbitrarily placed by means of <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{p}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{i}\)</span>. The reference-tracking transfer function is</p>
 <div class="math notranslate nohighlight" id="equation-gc">
 <span class="eqno">(5)<a class="headerlink" href="#equation-gc" title="Permalink to this equation">#</a></span>\[\boldsymbol{G}_\mathrm{c}(s) = \frac{s \boldsymbol{k}'_\mathrm{t} + \boldsymbol{k}'_\mathrm{i}}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}'_\mathrm{p}) s + \boldsymbol{k}'_\mathrm{i}}\]</div>
 <p>whose zero can be placed by means of the reference-feedforward gain <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{t}\)</span>.</p>
@@ -450,7 +450,7 @@ document.write(`
 \[\boldsymbol{k}'_\mathrm{p} = (2\alpha_\mathrm{c} - \mathrm{j}\omega_\mathrm{s}) \hat L_\sigma - \hat R_\sigma \qquad\qquad
 \boldsymbol{k}'_\mathrm{i} = \alpha_\mathrm{c}^2 \hat L_\sigma \qquad \qquad
 \boldsymbol{k}'_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma\]</div>
-<p>where the hat indicates the parameter estimates. Assuming accurate paramater estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(4)</a> and <a class="reference internal" href="#equation-gc">(5)</a> reduce to</p>
+<p>where the hat indicates the parameter estimates. Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(4)</a> and <a class="reference internal" href="#equation-gc">(5)</a> reduce to</p>
 <div class="math notranslate nohighlight">
 \[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma(s + \alpha_\mathrm{c})^2}
 \qquad\qquad
@@ -469,7 +469,7 @@ document.write(`
 \[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s})}
 \qquad\qquad
 \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}\]</div>
-<p>It can be seen that both gain designs result in the first-order reference-tracking dynamics. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately correponds to the open-loop pole.</p>
+<p>It can be seen that both gain designs result in the first-order reference-tracking dynamics. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole.</p>
 </section>
 </section>
 <section id="flux-linkage-as-an-internal-state">

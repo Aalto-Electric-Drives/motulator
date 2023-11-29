@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Speed Control &#8212; motulator 0.1.6 documentation</title>
+    <title>Speed Control &#8212; motulator 0.1.7 documentation</title>
   
   
   
@@ -137,7 +137,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.1.6 documentation</p>
+    <p class="title logo__title">motulator 0.1.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -401,7 +401,7 @@ document.write(`
 <div class="math notranslate nohighlight">
 \[\begin{split}\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &amp;= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
 \tau_\mathrm{M,ref} &amp;= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the measured (or estimated) mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\omega_\mathrm{M,ref}\)</span> is the reference angular speed, and <span class="math notranslate nohighlight">\(\tau_\mathrm{i}\)</span> is the the integral state. Furthermore, <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> is the reference feedforward gain, <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span> results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with intergral action and reference feedforward <a class="footnote-reference brackets" href="#fra1997" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the measured (or estimated) mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\omega_\mathrm{M,ref}\)</span> is the reference angular speed, and <span class="math notranslate nohighlight">\(\tau_\mathrm{i}\)</span> is the the integral state. Furthermore, <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> is the reference feedforward gain, <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span> results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward <a class="footnote-reference brackets" href="#fra1997" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 </section>
 <section id="disturbance-observer-structure">
 <h3>Disturbance-Observer Structure<a class="headerlink" href="#disturbance-observer-structure" title="Permalink to this heading">#</a></h3>

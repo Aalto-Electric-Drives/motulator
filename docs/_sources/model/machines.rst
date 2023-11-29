@@ -25,7 +25,7 @@ The space vector transformation in :eq:`space_vector` is implemented in the func
 Induction Machine
 -----------------
 
-The induction machine models are provided in the package :mod:`motulator.model.im`. The models are implemented in stator coordinates. A Γ-equivalent model is used as a base model since it can be extended with the magnetic saturation model in a staightforward manner [#Sle1989]_.
+The induction machine models are provided in the package :mod:`motulator.model.im`. The models are implemented in stator coordinates. A Γ-equivalent model is used as a base model since it can be extended with the magnetic saturation model in a straightforward manner [#Sle1989]_.
 
 .. figure:: figs/im_gamma.svg
    :width: 100%
