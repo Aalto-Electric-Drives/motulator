@@ -7,12 +7,3 @@ ipykernel
 yapf
 pylint
 toml
-
-# Documentation
-#numpydoc
-#Sphinx==6.1.3
-#sphinx-autoapi
-#sphinx-copybutton
-#sphinx-gallery
-#sphinx-book-theme
-#esbonio
