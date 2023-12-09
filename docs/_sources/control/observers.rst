@@ -165,7 +165,7 @@ where :math:`\boldsymbol{u}_\mathrm{s}` is the stator voltage, :math:`\boldsymbo
 
 .. math::
 	\boldsymbol{\psi}_\mathrm{s} = \mathrm{e}^{\mathrm{j}\delta}\left(L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s} \mathrm{e}^{-\mathrm{j}\delta}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\mathrm{e}^{-\mathrm{j}\delta}\} + \psi_\mathrm{f}\right)
-    :label: sm_flux 
+    :label: sm_flux_gen 
 
 where :math:`L_\mathrm{d}` is the d-axis inductance, :math:`L_\mathrm{q}` is the q-axis inductance, and :math:`\psi_\mathrm{f}` is the PM flux linkage. 
 
