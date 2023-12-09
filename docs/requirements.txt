@@ -2,8 +2,7 @@ numpy
 scipy
 matplotlib
 numpydoc
-#Sphinx==6.2.1
-sphinx
+sphinx==6.2.1
 sphinx-autoapi
 sphinx-copybutton
 sphinx-gallery
