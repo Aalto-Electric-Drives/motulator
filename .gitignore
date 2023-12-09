@@ -13,3 +13,4 @@ docs/source/_build/
 docs/source/auto_examples/
 docs/build/
 docs/source/autoapi/
+docs/source/sg_execution_times.rst
