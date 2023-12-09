@@ -6,5 +6,4 @@
         "--style",
         "{based_on_style: pep8, indent_width: 4, column_limit: 79, no_spaces_around_selected_binary_operators: '*,/', split_before_first_argument: true, coalesce_brackets: true, spaces_before_comment: 2}"
     ],
-    "esbonio.sphinx.confDir": "${workspaceFolder}/docs/source"
 }
