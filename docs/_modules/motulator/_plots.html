@@ -562,19 +562,19 @@ document.write(`
         <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{L}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{dc}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">])</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
 
-    <span class="c1"># Add axis labels</span>
-    <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (p.u.)&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+        <span class="c1"># Add axis labels</span>
+        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (p.u.)&quot;</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (p.u.)&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">fig2</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">UnboundLocalError</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fig2</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">UnboundLocalError</span><span class="p">:</span>
+            <span class="k">pass</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
