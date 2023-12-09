@@ -132,7 +132,7 @@ where the gain components correspond to :math:`\boldsymbol{k}_1 = k_\mathrm{d} +
 
 .. math::
     \boldsymbol{k}_1 = \frac{\sigma}{\alpha - \mathrm{j}\hat\omega_\mathrm{m}}
-    :label: k1k2_sensorless
+    :label: k1_sensorless
 
 which results in the characteristic polynomial :math:`D(s)=s^2 + 2\sigma s + \omega_\mathrm{s0}^2`. The decay rate can be selected as :math:`\sigma = \alpha/2 + \zeta_\infty|\hat{\omega}_\mathrm{m}|`, where :math:`\zeta_\infty` is the desired damping ratio at high speed. At zero stator frequency :math:`\omega_\mathrm{s0} = 0`, the poles are located at :math:`s = 0` and :math:`s = -\alpha`, which allows stable magnetizing and starting the machine.
 
