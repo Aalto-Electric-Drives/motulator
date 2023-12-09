@@ -40,7 +40,9 @@ Several powerful open-source IDEs are available for Python. The following instru
 4) Create a virtual environment in the workspace using the instructions provided here: https://code.visualstudio.com/docs/python/environments.
 5) Enable installation of suggested requirements in the virtual environment (at least ``requirements.txt``). Alternatively, you may run the command ``pip install -r requirements.txt`` in the VS Code terminal after the virtual environment is created and activated. 
 
-After completing the above steps, the virtual environment can be found in the ``.venv`` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. If you installed the requirement in ``requirements-dev.txt``, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code). Furthermore, when you start VS Code next time, it will automatically detect the virtual environment and use it.
+After completing the above steps, the virtual environment can be found in the ``.venv`` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it.
+
+If you installed the requirement in ``requirements-dev.txt``, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code). If you aim to work with the documentation, install also the requirements in ``docs/requirements.txt``. For previewing the documentation in VS Code, you can install the Esbonio extension: https://docs.esbon.io/en/latest/lsp/editors/vscode.html.
 
 If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for *Terminal: Select Default Profile*). 
 
