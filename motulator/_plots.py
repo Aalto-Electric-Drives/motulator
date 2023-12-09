@@ -238,19 +238,19 @@ def plot_extra(sim, base=None, t_span=None):
         ax2.legend([r"$i_\mathrm{L}$", r"$i_\mathrm{dc}$", r"$i_\mathrm{ga}$"])
         ax2.set_xlim(t_span)
 
-    # Add axis labels
-    if pu_vals:
-        ax1.set_ylabel("Voltage (p.u.)")
-        ax2.set_ylabel("Current (p.u.)")
-    else:
-        ax1.set_ylabel("Voltage (V)")
-        ax2.set_ylabel("Current (A)")
-    ax2.set_xlabel("Time (s)")
+        # Add axis labels
+        if pu_vals:
+            ax1.set_ylabel("Voltage (p.u.)")
+            ax2.set_ylabel("Current (p.u.)")
+        else:
+            ax1.set_ylabel("Voltage (V)")
+            ax2.set_ylabel("Current (A)")
+        ax2.set_xlabel("Time (s)")
 
-    try:
-        fig2.align_ylabels()
-    except UnboundLocalError:
-        pass
+        try:
+            fig2.align_ylabels()
+        except UnboundLocalError:
+            pass
 
     plt.tight_layout()
     plt.show()
