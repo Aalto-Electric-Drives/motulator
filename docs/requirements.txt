@@ -7,4 +7,4 @@ sphinx-autoapi
 sphinx-copybutton
 sphinx-gallery
 sphinx-book-theme
-#esbonio
+esbonio
