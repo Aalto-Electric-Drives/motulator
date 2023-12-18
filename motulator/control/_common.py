@@ -420,13 +420,13 @@ class RateLimiter:
 
         Parameters
         ----------
+        T_s : float
+            Sampling period (s).
         u : float
             Input signal.
 
         Returns
         -------
-        T_s : float
-            Sampling period (s).
         y : float
             Rate-limited output signal.
 
