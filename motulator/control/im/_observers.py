@@ -73,7 +73,7 @@ class Observer:
         else:
             if self.k1 is None:
                 self.k1 = lambda w_m: 1 + .2*np.abs(w_m)/(self.alpha - 1j*w_m)
-            self.k2 = 0*self.k1
+            self.k2 = lambda w_m: 0
 
         # States
         self.psi_R, self.theta_s, self.w_m, self._i_s_old = 0, 0, 0, 0
