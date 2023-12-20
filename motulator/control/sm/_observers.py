@@ -61,7 +61,8 @@ class Observer:
         else:
             if self.k1 is None:
                 self.k1 = lambda w_m: 2*np.pi*15
-            self.k2 = 0*self.k1
+            self.k2 = lambda w_m: 0
+            
         # Initial states
         self.theta_m, self.w_m, self.psi_s = 0, 0, par.psi_f
 
