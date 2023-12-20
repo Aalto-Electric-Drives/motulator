@@ -132,6 +132,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "saarela",
+      "name": "saarela",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10281832?v=4",
+      "profile": "https://github.com/saarela",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
