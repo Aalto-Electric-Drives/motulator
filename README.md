@@ -61,6 +61,9 @@ Thanks go to these wonderful people:
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/iam-nithin-10"><img src="https://avatars.githubusercontent.com/u/125553207?v=4?s=50" width="50px;" alt="Nithin Valiyaveettil Sadanandan"/><br /><sub><b>Nithin Valiyaveettil Sadanandan</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/issues?q=author%3Aiam-nithin-10" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/saarela"><img src="https://avatars.githubusercontent.com/u/10281832?v=4?s=50" width="50px;" alt="saarela"/><br /><sub><b>saarela</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/issues?q=author%3Asaarela" title="Bug reports">🐛</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/UshnishChowdhury"><img src="https://avatars.githubusercontent.com/u/35863166?v=4?s=50" width="50px;" alt="Ushnish"/><br /><sub><b>Ushnish</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/issues?q=author%3AUshnishChowdhury" title="Bug reports">🐛</a></td>
+    </tr>
   </tbody>
 </table>
 
