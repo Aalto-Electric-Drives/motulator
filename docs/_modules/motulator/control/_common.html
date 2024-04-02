@@ -332,13 +332,14 @@ document.write(`
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="PWM"><a class="viewcode-back" href="../../../autoapi/motulator/control/index.html#motulator.control._common.PWM">[docs]</a><span class="k">class</span> <span class="nc">PWM</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Duty ratios and realized voltage for three-phase PWM.</span>
+<span class="sd">    Duty ratios and realized voltage for three-phase space-vector PWM.</span>
 
-<span class="sd">    This contains the computation of the duty ratios and the realized voltage. </span>
-<span class="sd">    The realized voltage is computed based on the measured DC-bus voltage and </span>
-<span class="sd">    the duty ratios. The digital delay effects are taken into account in the </span>
-<span class="sd">    realized voltage, assuming the delay of a single sampling period. The total</span>
-<span class="sd">    delay is 1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.</span>
+<span class="sd">    This computes the duty ratios corresponding to standard space-vector PWM </span>
+<span class="sd">    and minimum-amplitude-error overmodulation [#Hav1999]_. The realized </span>
+<span class="sd">    voltage is computed based on the measured DC-bus voltage and the duty </span>
+<span class="sd">    ratios. The digital delay effects are taken into account in the realized </span>
+<span class="sd">    voltage, assuming the delay of a single sampling period. The total delay is</span>
+<span class="sd">    1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -352,6 +353,10 @@ document.write(`
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
+<span class="sd">    .. [#Hav1999] Hava, Sul, Kerkman, Lipo, &quot;Dynamic overmodulation </span>
+<span class="sd">       characteristics of triangle intersection PWM methods,&quot; IEEE Trans. Ind.</span>
+<span class="sd">       Appl., 1999, https://doi.org/10.1109/28.777199</span>
+<span class="sd">    </span>
 <span class="sd">    .. [#Bae2003] Bae, Sul, &quot;A compensation method for time delay of </span>
 <span class="sd">       full-digital synchronous frame current regulator of PWM AC drives,&quot; IEEE</span>
 <span class="sd">       Trans. Ind. Appl., 2003, https://doi.org/10.1109/TIA.2003.810660</span>
@@ -421,10 +426,10 @@ document.write(`
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="PWM.duty_ratios"><a class="viewcode-back" href="../../../autoapi/motulator/control/index.html#motulator.control._common.PWM.duty_ratios">[docs]</a>    <span class="k">def</span> <span class="nf">duty_ratios</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute the duty ratios for three-phase PWM.</span>
+<span class="sd">        Compute the duty ratios for three-phase space-vector PWM.</span>
 
-<span class="sd">        This computes the duty ratios using a symmetrical suboscillation</span>
-<span class="sd">        method. This method is identical to the standard space-vector PWM.</span>
+<span class="sd">        This computes the duty ratios corresponding to standard space-vector </span>
+<span class="sd">        PWM and minimum-amplitude-error overmodulation [#Hav1999]_.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -442,17 +447,21 @@ document.write(`
         <span class="c1"># Phase voltages without the zero-sequence voltage</span>
         <span class="n">u_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_s_ref</span><span class="p">)</span>
 
-        <span class="c1"># Symmetrization by adding the zero-sequence voltage</span>
+        <span class="c1"># Zero-sequence voltage resulting in space-vector PWM</span>
         <span class="n">u_0</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">u_abc</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">u_abc</span><span class="p">))</span>
         <span class="n">u_abc</span> <span class="o">-=</span> <span class="n">u_0</span>
 
-        <span class="c1"># Preventing overmodulation by means of a minimum phase error method</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span><span class="o">/</span><span class="n">u_dc</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">u_abc</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">u_abc</span> <span class="o">=</span> <span class="n">u_abc</span><span class="o">/</span><span class="n">m</span>
+        <span class="c1"># Uncommenting the following lines results in minimum-phase-error</span>
+        <span class="c1"># overmodulation. See [#Hav1999]_ for a comparison of the methods.</span>
+        <span class="c1"># m = (2./u_dc)*np.amax(u_abc)</span>
+        <span class="c1"># if m &gt; 1:</span>
+        <span class="c1">#    u_abc = u_abc/m</span>
 
         <span class="c1"># Duty ratios</span>
         <span class="n">d_abc</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">+</span> <span class="n">u_abc</span><span class="o">/</span><span class="n">u_dc</span>
+
+        <span class="c1"># Minimum-amplitude-error overmodulation</span>
+        <span class="n">d_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">d_abc</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">d_abc</span></div>
 

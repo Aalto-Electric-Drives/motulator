@@ -441,7 +441,7 @@ document.write(`
 <td><p>2DOF PI controller.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.PWM" title="motulator.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
-<td><p>Duty ratios and realized voltage for three-phase PWM.</p></td>
+<td><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p></td>
 </tr>
 </tbody>
 </table>
@@ -659,12 +659,13 @@ saturate, <code class="docutils literal notranslate"><span class="pre">u_lim</sp
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.control.PWM">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">six_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/control/_common.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.PWM" title="Permalink to this definition">#</a></dt>
-<dd><p>Duty ratios and realized voltage for three-phase PWM.</p>
-<p>This contains the computation of the duty ratios and the realized voltage.
-The realized voltage is computed based on the measured DC-bus voltage and
-the duty ratios. The digital delay effects are taken into account in the
-realized voltage, assuming the delay of a single sampling period. The total
-delay is 1.5 sampling periods due to the PWM (or ZOH) delay <a class="footnote-reference brackets" href="#bae2003" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
+<p>This computes the duty ratios corresponding to standard space-vector PWM
+and minimum-amplitude-error overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The realized
+voltage is computed based on the measured DC-bus voltage and the duty
+ratios. The digital delay effects are taken into account in the realized
+voltage, assuming the delay of a single sampling period. The total delay is
+1.5 sampling periods due to the PWM (or ZOH) delay <a class="footnote-reference brackets" href="#bae2003" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>six_step</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable six-step operation in overmodulation. The default is False.</p>
@@ -683,8 +684,15 @@ delay is 1.5 sampling periods due to the PWM (or ZOH) delay <a class="footnote-r
 
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
+<aside class="footnote brackets" id="hav1999" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
+<p>Hava, Sul, Kerkman, Lipo, “Dynamic overmodulation
+characteristics of triangle intersection PWM methods,” IEEE Trans. Ind.
+Appl., 1999, <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
+</aside>
 <aside class="footnote brackets" id="bae2003" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>Bae, Sul, “A compensation method for time delay of
 full-digital synchronous frame current regulator of PWM AC drives,” IEEE
 Trans. Ind. Appl., 2003, <a class="reference external" href="https://doi.org/10.1109/TIA.2003.810660">https://doi.org/10.1109/TIA.2003.810660</a></p>
@@ -696,7 +704,7 @@ Trans. Ind. Appl., 2003, <a class="reference external" href="https://doi.org/10.
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
 overmodulation region such that the six-step operation is reached
-<a class="footnote-reference brackets" href="#bol1997" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<a class="footnote-reference brackets" href="#bol1997" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -714,7 +722,7 @@ overmodulation region such that the six-step operation is reached
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of
 SVM inverters in the overmodulation range,” IEEE Trans. Ind. Appl.,
 1997, <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
@@ -725,9 +733,9 @@ SVM inverters in the overmodulation range,” IEEE Trans. Ind. Appl.,
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.control.PWM.duty_ratios">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">duty_ratios</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/control/_common.html#PWM.duty_ratios"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.PWM.duty_ratios" title="Permalink to this definition">#</a></dt>
-<dd><p>Compute the duty ratios for three-phase PWM.</p>
-<p>This computes the duty ratios using a symmetrical suboscillation
-method. This method is identical to the standard space-vector PWM.</p>
+<dd><p>Compute the duty ratios for three-phase space-vector PWM.</p>
+<p>This computes the duty ratios corresponding to standard space-vector
+PWM and minimum-amplitude-error overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

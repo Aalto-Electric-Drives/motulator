@@ -36,13 +36,14 @@ Classes
 
 
    
-   Duty ratios and realized voltage for three-phase PWM.
+   Duty ratios and realized voltage for three-phase space-vector PWM.
 
-   This contains the computation of the duty ratios and the realized voltage.
-   The realized voltage is computed based on the measured DC-bus voltage and
-   the duty ratios. The digital delay effects are taken into account in the
-   realized voltage, assuming the delay of a single sampling period. The total
-   delay is 1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.
+   This computes the duty ratios corresponding to standard space-vector PWM
+   and minimum-amplitude-error overmodulation [#Hav1999]_. The realized
+   voltage is computed based on the measured DC-bus voltage and the duty
+   ratios. The digital delay effects are taken into account in the realized
+   voltage, assuming the delay of a single sampling period. The total delay is
+   1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.
 
    :param six_step: Enable six-step operation in overmodulation. The default is False.
    :type six_step: bool, optional
@@ -54,6 +55,10 @@ Classes
       :type: complex
 
    .. rubric:: References
+
+   .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation
+      characteristics of triangle intersection PWM methods," IEEE Trans. Ind.
+      Appl., 1999, https://doi.org/10.1109/28.777199
 
    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of
       full-digital synchronous frame current regulator of PWM AC drives," IEEE
@@ -120,10 +125,10 @@ Classes
       :staticmethod:
 
       
-      Compute the duty ratios for three-phase PWM.
+      Compute the duty ratios for three-phase space-vector PWM.
 
-      This computes the duty ratios using a symmetrical suboscillation
-      method. This method is identical to the standard space-vector PWM.
+      This computes the duty ratios corresponding to standard space-vector
+      PWM and minimum-amplitude-error overmodulation [#Hav1999]_.
 
       :param u_s_ref: Voltage reference in stator coordinates (V).
       :type u_s_ref: complex
