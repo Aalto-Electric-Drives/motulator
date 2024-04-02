@@ -8,13 +8,14 @@ from motulator._utils import Bunch
 # %%
 class PWM:
     """
-    Duty ratios and realized voltage for three-phase PWM.
+    Duty ratios and realized voltage for three-phase space-vector PWM.
 
-    This contains the computation of the duty ratios and the realized voltage. 
-    The realized voltage is computed based on the measured DC-bus voltage and 
-    the duty ratios. The digital delay effects are taken into account in the 
-    realized voltage, assuming the delay of a single sampling period. The total
-    delay is 1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.
+    This computes the duty ratios corresponding to standard space-vector PWM 
+    and minimum-amplitude-error overmodulation [#Hav1999]_. The realized 
+    voltage is computed based on the measured DC-bus voltage and the duty 
+    ratios. The digital delay effects are taken into account in the realized 
+    voltage, assuming the delay of a single sampling period. The total delay is
+    1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.
 
     Parameters
     ----------
@@ -28,6 +29,10 @@ class PWM:
 
     References
     ----------
+    .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation 
+       characteristics of triangle intersection PWM methods," IEEE Trans. Ind.
+       Appl., 1999, https://doi.org/10.1109/28.777199
+    
     .. [#Bae2003] Bae, Sul, "A compensation method for time delay of 
        full-digital synchronous frame current regulator of PWM AC drives," IEEE
        Trans. Ind. Appl., 2003, https://doi.org/10.1109/TIA.2003.810660
@@ -97,10 +102,10 @@ class PWM:
     @staticmethod
     def duty_ratios(u_s_ref, u_dc):
         """
-        Compute the duty ratios for three-phase PWM.
+        Compute the duty ratios for three-phase space-vector PWM.
 
-        This computes the duty ratios using a symmetrical suboscillation
-        method. This method is identical to the standard space-vector PWM.
+        This computes the duty ratios corresponding to standard space-vector 
+        PWM and minimum-amplitude-error overmodulation [#Hav1999]_.
 
         Parameters
         ----------
@@ -118,17 +123,21 @@ class PWM:
         # Phase voltages without the zero-sequence voltage
         u_abc = complex2abc(u_s_ref)
 
-        # Symmetrization by adding the zero-sequence voltage
+        # Zero-sequence voltage resulting in space-vector PWM
         u_0 = .5*(np.amax(u_abc) + np.amin(u_abc))
         u_abc -= u_0
 
-        # Preventing overmodulation by means of a minimum phase error method
-        m = (2./u_dc)*np.amax(u_abc)
-        if m > 1:
-            u_abc = u_abc/m
+        # Uncommenting the following lines results in minimum-phase-error
+        # overmodulation. See [#Hav1999]_ for a comparison of the methods.
+        # m = (2./u_dc)*np.amax(u_abc)
+        # if m > 1:
+        #    u_abc = u_abc/m
 
         # Duty ratios
         d_abc = .5 + u_abc/u_dc
+
+        # Minimum-amplitude-error overmodulation
+        d_abc = np.clip(d_abc, 0, 1)
 
         return d_abc
 
