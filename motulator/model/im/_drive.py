@@ -35,7 +35,7 @@ class InductionMachine:
     Notes
     -----
     The Γ model is chosen here since it can be extended with the magnetic
-    saturation model in a staightforward manner. If the magnetic saturation is
+    saturation model in a straightforward manner. If the magnetic saturation is
     omitted, the Γ model is mathematically identical to the inverse-Γ and T
     models [#Sle1989]_.
 
@@ -243,7 +243,7 @@ class Drive:
         Induction machine model.
     mechanics : Mechanics
         Mechanics model.
-    converver : Inverter
+    converter : Inverter
         Inverter model.
 
     """

@@ -8,7 +8,7 @@ from dataclasses import dataclass, InitVar
 import numpy as np
 from motulator._helpers import abc2complex
 from motulator.control._common import PWM, Ctrl, ComplexPICtrl, SpeedCtrl
-from motulator.control.im._observers import Observer, FullOrderObserver
+from motulator.control.im._observers import Observer  # FullOrderObserver
 from motulator._utils import Bunch
 
 
