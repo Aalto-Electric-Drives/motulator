@@ -59,7 +59,7 @@ model.sm.plot_flux_map(data)
 # on triangularization and allows to use unstructured flux maps.
 
 # Data points for creating the interpolant
-psi_s_data, i_s_data = data.psi_s.ravel(), data.i_s.ravel()
+psi_s_data, i_s_data = np.array(data.psi_s).ravel(), np.array(data.i_s).ravel()
 
 # Create the interpolant, i_s = current_dq(psi_s.real, psi_s.imag)
 current_dq = LinearNDInterpolator(
