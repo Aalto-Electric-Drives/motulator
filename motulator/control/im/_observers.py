@@ -151,8 +151,8 @@ class FullOrderObserver:
     Full-order flux observer for induction machines in estimated 
     rotor flux coordinates.
 
-    This class implements a full-order flux observer for induction machines.
-    The observer structure is similar to [#Tii2023]_. The observer operates in 
+    This class implements a full-order flux observer for induction machines. The 
+    observer structure is similar to [#Tii2023]_. The observer operates in 
     estimated rotor flux coordinates. 
     
     Parameters
@@ -273,8 +273,8 @@ class FullOrderObserver:
         i_s : complex
             Stator current (A) in estimated rotor flux coordinates.
         w_m : float, optional
-            Rotor angular speed (electrical rad/s). This signal is not used
-            and only exists for compatibility.
+            Rotor angular speed (electrical rad/s). This signal is not used and 
+            only exists for compatibility.
 
         Returns
         -------

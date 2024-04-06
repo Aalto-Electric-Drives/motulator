@@ -44,8 +44,8 @@ class VectorCtrl(Ctrl):
     """
     Vector control for synchronous machine drives.
 
-    This class interconnects the subsystems of the control system and
-    provides the interface to the solver.
+    This class interconnects the subsystems of the control system and provides 
+    the interface to the solver.
 
     Parameters
     ----------
@@ -166,7 +166,7 @@ class CurrentCtrl(ComplexPICtrl):
     Current controller for synchronous machines.
 
     This provides an interface of a current controller for synchronous machines
-    [#Awa2019]_. The gains are initialized based on the desired closed-loop 
+    [#Awa2019a]_. The gains are initialized based on the desired closed-loop 
     bandwidth and the inductances. 
 
     Parameters
@@ -178,7 +178,7 @@ class CurrentCtrl(ComplexPICtrl):
 
     References
     ----------
-    .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current 
+    .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current 
        control of saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
        https://doi.org/10.1109/TIA.2019.2919258
 
@@ -226,9 +226,9 @@ class CurrentReferencePars:
     Attributes
     ----------
     i_sd_mtpa : callable
-        MTPA d-axis current (A) as a funtion of the torque (Nm).
+        MTPA d-axis current (A) as a function of the torque (Nm).
     tau_M_lim : callable
-        Torque limite (Nm) as a function of the stator flux linkage (Vs). This
+        Torque limit (Nm) as a function of the stator flux linkage (Vs). This
         limit merges the MTPV and current limits.
     i_sd_lim : callable
         d-axis current limit (A) as a function of the stator flux linkage (Vs).

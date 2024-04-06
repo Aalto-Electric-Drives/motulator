@@ -17,7 +17,7 @@ class FluxVectorCtrl(Ctrl):
 
     This class implements a variant of stator-flux-vector control [#Pel2009]_. 
     Rotor coordinates as well as decoupling between the stator flux and torque 
-    channels are used according to [#Awa2019]_. Here, the stator flux magnitude 
+    channels are used according to [#Awa2019b]_. Here, the stator flux magnitude 
     and the electromagnetic torque are selected as controllable variables. 
 
     Notes
@@ -60,9 +60,9 @@ class FluxVectorCtrl(Ctrl):
        region,” IEEE Trans.Ind. Appl., 2009, 
        https://doi.org/10.1109/TIA.2009.2027167
 
-    .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented 
-       control of synchronous motors: A systematic design procedure," IEEE Trans. 
-       Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+    .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented 
+       control of synchronous motors: A systematic design procedure," IEEE 
+       Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
     """
 
