@@ -554,7 +554,7 @@ directly provided.</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.control.sm.CurrentReferencePars.i_sd_mtpa">
 <span class="sig-name descname"><span class="pre">i_sd_mtpa</span></span><a class="headerlink" href="#motulator.control.sm.CurrentReferencePars.i_sd_mtpa" title="Permalink to this definition">#</a></dt>
-<dd><p>MTPA d-axis current (A) as a funtion of the torque (Nm).</p>
+<dd><p>MTPA d-axis current (A) as a function of the torque (Nm).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>callable</p>
@@ -565,7 +565,7 @@ directly provided.</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.control.sm.CurrentReferencePars.tau_M_lim">
 <span class="sig-name descname"><span class="pre">tau_M_lim</span></span><a class="headerlink" href="#motulator.control.sm.CurrentReferencePars.tau_M_lim" title="Permalink to this definition">#</a></dt>
-<dd><p>Torque limite (Nm) as a function of the stator flux linkage (Vs). This
+<dd><p>Torque limit (Nm) as a function of the stator flux linkage (Vs). This
 limit merges the MTPV and current limits.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -666,7 +666,7 @@ drives with accurate torque regulation,” IEEE Trans. Ind. Appl., 2020,
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.ComplexPICtrl" title="motulator.control._common.ComplexPICtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.ComplexPICtrl</span></code></a></p>
 <p>Current controller for synchronous machines.</p>
 <p>This provides an interface of a current controller for synchronous machines
-<a href="#id13"><span class="problematic" id="id4">[#Awa2019]_</span></a>. The gains are initialized based on the desired closed-loop
+<a class="footnote-reference brackets" href="#awa2019a" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The gains are initialized based on the desired closed-loop
 bandwidth and the inductances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -678,8 +678,8 @@ bandwidth and the inductances.</p>
 </dl>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="awa2019" role="note">
-<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="awa2019a" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
 <p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current
 control of saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
@@ -730,8 +730,8 @@ control of saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">VectorCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_vector.html#VectorCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.VectorCtrl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.Ctrl</span></code></a></p>
 <p>Vector control for synchronous machine drives.</p>
-<p>This class interconnects the subsystems of the control system and
-provides the interface to the solver.</p>
+<p>This class interconnects the subsystems of the control system and provides
+the interface to the solver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -937,15 +937,6 @@ to the d-axis of the rotor (electrical rad).</p>
 </dl>
 </dd></dl>
 
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="tii2022" role="note">
-<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
-<p>Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
-“Stable and passive observer-based V/Hz control for synchronous Motors,”
-Proc. IEEE ECCE, 2022, <a class="reference external" href="https://doi.org/10.1109/ECCE50734.2022.9947858">https://doi.org/10.1109/ECCE50734.2022.9947858</a></p>
-</aside>
-</aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.control.sm.FluxObserver.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_observers.html#FluxObserver.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.FluxObserver.update" title="Permalink to this definition">#</a></dt>
@@ -969,9 +960,9 @@ Proc. IEEE ECCE, 2022, <a class="reference external" href="https://doi.org/10.11
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">FluxVectorCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_psi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_flux_vector.html#FluxVectorCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.FluxVectorCtrl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.Ctrl</span></code></a></p>
 <p>Flux-vector control of synchronous machine drives.</p>
-<p>This class implements a variant of stator-flux-vector control <a class="footnote-reference brackets" href="#pel2009" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.
+<p>This class implements a variant of stator-flux-vector control <a class="footnote-reference brackets" href="#pel2009" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.
 Rotor coordinates as well as decoupling between the stator flux and torque
-channels are used according to <a href="#id14"><span class="problematic" id="id7">[#Awa2019]_</span></a>. Here, the stator flux magnitude
+channels are used according to <a class="footnote-reference brackets" href="#awa2019b" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. Here, the stator flux magnitude
 and the electromagnetic torque are selected as controllable variables.</p>
 <p class="rubric">Notes</p>
 <p>Proportional controllers are used for simplicity. The magnetic saturation is
@@ -1046,17 +1037,17 @@ not considered in this implementation.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="pel2009" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">5</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">4</a><span class="fn-bracket">]</span></span>
 <p>Pellegrino, Armando, Guglielmi, “Direct flux field-oriented
 control of IPM drives with variable DC link in the field-weakening
 region,” IEEE Trans.Ind. Appl., 2009,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2009.2027167">https://doi.org/10.1109/TIA.2009.2027167</a></p>
 </aside>
-<aside class="footnote brackets" id="id8" role="note">
-<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="awa2019b" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">5</a><span class="fn-bracket">]</span></span>
 <p>Awan, Hinkkanen, Bojoi, Pellegrino, “Stator-flux-oriented
-control of synchronous motors: A systematic design procedure,” IEEE Trans.
-Ind. Appl., 2019, <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2927316">https://doi.org/10.1109/TIA.2019.2927316</a></p>
+control of synchronous motors: A systematic design procedure,” IEEE
+Trans. Ind. Appl., 2019, <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2927316">https://doi.org/10.1109/TIA.2019.2927316</a></p>
 </aside>
 </aside>
 </dd></dl>
@@ -1120,7 +1111,7 @@ limit merges the MTPV and current limits.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedVHzCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/sm/_obs_vhz.html#ObserverBasedVHzCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm.ObserverBasedVHzCtrl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.Ctrl</span></code></a></p>
 <p>Observer-based V/Hz control for synchronous motors.</p>
-<p>This observer-based V/Hz control control method is based on <a href="#id15"><span class="problematic" id="id9">[#Tii2022]_</span></a>.</p>
+<p>This observer-based V/Hz control control method is based on <a class="footnote-reference brackets" href="#tii2022" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1143,12 +1134,11 @@ limit merges the MTPV and current limits.</p>
 
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id10" role="note">
-<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="tii2022" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">6</a><span class="fn-bracket">]</span></span>
 <p>Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
 “Stable and passive observer-based V/Hz control for synchronous Motors,”
-Proc. IEEE ECCE, Detroit, MI, Oct. 2022,
-<a class="reference external" href="https://doi.org/10.1109/ECCE50734.2022.9947858">https://doi.org/10.1109/ECCE50734.2022.9947858</a></p>
+Proc. IEEE ECCE, 2022, <a class="reference external" href="https://doi.org/10.1109/ECCE50734.2022.9947858">https://doi.org/10.1109/ECCE50734.2022.9947858</a></p>
 </aside>
 </aside>
 </dd></dl>
@@ -1461,7 +1451,7 @@ Either <cite>psi_s_max</cite> or <cite>i_s_max</cite> must be given.</p></li>
 <dd><p>Bases: <a class="reference internal" href="../_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.Ctrl</span></code></a></p>
 <p>Sensorless control with signal injection for synchronous machine drives.</p>
 <p>This class implements a square-wave signal injection for low-speed
-operation according to <a class="footnote-reference brackets" href="#kim2012" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>. A phase-locked loop is used to track
+operation according to <a class="footnote-reference brackets" href="#kim2012" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>. A phase-locked loop is used to track
 the rotor position.</p>
 <p class="rubric">Notes</p>
 <p>For a wider speed range, signal injection could be combined to a
@@ -1470,7 +1460,7 @@ compensated for in this version.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="kim2012" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">8</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">7</a><span class="fn-bracket">]</span></span>
 <p>Kim, Ha, Sul, “PWM switching frequency signal injection
 sensorless method in IPMSM,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2210175">https://doi.org/10.1109/TIA.2012.2210175</a></p>

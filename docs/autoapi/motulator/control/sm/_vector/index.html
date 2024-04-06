@@ -459,8 +459,8 @@ document.write(`
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.sm._vector.</span></span><span class="sig-name descname"><span class="pre">VectorCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/control/sm/_vector.html#VectorCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.sm._vector.VectorCtrl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.Ctrl</span></code></a></p>
 <p>Vector control for synchronous machine drives.</p>
-<p>This class interconnects the subsystems of the control system and
-provides the interface to the solver.</p>
+<p>This class interconnects the subsystems of the control system and provides
+the interface to the solver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -545,7 +545,7 @@ provides the interface to the solver.</p>
 <dd><p>Bases: <a class="reference internal" href="../../_common/index.html#motulator.control._common.ComplexPICtrl" title="motulator.control._common.ComplexPICtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.control._common.ComplexPICtrl</span></code></a></p>
 <p>Current controller for synchronous machines.</p>
 <p>This provides an interface of a current controller for synchronous machines
-<a class="footnote-reference brackets" href="#awa2019" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The gains are initialized based on the desired closed-loop
+<a class="footnote-reference brackets" href="#awa2019a" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The gains are initialized based on the desired closed-loop
 bandwidth and the inductances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -557,7 +557,7 @@ bandwidth and the inductances.</p>
 </dl>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="awa2019" role="note">
+<aside class="footnote brackets" id="awa2019a" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current
 control of saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
@@ -607,7 +607,7 @@ directly provided.</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.control.sm._vector.CurrentReferencePars.i_sd_mtpa">
 <span class="sig-name descname"><span class="pre">i_sd_mtpa</span></span><a class="headerlink" href="#motulator.control.sm._vector.CurrentReferencePars.i_sd_mtpa" title="Permalink to this definition">#</a></dt>
-<dd><p>MTPA d-axis current (A) as a funtion of the torque (Nm).</p>
+<dd><p>MTPA d-axis current (A) as a function of the torque (Nm).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>callable</p>
@@ -618,7 +618,7 @@ directly provided.</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.control.sm._vector.CurrentReferencePars.tau_M_lim">
 <span class="sig-name descname"><span class="pre">tau_M_lim</span></span><a class="headerlink" href="#motulator.control.sm._vector.CurrentReferencePars.tau_M_lim" title="Permalink to this definition">#</a></dt>
-<dd><p>Torque limite (Nm) as a function of the stator flux linkage (Vs). This
+<dd><p>Torque limit (Nm) as a function of the stator flux linkage (Vs). This
 limit merges the MTPV and current limits.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>

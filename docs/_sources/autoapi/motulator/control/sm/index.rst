@@ -78,13 +78,13 @@ Classes
 
    .. attribute:: i_sd_mtpa
 
-      MTPA d-axis current (A) as a funtion of the torque (Nm).
+      MTPA d-axis current (A) as a function of the torque (Nm).
 
       :type: callable
 
    .. attribute:: tau_M_lim
 
-      Torque limite (Nm) as a function of the stator flux linkage (Vs). This
+      Torque limit (Nm) as a function of the stator flux linkage (Vs). This
       limit merges the MTPV and current limits.
 
       :type: callable
@@ -232,7 +232,7 @@ Classes
    Current controller for synchronous machines.
 
    This provides an interface of a current controller for synchronous machines
-   [#Awa2019]_. The gains are initialized based on the desired closed-loop
+   [#Awa2019a]_. The gains are initialized based on the desired closed-loop
    bandwidth and the inductances.
 
    :param par: Synchronous machine parameters, should contain `L_d` and `L_q` (H).
@@ -242,7 +242,7 @@ Classes
 
    .. rubric:: References
 
-   .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current
+   .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current
       control of saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
       https://doi.org/10.1109/TIA.2019.2919258
 
@@ -337,8 +337,8 @@ Classes
    
    Vector control for synchronous machine drives.
 
-   This class interconnects the subsystems of the control system and
-   provides the interface to the solver.
+   This class interconnects the subsystems of the control system and provides
+   the interface to the solver.
 
    :param par: Machine model parameters.
    :type par: ModelPars
@@ -534,12 +534,6 @@ Classes
 
       :type: complex
 
-   .. rubric:: References
-
-   .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
-      "Stable and passive observer-based V/Hz control for synchronous Motors,"
-      Proc. IEEE ECCE, 2022, https://doi.org/10.1109/ECCE50734.2022.9947858
-
 
 
 
@@ -598,7 +592,7 @@ Classes
 
    This class implements a variant of stator-flux-vector control [#Pel2009]_.
    Rotor coordinates as well as decoupling between the stator flux and torque
-   channels are used according to [#Awa2019]_. Here, the stator flux magnitude
+   channels are used according to [#Awa2019b]_. Here, the stator flux magnitude
    and the electromagnetic torque are selected as controllable variables.
 
    .. rubric:: Notes
@@ -656,9 +650,9 @@ Classes
       region,” IEEE Trans.Ind. Appl., 2009,
       https://doi.org/10.1109/TIA.2009.2027167
 
-   .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented
-      control of synchronous motors: A systematic design procedure," IEEE Trans.
-      Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+   .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented
+      control of synchronous motors: A systematic design procedure," IEEE
+      Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
 
 
@@ -781,8 +775,7 @@ Classes
 
    .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
       "Stable and passive observer-based V/Hz control for synchronous Motors,"
-      Proc. IEEE ECCE, Detroit, MI, Oct. 2022,
-      https://doi.org/10.1109/ECCE50734.2022.9947858
+      Proc. IEEE ECCE, 2022, https://doi.org/10.1109/ECCE50734.2022.9947858
 
 
 

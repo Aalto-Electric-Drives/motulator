@@ -159,12 +159,6 @@ Classes
 
       :type: complex
 
-   .. rubric:: References
-
-   .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
-      "Stable and passive observer-based V/Hz control for synchronous Motors,"
-      Proc. IEEE ECCE, 2022, https://doi.org/10.1109/ECCE50734.2022.9947858
-
 
 
 

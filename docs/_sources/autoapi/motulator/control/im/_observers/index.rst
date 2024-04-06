@@ -107,8 +107,8 @@ Classes
    Full-order flux observer for induction machines in estimated
    rotor flux coordinates.
 
-   This class implements a full-order flux observer for induction machines.
-   The observer structure is similar to [#Tii2023]_. The observer operates in
+   This class implements a full-order flux observer for induction machines. The
+   observer structure is similar to [#Tii2023]_. The observer operates in
    estimated rotor flux coordinates.
 
    :param par: Machine model parameters.
