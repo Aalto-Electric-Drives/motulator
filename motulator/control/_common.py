@@ -104,8 +104,8 @@ class PWM:
         """
         Compute the duty ratios for three-phase space-vector PWM.
 
-        This computes the duty ratios corresponding to standard space-vector 
-        PWM and minimum-amplitude-error overmodulation [#Hav1999]_.
+        This computes the duty ratios corresponding to standard space-vector PWM 
+        and minimum-amplitude-error overmodulation [#Hav1999]_.
 
         Parameters
         ----------
