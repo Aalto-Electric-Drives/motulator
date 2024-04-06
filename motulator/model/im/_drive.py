@@ -390,9 +390,9 @@ class DriveWithDiodeBridge(Drive):
     """
     Induction machine drive equipped with a diode bridge.
 
-    This model extends the DriveWithDiodeBridge class with a model for a
-    three-phase diode bridge fed from stiff supply voltages. The DC bus is
-    modeled as an inductor and a capacitor.
+    This model extends the Drive class with a model for a three-phase diode 
+    bridge fed from stiff supply voltages. The DC bus is modeled as an inductor 
+    and a capacitor.
 
     Parameters
     ----------
