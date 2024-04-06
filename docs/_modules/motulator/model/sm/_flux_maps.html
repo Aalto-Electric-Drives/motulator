@@ -174,8 +174,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -419,8 +419,10 @@ document.write(`
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
     <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;3d&quot;</span><span class="p">)</span>
     <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;3d&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (Vs)&quot;</span><span class="p">)</span>
@@ -625,7 +627,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

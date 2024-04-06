@@ -174,8 +174,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -332,7 +332,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">motulator._helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span>
 <span class="kn">from</span> <span class="nn">motulator.control._common</span> <span class="kn">import</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">Ctrl</span><span class="p">,</span> <span class="n">ComplexPICtrl</span><span class="p">,</span> <span class="n">SpeedCtrl</span>
-<span class="kn">from</span> <span class="nn">motulator.control.im._observers</span> <span class="kn">import</span> <span class="n">Observer</span><span class="p">,</span> <span class="n">FullOrderObserver</span>
+<span class="kn">from</span> <span class="nn">motulator.control.im._observers</span> <span class="kn">import</span> <span class="n">Observer</span>  <span class="c1"># FullOrderObserver</span>
 <span class="kn">from</span> <span class="nn">motulator._utils</span> <span class="kn">import</span> <span class="n">Bunch</span>
 
 
@@ -712,7 +712,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

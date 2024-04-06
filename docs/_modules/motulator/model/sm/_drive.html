@@ -174,8 +174,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -513,15 +513,24 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">machine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span> <span class="o">=</span> <span class="n">mechanics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
-
-        <span class="c1"># Initial time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-        <span class="c1"># Store the solution in these lists</span>
+<div class="viewcode-block" id="Drive.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear the simulation data of the system model.</span>
+<span class="sd">        </span>
+<span class="sd">        This method is automatically run when the instance for the system model</span>
+<span class="sd">        is created. It can also be used in the case of repeated simulations to </span>
+<span class="sd">        clear the data from the previous simulation run.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Solution will be stored in the following lists</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="Drive.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -653,7 +662,12 @@ document.write(`
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mechanics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DriveTwoMassMechanics.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="DriveTwoMassMechanics.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
@@ -732,7 +746,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

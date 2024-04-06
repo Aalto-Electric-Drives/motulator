@@ -174,7 +174,7 @@ Classes
 
    .. rubric:: Notes
 
-   This contoller can be used, e.g., as a speed controller. In this case, `y`
+   This controller can be used, e.g., as a speed controller. In this case, `y`
    corresponds to the rotor angular speed `w_M` and `u` to the torque reference
    `tau_M_ref`.
 
@@ -348,8 +348,8 @@ Classes
 
    .. rubric:: Notes
 
-   This contoller can be used, e.g., as a current controller. In this case, `i`
-   corresponds to the stator current and `u` to the stator voltage.
+   This controller can be used, e.g., as a current controller. In this case,
+   `i` corresponds to the stator current and `u` to the stator voltage.
 
    .. rubric:: References
 
@@ -532,10 +532,36 @@ Classes
 
    ..
        !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Clear the internal data store of the control system.
+
+      This method is automatically run when the instance for the control
+      system is created. It can also be used in the case of repeated
+      simulations to clear the data from the previous simulation run.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
    .. py:method:: save(data)
 
       
-      Save the internal date of the control system.
+      Save the internal data of the control system.
 
       :param data: Contains the data to be saved.
       :type data: bunch or dict

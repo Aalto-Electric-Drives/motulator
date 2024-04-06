@@ -86,6 +86,32 @@ Functions
 
    ..
        !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Clear the simulation data of the system model.
+
+      This method is automatically run when the instance for the system model
+      is created. It can also be used in the case of repeated simulations to
+      clear the data from the previous simulation run.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
    .. py:method:: get_initial_values()
 
       
@@ -251,6 +277,29 @@ Functions
 
    ..
        !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
    .. py:method:: get_initial_values()
 
       

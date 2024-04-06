@@ -357,7 +357,8 @@ Classes
 
    This class implements a reduced-order flux observer for induction machines.
    Both sensored and sensorless operation are supported. The observer structure
-   is similar to [#Hin2010]_. The observer operates in estimated rotor flux coordinates.
+   is similar to [#Hin2010]_. The observer operates in estimated rotor flux
+   coordinates.
 
    :param par: Machine model parameters.
    :type par: ModelPars

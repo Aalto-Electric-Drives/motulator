@@ -174,8 +174,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -322,9 +322,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for motulator.control.im._observers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">State observers for induction machines.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;State observers for induction machines.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -337,7 +335,8 @@ document.write(`
 
 <span class="sd">    This class implements a reduced-order flux observer for induction machines.</span>
 <span class="sd">    Both sensored and sensorless operation are supported. The observer structure</span>
-<span class="sd">    is similar to [#Hin2010]_. The observer operates in estimated rotor flux coordinates. </span>
+<span class="sd">    is similar to [#Hin2010]_. The observer operates in estimated rotor flux </span>
+<span class="sd">    coordinates. </span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -508,9 +507,9 @@ document.write(`
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, &quot;Speed-Adaptive Full-Order Observer </span>
-<span class="sd">        Revisited: Closed-Form Design for Induction Motor Drives,&quot; Proc. IEEE SLED, </span>
-<span class="sd">        Seoul, South Korea,  Aug. 2023, https://doi.org/10.1109/SLED57582.2023.10261359</span>
+<span class="sd">    .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, &quot;Speed-adaptive full-order </span>
+<span class="sd">       observer revisited: Closed-form design for induction motor drives,&quot; Proc. </span>
+<span class="sd">       IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -569,7 +568,10 @@ document.write(`
             <span class="p">(</span><span class="n">w_s</span> <span class="o">-</span> <span class="n">w_m</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">*</span><span class="n">i_err</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
 
         <span class="c1"># Derivative of the integral term of the speed estimate</span>
-        <span class="n">dw_m</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_i</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">*</span><span class="n">i_err</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_R</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dw_m</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_i</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">*</span><span class="n">i_err</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_R</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dw_m</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">return</span> <span class="n">di_s</span><span class="p">,</span> <span class="n">dpsi_R</span><span class="p">,</span> <span class="n">dw_m</span><span class="p">,</span> <span class="n">w_s</span>
 
@@ -743,7 +745,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

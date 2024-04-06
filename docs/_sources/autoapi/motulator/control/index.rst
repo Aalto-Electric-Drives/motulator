@@ -93,8 +93,8 @@ Classes
 
    .. rubric:: Notes
 
-   This contoller can be used, e.g., as a current controller. In this case, `i`
-   corresponds to the stator current and `u` to the stator voltage.
+   This controller can be used, e.g., as a current controller. In this case,
+   `i` corresponds to the stator current and `u` to the stator voltage.
 
    .. rubric:: References
 
@@ -258,7 +258,7 @@ Classes
 
    .. rubric:: Notes
 
-   This contoller can be used, e.g., as a speed controller. In this case, `y`
+   This controller can be used, e.g., as a speed controller. In this case, `y`
    corresponds to the rotor angular speed `w_M` and `u` to the torque reference
    `tau_M_ref`.
 

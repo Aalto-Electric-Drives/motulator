@@ -177,8 +177,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -374,6 +374,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive"><code class="docutils literal notranslate"><span class="pre">Drive</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive.clear"><code class="docutils literal notranslate"><span class="pre">Drive.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive.get_initial_values"><code class="docutils literal notranslate"><span class="pre">Drive.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive.set_initial_values"><code class="docutils literal notranslate"><span class="pre">Drive.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive.f"><code class="docutils literal notranslate"><span class="pre">Drive.f()</span></code></a></li>
@@ -382,6 +383,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics.clear"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics.f"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.f()</span></code></a></li>
@@ -471,6 +473,15 @@ modeled using a similar template.</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.sm.Drive.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm/_drive.html#Drive.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm.Drive.clear" title="Permalink to this definition">#</a></dt>
+<dd><p>Clear the simulation data of the system model.</p>
+<p>This method is automatically run when the instance for the system model
+is created. It can also be used in the case of repeated simulations to
+clear the data from the previous simulation run.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.model.sm.Drive.get_initial_values">
 <span class="sig-name descname"><span class="pre">get_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm/_drive.html#Drive.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm.Drive.get_initial_values" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the initial values.</p>
@@ -553,6 +564,12 @@ provides an interface to the solver.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.sm.DriveTwoMassMechanics.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm/_drive.html#DriveTwoMassMechanics.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm.DriveTwoMassMechanics.clear" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.model.sm.DriveTwoMassMechanics.get_initial_values">
 <span class="sig-name descname"><span class="pre">get_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/sm/_drive.html#DriveTwoMassMechanics.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm.DriveTwoMassMechanics.get_initial_values" title="Permalink to this definition">#</a></dt>
@@ -813,6 +830,7 @@ repository, licensed under the Apache License, Version 2.0.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive"><code class="docutils literal notranslate"><span class="pre">Drive</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive.clear"><code class="docutils literal notranslate"><span class="pre">Drive.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive.get_initial_values"><code class="docutils literal notranslate"><span class="pre">Drive.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive.set_initial_values"><code class="docutils literal notranslate"><span class="pre">Drive.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.Drive.f"><code class="docutils literal notranslate"><span class="pre">Drive.f()</span></code></a></li>
@@ -821,6 +839,7 @@ repository, licensed under the Apache License, Version 2.0.</p>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics.clear"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm.DriveTwoMassMechanics.f"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.f()</span></code></a></li>
@@ -867,7 +886,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

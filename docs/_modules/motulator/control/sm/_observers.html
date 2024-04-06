@@ -174,8 +174,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -351,6 +351,8 @@ document.write(`
 <span class="sd">        Observer gain as a function of the rotor angular speed. The default is </span>
 <span class="sd">        ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if</span>
 <span class="sd">        `sensorless` else ``lambda w_m: 2*pi*15``.</span>
+<span class="sd">    sensorless : bool, optional</span>
+<span class="sd">        If True, sensorless control is used. The default is True.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -377,6 +379,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">=</span> <span class="n">alpha_o</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">sensorless</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="n">k</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># If not given, use the default gains</span>
                 <span class="n">sigma0</span> <span class="o">=</span> <span class="mf">.25</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span>
@@ -386,7 +389,7 @@ document.write(`
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">15</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">k2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">0</span>
-            
+
         <span class="c1"># Initial states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
 
@@ -423,7 +426,7 @@ document.write(`
             <span class="n">eps</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">e</span><span class="o">/</span><span class="n">psi_a</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
             <span class="n">w_s</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">*</span><span class="n">eps</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">,</span> <span class="mi">0</span>
+            <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">w_m</span><span class="p">),</span> <span class="mi">0</span>
             <span class="n">w_s</span> <span class="o">=</span> <span class="n">w_m</span>
             <span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -440,11 +443,12 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sensorless stator flux observer in external coordinates.</span>
 
-<span class="sd">    This observer estimates the stator flux linkage and the angle of the coordinate</span>
-<span class="sd">    system with respect to the d-axis of the rotor. Speed-estimation is omitted. </span>
-<span class="sd">    The observer gain decouples the electrical and mechanical dynamics and allows placing </span>
-<span class="sd">    the poles of the corresponding linearized estimation error dynamics. This implementation operates </span>
-<span class="sd">    in external coordinates (typically synchronous coordinates defined by reference signals </span>
+<span class="sd">    This observer estimates the stator flux linkage and the angle of the </span>
+<span class="sd">    coordinate system with respect to the d-axis of the rotor. Speed-estimation </span>
+<span class="sd">    is omitted. The observer gain decouples the electrical and mechanical </span>
+<span class="sd">    dynamics and allows placing the poles of the corresponding linearized </span>
+<span class="sd">    estimation error dynamics. This implementation operates in external </span>
+<span class="sd">    coordinates (typically synchronous coordinates defined by reference signals </span>
 <span class="sd">    of a control system).</span>
 
 <span class="sd">    Parameters</span>
@@ -468,8 +472,7 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, </span>
 <span class="sd">       &quot;Stable and passive observer-based V/Hz control for synchronous Motors,&quot; </span>
-<span class="sd">       Proc. IEEE ECCE, Detroit, MI, Oct. 2022, </span>
-<span class="sd">       https://doi.org/10.1109/ECCE50734.2022.9947858</span>
+<span class="sd">       Proc. IEEE ECCE, 2022, https://doi.org/10.1109/ECCE50734.2022.9947858</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -564,7 +567,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

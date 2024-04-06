@@ -178,8 +178,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -459,7 +459,7 @@ document.write(`
 </section>
 <section id="gain-selection">
 <h3>Gain Selection<a class="headerlink" href="#gain-selection" title="Permalink to this heading">#</a></h3>
-<p>The estimation-error dynamics are obtained by subtracting <a class="reference internal" href="#equation-dhatpsir">(2)</a> from <a class="reference internal" href="#equation-dpsir">(1)</a>. The resulting system can be linearized for analysis and gain selection purposes. Using the rotor speed as an exmaple, the small-signal deviation about the operating point is <span class="math notranslate nohighlight">\(\Delta \omega_\mathrm{m} = \omega_\mathrm{m} - \omega_\mathrm{m0}\)</span>, where the subscript 0 refers to the operating point. Linearization of the estimation-error dynamics leads to <a class="footnote-reference brackets" href="#hin2010" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
+<p>The estimation-error dynamics are obtained by subtracting <a class="reference internal" href="#equation-dhatpsir">(2)</a> from <a class="reference internal" href="#equation-dpsir">(1)</a>. The resulting system can be linearized for analysis and gain selection purposes. Using the rotor speed as an example, the small-signal deviation about the operating point is <span class="math notranslate nohighlight">\(\Delta \omega_\mathrm{m} = \omega_\mathrm{m} - \omega_\mathrm{m0}\)</span>, where the subscript 0 refers to the operating point. Linearization of the estimation-error dynamics leads to <a class="footnote-reference brackets" href="#hin2010" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
 <div class="math notranslate nohighlight" id="equation-dtildepsir">
 <span class="eqno">(8)<a class="headerlink" href="#equation-dtildepsir" title="Permalink to this equation">#</a></span>\[\frac{\mathrm{d} \Delta\tilde{\boldsymbol{\psi}}_\mathrm{R}}{\mathrm{d} t} =  \boldsymbol{k}_1\Delta \tilde{\boldsymbol{v}} + \boldsymbol{k}_2\Delta \tilde{\boldsymbol{v}}^* - \mathrm{j}\omega_\mathrm{s0}\Delta\tilde{\boldsymbol{\psi}}_\mathrm{R}\]</div>
 <p>where the estimation error of the rotor flux is <span class="math notranslate nohighlight">\(\Delta\tilde{\boldsymbol{\psi}}_\mathrm{R} = \Delta\boldsymbol{\psi}_\mathrm{R} - \Delta\hat{\boldsymbol{\psi}}_\mathrm{R}\)</span> and other estimation errors are marked similarly. Furthermore, the back-emf estimation error is</p>
@@ -697,7 +697,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

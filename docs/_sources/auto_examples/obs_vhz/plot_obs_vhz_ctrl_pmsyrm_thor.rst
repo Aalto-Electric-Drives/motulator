@@ -128,7 +128,7 @@ Load and plot the flux maps.
 
 Create the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-82
+.. GENERATED FROM PYTHON SOURCE LINES 56-83
 
 .. code-block:: Python
 
@@ -138,7 +138,8 @@ Create the saturation model.
     # on triangularization and allows to use unstructured flux maps.
 
     # Data points for creating the interpolant
-    psi_s_data, i_s_data = data.psi_s.ravel(), data.i_s.ravel()
+    psi_s_data = np.asarray(data.psi_s).ravel()
+    i_s_data = np.asarray(data.i_s).ravel()
 
     # Create the interpolant, i_s = current_dq(psi_s.real, psi_s.imag)
     current_dq = LinearNDInterpolator(
@@ -165,11 +166,11 @@ Create the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
+.. GENERATED FROM PYTHON SOURCE LINES 84-85
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-95
+.. GENERATED FROM PYTHON SOURCE LINES 85-96
 
 .. code-block:: Python
 
@@ -191,11 +192,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-97
+.. GENERATED FROM PYTHON SOURCE LINES 97-98
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-102
+.. GENERATED FROM PYTHON SOURCE LINES 98-103
 
 .. code-block:: Python
 
@@ -211,11 +212,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-104
+.. GENERATED FROM PYTHON SOURCE LINES 104-105
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-119
+.. GENERATED FROM PYTHON SOURCE LINES 105-120
 
 .. code-block:: Python
 
@@ -241,13 +242,13 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-123
+.. GENERATED FROM PYTHON SOURCE LINES 121-124
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower). One-sampling-period computational
 delay is modeled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-127
+.. GENERATED FROM PYTHON SOURCE LINES 124-128
 
 .. code-block:: Python
 
@@ -262,12 +263,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-130
+.. GENERATED FROM PYTHON SOURCE LINES 129-131
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-132
+.. GENERATED FROM PYTHON SOURCE LINES 131-133
 
 .. code-block:: Python
 
@@ -288,7 +289,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 32.588 seconds)
+   **Total running time of the script:** (0 minutes 32.763 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:

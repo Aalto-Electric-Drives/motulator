@@ -424,6 +424,8 @@ Classes
              ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
              `sensorless` else ``lambda w_m: 2*pi*15``.
    :type k: callable, optional
+   :param sensorless: If True, sensorless control is used. The default is True.
+   :type sensorless: bool, optional
 
    .. attribute:: theta_m
 
@@ -504,11 +506,12 @@ Classes
    
    Sensorless stator flux observer in external coordinates.
 
-   This observer estimates the stator flux linkage and the angle of the coordinate
-   system with respect to the d-axis of the rotor. Speed-estimation is omitted.
-   The observer gain decouples the electrical and mechanical dynamics and allows placing
-   the poles of the corresponding linearized estimation error dynamics. This implementation operates
-   in external coordinates (typically synchronous coordinates defined by reference signals
+   This observer estimates the stator flux linkage and the angle of the
+   coordinate system with respect to the d-axis of the rotor. Speed-estimation
+   is omitted. The observer gain decouples the electrical and mechanical
+   dynamics and allows placing the poles of the corresponding linearized
+   estimation error dynamics. This implementation operates in external
+   coordinates (typically synchronous coordinates defined by reference signals
    of a control system).
 
    :param par: Machine model parameters.
@@ -535,8 +538,7 @@ Classes
 
    .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
       "Stable and passive observer-based V/Hz control for synchronous Motors,"
-      Proc. IEEE ECCE, Detroit, MI, Oct. 2022,
-      https://doi.org/10.1109/ECCE50734.2022.9947858
+      Proc. IEEE ECCE, 2022, https://doi.org/10.1109/ECCE50734.2022.9947858
 
 
 

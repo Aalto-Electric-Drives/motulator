@@ -34,7 +34,7 @@ Imports.
 
     import numpy as np
     from motulator import model, control
-    from motulator import BaseValues, Sequence, plot
+    from motulator import BaseValues, Sequence, plot, plot_extra
 
 
 
@@ -137,21 +137,50 @@ Set the speed reference and the external load torque.
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-60
+.. GENERATED FROM PYTHON SOURCE LINES 56-70
 
 .. code-block:: Python
 
 
+    # Simulate the system without modeling PWM
     sim = model.Simulation(mdl, ctrl, pwm=False)
     sim.simulate(t_stop=4)
     plot(sim, base)  # Plot results in per-unit values.
 
+    # Repeat the same simulation with PWM model enabled (takes a bit longer)
+    mdl.clear()  # First clear the stored data from the previous simulation run
+    ctrl.clear()
+    sim = model.Simulation(mdl, ctrl, pwm=True)
+    sim.simulate(t_stop=4)
+    plot(sim, base)
+    # Plot a zoomed view
+    plot_extra(sim, t_span=(1.1, 1.125), base=base)
 
 
-.. image-sg:: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png
-   :alt: plot vector ctrl pmsm 2kw
-   :srcset: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png
-   :class: sphx-glr-single-img
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image-sg:: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png
+         :alt: plot vector ctrl pmsm 2kw
+         :srcset: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_002.png
+         :alt: plot vector ctrl pmsm 2kw
+         :srcset: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_002.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_003.png
+         :alt: plot vector ctrl pmsm 2kw
+         :srcset: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_003.png
+         :class: sphx-glr-multi-img
 
 
 
@@ -160,7 +189,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.137 seconds)
+   **Total running time of the script:** (0 minutes 40.487 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:

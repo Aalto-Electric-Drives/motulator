@@ -58,7 +58,7 @@ Classes
    .. rubric:: Notes
 
    The Γ model is chosen here since it can be extended with the magnetic
-   saturation model in a staightforward manner. If the magnetic saturation is
+   saturation model in a straightforward manner. If the magnetic saturation is
    omitted, the Γ model is mathematically identical to the inverse-Γ and T
    models [#Sle1989]_.
 
@@ -330,8 +330,8 @@ Classes
    :type machine: InductionMachine | InductionMachineSaturated
    :param mechanics: Mechanics model.
    :type mechanics: Mechanics
-   :param converver: Inverter model.
-   :type converver: Inverter
+   :param converter: Inverter model.
+   :type converter: Inverter
 
 
 
@@ -349,6 +349,32 @@ Classes
 
    ..
        !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Clear the simulation data of the system model.
+
+      This method is automatically run when the instance for the system model
+      is created. It can also be used in the case of repeated simulations to
+      clear the data from the previous simulation run.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
    .. py:method:: get_initial_values()
 
       
@@ -515,6 +541,29 @@ Classes
 
    ..
        !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
    .. py:method:: get_initial_values()
 
       
@@ -665,6 +714,29 @@ Classes
 
    ..
        !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
    .. py:method:: get_initial_values()
 
       

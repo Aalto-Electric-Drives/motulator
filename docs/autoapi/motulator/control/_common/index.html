@@ -175,8 +175,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -397,6 +397,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control._common.Ctrl"><code class="docutils literal notranslate"><span class="pre">Ctrl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control._common.Ctrl.clear"><code class="docutils literal notranslate"><span class="pre">Ctrl.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control._common.Ctrl.save"><code class="docutils literal notranslate"><span class="pre">Ctrl.save()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control._common.Ctrl.post_process"><code class="docutils literal notranslate"><span class="pre">Ctrl.post_process()</span></code></a></li>
 </ul>
@@ -560,7 +561,7 @@ the feedback signal, and <cite>1/s</cite> refers to integration. The standard PI
 controller is obtained by choosing <code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator anti-windup
 is implemented based on the realized controller output.</p>
 <p class="rubric">Notes</p>
-<p>This contoller can be used, e.g., as a speed controller. In this case, <cite>y</cite>
+<p>This controller can be used, e.g., as a speed controller. In this case, <cite>y</cite>
 corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to the torque reference
 <cite>tau_M_ref</cite>.</p>
 <dl class="field-list simple">
@@ -697,8 +698,8 @@ output.</p>
 </dd></dl>
 
 <p class="rubric">Notes</p>
-<p>This contoller can be used, e.g., as a current controller. In this case, <cite>i</cite>
-corresponds to the stator current and <cite>u</cite> to the stator voltage.</p>
+<p>This controller can be used, e.g., as a current controller. In this case,
+<cite>i</cite> corresponds to the stator current and <cite>u</cite> to the stator voltage.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bri2000" role="note">
@@ -779,9 +780,18 @@ saturate, <code class="docutils literal notranslate"><span class="pre">u_lim</sp
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control._common.</span></span><span class="sig-name descname"><span class="pre">Ctrl</span></span><a class="reference internal" href="../../../../_modules/motulator/control/_common.html#Ctrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control._common.Ctrl" title="Permalink to this definition">#</a></dt>
 <dd><p>Base class for the control system.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.control._common.Ctrl.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/_common.html#Ctrl.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control._common.Ctrl.clear" title="Permalink to this definition">#</a></dt>
+<dd><p>Clear the internal data store of the control system.</p>
+<p>This method is automatically run when the instance for the control
+system is created. It can also be used in the case of repeated
+simulations to clear the data from the previous simulation run.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.control._common.Ctrl.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/_common.html#Ctrl.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control._common.Ctrl.save" title="Permalink to this definition">#</a></dt>
-<dd><p>Save the internal date of the control system.</p>
+<dd><p>Save the internal data of the control system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>bunch</em><em> or </em><em>dict</em>) – Contains the data to be saved.</p>
@@ -858,6 +868,7 @@ to simplify plotting and analysis of the stored data.</p>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control._common.Ctrl"><code class="docutils literal notranslate"><span class="pre">Ctrl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control._common.Ctrl.clear"><code class="docutils literal notranslate"><span class="pre">Ctrl.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control._common.Ctrl.save"><code class="docutils literal notranslate"><span class="pre">Ctrl.save()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.control._common.Ctrl.post_process"><code class="docutils literal notranslate"><span class="pre">Ctrl.post_process()</span></code></a></li>
 </ul>
@@ -890,7 +901,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

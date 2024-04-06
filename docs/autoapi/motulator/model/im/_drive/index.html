@@ -175,8 +175,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -383,6 +383,7 @@ document.write(`
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.InductionMachineInvGamma"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGamma</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive"><code class="docutils literal notranslate"><span class="pre">Drive</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive.clear"><code class="docutils literal notranslate"><span class="pre">Drive.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive.get_initial_values"><code class="docutils literal notranslate"><span class="pre">Drive.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive.set_initial_values"><code class="docutils literal notranslate"><span class="pre">Drive.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive.f"><code class="docutils literal notranslate"><span class="pre">Drive.f()</span></code></a></li>
@@ -391,6 +392,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge.clear"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge.f"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.f()</span></code></a></li>
@@ -399,6 +401,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.clear"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.f"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.f()</span></code></a></li>
@@ -472,7 +475,7 @@ as state variables.</p>
 </dl>
 <p class="rubric">Notes</p>
 <p>The Γ model is chosen here since it can be extended with the magnetic
-saturation model in a staightforward manner. If the magnetic saturation is
+saturation model in a straightforward manner. If the magnetic saturation is
 omitted, the Γ model is mathematically identical to the inverse-Γ and T
 models <a class="footnote-reference brackets" href="#sle1989" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
@@ -634,10 +637,19 @@ a similar template.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.model.im._drive.InductionMachine" title="motulator.model.im._drive.InductionMachine"><em>InductionMachine</em></a><em> | </em><a class="reference internal" href="#motulator.model.im._drive.InductionMachineSaturated" title="motulator.model.im._drive.InductionMachineSaturated"><em>InductionMachineSaturated</em></a>) – Induction machine model.</p></li>
 <li><p><strong>mechanics</strong> (<a class="reference internal" href="../../_mechanics/index.html#motulator.model._mechanics.Mechanics" title="motulator.model._mechanics.Mechanics"><em>Mechanics</em></a>) – Mechanics model.</p></li>
-<li><p><strong>converver</strong> (<a class="reference internal" href="../../_converter/index.html#motulator.model._converter.Inverter" title="motulator.model._converter.Inverter"><em>Inverter</em></a>) – Inverter model.</p></li>
+<li><p><strong>converter</strong> (<a class="reference internal" href="../../_converter/index.html#motulator.model._converter.Inverter" title="motulator.model._converter.Inverter"><em>Inverter</em></a>) – Inverter model.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.Drive.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#Drive.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.Drive.clear" title="Permalink to this definition">#</a></dt>
+<dd><p>Clear the simulation data of the system model.</p>
+<p>This method is automatically run when the instance for the system model
+is created. It can also be used in the case of repeated simulations to
+clear the data from the previous simulation run.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.model.im._drive.Drive.get_initial_values">
 <span class="sig-name descname"><span class="pre">get_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#Drive.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.Drive.get_initial_values" title="Permalink to this definition">#</a></dt>
@@ -723,6 +735,12 @@ modeled as an inductor and a capacitor.</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithDiodeBridge.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithDiodeBridge.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithDiodeBridge.clear" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithDiodeBridge.get_initial_values">
 <span class="sig-name descname"><span class="pre">get_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithDiodeBridge.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithDiodeBridge.get_initial_values" title="Permalink to this definition">#</a></dt>
 <dd><p>Extend the base class.</p>
@@ -770,6 +788,12 @@ an interface to the solver.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveTwoMassMechanics.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveTwoMassMechanics.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveTwoMassMechanics.clear" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.model.im._drive.DriveTwoMassMechanics.get_initial_values">
 <span class="sig-name descname"><span class="pre">get_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveTwoMassMechanics.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveTwoMassMechanics.get_initial_values" title="Permalink to this definition">#</a></dt>
@@ -847,6 +871,7 @@ an interface to the solver.</p>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.InductionMachineInvGamma"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGamma</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive"><code class="docutils literal notranslate"><span class="pre">Drive</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive.clear"><code class="docutils literal notranslate"><span class="pre">Drive.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive.get_initial_values"><code class="docutils literal notranslate"><span class="pre">Drive.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive.set_initial_values"><code class="docutils literal notranslate"><span class="pre">Drive.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.Drive.f"><code class="docutils literal notranslate"><span class="pre">Drive.f()</span></code></a></li>
@@ -855,6 +880,7 @@ an interface to the solver.</p>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge.clear"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithDiodeBridge.f"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.f()</span></code></a></li>
@@ -863,6 +889,7 @@ an interface to the solver.</p>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.clear"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.get_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.set_initial_values()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.f"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.f()</span></code></a></li>
@@ -898,7 +925,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>

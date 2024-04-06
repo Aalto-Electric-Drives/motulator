@@ -37,7 +37,8 @@ Classes
 
    This class implements a reduced-order flux observer for induction machines.
    Both sensored and sensorless operation are supported. The observer structure
-   is similar to [#Hin2010]_. The observer operates in estimated rotor flux coordinates.
+   is similar to [#Hin2010]_. The observer operates in estimated rotor flux
+   coordinates.
 
    :param par: Machine model parameters.
    :type par: ModelPars
@@ -148,9 +149,9 @@ Classes
 
    .. rubric:: References
 
-   .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, "Speed-Adaptive Full-Order Observer
-       Revisited: Closed-Form Design for Induction Motor Drives," Proc. IEEE SLED,
-       Seoul, South Korea,  Aug. 2023, https://doi.org/10.1109/SLED57582.2023.10261359
+   .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, "Speed-adaptive full-order
+      observer revisited: Closed-form design for induction motor drives," Proc.
+      IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359
 
 
 

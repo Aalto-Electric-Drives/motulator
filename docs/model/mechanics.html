@@ -178,8 +178,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -398,7 +398,7 @@ document.write(`
 <p>where <span class="math notranslate nohighlight">\(\tau_{\mathrm{L},\omega}\)</span> is the speed-dependent load torque and <span class="math notranslate nohighlight">\(\tau_{\mathrm{L},t}\)</span> is the external load torque as a function of time. One typical speed-dependent load torque component is viscous friction</p>
 <div class="math notranslate nohighlight" id="equation-viscous-friction">
 <span class="eqno">(3)<a class="headerlink" href="#equation-viscous-friction" title="Permalink to this equation">#</a></span>\[\tau_{\mathrm{L},\omega} = B\omega_\mathrm{M}\]</div>
-<p>where <span class="math notranslate nohighlight">\(B\)</span> is the viscous damping coefficient. Fiscous friction appears, e.g., due to laminar fluid flow in bearings. Another typical component is quadratic load torque</p>
+<p>where <span class="math notranslate nohighlight">\(B\)</span> is the viscous damping coefficient. Viscous friction appears, e.g., due to laminar fluid flow in bearings. Another typical component is quadratic load torque</p>
 <div class="math notranslate nohighlight" id="equation-quadratic-load">
 <span class="eqno">(4)<a class="headerlink" href="#equation-quadratic-load" title="Permalink to this equation">#</a></span>\[\tau_{\mathrm{L},\omega} = k\omega_\mathrm{M}^2\mathrm{sign}(\omega_\mathrm{M})\]</div>
 <p>which appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance. The model of stiff mechanics is provided in the class <a class="reference internal" href="../autoapi/motulator/model/index.html#motulator.model.Mechanics" title="motulator.model.Mechanics"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.Mechanics</span></code></a>.</p>
@@ -499,7 +499,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2023, Aalto Electric Drives.
+      © Copyright 2024, Aalto Electric Drives.
       <br/>
     
   </p>
