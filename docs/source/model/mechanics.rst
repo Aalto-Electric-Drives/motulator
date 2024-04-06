@@ -23,7 +23,7 @@ where :math:`\tau_{\mathrm{L},\omega}` is the speed-dependent load torque and :m
     \tau_{\mathrm{L},\omega} = B\omega_\mathrm{M}
     :label: viscous_friction
     
-where :math:`B` is the viscous damping coefficient. Fiscous friction appears, e.g., due to laminar fluid flow in bearings. Another typical component is quadratic load torque
+where :math:`B` is the viscous damping coefficient. Viscous friction appears, e.g., due to laminar fluid flow in bearings. Another typical component is quadratic load torque
 
 .. math:: 
     \tau_{\mathrm{L},\omega} = k\omega_\mathrm{M}^2\mathrm{sign}(\omega_\mathrm{M})

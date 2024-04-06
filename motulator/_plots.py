@@ -176,16 +176,22 @@ def plot_extra(sim, base=None, t_span=None):
     if t_span is None:
         t_span = (0, ctrl.t[-1])
 
-    # Check if the base values were iven
+    # Check if the base values were given
     if base is not None:
         pu_vals = True
     else:
         pu_vals = False
         base = Bunch(w=1, u=1, i=1, psi=1, tau=1)  # Unity base values
 
+    # Angle of synchronous coordinates
+    try:
+        theta = ctrl.theta_s  # Induction machine
+    except AttributeError:
+        theta = ctrl.theta_m  # Synchronous machine
+
     # Quantities in stator coordinates
-    ctrl.u_ss = np.exp(1j*ctrl.theta_s)*ctrl.u_s
-    ctrl.i_ss = np.exp(1j*ctrl.theta_s)*ctrl.i_s
+    ctrl.u_ss = np.exp(1j*theta)*ctrl.u_s
+    ctrl.i_ss = np.exp(1j*theta)*ctrl.i_s
 
     fig1, (ax1, ax2) = plt.subplots(2, 1)
 

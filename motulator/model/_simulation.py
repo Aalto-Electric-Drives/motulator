@@ -136,7 +136,7 @@ class CarrierComparison:
 
         # Assume falling edge and compute the normalized switching instants:
         t_n = np.append(0, np.sort(d_abc))
-        # Compute the correponding switching states:
+        # Compute the corresponding switching states:
         q_abc = (t_n[:, np.newaxis] < d_abc).astype(int)
 
         # Durations of switching states

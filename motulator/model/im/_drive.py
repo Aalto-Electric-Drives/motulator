@@ -35,7 +35,7 @@ class InductionMachine:
     Notes
     -----
     The Γ model is chosen here since it can be extended with the magnetic
-    saturation model in a staightforward manner. If the magnetic saturation is
+    saturation model in a straightforward manner. If the magnetic saturation is
     omitted, the Γ model is mathematically identical to the inverse-Γ and T
     models [#Sle1989]_.
 
@@ -243,7 +243,7 @@ class Drive:
         Induction machine model.
     mechanics : Mechanics
         Mechanics model.
-    converver : Inverter
+    converter : Inverter
         Inverter model.
 
     """
@@ -253,8 +253,20 @@ class Drive:
         self.mechanics = mechanics
         self.converter = converter
         self.t0 = 0  # Initial time
-        # Store the solution in these lists
-        self.data = Bunch()  # Stores the solution data
+        self.clear()
+
+    def clear(self):
+        """
+        Clear the simulation data of the system model.
+        
+        This method is automatically run when the instance for the system model
+        is created. It can also be used in the case of repeated simulations to 
+        clear the data from the previous simulation run.
+        
+        """
+        self.t0 = 0  # Initial time
+        # Solution will be stored in the following lists
+        self.data = Bunch()
         self.data.t, self.data.q = [], []
         self.data.psi_ss, self.data.psi_rs = [], []
         self.data.theta_M, self.data.w_M = [], []
@@ -396,6 +408,11 @@ class DriveWithDiodeBridge(Drive):
     def __init__(self, machine=None, mechanics=None, converter=None):
         super().__init__(machine, mechanics, converter)
         self.converter = converter
+        self.clear()
+
+    def clear(self):
+        """Extend the base class."""
+        super().clear()
         self.data.u_dc, self.data.i_L = [], []
 
     def get_initial_values(self):
@@ -445,7 +462,7 @@ class DriveWithDiodeBridge(Drive):
         self.data.u_g = abc2complex(u_g_abc)
         # Voltage at the output of the diode bridge
         self.data.u_di = np.amax(u_g_abc, axis=0) - np.amin(u_g_abc, axis=0)
-        # Diode briddge switching states (-1, 0, 1)
+        # Diode bridge switching states (-1, 0, 1)
         q_g_abc = ((np.amax(u_g_abc, axis=0) == u_g_abc).astype(int) -
                    (np.amin(u_g_abc, axis=0) == u_g_abc).astype(int))
         # Grid current space vector
@@ -473,6 +490,11 @@ class DriveTwoMassMechanics(Drive):
 
     def __init__(self, machine=None, mechanics=None, converter=None):
         super().__init__(machine, mechanics, converter)
+        self.clear()
+
+    def clear(self):
+        """Extend the base class."""
+        super().clear()
         self.data.w_L, self.data.theta_ML = [], []
 
     def get_initial_values(self):

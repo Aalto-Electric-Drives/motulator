@@ -207,7 +207,7 @@ class PICtrl:
 
     Notes
     -----
-    This contoller can be used, e.g., as a speed controller. In this case, `y` 
+    This controller can be used, e.g., as a speed controller. In this case, `y` 
     corresponds to the rotor angular speed `w_M` and `u` to the torque reference 
     `tau_M_ref`.
 
@@ -345,8 +345,8 @@ class ComplexPICtrl:
 
     Notes
     -----
-    This contoller can be used, e.g., as a current controller. In this case, `i`
-    corresponds to the stator current and `u` to the stator voltage.
+    This controller can be used, e.g., as a current controller. In this case, 
+    `i` corresponds to the stator current and `u` to the stator voltage.
     
     References
     ----------
@@ -489,6 +489,17 @@ class Ctrl:
     """Base class for the control system."""
 
     def __init__(self):
+        self.clear()
+
+    def clear(self):
+        """
+        Clear the internal data store of the control system.
+        
+        This method is automatically run when the instance for the control 
+        system is created. It can also be used in the case of repeated 
+        simulations to clear the data from the previous simulation run.
+        
+        """
         self.data = Bunch()  # Data store
         self.clock = Clock()  # Digital clock
 
@@ -496,9 +507,9 @@ class Ctrl:
         """
         Run the main control loop.
 
-        The main control loop is callable that returns the sampling
-        period `T_s` (float)  and the duty ratios `d_abc` (ndarray, shape (3,)) 
-        for the next sampling period.
+        The main control loop is callable that returns the sampling period `T_s` 
+        (float) and the duty ratios `d_abc` (ndarray, shape (3,)) for the next 
+        sampling period.
 
         Parameters
         ----------
@@ -510,7 +521,7 @@ class Ctrl:
 
     def save(self, data):
         """
-        Save the internal date of the control system.
+        Save the internal data of the control system.
 
         Parameters
         ----------

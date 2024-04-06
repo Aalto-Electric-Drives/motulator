@@ -27,6 +27,8 @@ class Observer:
         Observer gain as a function of the rotor angular speed. The default is 
         ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
         `sensorless` else ``lambda w_m: 2*pi*15``.
+    sensorless : bool, optional
+        If True, sensorless control is used. The default is True.
 
     Attributes
     ----------
@@ -53,6 +55,7 @@ class Observer:
         self.alpha_o = alpha_o
         self.sensorless = sensorless
         self.k1 = k
+
         if self.sensorless:
             if self.k1 is None:  # If not given, use the default gains
                 sigma0 = .25*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
@@ -62,7 +65,7 @@ class Observer:
             if self.k1 is None:
                 self.k1 = lambda w_m: 2*np.pi*15
             self.k2 = lambda w_m: 0
-            
+
         # Initial states
         self.theta_m, self.w_m, self.psi_s = 0, 0, par.psi_f
 
@@ -99,7 +102,7 @@ class Observer:
             eps = -np.imag(e/psi_a) if np.abs(psi_a) > 0 else 0
             w_s = 2*self.alpha_o*eps + self.w_m
         else:
-            k1, k2 = self.k1, 0
+            k1, k2 = self.k1(w_m), 0
             w_s = w_m
             eps = 0
 
@@ -116,11 +119,12 @@ class FluxObserver:
     """
     Sensorless stator flux observer in external coordinates.
 
-    This observer estimates the stator flux linkage and the angle of the coordinate
-    system with respect to the d-axis of the rotor. Speed-estimation is omitted. 
-    The observer gain decouples the electrical and mechanical dynamics and allows placing 
-    the poles of the corresponding linearized estimation error dynamics. This implementation operates 
-    in external coordinates (typically synchronous coordinates defined by reference signals 
+    This observer estimates the stator flux linkage and the angle of the 
+    coordinate system with respect to the d-axis of the rotor. Speed-estimation 
+    is omitted. The observer gain decouples the electrical and mechanical 
+    dynamics and allows placing the poles of the corresponding linearized 
+    estimation error dynamics. This implementation operates in external 
+    coordinates (typically synchronous coordinates defined by reference signals 
     of a control system).
 
     Parameters
@@ -144,8 +148,7 @@ class FluxObserver:
     ----------
     .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, 
        "Stable and passive observer-based V/Hz control for synchronous Motors," 
-       Proc. IEEE ECCE, Detroit, MI, Oct. 2022, 
-       https://doi.org/10.1109/ECCE50734.2022.9947858
+       Proc. IEEE ECCE, 2022, https://doi.org/10.1109/ECCE50734.2022.9947858
 
     """
 
