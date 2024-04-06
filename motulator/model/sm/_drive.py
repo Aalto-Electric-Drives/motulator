@@ -189,11 +189,20 @@ class Drive:
         self.machine = machine
         self.mechanics = mechanics
         self.converter = converter
-
-        # Initial time
         self.t0 = 0
+        self.clear()
 
-        # Store the solution in these lists
+    def clear(self):
+        """
+        Clear the simulation data of the system model.
+        
+        This method is automatically run when the instance for the system model
+        is created. It can also be used in the case of repeated simulations to 
+        clear the data from the previous simulation run.
+        
+        """
+        self.t0 = 0
+        # Solution will be stored in the following lists
         self.data = Bunch()
         self.data.t, self.data.q = [], []
         self.data.psi_s, self.data.theta_m = [], []
@@ -329,6 +338,11 @@ class DriveTwoMassMechanics(Drive):
 
     def __init__(self, machine=None, mechanics=None, converter=None):
         super().__init__(machine, mechanics, converter)
+        self.clear()
+
+    def clear(self):
+        """Extend the base class."""
+        super().clear()
         self.data.w_L, self.data.theta_ML = [], []
 
     def get_initial_values(self):

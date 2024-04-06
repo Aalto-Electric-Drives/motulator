@@ -95,8 +95,10 @@ def plot_flux_map(data):
     fig = plt.figure(figsize=(10, 5))
     ax1 = fig.add_subplot(1, 2, 1, projection="3d")
     ax2 = fig.add_subplot(1, 2, 2, projection="3d")
-    ax1.plot_surface(data.i_s.real, data.i_s.imag, data.psi_s.real)
-    ax2.plot_surface(data.i_s.real, data.i_s.imag, data.psi_s.imag)
+    ax1.plot_surface(
+        data.i_s.real, data.i_s.imag, data.psi_s.real, cmap="viridis")
+    ax2.plot_surface(
+        data.i_s.real, data.i_s.imag, data.psi_s.imag, cmap="viridis")
     ax1.set_xlabel(r"$i_\mathrm{d}$ (A)")
     ax1.set_ylabel(r"$i_\mathrm{q}$ (A)")
     ax1.set_zlabel(r"$\psi_\mathrm{d}$ (Vs)")

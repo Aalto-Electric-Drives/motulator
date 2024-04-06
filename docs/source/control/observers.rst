@@ -79,7 +79,7 @@ Notice that the right-hand side of :eq:`hatws` is independent of :math:`\omega_\
 Gain Selection
 ^^^^^^^^^^^^^^
 
-The estimation-error dynamics are obtained by subtracting :eq:`dhatpsiR` from :eq:`dpsiR`. The resulting system can be linearized for analysis and gain selection purposes. Using the rotor speed as an exmaple, the small-signal deviation about the operating point is :math:`\Delta \omega_\mathrm{m} = \omega_\mathrm{m} - \omega_\mathrm{m0}`, where the subscript 0 refers to the operating point. Linearization of the estimation-error dynamics leads to [#Hin2010]_
+The estimation-error dynamics are obtained by subtracting :eq:`dhatpsiR` from :eq:`dpsiR`. The resulting system can be linearized for analysis and gain selection purposes. Using the rotor speed as an example, the small-signal deviation about the operating point is :math:`\Delta \omega_\mathrm{m} = \omega_\mathrm{m} - \omega_\mathrm{m0}`, where the subscript 0 refers to the operating point. Linearization of the estimation-error dynamics leads to [#Hin2010]_
 
 .. math::
 	\frac{\mathrm{d} \Delta\tilde{\boldsymbol{\psi}}_\mathrm{R}}{\mathrm{d} t} =  \boldsymbol{k}_1\Delta \tilde{\boldsymbol{v}} + \boldsymbol{k}_2\Delta \tilde{\boldsymbol{v}}^* - \mathrm{j}\omega_\mathrm{s0}\Delta\tilde{\boldsymbol{\psi}}_\mathrm{R}
