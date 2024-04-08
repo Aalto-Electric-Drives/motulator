@@ -148,7 +148,7 @@ Plot the saturation model (surfaces) and the measured flux map data (points).
 Notice that the simulation uses the the algebraic model only. The
 measured data is shown only for comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-134
+.. GENERATED FROM PYTHON SOURCE LINES 93-133
 
 .. code-block:: Python
 
@@ -179,7 +179,6 @@ measured data is shown only for comparison.
     ax1.set_xlabel(r"$\psi_\mathrm{d}$ (Vs)")
     ax1.set_ylabel(r"$\psi_\mathrm{q}$ (Vs)")
     ax1.set_zlabel(r"$i_\mathrm{d}$ (A)")
-    # ax1.legend([surf1, surf2], ["Measurements", "Model"])
 
     # Plot the q-axis experimental data as points
     surf3 = ax2.scatter(psi_d_meas, psi_q_meas, i_q_meas, marker=".", color="r")
@@ -205,12 +204,12 @@ measured data is shown only for comparison.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-137
+.. GENERATED FROM PYTHON SOURCE LINES 134-136
 
 Solve the PM flux linkage for the initial value of the stator flux, which is
 needed in the machine model below.
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-142
+.. GENERATED FROM PYTHON SOURCE LINES 136-141
 
 .. code-block:: Python
 
@@ -226,11 +225,11 @@ needed in the machine model below.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-144
+.. GENERATED FROM PYTHON SOURCE LINES 142-143
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-154
+.. GENERATED FROM PYTHON SOURCE LINES 143-153
 
 .. code-block:: Python
 
@@ -251,11 +250,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-156
+.. GENERATED FROM PYTHON SOURCE LINES 154-155
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-167
+.. GENERATED FROM PYTHON SOURCE LINES 155-166
 
 .. code-block:: Python
 
@@ -277,11 +276,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-169
+.. GENERATED FROM PYTHON SOURCE LINES 167-168
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-179
+.. GENERATED FROM PYTHON SOURCE LINES 168-178
 
 .. code-block:: Python
 
@@ -302,11 +301,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-181
+.. GENERATED FROM PYTHON SOURCE LINES 179-180
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-185
+.. GENERATED FROM PYTHON SOURCE LINES 180-184
 
 .. code-block:: Python
 
@@ -321,11 +320,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-187
+.. GENERATED FROM PYTHON SOURCE LINES 185-186
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-189
+.. GENERATED FROM PYTHON SOURCE LINES 186-188
 
 .. code-block:: Python
 
@@ -346,7 +345,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.437 seconds)
+   **Total running time of the script:** (0 minutes 11.629 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py:

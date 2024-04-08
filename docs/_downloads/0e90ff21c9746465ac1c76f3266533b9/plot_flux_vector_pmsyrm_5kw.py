@@ -117,7 +117,6 @@ surf2 = ax1.plot_surface(
 ax1.set_xlabel(r"$\psi_\mathrm{d}$ (Vs)")
 ax1.set_ylabel(r"$\psi_\mathrm{q}$ (Vs)")
 ax1.set_zlabel(r"$i_\mathrm{d}$ (A)")
-# ax1.legend([surf1, surf2], ["Measurements", "Model"])
 
 # Plot the q-axis experimental data as points
 surf3 = ax2.scatter(psi_d_meas, psi_q_meas, i_q_meas, marker=".", color="r")
