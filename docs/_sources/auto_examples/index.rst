@@ -319,6 +319,23 @@ torque are selected as controllable variables.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.5-kW  PM-SyRM (Baldor ECS10...">
+
+.. only:: html
+
+  .. image:: /auto_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_pmsyrm_5kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">5.5-kW PM-SyRM, saturated</div>
+    </div>
+
+
+.. raw:: html
+
     </div>
 
 Signal Injection
