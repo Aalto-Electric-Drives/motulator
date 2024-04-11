@@ -49,11 +49,9 @@ values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%
-# Create the simulation object and simulate it. You can also enable the PWM
-# model (which makes simulation slower). One-sampling-period computational
-# delay is modeled.
+# Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=8)
 
 # %%

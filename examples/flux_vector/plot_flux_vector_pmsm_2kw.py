@@ -46,7 +46,7 @@ mdl.mechanics.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.6)
 
 # %%

@@ -4,6 +4,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.io import savemat
 from motulator._helpers import abc2complex
+from motulator._utils import Bunch
 
 
 # %%
@@ -155,7 +156,7 @@ class CarrierComparison:
 
 
 # %%
-def _zoh(T_s, d_abc):
+def zoh(T_s, d_abc):
     """
     Zero-order hold of the duty ratios over the sampling period.
 
@@ -189,25 +190,16 @@ class Simulation:
 
     Parameters
     ----------
-    mdl : Drive 
+    mdl : Model 
         Continuous-time system model.
     ctrl : Ctrl
         Discrete-time controller.
-    delay : int, optional
-        Amount of computational delays. The default is 1.
-    pwm : bool, optional
-        Enable carrier comparison. The default is False.
 
     """
 
-    def __init__(self, mdl=None, ctrl=None, delay=1, pwm=False):
+    def __init__(self, mdl=None, ctrl=None):
         self.mdl = mdl
         self.ctrl = ctrl
-        self._delay = Delay(delay)
-        if pwm:
-            self._pwm = CarrierComparison()
-        else:
-            self._pwm = _zoh
 
     def simulate(self, t_stop=1, max_step=np.inf):
         """
@@ -222,7 +214,7 @@ class Simulation:
 
         Notes
         -----
-        Other options of `solve_ivp` could be easily changed if needed, but, for
+        Other options of `solve_ivp` could be easily used if needed, but, for
         simplicity, only `max_step` is included as an option of this method.
 
         """
@@ -243,17 +235,17 @@ class Simulation:
             T_s, d_abc_ref = self.ctrl(self.mdl)
 
             # Computational delay model
-            d_abc = self._delay(d_abc_ref)
+            d_abc = self.mdl.delay(d_abc_ref)
 
             # Carrier comparison
-            t_steps, q = self._pwm(T_s, d_abc)
+            t_steps, q = self.mdl.pwm(T_s, d_abc)
 
             # Loop over the sampling period T_s
             for i, t_step in enumerate(t_steps):
 
                 if t_step > 0:
                     # Update the switching state
-                    self.mdl.converter.q = q[i]
+                    self.mdl.q = q[i]
 
                     # Get initial values
                     x0 = self.mdl.get_initial_values()
@@ -267,7 +259,7 @@ class Simulation:
                     self.mdl.set_initial_values(t0_new, x0_new)
 
                     # Save the solution
-                    sol.q = len(sol.t)*[self.mdl.converter.q]
+                    sol.q = len(sol.t)*[self.mdl.q]
                     self.mdl.save(sol)
 
     def save_mat(self, name="sim"):
@@ -282,3 +274,108 @@ class Simulation:
         """
         savemat(name + "_mdl_data" + ".mat", self.mdl.data)
         savemat(name + "_ctrl_data" + ".mat", self.ctrl.data)
+
+
+# %%
+class Model:
+    """
+    Base class for continuous-time system models.
+
+    This base class is a template for a system model that interconnects the 
+    subsystems and provides an interface to the solver. 
+
+    Parameters
+    ----------
+    pwm : zoh | CarrierComparison, optional
+        Zero-order hold of duty ratios or carrier comparison. If None, the 
+        default is `zoh`.
+    delay : int, optional
+        Amount of computational delays. The default is 1.
+
+    """
+
+    def __init__(self, pwm=None, delay=1):
+        self.delay = Delay(delay)
+        self.pwm = zoh if pwm is None else pwm
+        self.t0 = 0  # Initial time
+        self.q = 0j  # Switching state vector
+        self.clear()
+
+    def clear(self):
+        """
+        Clear the simulation data of the system model.
+        
+        This method is automatically run when the instance for the system model
+        is created. It can also be used in the case of repeated simulations to 
+        clear the data from the previous simulation run.
+        
+        """
+        # Initial time
+        self.t0 = 0
+        # Solution will be stored in the following lists
+        self.data = Bunch()
+        self.data.t, self.data.q = [], []
+
+    def get_initial_values(self):
+        """
+        Get the initial values.
+
+        Returns
+        -------
+        x0 : complex list
+            Initial values of the state variables.
+
+        """
+        raise NotImplementedError
+
+    def set_initial_values(self, t0, x0):
+        """
+        Set the initial values.
+
+        Parameters
+        ----------
+        t0 : float
+            Initial time (s).
+        x0 : complex ndarray
+            Initial values of the state variables.
+
+        """
+        raise NotImplementedError
+
+    def f(self, t, x):
+        """
+        Compute the complete state derivative list for the solver.
+
+        Parameters
+        ----------
+        t : float
+            Time (s).
+        x : complex ndarray
+            State vector.
+
+        Returns
+        -------
+        complex list
+            State derivatives.
+
+        """
+        raise NotImplementedError
+
+    def save(self, sol):
+        """
+        Save the solution.
+
+        Parameters
+        ----------
+        sol : Bunch
+            Solution from the solver.
+
+        """
+        self.data.t.extend(sol.t)
+        self.data.q.extend(sol.q)
+
+    def post_process(self):
+        """Transform the lists to the ndarray format and post-process them."""
+        # From lists to the ndarray
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])

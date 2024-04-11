@@ -1,15 +1,15 @@
 """
 Observer-based V/Hz control for induction machine drives.
 
-This implements the observer-based V/Hz control method described in [#Tii2022]_. 
-The state-feedback control law is in the alternative form which uses an
+This implements the observer-based V/Hz control method [#Tii2022]_. The 
+state-feedback control law is in the alternative form which uses an 
 intermediate stator current reference.
 
 References
 ----------
-.. [#Tii2022] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-based 
-   V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022,
-   https://doi.org/10.1109/ECCE50734.2022.9948057
+.. [#Tii2022] Tiitinen, Hinkkanen, Harnefors, "Stable and passive 
+   observer-based V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, 
+   MI, Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9948057
 
 """
 

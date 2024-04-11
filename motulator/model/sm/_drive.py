@@ -5,8 +5,8 @@ Peak-valued complex space vectors are used.
 
 """
 import numpy as np
-from motulator._helpers import complex2abc
-from motulator._utils import Bunch
+from motulator._helpers import abc2complex, complex2abc, wrap
+from motulator.model._simulation import Model
 
 
 # %%
@@ -95,7 +95,7 @@ class SynchronousMachine:
         Returns
         -------
         complex list, length 2
-            Time derivative of the state vector, [dpsi_s, dtheta_m0]
+            Time derivative of the state vector, [dpsi_s, dtheta_m]
         i_s : complex
             Stator current (A).
         tau_M : float
@@ -104,7 +104,7 @@ class SynchronousMachine:
         Notes
         -----
         In addition to the state derivative, this method also returns the 
-        output signals (stator current `i_ss` and torque `tau_M`) needed for 
+        output signals (stator current `i_s` and torque `tau_M`) needed for 
         interconnection with other subsystems. This avoids overlapping 
         computation in simulation.
 
@@ -166,13 +166,12 @@ class SynchronousMachineSaturated(SynchronousMachine):
 
 
 # %%
-class Drive:
+class Drive(Model):
     """
     Continuous-time model for a synchronous machine drive.
 
     This interconnects the subsystems of a synchronous machine drive and 
-    provides an interface to the solver. More complicated systems could be 
-    modeled using a similar template.
+    provides an interface to the solver. 
 
     Parameters
     ----------
@@ -186,25 +185,14 @@ class Drive:
     """
 
     def __init__(self, machine=None, mechanics=None, converter=None):
+        super().__init__()
         self.machine = machine
         self.mechanics = mechanics
         self.converter = converter
-        self.t0 = 0
-        self.clear()
 
     def clear(self):
-        """
-        Clear the simulation data of the system model.
-        
-        This method is automatically run when the instance for the system model
-        is created. It can also be used in the case of repeated simulations to 
-        clear the data from the previous simulation run.
-        
-        """
-        self.t0 = 0
-        # Solution will be stored in the following lists
-        self.data = Bunch()
-        self.data.t, self.data.q = [], []
+        """Clear the simulation data of the system model."""
+        super().clear()
         self.data.psi_s, self.data.theta_m = [], []
         self.data.w_M, self.data.theta_M = [], []
 
@@ -243,9 +231,8 @@ class Drive:
         # x0[1:3].imag are always zero
         self.machine.theta_m0 = x0[1].real
         self.mechanics.w_M0 = x0[2].real
-        # Limit the angles into [-pi, pi)
-        self.mechanics.theta_m0 = np.mod(x0[1].real + np.pi, 2*np.pi) - np.pi
-        self.mechanics.theta_M0 = np.mod(x0[3].real + np.pi, 2*np.pi) - np.pi
+        self.mechanics.theta_m0 = wrap(x0[1].real)
+        self.mechanics.theta_M0 = wrap(x0[3].real)
 
     def f(self, t, x):
         """
@@ -268,8 +255,7 @@ class Drive:
         psi_s, theta_m, w_M, _ = x
 
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(
-            self.converter.q, self.converter.u_dc0)
+        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
         u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
 
         # State derivatives
@@ -280,17 +266,8 @@ class Drive:
         return machine_f + mechanics_f
 
     def save(self, sol):
-        """
-        Save the solution.
-
-        Parameters
-        ----------
-        sol : Bunch
-            Solution from the solver.
-
-        """
-        self.data.t.extend(sol.t)
-        self.data.q.extend(sol.q)
+        """Save the solution."""
+        super().save(sol)
         self.data.psi_s.extend(sol.y[0])
         self.data.theta_m.extend(sol.y[1].real)
         self.data.w_M.extend(sol.y[2].real)
@@ -298,10 +275,7 @@ class Drive:
 
     def post_process(self):
         """Transform the lists to the ndarray format and post-process them."""
-        # From lists to the ndarray
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
-
+        super().post_process()
         # Compute some useful quantities
         self.data.i_s, self.data.tau_M = self.machine.magnetic(self.data.psi_s)
         self.data.w_m = self.machine.n_p*self.data.w_M
@@ -310,20 +284,102 @@ class Drive:
             self.mechanics.tau_L_w(self.data.w_M))
         self.data.u_ss = self.converter.ac_voltage(
             self.data.q, self.converter.u_dc0)
-        self.data.theta_m = np.mod(  # Limit into [-pi, pi)
-            self.data.theta_m + np.pi, 2*np.pi) - np.pi
-        self.data.theta_M = np.mod(  # Limit into [-pi, pi)
-            self.data.theta_M + np.pi, 2*np.pi) - np.pi
+        self.data.theta_m = wrap(self.data.theta_m)
+        self.data.theta_M = wrap(self.data.theta_M)
         self.data.i_ss = self.data.i_s*np.exp(1j*self.data.theta_m)
+
+
+# %%
+class DriveWithDiodeBridge(Drive):
+    """
+    Synchronous machine drive equipped with a diode bridge.
+
+    This model extends the Drive class with a model for a three-phase diode 
+    bridge fed from stiff supply voltages. The DC bus is modeled as an inductor 
+    and a capacitor.
+
+    Parameters
+    ----------
+    machine : SynchronousMachine | SynchronousMachineSaturated
+        Induction machine model.
+    mechanics : Mechanics
+        Mechanics model.
+    converter : FrequencyConverter
+        Frequency converter model.
+
+    """
+
+    def __init__(self, machine=None, mechanics=None, converter=None):
+        super().__init__(machine, mechanics, converter)
+        self.converter = converter
+        self.clear()
+
+    def clear(self):
+        """Extend the base class."""
+        super().clear()
+        self.data.u_dc, self.data.i_L = [], []
+
+    def get_initial_values(self):
+        """Extend the base class."""
+        x0 = super().get_initial_values() + [
+            self.converter.u_dc0, self.converter.i_L0
+        ]
+        return x0
+
+    def set_initial_values(self, t0, x0):
+        """Extend the base class."""
+        super().set_initial_values(t0, x0[0:4])
+        self.converter.u_dc0 = x0[4].real
+        self.converter.i_L0 = x0[5].real
+
+    def f(self, t, x):
+        """Override the base class."""
+        # Unpack the states for better readability
+        psi_s, theta_m, w_M, _, u_dc, i_L = x
+
+        # Interconnections: outputs for computing the state derivatives
+        u_ss = self.converter.ac_voltage(self.q, u_dc)
+        u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
+
+        machine_f, i_s, tau_M = self.machine.f(psi_s, u_s, w_M)
+        i_ss = np.exp(1j*theta_m)*i_s  # Stator current in stator coordinates
+        i_dc = self.converter.dc_current(self.q, i_ss)
+
+        # Return the list of state derivatives
+        return (
+            machine_f + self.mechanics.f(t, w_M, tau_M) +
+            self.converter.f(t, u_dc, i_L, i_dc))
+
+    def save(self, sol):
+        """Extend the base class."""
+        super().save(sol)
+        self.data.u_dc.extend(sol.y[4].real)
+        self.data.i_L.extend(sol.y[5].real)
+
+    def post_process(self):
+        """Extend the base class."""
+        super().post_process()
+        # From lists to the ndarray
+        self.data.u_dc = np.asarray(self.data.u_dc)
+        self.data.i_L = np.asarray(self.data.i_L)
+        # Some useful variables
+        self.data.u_ss = self.converter.ac_voltage(self.data.q, self.data.u_dc)
+        self.data.i_dc = self.converter.dc_current(self.data.q, self.data.i_ss)
+        u_g_abc = self.converter.grid_voltages(self.data.t)
+        self.data.u_g = abc2complex(u_g_abc)
+        # Voltage at the output of the diode bridge
+        self.data.u_di = np.amax(u_g_abc, axis=0) - np.amin(u_g_abc, axis=0)
+        # Diode bridge switching states (-1, 0, 1)
+        q_g_abc = ((np.amax(u_g_abc, axis=0) == u_g_abc).astype(int) -
+                   (np.amin(u_g_abc, axis=0) == u_g_abc).astype(int))
+        # Grid current space vector
+        self.data.i_g = abc2complex(q_g_abc)*self.data.i_L
 
 
 # %%
 class DriveTwoMassMechanics(Drive):
     """
     Synchronous machine drive with two-mass mechanics.
-
-    This interconnects the subsystems of a synchronous machine drive and
-    provides an interface to the solver.
 
     Parameters
     ----------
@@ -356,15 +412,14 @@ class DriveTwoMassMechanics(Drive):
         """Extend the base class."""
         super().set_initial_values(t0, x0[0:4])
         self.mechanics.w_L0 = x0[4].real
-        self.mechanics.theta_ML0 = np.mod(x0[5].real + np.pi, 2*np.pi) - np.pi
+        self.mechanics.theta_ML0 = wrap(x0[5].real)
 
     def f(self, t, x):
         """Override the base class."""
         # Unpack the states
         psi_s, theta_m, w_M, _, w_L, theta_ML = x
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(
-            self.converter.q, self.converter.u_dc0)
+        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
         u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
         # State derivatives plus the outputs for interconnections
         machine_f, _, tau_M = self.machine.f(psi_s, u_s, w_M)

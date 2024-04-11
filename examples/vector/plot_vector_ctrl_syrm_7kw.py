@@ -50,12 +50,8 @@ values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%
-# Create the simulation object and simulate it.
+# Create the simulation object, simulate, and plot results in per-unit values.
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=4)
-
-# %%
-# Plot results in per-unit values.
-
 plot(sim, base)

@@ -194,3 +194,23 @@ class Step:
 
         """
         return self.initial_value + (t >= self.step_time)*self.step_value
+
+
+# %%
+def wrap(theta):
+    """
+    Limit the angle into the range [-pi, pi).
+
+    Parameters
+    ----------
+    theta : float
+        Angle (rad).
+
+    Returns
+    -------
+    float
+        Limited angle.
+
+    """
+
+    return np.mod(theta + np.pi, 2*np.pi) - np.pi

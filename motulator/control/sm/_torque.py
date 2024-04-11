@@ -1,10 +1,10 @@
 """
 Torque characteristics for synchronous machines.
 
-This contains computation and plotting of torque characteristics for synchronous 
-machines, including the MTPA and MTPV loci [#Mor1990]_. The methods can be used 
-to define look-up tables for control and to analyze the characteristics. This 
-version omits the magnetic saturation.
+This contains computation and plotting of torque characteristics for 
+synchronous machines, including the MTPA and MTPV loci [#Mor1990]_. The methods 
+can be used to define look-up tables for control and to analyze the 
+characteristics. This version omits the magnetic saturation.
 
 References
 ----------
@@ -232,7 +232,8 @@ class TorqueCharacteristics:
         Parameters
         ----------
         i_s_max : float
-            Maximum stator current magnitude (A) at which the locus is computed.
+            Maximum stator current magnitude (A) at which the locus is 
+            computed.
         psi_s_min : float, optional
             Minimum stator flux magnitude (Vs) at which the locus is computed.
         N : int, optional
@@ -295,7 +296,8 @@ class TorqueCharacteristics:
             Maximum stator flux magnitude (Vs) at which the locus is computed. 
             Either `psi_s_max` or `i_s_max` must be given.
         i_s_max : float, optional
-            Maximum stator current magnitude (A) at which the locus is computed.
+            Maximum stator current magnitude (A) at which the locus is 
+            computed.
         N : int, optional
             Amount of points. The default is 20.
 

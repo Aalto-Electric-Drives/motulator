@@ -62,12 +62,8 @@ k = .05*base.tau_nom/(base.w/base.n_p)**2
 mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # %%
-# Create the simulation object and simulate it.
+# Create the simulation object, simulate, and plot results in per-unit values.
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=.6)
-
-# %%
-# Plot results in per-unit values.
-
 plot(sim, base)

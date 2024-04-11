@@ -30,6 +30,7 @@ mechanics = model.Mechanics(J=.015)
 # Frequency converter with a diode bridge
 converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
 mdl = model.im.DriveWithDiodeBridge(machine, mechanics, converter)
+mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).
@@ -43,20 +44,20 @@ ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 # Set the speed reference and the external load torque. More complicated
 # signals could be defined as functions.
 
-ctrl.w_m_ref = lambda t: (t > .2)*(1.*base.w)
+ctrl.w_m_ref = lambda t: (t > .2)*base.w
 
 # Quadratic load torque profile (corresponding to pumps and fans)
 k = 1.1*base.tau_nom/(base.w/base.n_p)**2
 mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # Stepwise load torque at t = 1 s, 20% of the rated torque
-mdl.mechanics.tau_L_t = lambda t: (t > 1.)*base.tau_nom*.2
+mdl.mechanics.tau_L_t = lambda t: (t > 1.)*.2*base.tau_nom
 
 # %%
 # Create the simulation object and simulate it. The option `pwm=True` enables
 # the model for the carrier comparison.
 
-sim = model.Simulation(mdl, ctrl, pwm=True)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.5)
 
 # %%
@@ -65,12 +66,12 @@ sim.simulate(t_stop=1.5)
 # .. note::
 #    The DC link of this particular example is actually unstable at 1-p.u.
 #    speed at the rated load torque, since the inverter looks like a negative
-#    resistance to the DC link. You could notice this instability if simulating
-#    a longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
+#    resistance to the DC link. You can notice this instability if simulating a
+#    longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
 # sphinx_gallery_thumbnail_number = 2
 plot(sim, base)
-plot_extra(sim, t_span=(1.1, 1.125), base=base)
+plot_extra(sim, base, t_span=(1.1, 1.125))
 
 # %%
 # .. rubric:: References

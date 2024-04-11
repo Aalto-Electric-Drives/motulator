@@ -6,8 +6,8 @@ implemented in stator coordinates.
 
 """
 import numpy as np
-from motulator._helpers import abc2complex, complex2abc
-from motulator._utils import Bunch
+from motulator._helpers import abc2complex, complex2abc, wrap
+from motulator.model._simulation import Model
 
 
 # %%
@@ -41,8 +41,8 @@ class InductionMachine:
 
     References
     ----------
-    .. [#Sle1989] Slemon, "Modelling of induction machines for electric drives," 
-       IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
+    .. [#Sle1989] Slemon, "Modelling of induction machines for electric 
+       drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
 
     """
 
@@ -164,8 +164,8 @@ class InductionMachineSaturated(InductionMachine):
     """
     Γ-equivalent model of an induction machine model with main-flux saturation.
 
-    This extends the InductionMachine class with a main-flux magnetic saturation
-    model::
+    This extends the InductionMachine class with a main-flux magnetic 
+    saturation model::
 
         L_s = L_s(abs(psi_ss))
 
@@ -229,13 +229,12 @@ class InductionMachineInvGamma(InductionMachine):
 
 
 # %%
-class Drive:
+class Drive(Model):
     """
     Continuous-time model for an induction machine drive.
 
-    This interconnects the subsystems of an induction machine drive and provides
-    an interface to the solver. More complicated systems could be modeled using
-    a similar template.
+    This interconnects the subsystems of an induction machine drive and 
+    provides an interface to the solver. 
 
     Parameters
     ----------
@@ -249,25 +248,14 @@ class Drive:
     """
 
     def __init__(self, machine=None, mechanics=None, converter=None):
+        super().__init__()
         self.machine = machine
         self.mechanics = mechanics
         self.converter = converter
-        self.t0 = 0  # Initial time
-        self.clear()
 
     def clear(self):
-        """
-        Clear the simulation data of the system model.
-        
-        This method is automatically run when the instance for the system model
-        is created. It can also be used in the case of repeated simulations to 
-        clear the data from the previous simulation run.
-        
-        """
-        self.t0 = 0  # Initial time
-        # Solution will be stored in the following lists
-        self.data = Bunch()
-        self.data.t, self.data.q = [], []
+        """Clear the simulation data of the system model."""
+        super().clear()
         self.data.psi_ss, self.data.psi_rs = [], []
         self.data.theta_M, self.data.w_M = [], []
 
@@ -306,8 +294,7 @@ class Drive:
         self.machine.psi_rs0 = x0[1]
         # x0[2].imag and x0[3].imag are always zero
         self.mechanics.w_M0 = x0[2].real
-        # Limit theta_M0 = x0[3].real into [-pi, pi)
-        self.mechanics.theta_M0 = np.mod(x0[3].real + np.pi, 2*np.pi) - np.pi
+        self.mechanics.theta_M0 = wrap(x0[3].real)
 
     def f(self, t, x):
         """
@@ -329,8 +316,7 @@ class Drive:
         # Unpack the states
         psi_ss, psi_rs, w_M, _ = x
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(
-            self.converter.q, self.converter.u_dc0)
+        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
         # State derivatives plus the outputs for interconnections
         machine_f, _, tau_M = self.machine.f(psi_ss, psi_rs, u_ss, w_M)
         mechanics_f = self.mechanics.f(t, w_M, tau_M)
@@ -338,17 +324,8 @@ class Drive:
         return machine_f + mechanics_f
 
     def save(self, sol):
-        """
-        Save the solution.
-
-        Parameters
-        ----------
-        sol : Bunch object
-            Solution from the solver.
-
-        """
-        self.data.t.extend(sol.t)
-        self.data.q.extend(sol.q)
+        """Save the solution."""
+        super().save(sol)
         self.data.psi_ss.extend(sol.y[0])
         self.data.psi_rs.extend(sol.y[1])
         self.data.w_M.extend(sol.y[2].real)
@@ -356,17 +333,12 @@ class Drive:
 
     def post_process(self):
         """Transform the lists to the ndarray format and post-process them."""
-        # From lists to the ndarray
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
-
+        super().post_process()
         # Some useful variables
         self.data.i_ss, _, self.data.tau_M = self.machine.magnetic(
             self.data.psi_ss, self.data.psi_rs)
-        self.data.theta_M = np.mod(  # Limit into [-pi, pi)
-            self.data.theta_M + np.pi, 2*np.pi) - np.pi
-        self.data.theta_m = np.mod(  # Limit into [-pi, pi)
-            self.machine.n_p*self.data.theta_M + np.pi, 2*np.pi) - np.pi
+        self.data.theta_M = wrap(self.data.theta_M)
+        self.data.theta_m = wrap(self.machine.n_p*self.data.theta_M)
         self.data.w_m = self.machine.n_p*self.data.w_M
         self.data.tau_L = (
             self.mechanics.tau_L_t(self.data.t) +
@@ -407,7 +379,6 @@ class DriveWithDiodeBridge(Drive):
 
     def __init__(self, machine=None, mechanics=None, converter=None):
         super().__init__(machine, mechanics, converter)
-        self.converter = converter
         self.clear()
 
     def clear(self):
@@ -434,13 +405,13 @@ class DriveWithDiodeBridge(Drive):
         psi_ss, psi_rs, w_M, _, u_dc, i_L = x
 
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(self.converter.q, u_dc)
-        mach_f, i_ss, tau_M = self.machine.f(psi_ss, psi_rs, u_ss, w_M)
-        i_dc = self.converter.dc_current(self.converter.q, i_ss)
+        u_ss = self.converter.ac_voltage(self.q, u_dc)
+        machine_f, i_ss, tau_M = self.machine.f(psi_ss, psi_rs, u_ss, w_M)
+        i_dc = self.converter.dc_current(self.q, i_ss)
 
         # Return the list of state derivatives
         return (
-            mach_f + self.mechanics.f(t, w_M, tau_M) +
+            machine_f + self.mechanics.f(t, w_M, tau_M) +
             self.converter.f(t, u_dc, i_L, i_dc))
 
     def save(self, sol):
@@ -474,9 +445,6 @@ class DriveTwoMassMechanics(Drive):
     """
     Induction machine drive with two-mass mechanics.
 
-    This interconnects the subsystems of an induction machine drive and provides
-    an interface to the solver.
-
     Parameters
     ----------
     machine : InductionMachine | InductionMachineSaturated
@@ -508,15 +476,14 @@ class DriveTwoMassMechanics(Drive):
         """Extend the base class."""
         super().set_initial_values(t0, x0[0:4])
         self.mechanics.w_L0 = x0[4].real
-        self.mechanics.theta_ML0 = np.mod(x0[5].real + np.pi, 2*np.pi) - np.pi
+        self.mechanics.theta_ML0 = wrap(x0[5].real)
 
     def f(self, t, x):
         """Override the base class."""
         # Unpack the states
         psi_ss, psi_rs, w_M, _, w_L, theta_ML = x
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(
-            self.converter.q, self.converter.u_dc0)
+        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
         # State derivatives plus the outputs for interconnections
         machine_f, _, tau_M = self.machine.f(psi_ss, psi_rs, u_ss, w_M)
         mechanics_f = self.mechanics.f(t, w_M, w_L, theta_ML, tau_M)

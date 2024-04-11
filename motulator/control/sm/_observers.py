@@ -139,8 +139,8 @@ class FluxObserver:
     Attributes
     ----------
     delta : float
-        Angle estimate of the coordinate system with respect
-        to the d-axis of the rotor (electrical rad).
+        Angle estimate of the coordinate system with respect to the d-axis of 
+        the rotor (electrical rad).
     psi_s : complex
         Stator flux estimate (Vs).
   

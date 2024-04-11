@@ -31,6 +31,7 @@ machine = model.im.InductionMachineInvGamma(
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.im.Drive(machine, mechanics, converter)
+mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).
@@ -46,7 +47,7 @@ ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 # Speed reference
 times = np.array([0, .1, .3, 1])*2
-values = np.array([0, 0, 1, 1])*base.w*2
+values = np.array([0, 0, 1, 1])*2*base.w
 ctrl.w_m_ref = Sequence(times, values)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
@@ -56,10 +57,9 @@ mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 mdl.mechanics.tau_L_t = lambda t: (t > 1.)*base.tau_nom*0
 
 # %%
-# Create the simulation object and simulate it. The option ``pwm=True`` enables
-# the model for the carrier comparison.
+# Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=True)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=2)
 
 # %%

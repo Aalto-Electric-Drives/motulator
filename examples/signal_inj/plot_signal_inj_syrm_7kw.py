@@ -46,7 +46,7 @@ ctrl = control.sm.SignalInjectionCtrl(par, ref, T_s=250e-6)
 
 # Speed reference
 times = np.array([0, .25, .25, .375, .5, .625, .75, .75, 1])*4
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w*.1
+values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*.1*base.w
 ctrl.w_m_ref = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
@@ -56,7 +56,7 @@ mdl.mechanics.tau_L_t = Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=4)
 
 # %%
