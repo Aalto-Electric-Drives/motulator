@@ -26,7 +26,7 @@ These examples are for current vector control of induction machines and synchron
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
     </div>
 
 

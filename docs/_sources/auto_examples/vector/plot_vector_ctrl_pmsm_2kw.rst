@@ -18,8 +18,8 @@
 .. _sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:
 
 
-2.2-kW PMSM, diode bridge
-=========================
+2.2-kW PMSM
+===========
 
 This example simulates sensorless vector control of a 2.2-kW PMSM drive. 
 
@@ -155,7 +155,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.633 seconds)
+   **Total running time of the script:** (0 minutes 4.547 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:
