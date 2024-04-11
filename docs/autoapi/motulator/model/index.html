@@ -176,9 +176,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -373,7 +374,8 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Mechanics"><code class="docutils literal notranslate"><span class="pre">Mechanics</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Mechanics.f"><code class="docutils literal notranslate"><span class="pre">Mechanics.f()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Mechanics.meas_speed"><code class="docutils literal notranslate"><span class="pre">Mechanics.meas_speed()</span></code></a></li>
@@ -403,6 +405,8 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Simulation.save_mat"><code class="docutils literal notranslate"><span class="pre">Simulation.save_mat()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Delay"><code class="docutils literal notranslate"><span class="pre">Delay</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.zoh"><code class="docutils literal notranslate"><span class="pre">zoh()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -453,6 +457,19 @@ document.write(`
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.Simulation" title="motulator.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
 <td><p>Simulation environment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.Delay" title="motulator.model.Delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Delay</span></code></a></p></td>
+<td><p>Computational delay.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h3>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.zoh" title="motulator.model.zoh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zoh</span></code></a>(T_s, d_abc)</p></td>
+<td><p>Zero-order hold of the duty ratios over the sampling period.</p></td>
 </tr>
 </tbody>
 </table>
@@ -784,16 +801,14 @@ phase switching states are returned. The default is True.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.model.Simulation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_simulation.html#Simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.Simulation" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_simulation.html#Simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.Simulation" title="Permalink to this definition">#</a></dt>
 <dd><p>Simulation environment.</p>
 <p>Each simulation object has a system model object and a controller object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mdl</strong> (<a class="reference internal" href="im/_drive/index.html#motulator.model.im._drive.Drive" title="motulator.model.im._drive.Drive"><em>Drive</em></a>) – Continuous-time system model.</p></li>
+<li><p><strong>mdl</strong> (<a class="reference internal" href="_simulation/index.html#motulator.model._simulation.Model" title="motulator.model._simulation.Model"><em>Model</em></a>) – Continuous-time system model.</p></li>
 <li><p><strong>ctrl</strong> (<a class="reference internal" href="../control/_common/index.html#motulator.control._common.Ctrl" title="motulator.control._common.Ctrl"><em>Ctrl</em></a>) – Discrete-time controller.</p></li>
-<li><p><strong>delay</strong> (<em>int</em><em>, </em><em>optional</em>) – Amount of computational delays. The default is 1.</p></li>
-<li><p><strong>pwm</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable carrier comparison. The default is False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -810,7 +825,7 @@ phase switching states are returned. The default is True.</p></li>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Other options of <cite>solve_ivp</cite> could be easily changed if needed, but, for
+<p>Other options of <cite>solve_ivp</cite> could be easily used if needed, but, for
 simplicity, only <cite>max_step</cite> is included as an option of this method.</p>
 </dd></dl>
 
@@ -825,6 +840,39 @@ simplicity, only <cite>max_step</cite> is included as an option of this method.<
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.model.Delay">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">Delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_simulation.html#Delay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.Delay" title="Permalink to this definition">#</a></dt>
+<dd><p>Computational delay.</p>
+<p>This models the computational delay as a ring buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>int</em><em>, </em><em>optional</em>) – Length of the buffer in samples. The default is 1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.model.zoh">
+<span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">zoh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_simulation.html#zoh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.zoh" title="Permalink to this definition">#</a></dt>
+<dd><p>Zero-order hold of the duty ratios over the sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period.</p></li>
+<li><p><strong>d_abc</strong> (<em>array_like</em><em> of </em><em>floats</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Duty ratios in the range [0, 1].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>t_steps</strong> (<em>ndarray, shape (1,)</em>) – Sampling period as an array compatible with the solver.</p></li>
+<li><p><strong>q</strong> (<em>complex ndarray, shape (1,)</em>) – Duty ratio vector as an array compatible with the solver.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -877,7 +925,8 @@ simplicity, only <cite>max_step</cite> is included as an option of this method.<
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Mechanics"><code class="docutils literal notranslate"><span class="pre">Mechanics</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Mechanics.f"><code class="docutils literal notranslate"><span class="pre">Mechanics.f()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Mechanics.meas_speed"><code class="docutils literal notranslate"><span class="pre">Mechanics.meas_speed()</span></code></a></li>
@@ -907,6 +956,8 @@ simplicity, only <cite>max_step</cite> is included as an option of this method.<
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Simulation.save_mat"><code class="docutils literal notranslate"><span class="pre">Simulation.save_mat()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Delay"><code class="docutils literal notranslate"><span class="pre">Delay</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.zoh"><code class="docutils literal notranslate"><span class="pre">zoh()</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -71,8 +71,8 @@ simplicity, the saturation model parameters are hard-coded in function below,
 but the same model structure can also be used for other synchronous motors.
 For PM motors, the magnetomotive force (MMF) of the PMs can be modeled using
 constant current source `i_f` on the d-axis [#Awa2018]_, [#Jah1986]_.
-Correspondingly, this approach assumes that the MMFs of the d-axis current and
-of the PMs are in series. This model cannot capture the desaturation
+Correspondingly, this approach assumes that the MMFs of the d-axis current
+and of the PMs are in series. This model cannot capture the desaturation
 phenomenon of thin iron ribs, see [#Arm2009]_ for details. For such motors,
 look-up tables can be used.
 
@@ -198,18 +198,16 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-110
+.. GENERATED FROM PYTHON SOURCE LINES 107-108
 
-Create the simulation object and simulate it. You can also enable the PWM
-model (which makes simulation slower). One-sampling-period computational
-delay is modeled.
+Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-114
+.. GENERATED FROM PYTHON SOURCE LINES 108-112
 
 .. code-block:: Python
 
 
-    sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
+    sim = model.Simulation(mdl, ctrl)
     sim.simulate(t_stop=8)
 
 
@@ -219,12 +217,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-117
+.. GENERATED FROM PYTHON SOURCE LINES 113-115
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-120
+.. GENERATED FROM PYTHON SOURCE LINES 115-118
 
 .. code-block:: Python
 
@@ -243,7 +241,7 @@ the results in SI units.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-139
+.. GENERATED FROM PYTHON SOURCE LINES 119-137
 
 .. rubric:: References
 
@@ -267,7 +265,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 20.786 seconds)
+   **Total running time of the script:** (0 minutes 20.787 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py:

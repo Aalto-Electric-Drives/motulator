@@ -174,9 +174,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -388,6 +389,15 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.Drive.post_process"><code class="docutils literal notranslate"><span class="pre">Drive.post_process()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.clear"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.clear()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.get_initial_values()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.set_initial_values()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.f"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.f()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.save"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.save()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.post_process"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.post_process()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveTwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveTwoMassMechanics.clear"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.clear()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveTwoMassMechanics.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.get_initial_values()</span></code></a></li>
@@ -431,7 +441,10 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.sm._drive.Drive" title="motulator.model.sm._drive.Drive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drive</span></code></a></p></td>
 <td><p>Continuous-time model for a synchronous machine drive.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.sm._drive.DriveTwoMassMechanics" title="motulator.model.sm._drive.DriveTwoMassMechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.sm._drive.DriveWithDiodeBridge" title="motulator.model.sm._drive.DriveWithDiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveWithDiodeBridge</span></code></a></p></td>
+<td><p>Synchronous machine drive equipped with a diode bridge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.sm._drive.DriveTwoMassMechanics" title="motulator.model.sm._drive.DriveTwoMassMechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a></p></td>
 <td><p>Synchronous machine drive with two-mass mechanics.</p></td>
 </tr>
 </tbody>
@@ -502,7 +515,7 @@ linkage and the electrical angle of the rotor are the state variables.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>complex list, length 2</em> – Time derivative of the state vector, [dpsi_s, dtheta_m0]</p></li>
+<li><p><em>complex list, length 2</em> – Time derivative of the state vector, [dpsi_s, dtheta_m]</p></li>
 <li><p><strong>i_s</strong> (<em>complex</em>) – Stator current (A).</p></li>
 <li><p><strong>tau_M</strong> (<em>float</em>) – Electromagnetic torque (Nm).</p></li>
 </ul>
@@ -511,7 +524,7 @@ linkage and the electrical angle of the rotor are the state variables.</p>
 </dl>
 <p class="rubric">Notes</p>
 <p>In addition to the state derivative, this method also returns the
-output signals (stator current <cite>i_ss</cite> and torque <cite>tau_M</cite>) needed for
+output signals (stator current <cite>i_s</cite> and torque <cite>tau_M</cite>) needed for
 interconnection with other subsystems. This avoids overlapping
 computation in simulation.</p>
 </dd></dl>
@@ -560,10 +573,10 @@ should be solved from the the saturation model. The default is 0j.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.model.sm._drive.Drive">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.sm._drive.</span></span><span class="sig-name descname"><span class="pre">Drive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mechanics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#Drive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.Drive" title="Permalink to this definition">#</a></dt>
-<dd><p>Continuous-time model for a synchronous machine drive.</p>
+<dd><p>Bases: <a class="reference internal" href="../../_simulation/index.html#motulator.model._simulation.Model" title="motulator.model._simulation.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.model._simulation.Model</span></code></a></p>
+<p>Continuous-time model for a synchronous machine drive.</p>
 <p>This interconnects the subsystems of a synchronous machine drive and
-provides an interface to the solver. More complicated systems could be
-modeled using a similar template.</p>
+provides an interface to the solver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -577,9 +590,6 @@ modeled using a similar template.</p>
 <dt class="sig sig-object py" id="motulator.model.sm._drive.Drive.clear">
 <span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#Drive.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.Drive.clear" title="Permalink to this definition">#</a></dt>
 <dd><p>Clear the simulation data of the system model.</p>
-<p>This method is automatically run when the instance for the system model
-is created. It can also be used in the case of repeated simulations to
-clear the data from the previous simulation run.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -634,11 +644,6 @@ clear the data from the previous simulation run.</p>
 <dt class="sig sig-object py" id="motulator.model.sm._drive.Drive.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#Drive.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.Drive.save" title="Permalink to this definition">#</a></dt>
 <dd><p>Save the solution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sol</strong> (<a class="reference internal" href="../../../_utils/index.html#motulator._utils.Bunch" title="motulator._utils.Bunch"><em>Bunch</em></a>) – Solution from the solver.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -650,12 +655,65 @@ clear the data from the previous simulation run.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.model.sm._drive.DriveWithDiodeBridge">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.sm._drive.</span></span><span class="sig-name descname"><span class="pre">DriveWithDiodeBridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mechanics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#DriveWithDiodeBridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.DriveWithDiodeBridge" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motulator.model.sm._drive.Drive" title="motulator.model.sm._drive.Drive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drive</span></code></a></p>
+<p>Synchronous machine drive equipped with a diode bridge.</p>
+<p>This model extends the Drive class with a model for a three-phase diode
+bridge fed from stiff supply voltages. The DC bus is modeled as an inductor
+and a capacitor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.model.sm._drive.SynchronousMachine" title="motulator.model.sm._drive.SynchronousMachine"><em>SynchronousMachine</em></a><em> | </em><a class="reference internal" href="#motulator.model.sm._drive.SynchronousMachineSaturated" title="motulator.model.sm._drive.SynchronousMachineSaturated"><em>SynchronousMachineSaturated</em></a>) – Induction machine model.</p></li>
+<li><p><strong>mechanics</strong> (<a class="reference internal" href="../../_mechanics/index.html#motulator.model._mechanics.Mechanics" title="motulator.model._mechanics.Mechanics"><em>Mechanics</em></a>) – Mechanics model.</p></li>
+<li><p><strong>converter</strong> (<a class="reference internal" href="../../_converter/index.html#motulator.model._converter.FrequencyConverter" title="motulator.model._converter.FrequencyConverter"><em>FrequencyConverter</em></a>) – Frequency converter model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.sm._drive.DriveWithDiodeBridge.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#DriveWithDiodeBridge.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.DriveWithDiodeBridge.clear" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.sm._drive.DriveWithDiodeBridge.get_initial_values">
+<span class="sig-name descname"><span class="pre">get_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#DriveWithDiodeBridge.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.DriveWithDiodeBridge.get_initial_values" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.sm._drive.DriveWithDiodeBridge.set_initial_values">
+<span class="sig-name descname"><span class="pre">set_initial_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#DriveWithDiodeBridge.set_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.DriveWithDiodeBridge.set_initial_values" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.sm._drive.DriveWithDiodeBridge.f">
+<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#DriveWithDiodeBridge.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.DriveWithDiodeBridge.f" title="Permalink to this definition">#</a></dt>
+<dd><p>Override the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.sm._drive.DriveWithDiodeBridge.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#DriveWithDiodeBridge.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.DriveWithDiodeBridge.save" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.sm._drive.DriveWithDiodeBridge.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#DriveWithDiodeBridge.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.DriveWithDiodeBridge.post_process" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.model.sm._drive.DriveTwoMassMechanics">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.sm._drive.</span></span><span class="sig-name descname"><span class="pre">DriveTwoMassMechanics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mechanics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/sm/_drive.html#DriveTwoMassMechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.sm._drive.DriveTwoMassMechanics" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.model.sm._drive.Drive" title="motulator.model.sm._drive.Drive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drive</span></code></a></p>
 <p>Synchronous machine drive with two-mass mechanics.</p>
-<p>This interconnects the subsystems of a synchronous machine drive and
-provides an interface to the solver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -750,6 +808,15 @@ provides an interface to the solver.</p>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.Drive.f"><code class="docutils literal notranslate"><span class="pre">Drive.f()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.Drive.save"><code class="docutils literal notranslate"><span class="pre">Drive.save()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.Drive.post_process"><code class="docutils literal notranslate"><span class="pre">Drive.post_process()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.clear"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.clear()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.get_initial_values()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.set_initial_values()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.f"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.f()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.save"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.save()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveWithDiodeBridge.post_process"><code class="docutils literal notranslate"><span class="pre">DriveWithDiodeBridge.post_process()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.sm._drive.DriveTwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">

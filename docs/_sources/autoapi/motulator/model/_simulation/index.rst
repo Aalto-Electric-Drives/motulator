@@ -24,7 +24,16 @@ Classes
    motulator.model._simulation.Delay
    motulator.model._simulation.CarrierComparison
    motulator.model._simulation.Simulation
+   motulator.model._simulation.Model
 
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   motulator.model._simulation.zoh
 
 
 
@@ -127,7 +136,37 @@ Classes
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Simulation(mdl=None, ctrl=None, delay=1, pwm=False)
+.. py:function:: zoh(T_s, d_abc)
+
+   
+   Zero-order hold of the duty ratios over the sampling period.
+
+   :param T_s: Sampling period.
+   :type T_s: float
+   :param d_abc: Duty ratios in the range [0, 1].
+   :type d_abc: array_like of floats, shape (3,)
+
+   :returns: * **t_steps** (*ndarray, shape (1,)*) -- Sampling period as an array compatible with the solver.
+             * **q** (*complex ndarray, shape (1,)*) -- Duty ratio vector as an array compatible with the solver.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Simulation(mdl=None, ctrl=None)
 
 
    
@@ -136,13 +175,9 @@ Classes
    Each simulation object has a system model object and a controller object.
 
    :param mdl: Continuous-time system model.
-   :type mdl: Drive
+   :type mdl: Model
    :param ctrl: Discrete-time controller.
    :type ctrl: Ctrl
-   :param delay: Amount of computational delays. The default is 1.
-   :type delay: int, optional
-   :param pwm: Enable carrier comparison. The default is False.
-   :type pwm: bool, optional
 
 
 
@@ -172,7 +207,7 @@ Classes
 
       .. rubric:: Notes
 
-      Other options of `solve_ivp` could be easily changed if needed, but, for
+      Other options of `solve_ivp` could be easily used if needed, but, for
       simplicity, only `max_step` is included as an option of this method.
 
 
@@ -199,6 +234,197 @@ Classes
 
       :param name: Name for the simulation instance. The default is `sim`.
       :type name: str, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Model(pwm=None, delay=1)
+
+
+   
+   Base class for continuous-time system models.
+
+   This base class is a template for a system model that interconnects the
+   subsystems and provides an interface to the solver.
+
+   :param pwm: Zero-order hold of duty ratios or carrier comparison. If None, the
+               default is `zoh`.
+   :type pwm: zoh | CarrierComparison, optional
+   :param delay: Amount of computational delays. The default is 1.
+   :type delay: int, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Clear the simulation data of the system model.
+
+      This method is automatically run when the instance for the system model
+      is created. It can also be used in the case of repeated simulations to
+      clear the data from the previous simulation run.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_initial_values()
+      :abstractmethod:
+
+      
+      Get the initial values.
+
+      :returns: **x0** -- Initial values of the state variables.
+      :rtype: complex list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_initial_values(t0, x0)
+      :abstractmethod:
+
+      
+      Set the initial values.
+
+      :param t0: Initial time (s).
+      :type t0: float
+      :param x0: Initial values of the state variables.
+      :type x0: complex ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(t, x)
+      :abstractmethod:
+
+      
+      Compute the complete state derivative list for the solver.
+
+      :param t: Time (s).
+      :type t: float
+      :param x: State vector.
+      :type x: complex ndarray
+
+      :returns: State derivatives.
+      :rtype: complex list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: save(sol)
+
+      
+      Save the solution.
+
+      :param sol: Solution from the solver.
+      :type sol: Bunch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: post_process()
+
+      
+      Transform the lists to the ndarray format and post-process them.
+
 
 
 

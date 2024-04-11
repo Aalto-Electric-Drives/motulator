@@ -67,7 +67,7 @@ Compute base values based on the nominal values (just for figures).
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-34
+.. GENERATED FROM PYTHON SOURCE LINES 24-35
 
 .. code-block:: Python
 
@@ -80,6 +80,7 @@ Create the system model.
     # Frequency converter with a diode bridge
     converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
     mdl = model.im.DriveWithDiodeBridge(machine, mechanics, converter)
+    mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 
 
@@ -88,11 +89,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-36
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-42
+.. GENERATED FROM PYTHON SOURCE LINES 37-43
 
 .. code-block:: Python
 
@@ -109,24 +110,24 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-45
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
 
 Set the speed reference and the external load torque. More complicated
 signals could be defined as functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-55
+.. GENERATED FROM PYTHON SOURCE LINES 46-56
 
 .. code-block:: Python
 
 
-    ctrl.w_m_ref = lambda t: (t > .2)*(1.*base.w)
+    ctrl.w_m_ref = lambda t: (t > .2)*base.w
 
     # Quadratic load torque profile (corresponding to pumps and fans)
     k = 1.1*base.tau_nom/(base.w/base.n_p)**2
     mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
     # Stepwise load torque at t = 1 s, 20% of the rated torque
-    mdl.mechanics.tau_L_t = lambda t: (t > 1.)*base.tau_nom*.2
+    mdl.mechanics.tau_L_t = lambda t: (t > 1.)*.2*base.tau_nom
 
 
 
@@ -135,17 +136,17 @@ signals could be defined as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-58
+.. GENERATED FROM PYTHON SOURCE LINES 57-59
 
 Create the simulation object and simulate it. The option `pwm=True` enables
 the model for the carrier comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-62
+.. GENERATED FROM PYTHON SOURCE LINES 59-63
 
 .. code-block:: Python
 
 
-    sim = model.Simulation(mdl, ctrl, pwm=True)
+    sim = model.Simulation(mdl, ctrl)
     sim.simulate(t_stop=1.5)
 
 
@@ -155,24 +156,24 @@ the model for the carrier comparison.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-70
+.. GENERATED FROM PYTHON SOURCE LINES 64-71
 
 Plot results in per-unit values.
 
 .. note::
    The DC link of this particular example is actually unstable at 1-p.u.
    speed at the rated load torque, since the inverter looks like a negative
-   resistance to the DC link. You could notice this instability if simulating
-   a longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
+   resistance to the DC link. You can notice this instability if simulating a
+   longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-75
+.. GENERATED FROM PYTHON SOURCE LINES 71-76
 
 .. code-block:: Python
 
 
     # sphinx_gallery_thumbnail_number = 2
     plot(sim, base)
-    plot_extra(sim, t_span=(1.1, 1.125), base=base)
+    plot_extra(sim, base, t_span=(1.1, 1.125))
 
 
 
@@ -205,7 +206,7 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-81
+.. GENERATED FROM PYTHON SOURCE LINES 77-82
 
 .. rubric:: References
 
@@ -216,7 +217,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 14.816 seconds)
+   **Total running time of the script:** (0 minutes 14.914 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:

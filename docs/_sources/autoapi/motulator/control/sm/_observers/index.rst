@@ -148,8 +148,8 @@ Classes
 
    .. attribute:: delta
 
-      Angle estimate of the coordinate system with respect
-      to the d-axis of the rotor (electrical rad).
+      Angle estimate of the coordinate system with respect to the d-axis of
+      the rotor (electrical rad).
 
       :type: float
 

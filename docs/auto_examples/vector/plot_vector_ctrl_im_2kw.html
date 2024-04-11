@@ -53,7 +53,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="V/Hz Control" href="../vhz/index.html" />
-    <link rel="prev" title="2.2-kW PMSM" href="plot_vector_ctrl_pmsm_2kw.html" />
+    <link rel="prev" title="5-kW PM-SyRM" href="plot_vector_ctrl_pmsyrm_thor.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -176,9 +176,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Vector Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -399,7 +400,7 @@ parameters are hardcoded in the function below, but this model structure can
 be used also for other induction machines.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L_s</span><span class="p">(</span><span class="n">psi</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Stator inductance saturation model for a 2.2-kW machine.</span>
+<span class="sd">    Stator inductance saturation model for a 2.2-kW induction machine.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -425,13 +426,15 @@ be used also for other induction machines.</p>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">)</span>
 <span class="c1"># Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)</span>
 <span class="c1"># machine = model.im.InductionMachineInvGamma(</span>
-<span class="c1">#    R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)</span>
+<span class="c1">#    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)</span>
 <span class="c1"># Alternatively, configure the machine model using its Γ parameters</span>
 <span class="c1"># machine = model.im.InductionMachine(</span>
-<span class="c1">#     R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)</span>
+<span class="c1">#     n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">im</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
+<span class="c1"># mdl.pwm = model.CarrierComparison()  # Try to enable the PWM model</span>
+<span class="c1"># mdl.delay = model.Delay(2)  # Try longer computational delay</span>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
@@ -457,22 +460,11 @@ uncomment the field-weakening sequence.</p>
 <span class="c1"># No load, field-weakening (uncomment to try)</span>
 <span class="c1"># ctrl.w_m_ref = lambda t: (t &gt; .2)*(2*base.w)</span>
 <span class="c1"># mdl.mechanics.tau_L_t = lambda t: 0</span>
-
-<span class="c1"># Speed reversals under the rated load (uncomment to try, change t_stop=8 below)</span>
-<span class="c1"># import numpy as np</span>
-<span class="c1"># from motulator.helpers import Sequence</span>
-<span class="c1"># times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8</span>
-<span class="c1"># values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w</span>
-<span class="c1"># ctrl.w_m_ref = Sequence(times, values)</span>
-<span class="c1"># # External load torque</span>
-<span class="c1"># times = np.array([0, .125, .125, .875, .875, 1])*8</span>
-<span class="c1"># values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom</span>
-<span class="c1"># mdl.mechanics.tau_L_t = Sequence(times, values)</span>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower).</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -490,7 +482,7 @@ of induction motor drives,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.559 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.599 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/822ca16ec2c87f4b1cb305aa4eafaca5/plot_vector_ctrl_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vector_ctrl_im_2kw.ipynb</span></code></a></p>
@@ -514,12 +506,12 @@ of induction motor drives,” IEEE Trans. Ind. Appl., 2012,
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="plot_vector_ctrl_pmsm_2kw.html"
+       href="plot_vector_ctrl_pmsyrm_thor.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">2.2-kW PMSM</p>
+        <p class="prev-next-title">5-kW PM-SyRM</p>
       </div>
     </a>
     <a class="right-next"

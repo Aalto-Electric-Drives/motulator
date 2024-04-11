@@ -174,9 +174,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -387,6 +388,7 @@ document.write(`
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator._helpers.Sequence"><code class="docutils literal notranslate"><span class="pre">Sequence</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator._helpers.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator._helpers.wrap"><code class="docutils literal notranslate"><span class="pre">wrap()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -432,6 +434,9 @@ document.write(`
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator._helpers.complex2abc" title="motulator._helpers.complex2abc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complex2abc</span></code></a>(u)</p></td>
 <td><p>Transform a complex space vector to three-phase quantities.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator._helpers.wrap" title="motulator._helpers.wrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap</span></code></a>(theta)</p></td>
+<td><p>Limit the angle into the range [-pi, pi).</p></td>
 </tr>
 </tbody>
 </table>
@@ -614,6 +619,23 @@ between the data points.</p>
 <dd><p>Step function.</p>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator._helpers.wrap">
+<span class="sig-prename descclassname"><span class="pre">motulator._helpers.</span></span><span class="sig-name descname"><span class="pre">wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/_helpers.html#wrap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator._helpers.wrap" title="Permalink to this definition">#</a></dt>
+<dd><p>Limit the angle into the range [-pi, pi).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Angle (rad).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Limited angle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 </section>
@@ -662,6 +684,7 @@ between the data points.</p>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator._helpers.Sequence"><code class="docutils literal notranslate"><span class="pre">Sequence</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator._helpers.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator._helpers.wrap"><code class="docutils literal notranslate"><span class="pre">wrap()</span></code></a></li>
 </ul>
 </li>
 </ul>

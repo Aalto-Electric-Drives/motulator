@@ -29,6 +29,40 @@ These examples are for current vector control of induction machines and synchron
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive. ">
+
+.. only:: html
+
+  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive,  equipped with a diode...">
+
+.. only:: html
+
+  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_diode_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 6.7-kW SyRM drive.">
 
 .. only:: html
@@ -58,23 +92,6 @@ These examples are for current vector control of induction machines and synchron
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">5-kW PM-SyRM</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive.">
-
-.. only:: html
-
-  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
     </div>
 
 

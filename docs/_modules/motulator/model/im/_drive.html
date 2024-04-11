@@ -173,9 +173,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -331,8 +332,8 @@ document.write(`
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">motulator._helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">complex2abc</span>
-<span class="kn">from</span> <span class="nn">motulator._utils</span> <span class="kn">import</span> <span class="n">Bunch</span>
+<span class="kn">from</span> <span class="nn">motulator._helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">complex2abc</span><span class="p">,</span> <span class="n">wrap</span>
+<span class="kn">from</span> <span class="nn">motulator.model._simulation</span> <span class="kn">import</span> <span class="n">Model</span>
 
 
 <span class="c1"># %%</span>
@@ -366,8 +367,8 @@ document.write(`
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Sle1989] Slemon, &quot;Modelling of induction machines for electric drives,&quot; </span>
-<span class="sd">       IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.</span>
+<span class="sd">    .. [#Sle1989] Slemon, &quot;Modelling of induction machines for electric </span>
+<span class="sd">       drives,&quot; IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -489,8 +490,8 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Γ-equivalent model of an induction machine model with main-flux saturation.</span>
 
-<span class="sd">    This extends the InductionMachine class with a main-flux magnetic saturation</span>
-<span class="sd">    model::</span>
+<span class="sd">    This extends the InductionMachine class with a main-flux magnetic </span>
+<span class="sd">    saturation model::</span>
 
 <span class="sd">        L_s = L_s(abs(psi_ss))</span>
 
@@ -554,13 +555,12 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="Drive"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.Drive">[docs]</a><span class="k">class</span> <span class="nc">Drive</span><span class="p">:</span>
+<div class="viewcode-block" id="Drive"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.Drive">[docs]</a><span class="k">class</span> <span class="nc">Drive</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Continuous-time model for an induction machine drive.</span>
 
-<span class="sd">    This interconnects the subsystems of an induction machine drive and provides</span>
-<span class="sd">    an interface to the solver. More complicated systems could be modeled using</span>
-<span class="sd">    a similar template.</span>
+<span class="sd">    This interconnects the subsystems of an induction machine drive and </span>
+<span class="sd">    provides an interface to the solver. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -574,25 +574,14 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mechanics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">machine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span> <span class="o">=</span> <span class="n">mechanics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Initial time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Drive.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.Drive.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Clear the simulation data of the system model.</span>
-<span class="sd">        </span>
-<span class="sd">        This method is automatically run when the instance for the system model</span>
-<span class="sd">        is created. It can also be used in the case of repeated simulations to </span>
-<span class="sd">        clear the data from the previous simulation run.</span>
-<span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Initial time</span>
-        <span class="c1"># Solution will be stored in the following lists</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the simulation data of the system model.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_ss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_rs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span></div>
 
@@ -631,8 +620,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">psi_rs0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="c1"># x0[2].imag and x0[3].imag are always zero</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">w_M0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
-        <span class="c1"># Limit theta_M0 = x0[3].real into [-pi, pi)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">theta_M0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">theta_M0</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Drive.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.Drive.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -654,8 +642,7 @@ document.write(`
         <span class="c1"># Unpack the states</span>
         <span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x</span>
         <span class="c1"># Interconnections: outputs for computing the state derivatives</span>
-        <span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_voltage</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc0</span><span class="p">)</span>
+        <span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc0</span><span class="p">)</span>
         <span class="c1"># State derivatives plus the outputs for interconnections</span>
         <span class="n">machine_f</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">,</span> <span class="n">u_ss</span><span class="p">,</span> <span class="n">w_M</span><span class="p">)</span>
         <span class="n">mechanics_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">)</span>
@@ -663,17 +650,8 @@ document.write(`
         <span class="k">return</span> <span class="n">machine_f</span> <span class="o">+</span> <span class="n">mechanics_f</span></div>
 
 <div class="viewcode-block" id="Drive.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.Drive.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Save the solution.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        sol : Bunch object</span>
-<span class="sd">            Solution from the solver.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">q</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the solution.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_ss</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_rs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
@@ -681,17 +659,12 @@ document.write(`
 
 <div class="viewcode-block" id="Drive.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.Drive.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform the lists to the ndarray format and post-process them.&quot;&quot;&quot;</span>
-        <span class="c1"># From lists to the ndarray</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
         <span class="c1"># Some useful variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_ss</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">magnetic</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_ss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_rs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span>  <span class="c1"># Limit into [-pi, pi)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span>  <span class="c1"># Limit into [-pi, pi)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span>
@@ -732,7 +705,6 @@ document.write(`
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mechanics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
 <div class="viewcode-block" id="DriveWithDiodeBridge.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.DriveWithDiodeBridge.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -759,13 +731,13 @@ document.write(`
         <span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span> <span class="o">=</span> <span class="n">x</span>
 
         <span class="c1"># Interconnections: outputs for computing the state derivatives</span>
-        <span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
-        <span class="n">mach_f</span><span class="p">,</span> <span class="n">i_ss</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">,</span> <span class="n">u_ss</span><span class="p">,</span> <span class="n">w_M</span><span class="p">)</span>
-        <span class="n">i_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">dc_current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">i_ss</span><span class="p">)</span>
+        <span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+        <span class="n">machine_f</span><span class="p">,</span> <span class="n">i_ss</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">,</span> <span class="n">u_ss</span><span class="p">,</span> <span class="n">w_M</span><span class="p">)</span>
+        <span class="n">i_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">dc_current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">i_ss</span><span class="p">)</span>
 
         <span class="c1"># Return the list of state derivatives</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">mach_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">machine_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">)</span> <span class="o">+</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="DriveWithDiodeBridge.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.DriveWithDiodeBridge.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
@@ -799,9 +771,6 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Induction machine drive with two-mass mechanics.</span>
 
-<span class="sd">    This interconnects the subsystems of an induction machine drive and provides</span>
-<span class="sd">    an interface to the solver.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    machine : InductionMachine | InductionMachineSaturated</span>
@@ -833,15 +802,14 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_initial_values</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">w_L0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">theta_ML0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">theta_ML0</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DriveTwoMassMechanics.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/im/index.html#motulator.model.im._drive.DriveTwoMassMechanics.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Override the base class.&quot;&quot;&quot;</span>
         <span class="c1"># Unpack the states</span>
         <span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">w_L</span><span class="p">,</span> <span class="n">theta_ML</span> <span class="o">=</span> <span class="n">x</span>
         <span class="c1"># Interconnections: outputs for computing the state derivatives</span>
-        <span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_voltage</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc0</span><span class="p">)</span>
+        <span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc0</span><span class="p">)</span>
         <span class="c1"># State derivatives plus the outputs for interconnections</span>
         <span class="n">machine_f</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">psi_ss</span><span class="p">,</span> <span class="n">psi_rs</span><span class="p">,</span> <span class="n">u_ss</span><span class="p">,</span> <span class="n">w_M</span><span class="p">)</span>
         <span class="n">mechanics_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">w_L</span><span class="p">,</span> <span class="n">theta_ML</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">)</span>

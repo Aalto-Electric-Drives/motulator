@@ -18,23 +18,22 @@
 .. _sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:
 
 
-2.2-kW PMSM
-===========
+2.2-kW PMSM, diode bridge
+=========================
 
-This example simulates sensorless vector control of a 2.2-kW PMSM drive.
+This example simulates sensorless vector control of a 2.2-kW PMSM drive. 
 
 .. GENERATED FROM PYTHON SOURCE LINES 10-11
 
 Imports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-16
+.. GENERATED FROM PYTHON SOURCE LINES 11-15
 
 .. code-block:: Python
 
 
-    import numpy as np
     from motulator import model, control
-    from motulator import BaseValues, Sequence, plot, plot_extra
+    from motulator import BaseValues, plot
 
 
 
@@ -43,11 +42,11 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 16-17
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 17-21
 
 .. code-block:: Python
 
@@ -62,11 +61,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-31
+.. GENERATED FROM PYTHON SOURCE LINES 23-31
 
 .. code-block:: Python
 
@@ -76,6 +75,7 @@ Configure the system model.
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.sm.Drive(machine, mechanics, converter)
+    # mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 
 
@@ -109,22 +109,16 @@ Configure the control system.
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-54
+.. GENERATED FROM PYTHON SOURCE LINES 41-48
 
 .. code-block:: Python
 
 
     # Speed reference
-    times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
-    values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-    ctrl.w_m_ref = Sequence(times, values)
+    ctrl.w_m_ref = lambda t: (t > .2)*2*base.w
+
     # External load torque
-    times = np.array([0, .125, .125, .875, .875, 1])*4
-    values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-    mdl.mechanics.tau_L_t = Sequence(times, values)
-
-    # mdl.mechanics.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
-    # ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
+    mdl.mechanics.tau_L_t = lambda t: (t > .8)*.7*base.tau_nom
 
 
 
@@ -133,54 +127,26 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-70
+.. GENERATED FROM PYTHON SOURCE LINES 50-55
 
 .. code-block:: Python
 
 
-    # Simulate the system without modeling PWM
-    sim = model.Simulation(mdl, ctrl, pwm=False)
-    sim.simulate(t_stop=4)
-    plot(sim, base)  # Plot results in per-unit values.
-
-    # Repeat the same simulation with PWM model enabled (takes a bit longer)
-    mdl.clear()  # First clear the stored data from the previous simulation run
-    ctrl.clear()
-    sim = model.Simulation(mdl, ctrl, pwm=True)
-    sim.simulate(t_stop=4)
+    # Simulate the system and plot results in per-unit values
+    sim = model.Simulation(mdl, ctrl)
+    sim.simulate(t_stop=1.4)
     plot(sim, base)
-    # Plot a zoomed view
-    plot_extra(sim, t_span=(1.1, 1.125), base=base)
 
 
 
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image-sg:: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png
-         :alt: plot vector ctrl pmsm 2kw
-         :srcset: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_002.png
-         :alt: plot vector ctrl pmsm 2kw
-         :srcset: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_002.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_003.png
-         :alt: plot vector ctrl pmsm 2kw
-         :srcset: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_003.png
-         :class: sphx-glr-multi-img
+.. image-sg:: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png
+   :alt: plot vector ctrl pmsm 2kw
+   :srcset: /auto_examples/vector/images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png
+   :class: sphx-glr-single-img
 
 
 
@@ -189,7 +155,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 40.807 seconds)
+   **Total running time of the script:** (0 minutes 4.633 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:

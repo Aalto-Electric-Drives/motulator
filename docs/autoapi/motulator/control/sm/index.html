@@ -176,9 +176,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -918,8 +919,8 @@ of a control system).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.control.sm.FluxObserver.delta">
 <span class="sig-name descname"><span class="pre">delta</span></span><a class="headerlink" href="#motulator.control.sm.FluxObserver.delta" title="Permalink to this definition">#</a></dt>
-<dd><p>Angle estimate of the coordinate system with respect
-to the d-axis of the rotor (electrical rad).</p>
+<dd><p>Angle estimate of the coordinate system with respect to the d-axis of
+the rotor (electrical rad).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -963,11 +964,12 @@ to the d-axis of the rotor (electrical rad).</p>
 <p>Flux-vector control of synchronous machine drives.</p>
 <p>This class implements a variant of stator-flux-vector control <a class="footnote-reference brackets" href="#pel2009" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.
 Rotor coordinates as well as decoupling between the stator flux and torque
-channels are used according to <a class="footnote-reference brackets" href="#awa2019b" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. Here, the stator flux magnitude
-and the electromagnetic torque are selected as controllable variables.</p>
+channels are used according to <a class="footnote-reference brackets" href="#awa2019b" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. Here, the stator flux
+magnitude and the electromagnetic torque are selected as controllable
+variables.</p>
 <p class="rubric">Notes</p>
-<p>Proportional controllers are used for simplicity. The magnetic saturation is
-not considered in this implementation.</p>
+<p>Proportional controllers are used for simplicity. The magnetic saturation
+is not considered in this implementation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1019,7 +1021,7 @@ not considered in this implementation.</p>
 <dd><p>Speed reference (electrical rad/s) as a function of time (s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>callable</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1287,7 +1289,8 @@ be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_s_max</strong> (<em>float</em>) – Maximum stator current magnitude (A) at which the locus is computed.</p></li>
+<li><p><strong>i_s_max</strong> (<em>float</em>) – Maximum stator current magnitude (A) at which the locus is
+computed.</p></li>
 <li><p><strong>psi_s_min</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum stator flux magnitude (Vs) at which the locus is computed.</p></li>
 <li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – Amount of points. The default is 20.</p></li>
 </ul>
@@ -1315,7 +1318,8 @@ be used.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>psi_s_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum stator flux magnitude (Vs) at which the locus is computed.
 Either <cite>psi_s_max</cite> or <cite>i_s_max</cite> must be given.</p></li>
-<li><p><strong>i_s_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum stator current magnitude (A) at which the locus is computed.</p></li>
+<li><p><strong>i_s_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum stator current magnitude (A) at which the locus is
+computed.</p></li>
 <li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – Amount of points. The default is 20.</p></li>
 </ul>
 </dd>

@@ -523,8 +523,8 @@ Classes
 
    .. attribute:: delta
 
-      Angle estimate of the coordinate system with respect
-      to the d-axis of the rotor (electrical rad).
+      Angle estimate of the coordinate system with respect to the d-axis of
+      the rotor (electrical rad).
 
       :type: float
 
@@ -592,13 +592,14 @@ Classes
 
    This class implements a variant of stator-flux-vector control [#Pel2009]_.
    Rotor coordinates as well as decoupling between the stator flux and torque
-   channels are used according to [#Awa2019b]_. Here, the stator flux magnitude
-   and the electromagnetic torque are selected as controllable variables.
+   channels are used according to [#Awa2019b]_. Here, the stator flux
+   magnitude and the electromagnetic torque are selected as controllable
+   variables.
 
    .. rubric:: Notes
 
-   Proportional controllers are used for simplicity. The magnetic saturation is
-   not considered in this implementation.
+   Proportional controllers are used for simplicity. The magnetic saturation
+   is not considered in this implementation.
 
    :param par: Machine model parameters.
    :type par: ModelPars
@@ -635,7 +636,7 @@ Classes
 
       Speed reference (electrical rad/s) as a function of time (s).
 
-      :type: float
+      :type: callable
 
    .. attribute:: pwm
 
@@ -1036,7 +1037,8 @@ Classes
       
       Compute the MTPA locus.
 
-      :param i_s_max: Maximum stator current magnitude (A) at which the locus is computed.
+      :param i_s_max: Maximum stator current magnitude (A) at which the locus is
+                      computed.
       :type i_s_max: float
       :param psi_s_min: Minimum stator flux magnitude (Vs) at which the locus is computed.
       :type psi_s_min: float, optional
@@ -1075,7 +1077,8 @@ Classes
       :param psi_s_max: Maximum stator flux magnitude (Vs) at which the locus is computed.
                         Either `psi_s_max` or `i_s_max` must be given.
       :type psi_s_max: float, optional
-      :param i_s_max: Maximum stator current magnitude (A) at which the locus is computed.
+      :param i_s_max: Maximum stator current magnitude (A) at which the locus is
+                      computed.
       :type i_s_max: float, optional
       :param N: Amount of points. The default is 20.
       :type N: int, optional

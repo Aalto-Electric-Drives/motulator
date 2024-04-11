@@ -182,32 +182,15 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 65-66
 
-Create the simulation object and simulate it.
+Create the simulation object, simulate, and plot results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 66-70
 
 .. code-block:: Python
 
 
-    sim = model.Simulation(mdl, ctrl, pwm=False)
+    sim = model.Simulation(mdl, ctrl)
     sim.simulate(t_stop=.6)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
-
-Plot results in per-unit values.
-
-.. GENERATED FROM PYTHON SOURCE LINES 72-74
-
-.. code-block:: Python
-
-
     plot(sim, base)
 
 
@@ -224,7 +207,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.197 seconds)
+   **Total running time of the script:** (0 minutes 4.251 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:

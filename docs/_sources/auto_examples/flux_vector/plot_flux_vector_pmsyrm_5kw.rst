@@ -22,11 +22,11 @@
 =========================
 
 This example simulates sensorless stator-flux-vector control of a 5.5-kW 
-PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using an 
-algebraic saturation model, fitted to the flux linkage maps measured using the 
-constant-speed test. For comparison, the measured data is plotted together with 
-the model predictions. Notice that the control system used in this example does 
-not consider the saturation, only the system model does. 
+PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using 
+an algebraic saturation model, fitted to the flux linkage maps measured using 
+the constant-speed test. For comparison, the measured data is plotted together 
+with the model predictions. Notice that the control system used in this example 
+does not consider the saturation, only the system model does. 
 
 .. GENERATED FROM PYTHON SOURCE LINES 15-16
 
@@ -78,20 +78,21 @@ Create a saturation model, which will be used in the machine model in the
 following simulations. The documentation for this model will be made
 available later.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-89
+.. GENERATED FROM PYTHON SOURCE LINES 36-91
 
 .. code-block:: Python
 
 
 
+    # pylint: disable=too-many-locals
     def i_s(psi_s):
         """
-        Saturation model for a 5.5-kW PM synchronous reluctance machine.
+        Saturation model for a 5.5-kW PM-SyRM.
     
         This model takes into account the bridge saturation in addition to the 
         regular self- and cross-saturation effects of the d- and q-axis. The bridge 
         saturation model is based on a nonlinear reluctance element in parallel 
-        with the Norton-equivalent PM model.
+        with the Norton-equivalent PM model. 
 
         Parameters
         ----------
@@ -105,8 +106,9 @@ available later.
 
         Notes
         -----
-        This model can also be used for other PM synchronous reluctance machines by 
-        changing the model parameters.  
+        For simplicity, the saturation model parameters are hard-coded in the 
+        function below. This model can also be used for other PM-SyRMs by changing 
+        the model parameters.  
 
         """
         # d-axis self-saturation
@@ -142,13 +144,13 @@ available later.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-93
+.. GENERATED FROM PYTHON SOURCE LINES 92-95
 
 Plot the saturation model (surfaces) and the measured flux map data (points).
 Notice that the simulation uses the the algebraic model only. The
 measured data is shown only for comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-133
+.. GENERATED FROM PYTHON SOURCE LINES 95-135
 
 .. code-block:: Python
 
@@ -204,12 +206,12 @@ measured data is shown only for comparison.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-136
+.. GENERATED FROM PYTHON SOURCE LINES 136-138
 
-Solve the PM flux linkage for the initial value of the stator flux, which is
-needed in the machine model below.
+Solve the PM flux linkage for the initial value of the stator flux linkage,
+which is needed in the machine model below.
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-141
+.. GENERATED FROM PYTHON SOURCE LINES 138-143
 
 .. code-block:: Python
 
@@ -225,23 +227,24 @@ needed in the machine model below.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-143
+.. GENERATED FROM PYTHON SOURCE LINES 144-145
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-153
+.. GENERATED FROM PYTHON SOURCE LINES 145-156
 
 .. code-block:: Python
 
 
     machine = model.sm.SynchronousMachineSaturated(
         n_p=2, R_s=.63, current=i_s, psi_s0=psi_s0)
-    # Magnetically linear PMSyRM model for comparison
+    # Magnetically linear PM-SyRM model for comparison
     # machine = model.sm.SynchronousMachine(
-    #     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
+    #    n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.sm.Drive(machine, mechanics, converter)
+    # mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 
 
@@ -250,11 +253,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-155
+.. GENERATED FROM PYTHON SOURCE LINES 157-158
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-166
+.. GENERATED FROM PYTHON SOURCE LINES 158-169
 
 .. code-block:: Python
 
@@ -276,11 +279,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-168
+.. GENERATED FROM PYTHON SOURCE LINES 170-171
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-178
+.. GENERATED FROM PYTHON SOURCE LINES 171-181
 
 .. code-block:: Python
 
@@ -301,16 +304,16 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-180
+.. GENERATED FROM PYTHON SOURCE LINES 182-183
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-184
+.. GENERATED FROM PYTHON SOURCE LINES 183-187
 
 .. code-block:: Python
 
 
-    sim = model.Simulation(mdl, ctrl, pwm=False)
+    sim = model.Simulation(mdl, ctrl)
     sim.simulate(t_stop=4)
 
 
@@ -320,11 +323,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-186
+.. GENERATED FROM PYTHON SOURCE LINES 188-189
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-188
+.. GENERATED FROM PYTHON SOURCE LINES 189-191
 
 .. code-block:: Python
 
@@ -345,7 +348,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.629 seconds)
+   **Total running time of the script:** (0 minutes 11.479 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py:

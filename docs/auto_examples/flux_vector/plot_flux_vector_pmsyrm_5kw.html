@@ -176,9 +176,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -381,11 +382,11 @@ to download the full example code</p>
 <section class="sphx-glr-example-title" id="kw-pm-syrm-saturated">
 <span id="sphx-glr-auto-examples-flux-vector-plot-flux-vector-pmsyrm-5kw-py"></span><h1>5.5-kW PM-SyRM, saturated<a class="headerlink" href="#kw-pm-syrm-saturated" title="Permalink to this heading">#</a></h1>
 <p>This example simulates sensorless stator-flux-vector control of a 5.5-kW
-PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using an
-algebraic saturation model, fitted to the flux linkage maps measured using the
-constant-speed test. For comparison, the measured data is plotted together with
-the model predictions. Notice that the control system used in this example does
-not consider the saturation, only the system model does.</p>
+PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using
+an algebraic saturation model, fitted to the flux linkage maps measured using
+the constant-speed test. For comparison, the measured data is plotted together
+with the model predictions. Notice that the control system used in this example
+does not consider the saturation, only the system model does.</p>
 <p>Imports.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
@@ -405,9 +406,10 @@ not consider the saturation, only the system model does.</p>
 <p>Create a saturation model, which will be used in the machine model in the
 following simulations. The documentation for this model will be made
 available later.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">i_s</span><span class="p">(</span><span class="n">psi_s</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># pylint: disable=too-many-locals</span>
+<span class="k">def</span> <span class="nf">i_s</span><span class="p">(</span><span class="n">psi_s</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Saturation model for a 5.5-kW PM synchronous reluctance machine.</span>
+<span class="sd">    Saturation model for a 5.5-kW PM-SyRM.</span>
 
 <span class="sd">    This model takes into account the bridge saturation in addition to the</span>
 <span class="sd">    regular self- and cross-saturation effects of the d- and q-axis. The bridge</span>
@@ -426,8 +428,9 @@ available later.</p>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This model can also be used for other PM synchronous reluctance machines by</span>
-<span class="sd">    changing the model parameters.</span>
+<span class="sd">    For simplicity, the saturation model parameters are hard-coded in the</span>
+<span class="sd">    function below. This model can also be used for other PM-SyRMs by changing</span>
+<span class="sd">    the model parameters.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># d-axis self-saturation</span>
@@ -499,8 +502,8 @@ measured data is shown only for comparison.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_001.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_001.png" alt="plot flux vector pmsyrm 5kw" class = "sphx-glr-single-img"/><p>Solve the PM flux linkage for the initial value of the stator flux, which is
-needed in the machine model below.</p>
+<img src="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_001.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_001.png" alt="plot flux vector pmsyrm 5kw" class = "sphx-glr-single-img"/><p>Solve the PM flux linkage for the initial value of the stator flux linkage,
+which is needed in the machine model below.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span>
     <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_s</span><span class="p">(</span><span class="n">psi_d</span><span class="p">)),</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;bounded&quot;</span><span class="p">)</span>
 <span class="n">psi_s0</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># psi_s0 = 0.477</span>
@@ -509,12 +512,13 @@ needed in the machine model below.</p>
 <p>Configure the system model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">SynchronousMachineSaturated</span><span class="p">(</span>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.63</span><span class="p">,</span> <span class="n">current</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="n">psi_s0</span><span class="p">)</span>
-<span class="c1"># Magnetically linear PMSyRM model for comparison</span>
+<span class="c1"># Magnetically linear PM-SyRM model for comparison</span>
 <span class="c1"># machine = model.sm.SynchronousMachine(</span>
-<span class="c1">#     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)</span>
+<span class="c1">#    n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
+<span class="c1"># mdl.pwm = model.CarrierComparison()  # Enable the PWM model</span>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
@@ -541,7 +545,7 @@ needed in the machine model below.</p>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -549,7 +553,7 @@ needed in the machine model below.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_002.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_002.png" alt="plot flux vector pmsyrm 5kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.629 seconds)</p>
+<img src="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_002.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_002.png" alt="plot flux vector pmsyrm 5kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.479 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-vector-plot-flux-vector-pmsyrm-5kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4cbdc04e08950a0a4c3fdc370e5c6f89/plot_flux_vector_pmsyrm_5kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_flux_vector_pmsyrm_5kw.ipynb</span></code></a></p>

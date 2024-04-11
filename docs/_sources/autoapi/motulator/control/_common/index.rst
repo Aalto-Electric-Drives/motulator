@@ -100,9 +100,9 @@ Classes
 
       .. rubric:: References
 
-      .. [#Bol1997] Bolognani, Zigliotto, "Novel digital continuous control of
-         SVM inverters in the overmodulation range," IEEE Trans. Ind. Appl.,
-         1997, https://doi.org/10.1109/28.568019
+      .. [#Bol1997] Bolognani, Zigliotto, "Novel digital continuous control
+         of SVM inverters in the overmodulation range," IEEE Trans. Ind.
+         Appl., 1997, https://doi.org/10.1109/28.568019
 
 
 
@@ -127,8 +127,8 @@ Classes
       
       Compute the duty ratios for three-phase space-vector PWM.
 
-      This computes the duty ratios corresponding to standard space-vector PWM
-      and minimum-amplitude-error overmodulation [#Hav1999]_.
+      This computes the duty ratios corresponding to standard space-vector
+      PWM and minimum-amplitude-error overmodulation [#Hav1999]_.
 
       :param u_s_ref: Voltage reference in stator coordinates (V).
       :type u_s_ref: complex
@@ -169,14 +169,14 @@ Classes
 
    where `u` is the controller output, `y_ref` is the reference signal, `y` is
    the feedback signal, and `1/s` refers to integration. The standard PI
-   controller is obtained by choosing ``k_t = k_p``. The integrator anti-windup
-   is implemented based on the realized controller output.
+   controller is obtained by choosing ``k_t = k_p``. The integrator
+   anti-windup is implemented based on the realized controller output.
 
    .. rubric:: Notes
 
    This controller can be used, e.g., as a speed controller. In this case, `y`
-   corresponds to the rotor angular speed `w_M` and `u` to the torque reference
-   `tau_M_ref`.
+   corresponds to the rotor angular speed `w_M` and `u` to the torque
+   reference `tau_M_ref`.
 
    :param k_p: Proportional gain.
    :type k_p: float
@@ -282,7 +282,7 @@ Classes
    
    2DOF PI speed controller.
 
-   This provides an interface for a speed controller. The gains are initialized
+   This is an interface for a speed controller. The gains are initialized
    based on the desired closed-loop bandwidth and the rotor inertia estimate.
 
    :param J: Total inertia of the rotor (kgm²).
@@ -322,10 +322,10 @@ Classes
 
    where `u` is the controller output, `i_ref` is the reference signal, `i` is
    the feedback signal, `w` is the angular speed of synchronous coordinates,
-   and `1/s` refers to integration. This algorithm is compatible with both real
-   and complex signals. The 1DOF version is obtained by setting ``k_t = k_p``.
-   The integrator anti-windup is implemented based on the realized controller
-   output.
+   and `1/s` refers to integration. This algorithm is compatible with both
+   real and complex signals. The 1DOF version is obtained by setting
+   ``k_t = k_p``. The integrator anti-windup is implemented based on the
+   realized controller output.
 
    :param k_p: Proportional gain.
    :type k_p: float
@@ -513,7 +513,7 @@ Classes
 
 
    
-   Base class for the control system.
+   Base class for control systems.
 
 
 

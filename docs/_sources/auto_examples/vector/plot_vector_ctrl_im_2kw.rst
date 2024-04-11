@@ -81,7 +81,7 @@ be used also for other induction machines.
 
     def L_s(psi):
         """
-        Stator inductance saturation model for a 2.2-kW machine.
+        Stator inductance saturation model for a 2.2-kW induction machine.
 
         Parameters
         ----------
@@ -112,7 +112,7 @@ be used also for other induction machines.
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-70
+.. GENERATED FROM PYTHON SOURCE LINES 56-72
 
 .. code-block:: Python
 
@@ -122,13 +122,15 @@ Create the system model.
         n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
     # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
     # machine = model.im.InductionMachineInvGamma(
-    #    R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+    #    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
     # Alternatively, configure the machine model using its Γ parameters
     # machine = model.im.InductionMachine(
-    #     R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)
+    #     n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.im.Drive(machine, mechanics, converter)
+    # mdl.pwm = model.CarrierComparison()  # Try to enable the PWM model
+    # mdl.delay = model.Delay(2)  # Try longer computational delay
 
 
 
@@ -137,11 +139,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-85
+.. GENERATED FROM PYTHON SOURCE LINES 74-87
 
 .. code-block:: Python
 
@@ -165,12 +167,12 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-88
+.. GENERATED FROM PYTHON SOURCE LINES 88-90
 
 Set the speed reference and the external load torque. You may also try to
 uncomment the field-weakening sequence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-108
+.. GENERATED FROM PYTHON SOURCE LINES 90-99
 
 .. code-block:: Python
 
@@ -183,16 +185,6 @@ uncomment the field-weakening sequence.
     # ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
     # mdl.mechanics.tau_L_t = lambda t: 0
 
-    # Speed reversals under the rated load (uncomment to try, change t_stop=8 below)
-    # import numpy as np
-    # from motulator.helpers import Sequence
-    # times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
-    # values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-    # ctrl.w_m_ref = Sequence(times, values)
-    # # External load torque
-    # times = np.array([0, .125, .125, .875, .875, 1])*8
-    # values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-    # mdl.mechanics.tau_L_t = Sequence(times, values)
 
 
 
@@ -200,18 +192,17 @@ uncomment the field-weakening sequence.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 109-111
+.. GENERATED FROM PYTHON SOURCE LINES 100-102
 
 Create the simulation object and simulate it. You can also enable the PWM
 model (which makes simulation slower).
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-115
+.. GENERATED FROM PYTHON SOURCE LINES 102-106
 
 .. code-block:: Python
 
 
-    sim = model.Simulation(mdl, ctrl, pwm=False)
+    sim = model.Simulation(mdl, ctrl)
     sim.simulate(t_stop=1.5)
 
 
@@ -221,12 +212,12 @@ model (which makes simulation slower).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-118
+.. GENERATED FROM PYTHON SOURCE LINES 107-109
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-121
+.. GENERATED FROM PYTHON SOURCE LINES 109-112
 
 .. code-block:: Python
 
@@ -245,7 +236,7 @@ the results in SI units.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-127
+.. GENERATED FROM PYTHON SOURCE LINES 113-118
 
 .. rubric:: References
 
@@ -256,7 +247,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.559 seconds)
+   **Total running time of the script:** (0 minutes 3.599 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw.py:

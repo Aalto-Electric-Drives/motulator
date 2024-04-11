@@ -173,9 +173,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -392,9 +393,9 @@ document.write(`
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
-<span class="sd">        .. [#Bol1997] Bolognani, Zigliotto, &quot;Novel digital continuous control of </span>
-<span class="sd">           SVM inverters in the overmodulation range,&quot; IEEE Trans. Ind. Appl.,</span>
-<span class="sd">           1997, https://doi.org/10.1109/28.568019</span>
+<span class="sd">        .. [#Bol1997] Bolognani, Zigliotto, &quot;Novel digital continuous control </span>
+<span class="sd">           of SVM inverters in the overmodulation range,&quot; IEEE Trans. Ind. </span>
+<span class="sd">           Appl., 1997, https://doi.org/10.1109/28.568019</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Limited magnitude</span>
@@ -429,8 +430,8 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the duty ratios for three-phase space-vector PWM.</span>
 
-<span class="sd">        This computes the duty ratios corresponding to standard space-vector PWM </span>
-<span class="sd">        and minimum-amplitude-error overmodulation [#Hav1999]_.</span>
+<span class="sd">        This computes the duty ratios corresponding to standard space-vector </span>
+<span class="sd">        PWM and minimum-amplitude-error overmodulation [#Hav1999]_.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -527,14 +528,14 @@ document.write(`
 
 <span class="sd">    where `u` is the controller output, `y_ref` is the reference signal, `y` is</span>
 <span class="sd">    the feedback signal, and `1/s` refers to integration. The standard PI</span>
-<span class="sd">    controller is obtained by choosing ``k_t = k_p``. The integrator anti-windup </span>
-<span class="sd">    is implemented based on the realized controller output.</span>
+<span class="sd">    controller is obtained by choosing ``k_t = k_p``. The integrator </span>
+<span class="sd">    anti-windup is implemented based on the realized controller output.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    This controller can be used, e.g., as a speed controller. In this case, `y` </span>
-<span class="sd">    corresponds to the rotor angular speed `w_M` and `u` to the torque reference </span>
-<span class="sd">    `tau_M_ref`.</span>
+<span class="sd">    corresponds to the rotor angular speed `w_M` and `u` to the torque </span>
+<span class="sd">    reference `tau_M_ref`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -614,7 +615,7 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2DOF PI speed controller.</span>
 
-<span class="sd">    This provides an interface for a speed controller. The gains are initialized</span>
+<span class="sd">    This is an interface for a speed controller. The gains are initialized </span>
 <span class="sd">    based on the desired closed-loop bandwidth and the rotor inertia estimate.</span>
 
 <span class="sd">    Parameters</span>
@@ -647,10 +648,10 @@ document.write(`
 
 <span class="sd">    where `u` is the controller output, `i_ref` is the reference signal, `i` is</span>
 <span class="sd">    the feedback signal, `w` is the angular speed of synchronous coordinates, </span>
-<span class="sd">    and `1/s` refers to integration. This algorithm is compatible with both real </span>
-<span class="sd">    and complex signals. The 1DOF version is obtained by setting ``k_t = k_p``. </span>
-<span class="sd">    The integrator anti-windup is implemented based on the realized controller </span>
-<span class="sd">    output.</span>
+<span class="sd">    and `1/s` refers to integration. This algorithm is compatible with both </span>
+<span class="sd">    real and complex signals. The 1DOF version is obtained by setting </span>
+<span class="sd">    ``k_t = k_p``. The integrator anti-windup is implemented based on the </span>
+<span class="sd">    realized controller output.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -811,7 +812,7 @@ document.write(`
 
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="Ctrl"><a class="viewcode-back" href="../../../autoapi/motulator/control/_common/index.html#motulator.control._common.Ctrl">[docs]</a><span class="k">class</span> <span class="nc">Ctrl</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for the control system.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for control systems.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -832,9 +833,9 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the main control loop.</span>
 
-<span class="sd">        The main control loop is callable that returns the sampling period `T_s` </span>
-<span class="sd">        (float) and the duty ratios `d_abc` (ndarray, shape (3,)) for the next </span>
-<span class="sd">        sampling period.</span>
+<span class="sd">        The main control loop is callable that returns the sampling period </span>
+<span class="sd">        `T_s` (float) and the duty ratios `d_abc` (ndarray, shape (3,)) for the </span>
+<span class="sd">        next sampling period.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

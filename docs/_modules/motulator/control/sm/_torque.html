@@ -173,9 +173,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -326,10 +327,10 @@ document.write(`
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Torque characteristics for synchronous machines.</span>
 
-<span class="sd">This contains computation and plotting of torque characteristics for synchronous </span>
-<span class="sd">machines, including the MTPA and MTPV loci [#Mor1990]_. The methods can be used </span>
-<span class="sd">to define look-up tables for control and to analyze the characteristics. This </span>
-<span class="sd">version omits the magnetic saturation.</span>
+<span class="sd">This contains computation and plotting of torque characteristics for </span>
+<span class="sd">synchronous machines, including the MTPA and MTPV loci [#Mor1990]_. The methods </span>
+<span class="sd">can be used to define look-up tables for control and to analyze the </span>
+<span class="sd">characteristics. This version omits the magnetic saturation.</span>
 
 <span class="sd">References</span>
 <span class="sd">----------</span>
@@ -557,7 +558,8 @@ document.write(`
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        i_s_max : float</span>
-<span class="sd">            Maximum stator current magnitude (A) at which the locus is computed.</span>
+<span class="sd">            Maximum stator current magnitude (A) at which the locus is </span>
+<span class="sd">            computed.</span>
 <span class="sd">        psi_s_min : float, optional</span>
 <span class="sd">            Minimum stator flux magnitude (Vs) at which the locus is computed.</span>
 <span class="sd">        N : int, optional</span>
@@ -620,7 +622,8 @@ document.write(`
 <span class="sd">            Maximum stator flux magnitude (Vs) at which the locus is computed. </span>
 <span class="sd">            Either `psi_s_max` or `i_s_max` must be given.</span>
 <span class="sd">        i_s_max : float, optional</span>
-<span class="sd">            Maximum stator current magnitude (A) at which the locus is computed.</span>
+<span class="sd">            Maximum stator current magnitude (A) at which the locus is </span>
+<span class="sd">            computed.</span>
 <span class="sd">        N : int, optional</span>
 <span class="sd">            Amount of points. The default is 20.</span>
 

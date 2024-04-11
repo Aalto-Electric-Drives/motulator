@@ -5,8 +5,8 @@
 This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The
 mechanical subsystem is modeled as a two-mass system. The resonance frequency
 of the mechanics is around 85 Hz. The mechanical parameters correspond to 
-[#Saa2015]_, except that the torsional damping is set to a smaller value in this 
-example.
+[#Saa2015]_, except that the torsional damping is set to a smaller value in 
+this example.
 
 """
 
@@ -57,7 +57,7 @@ mdl.mechanics.tau_L_t = Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.2)
 # sphinx_gallery_thumbnail_number = 3
 plot(sim, base)  # Plot results in per-unit values

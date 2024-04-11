@@ -182,8 +182,8 @@ Classes
    Parameters for reference generation.
 
    This dataclass stores the nominal and limit values needed for reference
-   generation. For calculating the rotor flux reference, the machine parameters
-   are also required.
+   generation. For calculating the rotor flux reference, the machine
+   parameters are also required.
 
    :param par: Machine model parameters.
    :type par: ModelPars
@@ -224,8 +224,8 @@ Classes
    
    Current reference generation.
 
-   In the base-speed region, the current reference in rotor-flux coordinates is
-   given by::
+   In the base-speed region, the current reference in rotor-flux coordinates
+   is given by::
 
        i_s_ref = psi_R_nom/L_M + 1j*tau_M_ref/(1.5*n_p*abs(psi_R))
 

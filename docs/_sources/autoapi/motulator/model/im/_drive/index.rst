@@ -64,8 +64,8 @@ Classes
 
    .. rubric:: References
 
-   .. [#Sle1989] Slemon, "Modelling of induction machines for electric drives,"
-      IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
+   .. [#Sle1989] Slemon, "Modelling of induction machines for electric
+      drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
 
 
 
@@ -220,8 +220,8 @@ Classes
    
    Γ-equivalent model of an induction machine model with main-flux saturation.
 
-   This extends the InductionMachine class with a main-flux magnetic saturation
-   model::
+   This extends the InductionMachine class with a main-flux magnetic
+   saturation model::
 
        L_s = L_s(abs(psi_ss))
 
@@ -319,12 +319,13 @@ Classes
 .. py:class:: Drive(machine=None, mechanics=None, converter=None)
 
 
+   Bases: :py:obj:`motulator.model._simulation.Model`
+
    
    Continuous-time model for an induction machine drive.
 
-   This interconnects the subsystems of an induction machine drive and provides
-   an interface to the solver. More complicated systems could be modeled using
-   a similar template.
+   This interconnects the subsystems of an induction machine drive and
+   provides an interface to the solver.
 
    :param machine: Induction machine model.
    :type machine: InductionMachine | InductionMachineSaturated
@@ -354,9 +355,6 @@ Classes
       
       Clear the simulation data of the system model.
 
-      This method is automatically run when the instance for the system model
-      is created. It can also be used in the case of repeated simulations to
-      clear the data from the previous simulation run.
 
 
 
@@ -462,8 +460,6 @@ Classes
       
       Save the solution.
 
-      :param sol: Solution from the solver.
-      :type sol: Bunch object
 
 
 
@@ -687,9 +683,6 @@ Classes
 
    
    Induction machine drive with two-mass mechanics.
-
-   This interconnects the subsystems of an induction machine drive and provides
-   an interface to the solver.
 
    :param machine: Induction machine model.
    :type machine: InductionMachine | InductionMachineSaturated

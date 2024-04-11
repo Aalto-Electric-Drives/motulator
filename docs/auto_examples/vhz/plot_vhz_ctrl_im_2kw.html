@@ -176,9 +176,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -402,6 +403,7 @@ parameters in this example yield open-loop V/Hz control.</p>
 <span class="c1"># Frequency converter with a diode bridge</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">FrequencyConverter</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">235e-6</span><span class="p">,</span> <span class="n">U_g</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">f_g</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">im</span><span class="o">.</span><span class="n">DriveWithDiodeBridge</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">CarrierComparison</span><span class="p">()</span>  <span class="c1"># Enable the PWM model</span>
 </pre></div>
 </div>
 <p>Control system (parametrized as open-loop V/Hz control).</p>
@@ -413,19 +415,19 @@ parameters in this example yield open-loop V/Hz control.</p>
 </div>
 <p>Set the speed reference and the external load torque. More complicated
 signals could be defined as functions.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
 
 <span class="c1"># Quadratic load torque profile (corresponding to pumps and fans)</span>
 <span class="n">k</span> <span class="o">=</span> <span class="mf">1.1</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span><span class="o">/</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="n">k</span><span class="o">*</span><span class="n">w_M</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">w_M</span><span class="p">)</span>
 
 <span class="c1"># Stepwise load torque at t = 1 s, 20% of the rated torque</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">)</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span><span class="o">*</span><span class="mf">.2</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">)</span><span class="o">*</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it. The option <cite>pwm=True</cite> enables
 the model for the carrier comparison.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -434,12 +436,12 @@ the model for the carrier comparison.</p>
 <p class="admonition-title">Note</p>
 <p>The DC link of this particular example is actually unstable at 1-p.u.
 speed at the rated load torque, since the inverter looks like a negative
-resistance to the DC link. You could notice this instability if simulating
-a longer period (e.g. set <cite>t_stop=2</cite>). For analysis, see e.g., <a class="footnote-reference brackets" href="#hin2007" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+resistance to the DC link. You can notice this instability if simulating a
+longer period (e.g. set <cite>t_stop=2</cite>). For analysis, see e.g., <a class="footnote-reference brackets" href="#hin2007" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
 <span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-<span class="n">plot_extra</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.125</span><span class="p">),</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
+<span class="n">plot_extra</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.125</span><span class="p">))</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
@@ -456,7 +458,7 @@ equipped with small DC-Link capacitance,” Proc. EPE, 2007,
 <a class="reference external" href="https://doi.org/10.1109/EPE.2007.4417763">https://doi.org/10.1109/EPE.2007.4417763</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.816 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.914 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/976c00e094a2f509f63377205e8e22fd/plot_vhz_ctrl_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vhz_ctrl_im_2kw.ipynb</span></code></a></p>

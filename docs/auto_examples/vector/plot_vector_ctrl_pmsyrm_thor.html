@@ -52,7 +52,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/vector/plot_vector_ctrl_pmsyrm_thor';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="2.2-kW PMSM" href="plot_vector_ctrl_pmsm_2kw.html" />
+    <link rel="next" title="2.2-kW induction motor, saturated" href="plot_vector_ctrl_im_2kw.html" />
     <link rel="prev" title="6.7-kW SyRM" href="plot_vector_ctrl_syrm_7kw.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -176,9 +176,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Vector Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -435,16 +436,13 @@ synchronous reluctance motor. Control look-up tables are also plotted.</p>
 <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="n">k</span><span class="o">*</span><span class="n">w_M</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">w_M</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Create the simulation object and simulate it.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<p>Create the simulation object, simulate, and plot results in per-unit values.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">.6</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Plot results in per-unit values.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-</pre></div>
-</div>
-<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_004.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_004.png" alt="plot vector ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.197 seconds)</p>
+<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_004.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_004.png" alt="plot vector ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.251 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-pmsyrm-thor-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/8e207436b84cf331b0ee771aa344acf5/plot_vector_ctrl_pmsyrm_thor.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vector_ctrl_pmsyrm_thor.ipynb</span></code></a></p>
@@ -477,11 +475,11 @@ synchronous reluctance motor. Control look-up tables are also plotted.</p>
       </div>
     </a>
     <a class="right-next"
-       href="plot_vector_ctrl_pmsm_2kw.html"
+       href="plot_vector_ctrl_im_2kw.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">2.2-kW PMSM</p>
+        <p class="prev-next-title">2.2-kW induction motor, saturated</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

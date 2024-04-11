@@ -121,7 +121,7 @@ Set the speed reference and the external load torque.
 
     # Speed reference
     times = np.array([0, .25, .25, .375, .5, .625, .75, .75, 1])*4
-    values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w*.1
+    values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*.1*base.w
     ctrl.w_m_ref = Sequence(times, values)
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*4
@@ -144,7 +144,7 @@ Create the simulation object and simulate it.
 .. code-block:: Python
 
 
-    sim = model.Simulation(mdl, ctrl, pwm=False)
+    sim = model.Simulation(mdl, ctrl)
     sim.simulate(t_stop=4)
 
 
@@ -205,7 +205,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.055 seconds)
+   **Total running time of the script:** (0 minutes 10.911 seconds)
 
 
 .. _sphx_glr_download_auto_examples_signal_inj_plot_signal_inj_syrm_7kw.py:

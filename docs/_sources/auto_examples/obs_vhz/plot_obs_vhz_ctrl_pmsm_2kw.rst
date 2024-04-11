@@ -130,18 +130,16 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-55
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
-Create the simulation object and simulate it. You can also enable the PWM
-model (which makes simulation slower). One-sampling-period computational
-delay is modeled.
+Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-59
+.. GENERATED FROM PYTHON SOURCE LINES 53-57
 
 .. code-block:: Python
 
 
-    sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
+    sim = model.Simulation(mdl, ctrl)
     sim.simulate(t_stop=8)
 
 
@@ -151,12 +149,12 @@ delay is modeled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-62
+.. GENERATED FROM PYTHON SOURCE LINES 58-60
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-64
+.. GENERATED FROM PYTHON SOURCE LINES 60-62
 
 .. code-block:: Python
 
@@ -177,7 +175,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 19.728 seconds)
+   **Total running time of the script:** (0 minutes 19.529 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py:

@@ -174,9 +174,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -431,9 +432,9 @@ document.write(`
 <dd><p>Reduced-order flux observer for induction machines in estimated
 rotor flux coordinates.</p>
 <p>This class implements a reduced-order flux observer for induction machines.
-Both sensored and sensorless operation are supported. The observer structure
-is similar to <a class="footnote-reference brackets" href="#hin2010" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The observer operates in estimated rotor flux
-coordinates.</p>
+Both sensored and sensorless operation are supported. The observer
+structure is similar to <a class="footnote-reference brackets" href="#hin2010" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The observer operates in estimated
+rotor flux coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -501,8 +502,8 @@ drives,” IEEE Trans. Power Electron., 2010,
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.im._observers.</span></span><span class="sig-name descname"><span class="pre">FullOrderObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/control/im/_observers.html#FullOrderObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im._observers.FullOrderObserver" title="Permalink to this definition">#</a></dt>
 <dd><p>Full-order flux observer for induction machines in estimated
 rotor flux coordinates.</p>
-<p>This class implements a full-order flux observer for induction machines. The
-observer structure is similar to <a class="footnote-reference brackets" href="#tii2023" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The observer operates in
+<p>This class implements a full-order flux observer for induction machines.
+The observer structure is similar to <a class="footnote-reference brackets" href="#tii2023" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The observer operates in
 estimated rotor flux coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -565,8 +566,8 @@ estimated rotor flux coordinates.</p>
 <aside class="footnote brackets" id="tii2023" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Tiitinen, Hinkkanen, Harnefors, “Speed-adaptive full-order
-observer revisited: Closed-form design for induction motor drives,” Proc.
-IEEE SLED, 2023, <a class="reference external" href="https://doi.org/10.1109/SLED57582.2023.10261359">https://doi.org/10.1109/SLED57582.2023.10261359</a></p>
+observer revisited: Closed-form design for induction motor drives,”
+Proc. IEEE SLED, 2023, <a class="reference external" href="https://doi.org/10.1109/SLED57582.2023.10261359">https://doi.org/10.1109/SLED57582.2023.10261359</a></p>
 </aside>
 </aside>
 </dd></dl>

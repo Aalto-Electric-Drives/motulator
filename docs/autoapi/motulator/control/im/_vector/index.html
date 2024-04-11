@@ -174,9 +174,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -556,8 +557,8 @@ bandwidth and the leakage inductance.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.im._vector.</span></span><span class="sig-name descname"><span class="pre">CurrentReferencePars</span></span><a class="reference internal" href="../../../../../_modules/motulator/control/im/_vector.html#CurrentReferencePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im._vector.CurrentReferencePars" title="Permalink to this definition">#</a></dt>
 <dd><p>Parameters for reference generation.</p>
 <p>This dataclass stores the nominal and limit values needed for reference
-generation. For calculating the rotor flux reference, the machine parameters
-are also required.</p>
+generation. For calculating the rotor flux reference, the machine
+parameters are also required.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -578,8 +579,8 @@ are also required.</p>
 <dt class="sig sig-object py" id="motulator.control.im._vector.CurrentReference">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.im._vector.</span></span><span class="sig-name descname"><span class="pre">CurrentReference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/control/im/_vector.html#CurrentReference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im._vector.CurrentReference" title="Permalink to this definition">#</a></dt>
 <dd><p>Current reference generation.</p>
-<p>In the base-speed region, the current reference in rotor-flux coordinates is
-given by:</p>
+<p>In the base-speed region, the current reference in rotor-flux coordinates
+is given by:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="n">psi_R_nom</span><span class="o">/</span><span class="n">L_M</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">tau_M_ref</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">n_p</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">psi_R</span><span class="p">))</span>
 </pre></div>
 </div>

@@ -31,7 +31,7 @@ base = BaseValues(
 
 def L_s(psi):
     """
-    Stator inductance saturation model for a 2.2-kW machine.
+    Stator inductance saturation model for a 2.2-kW induction machine.
 
     Parameters
     ----------
@@ -59,13 +59,15 @@ machine = model.im.InductionMachineSaturated(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
 # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
 # machine = model.im.InductionMachineInvGamma(
-#    R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+#    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 # Alternatively, configure the machine model using its Γ parameters
 # machine = model.im.InductionMachine(
-#     R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245, n_p=2)
+#     n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.im.Drive(machine, mechanics, converter)
+# mdl.pwm = model.CarrierComparison()  # Try to enable the PWM model
+# mdl.delay = model.Delay(2)  # Try longer computational delay
 
 # %%
 # Configure the control system.
@@ -94,22 +96,11 @@ mdl.mechanics.tau_L_t = lambda t: (t > .75)*base.tau_nom
 # ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
 # mdl.mechanics.tau_L_t = lambda t: 0
 
-# Speed reversals under the rated load (uncomment to try, change t_stop=8 below)
-# import numpy as np
-# from motulator.helpers import Sequence
-# times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
-# values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-# ctrl.w_m_ref = Sequence(times, values)
-# # External load torque
-# times = np.array([0, .125, .125, .875, .875, 1])*8
-# values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-# mdl.mechanics.tau_L_t = Sequence(times, values)
-
 # %%
 # Create the simulation object and simulate it. You can also enable the PWM
 # model (which makes simulation slower).
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.5)
 
 # %%

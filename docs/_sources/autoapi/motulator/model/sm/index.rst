@@ -36,6 +36,7 @@ Classes
 .. autoapisummary::
 
    motulator.model.sm.Drive
+   motulator.model.sm.DriveWithDiodeBridge
    motulator.model.sm.DriveTwoMassMechanics
    motulator.model.sm.SynchronousMachine
    motulator.model.sm.SynchronousMachineSaturated
@@ -56,12 +57,13 @@ Functions
 .. py:class:: Drive(machine=None, mechanics=None, converter=None)
 
 
+   Bases: :py:obj:`motulator.model._simulation.Model`
+
    
    Continuous-time model for a synchronous machine drive.
 
    This interconnects the subsystems of a synchronous machine drive and
-   provides an interface to the solver. More complicated systems could be
-   modeled using a similar template.
+   provides an interface to the solver.
 
    :param machine: Synchronous machine model.
    :type machine: SynchronousMachine
@@ -91,9 +93,6 @@ Functions
       
       Clear the simulation data of the system model.
 
-      This method is automatically run when the instance for the system model
-      is created. It can also be used in the case of repeated simulations to
-      clear the data from the previous simulation run.
 
 
 
@@ -199,8 +198,6 @@ Functions
       
       Save the solution.
 
-      :param sol: Solution from the solver.
-      :type sol: Bunch
 
 
 
@@ -243,6 +240,180 @@ Functions
           !! processed by numpydoc !!
 
 
+.. py:class:: DriveWithDiodeBridge(machine=None, mechanics=None, converter=None)
+
+
+   Bases: :py:obj:`Drive`
+
+   
+   Synchronous machine drive equipped with a diode bridge.
+
+   This model extends the Drive class with a model for a three-phase diode
+   bridge fed from stiff supply voltages. The DC bus is modeled as an inductor
+   and a capacitor.
+
+   :param machine: Induction machine model.
+   :type machine: SynchronousMachine | SynchronousMachineSaturated
+   :param mechanics: Mechanics model.
+   :type mechanics: Mechanics
+   :param converter: Frequency converter model.
+   :type converter: FrequencyConverter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_initial_values()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_initial_values(t0, x0)
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(t, x)
+
+      
+      Override the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: save(sol)
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: post_process()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: DriveTwoMassMechanics(machine=None, mechanics=None, converter=None)
 
 
@@ -250,9 +421,6 @@ Functions
 
    
    Synchronous machine drive with two-mass mechanics.
-
-   This interconnects the subsystems of a synchronous machine drive and
-   provides an interface to the solver.
 
    :param machine: Synchronous machine model.
    :type machine: SynchronousMachine
@@ -520,14 +688,14 @@ Functions
       :param w_M: Rotor angular speed (mechanical rad/s).
       :type w_M: float
 
-      :returns: * *complex list, length 2* -- Time derivative of the state vector, [dpsi_s, dtheta_m0]
+      :returns: * *complex list, length 2* -- Time derivative of the state vector, [dpsi_s, dtheta_m]
                 * **i_s** (*complex*) -- Stator current (A).
                 * **tau_M** (*float*) -- Electromagnetic torque (Nm).
 
       .. rubric:: Notes
 
       In addition to the state derivative, this method also returns the
-      output signals (stator current `i_ss` and torque `tau_M`) needed for
+      output signals (stator current `i_s` and torque `tau_M`) needed for
       interconnection with other subsystems. This avoids overlapping
       computation in simulation.
 

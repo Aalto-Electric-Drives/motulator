@@ -173,9 +173,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -342,13 +343,14 @@ document.write(`
 
 <span class="sd">    This class implements a variant of stator-flux-vector control [#Pel2009]_. </span>
 <span class="sd">    Rotor coordinates as well as decoupling between the stator flux and torque </span>
-<span class="sd">    channels are used according to [#Awa2019b]_. Here, the stator flux magnitude </span>
-<span class="sd">    and the electromagnetic torque are selected as controllable variables. </span>
+<span class="sd">    channels are used according to [#Awa2019b]_. Here, the stator flux </span>
+<span class="sd">    magnitude and the electromagnetic torque are selected as controllable </span>
+<span class="sd">    variables. </span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    Proportional controllers are used for simplicity. The magnetic saturation is </span>
-<span class="sd">    not considered in this implementation.</span>
+<span class="sd">    Proportional controllers are used for simplicity. The magnetic saturation </span>
+<span class="sd">    is not considered in this implementation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -373,7 +375,7 @@ document.write(`
 <span class="sd">        Flux and torque reference generator.</span>
 <span class="sd">    speed_ctrl : SpeedCtrl</span>
 <span class="sd">        Speed controller.</span>
-<span class="sd">    w_m_ref : float</span>
+<span class="sd">    w_m_ref : callable</span>
 <span class="sd">        Speed reference (electrical rad/s) as a function of time (s).</span>
 <span class="sd">    pwm : PWM</span>
 <span class="sd">        Pulse-width modulation.</span>
@@ -469,7 +471,7 @@ document.write(`
         <span class="c1"># Auxiliary current</span>
         <span class="n">i_a</span> <span class="o">=</span> <span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="n">i_s</span>
 
-        <span class="c1"># Torque-production factor (c_tau = 0 corresponds to the MTPV condition)</span>
+        <span class="c1"># Torque-production factor, c_tau = 0 corresponds to the MTPV condition</span>
         <span class="n">c_tau</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span>
 
         <span class="c1"># References for the flux and torque controllers</span>

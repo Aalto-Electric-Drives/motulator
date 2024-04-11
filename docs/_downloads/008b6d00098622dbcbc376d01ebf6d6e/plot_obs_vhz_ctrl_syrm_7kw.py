@@ -27,8 +27,8 @@ base = BaseValues(
 # but the same model structure can also be used for other synchronous motors.
 # For PM motors, the magnetomotive force (MMF) of the PMs can be modeled using
 # constant current source `i_f` on the d-axis [#Awa2018]_, [#Jah1986]_.
-# Correspondingly, this approach assumes that the MMFs of the d-axis current and
-# of the PMs are in series. This model cannot capture the desaturation
+# Correspondingly, this approach assumes that the MMFs of the d-axis current
+# and of the PMs are in series. This model cannot capture the desaturation
 # phenomenon of thin iron ribs, see [#Arm2009]_ for details. For such motors,
 # look-up tables can be used.
 
@@ -104,11 +104,9 @@ values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%
-# Create the simulation object and simulate it. You can also enable the PWM
-# model (which makes simulation slower). One-sampling-period computational
-# delay is modeled.
+# Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=8)
 
 # %%

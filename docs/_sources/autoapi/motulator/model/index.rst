@@ -51,7 +51,16 @@ Classes
    motulator.model.Inverter
    motulator.model.CarrierComparison
    motulator.model.Simulation
+   motulator.model.Delay
 
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   motulator.model.zoh
 
 
 
@@ -593,7 +602,7 @@ Classes
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Simulation(mdl=None, ctrl=None, delay=1, pwm=False)
+.. py:class:: Simulation(mdl=None, ctrl=None)
 
 
    
@@ -602,13 +611,9 @@ Classes
    Each simulation object has a system model object and a controller object.
 
    :param mdl: Continuous-time system model.
-   :type mdl: Drive
+   :type mdl: Model
    :param ctrl: Discrete-time controller.
    :type ctrl: Ctrl
-   :param delay: Amount of computational delays. The default is 1.
-   :type delay: int, optional
-   :param pwm: Enable carrier comparison. The default is False.
-   :type pwm: bool, optional
 
 
 
@@ -638,7 +643,7 @@ Classes
 
       .. rubric:: Notes
 
-      Other options of `solve_ivp` could be easily changed if needed, but, for
+      Other options of `solve_ivp` could be easily used if needed, but, for
       simplicity, only `max_step` is included as an option of this method.
 
 
@@ -683,4 +688,62 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: Delay(length=1, elem=3)
+
+
+   
+   Computational delay.
+
+   This models the computational delay as a ring buffer.
+
+   :param length: Length of the buffer in samples. The default is 1.
+   :type length: int, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: zoh(T_s, d_abc)
+
+   
+   Zero-order hold of the duty ratios over the sampling period.
+
+   :param T_s: Sampling period.
+   :type T_s: float
+   :param d_abc: Duty ratios in the range [0, 1].
+   :type d_abc: array_like of floats, shape (3,)
+
+   :returns: * **t_steps** (*ndarray, shape (1,)*) -- Sampling period as an array compatible with the solver.
+             * **q** (*complex ndarray, shape (1,)*) -- Duty ratio vector as an array compatible with the solver.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 

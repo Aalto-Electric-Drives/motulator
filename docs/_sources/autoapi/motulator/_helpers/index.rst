@@ -34,6 +34,7 @@ Functions
 
    motulator._helpers.abc2complex
    motulator._helpers.complex2abc
+   motulator._helpers.wrap
 
 
 
@@ -233,6 +234,34 @@ Functions
    
    Step function.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: wrap(theta)
+
+   
+   Limit the angle into the range [-pi, pi).
+
+   :param theta: Angle (rad).
+   :type theta: float
+
+   :returns: Limited angle.
+   :rtype: float
 
 
 

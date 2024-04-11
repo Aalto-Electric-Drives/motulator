@@ -1,17 +1,16 @@
 """
-2.2-kW PMSM
-===========
+2.2-kW PMSM, diode bridge
+=========================
 
-This example simulates sensorless vector control of a 2.2-kW PMSM drive.
+This example simulates sensorless vector control of a 2.2-kW PMSM drive. 
 
 """
 
 # %%
 # Imports.
 
-import numpy as np
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot, plot_extra
+from motulator import BaseValues, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -27,6 +26,7 @@ machine = model.sm.SynchronousMachine(
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.sm.Drive(machine, mechanics, converter)
+# mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
 # Configure the control system.
@@ -40,30 +40,15 @@ ctrl = control.sm.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 # Set the speed reference and the external load torque.
 
 # Speed reference
-times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
-# External load torque
-times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
-mdl.mechanics.tau_L_t = Sequence(times, values)
+ctrl.w_m_ref = lambda t: (t > .2)*2*base.w
 
-# mdl.mechanics.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
-# ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
+# External load torque
+mdl.mechanics.tau_L_t = lambda t: (t > .8)*.7*base.tau_nom
 
 # %%
 # Create the simulation object and simulate it.
 
-# Simulate the system without modeling PWM
-sim = model.Simulation(mdl, ctrl, pwm=False)
-sim.simulate(t_stop=4)
-plot(sim, base)  # Plot results in per-unit values.
-
-# Repeat the same simulation with PWM model enabled (takes a bit longer)
-mdl.clear()  # First clear the stored data from the previous simulation run
-ctrl.clear()
-sim = model.Simulation(mdl, ctrl, pwm=True)
-sim.simulate(t_stop=4)
+# Simulate the system and plot results in per-unit values
+sim = model.Simulation(mdl, ctrl)
+sim.simulate(t_stop=1.4)
 plot(sim, base)
-# Plot a zoomed view
-plot_extra(sim, t_span=(1.1, 1.125), base=base)

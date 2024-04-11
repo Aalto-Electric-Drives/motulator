@@ -176,9 +176,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -457,10 +458,10 @@ controller, whose continuous-time counterpart is <a class="footnote-reference br
 </div>
 <p>where <cite>u</cite> is the controller output, <cite>i_ref</cite> is the reference signal, <cite>i</cite> is
 the feedback signal, <cite>w</cite> is the angular speed of synchronous coordinates,
-and <cite>1/s</cite> refers to integration. This algorithm is compatible with both real
-and complex signals. The 1DOF version is obtained by setting <code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>.
-The integrator anti-windup is implemented based on the realized controller
-output.</p>
+and <cite>1/s</cite> refers to integration. This algorithm is compatible with both
+real and complex signals. The 1DOF version is obtained by setting
+<code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator anti-windup is implemented based on the
+realized controller output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -558,7 +559,7 @@ saturate, <code class="docutils literal notranslate"><span class="pre">u_lim</sp
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.</span></span><span class="sig-name descname"><span class="pre">SpeedCtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/control/_common.html#SpeedCtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.SpeedCtrl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.control.PICtrl" title="motulator.control.PICtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PICtrl</span></code></a></p>
 <p>2DOF PI speed controller.</p>
-<p>This provides an interface for a speed controller. The gains are initialized
+<p>This is an interface for a speed controller. The gains are initialized
 based on the desired closed-loop bandwidth and the rotor inertia estimate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -582,12 +583,12 @@ counterpart is:</p>
 </div>
 <p>where <cite>u</cite> is the controller output, <cite>y_ref</cite> is the reference signal, <cite>y</cite> is
 the feedback signal, and <cite>1/s</cite> refers to integration. The standard PI
-controller is obtained by choosing <code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator anti-windup
-is implemented based on the realized controller output.</p>
+controller is obtained by choosing <code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator
+anti-windup is implemented based on the realized controller output.</p>
 <p class="rubric">Notes</p>
 <p>This controller can be used, e.g., as a speed controller. In this case, <cite>y</cite>
-corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to the torque reference
-<cite>tau_M_ref</cite>.</p>
+corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to the torque
+reference <cite>tau_M_ref</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -724,9 +725,9 @@ overmodulation region such that the six-step operation is reached
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
-<p>Bolognani, Zigliotto, “Novel digital continuous control of
-SVM inverters in the overmodulation range,” IEEE Trans. Ind. Appl.,
-1997, <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
+<p>Bolognani, Zigliotto, “Novel digital continuous control
+of SVM inverters in the overmodulation range,” IEEE Trans. Ind.
+Appl., 1997, <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
 </aside>
 </aside>
 </dd></dl>
@@ -735,8 +736,8 @@ SVM inverters in the overmodulation range,” IEEE Trans. Ind. Appl.,
 <dt class="sig sig-object py" id="motulator.control.PWM.duty_ratios">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">duty_ratios</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/control/_common.html#PWM.duty_ratios"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.PWM.duty_ratios" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute the duty ratios for three-phase space-vector PWM.</p>
-<p>This computes the duty ratios corresponding to standard space-vector PWM
-and minimum-amplitude-error overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>This computes the duty ratios corresponding to standard space-vector
+PWM and minimum-amplitude-error overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

@@ -173,9 +173,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vector/index.html">Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -329,10 +330,11 @@ document.write(`
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
 <span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">savemat</span>
 <span class="kn">from</span> <span class="nn">motulator._helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span>
+<span class="kn">from</span> <span class="nn">motulator._utils</span> <span class="kn">import</span> <span class="n">Bunch</span>
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="Delay"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Delay">[docs]</a><span class="k">class</span> <span class="nc">Delay</span><span class="p">:</span>
+<div class="viewcode-block" id="Delay"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._simulation.Delay">[docs]</a><span class="k">class</span> <span class="nc">Delay</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computational delay.</span>
 
@@ -480,7 +482,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<span class="k">def</span> <span class="nf">_zoh</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">):</span>
+<div class="viewcode-block" id="zoh"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._simulation.zoh">[docs]</a><span class="k">def</span> <span class="nf">zoh</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Zero-order hold of the duty ratios over the sampling period.</span>
 
@@ -502,7 +504,7 @@ document.write(`
     <span class="c1"># Shape the output arrays to be compatible with the solver</span>
     <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">T_s</span><span class="p">])</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">abc2complex</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)])</span>
-    <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">q</span>
+    <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">q</span></div>
 
 
 <span class="c1"># %%</span>
@@ -514,25 +516,16 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mdl : Drive </span>
+<span class="sd">    mdl : Model </span>
 <span class="sd">        Continuous-time system model.</span>
 <span class="sd">    ctrl : Ctrl</span>
 <span class="sd">        Discrete-time controller.</span>
-<span class="sd">    delay : int, optional</span>
-<span class="sd">        Amount of computational delays. The default is 1.</span>
-<span class="sd">    pwm : bool, optional</span>
-<span class="sd">        Enable carrier comparison. The default is False.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span> <span class="o">=</span> <span class="n">mdl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span> <span class="o">=</span> <span class="n">ctrl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">pwm</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pwm</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pwm</span> <span class="o">=</span> <span class="n">_zoh</span>
 
 <div class="viewcode-block" id="Simulation.simulate"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._simulation.Simulation.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_stop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -547,7 +540,7 @@ document.write(`
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Other options of `solve_ivp` could be easily changed if needed, but, for</span>
+<span class="sd">        Other options of `solve_ivp` could be easily used if needed, but, for</span>
 <span class="sd">        simplicity, only `max_step` is included as an option of this method.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -568,17 +561,17 @@ document.write(`
             <span class="n">T_s</span><span class="p">,</span> <span class="n">d_abc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="p">)</span>
 
             <span class="c1"># Computational delay model</span>
-            <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delay</span><span class="p">(</span><span class="n">d_abc_ref</span><span class="p">)</span>
+            <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">d_abc_ref</span><span class="p">)</span>
 
             <span class="c1"># Carrier comparison</span>
-            <span class="n">t_steps</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pwm</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">)</span>
+            <span class="n">t_steps</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">)</span>
 
             <span class="c1"># Loop over the sampling period T_s</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t_step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t_steps</span><span class="p">):</span>
 
                 <span class="k">if</span> <span class="n">t_step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="c1"># Update the switching state</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
                     <span class="c1"># Get initial values</span>
                     <span class="n">x0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span>
@@ -592,7 +585,7 @@ document.write(`
                     <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">set_initial_values</span><span class="p">(</span><span class="n">t0_new</span><span class="p">,</span> <span class="n">x0_new</span><span class="p">)</span>
 
                     <span class="c1"># Save the solution</span>
-                    <span class="n">sol</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">q</span><span class="p">]</span>
+                    <span class="n">sol</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">q</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Simulation.save_mat"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._simulation.Simulation.save_mat">[docs]</a>    <span class="k">def</span> <span class="nf">save_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sim&quot;</span><span class="p">):</span>
@@ -607,6 +600,111 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">savemat</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_mdl_data&quot;</span> <span class="o">+</span> <span class="s2">&quot;.mat&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         <span class="n">savemat</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_ctrl_data&quot;</span> <span class="o">+</span> <span class="s2">&quot;.mat&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for continuous-time system models.</span>
+
+<span class="sd">    This base class is a template for a system model that interconnects the </span>
+<span class="sd">    subsystems and provides an interface to the solver. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pwm : zoh | CarrierComparison, optional</span>
+<span class="sd">        Zero-order hold of duty ratios or carrier comparison. If None, the </span>
+<span class="sd">        default is `zoh`.</span>
+<span class="sd">    delay : int, optional</span>
+<span class="sd">        Amount of computational delays. The default is 1.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">zoh</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pwm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Initial time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Switching state vector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Model.clear"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Model.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear the simulation data of the system model.</span>
+<span class="sd">        </span>
+<span class="sd">        This method is automatically run when the instance for the system model</span>
+<span class="sd">        is created. It can also be used in the case of repeated simulations to </span>
+<span class="sd">        clear the data from the previous simulation run.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initial time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Solution will be stored in the following lists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="Model.get_initial_values"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Model.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the initial values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x0 : complex list</span>
+<span class="sd">            Initial values of the state variables.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Model.set_initial_values"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Model.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the initial values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t0 : float</span>
+<span class="sd">            Initial time (s).</span>
+<span class="sd">        x0 : complex ndarray</span>
+<span class="sd">            Initial values of the state variables.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Model.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Model.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the complete state derivative list for the solver.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Time (s).</span>
+<span class="sd">        x : complex ndarray</span>
+<span class="sd">            State vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex list</span>
+<span class="sd">            State derivatives.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Model.save"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Model.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the solution.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sol : Bunch</span>
+<span class="sd">            Solution from the solver.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">q</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.post_process"><a class="viewcode-back" href="../../../autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Model.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform the lists to the ndarray format and post-process them.&quot;&quot;&quot;</span>
+        <span class="c1"># From lists to the ndarray</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div></div>
 </pre></div>
 
                 </article>

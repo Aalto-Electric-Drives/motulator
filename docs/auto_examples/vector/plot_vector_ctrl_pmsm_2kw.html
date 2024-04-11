@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>2.2-kW PMSM &#8212; motulator 0.1.7 documentation</title>
+    <title>2.2-kW PMSM, diode bridge &#8212; motulator 0.1.7 documentation</title>
   
   
   
@@ -52,8 +52,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/vector/plot_vector_ctrl_pmsm_2kw';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="2.2-kW induction motor, saturated" href="plot_vector_ctrl_im_2kw.html" />
-    <link rel="prev" title="5-kW PM-SyRM" href="plot_vector_ctrl_pmsyrm_thor.html" />
+    <link rel="next" title="2.2-kW PMSM, diode bridge" href="plot_vector_ctrl_pmsm_2kw_diode.html" />
+    <link rel="prev" title="Vector Control" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -176,9 +176,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Vector Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
 </li>
@@ -359,7 +360,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>2.2-kW PMSM</h1>
+    <h1>2.2-kW PMSM, diode bridge</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -378,13 +379,12 @@ document.write(`
 <p><a class="reference internal" href="#sphx-glr-download-auto-examples-vector-plot-vector-ctrl-pmsm-2kw-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code</p>
 </div>
-<section class="sphx-glr-example-title" id="kw-pmsm">
-<span id="sphx-glr-auto-examples-vector-plot-vector-ctrl-pmsm-2kw-py"></span><h1>2.2-kW PMSM<a class="headerlink" href="#kw-pmsm" title="Permalink to this heading">#</a></h1>
+<section class="sphx-glr-example-title" id="kw-pmsm-diode-bridge">
+<span id="sphx-glr-auto-examples-vector-plot-vector-ctrl-pmsm-2kw-py"></span><h1>2.2-kW PMSM, diode bridge<a class="headerlink" href="#kw-pmsm-diode-bridge" title="Permalink to this heading">#</a></h1>
 <p>This example simulates sensorless vector control of a 2.2-kW PMSM drive.</p>
 <p>Imports.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
-<span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">plot</span><span class="p">,</span> <span class="n">plot_extra</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
+<span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">plot</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
@@ -398,6 +398,7 @@ to download the full example code</p>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sm</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
+<span class="c1"># mdl.pwm = model.CarrierComparison()  # Enable the PWM model</span>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
@@ -409,40 +410,20 @@ to download the full example code</p>
 </div>
 <p>Set the speed reference and the external load torque.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
-<span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.25</span><span class="p">,</span> <span class="mf">.375</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.625</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
-<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-<span class="c1"># External load torque</span>
-<span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
-<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">w_m_ref</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
 
-<span class="c1"># mdl.mechanics.tau_L_t = lambda t: (t &gt; .8)*base.tau_nom*.7</span>
-<span class="c1"># ctrl.w_m_ref = lambda t: (t &gt; .2)*(2*base.w)</span>
+<span class="c1"># External load torque</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.8</span><span class="p">)</span><span class="o">*</span><span class="mf">.7</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">tau_nom</span>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate the system without modeling PWM</span>
-<span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>  <span class="c1"># Plot results in per-unit values.</span>
-
-<span class="c1"># Repeat the same simulation with PWM model enabled (takes a bit longer)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>  <span class="c1"># First clear the stored data from the previous simulation run</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-<span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate the system and plot results in per-unit values</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">1.4</span><span class="p">)</span>
 <span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-<span class="c1"># Plot a zoomed view</span>
-<span class="n">plot_extra</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.125</span><span class="p">),</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" alt="plot vector ctrl pmsm 2kw" class = "sphx-glr-multi-img"/></li>
-<li><img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_002.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_002.png" alt="plot vector ctrl pmsm 2kw" class = "sphx-glr-multi-img"/></li>
-<li><img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_003.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_003.png" alt="plot vector ctrl pmsm 2kw" class = "sphx-glr-multi-img"/></li>
-</ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 40.807 seconds)</p>
+<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_001.png" alt="plot vector ctrl pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.633 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-pmsm-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/79539a8c2db262717687591048fde041/plot_vector_ctrl_pmsm_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vector_ctrl_pmsm_2kw.ipynb</span></code></a></p>
@@ -466,20 +447,20 @@ to download the full example code</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="plot_vector_ctrl_pmsyrm_thor.html"
+       href="index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">5-kW PM-SyRM</p>
+        <p class="prev-next-title">Vector Control</p>
       </div>
     </a>
     <a class="right-next"
-       href="plot_vector_ctrl_im_2kw.html"
+       href="plot_vector_ctrl_pmsm_2kw_diode.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">2.2-kW induction motor, saturated</p>
+        <p class="prev-next-title">2.2-kW PMSM, diode bridge</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
