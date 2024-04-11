@@ -3,11 +3,11 @@
 =========================
 
 This example simulates sensorless stator-flux-vector control of a 5.5-kW 
-PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using an 
-algebraic saturation model, fitted to the flux linkage maps measured using the 
-constant-speed test. For comparison, the measured data is plotted together with 
-the model predictions. Notice that the control system used in this example does 
-not consider the saturation, only the system model does. 
+PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using 
+an algebraic saturation model, fitted to the flux linkage maps measured using 
+the constant-speed test. For comparison, the measured data is plotted together 
+with the model predictions. Notice that the control system used in this example 
+does not consider the saturation, only the system model does. 
 
 """
 
@@ -35,14 +35,15 @@ base = BaseValues(
 # available later.
 
 
+# pylint: disable=too-many-locals
 def i_s(psi_s):
     """
-    Saturation model for a 5.5-kW PM synchronous reluctance machine.
+    Saturation model for a 5.5-kW PM-SyRM.
     
     This model takes into account the bridge saturation in addition to the 
     regular self- and cross-saturation effects of the d- and q-axis. The bridge 
     saturation model is based on a nonlinear reluctance element in parallel 
-    with the Norton-equivalent PM model.
+    with the Norton-equivalent PM model. 
 
     Parameters
     ----------
@@ -56,8 +57,9 @@ def i_s(psi_s):
 
     Notes
     -----
-    This model can also be used for other PM synchronous reluctance machines by 
-    changing the model parameters.  
+    For simplicity, the saturation model parameters are hard-coded in the 
+    function below. This model can also be used for other PM-SyRMs by changing 
+    the model parameters.  
 
     """
     # d-axis self-saturation
@@ -131,8 +133,8 @@ ax2.set_zlabel(r"$i_\mathrm{q}$ (A)")
 plt.show()
 
 # %%
-# Solve the PM flux linkage for the initial value of the stator flux, which is
-# needed in the machine model below.
+# Solve the PM flux linkage for the initial value of the stator flux linkage,
+# which is needed in the machine model below.
 
 res = minimize_scalar(
     lambda psi_d: np.abs(i_s(psi_d)), bounds=(0, base.psi), method="bounded")
@@ -143,12 +145,13 @@ psi_s0 = complex(res.x)  # psi_s0 = 0.477
 
 machine = model.sm.SynchronousMachineSaturated(
     n_p=2, R_s=.63, current=i_s, psi_s0=psi_s0)
-# Magnetically linear PMSyRM model for comparison
+# Magnetically linear PM-SyRM model for comparison
 # machine = model.sm.SynchronousMachine(
-#     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
+#    n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.sm.Drive(machine, mechanics, converter)
+# mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
 # Configure the control system.
@@ -178,7 +181,7 @@ mdl.mechanics.tau_L_t = Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=4)
 
 # %%

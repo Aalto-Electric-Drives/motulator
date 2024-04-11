@@ -2,6 +2,7 @@
 
 from motulator.model.sm._drive import (
     Drive,
+    DriveWithDiodeBridge,
     DriveTwoMassMechanics,
     SynchronousMachine,
     SynchronousMachineSaturated,
@@ -15,6 +16,7 @@ from motulator.model.sm._flux_maps import (
 
 __all__ = [
     "Drive",
+    "DriveWithDiodeBridge",
     "DriveTwoMassMechanics",
     "SynchronousMachine",
     "SynchronousMachineSaturated",

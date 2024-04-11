@@ -17,13 +17,14 @@ class FluxVectorCtrl(Ctrl):
 
     This class implements a variant of stator-flux-vector control [#Pel2009]_. 
     Rotor coordinates as well as decoupling between the stator flux and torque 
-    channels are used according to [#Awa2019b]_. Here, the stator flux magnitude 
-    and the electromagnetic torque are selected as controllable variables. 
+    channels are used according to [#Awa2019b]_. Here, the stator flux 
+    magnitude and the electromagnetic torque are selected as controllable 
+    variables. 
 
     Notes
     -----
-    Proportional controllers are used for simplicity. The magnetic saturation is 
-    not considered in this implementation.
+    Proportional controllers are used for simplicity. The magnetic saturation 
+    is not considered in this implementation.
 
     Parameters
     ----------
@@ -48,7 +49,7 @@ class FluxVectorCtrl(Ctrl):
         Flux and torque reference generator.
     speed_ctrl : SpeedCtrl
         Speed controller.
-    w_m_ref : float
+    w_m_ref : callable
         Speed reference (electrical rad/s) as a function of time (s).
     pwm : PWM
         Pulse-width modulation.
@@ -144,7 +145,7 @@ class FluxVectorCtrl(Ctrl):
         # Auxiliary current
         i_a = psi_s.real/self.L_q + 1j*psi_s.imag/self.L_d - i_s
 
-        # Torque-production factor (c_tau = 0 corresponds to the MTPV condition)
+        # Torque-production factor, c_tau = 0 corresponds to the MTPV condition
         c_tau = 1.5*self.n_p*np.real(i_a*np.conj(psi_s))
 
         # References for the flux and torque controllers

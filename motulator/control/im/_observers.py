@@ -10,9 +10,9 @@ class Observer:
     rotor flux coordinates.
 
     This class implements a reduced-order flux observer for induction machines.
-    Both sensored and sensorless operation are supported. The observer structure
-    is similar to [#Hin2010]_. The observer operates in estimated rotor flux 
-    coordinates. 
+    Both sensored and sensorless operation are supported. The observer 
+    structure is similar to [#Hin2010]_. The observer operates in estimated 
+    rotor flux coordinates. 
     
     Parameters
     ----------
@@ -151,8 +151,8 @@ class FullOrderObserver:
     Full-order flux observer for induction machines in estimated 
     rotor flux coordinates.
 
-    This class implements a full-order flux observer for induction machines. The 
-    observer structure is similar to [#Tii2023]_. The observer operates in 
+    This class implements a full-order flux observer for induction machines. 
+    The observer structure is similar to [#Tii2023]_. The observer operates in 
     estimated rotor flux coordinates. 
     
     Parameters
@@ -184,8 +184,8 @@ class FullOrderObserver:
     References
     ----------
     .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, "Speed-adaptive full-order 
-       observer revisited: Closed-form design for induction motor drives," Proc. 
-       IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359
+       observer revisited: Closed-form design for induction motor drives," 
+       Proc. IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359
 
     """
 

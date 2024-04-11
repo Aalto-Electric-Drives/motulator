@@ -3,7 +3,7 @@
 
 This software includes continuous-time simulation models for induction machines 
 and synchronous machines. Furthermore, selected examples of discrete-time 
-control algortihms are also included as well as various utilities.
+control algorithms are also included as well as various utilities.
 
 """
 

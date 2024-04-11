@@ -24,7 +24,6 @@ class Inverter:
 
     def __init__(self, u_dc):
         self.u_dc0 = u_dc
-        self.q = 0j  # Switching state vector
 
     @staticmethod
     def ac_voltage(q, u_dc):
@@ -114,8 +113,6 @@ class FrequencyConverter(Inverter):
         self.u_g = np.sqrt(2/3)*U_g
         # Grid angular frequeyncy
         self.w_g = 2*np.pi*f_g
-        # Switching state vector
-        self.q = 0j
 
     def grid_voltages(self, t):
         """

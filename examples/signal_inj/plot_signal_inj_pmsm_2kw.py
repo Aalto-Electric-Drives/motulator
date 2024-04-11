@@ -54,7 +54,7 @@ mdl.mechanics.tau_L_t = Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=4)
 
 # %%

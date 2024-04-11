@@ -60,11 +60,9 @@ mdl.mechanics.tau_L_t = Sequence(times, values)
 # mdl.mech.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2
 
 # %%
-# Create the simulation object and simulate it. You can also enable the PWM
-# model (which makes simulation slower). One-sampling-period computational
-# delay is modeled.
+# Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False, delay=1)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=4)
 
 # %%
