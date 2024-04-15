@@ -1,6 +1,7 @@
 """State observers for induction machines."""
 
 import numpy as np
+from motulator._helpers import wrap
 
 
 # %%
@@ -103,8 +104,8 @@ class Observer:
     def _update(self, T_s, i_s, dpsi_R, w_s, w_m):
         # Update the states
         self.psi_R += T_s*dpsi_R
-        self.theta_s += T_s*w_s  # Next line: limit into [-pi, pi)
-        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
+        self.theta_s += T_s*w_s
+        self.theta_s = wrap(self.theta_s)
         self.w_m += T_s*self.alpha_o*(w_m - self.w_m)
         # Store the old current
         self._i_s_old = i_s
@@ -215,7 +216,7 @@ class FullOrderObserver:
                     self.alpha - 1j*w_m)
         else:
             raise NotImplementedError(
-                'Sensored mode not implemented for full-order observer')
+                "Sensored mode not implemented for full-order observer")
 
         # States
         self.psi_R, self.i_s, self.theta_s, self.w_m = 0, 0, 0, 0
@@ -257,8 +258,8 @@ class FullOrderObserver:
         self.i_s += T_s*di_s
         self.psi_R += T_s*dpsi_R
         self.w_m += T_s*dw_m
-        self.theta_s += T_s*w_s  # Next line: limit into [-pi, pi)
-        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
+        self.theta_s += T_s*w_s
+        self.theta_s = wrap(self.theta_s)
 
     def __call__(self, T_s, u_s, i_s, w_m=None):
         """

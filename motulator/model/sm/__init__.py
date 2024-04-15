@@ -4,6 +4,7 @@ from motulator.model.sm._drive import (
     Drive,
     DriveWithDiodeBridge,
     DriveTwoMassMechanics,
+    DriveWithLCFilter,
     SynchronousMachine,
     SynchronousMachineSaturated,
 )
@@ -18,6 +19,7 @@ __all__ = [
     "Drive",
     "DriveWithDiodeBridge",
     "DriveTwoMassMechanics",
+    "DriveWithLCFilter",
     "SynchronousMachine",
     "SynchronousMachineSaturated",
     "import_syre_data",

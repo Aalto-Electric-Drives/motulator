@@ -17,7 +17,7 @@ References
 # %%
 import numpy as np
 from motulator.control._common import Ctrl, PWM
-from motulator._helpers import abc2complex
+from motulator._helpers import abc2complex, wrap
 from motulator._utils import Bunch
 
 
@@ -33,7 +33,7 @@ class VHzCtrl(Ctrl):
 
     """
 
-    # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-many-instance-attributes, too-many-arguments
     def __init__(self, T_s, par, psi_s_nom, k_u=1., k_w=4., six_step=False):
         super().__init__()
         self.T_s = T_s
@@ -50,7 +50,7 @@ class VHzCtrl(Ctrl):
         # Instantiate classes
         self.pwm = PWM(six_step=six_step)
         self.rate_limiter = callable
-        self.six_step = six_step
+        # self.six_step = six_step
         # States
         self.i_s_ref, self.theta_s, self.w_r_ref = 0j, 0, 0
         # self.T_s0 = T_s
@@ -120,8 +120,8 @@ class VHzCtrl(Ctrl):
         # with ref at the end of the variable name.
         self.i_s_ref += self.T_s*self.alpha_i*(i_s - self.i_s_ref)
         self.w_r_ref += self.T_s*self.alpha_f*(w_r - self.w_r_ref)
-        self.theta_s += self.T_s*w_s  # Next line: limit into [-pi, pi)
-        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
+        self.theta_s += self.T_s*w_s
+        self.theta_s = wrap(self.theta_s)
         self.clock.update(self.T_s)
 
         # Compute the duty ratios

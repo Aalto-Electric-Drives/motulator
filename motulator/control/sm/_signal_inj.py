@@ -1,7 +1,7 @@
 """Sensorless control with signal injection for synchronous machine drives."""
 
 import numpy as np
-from motulator._helpers import abc2complex
+from motulator._helpers import abc2complex, wrap
 from motulator.control._common import Ctrl, PWM, SpeedCtrl
 from motulator.control.sm._vector import CurrentCtrl, CurrentReference
 from motulator._utils import Bunch
@@ -261,5 +261,5 @@ class PhaseLockedLoop:
 
         # Update the states
         self.w_m += T_s*self.k_i*err
-        self.theta_m += T_s*w_m  # Next line: limit into [-pi, pi)
-        self.theta_m = np.mod(self.theta_m + np.pi, 2*np.pi) - np.pi
+        self.theta_m += T_s*w_m
+        self.theta_m = wrap(self.theta_m)

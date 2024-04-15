@@ -255,11 +255,12 @@ class Drive(Model):
         psi_s, theta_m, w_M, _ = x
 
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
-        u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
+        u_cs = self.converter.ac_voltage(self.q, self.converter.u_dc0)
+        # Converter (stator) voltage in rotor coordinates
+        u_c = np.exp(-1j*theta_m)*u_cs
 
         # State derivatives
-        machine_f, _, tau_M = self.machine.f(psi_s, u_s, w_M)
+        machine_f, _, tau_M = self.machine.f(psi_s, u_c, w_M)
         mechanics_f = self.mechanics.f(t, w_M, tau_M)
 
         # List of state derivatives
@@ -282,7 +283,7 @@ class Drive(Model):
         self.data.tau_L = (
             self.mechanics.tau_L_t(self.data.t) +
             self.mechanics.tau_L_w(self.data.w_M))
-        self.data.u_ss = self.converter.ac_voltage(
+        self.data.u_cs = self.converter.ac_voltage(
             self.data.q, self.converter.u_dc0)
         self.data.theta_m = wrap(self.data.theta_m)
         self.data.theta_M = wrap(self.data.theta_M)
@@ -338,10 +339,10 @@ class DriveWithDiodeBridge(Drive):
         psi_s, theta_m, w_M, _, u_dc, i_L = x
 
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(self.q, u_dc)
-        u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
+        u_cs = self.converter.ac_voltage(self.q, u_dc)
+        u_c = np.exp(-1j*theta_m)*u_cs
 
-        machine_f, i_s, tau_M = self.machine.f(psi_s, u_s, w_M)
+        machine_f, i_s, tau_M = self.machine.f(psi_s, u_c, w_M)
         i_ss = np.exp(1j*theta_m)*i_s  # Stator current in stator coordinates
         i_dc = self.converter.dc_current(self.q, i_ss)
 
@@ -363,7 +364,7 @@ class DriveWithDiodeBridge(Drive):
         self.data.u_dc = np.asarray(self.data.u_dc)
         self.data.i_L = np.asarray(self.data.i_L)
         # Some useful variables
-        self.data.u_ss = self.converter.ac_voltage(self.data.q, self.data.u_dc)
+        self.data.u_cs = self.converter.ac_voltage(self.data.q, self.data.u_dc)
         self.data.i_dc = self.converter.dc_current(self.data.q, self.data.i_ss)
         u_g_abc = self.converter.grid_voltages(self.data.t)
         self.data.u_g = abc2complex(u_g_abc)
@@ -419,10 +420,10 @@ class DriveTwoMassMechanics(Drive):
         # Unpack the states
         psi_s, theta_m, w_M, _, w_L, theta_ML = x
         # Interconnections: outputs for computing the state derivatives
-        u_ss = self.converter.ac_voltage(self.q, self.converter.u_dc0)
-        u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
+        u_cs = self.converter.ac_voltage(self.q, self.converter.u_dc0)
+        u_c = np.exp(-1j*theta_m)*u_cs
         # State derivatives plus the outputs for interconnections
-        machine_f, _, tau_M = self.machine.f(psi_s, u_s, w_M)
+        machine_f, _, tau_M = self.machine.f(psi_s, u_c, w_M)
         mechanics_f = self.mechanics.f(t, w_M, w_L, theta_ML, tau_M)
         # List of state derivatives
         return machine_f + mechanics_f
@@ -439,3 +440,79 @@ class DriveTwoMassMechanics(Drive):
         # From lists to the ndarray
         self.data.w_L = np.asarray(self.data.w_L)
         self.data.theta_ML = np.asarray(self.data.theta_ML)
+
+
+# %%
+class DriveWithLCFilter(Drive):
+    """
+    Synchronous machine drive with an output LC filter.
+
+    Parameters
+    ----------
+    machine : SynchronousMachine | SynchronousMachineSaturated
+        Synchronous machine model.
+    mechanics : Mechanics
+        Mechanics model.
+    converter : Inverter
+        Inverter model.
+    lc_filter : LCFilter
+        LC-filter model.
+
+    """
+
+    def __init__(
+            self,
+            machine=None,
+            mechanics=None,
+            converter=None,
+            lc_filter=None):
+        super().__init__(machine, mechanics, converter)
+        self.lc_filter = lc_filter
+        self.clear()
+
+    def clear(self):
+        """Extend the base class."""
+        super().clear()
+        self.data.i_cs, self.data.u_ss = [], []
+
+    def get_initial_values(self):
+        """Extend the base class."""
+        x0 = super().get_initial_values() + [
+            self.lc_filter.i_cs0, self.lc_filter.u_ss0
+        ]
+        return x0
+
+    def set_initial_values(self, t0, x0):
+        """Extend the base class."""
+        super().set_initial_values(t0, x0[0:4])
+        self.lc_filter.i_cs0 = x0[4]
+        self.lc_filter.u_ss0 = x0[5]
+
+    # pylint: disable=too-many-locals
+    def f(self, t, x):
+        """Override the base class."""
+        # Unpack the states
+        psi_s, theta_m, w_M, _, i_cs, u_ss = x
+        # Interconnections: outputs for computing the state derivatives
+        u_cs = self.converter.ac_voltage(self.q, self.converter.u_dc0)
+        u_s = np.exp(-1j*theta_m)*u_ss  # Stator voltage in rotor coordinates
+        # State derivatives plus the outputs for interconnections
+        machine_f, i_s, tau_M = self.machine.f(psi_s, u_s, w_M)
+        i_ss = np.exp(1j*theta_m)*i_s  # Stator current in stator coordinates
+        mechanics_f = self.mechanics.f(t, w_M, tau_M)
+        lc_filter_f = self.lc_filter.f(i_cs, u_ss, u_cs, i_ss)
+        # List of state derivatives
+        return machine_f + mechanics_f + lc_filter_f
+
+    def save(self, sol):
+        """Extend the base class."""
+        super().save(sol)
+        self.data.i_cs.extend(sol.y[4])
+        self.data.u_ss.extend(sol.y[5])
+
+    def post_process(self):
+        """Extend the base class."""
+        super().post_process()
+        # From lists to the ndarray
+        self.data.i_cs = np.asarray(self.data.i_cs)
+        self.data.u_ss = np.asarray(self.data.u_ss)

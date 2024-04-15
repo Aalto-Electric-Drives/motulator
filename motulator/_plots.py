@@ -196,7 +196,7 @@ def plot_extra(sim, base=None, t_span=None):
     fig1, (ax1, ax2) = plt.subplots(2, 1)
 
     # Subplot 1: voltages
-    ax1.plot(mdl.t, mdl.u_ss.real/base.u)
+    ax1.plot(mdl.t, mdl.u_cs.real/base.u)
     ax1.plot(ctrl.t, ctrl.u_ss.real/base.u)
     ax1.set_xlim(t_span)
     ax1.legend([r"$u_\mathrm{sa}$", r"$\hat u_\mathrm{sa}$"])
