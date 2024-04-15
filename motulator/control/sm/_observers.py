@@ -2,6 +2,7 @@
 State observers for synchronous machines.
 """
 import numpy as np
+from motulator._helpers import wrap
 
 
 # %%
@@ -110,8 +111,8 @@ class Observer:
         self.psi_s += T_s*(
             u_s - self.R_s*i_s - 1j*w_s*self.psi_s + k1*e + k2*np.conj(e))
         self.w_m += T_s*self.alpha_o**2*eps
-        self.theta_m += T_s*w_s  # Next line: limit into [-pi, pi)
-        self.theta_m = np.mod(self.theta_m + np.pi, 2*np.pi) - np.pi
+        self.theta_m += T_s*w_s
+        self.theta_m = wrap(self.theta_m)
 
 
 # %%

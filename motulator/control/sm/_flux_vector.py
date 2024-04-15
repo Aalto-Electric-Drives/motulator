@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator._helpers import abc2complex
+from motulator._helpers import abc2complex, wrap
 from motulator.control._common import Ctrl, PWM, SpeedCtrl
 from motulator.control.sm._torque import TorqueCharacteristics
 from motulator.control.sm._vector import ModelPars
@@ -126,10 +126,8 @@ class FluxVectorCtrl(Ctrl):
         else:
             # Measure the rotor speed
             w_m = self.n_p*mdl.mechanics.meas_speed()
-            # Limit the electrical rotor position into [-pi, pi)
-            theta_m = np.mod(
-                self.n_p*mdl.mechanics.meas_position() + np.pi,
-                2*np.pi) - np.pi
+            # Measure the electrical rotor position
+            theta_m = wrap(self.n_p*mdl.mechanics.meas_position())
 
         # Current vector in estimated rotor coordinates
         i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)

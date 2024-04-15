@@ -39,15 +39,15 @@ class Inverter:
 
         Returns
         -------
-        u_ac : complex
-            AC-side voltage (V).
+        u_c : complex
+            AC-side converter voltage (V).
 
         """
-        u_ac = q*u_dc
-        return u_ac
+        u_c = q*u_dc
+        return u_c
 
     @staticmethod
-    def dc_current(q, i_ac):
+    def dc_current(q, i_c):
         """
         Compute the DC-side current of a lossless inverter.
 
@@ -55,8 +55,8 @@ class Inverter:
         ----------
         q : complex
             Switching state vector.
-        i_ac : complex
-            AC-side current (A).
+        i_c : complex
+            AC-side converter current (A).
 
         Returns
         -------
@@ -64,7 +64,7 @@ class Inverter:
             DC-side current (A).
 
         """
-        i_dc = 1.5*np.real(q*np.conj(i_ac))
+        i_dc = 1.5*np.real(q*np.conj(i_c))
         return i_dc
 
     def meas_dc_voltage(self):
@@ -111,7 +111,7 @@ class FrequencyConverter(Inverter):
         self.u_dc0 = np.sqrt(2)*U_g
         # Peak-valued line-neutral grid voltage
         self.u_g = np.sqrt(2/3)*U_g
-        # Grid angular frequeyncy
+        # Grid angular frequency
         self.w_g = 2*np.pi*f_g
 
     def grid_voltages(self, t):

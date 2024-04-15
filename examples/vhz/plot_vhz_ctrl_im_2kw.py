@@ -41,8 +41,7 @@ ctrl = control.im.VHzCtrl(250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0)
 ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 # %%
-# Set the speed reference and the external load torque. More complicated
-# signals could be defined as functions.
+# Set the speed reference and the external load torque.
 
 ctrl.w_m_ref = lambda t: (t > .2)*base.w
 
@@ -54,8 +53,7 @@ mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 mdl.mechanics.tau_L_t = lambda t: (t > 1.)*.2*base.tau_nom
 
 # %%
-# Create the simulation object and simulate it. The option `pwm=True` enables
-# the model for the carrier comparison.
+# Create the simulation object and simulate it.
 
 sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.5)

@@ -18,7 +18,7 @@ from dataclasses import dataclass
 import numpy as np
 from motulator.control._common import Ctrl, PWM, RateLimiter
 from motulator.control.im._observers import FluxObserver
-from motulator._helpers import abc2complex
+from motulator._helpers import abc2complex, wrap
 from motulator._utils import Bunch
 
 
@@ -110,6 +110,7 @@ class ObserverBasedVHzCtrl(Ctrl):
         # States
         self.theta_s, self.tau_M_ref, self.w_r_ref = 0, 0, 0
 
+    # pylint: disable=too-many-locals
     def __call__(self, mdl):
         """
         Run the main control loop.
@@ -185,8 +186,8 @@ class ObserverBasedVHzCtrl(Ctrl):
         self.observer.update(self.T_s, u_s, i_s, w_s)
         self.w_r_ref += self.T_s*self.alpha_r*(w_r - self.w_r_ref)
         self.tau_M_ref += self.T_s*self.alpha_f*(tau_M - self.tau_M_ref)
-        self.theta_s += self.T_s*w_s  # Next line: limit into [-pi, pi)
-        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
+        self.theta_s += self.T_s*w_s
+        self.theta_s = wrap(self.theta_s)
         self.clock.update(self.T_s)
 
         # Calculate the duty ratios and update the voltage estimate state

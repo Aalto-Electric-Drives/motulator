@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator._helpers import abc2complex
+from motulator._helpers import abc2complex, wrap
 from motulator.control._common import Ctrl, PWM, RateLimiter
 from motulator.control.sm._flux_vector import (
     FluxTorqueReference, FluxTorqueReferencePars)
@@ -166,8 +166,8 @@ class ObserverBasedVHzCtrl(Ctrl):
         # Update the states
         self.observer.update(self.T_s, u_s, i_s, w_s)
         self.tau_M_ref += self.T_s*self.alpha_f*(tau_M - self.tau_M_ref)
-        self.theta_s += self.T_s*w_s  # Next line: limit into [-pi, pi)
-        self.theta_s = np.mod(self.theta_s + np.pi, 2*np.pi) - np.pi
+        self.theta_s += self.T_s*w_s
+        self.theta_s = wrap(self.theta_s)
         self.clock.update(self.T_s)
 
         # PWM output

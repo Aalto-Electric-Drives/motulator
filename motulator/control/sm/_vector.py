@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator._helpers import abc2complex
+from motulator._helpers import abc2complex, wrap
 from motulator.control._common import Ctrl, ComplexPICtrl, PWM, SpeedCtrl
 from motulator.control.sm._torque import TorqueCharacteristics
 from motulator.control.sm._observers import Observer
@@ -122,8 +122,7 @@ class VectorCtrl(Ctrl):
             w_m, theta_m = self.observer.w_m, self.observer.theta_m
         else:
             w_m = self.n_p*mdl.mechanics.meas_speed()
-            theta_m = self.n_p*mdl.mechanics.meas_position()
-            theta_m = np.mod(theta_m + np.pi, 2*np.pi) - np.pi
+            theta_m = wrap(self.n_p*mdl.mechanics.meas_position())
 
         # Current vector in estimated rotor coordinates
         i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
