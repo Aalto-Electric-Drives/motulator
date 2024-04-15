@@ -32,7 +32,7 @@ Several powerful open-source IDEs are available for Python. The following instru
 1)	Install VS Code, Python, and ``git`` on your computer. Install also the recommended Python extensions in VS Code.
 2) Clone the project::
     
-      git clone https://github.com/AaltoElectricDrives/motulator
+      git clone https://github.com/Aalto-Electric-Drives/motulator
 
    This will create a folder called *motulator* in your current directory. 
 

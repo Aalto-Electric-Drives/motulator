@@ -21,11 +21,11 @@
 2.2-kW induction motor, 6-step mode
 ===================================
 
-This example simulates V/Hz of a 2.2-kW induction motor drive. The six-step
-overmodulation is enabled, which increases the fundamental voltage as well as
-the harmonics. Since the PWM is not synchronized with the stator frequency, the
-harmonic content also depends on the ratio between the stator frequency and the 
-sampling frequency.
+This example simulates V/Hz control of a 2.2-kW induction motor drive. The 
+six-step overmodulation is enabled, which increases the fundamental voltage as 
+well as the harmonics. Since the PWM is not synchronized with the stator 
+frequency, the harmonic content also depends on the ratio between the stator 
+frequency and the sampling frequency.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-14
 
@@ -111,12 +111,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
-Set the speed reference and the external load torque. More complicated
-signals could be defined as functions.
+Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-59
+.. GENERATED FROM PYTHON SOURCE LINES 46-58
 
 .. code-block:: Python
 
@@ -139,11 +138,11 @@ signals could be defined as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-65
+.. GENERATED FROM PYTHON SOURCE LINES 60-64
 
 .. code-block:: Python
 
@@ -158,11 +157,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-71
+.. GENERATED FROM PYTHON SOURCE LINES 66-70
 
 .. code-block:: Python
 
@@ -197,7 +196,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.406 seconds)
+   **Total running time of the script:** (0 minutes 7.559 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:

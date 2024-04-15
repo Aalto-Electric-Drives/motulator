@@ -30,6 +30,7 @@ Classes
    motulator.model.im._drive.Drive
    motulator.model.im._drive.DriveWithDiodeBridge
    motulator.model.im._drive.DriveTwoMassMechanics
+   motulator.model.im._drive.DriveWithLCFilter
 
 
 
@@ -690,6 +691,178 @@ Classes
    :type mechanics: MechanicsTwoMass
    :param converter: Inverter model.
    :type converter: Inverter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: clear()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_initial_values()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_initial_values(t0, x0)
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: f(t, x)
+
+      
+      Override the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: save(sol)
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: post_process()
+
+      
+      Extend the base class.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveWithLCFilter(machine=None, mechanics=None, converter=None, lc_filter=None)
+
+
+   Bases: :py:obj:`Drive`
+
+   
+   Induction machine drive with an output LC filter.
+
+   :param machine: Induction machine model.
+   :type machine: InductionMachine | InductionMachineSaturated
+   :param mechanics: Mechanics model.
+   :type mechanics: Mechanics
+   :param converter: Inverter model.
+   :type converter: Inverter
+   :param lc_filter: LC-filter model.
+   :type lc_filter: LCFilter
 
 
 

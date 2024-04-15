@@ -166,7 +166,7 @@ Create the simulation object and simulate it.
 
 Plot the load speed and the twist angle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-81
+.. GENERATED FROM PYTHON SOURCE LINES 67-82
 
 .. code-block:: Python
 
@@ -179,6 +179,7 @@ Plot the load speed and the twist angle.
     ax1.set_xlim(t_span)
     ax2.set_xlim(t_span)
     ax1.set_xticklabels([])
+    ax1.legend()
     ax1.set_ylabel(r"$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)")
     ax2.set_ylabel(r"$\vartheta_\mathrm{ML}$ (deg)")
     ax2.set_xlabel("Time (s)")
@@ -196,12 +197,12 @@ Plot the load speed and the twist angle.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-84
+.. GENERATED FROM PYTHON SOURCE LINES 83-85
 
 Plot also the frequency response from the electromagnetic torque tau_M to the
 rotor speed w_M.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-113
+.. GENERATED FROM PYTHON SOURCE LINES 85-114
 
 .. code-block:: Python
 
@@ -246,7 +247,7 @@ rotor speed w_M.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-119
+.. GENERATED FROM PYTHON SOURCE LINES 115-120
 
 .. rubric:: References
 
@@ -257,7 +258,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.792 seconds)
+   **Total running time of the script:** (0 minutes 3.995 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py:

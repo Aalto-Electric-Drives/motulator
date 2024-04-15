@@ -68,7 +68,7 @@ Classes
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: **u_ac** -- AC-side voltage (V).
+      :returns: **u_c** -- AC-side converter voltage (V).
       :rtype: complex
 
 
@@ -88,7 +88,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: dc_current(q, i_ac)
+   .. py:method:: dc_current(q, i_c)
       :staticmethod:
 
       
@@ -96,8 +96,8 @@ Classes
 
       :param q: Switching state vector.
       :type q: complex
-      :param i_ac: AC-side current (A).
-      :type i_ac: complex
+      :param i_c: AC-side converter current (A).
+      :type i_c: complex
 
       :returns: **i_dc** -- DC-side current (A).
       :rtype: float

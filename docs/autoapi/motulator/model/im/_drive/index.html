@@ -184,6 +184,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -411,6 +412,15 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.post_process"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.post_process()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.clear"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.clear()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.get_initial_values()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.set_initial_values()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.f"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.f()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.save"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.save()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.post_process"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.post_process()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -454,6 +464,9 @@ implemented in stator coordinates.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.im._drive.DriveTwoMassMechanics" title="motulator.model.im._drive.DriveTwoMassMechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveTwoMassMechanics</span></code></a></p></td>
 <td><p>Induction machine drive with two-mass mechanics.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.im._drive.DriveWithLCFilter" title="motulator.model.im._drive.DriveWithLCFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveWithLCFilter</span></code></a></p></td>
+<td><p>Induction machine drive with an output LC filter.</p></td>
 </tr>
 </tbody>
 </table>
@@ -818,6 +831,59 @@ and a capacitor.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithLCFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.im._drive.</span></span><span class="sig-name descname"><span class="pre">DriveWithLCFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mechanics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lc_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithLCFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithLCFilter" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motulator.model.im._drive.Drive" title="motulator.model.im._drive.Drive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drive</span></code></a></p>
+<p>Induction machine drive with an output LC filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.model.im._drive.InductionMachine" title="motulator.model.im._drive.InductionMachine"><em>InductionMachine</em></a><em> | </em><a class="reference internal" href="#motulator.model.im._drive.InductionMachineSaturated" title="motulator.model.im._drive.InductionMachineSaturated"><em>InductionMachineSaturated</em></a>) – Induction machine model.</p></li>
+<li><p><strong>mechanics</strong> (<a class="reference internal" href="../../_mechanics/index.html#motulator.model._mechanics.Mechanics" title="motulator.model._mechanics.Mechanics"><em>Mechanics</em></a>) – Mechanics model.</p></li>
+<li><p><strong>converter</strong> (<a class="reference internal" href="../../_converter/index.html#motulator.model._converter.Inverter" title="motulator.model._converter.Inverter"><em>Inverter</em></a>) – Inverter model.</p></li>
+<li><p><strong>lc_filter</strong> (<a class="reference internal" href="../../_lc_filter/index.html#motulator.model._lc_filter.LCFilter" title="motulator.model._lc_filter.LCFilter"><em>LCFilter</em></a>) – LC-filter model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithLCFilter.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithLCFilter.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithLCFilter.clear" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithLCFilter.get_initial_values">
+<span class="sig-name descname"><span class="pre">get_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithLCFilter.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithLCFilter.get_initial_values" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithLCFilter.set_initial_values">
+<span class="sig-name descname"><span class="pre">set_initial_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithLCFilter.set_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithLCFilter.set_initial_values" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithLCFilter.f">
+<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithLCFilter.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithLCFilter.f" title="Permalink to this definition">#</a></dt>
+<dd><p>Override the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithLCFilter.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithLCFilter.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithLCFilter.save" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.im._drive.DriveWithLCFilter.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/model/im/_drive.html#DriveWithLCFilter.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.im._drive.DriveWithLCFilter.post_process" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 </section>
@@ -887,6 +953,15 @@ and a capacitor.</p>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.f"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.f()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.save"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.save()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveTwoMassMechanics.post_process"><code class="docutils literal notranslate"><span class="pre">DriveTwoMassMechanics.post_process()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.clear"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.clear()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.get_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.get_initial_values()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.set_initial_values"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.set_initial_values()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.f"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.f()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.save"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.save()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.im._drive.DriveWithLCFilter.post_process"><code class="docutils literal notranslate"><span class="pre">DriveWithLCFilter.post_process()</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -129,7 +129,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz of a 2.2-kW induction motor drive. The six-step overmodulation is e...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz control of a 2.2-kW induction motor drive. The  six-step overmodula...">
 
 .. only:: html
 
@@ -158,6 +158,23 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, diode bridge</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine drive equipped with...">
+
+.. only:: html
+
+  .. image:: /auto_examples/vhz/images/thumb/sphx_glr_plot_vhz_ctrl_im_2kw_lc_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, LC filter</div>
     </div>
 
 

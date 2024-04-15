@@ -183,6 +183,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="auto_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -403,11 +404,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithDiodeBridge.clear">(motulator.model.im._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithLCFilter.clear">(motulator.model.im._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.Drive.clear">(motulator.model.im.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveTwoMassMechanics.clear">(motulator.model.im.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithDiodeBridge.clear">(motulator.model.im.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithLCFilter.clear">(motulator.model.im.DriveWithLCFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.Drive.clear">(motulator.model.sm._drive.Drive method)</a>
 </li>
@@ -415,11 +420,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.clear">(motulator.model.sm._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithLCFilter.clear">(motulator.model.sm._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.clear">(motulator.model.sm.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.clear">(motulator.model.sm.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.clear">(motulator.model.sm.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.clear">(motulator.model.sm.DriveWithLCFilter method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/control/_common/index.html#motulator.control._common.Clock">Clock (class in motulator.control._common)</a>
@@ -448,6 +457,8 @@ document.write(`
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachine.current">(motulator.model.sm.SynchronousMachine method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/control/im/_vector/index.html#motulator.control.im._vector.VectorCtrl.current_ctrl">current_ctrl (motulator.control.im._vector.VectorCtrl attribute)</a>
 
       <ul>
@@ -462,8 +473,6 @@ document.write(`
         <li><a href="autoapi/motulator/control/sm/index.html#motulator.control.sm.VectorCtrl.current_ctrl">(motulator.control.sm.VectorCtrl attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/control/sm/_torque/index.html#motulator.control.sm._torque.TorqueCharacteristics.current_limit">current_limit() (motulator.control.sm._torque.TorqueCharacteristics method)</a>
 
       <ul>
@@ -560,8 +569,6 @@ document.write(`
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.Drive">(class in motulator.model.sm._drive)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveTwoMassMechanics">DriveTwoMassMechanics (class in motulator.model.im)</a>
 
       <ul>
@@ -572,6 +579,8 @@ document.write(`
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveTwoMassMechanics">(class in motulator.model.sm._drive)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithDiodeBridge">DriveWithDiodeBridge (class in motulator.model.im)</a>
 
       <ul>
@@ -580,6 +589,16 @@ document.write(`
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge">(class in motulator.model.sm)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithDiodeBridge">(class in motulator.model.sm._drive)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithLCFilter">DriveWithLCFilter (class in motulator.model.im)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithLCFilter">(class in motulator.model.im._drive)</a>
+</li>
+        <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter">(class in motulator.model.sm)</a>
+</li>
+        <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithLCFilter">(class in motulator.model.sm._drive)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/control/_common/index.html#motulator.control._common.PWM.duty_ratios">duty_ratios() (motulator.control._common.PWM static method)</a>
@@ -597,6 +616,8 @@ document.write(`
       <li><a href="autoapi/motulator/model/_converter/index.html#motulator.model._converter.FrequencyConverter.f">f() (motulator.model._converter.FrequencyConverter method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/model/_lc_filter/index.html#motulator.model._lc_filter.LCFilter.f">(motulator.model._lc_filter.LCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/_mechanics/index.html#motulator.model._mechanics.Mechanics.f">(motulator.model._mechanics.Mechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/_mechanics/index.html#motulator.model._mechanics.MechanicsTwoMass.f">(motulator.model._mechanics.MechanicsTwoMass method)</a>
@@ -611,6 +632,8 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithDiodeBridge.f">(motulator.model.im._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithLCFilter.f">(motulator.model.im._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.InductionMachine.f">(motulator.model.im._drive.InductionMachine method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.Drive.f">(motulator.model.im.Drive method)</a>
@@ -619,7 +642,11 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithDiodeBridge.f">(motulator.model.im.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithLCFilter.f">(motulator.model.im.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.InductionMachine.f">(motulator.model.im.InductionMachine method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/index.html#motulator.model.LCFilter.f">(motulator.model.LCFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/model/index.html#motulator.model.Mechanics.f">(motulator.model.Mechanics method)</a>
 </li>
@@ -631,6 +658,8 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.f">(motulator.model.sm._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithLCFilter.f">(motulator.model.sm._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.SynchronousMachine.f">(motulator.model.sm._drive.SynchronousMachine method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.f">(motulator.model.sm.Drive method)</a>
@@ -638,6 +667,8 @@ document.write(`
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.f">(motulator.model.sm.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.f">(motulator.model.sm.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.f">(motulator.model.sm.DriveWithLCFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachine.f">(motulator.model.sm.SynchronousMachine method)</a>
 </li>
@@ -713,11 +744,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithDiodeBridge.get_initial_values">(motulator.model.im._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithLCFilter.get_initial_values">(motulator.model.im._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.Drive.get_initial_values">(motulator.model.im.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveTwoMassMechanics.get_initial_values">(motulator.model.im.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithDiodeBridge.get_initial_values">(motulator.model.im.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithLCFilter.get_initial_values">(motulator.model.im.DriveWithLCFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.Drive.get_initial_values">(motulator.model.sm._drive.Drive method)</a>
 </li>
@@ -725,11 +760,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.get_initial_values">(motulator.model.sm._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithLCFilter.get_initial_values">(motulator.model.sm._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.get_initial_values">(motulator.model.sm.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.get_initial_values">(motulator.model.sm.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.get_initial_values">(motulator.model.sm.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.get_initial_values">(motulator.model.sm.DriveWithLCFilter method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -813,6 +852,14 @@ document.write(`
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/model/index.html#motulator.model.LCFilter">LCFilter (class in motulator.model)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/model/_lc_filter/index.html#motulator.model._lc_filter.LCFilter">(class in motulator.model._lc_filter)</a>
+</li>
+      </ul></li>
+  </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
@@ -828,10 +875,14 @@ document.write(`
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachine.magnetic">(motulator.model.sm.SynchronousMachine method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.InductionMachine.meas_currents">meas_currents() (motulator.model.im._drive.InductionMachine method)</a>
+      <li><a href="autoapi/motulator/model/_lc_filter/index.html#motulator.model._lc_filter.LCFilter.meas_currents">meas_currents() (motulator.model._lc_filter.LCFilter method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.InductionMachine.meas_currents">(motulator.model.im._drive.InductionMachine method)</a>
+</li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.InductionMachine.meas_currents">(motulator.model.im.InductionMachine method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/index.html#motulator.model.LCFilter.meas_currents">(motulator.model.LCFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.SynchronousMachine.meas_currents">(motulator.model.sm._drive.SynchronousMachine method)</a>
 </li>
@@ -866,6 +917,12 @@ document.write(`
 
       <ul>
         <li><a href="autoapi/motulator/model/index.html#motulator.model.Mechanics.meas_speed">(motulator.model.Mechanics method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/motulator/model/_lc_filter/index.html#motulator.model._lc_filter.LCFilter.meas_voltages">meas_voltages() (motulator.model._lc_filter.LCFilter method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/model/index.html#motulator.model.LCFilter.meas_voltages">(motulator.model.LCFilter method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/model/index.html#motulator.model.Mechanics">Mechanics (class in motulator.model)</a>
@@ -936,6 +993,8 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/_converter/index.html#module-motulator.model._converter">motulator.model._converter</a>
 </li>
+        <li><a href="autoapi/motulator/model/_lc_filter/index.html#module-motulator.model._lc_filter">motulator.model._lc_filter</a>
+</li>
         <li><a href="autoapi/motulator/model/_mechanics/index.html#module-motulator.model._mechanics">motulator.model._mechanics</a>
 </li>
         <li><a href="autoapi/motulator/model/_simulation/index.html#module-motulator.model._simulation">motulator.model._simulation</a>
@@ -965,6 +1024,8 @@ document.write(`
         <li><a href="autoapi/motulator/_helpers/index.html#module-motulator._helpers">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     motulator._plots
 
@@ -972,8 +1033,6 @@ document.write(`
         <li><a href="autoapi/motulator/_plots/index.html#module-motulator._plots">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     motulator._utils
 
@@ -1091,6 +1150,13 @@ document.write(`
 
       <ul>
         <li><a href="autoapi/motulator/model/_converter/index.html#module-motulator.model._converter">module</a>
+</li>
+      </ul></li>
+      <li>
+    motulator.model._lc_filter
+
+      <ul>
+        <li><a href="autoapi/motulator/model/_lc_filter/index.html#module-motulator.model._lc_filter">module</a>
 </li>
       </ul></li>
       <li>
@@ -1347,11 +1413,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithDiodeBridge.post_process">(motulator.model.im._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithLCFilter.post_process">(motulator.model.im._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.Drive.post_process">(motulator.model.im.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveTwoMassMechanics.post_process">(motulator.model.im.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithDiodeBridge.post_process">(motulator.model.im.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithLCFilter.post_process">(motulator.model.im.DriveWithLCFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.Drive.post_process">(motulator.model.sm._drive.Drive method)</a>
 </li>
@@ -1359,11 +1429,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.post_process">(motulator.model.sm._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithLCFilter.post_process">(motulator.model.sm._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.post_process">(motulator.model.sm.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.post_process">(motulator.model.sm.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.post_process">(motulator.model.sm.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.post_process">(motulator.model.sm.DriveWithLCFilter method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1473,11 +1547,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithDiodeBridge.save">(motulator.model.im._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithLCFilter.save">(motulator.model.im._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.Drive.save">(motulator.model.im.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveTwoMassMechanics.save">(motulator.model.im.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithDiodeBridge.save">(motulator.model.im.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithLCFilter.save">(motulator.model.im.DriveWithLCFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.Drive.save">(motulator.model.sm._drive.Drive method)</a>
 </li>
@@ -1485,11 +1563,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.save">(motulator.model.sm._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithLCFilter.save">(motulator.model.sm._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.save">(motulator.model.sm.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.save">(motulator.model.sm.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.save">(motulator.model.sm.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.save">(motulator.model.sm.DriveWithLCFilter method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/model/_simulation/index.html#motulator.model._simulation.Simulation.save_mat">save_mat() (motulator.model._simulation.Simulation method)</a>
@@ -1515,11 +1597,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithDiodeBridge.set_initial_values">(motulator.model.im._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/im/_drive/index.html#motulator.model.im._drive.DriveWithLCFilter.set_initial_values">(motulator.model.im._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.Drive.set_initial_values">(motulator.model.im.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveTwoMassMechanics.set_initial_values">(motulator.model.im.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithDiodeBridge.set_initial_values">(motulator.model.im.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/im/index.html#motulator.model.im.DriveWithLCFilter.set_initial_values">(motulator.model.im.DriveWithLCFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.Drive.set_initial_values">(motulator.model.sm._drive.Drive method)</a>
 </li>
@@ -1527,11 +1613,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.set_initial_values">(motulator.model.sm._drive.DriveWithDiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/model/sm/_drive/index.html#motulator.model.sm._drive.DriveWithLCFilter.set_initial_values">(motulator.model.sm._drive.DriveWithLCFilter method)</a>
+</li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.set_initial_values">(motulator.model.sm.Drive method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.set_initial_values">(motulator.model.sm.DriveTwoMassMechanics method)</a>
 </li>
         <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.set_initial_values">(motulator.model.sm.DriveWithDiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.set_initial_values">(motulator.model.sm.DriveWithLCFilter method)</a>
 </li>
       </ul></li>
   </ul></td>

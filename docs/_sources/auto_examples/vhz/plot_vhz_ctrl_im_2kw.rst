@@ -110,12 +110,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-46
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
-Set the speed reference and the external load torque. More complicated
-signals could be defined as functions.
+Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-56
+.. GENERATED FROM PYTHON SOURCE LINES 45-55
 
 .. code-block:: Python
 
@@ -136,12 +135,11 @@ signals could be defined as functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-59
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
-Create the simulation object and simulate it. The option `pwm=True` enables
-the model for the carrier comparison.
+Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-63
+.. GENERATED FROM PYTHON SOURCE LINES 57-61
 
 .. code-block:: Python
 
@@ -156,7 +154,7 @@ the model for the carrier comparison.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-71
+.. GENERATED FROM PYTHON SOURCE LINES 62-69
 
 Plot results in per-unit values.
 
@@ -166,7 +164,7 @@ Plot results in per-unit values.
    resistance to the DC link. You can notice this instability if simulating a
    longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-76
+.. GENERATED FROM PYTHON SOURCE LINES 69-74
 
 .. code-block:: Python
 
@@ -206,7 +204,7 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-82
+.. GENERATED FROM PYTHON SOURCE LINES 75-80
 
 .. rubric:: References
 
@@ -217,7 +215,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 14.499 seconds)
+   **Total running time of the script:** (0 minutes 14.779 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:

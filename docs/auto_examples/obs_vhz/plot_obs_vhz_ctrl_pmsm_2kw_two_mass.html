@@ -186,6 +186,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Observer-Based V/Hz Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
@@ -441,6 +442,7 @@ this example.</p>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\omega_\mathrm</span><span class="si">{M}</span><span class="s2">$, $\omega_\mathrm</span><span class="si">{L}</span><span class="s2">$ (rad/s)&quot;</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\vartheta_\mathrm</span><span class="si">{ML}</span><span class="s2">$ (deg)&quot;</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
@@ -487,7 +489,7 @@ systems using torque excitation: Design and experimental evaluation,” IEEE
 Trans. Ind. Appl., 2015, <a class="reference external" href="https://doi.org/10.1109/TIA.2015.2416128">https://doi.org/10.1109/TIA.2015.2416128</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.792 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.995 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-obs-vhz-plot-obs-vhz-ctrl-pmsm-2kw-two-mass-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/8d2d9b3726dcd25847103191cbbd4d9b/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_obs_vhz_ctrl_pmsm_2kw_two_mass.ipynb</span></code></a></p>

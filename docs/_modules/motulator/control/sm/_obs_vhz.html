@@ -183,6 +183,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -328,7 +329,7 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">InitVar</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">motulator._helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span>
+<span class="kn">from</span> <span class="nn">motulator._helpers</span> <span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">wrap</span>
 <span class="kn">from</span> <span class="nn">motulator.control._common</span> <span class="kn">import</span> <span class="n">Ctrl</span><span class="p">,</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">RateLimiter</span>
 <span class="kn">from</span> <span class="nn">motulator.control.sm._flux_vector</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FluxTorqueReference</span><span class="p">,</span> <span class="n">FluxTorqueReferencePars</span><span class="p">)</span>
@@ -492,8 +493,8 @@ document.write(`
         <span class="c1"># Update the states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">w_s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_ref</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_f</span><span class="o">*</span><span class="p">(</span><span class="n">tau_M</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_ref</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="n">w_s</span>  <span class="c1"># Next line: limit into [-pi, pi)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="n">w_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
 
         <span class="c1"># PWM output</span>

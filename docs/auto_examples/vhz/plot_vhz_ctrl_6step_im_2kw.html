@@ -186,6 +186,7 @@
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">V/Hz Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -381,11 +382,11 @@ to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="kw-induction-motor-6-step-mode">
 <span id="sphx-glr-auto-examples-vhz-plot-vhz-ctrl-6step-im-2kw-py"></span><h1>2.2-kW induction motor, 6-step mode<a class="headerlink" href="#kw-induction-motor-6-step-mode" title="Permalink to this heading">#</a></h1>
-<p>This example simulates V/Hz of a 2.2-kW induction motor drive. The six-step
-overmodulation is enabled, which increases the fundamental voltage as well as
-the harmonics. Since the PWM is not synchronized with the stator frequency, the
-harmonic content also depends on the ratio between the stator frequency and the
-sampling frequency.</p>
+<p>This example simulates V/Hz control of a 2.2-kW induction motor drive. The
+six-step overmodulation is enabled, which increases the fundamental voltage as
+well as the harmonics. Since the PWM is not synchronized with the stator
+frequency, the harmonic content also depends on the ratio between the stator
+frequency and the sampling frequency.</p>
 <p>Imports.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">motulator</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
@@ -414,8 +415,7 @@ sampling frequency.</p>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">rate_limiter</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">RateLimiter</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">120</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Set the speed reference and the external load torque. More complicated
-signals could be defined as functions.</p>
+<p>Set the speed reference and the external load torque.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speed reference</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">2</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
@@ -443,7 +443,7 @@ signals could be defined as functions.</p>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_001.png" alt="plot vhz ctrl 6step im 2kw" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_002.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_002.png" alt="plot vhz ctrl 6step im 2kw" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.406 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.559 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-6step-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7b8c7612bd84de9f52110b924d3ec0fb/plot_vhz_ctrl_6step_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vhz_ctrl_6step_im_2kw.ipynb</span></code></a></p>

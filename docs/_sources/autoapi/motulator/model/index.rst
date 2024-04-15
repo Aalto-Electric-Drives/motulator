@@ -49,6 +49,7 @@ Classes
    motulator.model.MechanicsTwoMass
    motulator.model.FrequencyConverter
    motulator.model.Inverter
+   motulator.model.LCFilter
    motulator.model.CarrierComparison
    motulator.model.Simulation
    motulator.model.Delay
@@ -454,7 +455,7 @@ Functions
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: **u_ac** -- AC-side voltage (V).
+      :returns: **u_c** -- AC-side converter voltage (V).
       :rtype: complex
 
 
@@ -474,7 +475,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: dc_current(q, i_ac)
+   .. py:method:: dc_current(q, i_c)
       :staticmethod:
 
       
@@ -482,8 +483,8 @@ Functions
 
       :param q: Switching state vector.
       :type q: complex
-      :param i_ac: AC-side current (A).
-      :type i_ac: complex
+      :param i_c: AC-side converter current (A).
+      :type i_c: complex
 
       :returns: **i_dc** -- DC-side current (A).
       :rtype: float
@@ -512,6 +513,123 @@ Functions
 
       :returns: DC-bus voltage (V).
       :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: LCFilter(L, C, R_L=0, G_C=0)
+
+
+   
+   LC-filter model.
+
+   :param L: Inductance (H).
+   :type L: float
+   :param C: Capacitance (F).
+   :type C: float
+   :param R_L: Series resistance (Ω) of the inductor. The default is 0.
+   :type R_L: float, optional
+   :param G_C: Parallel conductance (S) of the capacitor. The default is 0.
+   :type G_C: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: f(i_cs, u_ss, u_cs, i_ss)
+
+      
+      Compute the state derivative.
+
+      :param i_cs: Converter output current (A).
+      :type i_cs: complex
+      :param u_ss: Capacitor (stator) voltage (V).
+      :type u_ss: complex
+      :param u_cs: Converter output voltage (V).
+      :type u_cs: complex
+      :param i_ss: Stator current (A).
+      :type i_ss: complex
+
+      :returns: Time derivative of the state vector, [di_cs, du_ss]
+      :rtype: complex list, length 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: meas_currents()
+
+      
+      Returns the converter phase currents at the end of the sampling period.
+
+      :returns: **i_c_abc** -- Phase currents (A).
+      :rtype: 3-tuple of floats
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: meas_voltages()
+
+      
+      Returns the capacitor (stator) phase voltages at the end of the
+      sampling period.
+
+      :returns: **u_s_abc** -- Phase voltages (V).
+      :rtype: 3-tuple of floats
 
 
 

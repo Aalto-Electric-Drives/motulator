@@ -183,6 +183,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -365,15 +366,15 @@ document.write(`
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        u_ac : complex</span>
-<span class="sd">            AC-side voltage (V).</span>
+<span class="sd">        u_c : complex</span>
+<span class="sd">            AC-side converter voltage (V).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">u_ac</span> <span class="o">=</span> <span class="n">q</span><span class="o">*</span><span class="n">u_dc</span>
-        <span class="k">return</span> <span class="n">u_ac</span></div>
+        <span class="n">u_c</span> <span class="o">=</span> <span class="n">q</span><span class="o">*</span><span class="n">u_dc</span>
+        <span class="k">return</span> <span class="n">u_c</span></div>
 
     <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="Inverter.dc_current"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.dc_current">[docs]</a>    <span class="k">def</span> <span class="nf">dc_current</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">i_ac</span><span class="p">):</span>
+<div class="viewcode-block" id="Inverter.dc_current"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.dc_current">[docs]</a>    <span class="k">def</span> <span class="nf">dc_current</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">i_c</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the DC-side current of a lossless inverter.</span>
 
@@ -381,8 +382,8 @@ document.write(`
 <span class="sd">        ----------</span>
 <span class="sd">        q : complex</span>
 <span class="sd">            Switching state vector.</span>
-<span class="sd">        i_ac : complex</span>
-<span class="sd">            AC-side current (A).</span>
+<span class="sd">        i_c : complex</span>
+<span class="sd">            AC-side converter current (A).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -390,7 +391,7 @@ document.write(`
 <span class="sd">            DC-side current (A).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_ac</span><span class="p">))</span>
+        <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_c</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">i_dc</span></div>
 
 <div class="viewcode-block" id="Inverter.meas_dc_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.meas_dc_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">meas_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -437,7 +438,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">u_dc0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">U_g</span>
         <span class="c1"># Peak-valued line-neutral grid voltage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">U_g</span>
-        <span class="c1"># Grid angular frequeyncy</span>
+        <span class="c1"># Grid angular frequency</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f_g</span>
 
 <div class="viewcode-block" id="FrequencyConverter.grid_voltages"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.FrequencyConverter.grid_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">grid_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>

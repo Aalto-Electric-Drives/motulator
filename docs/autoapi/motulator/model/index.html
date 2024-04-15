@@ -186,6 +186,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -399,6 +400,12 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Inverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">Inverter.meas_dc_voltage()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter"><code class="docutils literal notranslate"><span class="pre">LCFilter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter.f"><code class="docutils literal notranslate"><span class="pre">LCFilter.f()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter.meas_currents"><code class="docutils literal notranslate"><span class="pre">LCFilter.meas_currents()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">LCFilter.meas_voltages()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Simulation.simulate"><code class="docutils literal notranslate"><span class="pre">Simulation.simulate()</span></code></a></li>
@@ -452,13 +459,16 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.Inverter" title="motulator.model.Inverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Inverter</span></code></a></p></td>
 <td><p>Inverter with constant DC-bus voltage and switching-cycle averaging.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.CarrierComparison" title="motulator.model.CarrierComparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.LCFilter" title="motulator.model.LCFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LCFilter</span></code></a></p></td>
+<td><p>LC-filter model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.CarrierComparison" title="motulator.model.CarrierComparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></p></td>
 <td><p>Carrier comparison.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.Simulation" title="motulator.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.Simulation" title="motulator.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
 <td><p>Simulation environment.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.Delay" title="motulator.model.Delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Delay</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.Delay" title="motulator.model.Delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Delay</span></code></a></p></td>
 <td><p>Computational delay.</p></td>
 </tr>
 </tbody>
@@ -699,7 +709,7 @@ inverter.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u_ac</strong> – AC-side voltage (V).</p>
+<dd class="field-even"><p><strong>u_c</strong> – AC-side converter voltage (V).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>complex</p>
@@ -709,13 +719,13 @@ inverter.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.model.Inverter.dc_current">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dc_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_ac</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_converter.html#Inverter.dc_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.Inverter.dc_current" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dc_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_converter.html#Inverter.dc_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.Inverter.dc_current" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute the DC-side current of a lossless inverter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>q</strong> (<em>complex</em>) – Switching state vector.</p></li>
-<li><p><strong>i_ac</strong> (<em>complex</em>) – AC-side current (A).</p></li>
+<li><p><strong>i_c</strong> (<em>complex</em>) – AC-side converter current (A).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -737,6 +747,73 @@ inverter.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.model.LCFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">LCFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G_C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_lc_filter.html#LCFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.LCFilter" title="Permalink to this definition">#</a></dt>
+<dd><p>LC-filter model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L</strong> (<em>float</em>) – Inductance (H).</p></li>
+<li><p><strong>C</strong> (<em>float</em>) – Capacitance (F).</p></li>
+<li><p><strong>R_L</strong> (<em>float</em><em>, </em><em>optional</em>) – Series resistance (Ω) of the inductor. The default is 0.</p></li>
+<li><p><strong>G_C</strong> (<em>float</em><em>, </em><em>optional</em>) – Parallel conductance (S) of the capacitor. The default is 0.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.LCFilter.f">
+<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_cs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_cs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_ss</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_lc_filter.html#LCFilter.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.LCFilter.f" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute the state derivative.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_cs</strong> (<em>complex</em>) – Converter output current (A).</p></li>
+<li><p><strong>u_ss</strong> (<em>complex</em>) – Capacitor (stator) voltage (V).</p></li>
+<li><p><strong>u_cs</strong> (<em>complex</em>) – Converter output voltage (V).</p></li>
+<li><p><strong>i_ss</strong> (<em>complex</em>) – Stator current (A).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Time derivative of the state vector, [di_cs, du_ss]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>complex list, length 2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.LCFilter.meas_currents">
+<span class="sig-name descname"><span class="pre">meas_currents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_lc_filter.html#LCFilter.meas_currents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.LCFilter.meas_currents" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the converter phase currents at the end of the sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_c_abc</strong> – Phase currents (A).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>3-tuple of floats</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.model.LCFilter.meas_voltages">
+<span class="sig-name descname"><span class="pre">meas_voltages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_lc_filter.html#LCFilter.meas_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.LCFilter.meas_voltages" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the capacitor (stator) phase voltages at the end of the
+sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u_s_abc</strong> – Phase voltages (V).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>3-tuple of floats</p>
 </dd>
 </dl>
 </dd></dl>
@@ -948,6 +1025,12 @@ simplicity, only <cite>max_step</cite> is included as an option of this method.<
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Inverter.ac_voltage"><code class="docutils literal notranslate"><span class="pre">Inverter.ac_voltage()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Inverter.dc_current"><code class="docutils literal notranslate"><span class="pre">Inverter.dc_current()</span></code></a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Inverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">Inverter.meas_dc_voltage()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter"><code class="docutils literal notranslate"><span class="pre">LCFilter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter.f"><code class="docutils literal notranslate"><span class="pre">LCFilter.f()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter.meas_currents"><code class="docutils literal notranslate"><span class="pre">LCFilter.meas_currents()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">LCFilter.meas_voltages()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></li>
