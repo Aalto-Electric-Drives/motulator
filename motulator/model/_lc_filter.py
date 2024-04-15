@@ -1,6 +1,8 @@
 """
 Continuous-time model for an output LC filter.
 
+The space vector model is implemented in stator coordinates. 
+
 """
 from motulator._helpers import complex2abc
 
@@ -17,9 +19,9 @@ class LCFilter:
     C : float
         Capacitance (F). 
     R_L : float, optional
-        Resistance (Ω) of the inductor. The default is 0.
+        Series resistance (Ω) of the inductor. The default is 0.
     G_C : float, optional
-        Conductance (S) of the capacitor. The default is 0.
+        Parallel conductance (S) of the capacitor. The default is 0.
    
     """
 
