@@ -192,7 +192,6 @@ plot(sim, base)
 # %%
 # .. rubric:: References
 #
-# .. [#Lel2024] Francesco Lelli, Marko Hinkkanen, Fabio Giulii Capponi. A
-#    Saturation Model Based on a Simplified Equivalent Magnetic Circuit for
-#    Permanent Magnet Machines. TechRxiv. April 17, 2024,
-#    DOI: 10.36227/techrxiv.171332345.53790692/v1
+# .. [#Lel2024] Lelli, Hinkkanen, Giulii Capponi, "A saturation model based on
+#    a simplified equivalent magnetic circuit for permanent magnet machines,"
+#    TechRxiv., 2024, https://doi.org/10.36227/techrxiv.171332345.53790692/v1
