@@ -32,8 +32,7 @@ Classes
 
 
    
-   Reduced-order flux observer for induction machines in estimated
-   rotor flux coordinates.
+   Reduced-order flux observer in estimated rotor flux coordinates.
 
    This class implements a reduced-order flux observer for induction machines.
    Both sensored and sensorless operation are supported. The observer
@@ -104,8 +103,7 @@ Classes
 
 
    
-   Full-order flux observer for induction machines in estimated
-   rotor flux coordinates.
+   Full-order flux observer in estimated rotor flux coordinates.
 
    This class implements a full-order flux observer for induction machines.
    The observer structure is similar to [#Tii2023]_. The observer operates in

@@ -66,7 +66,7 @@ Classes
    .. rubric:: References
 
    .. [#Sle1989] Slemon, "Modelling of induction machines for electric
-      drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251.
+      drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
 
 
 

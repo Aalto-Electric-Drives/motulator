@@ -334,8 +334,7 @@ document.write(`
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="Observer"><a class="viewcode-back" href="../../../../autoapi/motulator/control/im/index.html#motulator.control.im._observers.Observer">[docs]</a><span class="k">class</span> <span class="nc">Observer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Reduced-order flux observer for induction machines in estimated </span>
-<span class="sd">    rotor flux coordinates.</span>
+<span class="sd">    Reduced-order flux observer in estimated rotor flux coordinates.</span>
 
 <span class="sd">    This class implements a reduced-order flux observer for induction machines.</span>
 <span class="sd">    Both sensored and sensorless operation are supported. The observer </span>
@@ -476,8 +475,7 @@ document.write(`
 
 <div class="viewcode-block" id="FullOrderObserver"><a class="viewcode-back" href="../../../../autoapi/motulator/control/im/_observers/index.html#motulator.control.im._observers.FullOrderObserver">[docs]</a><span class="k">class</span> <span class="nc">FullOrderObserver</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Full-order flux observer for induction machines in estimated </span>
-<span class="sd">    rotor flux coordinates.</span>
+<span class="sd">    Full-order flux observer in estimated rotor flux coordinates.</span>
 
 <span class="sd">    This class implements a full-order flux observer for induction machines. </span>
 <span class="sd">    The observer structure is similar to [#Tii2023]_. The observer operates in </span>
@@ -543,7 +541,7 @@ document.write(`
                     <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_m</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-                <span class="s2">&quot;Sensored mode not implemented for full-order observer&quot;</span><span class="p">)</span>
+                <span class="s2">&quot;Sensored mode not implemented for this full-order observer&quot;</span><span class="p">)</span>
 
         <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_R</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>

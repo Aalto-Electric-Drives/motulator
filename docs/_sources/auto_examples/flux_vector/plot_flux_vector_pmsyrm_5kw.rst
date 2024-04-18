@@ -346,19 +346,18 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-199
+.. GENERATED FROM PYTHON SOURCE LINES 193-198
 
 .. rubric:: References
 
-.. [#Lel2024] Francesco Lelli, Marko Hinkkanen, Fabio Giulii Capponi. A
-   Saturation Model Based on a Simplified Equivalent Magnetic Circuit for
-   Permanent Magnet Machines. TechRxiv. April 17, 2024,
-   DOI: 10.36227/techrxiv.171332345.53790692/v1
+.. [#Lel2024] Lelli, Hinkkanen, Giulii Capponi, "A saturation model based on
+   a simplified equivalent magnetic circuit for permanent magnet machines,"
+   TechRxiv., 2024, https://doi.org/10.36227/techrxiv.171332345.53790692/v1
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.256 seconds)
+   **Total running time of the script:** (0 minutes 11.366 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py:

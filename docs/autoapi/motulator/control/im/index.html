@@ -453,7 +453,7 @@ document.write(`
 <td><p>Vector control for induction machine drives.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.control.im.Observer" title="motulator.control.im.Observer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Observer</span></code></a></p></td>
-<td><p>Reduced-order flux observer for induction machines in estimated</p></td>
+<td><p>Reduced-order flux observer in estimated rotor flux coordinates.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.control.im.FluxObserver" title="motulator.control.im.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
 <td><p>Sensorless reduced-order flux observer in external coordinates.</p></td>
@@ -694,8 +694,7 @@ the interface to the solver.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.control.im.Observer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.control.im.</span></span><span class="sig-name descname"><span class="pre">Observer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/control/im/_observers.html#Observer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.control.im.Observer" title="Permalink to this definition">#</a></dt>
-<dd><p>Reduced-order flux observer for induction machines in estimated
-rotor flux coordinates.</p>
+<dd><p>Reduced-order flux observer in estimated rotor flux coordinates.</p>
 <p>This class implements a reduced-order flux observer for induction machines.
 Both sensored and sensorless operation are supported. The observer
 structure is similar to <a class="footnote-reference brackets" href="#hin2010" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The observer operates in estimated
