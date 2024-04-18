@@ -193,7 +193,7 @@ Plot additional waveforms.
     ax1.legend()
     ax1.set_xticklabels([])
     ax1.set_ylabel("Voltage (p.u.)")
-    # Plot he converter and stator currents (phase a)
+    # Plot the converter and stator currents (phase a)
     ax2.plot(mdl.t, mdl.i_cs.real/base.i, label=r"$i_\mathrm{ca}$")
     ax2.plot(mdl.t, mdl.i_ss.real/base.i, label=r"$i_\mathrm{sa}$")
     ax2.set_xlim(t_span)
@@ -227,7 +227,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.824 seconds)
+   **Total running time of the script:** (0 minutes 7.903 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py:
