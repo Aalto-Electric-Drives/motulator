@@ -369,7 +369,7 @@ class CurrentReference:
 
     def update(self, T_s, tau_M_ref_lim, u_s_ref, u_dc):
         """
-        Field-weakening based on the unlimited reference voltage.
+        Field-weakening control based on the unlimited reference voltage.
 
         Parameters
         ----------
