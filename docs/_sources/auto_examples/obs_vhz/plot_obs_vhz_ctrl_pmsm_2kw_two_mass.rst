@@ -258,7 +258,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.995 seconds)
+   **Total running time of the script:** (0 minutes 3.821 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py:

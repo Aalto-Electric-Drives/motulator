@@ -384,10 +384,11 @@ to download the full example code</p>
 <span id="sphx-glr-auto-examples-flux-vector-plot-flux-vector-pmsyrm-5kw-py"></span><h1>5.5-kW PM-SyRM, saturated<a class="headerlink" href="#kw-pm-syrm-saturated" title="Permalink to this heading">#</a></h1>
 <p>This example simulates sensorless stator-flux-vector control of a 5.5-kW
 PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using
-an algebraic saturation model, fitted to the flux linkage maps measured using
-the constant-speed test. For comparison, the measured data is plotted together
-with the model predictions. Notice that the control system used in this example
-does not consider the saturation, only the system model does.</p>
+the algebraic saturation model from <a class="footnote-reference brackets" href="#lel2024" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, fitted to the flux linkage
+maps measured using the constant-speed test. For comparison, the measured data
+is plotted together with the model predictions. Notice that the control system
+used in this example does not consider the saturation, only the system model
+does.</p>
 <p>Imports.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
@@ -405,8 +406,7 @@ does not consider the saturation, only the system model does.</p>
 </pre></div>
 </div>
 <p>Create a saturation model, which will be used in the machine model in the
-following simulations. The documentation for this model will be made
-available later.</p>
+following simulations.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># pylint: disable=too-many-locals</span>
 <span class="k">def</span> <span class="nf">i_s</span><span class="p">(</span><span class="n">psi_s</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -554,7 +554,17 @@ which is needed in the machine model below.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_002.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_002.png" alt="plot flux vector pmsyrm 5kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.553 seconds)</p>
+<img src="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_002.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_002.png" alt="plot flux vector pmsyrm 5kw" class = "sphx-glr-single-img"/><p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="lel2024" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Francesco Lelli, Marko Hinkkanen, Fabio Giulii Capponi. A
+Saturation Model Based on a Simplified Equivalent Magnetic Circuit for
+Permanent Magnet Machines. TechRxiv. April 17, 2024,
+DOI: 10.36227/techrxiv.171332345.53790692/v1</p>
+</aside>
+</aside>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.538 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-vector-plot-flux-vector-pmsyrm-5kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4cbdc04e08950a0a4c3fdc370e5c6f89/plot_flux_vector_pmsyrm_5kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_flux_vector_pmsyrm_5kw.ipynb</span></code></a></p>

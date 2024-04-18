@@ -23,16 +23,17 @@
 
 This example simulates sensorless stator-flux-vector control of a 5.5-kW 
 PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using 
-an algebraic saturation model, fitted to the flux linkage maps measured using 
-the constant-speed test. For comparison, the measured data is plotted together 
-with the model predictions. Notice that the control system used in this example 
-does not consider the saturation, only the system model does. 
+the algebraic saturation model from [#Lel2024]_, fitted to the flux linkage 
+maps measured using the constant-speed test. For comparison, the measured data 
+is plotted together with the model predictions. Notice that the control system 
+used in this example does not consider the saturation, only the system model 
+does.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-16
+.. GENERATED FROM PYTHON SOURCE LINES 16-17
 
 Imports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-26
+.. GENERATED FROM PYTHON SOURCE LINES 17-27
 
 .. code-block:: Python
 
@@ -53,11 +54,11 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-28
+.. GENERATED FROM PYTHON SOURCE LINES 28-29
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-32
+.. GENERATED FROM PYTHON SOURCE LINES 29-33
 
 .. code-block:: Python
 
@@ -72,11 +73,10 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-36
+.. GENERATED FROM PYTHON SOURCE LINES 34-36
 
 Create a saturation model, which will be used in the machine model in the
-following simulations. The documentation for this model will be made
-available later.
+following simulations.
 
 .. GENERATED FROM PYTHON SOURCE LINES 36-91
 
@@ -327,12 +327,13 @@ Create the simulation object and simulate it.
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-191
+.. GENERATED FROM PYTHON SOURCE LINES 189-192
 
 .. code-block:: Python
 
 
     plot(sim, base)
+
 
 
 
@@ -345,10 +346,19 @@ Plot results in per-unit values.
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 193-199
+
+.. rubric:: References
+
+.. [#Lel2024] Francesco Lelli, Marko Hinkkanen, Fabio Giulii Capponi. A
+   Saturation Model Based on a Simplified Equivalent Magnetic Circuit for
+   Permanent Magnet Machines. TechRxiv. April 17, 2024,
+   DOI: 10.36227/techrxiv.171332345.53790692/v1
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.553 seconds)
+   **Total running time of the script:** (0 minutes 11.538 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py:
