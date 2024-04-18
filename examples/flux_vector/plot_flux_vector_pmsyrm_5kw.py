@@ -4,10 +4,11 @@
 
 This example simulates sensorless stator-flux-vector control of a 5.5-kW 
 PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using 
-an algebraic saturation model, fitted to the flux linkage maps measured using 
-the constant-speed test. For comparison, the measured data is plotted together 
-with the model predictions. Notice that the control system used in this example 
-does not consider the saturation, only the system model does. 
+the algebraic saturation model from [#Lel2024]_, fitted to the flux linkage 
+maps measured using the constant-speed test. For comparison, the measured data 
+is plotted together with the model predictions. Notice that the control system 
+used in this example does not consider the saturation, only the system model 
+does.
 
 """
 
@@ -31,8 +32,7 @@ base = BaseValues(
 
 # %%
 # Create a saturation model, which will be used in the machine model in the
-# following simulations. The documentation for this model will be made
-# available later.
+# following simulations.
 
 
 # pylint: disable=too-many-locals
@@ -188,3 +188,11 @@ sim.simulate(t_stop=4)
 # Plot results in per-unit values.
 
 plot(sim, base)
+
+# %%
+# .. rubric:: References
+#
+# .. [#Lel2024] Francesco Lelli, Marko Hinkkanen, Fabio Giulii Capponi. A
+#    Saturation Model Based on a Simplified Equivalent Magnetic Circuit for
+#    Permanent Magnet Machines. TechRxiv. April 17, 2024,
+#    DOI: 10.36227/techrxiv.171332345.53790692/v1
