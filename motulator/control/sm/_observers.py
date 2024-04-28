@@ -83,7 +83,6 @@ class Observer:
             self.k1 = (lambda w_m: 2*np.pi*15) if k is None else k
             self.k2 = lambda w_m: 0
         # PM-flux estimation gain
-        self.k_f = k_f
         self.k_f = (lambda w_m: 0) if k_f is None else k_f
 
         # Initial states
