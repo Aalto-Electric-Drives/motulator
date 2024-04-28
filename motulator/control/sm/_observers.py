@@ -10,13 +10,14 @@ class Observer:
     """
     Observer for synchronous machines in estimated rotor coordinates.
 
-    This observer estimates the rotor angle, the rotor speed, and the stator 
-    flux linkage. The design is based on [#Hin2018]_. The observer gain 
-    decouples the electrical and mechanical dynamics and allows placing the 
-    poles of the corresponding linearized estimation error dynamics. This 
-    implementation operates in estimated rotor coordinates. The observer can 
-    also be used in the sensored mode by providing the measured rotor speed as 
-    an input.
+    This observer estimates the stator flux linkage, the rotor angle, the rotor 
+    speed, and (optionally) the PM-flux linkage. The design is based on 
+    [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and 
+    mechanical dynamics and allows placing the poles of the corresponding 
+    linearized estimation error dynamics. The PM-flux linkage can also be 
+    estimated [#Tuo2018]_. This implementation operates in estimated rotor 
+    coordinates. The observer can  also be used in the sensored mode by 
+    providing the measured rotor speed as an input. 
 
     Parameters
     ----------
@@ -28,6 +29,12 @@ class Observer:
         Observer gain as a function of the rotor angular speed. The default is 
         ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
         `sensorless` else ``lambda w_m: 2*pi*15``.
+    k_f : callable, optional
+        PM-flux estimation gain (V) as a function of the rotor angular speed. 
+        The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of 
+        the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below 
+        the speed `w_min` (rad/s) and linearly increasing above that with the 
+        slope `k` (Vs). 
     sensorless : bool, optional
         If True, sensorless control is used. The default is True.
 
@@ -39,6 +46,14 @@ class Observer:
         Rotor speed estimate (electrical rad/s).
     psi_s : complex
         Stator flux estimate (Vs).
+    psi_f : float
+        PM-flux estimate (Vs). The PM-flux estimate lumps various disturbances. 
+        Hence, it can become slightly negative in the case of SyRMs.  
+
+    Notes
+    -----
+    The sensored mode assumes that the control system operates in the measured 
+    rotor coordinates, i.e., the rotor-angle tracking is disabled.
 
     References
     ----------
@@ -46,26 +61,30 @@ class Observer:
        sensorless synchronous motor drives: Framework for design and analysis,"
        IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
 
+    .. [#Tuo2018] Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, "Permanent-
+       magnet flux adaptation for sensorless synchronous motor drives," Proc. 
+       IEEE SLED, 2018, https://doi.org/10.1109/SLED.2018.8485899
+
     """
 
-    # pylint: disable=too-many-instance-attributes
-    def __init__(self, par, alpha_o=2*np.pi*40, k=None, sensorless=True):
+    # pylint: disable=too-many-arguments
+    def __init__(
+            self, par, alpha_o=2*np.pi*40, k=None, k_f=None, sensorless=True):
         self.R_s = par.R_s
         self.L_d, self.L_q, self.psi_f = par.L_d, par.L_q, par.psi_f
-        self.psi_f = par.psi_f
         self.alpha_o = alpha_o
         self.sensorless = sensorless
-        self.k1 = k
-
+        # Flux observer gains
         if self.sensorless:
-            if self.k1 is None:  # If not given, use the default gains
-                sigma0 = .25*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
-                self.k1 = lambda w_m: (sigma0 + .2*np.abs(w_m))
+            sigma0 = .25*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
+            self.k1 = (lambda w_m: sigma0 + .2*np.abs(w_m)) if k is None else k
             self.k2 = self.k1
         else:
-            if self.k1 is None:
-                self.k1 = lambda w_m: 2*np.pi*15
+            self.k1 = (lambda w_m: 2*np.pi*15) if k is None else k
             self.k2 = lambda w_m: 0
+        # PM-flux estimation gain
+        self.k_f = k_f
+        self.k_f = (lambda w_m: 0) if k_f is None else k_f
 
         # Initial states
         self.theta_m, self.w_m, self.psi_s = 0, 0, par.psi_f
@@ -87,32 +106,38 @@ class Observer:
             mode. The default is None. 
 
         """
-
         # Estimation error
         e = self.L_d*i_s.real + 1j*self.L_q*i_s.imag + self.psi_f - self.psi_s
 
-        if self.sensorless:
-            # Auxiliary flux
-            psi_a = self.psi_f + (self.L_d - self.L_q)*np.conj(i_s)
+        # Auxiliary flux
+        psi_a = self.psi_f + (self.L_d - self.L_q)*np.conj(i_s)
 
+        if self.sensorless:
             # Observer gains
             k1 = self.k1(self.w_m)
             k2 = k1*psi_a/np.conj(psi_a) if np.abs(psi_a) > 0 else k1
 
-            # Speed estimation
+            # For the rotor angle and speed estimation
             eps = -np.imag(e/psi_a) if np.abs(psi_a) > 0 else 0
             w_s = 2*self.alpha_o*eps + self.w_m
+
+            # For the PM-flux estimation
+            eps_f = -np.real(e/psi_a) if np.abs(psi_a) > 0 else 0
         else:
+            # The sensorless mode assumes that the control system operates in
+            # the measured rotor coordinates, w_s = w_m. If the rotor angle
+            # were not measured, it could be tracked (not implemented).
             k1, k2 = self.k1(w_m), 0
             w_s = w_m
-            eps = 0
+            eps, eps_f = 0, 0
 
         # Update the states
         self.psi_s += T_s*(
             u_s - self.R_s*i_s - 1j*w_s*self.psi_s + k1*e + k2*np.conj(e))
-        self.w_m += T_s*self.alpha_o**2*eps
         self.theta_m += T_s*w_s
         self.theta_m = wrap(self.theta_m)
+        self.psi_f += T_s*self.k_f(self.w_m)*eps_f  # PM-flux estimation
+        self.w_m += T_s*self.alpha_o**2*eps  # Speed estimation
 
 
 # %%
