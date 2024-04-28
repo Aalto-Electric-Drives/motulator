@@ -1,11 +1,11 @@
-"""
-State observers for synchronous machines.
-"""
+"""State observers for synchronous machines."""
+
 import numpy as np
 from motulator._helpers import wrap
 
 
 # %%
+# pylint: disable=too-many-instance-attributes
 class Observer:
     """
     Observer for synchronous machines in estimated rotor coordinates.
