@@ -27,19 +27,20 @@ Classes
 
 
 
-.. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, sensorless=True)
+.. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, k_f=None, sensorless=True)
 
 
    
    Observer for synchronous machines in estimated rotor coordinates.
 
-   This observer estimates the rotor angle, the rotor speed, and the stator
-   flux linkage. The design is based on [#Hin2018]_. The observer gain
-   decouples the electrical and mechanical dynamics and allows placing the
-   poles of the corresponding linearized estimation error dynamics. This
-   implementation operates in estimated rotor coordinates. The observer can
-   also be used in the sensored mode by providing the measured rotor speed as
-   an input.
+   This observer estimates the stator flux linkage, the rotor angle, the rotor
+   speed, and (optionally) the PM-flux linkage. The design is based on
+   [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and
+   mechanical dynamics and allows placing the poles of the corresponding
+   linearized estimation error dynamics. The PM-flux linkage can also be
+   estimated [#Tuo2018]_. This implementation operates in estimated rotor
+   coordinates. The observer can  also be used in the sensored mode by
+   providing the measured rotor speed as an input.
 
    :param par: Machine model parameters.
    :type par: ModelPars
@@ -49,6 +50,12 @@ Classes
              ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
              `sensorless` else ``lambda w_m: 2*pi*15``.
    :type k: callable, optional
+   :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
+               The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of
+               the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below
+               the speed `w_min` (rad/s) and linearly increasing above that with the
+               slope `k` (Vs).
+   :type k_f: callable, optional
    :param sensorless: If True, sensorless control is used. The default is True.
    :type sensorless: bool, optional
 
@@ -70,11 +77,27 @@ Classes
 
       :type: complex
 
+   .. attribute:: psi_f
+
+      PM-flux estimate (Vs). The PM-flux estimate lumps various disturbances.
+      Hence, it can become slightly negative in the case of SyRMs.
+
+      :type: float
+
+   .. rubric:: Notes
+
+   The sensored mode assumes that the control system operates in the measured
+   rotor coordinates, i.e., the rotor-angle tracking is disabled.
+
    .. rubric:: References
 
    .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
       sensorless synchronous motor drives: Framework for design and analysis,"
       IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
+
+   .. [#Tuo2018] Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, "Permanent-
+      magnet flux adaptation for sensorless synchronous motor drives," Proc.
+      IEEE SLED, 2018, https://doi.org/10.1109/SLED.2018.8485899
 
 
 

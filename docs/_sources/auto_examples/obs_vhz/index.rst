@@ -20,6 +20,7 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -105,6 +106,8 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
       <div class="sphx-glr-thumbnail-title">5-kW PM-SyRM, flux maps from SyR-e</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

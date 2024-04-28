@@ -11,6 +11,9 @@ A collection of Python scripts that demonstrate how to use *motulator*.
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 
@@ -26,6 +29,7 @@ These examples are for current vector control of induction machines and synchron
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -112,6 +116,8 @@ These examples are for current vector control of induction machines and synchron
     </div>
 
 
+.. thumbnail-parent-div-close
+
 .. raw:: html
 
     </div>
@@ -126,6 +132,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -178,6 +185,8 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
     </div>
 
 
+.. thumbnail-parent-div-close
+
 .. raw:: html
 
     </div>
@@ -200,6 +209,7 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -286,6 +296,8 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
     </div>
 
 
+.. thumbnail-parent-div-close
+
 .. raw:: html
 
     </div>
@@ -316,6 +328,7 @@ torque are selected as controllable variables.
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -347,7 +360,7 @@ torque are selected as controllable variables.
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated, disturbance estimation</div>
     </div>
 
 
@@ -367,6 +380,8 @@ torque are selected as controllable variables.
       <div class="sphx-glr-thumbnail-title">5.5-kW PM-SyRM, saturated</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 
@@ -393,6 +408,7 @@ this version.
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -427,6 +443,8 @@ this version.
       <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

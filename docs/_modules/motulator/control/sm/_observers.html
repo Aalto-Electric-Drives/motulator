@@ -196,7 +196,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
 </ul>
 </li>
@@ -325,25 +325,26 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for motulator.control.sm._observers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">State observers for synchronous machines.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;State observers for synchronous machines.&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">motulator._helpers</span> <span class="kn">import</span> <span class="n">wrap</span>
 
 
 <span class="c1"># %%</span>
+<span class="c1"># pylint: disable=too-many-instance-attributes</span>
 <div class="viewcode-block" id="Observer"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._observers.Observer">[docs]</a><span class="k">class</span> <span class="nc">Observer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Observer for synchronous machines in estimated rotor coordinates.</span>
 
-<span class="sd">    This observer estimates the rotor angle, the rotor speed, and the stator </span>
-<span class="sd">    flux linkage. The design is based on [#Hin2018]_. The observer gain </span>
-<span class="sd">    decouples the electrical and mechanical dynamics and allows placing the </span>
-<span class="sd">    poles of the corresponding linearized estimation error dynamics. This </span>
-<span class="sd">    implementation operates in estimated rotor coordinates. The observer can </span>
-<span class="sd">    also be used in the sensored mode by providing the measured rotor speed as </span>
-<span class="sd">    an input.</span>
+<span class="sd">    This observer estimates the stator flux linkage, the rotor angle, the rotor </span>
+<span class="sd">    speed, and (optionally) the PM-flux linkage. The design is based on </span>
+<span class="sd">    [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and </span>
+<span class="sd">    mechanical dynamics and allows placing the poles of the corresponding </span>
+<span class="sd">    linearized estimation error dynamics. The PM-flux linkage can also be </span>
+<span class="sd">    estimated [#Tuo2018]_. This implementation operates in estimated rotor </span>
+<span class="sd">    coordinates. The observer can  also be used in the sensored mode by </span>
+<span class="sd">    providing the measured rotor speed as an input. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -355,6 +356,12 @@ document.write(`
 <span class="sd">        Observer gain as a function of the rotor angular speed. The default is </span>
 <span class="sd">        ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if</span>
 <span class="sd">        `sensorless` else ``lambda w_m: 2*pi*15``.</span>
+<span class="sd">    k_f : callable, optional</span>
+<span class="sd">        PM-flux estimation gain (V) as a function of the rotor angular speed. </span>
+<span class="sd">        The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of </span>
+<span class="sd">        the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below </span>
+<span class="sd">        the speed `w_min` (rad/s) and linearly increasing above that with the </span>
+<span class="sd">        slope `k` (Vs). </span>
 <span class="sd">    sensorless : bool, optional</span>
 <span class="sd">        If True, sensorless control is used. The default is True.</span>
 
@@ -366,6 +373,14 @@ document.write(`
 <span class="sd">        Rotor speed estimate (electrical rad/s).</span>
 <span class="sd">    psi_s : complex</span>
 <span class="sd">        Stator flux estimate (Vs).</span>
+<span class="sd">    psi_f : float</span>
+<span class="sd">        PM-flux estimate (Vs). The PM-flux estimate lumps various disturbances. </span>
+<span class="sd">        Hence, it can become slightly negative in the case of SyRMs.  </span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The sensored mode assumes that the control system operates in the measured </span>
+<span class="sd">    rotor coordinates, i.e., the rotor-angle tracking is disabled.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -373,26 +388,30 @@ document.write(`
 <span class="sd">       sensorless synchronous motor drives: Framework for design and analysis,&quot;</span>
 <span class="sd">       IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753</span>
 
+<span class="sd">    .. [#Tuo2018] Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, &quot;Permanent-</span>
+<span class="sd">       magnet flux adaptation for sensorless synchronous motor drives,&quot; Proc. </span>
+<span class="sd">       IEEE SLED, 2018, https://doi.org/10.1109/SLED.2018.8485899</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">40</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="c1"># pylint: disable=too-many-arguments</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">40</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k_f</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">=</span> <span class="n">alpha_o</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">sensorless</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="n">k</span>
-
+        <span class="c1"># Flux observer gains</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># If not given, use the default gains</span>
-                <span class="n">sigma0</span> <span class="o">=</span> <span class="mf">.25</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="p">(</span><span class="n">sigma0</span> <span class="o">+</span> <span class="mf">.2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">))</span>
+            <span class="n">sigma0</span> <span class="o">=</span> <span class="mf">.25</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="n">sigma0</span> <span class="o">+</span> <span class="mf">.2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">))</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">15</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">15</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">k2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="c1"># PM-flux estimation gain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_f</span> <span class="o">=</span> <span class="n">k_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_f</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">k_f</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_f</span>
 
         <span class="c1"># Initial states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
@@ -414,32 +433,38 @@ document.write(`
 <span class="sd">            mode. The default is None. </span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="c1"># Estimation error</span>
         <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
-            <span class="c1"># Auxiliary flux</span>
-            <span class="n">psi_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
+        <span class="c1"># Auxiliary flux</span>
+        <span class="n">psi_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
             <span class="c1"># Observer gains</span>
             <span class="n">k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span>
             <span class="n">k2</span> <span class="o">=</span> <span class="n">k1</span><span class="o">*</span><span class="n">psi_a</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_a</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">k1</span>
 
-            <span class="c1"># Speed estimation</span>
+            <span class="c1"># For the rotor angle and speed estimation</span>
             <span class="n">eps</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">e</span><span class="o">/</span><span class="n">psi_a</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
             <span class="n">w_s</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">*</span><span class="n">eps</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span>
+
+            <span class="c1"># For the PM-flux estimation</span>
+            <span class="n">eps_f</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">e</span><span class="o">/</span><span class="n">psi_a</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># The sensorless mode assumes that the control system operates in</span>
+            <span class="c1"># the measured rotor coordinates, w_s = w_m. If the rotor angle</span>
+            <span class="c1"># were not measured, it could be tracked (not implemented).</span>
             <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">w_m</span><span class="p">),</span> <span class="mi">0</span>
             <span class="n">w_s</span> <span class="o">=</span> <span class="n">w_m</span>
-            <span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">eps</span><span class="p">,</span> <span class="n">eps_f</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
         <span class="c1"># Update the states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="p">(</span>
             <span class="n">u_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="o">*</span><span class="n">i_s</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+</span> <span class="n">k1</span><span class="o">*</span><span class="n">e</span> <span class="o">+</span> <span class="n">k2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">eps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="n">w_s</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">k_f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span><span class="o">*</span><span class="n">eps_f</span>  <span class="c1"># PM-flux estimation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">eps</span>  <span class="c1"># Speed estimation</span></div></div>
 
 
 <span class="c1"># %%</span>

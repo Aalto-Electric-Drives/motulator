@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py>`
-        to download the full example code
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -158,7 +158,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.156 seconds)
+   **Total running time of the script:** (0 minutes 21.338 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py:

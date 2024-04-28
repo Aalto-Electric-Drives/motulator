@@ -12,6 +12,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -63,6 +64,8 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
       <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, LC filter</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

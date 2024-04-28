@@ -23,6 +23,7 @@ this version.
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -57,6 +58,8 @@ this version.
       <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

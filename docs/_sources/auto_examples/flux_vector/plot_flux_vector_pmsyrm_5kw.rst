@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py>`
-        to download the full example code
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -269,7 +269,7 @@ Configure the control system.
     ref = control.sm.FluxTorqueReferencePars(
         par, i_s_max=2*base.i, k_u=1, psi_s_max=base.psi)
     ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
-    # Select low speed-estimation bandwidth since the saturation is not considered
+    # Select a lower speed-estimation bandwidth to mitigate the saturation effects
     ctrl.observer = control.sm.Observer(par, alpha_o=2*np.pi*40, sensorless=True)
 
 
@@ -357,7 +357,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.366 seconds)
+   **Total running time of the script:** (0 minutes 11.388 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py:

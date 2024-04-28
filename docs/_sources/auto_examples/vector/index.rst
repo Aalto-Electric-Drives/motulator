@@ -12,6 +12,7 @@ These examples are for current vector control of induction machines and synchron
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -97,6 +98,8 @@ These examples are for current vector control of induction machines and synchron
       <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, saturated</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

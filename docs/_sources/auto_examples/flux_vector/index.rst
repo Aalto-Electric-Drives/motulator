@@ -28,6 +28,7 @@ torque are selected as controllable variables.
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -59,7 +60,7 @@ torque are selected as controllable variables.
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated, disturbance estimation</div>
     </div>
 
 
@@ -79,6 +80,8 @@ torque are selected as controllable variables.
       <div class="sphx-glr-thumbnail-title">5.5-kW PM-SyRM, saturated</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 
