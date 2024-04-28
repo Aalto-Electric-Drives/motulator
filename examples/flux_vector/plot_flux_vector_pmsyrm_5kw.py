@@ -163,7 +163,7 @@ par = control.sm.ModelPars(
 ref = control.sm.FluxTorqueReferencePars(
     par, i_s_max=2*base.i, k_u=1, psi_s_max=base.psi)
 ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
-# Select low speed-estimation bandwidth since the saturation is not considered
+# Select a lower speed-estimation bandwidth to mitigate the saturation effects
 ctrl.observer = control.sm.Observer(par, alpha_o=2*np.pi*40, sensorless=True)
 
 # %%

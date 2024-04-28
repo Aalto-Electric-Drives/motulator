@@ -119,7 +119,7 @@ class FluxVectorCtrl(Ctrl):
         i_s_abc = mdl.machine.meas_currents()  # Phase currents
         u_dc = mdl.converter.meas_dc_voltage()  # DC-bus voltage
         u_s = self.pwm.realized_voltage  # Realized voltage from PWM
-        #
+
         if self.sensorless:
             # Get the rotor speed and position estimates
             w_m, theta_m = self.observer.w_m, self.observer.theta_m
@@ -162,6 +162,7 @@ class FluxVectorCtrl(Ctrl):
             i_s=i_s,
             psi_s=psi_s,
             psi_s_ref=psi_s_ref,
+            psi_f=self.observer.psi_f,
             t=self.clock.t,
             tau_M_ref_lim=tau_M_ref_lim,
             theta_m=theta_m,
@@ -215,7 +216,7 @@ class FluxTorqueReferencePars:
     i_s_max: float = None
     psi_s_min: float = None
     psi_s_max: float = np.inf
-    k_u: float = 0.95
+    k_u: float = .95
 
     def __post_init__(self, par):
         self.psi_s_min = par.psi_f if self.psi_s_min is None else self.psi_s_min
