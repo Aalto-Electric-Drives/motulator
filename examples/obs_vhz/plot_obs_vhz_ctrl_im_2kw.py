@@ -56,7 +56,7 @@ values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # Quadratic load torque profile, e.g. pumps and fans (uncomment to enable)
-# k = 1.1*base.tau_nom/(base.w/base.p)**2
+# k = 1.1*base.tau_nom/(base.w/base.n_p)**2
 # mdl.mechanics.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2
 
 # %%
