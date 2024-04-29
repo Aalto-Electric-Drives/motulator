@@ -97,8 +97,7 @@ mdl.mechanics.tau_L_t = lambda t: (t > .75)*base.tau_nom
 # mdl.mechanics.tau_L_t = lambda t: 0
 
 # %%
-# Create the simulation object and simulate it. You can also enable the PWM
-# model (which makes simulation slower).
+# Create the simulation object and simulate it.
 
 sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.5)
