@@ -144,7 +144,7 @@ Set the load torque reference.
     mdl.mechanics.tau_L_t = Sequence(times, values)
 
     # Quadratic load torque profile, e.g. pumps and fans (uncomment to enable)
-    # k = 1.1*base.tau_nom/(base.w/base.p)**2
+    # k = 1.1*base.tau_nom/(base.w/base.n_p)**2
     # mdl.mechanics.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2
 
 
@@ -199,7 +199,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.113 seconds)
+   **Total running time of the script:** (0 minutes 7.278 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py:

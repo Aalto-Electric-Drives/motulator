@@ -426,7 +426,7 @@ drive.</p>
 <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
 
 <span class="c1"># Quadratic load torque profile, e.g. pumps and fans (uncomment to enable)</span>
-<span class="c1"># k = 1.1*base.tau_nom/(base.w/base.p)**2</span>
+<span class="c1"># k = 1.1*base.tau_nom/(base.w/base.n_p)**2</span>
 <span class="c1"># mdl.mechanics.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2</span>
 </pre></div>
 </div>
@@ -440,7 +440,7 @@ the results in SI units.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" alt="plot obs vhz ctrl im 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.113 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" alt="plot obs vhz ctrl im 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.278 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-obs-vhz-plot-obs-vhz-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/575fba068cfee95663babe7799456a42/plot_obs_vhz_ctrl_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_obs_vhz_ctrl_im_2kw.ipynb</span></code></a></p>
