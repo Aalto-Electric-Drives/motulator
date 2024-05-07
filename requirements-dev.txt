@@ -1,9 +1,0 @@
--r requirements.txt
-
-# Interactive python
-ipykernel
-
-# Linting and formatting
-yapf
-pylint
-toml
