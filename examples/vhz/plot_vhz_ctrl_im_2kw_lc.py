@@ -27,7 +27,7 @@ machine = model.im.InductionMachineInvGamma(  # Inverse-Γ parameters
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-lc_filter = model.LCFilter(L=8e-3, C=9.9e-6, R_L=.1)
+lc_filter = model.LCFilter(L=8e-3, C=9.9e-6, R=.1)
 mdl = model.im.DriveWithLCFilter(machine, mechanics, converter, lc_filter)
 mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
