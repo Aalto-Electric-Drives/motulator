@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.model._lc_filter &#8212; motulator 0.1.7 documentation</title>
+    <title>motulator.model._lc_filter &#8212; motulator 0.2.0 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.1.7 documentation</p>
+    <p class="title logo__title">motulator 0.2.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -162,6 +162,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../model/machines.html">Electric Machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../model/mechanics.html">Mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../model/converters.html">Converters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/ac_filter.html">Output LC Filter</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="nav bd-sidenav">
@@ -345,15 +346,13 @@ document.write(`
 <span class="sd">        Inductance (H).</span>
 <span class="sd">    C : float</span>
 <span class="sd">        Capacitance (F). </span>
-<span class="sd">    R_L : float, optional</span>
+<span class="sd">    R : float, optional</span>
 <span class="sd">        Series resistance (Ω) of the inductor. The default is 0.</span>
-<span class="sd">    G_C : float, optional</span>
-<span class="sd">        Parallel conductance (S) of the capacitor. The default is 0.</span>
 <span class="sd">   </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">R_L</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">G_C</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G_C</span> <span class="o">=</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">R_L</span><span class="p">,</span> <span class="n">G_C</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="o">=</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">R</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_cs0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_ss0</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="n">j</span>
 
 <div class="viewcode-block" id="LCFilter.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._lc_filter.LCFilter.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_cs</span><span class="p">,</span> <span class="n">u_ss</span><span class="p">,</span> <span class="n">u_cs</span><span class="p">,</span> <span class="n">i_ss</span><span class="p">):</span>
@@ -378,8 +377,8 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">di_cs</span> <span class="o">=</span> <span class="p">(</span><span class="n">u_cs</span> <span class="o">-</span> <span class="n">u_ss</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_L</span><span class="o">*</span><span class="n">i_cs</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span>
-        <span class="n">du_ss</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_cs</span> <span class="o">-</span> <span class="n">i_ss</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">G_C</span><span class="o">*</span><span class="n">u_ss</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+        <span class="n">di_cs</span> <span class="o">=</span> <span class="p">(</span><span class="n">u_cs</span> <span class="o">-</span> <span class="n">u_ss</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="o">*</span><span class="n">i_cs</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span>
+        <span class="n">du_ss</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_cs</span> <span class="o">-</span> <span class="n">i_ss</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">di_cs</span><span class="p">,</span> <span class="n">du_ss</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="LCFilter.meas_currents"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._lc_filter.LCFilter.meas_currents">[docs]</a>    <span class="k">def</span> <span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

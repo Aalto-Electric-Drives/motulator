@@ -28,7 +28,7 @@ Classes
 
 
 
-.. py:class:: LCFilter(L, C, R_L=0, G_C=0)
+.. py:class:: LCFilter(L, C, R=0)
 
 
    
@@ -38,10 +38,8 @@ Classes
    :type L: float
    :param C: Capacitance (F).
    :type C: float
-   :param R_L: Series resistance (Ω) of the inductor. The default is 0.
-   :type R_L: float, optional
-   :param G_C: Parallel conductance (S) of the capacitor. The default is 0.
-   :type G_C: float, optional
+   :param R: Series resistance (Ω) of the inductor. The default is 0.
+   :type R: float, optional
 
 
 

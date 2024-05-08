@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>motulator.model._lc_filter &#8212; motulator 0.1.7 documentation</title>
+    <title>motulator.model._lc_filter &#8212; motulator 0.2.0 documentation</title>
   
   
   
@@ -134,7 +134,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.1.7 documentation</p>
+    <p class="title logo__title">motulator 0.2.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -163,6 +163,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../model/machines.html">Electric Machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../model/mechanics.html">Mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../model/converters.html">Converters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/ac_filter.html">Output LC Filter</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="nav bd-sidenav">
@@ -411,15 +412,14 @@ document.write(`
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.model._lc_filter.LCFilter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model._lc_filter.</span></span><span class="sig-name descname"><span class="pre">LCFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G_C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/_lc_filter.html#LCFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model._lc_filter.LCFilter" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model._lc_filter.</span></span><span class="sig-name descname"><span class="pre">LCFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/model/_lc_filter.html#LCFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model._lc_filter.LCFilter" title="Permalink to this definition">#</a></dt>
 <dd><p>LC-filter model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>L</strong> (<em>float</em>) – Inductance (H).</p></li>
 <li><p><strong>C</strong> (<em>float</em>) – Capacitance (F).</p></li>
-<li><p><strong>R_L</strong> (<em>float</em><em>, </em><em>optional</em>) – Series resistance (Ω) of the inductor. The default is 0.</p></li>
-<li><p><strong>G_C</strong> (<em>float</em><em>, </em><em>optional</em>) – Parallel conductance (S) of the capacitor. The default is 0.</p></li>
+<li><p><strong>R</strong> (<em>float</em><em>, </em><em>optional</em>) – Series resistance (Ω) of the inductor. The default is 0.</p></li>
 </ul>
 </dd>
 </dl>

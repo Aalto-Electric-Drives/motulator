@@ -77,7 +77,7 @@ Create the system model. The filter parameters correspond to [#Sal2006]_.
         R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
-    lc_filter = model.LCFilter(L=8e-3, C=9.9e-6, R_L=.1)
+    lc_filter = model.LCFilter(L=8e-3, C=9.9e-6, R=.1)
     mdl = model.im.DriveWithLCFilter(machine, mechanics, converter, lc_filter)
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
@@ -227,7 +227,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.798 seconds)
+   **Total running time of the script:** (0 minutes 7.881 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py:
