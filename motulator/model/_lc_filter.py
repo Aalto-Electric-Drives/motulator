@@ -18,15 +18,13 @@ class LCFilter:
         Inductance (H).
     C : float
         Capacitance (F). 
-    R_L : float, optional
+    R : float, optional
         Series resistance (Ω) of the inductor. The default is 0.
-    G_C : float, optional
-        Parallel conductance (S) of the capacitor. The default is 0.
    
     """
 
-    def __init__(self, L, C, R_L=0, G_C=0):
-        self.L, self.C, self.R_L, self.G_C = L, C, R_L, G_C
+    def __init__(self, L, C, R=0):
+        self.L, self.C, self.R, = L, C, R
         self.i_cs0, self.u_ss0 = 0j, 0j
 
     def f(self, i_cs, u_ss, u_cs, i_ss):
@@ -51,8 +49,8 @@ class LCFilter:
 
         """
 
-        di_cs = (u_cs - u_ss - self.R_L*i_cs)/self.L
-        du_ss = (i_cs - i_ss - self.G_C*u_ss)/self.C
+        di_cs = (u_cs - u_ss - self.R*i_cs)/self.L
+        du_ss = (i_cs - i_ss)/self.C
         return [di_cs, du_ss]
 
     def meas_currents(self):
