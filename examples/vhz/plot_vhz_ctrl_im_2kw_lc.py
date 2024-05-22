@@ -7,7 +7,6 @@ drive equipped with an LC filter.
 
 """
 # %%
-# Imports.
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -35,14 +34,14 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # Control system (parametrized as open-loop V/Hz control).
 
 # Inverse-Γ model parameter estimates
-par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-ctrl = control.im.VHzCtrl(250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0)
-ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
+model_par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+ctrl = control.im.VHzCtrl(
+    control.im.VHzCtrlPars(model_par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference and the external load torque.
 
-ctrl.w_m_ref = lambda t: (t > .2)*base.w
+ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
 # Quadratic load torque profile (corresponding to pumps and fans)
 k = 1.1*base.tau_nom/(base.w/base.n_p)**2

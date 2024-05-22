@@ -1,8 +1,9 @@
 """Common control functions and classes."""
 
+from abc import ABC, abstractmethod
+from types import SimpleNamespace
 import numpy as np
-from motulator._helpers import abc2complex, complex2abc
-from motulator._utils import Bunch
+from motulator._helpers import abc2complex, complex2abc, wrap
 
 
 # %%
@@ -14,18 +15,21 @@ class PWM:
     and minimum-amplitude-error overmodulation [#Hav1999]_. The realized 
     voltage is computed based on the measured DC-bus voltage and the duty 
     ratios. The digital delay effects are taken into account in the realized 
-    voltage, assuming the delay of a single sampling period. The total delay is
-    1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.
+    voltage [#Bae2003]_.
 
     Parameters
     ----------
     six_step: bool, optional
         Enable six-step operation in overmodulation. The default is False.
-    
+    k_comp : float, optional
+        Compensation factor for the delay effect on the voltage vector angle. 
+        The default is 1.5.
+
     Attributes
     ----------
-    realized_voltage : complex
-        Realized voltage (V) in synchronous coordinates.
+    u_cs : complex
+        Realized converter voltage (V) in stator coordinates over the sampling 
+        period with the delay compensation.
 
     References
     ----------
@@ -39,13 +43,14 @@ class PWM:
     
     """
 
-    def __init__(self, six_step=False):
+    def __init__(self, six_step=False, k_comp=1.5):
         self.six_step = six_step
+        self.k_comp = k_comp
         self.realized_voltage = 0
-        self._u_ref_lim_old = 0
+        self._u_cs_lim_old = 0
 
     @staticmethod
-    def six_step_overmodulation(u_s_ref, u_dc):
+    def six_step_overmodulation(u_cs_ref, u_dc):
         """
         Overmodulation up to six-step operation.
 
@@ -55,15 +60,15 @@ class PWM:
 
         Parameters
         ----------
-        u_s_ref : complex
-            Reference voltage (V) in stator coordinates.
+        u_cs_ref : complex
+            Converter voltage reference (V) in stator coordinates.
         u_dc : float
             DC-bus voltage (V).
 
         Returns
         -------
-        u_s_ref_mod : complex
-            Reference voltage (V) in stator coordinates.
+        u_cs_ref_mod : complex
+            Converter voltage reference (V) in stator coordinates.
 
         References
         ----------
@@ -73,11 +78,11 @@ class PWM:
 
         """
         # Limited magnitude
-        r = np.min([np.abs(u_s_ref), 2/3*u_dc])
+        r = np.min([np.abs(u_cs_ref), 2/3*u_dc])
 
         if np.sqrt(3)*r > u_dc:
             # Angle and sector of the reference vector
-            theta = np.angle(u_s_ref)
+            theta = np.angle(u_cs_ref)
             sector = np.floor(3*theta/np.pi)
 
             # Angle reduced to the first sector (at which sector == 0)
@@ -93,14 +98,14 @@ class PWM:
                 theta0 = np.pi/3 - alpha_g
 
             # Modified reference voltage
-            u_s_ref_mod = r*np.exp(1j*(theta0 + sector*np.pi/3))
+            u_cs_ref_mod = r*np.exp(1j*(theta0 + sector*np.pi/3))
         else:
-            u_s_ref_mod = u_s_ref
+            u_cs_ref_mod = u_cs_ref
 
-        return u_s_ref_mod
+        return u_cs_ref_mod
 
     @staticmethod
-    def duty_ratios(u_s_ref, u_dc):
+    def duty_ratios(u_cs_ref, u_dc):
         """
         Compute the duty ratios for three-phase space-vector PWM.
 
@@ -109,8 +114,8 @@ class PWM:
 
         Parameters
         ----------
-        u_s_ref : complex
-            Voltage reference in stator coordinates (V).
+        u_cs_ref : complex
+            Converter voltage reference (V) in stator coordinates.
         u_dc : float
             DC-bus voltage (V).
 
@@ -121,7 +126,7 @@ class PWM:
 
         """
         # Phase voltages without the zero-sequence voltage
-        u_abc = complex2abc(u_s_ref)
+        u_abc = complex2abc(u_cs_ref)
 
         # Zero-sequence voltage resulting in space-vector PWM
         u_0 = .5*(np.amax(u_abc) + np.amin(u_abc))
@@ -141,21 +146,18 @@ class PWM:
 
         return d_abc
 
-    # pylint: disable=too-many-arguments
-    def __call__(self, T_s, u_ref, u_dc, theta, w):
+    def output(self, T_s, u_cs_ref, u_dc, w):
         """
-        Compute the duty ratios and update the state.
+        Compute the duty ratios and the limited voltage reference.
 
         Parameters
         ----------
         T_s : float
             Sampling period (s).
-        u_ref : complex
-            Voltage reference in synchronous coordinates (V).
+        u_cs_ref : complex
+            Converter voltage reference (V) in stator coordinates.
         u_dc : float
-            DC-bus voltage.
-        theta : float
-            Angle of synchronous coordinates (rad).
+            DC-bus voltage (V).
         w : float
             Angular speed of synchronous coordinates (rad/s).
 
@@ -163,30 +165,37 @@ class PWM:
         -------
         d_abc : ndarray, shape (3,)
             Duty ratios for the next sampling period.
-
+        u_cs_lim : complex
+            Limited voltage reference (V) in synchronous coordinates.
+        
         """
-        # Advance the angle due to the computational delay (T_s) and the ZOH
-        # (PWM) delay (0.5*T_s)
-        theta_comp = theta + 1.5*T_s*w
-
-        # Voltage reference in stator coordinates
-        u_s_ref = np.exp(1j*theta_comp)*u_ref
+        # Advance the angle due to the computational delay (N*T_s) and the ZOH
+        # (PWM) delay (0.5*T_s), typically 1.5*T_s*w
+        theta_comp = self.k_comp*T_s*w
+        u_cs_comp = np.exp(1j*theta_comp)*u_cs_ref
 
         # Modify angle in the overmodulation region
         if self.six_step:
-            u_s_ref = self.six_step_overmodulation(u_s_ref, u_dc)
+            u_cs_comp = self.six_step_overmodulation(u_cs_comp, u_dc)
 
         # Duty ratios
-        d_abc = self.duty_ratios(u_s_ref, u_dc)
+        d_abc = self.duty_ratios(u_cs_comp, u_dc)
 
-        # Realizable voltage
-        u_s_ref_lim = abc2complex(d_abc)*u_dc
-        u_ref_lim = np.exp(-1j*theta_comp)*u_s_ref_lim
+        # Limited voltage reference
+        u_cs_lim = abc2complex(d_abc)*u_dc
+
+        return d_abc, u_cs_lim
+
+    def update(self, u_cs_lim):
+        """Update the realized voltage."""
 
         # Update the voltage estimate for the next sampling instant.
-        self.realized_voltage = .5*(self._u_ref_lim_old + u_ref_lim)
-        self._u_ref_lim_old = u_ref_lim
+        self.realized_voltage = .5*(self._u_cs_lim_old + u_cs_lim)
+        self._u_cs_lim_old = u_cs_lim
 
+    def __call__(self, T_s, u_cs_ref, u_dc, w):
+        d_abc, u_cs_lim = self.output(T_s, u_cs_ref, u_dc, w)
+        self.update(u_cs_lim)
         return d_abc
 
 
@@ -485,60 +494,228 @@ class Clock:
 
 
 # %%
-class Ctrl:
+class Ctrl(ABC):
     """Base class for control systems."""
 
-    def __init__(self):
-        self.clear()
+    def __init__(self, T_s):
+        self.clock = Clock()
+        self._data = SimpleNamespace()  # Private data
+        self.data = SimpleNamespace()  # Public data
+        self.pwm = PWM()
+        self.T_s = T_s
 
-    def clear(self):
+    @abstractmethod
+    def get_feedback_signals(self, mdl):
         """
-        Clear the internal data store of the control system.
-        
-        This method is automatically run when the instance for the control 
-        system is created. It can also be used in the case of repeated 
-        simulations to clear the data from the previous simulation run.
-        
-        """
-        self.data = Bunch()  # Data store
-        self.clock = Clock()  # Digital clock
-
-    def __call__(self, mdl):
-        """
-        Run the main control loop.
-
-        The main control loop is callable that returns the sampling period 
-        `T_s` (float) and the duty ratios `d_abc` (ndarray, shape (3,)) for the 
-        next sampling period.
+        Get the feedback signals.
 
         Parameters
         ----------
         mdl : Model
-            System model containing methods for getting the feedback signals.
+            Continuous-time system model.
 
+        Returns
+        -------
+        fbk : SimpleNamespace
+            Feedback signals.
+        
         """
-        raise NotImplementedError
+        fbk = SimpleNamespace()
+        return fbk
 
-    def save(self, data):
+    @abstractmethod
+    def output(self, fbk):
         """
-        Save the internal data of the control system.
+        Compute the controller outputs.
 
         Parameters
         ----------
-        data : bunch or dict
-            Contains the data to be saved.
+        fbk : SimpleNamespace
+            Feedback signals.
+
+        Returns
+        -------
+        ref : SimpleNamespace
+            References, containing at least the following fields:
+            T_s : float
+                Next sampling period (s).
+            d_abc : ndarray, shape (3,)
+                Duty ratios.
+                    
+        """
+        ref = SimpleNamespace()
+        ref.t = self.clock.t
+        ref.T_s = self.T_s  # Desired next sampling periodd
+        return ref
+
+    @abstractmethod
+    def update(self, fbk, ref):
+        """
+        Update the states.
+        
+        Parameters
+        ----------
+        fbk : SimpleNamespace
+            Feedback signals.
+        ref : SimpleNamespace
+            Reference signals.
+        
+        """
+        self.T_s = ref.T_s 
+        self.clock.update(ref.T_s)
+
+    def save(self, **kwargs):
+        """
+        Save the data of the control system.
+
+        Each keyword represents a data category, and its value (a 
+        SimpleNamespace) contains the data for that category.
+        
+        Parameters
+        ----------
+        **kwargs : SimpleNamespace
+            One or more keyword arguments where the key is the name and the
+            value is a SimpleNamespace containing the data to be saved.
 
         """
-        for key, value in data.items():
-            self.data.setdefault(key, []).extend([value])
+        for name, arg in kwargs.items():
+            if not hasattr(self._data, name):
+                setattr(self._data, name, SimpleNamespace())
+            data = getattr(self._data, name)
+            for key, value in vars(arg).items():
+                if not hasattr(data, key):
+                    setattr(data, key, [])
+                getattr(data, key).append(value)
 
     def post_process(self):
         """
         Transform the lists to the ndarray format.
 
-        This method can be run after the simulation has been completed in order 
+        This method can be run after the simulation has been completed in order
         to simplify plotting and analysis of the stored data.
 
         """
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
+        self.data = SimpleNamespace()
+        for name, values in vars(self._data).items():
+            setattr(self.data, name, SimpleNamespace())
+            for key, value in vars(values).items():
+                setattr(getattr(self.data, name), key, np.asarray(value))
+
+    def __call__(self, mdl):
+        """
+        Main control loop.
+
+        Parameters
+        ----------
+        mdl : Model
+            Continuous-time system model.
+
+        Returns
+        -------
+        T_s : float
+            Sampling period (s).
+        d_abc : ndarray, shape (3,)
+            Duty ratios.
+
+        """
+        # Feedback signals
+        fbk = self.get_feedback_signals(mdl)
+
+        # Compute references
+        ref = self.output(fbk)
+
+        # Update states
+        self.update(fbk, ref)
+
+        # Save data
+        self.save(fbk=fbk, ref=ref)
+
+        # Return the sampling period and the duty ratios for the PWM
+        return ref.T_s, ref.d_abc
+
+
+# %%
+class DriveCtrl(Ctrl, ABC):
+    """
+    Base class for control of electric machine drives.
+
+    This base class provides typical functionalities for control of electric
+    machine drives. This can be used both in speed-control and torque-control 
+    modes. 
+
+    Parameters
+    ----------
+    model_par : ModelPars
+        Machine model parameters.
+    T_s : float
+        Sampling period (s).
+    sensorless : bool
+        If True, sensorless control mode is used.
+
+    Attributes
+    ----------
+    observer : Observer
+        State observer. 
+    speed_ctrl : SpeedCtrl 
+        Speed controller.   
+    ref : SimpleNamespace
+        References, possibly containing either of the following fields:
+        w_m : callable
+            Speed reference (mechanical rad/s) as a function of time (s).
+        tau_M : callable
+            Torque reference (Nm) as a function of time (s).
+
+    """
+
+    def __init__(self, model_par, T_s, sensorless):
+        super().__init__(T_s)
+        self.par = model_par
+        self.sensorless = sensorless
+        self.speed_ctrl = None
+        self.observer = None
+        self.ref = SimpleNamespace()
+
+    def get_electrical_measurements(self, fbk, mdl):
+        """Measure the currents and voltages."""
+        fbk.u_dc = mdl.converter.meas_dc_voltage()
+        fbk.i_ss = abc2complex(mdl.machine.meas_currents())
+        fbk.u_ss = self.pwm.realized_voltage
+        return fbk
+    
+    def get_mechanical_measurements(self, fbk, mdl):
+        """Measure the speed and position."""
+        fbk.w_m = self.par.n_p*mdl.mechanics.meas_speed()
+        fbk.theta_m = wrap(self.par.n_p*mdl.mechanics.meas_position())
+        return fbk
+
+    def get_feedback_signals(self, mdl):
+        fbk = super().get_feedback_signals(mdl)
+        """Get the feedback signals."""
+        fbk = self.get_electrical_measurements(fbk, mdl)
+        if not self.sensorless:
+            fbk = self.get_mechanical_measurements(fbk, mdl)
+        if self.observer:
+            fbk = self.observer.output(fbk)
+        return fbk
+
+    def get_torque_reference(self, fbk, ref):
+        """Get the torque reference in vector control."""
+        if self.speed_ctrl:
+            # Speed-control mode
+            ref.w_m = self.ref.w_m(ref.t)
+            ref_w_M = ref.w_m/self.par.n_p
+            w_M = fbk.w_m/self.par.n_p
+            ref.tau_M = self.speed_ctrl.output(ref_w_M, w_M)
+        else:
+            # Torque-control mode
+            ref.w_m = None
+            ref.tau_M = self.ref.tau_M(ref.t)
+        return ref
+
+    def update(self, fbk, ref):
+        """Extend the base class method."""
+        super().update(fbk, ref)
+        if self.speed_ctrl:
+            self.speed_ctrl.update(ref.T_s, ref.tau_M_lim)
+        if self.observer:
+            self.observer.update(ref.T_s, fbk)

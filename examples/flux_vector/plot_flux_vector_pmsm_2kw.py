@@ -2,13 +2,11 @@
 2.2-kW PMSM
 ===========
 
-This example simulates sensorless stator-flux-vector control of a 2.2-kW PMSM
-drive.
+This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.
 
 """
 
 # %%
-# Imports.
 
 from motulator import model, control
 from motulator import BaseValues, plot
@@ -34,13 +32,15 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 par = control.sm.ModelPars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
 ref = control.sm.FluxTorqueReferencePars(par, i_s_max=1.5*base.i, k_u=.9)
-ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
+ctrl = control.sm.FluxVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.
 
-# Simple acceleration and load torque step
-ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
+# Speed reference (electrical rad/s)
+ctrl.ref.w_m = lambda t: (t > .2)*2*base.w
+
+# Load torque step
 mdl.mechanics.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
 
 # %%

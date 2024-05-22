@@ -15,14 +15,41 @@ References
 
 """
 # %%
+from dataclasses import dataclass, field, InitVar
+from types import SimpleNamespace
 import numpy as np
-from motulator.control._common import Ctrl, PWM
+from motulator.control._common import PWM, DriveCtrl, RateLimiter
+from motulator.control.im._common import ModelPars
 from motulator._helpers import abc2complex, wrap
-from motulator._utils import Bunch
 
 
 # %%
-class VHzCtrl(Ctrl):
+@dataclass
+class VHzCtrlPars:
+    """V/Hz control parameters."""
+
+    model_par: ModelPars
+    nom_psi_s: float = None
+    T_s: float = 250e-6
+    six_step: bool = False
+    rate_limiter: callable = RateLimiter(2*np.pi*120)
+    gain: SimpleNamespace = field(init=False)
+    k_u: InitVar[float] = 1
+    k_w: InitVar[float] = 4
+    alpha_f: InitVar[float] = None
+    alpha_i: InitVar[float] = None
+
+    def __post_init__(self, k_u, k_w, alpha_f, alpha_i):
+        par = self.model_par
+        w_rb = par.R_R*(par.L_M + par.L_sgm)/(par.L_sgm*par.L_M)
+        alpha_f = .1*w_rb if alpha_f is None else alpha_f
+        alpha_i = .1*w_rb if alpha_i is None else alpha_f
+        self.gain = SimpleNamespace(
+            k_u=k_u, k_w=k_w, alpha_f=alpha_f, alpha_i=alpha_i)
+
+
+# %%
+class VHzCtrl(DriveCtrl):
     """
     V/Hz control with the stator current feedback.
 
@@ -32,129 +59,89 @@ class VHzCtrl(Ctrl):
         Control parameters.
 
     """
+    def __init__(self, vhz_par):
+        super().__init__(vhz_par.model_par, vhz_par.T_s, sensorless=True)
+        self.gain = vhz_par.gain
+        self.nom_psi_s = vhz_par.nom_psi_s
+        self.pwm = PWM(six_step=vhz_par.six_step)
+        self.rate_limiter = vhz_par.rate_limiter
+        self.ref = SimpleNamespace()
+        self.state = SimpleNamespace(theta_s=0, i_s=0j, w_r=0)
 
-    # pylint: disable=too-many-instance-attributes, too-many-arguments
-    def __init__(self, T_s, par, psi_s_nom, k_u=1., k_w=4., six_step=False):
-        super().__init__()
-        self.T_s = T_s
-        self.w_m_ref = callable
-        # Motor parameters
-        self.R_s, self.R_R = par.R_s, par.R_R
-        self.L_sgm, self.L_M = par.L_sgm, par.L_M
-        # Control parameters
-        self.k_u, self.k_w = k_w, k_u
-        self.psi_s_ref = psi_s_nom
-        w_rb = self.R_R*(self.L_M + self.L_sgm)/(self.L_sgm*self.L_M)
-        self.alpha_f = .1*w_rb
-        self.alpha_i = .1*w_rb
-        # Instantiate classes
-        self.pwm = PWM(six_step=six_step)
-        self.rate_limiter = callable
-        # self.six_step = six_step
-        # States
-        self.i_s_ref, self.theta_s, self.w_r_ref = 0j, 0, 0
-        # self.T_s0 = T_s
-        # self.N = 100
+    def get_feedback_signals(self, mdl):
+        """Get the feedback signals."""
+        fbk = super().get_feedback_signals(mdl)
+        fbk.theta_s = self.state.theta_s
+        fbk.i_s = np.exp(-1j*fbk.theta_s)*fbk.i_ss
+        fbk.u_s = np.exp(-1j*fbk.theta_s)*fbk.u_ss
 
-    def __call__(self, mdl):
-        """
-        Run the main control loop.
+        return fbk
 
-        Parameters
-        ----------
-        mdl : Drive
-            Continuous-time model for getting the feedback signals.
+    def output(self, fbk):
+        """Extend the base class method."""
+        ref = super().output(fbk)
 
-        Returns
-        -------
-        T_s : float
-            Sampling period (s).
-        d_abc : ndarray, shape (3,)
-            Duty ratios.
+        ref.i_s, ref.w_r = self.state.i_s, self.state.w_r
+        ref.psi_s = self.nom_psi_s
 
-        """
         # Rate limit the frequency reference
-        w_m_ref = self.rate_limiter(self.T_s, self.w_m_ref(self.clock.t))
-
-        # Measure the feedback signals
-        i_s_abc = mdl.machine.meas_currents()  # Phase currents
-        u_dc = mdl.converter.meas_dc_voltage()  # DC-bus voltage
-
-        # Space vector transformation
-        theta_s = self.theta_s
-        i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
+        ref.w_m = self.rate_limiter(ref.T_s, self.ref.w_m(ref.t))
 
         # Slip compensation
-        w_s_ref = w_m_ref + self.w_r_ref
+        ref.w_s = ref.w_m + ref.w_r
 
         # Dynamic stator frequency and slip frequency
-        w_s, w_r = self._stator_freq(w_s_ref, i_s)
+        fbk, ref = self._stator_freq(fbk, ref)
 
         # Voltage reference
-        u_s_ref = self._voltage_reference(w_s, i_s)
+        ref = self._voltage_reference(fbk, ref)
 
-        # TODO: Synchronize the PWM to the stator frequency in overmodulation,
-        # a simplistic approach given below.
-        # f_s = w_s/(2*np.pi)  # Stator frequency
-        # if self.six_step and self.N*np.abs(f_s) > 1/self.T_s0:
-        #     self.T_s = 1/(self.N*f_s)
-        # else:
-        #     self.T_s = self.T_s0
+        return ref
 
-        # Data logging
-        data = Bunch(
-            i_s=i_s,
-            i_s_ref=self.i_s_ref,
-            psi_s_ref=self.psi_s_ref,
-            t=self.clock.t,
-            theta_s=self.theta_s,
-            u_dc=u_dc,
-            u_s=self.pwm.realized_voltage,
-            w_m_ref=w_m_ref,
-            w_r=w_r,
-            w_s=w_s,
-        )
-        self.save(data)
-
-        # Update the states. Note that the low-pass-filtered values are marked
-        # with ref at the end of the variable name.
-        self.i_s_ref += self.T_s*self.alpha_i*(i_s - self.i_s_ref)
-        self.w_r_ref += self.T_s*self.alpha_f*(w_r - self.w_r_ref)
-        self.theta_s += self.T_s*w_s
-        self.theta_s = wrap(self.theta_s)
-        self.clock.update(self.T_s)
-
-        # Compute the duty ratios
-        d_abc = self.pwm(self.T_s, u_s_ref, u_dc, theta_s, w_s)
-
-        return self.T_s, d_abc
-
-    def _stator_freq(self, w_s_ref, i_s):
-        # Compute the stator frequency for coordinate transformations
+    def _stator_freq(self, fbk, ref):
+        """Compute the stator frequency for coordinate transformations."""
+        par = self.par
 
         # Operating-point quantities
-        psi_R_ref = self.psi_s_ref - self.L_sgm*self.i_s_ref
-        psi_R_ref_sqr = np.abs(psi_R_ref)**2
-        # Compute the dynamic stator frequency
-        if psi_R_ref_sqr > 0:
-            # Slip estimate based on the measured current
-            w_r = self.R_R*np.imag(i_s*np.conj(psi_R_ref))/psi_R_ref_sqr
-            # Dynamic frequency
-            w_s = w_s_ref + self.k_w*(self.w_r_ref - w_r)
-        else:
-            w_s, w_r = 0, 0
-        return w_s, w_r
+        ref.psi_R = ref.psi_s - par.L_sgm*ref.i_s
+        ref_psi_R_sqr = np.abs(ref.psi_R)**2
 
-    def _voltage_reference(self, w_s, i_s):
-        # Compute the stator voltage reference
+        # Compute the dynamic stator frequency
+        if ref_psi_R_sqr > 0:
+            # Slip estimate based on the measured current
+            fbk.w_r = par.R_R*np.imag(fbk.i_s*np.conj(ref.psi_R))/ref_psi_R_sqr
+            # Dynamic frequency
+            fbk.w_s = ref.w_s + self.gain.k_w*(ref.w_r - fbk.w_r)
+        else:
+            fbk.w_s, fbk.w_r = 0, 0
+
+        return fbk, ref
+
+    def _voltage_reference(self, fbk, ref):
+        """Compute the stator voltage reference."""
+        par, gain = self.par, self.gain
 
         # Nominal magnetizing current
-        i_sd_nom = self.psi_s_ref/(self.L_M + self.L_sgm)
+        nom_i_sd = ref.psi_s/(par.L_M + par.L_sgm)
+
         # Operating-point current for RI compensation
-        i_s_ref0 = i_sd_nom + 1j*self.i_s_ref.imag
+        ref_i_s0 = nom_i_sd + 1j*ref.i_s.imag
         # Term -R_s omitted to avoid problems due to the voltage saturation
         # k = -R_s + k_u*L_sgm*(alpha + 1j*w_m0)
-        k = self.k_u*self.L_sgm*(self.R_R/self.L_M + 1j*w_s)
-        u_s_ref = (
-            self.R_s*i_s_ref0 + 1j*w_s*self.psi_s_ref + k*(self.i_s_ref - i_s))
-        return u_s_ref
+        k = gain.k_u*par.L_sgm*(par.R_R/par.L_M + 1j*fbk.w_s)
+
+        ref.u_s = (
+            par.R_s*ref_i_s0 + 1j*fbk.w_s*ref.psi_s + k*(ref.i_s - fbk.i_s))
+        ref.u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
+
+        ref.d_abc = self.pwm(ref.T_s, ref.u_ss, fbk.u_dc, fbk.w_s)
+
+        return ref
+
+    def update(self, fbk, ref):
+        """Extend the base class method."""
+        super().update(fbk, ref)
+
+        self.state.i_s += ref.T_s*self.gain.alpha_i*(fbk.i_s - self.state.i_s)
+        self.state.w_r += ref.T_s*self.gain.alpha_f*(fbk.w_r - self.state.w_r)
+        self.state.theta_s = wrap(self.state.theta_s + ref.T_s*fbk.w_s)

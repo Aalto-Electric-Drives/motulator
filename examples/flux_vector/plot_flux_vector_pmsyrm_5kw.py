@@ -13,7 +13,6 @@ does.
 """
 
 # %%
-# Imports.
 
 from os import path
 import inspect
@@ -164,15 +163,15 @@ ref = control.sm.FluxTorqueReferencePars(
     par, i_s_max=2*base.i, k_u=1, psi_s_max=base.psi)
 ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
-ctrl.observer = control.sm.Observer(par, alpha_o=2*np.pi*40, sensorless=True)
+ctrl.observer = control.sm.Observer(control.sm.ObserverPars(par, alpha_o=2*np.pi*40, sensorless=True))
 
 # %%
 # Set the speed reference and the external load torque.
 
-# Speed reference
+# Speed reference (electrical rad/s)
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom

@@ -2,13 +2,12 @@
 5-kW PM-SyRM
 ============
 
-This example simulates sensorless vector control of a 5-kW permanent-magnet
-synchronous reluctance motor. Control look-up tables are also plotted.
+This example simulates sensorless current-vector control of a 5-kW permanent-
+magnet synchronous reluctance motor. Control look-up tables are also plotted.
 
 """
 
 # %%
-# Imports.
 
 import numpy as np
 from motulator import model, control
@@ -37,8 +36,8 @@ par = control.sm.ModelPars(
     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134, J=.0042)
 ref = control.sm.CurrentReferencePars(
     par, w_m_nom=base.w, i_s_max=2*base.i, k_u=.9)
-ctrl = control.sm.VectorCtrl(par, ref, T_s=125e-6, sensorless=True)
-ctrl.observer = control.sm.Observer(par, alpha_o=2*np.pi*200)
+ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=125e-6, sensorless=True)
+ctrl.observer = control.sm.Observer(control.sm.ObserverPars(par, alpha_o=2*np.pi*200))
 ctrl.speed_ctrl = control.SpeedCtrl(
     J=par.J, alpha_s=2*np.pi*4, tau_M_max=1.5*base.tau_nom)
 
@@ -56,7 +55,7 @@ tq.plot_torque_current(ctrl.current_ref.i_s_max, base)
 # Set the speed reference and the external load torque.
 
 # Acceleration and load torque step
-ctrl.w_m_ref = lambda t: (t > .1)*base.w*3
+ctrl.ref.w_m = lambda t: (t > .1)*base.w*3
 # Quadratic load torque profile
 k = .05*base.tau_nom/(base.w/base.n_p)**2
 mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)

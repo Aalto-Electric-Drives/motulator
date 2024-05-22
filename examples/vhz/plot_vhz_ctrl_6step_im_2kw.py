@@ -10,7 +10,6 @@ frequency and the sampling frequency.
 
 """
 # %%
-# Imports.
 
 import numpy as np
 from motulator import model, control
@@ -36,18 +35,17 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # %%
 # Control system (parametrized as open-loop V/Hz control).
 
-par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+model_par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
 ctrl = control.im.VHzCtrl(
-    250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0, six_step=True)
-ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
-
+    control.im.VHzCtrlPars(
+        model_par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
 # %%
 # Set the speed reference and the external load torque.
 
 # Speed reference
 times = np.array([0, .1, .3, 1])*2
 values = np.array([0, 0, 1, 1])*2*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
 k = .2*base.tau_nom/(base.w/base.n_p)**2

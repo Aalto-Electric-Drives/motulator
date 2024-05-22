@@ -155,7 +155,7 @@ class FrequencyConverter(Inverter):
         Returns
         -------
         list, length 2
-            Time derivative of the state vector, [du_dc, di_L]
+            Time derivative of the state vector, [d_u_dc, d_i_L]
 
         """
         # Grid phase voltages
@@ -163,9 +163,9 @@ class FrequencyConverter(Inverter):
         # Output voltage of the diode bridge
         u_di = np.amax(u_g_abc, axis=0) - np.amin(u_g_abc, axis=0)
         # State derivatives
-        du_dc = (i_L - i_dc)/self.C
-        di_L = (u_di - u_dc)/self.L
+        d_u_dc = (i_L - i_dc)/self.C
+        d_i_L = (u_di - u_dc)/self.L
         # The inductor current cannot be negative due to the diode bridge
-        if i_L < 0 and di_L < 0:
-            di_L = 0
-        return [du_dc, di_L]
+        if i_L < 0 and d_i_L < 0:
+            d_i_L = 0
+        return [d_u_dc, d_i_L]

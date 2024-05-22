@@ -2,12 +2,12 @@
 6.7-kW SyRM
 ===========
 
-This example simulates sensorless vector control of a 6.7-kW SyRM drive.
+This example simulates sensorless current-vector control of a 6.7-kW SyRM 
+drive.
 
 """
 
 # %%
-# Imports.
 
 import numpy as np
 from motulator import model, control
@@ -35,7 +35,7 @@ par = control.sm.ModelPars(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, J=.015)
 ref = control.sm.CurrentReferencePars(
     par, w_m_nom=base.w, i_s_max=1.5*base.i, psi_s_min=.5*base.psi, k_u=.9)
-ctrl = control.sm.VectorCtrl(par, ref, T_s=125e-6, sensorless=True)
+ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=125e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -43,7 +43,7 @@ ctrl = control.sm.VectorCtrl(par, ref, T_s=125e-6, sensorless=True)
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom

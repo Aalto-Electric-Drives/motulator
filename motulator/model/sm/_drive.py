@@ -95,7 +95,7 @@ class SynchronousMachine:
         Returns
         -------
         complex list, length 2
-            Time derivative of the state vector, [dpsi_s, dtheta_m]
+            Time derivative of the state vector, [d_psi_s, d_theta_m]
         i_s : complex
             Stator current (A).
         tau_M : float
@@ -110,9 +110,9 @@ class SynchronousMachine:
 
         """
         i_s, tau_M = self.magnetic(psi_s)
-        dpsi_s = u_s - self.R_s*i_s - 1j*self.n_p*w_M*psi_s
-        dtheta_m = self.n_p*w_M
-        return [dpsi_s, dtheta_m], i_s, tau_M
+        d_psi_s = u_s - self.R_s*i_s - 1j*self.n_p*w_M*psi_s
+        d_theta_m = self.n_p*w_M
+        return [d_psi_s, d_theta_m], i_s, tau_M
 
     def meas_currents(self):
         """
@@ -189,12 +189,8 @@ class Drive(Model):
         self.machine = machine
         self.mechanics = mechanics
         self.converter = converter
-
-    def clear(self):
-        """Clear the simulation data of the system model."""
-        super().clear()
-        self.data.psi_s, self.data.theta_m = [], []
-        self.data.w_M, self.data.theta_M = [], []
+        self._data.psi_s, self._data.theta_m = [], []
+        self._data.w_M, self._data.theta_M = [], []
 
     def get_initial_values(self):
         """
@@ -269,10 +265,10 @@ class Drive(Model):
     def save(self, sol):
         """Save the solution."""
         super().save(sol)
-        self.data.psi_s.extend(sol.y[0])
-        self.data.theta_m.extend(sol.y[1].real)
-        self.data.w_M.extend(sol.y[2].real)
-        self.data.theta_M.extend(sol.y[3].real)
+        self._data.psi_s.extend(sol.y[0])
+        self._data.theta_m.extend(sol.y[1].real)
+        self._data.w_M.extend(sol.y[2].real)
+        self._data.theta_M.extend(sol.y[3].real)
 
     def post_process(self):
         """Transform the lists to the ndarray format and post-process them."""
@@ -313,12 +309,7 @@ class DriveWithDiodeBridge(Drive):
     def __init__(self, machine=None, mechanics=None, converter=None):
         super().__init__(machine, mechanics, converter)
         self.converter = converter
-        self.clear()
-
-    def clear(self):
-        """Extend the base class."""
-        super().clear()
-        self.data.u_dc, self.data.i_L = [], []
+        self._data.u_dc, self._data.i_L = [], []
 
     def get_initial_values(self):
         """Extend the base class."""
@@ -354,8 +345,8 @@ class DriveWithDiodeBridge(Drive):
     def save(self, sol):
         """Extend the base class."""
         super().save(sol)
-        self.data.u_dc.extend(sol.y[4].real)
-        self.data.i_L.extend(sol.y[5].real)
+        self._data.u_dc.extend(sol.y[4].real)
+        self._data.i_L.extend(sol.y[5].real)
 
     def post_process(self):
         """Extend the base class."""
@@ -395,12 +386,7 @@ class DriveTwoMassMechanics(Drive):
 
     def __init__(self, machine=None, mechanics=None, converter=None):
         super().__init__(machine, mechanics, converter)
-        self.clear()
-
-    def clear(self):
-        """Extend the base class."""
-        super().clear()
-        self.data.w_L, self.data.theta_ML = [], []
+        self._data.w_L, self._data.theta_ML = [], []
 
     def get_initial_values(self):
         """Extend the base class."""
@@ -431,8 +417,8 @@ class DriveTwoMassMechanics(Drive):
     def save(self, sol):
         """Extend the base class."""
         super().save(sol)
-        self.data.w_L.extend(sol.y[4].real)
-        self.data.theta_ML.extend(sol.y[5].real)
+        self._data.w_L.extend(sol.y[4].real)
+        self._data.theta_ML.extend(sol.y[5].real)
 
     def post_process(self):
         """Extend the base class."""
@@ -468,12 +454,7 @@ class DriveWithLCFilter(Drive):
             lc_filter=None):
         super().__init__(machine, mechanics, converter)
         self.lc_filter = lc_filter
-        self.clear()
-
-    def clear(self):
-        """Extend the base class."""
-        super().clear()
-        self.data.i_cs, self.data.u_ss = [], []
+        self._data.i_cs, self._data.u_ss = [], []
 
     def get_initial_values(self):
         """Extend the base class."""
@@ -507,8 +488,8 @@ class DriveWithLCFilter(Drive):
     def save(self, sol):
         """Extend the base class."""
         super().save(sol)
-        self.data.i_cs.extend(sol.y[4])
-        self.data.u_ss.extend(sol.y[5])
+        self._data.i_cs.extend(sol.y[4])
+        self._data.u_ss.extend(sol.y[5])
 
     def post_process(self):
         """Extend the base class."""

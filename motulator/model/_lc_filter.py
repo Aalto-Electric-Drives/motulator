@@ -45,13 +45,13 @@ class LCFilter:
         Returns
         -------
         complex list, length 2
-            Time derivative of the state vector, [di_cs, du_ss]
+            Time derivative of the state vector, [d_i_cs, d_u_ss]
 
         """
 
-        di_cs = (u_cs - u_ss - self.R*i_cs)/self.L
-        du_ss = (i_cs - i_ss)/self.C
-        return [di_cs, du_ss]
+        d_i_cs = (u_cs - u_ss - self.R*i_cs)/self.L
+        d_u_ss = (i_cs - i_ss)/self.C
+        return [d_i_cs, d_u_ss]
 
     def meas_currents(self):
         """

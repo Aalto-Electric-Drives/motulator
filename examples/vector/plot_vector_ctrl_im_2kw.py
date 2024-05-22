@@ -2,14 +2,13 @@
 2.2-kW induction motor, saturated
 =================================
 
-This example simulates sensorless vector control of a 2.2-kW induction motor
-drive. The magnetic saturation of the machine is also included in the system 
-model, while the control system assumes constant parameters. 
+This example simulates sensorless current-vector control of a 2.2-kW induction 
+motor drive. The magnetic saturation of the machine is also included in the 
+system model, while the control system assumes constant parameters. 
 
 """
 
 # %%
-# Imports.
 
 from motulator import model, control
 from motulator import BaseValues, plot
@@ -58,7 +57,7 @@ def L_s(psi):
 machine = model.im.InductionMachineSaturated(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
 # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
-# machine = model.im.InductionMachineInvGamma(
+#machine = model.im.InductionMachineInvGamma(
 #    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 # Alternatively, configure the machine model using its Γ parameters
 # machine = model.im.InductionMachine(
@@ -79,7 +78,7 @@ par = control.im.ModelPars(
 ref = control.im.CurrentReferencePars(
     par, i_s_max=1.5*base.i, u_s_nom=base.u, w_s_nom=base.w)
 # Create the control system
-ctrl = control.im.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+ctrl = control.im.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 # As an example, you may replace the default 2DOF PI speed controller with the
 # regular PI speed controller by uncommenting the following line
 # ctrl.speed_ctrl = control.PICtrl(k_p=1, k_i=1)
@@ -89,11 +88,11 @@ ctrl = control.im.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 # uncomment the field-weakening sequence.
 
 # Simple acceleration and load torque step
-ctrl.w_m_ref = lambda t: (t > .2)*(.5*base.w)
+ctrl.ref.w_m = lambda t: (t > .2)*(.5*base.w)
 mdl.mechanics.tau_L_t = lambda t: (t > .75)*base.tau_nom
 
 # No load, field-weakening (uncomment to try)
-# ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
+# ctrl.ref.w_m = lambda t: (t > .2)*(2*base.w)
 # mdl.mechanics.tau_L_t = lambda t: 0
 
 # %%

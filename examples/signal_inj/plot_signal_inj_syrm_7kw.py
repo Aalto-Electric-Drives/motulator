@@ -8,7 +8,6 @@ Square-wave signal injection is used with a simple phase-locked loop.
 """
 
 # %%
-# Imports.
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -47,7 +46,7 @@ ctrl = control.sm.SignalInjectionCtrl(par, ref, T_s=250e-6)
 # Speed reference
 times = np.array([0, .25, .25, .375, .5, .625, .75, .75, 1])*4
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*.1*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
@@ -68,10 +67,14 @@ plot(sim, base)
 # Plot also the angles
 mdl = sim.mdl.data  # Continuous-time data
 ctrl = sim.ctrl.data  # Discrete-time data
+ctrl.t = ctrl.ref.t  # Discrete time
 plt.figure()
 plt.plot(mdl.t, mdl.theta_m, label=r"$\vartheta_\mathrm{m}$")
-plt.step(
-    ctrl.t, ctrl.theta_m, where="post", label=r"$\hat \vartheta_\mathrm{m}$")
+plt.plot(
+    ctrl.t,
+    ctrl.fbk.theta_m,
+    ds="steps-post",
+    label=r"$\hat \vartheta_\mathrm{m}$")
 plt.legend()
 plt.xlim(0, 4)
 plt.xlabel("Time (s)")

@@ -1,18 +1,16 @@
 """Simulation environment."""
 
+from types import SimpleNamespace
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.io import savemat
 from motulator._helpers import abc2complex
-from motulator._utils import Bunch
 
 
 # %%
 class Delay:
     """
-    Computational delay.
-
-    This models the computational delay as a ring buffer.
+    Computational delay modeled as a ring buffer.
 
     Parameters
     ----------
@@ -222,7 +220,7 @@ class Simulation:
             self._simulation_loop(t_stop, max_step)
         except FloatingPointError:
             print(f"Invalid value encountered at {self.mdl.t0:.2f} seconds.")
-        # Call the post-processing functions
+        # Post-process the solution data
         self.mdl.post_process()
         self.ctrl.post_process()
 
@@ -299,22 +297,9 @@ class Model:
         self.pwm = zoh if pwm is None else pwm
         self.t0 = 0  # Initial time
         self.q = 0j  # Switching state vector
-        self.clear()
-
-    def clear(self):
-        """
-        Clear the simulation data of the system model.
-        
-        This method is automatically run when the instance for the system model
-        is created. It can also be used in the case of repeated simulations to 
-        clear the data from the previous simulation run.
-        
-        """
-        # Initial time
-        self.t0 = 0
-        # Solution will be stored in the following lists
-        self.data = Bunch()
-        self.data.t, self.data.q = [], []
+        self.t0 = 0  # Initial time
+        self._data = SimpleNamespace(t=[], q=[])  # Private solution
+        self.data = SimpleNamespace()  # Public solution
 
     def get_initial_values(self):
         """
@@ -367,15 +352,14 @@ class Model:
 
         Parameters
         ----------
-        sol : Bunch
+        sol : SimpleNamespace
             Solution from the solver.
 
         """
-        self.data.t.extend(sol.t)
-        self.data.q.extend(sol.q)
+        self._data.t.extend(sol.t)
+        self._data.q.extend(sol.q)
 
     def post_process(self):
         """Transform the lists to the ndarray format and post-process them."""
-        # From lists to the ndarray
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
+        for key, value in vars(self._data).items():
+            setattr(self.data, key, np.asarray(value))

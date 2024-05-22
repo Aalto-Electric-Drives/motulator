@@ -2,13 +2,12 @@
 2.2-kW PMSM, diode bridge
 =========================
 
-This example simulates sensorless vector control of a 2.2-kW PMSM drive, 
-equipped with a diode bridge rectifier. 
+This example simulates sensorless current-vector control of a 2.2-kW PMSM 
+drive, equipped with a diode bridge rectifier. 
 
 """
 
 # %%
-# Imports.
 
 from motulator import model, control
 from motulator import BaseValues, plot, plot_extra
@@ -35,13 +34,13 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 par = control.sm.ModelPars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
 ref = control.sm.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=1.5*base.i)
-ctrl = control.sm.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.
 
-# Speed reference
-ctrl.w_m_ref = lambda t: (t > .2)*base.w
+# Speed reference (electrical rad/s)
+ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
 # External load torque
 mdl.mechanics.tau_L_t = lambda t: (t > .6)*base.tau_nom

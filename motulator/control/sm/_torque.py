@@ -16,11 +16,11 @@ References
 """
 
 from sys import float_info
+from types import SimpleNamespace
 import numpy as np
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 from cycler import cycler
-from motulator._utils import Bunch
 
 plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")
 plt.rcParams["lines.linewidth"] = 1.
@@ -241,7 +241,7 @@ class TorqueCharacteristics:
 
         Returns
         -------
-        Bunch object with the following fields defined:
+        SimpleNamespace object with the following fields defined:
         psi_s : complex
             Stator flux (Vs).
         i_s : complex
@@ -278,8 +278,7 @@ class TorqueCharacteristics:
         i_sd_vs_tau_M = interp1d(
             tau_M, i_s.real, fill_value=i_s.real[-1], bounds_error=False)
 
-        # Return the result as a bunch object
-        return Bunch(
+        return SimpleNamespace(
             psi_s=psi_s,
             i_s=i_s,
             tau_M=tau_M,
@@ -303,7 +302,7 @@ class TorqueCharacteristics:
 
         Returns
         -------
-        Bunch object with the following fields defined:
+        SimpleNamespace object with the following fields defined:
         psi_s : complex
             Stator flux (Vs).
         i_s : complex
@@ -332,8 +331,7 @@ class TorqueCharacteristics:
         # more interpolants can be easily added.
         tau_M_vs_abs_psi_s = interp1d(np.abs(psi_s), tau_M, bounds_error=False)
 
-        # Return the result as a bunch object
-        return Bunch(
+        return SimpleNamespace(
             psi_s=psi_s,
             i_s=i_s,
             tau_M=tau_M,
@@ -356,7 +354,7 @@ class TorqueCharacteristics:
 
         Returns
         -------
-        Bunch object with the following fields defined:
+        SimpleNamespace object with the following fields defined:
         psi_s : complex
             Stator flux (Vs).
         i_s : complex
@@ -386,8 +384,7 @@ class TorqueCharacteristics:
             bounds_error=False,
             fill_value=(tau_M[0], tau_M[-1]))
 
-        # Return the result as a bunch object
-        return Bunch(
+        return SimpleNamespace(
             psi_s=psi_s,
             i_s=i_s,
             tau_M=tau_M,
@@ -406,7 +403,7 @@ class TorqueCharacteristics:
 
         Returns
         -------
-        Bunch object with the following fields defined:
+        SimpleNamespace object with the following fields defined:
         tau_M_vs_abs_psi_s : interp1d object
             Torque (Nm) as a function of the flux magnitude (Vs).
         i_sd_vs_tau_M : interp1d object
@@ -440,8 +437,7 @@ class TorqueCharacteristics:
             fill_value=(tau_M[0], tau_M[-1]))
         i_sd_vs_tau_M = interp1d(tau_M, i_sd, fill_value="extrapolate")
 
-        # Return the result as a bunch object
-        return Bunch(
+        return SimpleNamespace(
             tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s, i_sd_vs_tau_M=i_sd_vs_tau_M)
 
     def plot_flux_loci(self, i_s_max, base, N=20):

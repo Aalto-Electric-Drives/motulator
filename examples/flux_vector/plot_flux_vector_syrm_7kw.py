@@ -12,7 +12,6 @@ Naturally, the PM-flux estimation can be used in PM machine drives as well.
 """
 
 # %%
-# Imports.
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -70,19 +69,19 @@ ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
 # Since the saturation is not considered in the control system, the speed
 # estimation bandwidth is set to a lower value. Furthermore, the PM-flux
 # disturbance estimation is enabled at speeds above 2*pi*20 rad/s (electrical).
-ctrl.observer = control.sm.Observer(
+ctrl.observer = control.sm.Observer(control.sm.ObserverPars(
     par,
     alpha_o=2*np.pi*40,
     k_f=lambda w_m: max(.05*(np.abs(w_m) - 2*np.pi*20), 0),
-    sensorless=True)
+    sensorless=True))
 
 # %%
 # Set the speed reference and the external load torque.
 
-# Speed reference
+# Speed reference (electrical rad/s)
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
@@ -107,11 +106,13 @@ plot(sim, base)
 
 mdl = sim.mdl.data  # Continuous-time data
 ctrl = sim.ctrl.data  # Discrete-time data
+ctrl.t = ctrl.ref.t  # Discrete time
 plt.figure()
 plt.plot(mdl.t, np.abs(mdl.psi_s)/base.psi, label=r"$\psi_\mathrm{s}$")
-plt.plot(ctrl.t, np.abs(ctrl.psi_s)/base.psi, label=r"$\hat{\psi}_\mathrm{s}$")
-plt.plot(ctrl.t, ctrl.psi_f/base.psi, label=r"$\hat{\psi}_\mathrm{f}$")
-plt.plot(ctrl.t, ctrl.psi_s_ref/base.psi, "--", label=r"$\psi_\mathrm{s,ref}$")
+plt.plot(
+    ctrl.t, np.abs(ctrl.fbk.psi_s)/base.psi, label=r"$\hat{\psi}_\mathrm{s}$")
+plt.plot(ctrl.t, ctrl.fbk.psi_f/base.psi, label=r"$\hat{\psi}_\mathrm{f}$")
+plt.plot(ctrl.t, ctrl.ref.psi_s/base.psi, "--", label=r"$\psi_\mathrm{s,ref}$")
 plt.xlim(0, 4)
 plt.xlabel("Time (s)")
 plt.ylabel("Flux linkage (p.u.)")

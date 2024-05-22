@@ -2,21 +2,18 @@
 
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator._helpers import abc2complex, wrap
-from motulator.control._common import Ctrl, PWM, SpeedCtrl
+from motulator.control._common import SpeedCtrl, DriveCtrl
 from motulator.control.sm._torque import TorqueCharacteristics
-from motulator.control.sm._vector import ModelPars
-from motulator.control.sm._observers import Observer
-from motulator._utils import Bunch
+from motulator.control.sm._common import ModelPars, Observer, ObserverPars
 
 
 # %%
-class FluxVectorCtrl(Ctrl):
+class FluxVectorCtrl(DriveCtrl):
     """
     Flux-vector control of synchronous machine drives.
 
-    This class implements a variant of stator-flux-vector control [#Pel2009]_. 
-    Rotor coordinates as well as decoupling between the stator flux and torque 
+    This class implements a variant of flux-vector control [#Pel2009]_. Rotor 
+    coordinates as well as decoupling between the stator flux and torque 
     channels are used according to [#Awa2019b]_. Here, the stator flux 
     magnitude and the electromagnetic torque are selected as controllable 
     variables. 
@@ -71,117 +68,60 @@ class FluxVectorCtrl(Ctrl):
     def __init__(
             self,
             par,
-            ref,
+            ref_par,
             alpha_psi=2*np.pi*100,
             alpha_tau=2*np.pi*200,
+            alpha_o=2*np.pi*100,
             T_s=250e-6,
             sensorless=True):
-        super().__init__()
-        self.T_s = T_s
-        self.sensorless = sensorless
-        # Machine model parameters
-        self.n_p = par.n_p
-        self.R_s, self.L_d, self.L_q = par.R_s, par.L_d, par.L_q
+        super().__init__(par, T_s, sensorless)
         # Subsystems
-        self.observer = Observer(
-            par, alpha_o=2*np.pi*100, sensorless=sensorless)
-        self.flux_torque_ref = FluxTorqueReference(ref)
-        self.pwm = PWM()
+        self.flux_torque_ref = FluxTorqueReference(ref_par)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
+        self.observer = Observer(
+            ObserverPars(par, alpha_o=alpha_o, sensorless=sensorless))
         # Bandwidths
         self.alpha_psi = alpha_psi
         self.alpha_tau = alpha_tau
-        # Speed reference
-        self.w_m_ref = callable
 
     # pylint: disable=too-many-locals
-    def __call__(self, mdl):
-        """
-        Run the main control loop.
+    def output(self, fbk):
+        """Calculate references."""
 
-        Parameters
-        ----------
-        mdl : Drive
-            Continuous-time system model for getting the feedback signals.
+        par = self.par
 
-        Returns
-        -------
-        T_s : float
-            Sampling period (s).
-        d_abc : ndarray, shape (3,)
-            Duty ratios.
+        ref = super().output(fbk)
+        ref = super().get_torque_reference(fbk, ref)
 
-        """
-        # Get the speed reference
-        w_m_ref = self.w_m_ref(self.clock.t)
-
-        # Feedback signals
-        i_s_abc = mdl.machine.meas_currents()  # Phase currents
-        u_dc = mdl.converter.meas_dc_voltage()  # DC-bus voltage
-        u_s = self.pwm.realized_voltage  # Realized voltage from PWM
-
-        if self.sensorless:
-            # Get the rotor speed and position estimates
-            w_m, theta_m = self.observer.w_m, self.observer.theta_m
-        else:
-            # Measure the rotor speed
-            w_m = self.n_p*mdl.mechanics.meas_speed()
-            # Measure the electrical rotor position
-            theta_m = wrap(self.n_p*mdl.mechanics.meas_position())
-
-        # Current vector in estimated rotor coordinates
-        i_s = np.exp(-1j*theta_m)*abc2complex(i_s_abc)
+        ref.psi_s, ref.tau_M_lim = self.flux_torque_ref(
+            ref.tau_M, fbk.w_m, fbk.u_dc)
 
         # Flux and torque estimates
-        psi_s = self.observer.psi_s
-        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
-
-        # Outputs
-        tau_M_ref = self.speed_ctrl.output(w_m_ref/self.n_p, w_m/self.n_p)
-        psi_s_ref, tau_M_ref_lim = self.flux_torque_ref(tau_M_ref, w_m, u_dc)
+        tau_M = 1.5*par.n_p*np.imag(fbk.i_s*np.conj(fbk.psi_s))
 
         # Auxiliary current
-        i_a = psi_s.real/self.L_q + 1j*psi_s.imag/self.L_d - i_s
+        i_a = fbk.psi_s.real/par.L_q + 1j*fbk.psi_s.imag/par.L_d - fbk.i_s
 
         # Torque-production factor, c_tau = 0 corresponds to the MTPV condition
-        c_tau = 1.5*self.n_p*np.real(i_a*np.conj(psi_s))
+        c_tau = 1.5*par.n_p*np.real(i_a*np.conj(fbk.psi_s))
 
         # References for the flux and torque controllers
-        v_psi = self.alpha_psi*(psi_s_ref - np.abs(psi_s))
-        v_tau = self.alpha_tau*(tau_M_ref_lim - tau_M)
+        v_psi = self.alpha_psi*(ref.psi_s - np.abs(fbk.psi_s))
+        v_tau = self.alpha_tau*(ref.tau_M_lim - tau_M)
         if c_tau > 0:
-            v = (1.5*self.n_p*np.abs(psi_s)*i_a*v_psi + 1j*psi_s*v_tau)/c_tau
+            v = (
+                1.5*par.n_p*np.abs(fbk.psi_s)*i_a*v_psi +
+                1j*fbk.psi_s*v_tau)/c_tau
         else:
             v = v_psi
 
         # Stator voltage reference
-        u_s_ref = self.R_s*i_s + 1j*w_m*psi_s + v
+        ref.u_s = par.R_s*fbk.i_s + 1j*fbk.w_m*fbk.psi_s + v
+        u_ss = ref.u_s*np.exp(1j*fbk.theta_m)
 
-        # Data logging
-        data = Bunch(
-            i_s=i_s,
-            psi_s=psi_s,
-            psi_s_ref=psi_s_ref,
-            psi_f=self.observer.psi_f,
-            t=self.clock.t,
-            tau_M_ref_lim=tau_M_ref_lim,
-            theta_m=theta_m,
-            u_dc=u_dc,
-            u_s=u_s,
-            w_m=w_m,
-            w_m_ref=w_m_ref,
-        )
-        self.save(data)
+        ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
 
-        # Update states
-        self.observer.update(self.T_s, u_s, i_s, w_m)
-        self.speed_ctrl.update(self.T_s, tau_M_ref_lim)
-        self.clock.update(self.T_s)
-
-        # PWM output
-        d_abc = self.pwm(self.T_s, u_s_ref, u_dc, theta_m, w_m)
-
-        return self.T_s, d_abc
+        return ref
 
 
 # %%
@@ -241,19 +181,19 @@ class FluxTorqueReference:
 
     Parameters
     ----------
-    ref : FluxTorqueReferencePars
+    ref_par : FluxTorqueReferencePars
         Reference generation parameters.
 
     """
 
     # pylint: disable=too-many-arguments
-    def __init__(self, ref):
-        self.psi_s_min, self.psi_s_max = ref.psi_s_min, ref.psi_s_max
-        self.k_u = ref.k_u
+    def __init__(self, ref_par):
+        self.psi_s_min, self.psi_s_max = ref_par.psi_s_min, ref_par.psi_s_max
+        self.k_u = ref_par.k_u
         # Merged MTPV and current limits
-        self.tau_M_lim = ref.tau_M_lim
+        self.tau_M_lim = ref_par.tau_M_lim
         # MTPA locus
-        self.psi_s_mtpa = ref.psi_s_mtpa
+        self.psi_s_mtpa = ref_par.psi_s_mtpa
 
     def __call__(self, tau_M_ref, w_m, u_dc):
         """

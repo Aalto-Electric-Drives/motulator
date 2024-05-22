@@ -50,9 +50,9 @@ class Mechanics:
         # Total load torque
         tau_L = self.tau_L_w(w_M) + self.tau_L_t(t)
         # Time derivatives
-        dw_M = (tau_M - tau_L)/self.J
-        dtheta_M = w_M
-        return [dw_M, dtheta_M]
+        d_w_M = (tau_M - tau_L)/self.J
+        d_theta_M = w_M
+        return [d_w_M, d_theta_M]
 
     def meas_speed(self):
         """
@@ -152,12 +152,12 @@ class MechanicsTwoMass(Mechanics):
         # Shaft torque
         tau_S = self.K_S*theta_ML + self.C_S*(w_M - w_L)
         # Time derivatives
-        dw_M = (tau_M - tau_S)/self.J_M
-        dtheta_M = w_M
-        dw_L = (tau_S - tau_L)/self.J_L
-        dtheta_ML = w_M - w_L
+        d_w_M = (tau_M - tau_S)/self.J_M
+        d_theta_M = w_M
+        d_w_L = (tau_S - tau_L)/self.J_L
+        d_theta_ML = w_M - w_L
 
-        return [dw_M, dtheta_M, dw_L, dtheta_ML]
+        return [d_w_M, d_theta_M, d_w_L, d_theta_ML]
 
     def meas_load_speed(self):
         """
