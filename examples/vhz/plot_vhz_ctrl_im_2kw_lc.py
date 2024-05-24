@@ -36,7 +36,7 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # Inverse-Γ model parameter estimates
 model_par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
 ctrl = control.im.VHzCtrl(
-    control.im.VHzCtrlPars(model_par, nom_psi_s=base.psi, k_u=0, k_w=0))
+    control.im.VHzCtrlCfg(model_par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference and the external load torque.

@@ -2,27 +2,27 @@
 
 from motulator.control.im._current_vector import (
     CurrentCtrl,
-    CurrentReferencePars,
+    CurrentReferenceCfg,
     CurrentReference,
     ModelPars,
     CurrentVectorCtrl,
 )
 
-from motulator.control.im._common import Observer, ObserverPars
-from motulator.control.im._common import FullOrderObserver, FullOrderObserverPars
+from motulator.control.im._common import Observer, ObserverCfg
+from motulator.control.im._common import FullOrderObserver, FullOrderObserverCfg
 
-from motulator.control.im._vhz import VHzCtrl, VHzCtrlPars
+from motulator.control.im._vhz import VHzCtrl, VHzCtrlCfg
 
 __all__ = [
     "CurrentCtrl",
-    "CurrentReferencePars",
+    "CurrentReferenceCfg",
     "CurrentReference",
     "ModelPars",
     "CurrentVectorCtrl",
     "Observer",
-    "ObserverPars",
+    "ObserverCfg",
     "FullOrderObserver",
-    "FullOrderObserverPars",
+    "FullOrderObserverCfg",
     "VHzCtrl",
-    "VHzCtrlPars",
+    "VHzCtrlCfg",
 ]

@@ -34,10 +34,11 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 
 par = control.sm.ModelPars(
     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134, J=.0042)
-ref = control.sm.CurrentReferencePars(
+ref = control.sm.CurrentReferenceCfg(
     par, w_m_nom=base.w, i_s_max=2*base.i, k_u=.9)
 ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=125e-6, sensorless=True)
-ctrl.observer = control.sm.Observer(control.sm.ObserverPars(par, alpha_o=2*np.pi*200))
+ctrl.observer = control.sm.Observer(
+    control.sm.ObserverCfg(par, alpha_o=2*np.pi*200))
 ctrl.speed_ctrl = control.SpeedCtrl(
     J=par.J, alpha_s=2*np.pi*4, tau_M_max=1.5*base.tau_nom)
 

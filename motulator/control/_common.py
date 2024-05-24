@@ -545,7 +545,7 @@ class Ctrl(ABC):
         """
         ref = SimpleNamespace()
         ref.t = self.clock.t
-        ref.T_s = self.T_s  # Desired next sampling periodd
+        ref.T_s = self.T_s  # Desired next sampling period
         return ref
 
     @abstractmethod
@@ -561,7 +561,7 @@ class Ctrl(ABC):
             Reference signals.
         
         """
-        self.T_s = ref.T_s 
+        self.T_s = ref.T_s
         self.clock.update(ref.T_s)
 
     def save(self, **kwargs):
@@ -681,7 +681,7 @@ class DriveCtrl(Ctrl, ABC):
         fbk.i_ss = abc2complex(mdl.machine.meas_currents())
         fbk.u_ss = self.pwm.realized_voltage
         return fbk
-    
+
     def get_mechanical_measurements(self, fbk, mdl):
         """Measure the speed and position."""
         fbk.w_m = self.par.n_p*mdl.mechanics.meas_speed()
@@ -689,8 +689,8 @@ class DriveCtrl(Ctrl, ABC):
         return fbk
 
     def get_feedback_signals(self, mdl):
-        fbk = super().get_feedback_signals(mdl)
         """Get the feedback signals."""
+        fbk = super().get_feedback_signals(mdl)
         fbk = self.get_electrical_measurements(fbk, mdl)
         if not self.sensorless:
             fbk = self.get_mechanical_measurements(fbk, mdl)

@@ -4,7 +4,7 @@ from dataclasses import dataclass, InitVar
 import numpy as np
 from motulator.control._common import SpeedCtrl, DriveCtrl
 from motulator.control.sm._torque import TorqueCharacteristics
-from motulator.control.sm._common import ModelPars, Observer, ObserverPars
+from motulator.control.sm._common import ModelPars, Observer, ObserverCfg
 
 
 # %%
@@ -27,7 +27,7 @@ class FluxVectorCtrl(DriveCtrl):
     ----------
     par : ModelPars
         Machine model parameters.
-    ref : FluxTorqueReferencePars
+    ref : FluxTorqueReferenceCfg
         Reference generation parameters.
     alpha_psi : float, optional
         Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
@@ -64,7 +64,6 @@ class FluxVectorCtrl(DriveCtrl):
 
     """
 
-    # pylint: disable=too-many-instance-attributes, too-many-arguments
     def __init__(
             self,
             par,
@@ -79,7 +78,7 @@ class FluxVectorCtrl(DriveCtrl):
         self.flux_torque_ref = FluxTorqueReference(ref_par)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
         self.observer = Observer(
-            ObserverPars(par, alpha_o=alpha_o, sensorless=sensorless))
+            ObserverCfg(par, alpha_o=alpha_o, sensorless=sensorless))
         # Bandwidths
         self.alpha_psi = alpha_psi
         self.alpha_tau = alpha_tau
@@ -126,9 +125,9 @@ class FluxVectorCtrl(DriveCtrl):
 
 # %%
 @dataclass
-class FluxTorqueReferencePars:
+class FluxTorqueReferenceCfg:
     """
-    Parameters for reference generation.
+    Reference generation configuration.
 
     Parameters
     ----------
@@ -181,19 +180,18 @@ class FluxTorqueReference:
 
     Parameters
     ----------
-    ref_par : FluxTorqueReferencePars
-        Reference generation parameters.
+    cfg : FluxTorqueReferenceCfg
+        Reference generation configuration.
 
     """
 
-    # pylint: disable=too-many-arguments
-    def __init__(self, ref_par):
-        self.psi_s_min, self.psi_s_max = ref_par.psi_s_min, ref_par.psi_s_max
-        self.k_u = ref_par.k_u
+    def __init__(self, cfg):
+        self.psi_s_min, self.psi_s_max = cfg.psi_s_min, cfg.psi_s_max
+        self.k_u = cfg.k_u
         # Merged MTPV and current limits
-        self.tau_M_lim = ref_par.tau_M_lim
+        self.tau_M_lim = cfg.tau_M_lim
         # MTPA locus
-        self.psi_s_mtpa = ref_par.psi_s_mtpa
+        self.psi_s_mtpa = cfg.psi_s_mtpa
 
     def __call__(self, tau_M_ref, w_m, u_dc):
         """

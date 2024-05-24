@@ -38,13 +38,13 @@ class ModelPars:
 
 # %%
 @dataclass
-class ObserverPars:
+class ObserverCfg:
     """
-    Reduced-order flux observer parameters.
+    Reduced-order flux observer configuration.
 
     Parameters
     ----------
-    model_par : ModelPars
+    par : ModelPars
         Machine model parameters.
     T_s : float
         Sampling period (s).
@@ -64,7 +64,7 @@ class ObserverPars:
     obtained by setting ``k_o = lambda w_m: 1``. 
             
     """
-    model_par: ModelPars
+    par: ModelPars
     T_s: float
     sensorless: bool
     gain: SimpleNamespace = field(init=False)
@@ -72,7 +72,7 @@ class ObserverPars:
     k_o: InitVar[callable] = None
 
     def __post_init__(self, alpha_o, k_o):
-        alpha = self.model_par.R_R/self.model_par.L_M
+        alpha = self.par.R_R/self.par.L_M
         if self.sensorless:
             k_o = (
                 lambda w_m: (.5*alpha + .2*np.abs(w_m))/
@@ -97,8 +97,8 @@ class Observer:
     
     Parameters
     ----------
-    observer_par : ObserverPars
-        Observer parameters.
+    cfg : ObserverCfg
+        Observer configuration.
 
     References
     ----------
@@ -109,11 +109,9 @@ class Observer:
 
     """
 
-    def __init__(self, observer_par):
-        self.par = observer_par.model_par
-        self.sensorless = observer_par.sensorless
-        self.T_s = observer_par.T_s
-        self.gain = observer_par.gain
+    def __init__(self, cfg):
+        self.par, self.gain, self.T_s = cfg.par, cfg.gain, cfg.T_s
+        self.sensorless = cfg.sensorless
         # Initialize states
         self.state = SimpleNamespace(psi_R=0, theta_s=0, w_m=0)
         # Internal work variables for the update method
@@ -158,8 +156,8 @@ class Observer:
                 Stator flux estimate (Vs).
  
         """
-        # Parameter estimates
-        par = self.par
+        # Unpack
+        par, gain = self.par, self.gain
 
         # Get the rotor flux estimate
         fbk.psi_R, fbk.theta_s = self.state.psi_R, self.state.theta_s
@@ -184,10 +182,10 @@ class Observer:
 
         # Observer gains
         if self.sensorless:
-            k_o1 = self.gain.k_o(fbk.w_m)
+            k_o1 = gain.k_o(fbk.w_m)
             k_o2 = k_o1
         else:
-            k_o1, k_o2 = self.gain.k_o(fbk.w_m), 0
+            k_o1, k_o2 = gain.k_o(fbk.w_m), 0
 
         # Angular frequencies
         den = fbk.psi_R + par.L_sgm*np.real(
@@ -200,7 +198,7 @@ class Observer:
         v = v_s - 1j*fbk.w_s*par.L_sgm*fbk.i_s
         self._work.d_psi_R = np.real(
             v + k_o1*(v_r - v) + k_o2*np.conj(v_r - v))
-        self._work.d_w_m = self.gain.alpha_o*(fbk.w_s - fbk.w_r - fbk.w_m)
+        self._work.d_w_m = gain.alpha_o*(fbk.w_s - fbk.w_r - fbk.w_m)
 
         return fbk
 
@@ -230,9 +228,9 @@ class Observer:
 
 # %%
 @dataclass
-class FullOrderObserverPars(ObserverPars):
+class FullOrderObserverCfg(ObserverCfg):
     """
-    Full-order observer parameters.
+    Full-order observer configuration.
 
     Parameters
     ----------
@@ -244,7 +242,7 @@ class FullOrderObserverPars(ObserverPars):
 
     def __post_init__(self, alpha_o, k_o, alpha_i):
         super().__post_init__(alpha_o, k_o)
-        alpha = self.model_par.R_R/self.model_par.L_M
+        alpha = self.par.R_R/self.par.L_M
         self.gain.alpha_i = alpha_i if alpha_i is not None else self.alpha_i
         self.gain.g = alpha_i - alpha
 
@@ -260,7 +258,7 @@ class FullOrderObserver:
     
     Parameters
     ----------
-    observer_par : ObserverPars
+    cfg : ObserverCfg
         Observer parameters.
 
     References
@@ -272,10 +270,9 @@ class FullOrderObserver:
     """
 
     # pylint: disable=too-many-instance-attributes, too-many-arguments
-    def __init__(self, observer_par):
-        self.par = observer_par.model_par
-        self.sensorless = observer_par.sensorless
-        self.gain = observer_par.gain
+    def __init__(self, cfg):
+        self.par, self.gain = cfg.par, cfg.gain
+        self.sensorless = cfg.sensorless
         # Initialize states
         self.state = SimpleNamespace(psi_R=0, i_s=0, theta_s=0, w_m=0)
         # Internal work variables for the update method
@@ -289,10 +286,8 @@ class FullOrderObserver:
         """Output."""
 
         # Unpack
-        par = self.par
-        gain = self.gain
-        par.R_sgm = par.R_s + par.R_R
-        par.alpha = par.R_R/par.L_M
+        par, gain = self.par, self.gain,
+        par.R_sgm, par.alpha = par.R_s + par.R_R, par.R_R/par.L_M
 
         # Get the estimates
         fbk.psi_R, fbk.theta_s = self.state.psi_R, self.state.theta_s

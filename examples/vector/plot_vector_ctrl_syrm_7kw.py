@@ -33,7 +33,7 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 
 par = control.sm.ModelPars(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, J=.015)
-ref = control.sm.CurrentReferencePars(
+ref = control.sm.CurrentReferenceCfg(
     par, w_m_nom=base.w, i_s_max=1.5*base.i, psi_s_min=.5*base.psi, k_u=.9)
 ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=125e-6, sensorless=True)
 

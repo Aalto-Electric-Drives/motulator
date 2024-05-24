@@ -38,9 +38,9 @@ class ModelPars:
 
 # %%
 @dataclass
-class ObserverPars:
+class ObserverCfg:
     """
-    Observer parameters.
+    Observer configuration.
 
     Parameters
     ----------
@@ -62,7 +62,7 @@ class ObserverPars:
         slope `k` (Vs).
 
     """
-    model_par: ModelPars
+    par: ModelPars
     sensorless: bool
     gain: SimpleNamespace = field(init=False)
     alpha_o: InitVar[float] = 2*np.pi*40
@@ -73,7 +73,7 @@ class ObserverPars:
 
         # Observer gain
         if self.sensorless:
-            par = self.model_par
+            par = self.par
             sigma0 = .25*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
             k_o = (lambda w_m: sigma0 + .2*np.abs(w_m)) if k_o is None else k_o
         else:
@@ -99,8 +99,8 @@ class Observer:
 
     Parameters
     ----------
-    observer_par : ObserverPars
-        Observer parameters.
+    cfg : ObserverCfg
+        Observer configuration.
             
     References
     ----------
@@ -114,10 +114,9 @@ class Observer:
 
     """
 
-    def __init__(self, observer_par):
-        self.sensorless = observer_par.sensorless
-        self.par = observer_par.model_par
-        self.gain = observer_par.gain
+    def __init__(self, cfg):
+        self.sensorless = cfg.sensorless
+        self.par, self.gain = cfg.par, cfg.gain
         # Initialize states
         self.state = SimpleNamespace(
             theta_m=0, w_m=0, psi_s=self.par.psi_f, psi_f=self.par.psi_f)
@@ -164,8 +163,8 @@ class Observer:
                 Stator flux estimate (Vs).
 
         """
-        # Parameter estimates
-        par = self.par
+        # Unpack
+        par, gain = self.par, self.gain
 
         # Get the flux estimates
         fbk.psi_s, fbk.psi_f = self.state.psi_s, self.state.psi_f
@@ -189,13 +188,13 @@ class Observer:
         # Observer gains and error terms
         if self.sensorless:
             # Observer gains
-            k_o1 = self.gain.k_o(fbk.w_m)
+            k_o1 = gain.k_o(fbk.w_m)
             k_o2 = k_o1*psi_a/np.conj(psi_a) if np.abs(psi_a) > 0 else k_o1
 
             # Error term for the rotor angle and speed estimation
             eps_m = -np.imag(e/psi_a) if np.abs(psi_a) > 0 else 0
             # Angular speed of the coordinate system
-            fbk.w_s = 2*self.gain.alpha_o*eps_m + fbk.w_m
+            fbk.w_s = 2*gain.alpha_o*eps_m + fbk.w_m
 
             # Error term for the PM-flux estimation
             eps_f = -np.real(e/psi_a) if np.abs(psi_a) > 0 else 0
@@ -203,15 +202,15 @@ class Observer:
             # Sensored mode assumes that the control system operates in the
             # measured rotor coordinates
             fbk.w_s = fbk.w_m
-            k_o1, k_o2 = self.gain.k_o(fbk.w_m), 0
+            k_o1, k_o2 = gain.k_o(fbk.w_m), 0
             eps_m, eps_f = 0, 0
 
         # Compute and store the time derivatives for the update method
         self._work.d_psi_s = (
             fbk.u_s - par.R_s*fbk.i_s - 1j*fbk.w_s*fbk.psi_s + k_o1*e +
             k_o2*np.conj(e))
-        self._work.d_psi_f = self.gain.k_f(fbk.w_m)*eps_f
-        self._work.d_w_m = self.gain.alpha_o**2*eps_m
+        self._work.d_psi_f = gain.k_f(fbk.w_m)*eps_f
+        self._work.d_w_m = gain.alpha_o**2*eps_m
 
         return fbk
 

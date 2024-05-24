@@ -20,7 +20,7 @@ After :doc:`installation`, *motulator* can be used by creating a continuous-time
    # Discrete-time controller
    par = control.im.ModelPars(
       R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2, J=.015)
-   ref = control.im.CurrentReferencePars(par, i_s_max=1.5*np.sqrt(2)*5)
+   ref = control.im.CurrentReferenceCfg(par, i_s_max=1.5*np.sqrt(2)*5)
    ctrl = control.im.VectorCtrl(par, ref)
 
    # Acceleration at t = 0.2 s and load torque step of 14 Nm at t = 0.75 s 

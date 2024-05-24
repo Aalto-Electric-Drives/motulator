@@ -97,8 +97,8 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 # Configure the control system.
 
 par = control.sm.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-ctrl_par = control.sm.ObserverBasedVHzCtrlPars(par, i_s_max=2*base.i)
-ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
+cfg = control.sm.ObserverBasedVHzCtrlCfg(par, i_s_max=2*base.i)
+ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 # %%
 # Set the speed reference and the external load torque.

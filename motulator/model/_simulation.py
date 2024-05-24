@@ -1,5 +1,6 @@
 """Simulation environment."""
 
+from abc import ABC, abstractmethod
 from types import SimpleNamespace
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -126,7 +127,7 @@ class CarrierComparison:
 
         Notes
         -----
-        No switching (e.g. `d_a == 0` or `d_a == 1`) or simultaneous switchings
+        No switching (e.g. `d_a == 0` or `d_a == 1`) or simultaneous switching
         (e.g. `d_a == d_b`) lead to zeroes in `t_steps`.
 
         """
@@ -275,7 +276,7 @@ class Simulation:
 
 
 # %%
-class Model:
+class Model(ABC):
     """
     Base class for continuous-time system models.
 
@@ -301,6 +302,7 @@ class Model:
         self._data = SimpleNamespace(t=[], q=[])  # Private solution
         self.data = SimpleNamespace()  # Public solution
 
+    @abstractmethod
     def get_initial_values(self):
         """
         Get the initial values.
@@ -311,8 +313,8 @@ class Model:
             Initial values of the state variables.
 
         """
-        raise NotImplementedError
 
+    @abstractmethod
     def set_initial_values(self, t0, x0):
         """
         Set the initial values.
@@ -325,8 +327,8 @@ class Model:
             Initial values of the state variables.
 
         """
-        raise NotImplementedError
 
+    @abstractmethod
     def f(self, t, x):
         """
         Compute the complete state derivative list for the solver.
@@ -344,7 +346,6 @@ class Model:
             State derivatives.
 
         """
-        raise NotImplementedError
 
     def save(self, sol):
         """

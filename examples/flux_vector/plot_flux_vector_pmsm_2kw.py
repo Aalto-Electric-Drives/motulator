@@ -31,7 +31,7 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 
 par = control.sm.ModelPars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-ref = control.sm.FluxTorqueReferencePars(par, i_s_max=1.5*base.i, k_u=.9)
+ref = control.sm.FluxTorqueReferenceCfg(par, i_s_max=1.5*base.i, k_u=.9)
 ctrl = control.sm.FluxVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%

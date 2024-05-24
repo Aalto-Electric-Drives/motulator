@@ -20,15 +20,15 @@ from types import SimpleNamespace
 import numpy as np
 from motulator.control._common import PWM, DriveCtrl, RateLimiter
 from motulator.control.im._common import ModelPars
-from motulator._helpers import abc2complex, wrap
+from motulator._helpers import wrap
 
 
 # %%
 @dataclass
-class VHzCtrlPars:
-    """V/Hz control parameters."""
+class VHzCtrlCfg:
+    """V/Hz control configuration."""
 
-    model_par: ModelPars
+    par: ModelPars
     nom_psi_s: float = None
     T_s: float = 250e-6
     six_step: bool = False
@@ -40,7 +40,7 @@ class VHzCtrlPars:
     alpha_i: InitVar[float] = None
 
     def __post_init__(self, k_u, k_w, alpha_f, alpha_i):
-        par = self.model_par
+        par = self.par
         w_rb = par.R_R*(par.L_M + par.L_sgm)/(par.L_sgm*par.L_M)
         alpha_f = .1*w_rb if alpha_f is None else alpha_f
         alpha_i = .1*w_rb if alpha_i is None else alpha_f
@@ -50,21 +50,14 @@ class VHzCtrlPars:
 
 # %%
 class VHzCtrl(DriveCtrl):
-    """
-    V/Hz control with the stator current feedback.
+    """V/Hz control with the stator current feedback."""
 
-    Parameters
-    ----------
-    par : ModelPars
-        Control parameters.
-
-    """
-    def __init__(self, vhz_par):
-        super().__init__(vhz_par.model_par, vhz_par.T_s, sensorless=True)
-        self.gain = vhz_par.gain
-        self.nom_psi_s = vhz_par.nom_psi_s
-        self.pwm = PWM(six_step=vhz_par.six_step)
-        self.rate_limiter = vhz_par.rate_limiter
+    def __init__(self, cfg):
+        super().__init__(cfg.par, cfg.T_s, sensorless=True)
+        self.gain = cfg.gain
+        self.nom_psi_s = cfg.nom_psi_s
+        self.pwm = PWM(six_step=cfg.six_step)
+        self.rate_limiter = cfg.rate_limiter
         self.ref = SimpleNamespace()
         self.state = SimpleNamespace(theta_s=0, i_s=0j, w_r=0)
 

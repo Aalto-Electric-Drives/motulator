@@ -7,9 +7,9 @@ The algorithms are written based on the inverse-Γ model.
 from dataclasses import dataclass, InitVar
 import numpy as np
 from motulator.control._common import ComplexPICtrl, SpeedCtrl, DriveCtrl
-from motulator.control.im._common import Observer, ObserverPars, ModelPars
+from motulator.control.im._common import Observer, ObserverCfg, ModelPars
 
-#from motulator.control.im._common import FullOrderObserver, FullOrderObserverPars, ModelPars
+#from motulator.control.im._common import FullOrderObserver, FullOrderObserverCfg, ModelPars
 
 
 # %%
@@ -21,9 +21,9 @@ class CurrentVectorCtrl(DriveCtrl):
         self.current_ref = CurrentReference(par, ref)
         self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
-        self.observer = Observer(ObserverPars(par, T_s, sensorless=sensorless))
+        self.observer = Observer(ObserverCfg(par, T_s, sensorless=sensorless))
         #self.observer = FullOrderObserver(
-        #    FullOrderObserverPars(par, T_s, sensorless=sensorless))
+        #    FullOrderObserverCfg(par, T_s, sensorless=sensorless))
 
     def output(self, fbk):
         ref = super().output(fbk)
@@ -69,9 +69,9 @@ class CurrentCtrl(ComplexPICtrl):
 # %%
 # pylint: disable=too-many-instance-attributes
 @dataclass
-class CurrentReferencePars:
+class CurrentReferenceCfg:
     """
-    Parameters for reference generation.
+    Reference generation configuration.
 
     This dataclass stores the nominal and limit values needed for reference 
     generation. For calculating the rotor flux reference, the machine 
@@ -141,8 +141,8 @@ class CurrentReference:
     ----------
     par : ModelPars
         Machine model parameters.
-    ref : CurrentReferencePars
-        Reference generation parameters.
+    cfg : CurrentReferenceCfg
+        Reference generation configuration.
 
     References
     ----------
@@ -153,17 +153,16 @@ class CurrentReference:
 
     """
 
-    def __init__(self, par, ref_par):
+    def __init__(self, par, cfg):
         # Machine model parameters
-        self.L_sgm = par.L_sgm
-        self.n_p = par.n_p
+        self.L_sgm, self.n_p = par.L_sgm, par.n_p
         # Other parameters
-        self.i_s_max = ref_par.i_s_max
-        self.k_u = ref_par.k_u
+        self.i_s_max = cfg.i_s_max
+        self.k_u = cfg.k_u
         # Field-weakening gain
-        self.k_fw = ref_par.k_fw
+        self.k_fw = cfg.k_fw
         # Nominal d-axis current
-        self.i_sd_nom = ref_par.psi_R_nom/par.L_M
+        self.i_sd_nom = cfg.psi_R_nom/par.L_M
         # State variable
         self.i_sd_ref = self.i_sd_nom
 

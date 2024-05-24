@@ -4,7 +4,7 @@ from dataclasses import dataclass, InitVar
 import numpy as np
 from motulator.control._common import ComplexPICtrl, SpeedCtrl, DriveCtrl
 from motulator.control.sm._torque import TorqueCharacteristics
-from motulator.control.sm._common import ModelPars, Observer, ObserverPars
+from motulator.control.sm._common import ModelPars, Observer, ObserverCfg
 
 
 # %%
@@ -36,6 +36,7 @@ class CurrentVectorCtrl(DriveCtrl):
         Current controller.
         
     """
+
     def __init__(
             self,
             par,
@@ -50,7 +51,7 @@ class CurrentVectorCtrl(DriveCtrl):
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
         if sensorless:
             self.observer = Observer(
-                ObserverPars(par, sensorless, alpha_o=alpha_o))
+                ObserverCfg(par, sensorless, alpha_o=alpha_o))
 
     def get_feedback_signals(self, mdl):
         """Override the base class method."""
@@ -123,9 +124,9 @@ class CurrentCtrl(ComplexPICtrl):
 # %%
 # pylint: disable=too-many-instance-attributes
 @dataclass
-class CurrentReferencePars:
+class CurrentReferenceCfg:
     """
-    Parameters for reference generation.
+    Reference generation configuration.
 
     Parameters
     ----------
@@ -196,8 +197,8 @@ class CurrentReference:
     ----------
     par : ModelPars
         Machine model parameters.
-    ref : CurrentReferencePars
-        Reference generation parameters.
+    ref : CurrentReferenceCfg
+        Reference generation configuration.
 
     Notes
     -----
@@ -216,7 +217,6 @@ class CurrentReference:
 
     """
 
-    # pylint: disable=too-many-instance-attributes, too-many-arguments
     def __init__(self, par, ref):
         # Machine model parameters
         self.n_p = par.n_p

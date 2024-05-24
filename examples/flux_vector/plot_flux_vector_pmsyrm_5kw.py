@@ -159,11 +159,12 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 par = control.sm.ModelPars(
     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47, J=.015)
 # Limit the maximum reference flux to the base value
-ref = control.sm.FluxTorqueReferencePars(
+ref = control.sm.FluxTorqueReferenceCfg(
     par, i_s_max=2*base.i, k_u=1, psi_s_max=base.psi)
 ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
-ctrl.observer = control.sm.Observer(control.sm.ObserverPars(par, alpha_o=2*np.pi*40, sensorless=True))
+ctrl.observer = control.sm.Observer(
+    control.sm.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))
 
 # %%
 # Set the speed reference and the external load torque.

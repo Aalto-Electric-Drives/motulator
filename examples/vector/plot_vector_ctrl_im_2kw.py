@@ -75,7 +75,7 @@ mdl = model.im.Drive(machine, mechanics, converter)
 par = control.im.ModelPars(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2, J=.015)
 # Set nominal values and limits for reference generation
-ref = control.im.CurrentReferencePars(
+ref = control.im.CurrentReferenceCfg(
     par, i_s_max=1.5*base.i, u_s_nom=base.u, w_s_nom=base.w)
 # Create the control system
 ctrl = control.im.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)

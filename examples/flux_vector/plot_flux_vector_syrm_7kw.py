@@ -63,17 +63,18 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 par = control.sm.ModelPars(
     n_p=2, R_s=.54, L_d=.7*37e-3, L_q=.8*6.2e-3, psi_f=0, J=.015)
 # Disable MTPA since the control system does not consider the saturation
-ref = control.sm.FluxTorqueReferencePars(
+ref = control.sm.FluxTorqueReferenceCfg(
     par, i_s_max=2*base.i, k_u=.9, psi_s_min=base.psi, psi_s_max=base.psi)
 ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
 # Since the saturation is not considered in the control system, the speed
 # estimation bandwidth is set to a lower value. Furthermore, the PM-flux
 # disturbance estimation is enabled at speeds above 2*pi*20 rad/s (electrical).
-ctrl.observer = control.sm.Observer(control.sm.ObserverPars(
-    par,
-    alpha_o=2*np.pi*40,
-    k_f=lambda w_m: max(.05*(np.abs(w_m) - 2*np.pi*20), 0),
-    sensorless=True))
+ctrl.observer = control.sm.Observer(
+    control.sm.ObserverCfg(
+        par,
+        alpha_o=2*np.pi*40,
+        k_f=lambda w_m: max(.05*(np.abs(w_m) - 2*np.pi*20), 0),
+        sensorless=True))
 
 # %%
 # Set the speed reference and the external load torque.

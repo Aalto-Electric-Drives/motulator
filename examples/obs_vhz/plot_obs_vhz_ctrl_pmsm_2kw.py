@@ -32,7 +32,7 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 # Configure the control system.
 
 par = control.sm.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-ctrl_par = control.sm.ObserverBasedVHzCtrlPars(par, i_s_max=1.5*base.i)
+ctrl_par = control.sm.ObserverBasedVHzCtrlCfg(par, i_s_max=1.5*base.i)
 ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
 #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 

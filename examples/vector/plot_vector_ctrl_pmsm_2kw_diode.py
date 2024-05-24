@@ -33,7 +33,7 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 par = control.sm.ModelPars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-ref = control.sm.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=1.5*base.i)
+ref = control.sm.CurrentReferenceCfg(par, w_m_nom=base.w, i_s_max=1.5*base.i)
 ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%
