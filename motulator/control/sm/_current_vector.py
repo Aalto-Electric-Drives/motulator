@@ -71,8 +71,8 @@ class CurrentVectorCtrl(DriveCtrl):
         ref = super().get_torque_reference(fbk, ref)
         ref = self.current_reference.output(fbk, ref)
         ref.u_s = self.current_ctrl.output(ref.i_s, fbk.i_s)
-        ref.u_ss = ref.u_s*np.exp(1j*fbk.theta_m)
-        ref.d_abc = self.pwm(ref.T_s, ref.u_ss, fbk.u_dc, fbk.w_s)
+        u_ss = ref.u_s*np.exp(1j*fbk.theta_m)
+        ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
 
         return ref
 
@@ -112,13 +112,13 @@ class CurrentCtrl(ComplexPICtrl):
         self.L_d = par.L_d
         self.L_q = par.L_q
 
-    def output(self, i_ref, i):
+    def output(self, ref_i, i):
         # Extends the base class method by transforming the currents to the
         # flux linkages, which is a simple way to take the saliency into
         # account
-        psi_ref = self.L_d*i_ref.real + 1j*self.L_q*i_ref.imag
+        ref_psi = self.L_d*ref_i.real + 1j*self.L_q*ref_i.imag
         psi = self.L_d*i.real + 1j*self.L_q*i.imag
-        return super().output(psi_ref, psi)
+        return super().output(ref_psi, psi)
 
 
 # %%
@@ -132,11 +132,11 @@ class CurrentReferenceCfg:
     ----------
     par : ModelPars
         Machine model parameters.
-    i_s_max : float
+    max_i_s : float
         Maximum stator current (A). 
-    psi_s_min : float, optional
+    min_psi_s : float, optional
         Minimum stator flux (Vs). The default is `psi_f`.
-    w_m_nom : float, optional
+    nom_w_m : float, optional
         Nominal rotor angular speed (electrical rad/s). Needed if `k_fw` is not
         directly provided.
     alpha_fw : float, optional
@@ -148,12 +148,12 @@ class CurrentReferenceCfg:
 
     Attributes
     ----------
-    i_sd_mtpa : callable
+    mtpa_i_sd : callable
         MTPA d-axis current (A) as a function of the torque (Nm).
-    tau_M_lim : callable
+    lim_tau_M : callable
         Torque limit (Nm) as a function of the stator flux linkage (Vs). This
         limit merges the MTPV and current limits.
-    i_sd_lim : callable
+    lim_i_sd : callable
         d-axis current limit (A) as a function of the stator flux linkage (Vs).
         This limit merges the MTPV and current limits.
     
@@ -197,7 +197,7 @@ class CurrentReference:
     ----------
     par : ModelPars
         Machine model parameters.
-    ref : CurrentReferenceCfg
+    cfg : CurrentReferenceCfg
         Reference generation configuration.
 
     Notes
@@ -222,26 +222,7 @@ class CurrentReference:
         self.ref_i_sd = 0  # State
 
     def output(self, fbk, ref):
-        """
-        Compute the stator current reference.
-
-        Parameters
-        ----------
-        tau_M_ref : float
-            Torque reference (Nm).
-        w_m : float
-            Rotor speed (electrical rad/s)
-        u_dc : float
-            DC-bus voltage (V).
-
-        Returns
-        -------
-        i_s_ref : complex
-            Stator current reference (A).
-        tau_M_ref_lim : float
-            Limited torque reference (Nm).
-
-        """
+        """Compute the stator current reference."""
         par, cfg = self.par, self.cfg
 
         def limit_torque(ref, fbk):
@@ -276,31 +257,20 @@ class CurrentReference:
         ref.i_s = self.ref_i_sd + 1j*ref_i_sq
 
         # Limited torque (for the speed controller)
-        ref.tau_M_lim = 1.5*par.n_p*psi_t*ref_i_sq
+        #ref.tau_M_lim = 1.5*par.n_p*psi_t*ref_i_sq
+        ref.tau_M = 1.5*par.n_p*psi_t*ref_i_sq
 
         return ref
 
     def update(self, fbk, ref):
-        """
-        Field-weakening control based on the unlimited reference voltage.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-        tau_M_ref_lim : float
-            Limited torque reference (Nm).
-        u_s_ref : complex
-            Unlimited stator voltage reference (V).
-        u_dc : float 
-            DC-bus voltage (V).
-
-        """
+        """Field-weakening control based on the unlimited reference voltage."""
         cfg = self.cfg
         max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
         self.ref_i_sd += ref.T_s*cfg.k_fw*(max_u_s - np.abs(ref.u_s))
 
         # Limit the current
-        mtpa_i_sd = cfg.mtpa_i_sd(np.abs(ref.tau_M_lim))
-        lim_i_sd = cfg.lim_i_sd(np.abs(ref.tau_M_lim))
+        # mtpa_i_sd = cfg.mtpa_i_sd(np.abs(ref.tau_M_lim))
+        # lim_i_sd = cfg.lim_i_sd(np.abs(ref.tau_M_lim))
+        mtpa_i_sd = cfg.mtpa_i_sd(np.abs(ref.tau_M))
+        lim_i_sd = cfg.lim_i_sd(np.abs(ref.tau_M))
         self.ref_i_sd = np.clip(self.ref_i_sd, lim_i_sd, mtpa_i_sd)

@@ -178,7 +178,7 @@ class CurrentReference:
         ref.i_s = ref_i_sd + 1j*ref_i_sq
 
         # Limited torque (for the speed controller)
-        ref.tau_M_lim = 1.5*par.n_p*fbk.psi_R*ref_i_sq
+        ref.tau_M = 1.5*par.n_p*fbk.psi_R*ref_i_sq
 
         return ref
 

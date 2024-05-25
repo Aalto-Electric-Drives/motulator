@@ -87,7 +87,7 @@ def plot(sim, base=None, t_span=None):
     try:
         ax2.plot(
             ctrl.t,
-            ctrl.ref.tau_M_lim/base.tau,
+            ctrl.ref.tau_M/base.tau,
             "--",
             label=r"$\tau_\mathrm{M,ref}$",
             ds="steps-post")

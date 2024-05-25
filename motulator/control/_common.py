@@ -47,10 +47,10 @@ class PWM:
         self.six_step = six_step
         self.k_comp = k_comp
         self.realized_voltage = 0
-        self._u_cs_lim_old = 0
+        self._old_u_cs = 0
 
     @staticmethod
-    def six_step_overmodulation(u_cs_ref, u_dc):
+    def six_step_overmodulation(ref_u_cs, u_dc):
         """
         Overmodulation up to six-step operation.
 
@@ -60,15 +60,15 @@ class PWM:
 
         Parameters
         ----------
-        u_cs_ref : complex
+        ref_u_cs : complex
             Converter voltage reference (V) in stator coordinates.
         u_dc : float
             DC-bus voltage (V).
 
         Returns
         -------
-        u_cs_ref_mod : complex
-            Converter voltage reference (V) in stator coordinates.
+        ref_u_cs : complex
+            Modified converter voltage reference (V) in stator coordinates.
 
         References
         ----------
@@ -78,11 +78,11 @@ class PWM:
 
         """
         # Limited magnitude
-        r = np.min([np.abs(u_cs_ref), 2/3*u_dc])
+        r = np.min([np.abs(ref_u_cs), 2/3*u_dc])
 
         if np.sqrt(3)*r > u_dc:
             # Angle and sector of the reference vector
-            theta = np.angle(u_cs_ref)
+            theta = np.angle(ref_u_cs)
             sector = np.floor(3*theta/np.pi)
 
             # Angle reduced to the first sector (at which sector == 0)
@@ -98,14 +98,12 @@ class PWM:
                 theta0 = np.pi/3 - alpha_g
 
             # Modified reference voltage
-            u_cs_ref_mod = r*np.exp(1j*(theta0 + sector*np.pi/3))
-        else:
-            u_cs_ref_mod = u_cs_ref
+            ref_u_cs = r*np.exp(1j*(theta0 + sector*np.pi/3))
 
-        return u_cs_ref_mod
+        return ref_u_cs
 
     @staticmethod
-    def duty_ratios(u_cs_ref, u_dc):
+    def duty_ratios(ref_u_cs, u_dc):
         """
         Compute the duty ratios for three-phase space-vector PWM.
 
@@ -114,7 +112,7 @@ class PWM:
 
         Parameters
         ----------
-        u_cs_ref : complex
+        ref_u_cs : complex
             Converter voltage reference (V) in stator coordinates.
         u_dc : float
             DC-bus voltage (V).
@@ -126,7 +124,7 @@ class PWM:
 
         """
         # Phase voltages without the zero-sequence voltage
-        u_abc = complex2abc(u_cs_ref)
+        u_abc = complex2abc(ref_u_cs)
 
         # Zero-sequence voltage resulting in space-vector PWM
         u_0 = .5*(np.amax(u_abc) + np.amin(u_abc))
@@ -146,7 +144,7 @@ class PWM:
 
         return d_abc
 
-    def output(self, T_s, u_cs_ref, u_dc, w):
+    def output(self, T_s, ref_u_cs, u_dc, w):
         """
         Compute the duty ratios and the limited voltage reference.
 
@@ -154,7 +152,7 @@ class PWM:
         ----------
         T_s : float
             Sampling period (s).
-        u_cs_ref : complex
+        ref_u_cs : complex
             Converter voltage reference (V) in stator coordinates.
         u_dc : float
             DC-bus voltage (V).
@@ -165,37 +163,37 @@ class PWM:
         -------
         d_abc : ndarray, shape (3,)
             Duty ratios for the next sampling period.
-        u_cs_lim : complex
+        u_cs : complex
             Limited voltage reference (V) in synchronous coordinates.
         
         """
         # Advance the angle due to the computational delay (N*T_s) and the ZOH
         # (PWM) delay (0.5*T_s), typically 1.5*T_s*w
         theta_comp = self.k_comp*T_s*w
-        u_cs_comp = np.exp(1j*theta_comp)*u_cs_ref
+        ref_u_cs = np.exp(1j*theta_comp)*ref_u_cs
 
         # Modify angle in the overmodulation region
         if self.six_step:
-            u_cs_comp = self.six_step_overmodulation(u_cs_comp, u_dc)
+            ref_u_cs = self.six_step_overmodulation(ref_u_cs, u_dc)
 
         # Duty ratios
-        d_abc = self.duty_ratios(u_cs_comp, u_dc)
+        d_abc = self.duty_ratios(ref_u_cs, u_dc)
 
         # Limited voltage reference
-        u_cs_lim = abc2complex(d_abc)*u_dc
+        u_cs = abc2complex(d_abc)*u_dc
 
-        return d_abc, u_cs_lim
+        return d_abc, u_cs
 
-    def update(self, u_cs_lim):
+    def update(self, u_cs):
         """Update the realized voltage."""
 
-        # Update the voltage estimate for the next sampling instant.
-        self.realized_voltage = .5*(self._u_cs_lim_old + u_cs_lim)
-        self._u_cs_lim_old = u_cs_lim
+        # Update the voltage estimate for the next sampling instant
+        self.realized_voltage = .5*(self._old_u_cs + u_cs)
+        self._old_u_cs = u_cs
 
-    def __call__(self, T_s, u_cs_ref, u_dc, w):
-        d_abc, u_cs_lim = self.output(T_s, u_cs_ref, u_dc, w)
-        self.update(u_cs_lim)
+    def __call__(self, T_s, ref_u_cs, u_dc, w):
+        d_abc, u_cs = self.output(T_s, ref_u_cs, u_dc, w)
+        self.update(u_cs)
         return d_abc
 
 
@@ -207,7 +205,7 @@ class PICtrl:
     This implements a discrete-time 2DOF PI controller, whose continuous-time
     counterpart is::
 
-        u = k_t*y_ref - k_p*y + (k_i/s)*(y_ref - y)
+        u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y)
 
     where `u` is the controller output, `y_ref` is the reference signal, `y` is
     the feedback signal, and `1/s` refers to integration. The standard PI
@@ -218,7 +216,7 @@ class PICtrl:
     -----
     This controller can be used, e.g., as a speed controller. In this case, `y` 
     corresponds to the rotor angular speed `w_M` and `u` to the torque 
-    reference `tau_M_ref`.
+    reference `ref_tau_M`.
 
     Parameters
     ----------
@@ -228,7 +226,7 @@ class PICtrl:
         Integral gain.
     k_t : float, optional
         Reference-feedforward gain. The default is `k_p`.
-    u_max : float, optional
+    max_u : float, optional
         Maximum controller output. The default is inf.
 
     Attributes
@@ -240,8 +238,8 @@ class PICtrl:
 
     """
 
-    def __init__(self, k_p, k_i, k_t=None, u_max=np.inf):
-        self.u_max = u_max
+    def __init__(self, k_p, k_i, k_t=None, max_u=np.inf):
+        self.max_u = max_u
         # Gains
         self.k_p = k_p
         self.k_t = k_t if k_t is not None else k_p
@@ -249,13 +247,13 @@ class PICtrl:
         # States
         self.v, self.u_i = 0, 0
 
-    def output(self, y_ref, y):
+    def output(self, ref_y, y):
         """
         Compute the controller output.
 
         Parameters
         ----------
-        y_ref : float
+        ref_y : float
             Reference signal.
         y : float
             Feedback signal.
@@ -270,14 +268,14 @@ class PICtrl:
         self.v = self.u_i - (self.k_p - self.k_t)*y
 
         # Controller output
-        u = self.k_t*(y_ref - y) + self.v
+        u = self.k_t*(ref_y - y) + self.v
 
         # Limit the controller output
-        u = np.clip(u, -self.u_max, self.u_max)
+        u = np.clip(u, -self.max_u, self.max_u)
 
         return u
 
-    def update(self, T_s, u_lim):
+    def update(self, T_s, u):
         """
         Update the integral state.
 
@@ -285,12 +283,11 @@ class PICtrl:
         ----------
         T_s : float
             Sampling period (s).
-        u_lim : float
-            Realized (limited) controller output. If the actuator does not
-            saturate, ``u_lim = u``.
+        u : float
+            Realized (limited) controller output. 
 
         """
-        self.u_i += T_s*self.alpha_i*(u_lim - self.v)
+        self.u_i += T_s*self.alpha_i*(u - self.v)
 
 
 # %%
@@ -327,9 +324,9 @@ class ComplexPICtrl:
     This implements a discrete-time 2DOF synchronous-frame complex-vector PI
     controller, whose continuous-time counterpart is [#Bri2000]_::
 
-        u = k_t*i_ref - k_p*i + (k_i + 1j*w*k_t)/s*(i_ref - i)
+        u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i)
 
-    where `u` is the controller output, `i_ref` is the reference signal, `i` is
+    where `u` is the controller output, `ref_i` is the reference signal, `i` is
     the feedback signal, `w` is the angular speed of synchronous coordinates, 
     and `1/s` refers to integration. This algorithm is compatible with both 
     real and complex signals. The 1DOF version is obtained by setting 
@@ -373,13 +370,13 @@ class ComplexPICtrl:
         # States
         self.v, self.u_i = 0, 0
 
-    def output(self, i_ref, i):
+    def output(self, ref_i, i):
         """
         Compute the controller output.
 
         Parameters
         ----------
-        i_ref : complex
+        ref_i : complex
             Reference signal.
         i : complex
             Feedback signal.
@@ -394,11 +391,11 @@ class ComplexPICtrl:
         self.v = self.u_i - (self.k_p - self.k_t)*i
 
         # Controller output
-        u = self.k_t*(i_ref - i) + self.v
+        u = self.k_t*(ref_i - i) + self.v
 
         return u
 
-    def update(self, T_s, u_lim, w):
+    def update(self, T_s, u, w):
         """
         Update the integral state.
 
@@ -406,14 +403,13 @@ class ComplexPICtrl:
         ----------
         T_s : float
             Sampling period (s).
-        u_lim : complex
-            Realized (limited) controller output. If the actuator does not
-            saturate, ``u_lim = u``.
+        u : complex
+            Realized (limited) controller output. 
         w : float
             Angular speed of the reference frame (rad/s). 
 
         """
-        self.u_i += T_s*(self.alpha_i + 1j*w)*(u_lim - self.v)
+        self.u_i += T_s*(self.alpha_i + 1j*w)*(u - self.v)
 
 
 # %%
@@ -430,7 +426,7 @@ class RateLimiter:
 
     def __init__(self, rate_limit=np.inf):
         self.rate_limit = rate_limit
-        self._y_old = 0
+        self._old_y = 0
 
     def __call__(self, T_s, u):
         """
@@ -455,19 +451,19 @@ class RateLimiter:
         modifications in the class.
 
         """
-        rate = (u - self._y_old)/T_s
+        rate = (u - self._old_y)/T_s
 
         if rate > self.rate_limit:
             # Limit rising rate
-            y = self._y_old + T_s*self.rate_limit
+            y = self._old_y + T_s*self.rate_limit
         elif rate < -self.rate_limit:
             # Limit falling rate
-            y = self._y_old - T_s*self.rate_limit
+            y = self._old_y - T_s*self.rate_limit
         else:
             y = u
 
         # Store the limited output
-        self._y_old = y
+        self._old_y = y
 
         return y
 
@@ -716,6 +712,6 @@ class DriveCtrl(Ctrl, ABC):
         """Extend the base class method."""
         super().update(fbk, ref)
         if self.speed_ctrl:
-            self.speed_ctrl.update(ref.T_s, ref.tau_M_lim)
+            self.speed_ctrl.update(ref.T_s, ref.tau_M)
         if self.observer:
             self.observer.update(ref.T_s, fbk)

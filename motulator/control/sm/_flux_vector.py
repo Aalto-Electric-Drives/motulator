@@ -27,7 +27,7 @@ class FluxVectorCtrl(DriveCtrl):
     ----------
     par : ModelPars
         Machine model parameters.
-    ref : FluxTorqueReferenceCfg
+    cfg : FluxTorqueReferenceCfg
         Reference generation configuration.
     alpha_psi : float, optional
         Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
@@ -91,7 +91,7 @@ class FluxVectorCtrl(DriveCtrl):
 
         # References for the flux and torque controllers
         v_psi = self.alpha_psi*(ref.psi_s - np.abs(fbk.psi_s))
-        v_tau = self.alpha_tau*(ref.tau_M_lim - tau_M)
+        v_tau = self.alpha_tau*(ref.tau_M - tau_M)
         if c_tau > 0:
             v = (
                 1.5*par.n_p*np.abs(fbk.psi_s)*i_a*v_psi +
@@ -182,7 +182,8 @@ class FluxTorqueReference:
 
         # Limit the torque reference according to the MTPV and current limits
         lim_tau_M = cfg.lim_tau_M(ref.psi_s)
-        ref.tau_M_lim = np.min([lim_tau_M, np.abs(ref.tau_M)])*np.sign(
-            ref.tau_M)
+        #ref.tau_M_lim = np.min([lim_tau_M, np.abs(ref.tau_M)])*np.sign(
+        #    ref.tau_M)
+        ref.tau_M = np.min([lim_tau_M, np.abs(ref.tau_M)])*np.sign(ref.tau_M)
 
         return ref
