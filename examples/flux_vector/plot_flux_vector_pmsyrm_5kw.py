@@ -21,13 +21,13 @@ from scipy.io import loadmat
 from scipy.optimize import minimize_scalar
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import base_values, plot, NominalValues, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=370, I_nom=8.8, f_nom=60, tau_nom=29.2, P_nom=5.5e3, n_p=2)
+nom = NominalValues(U=370, I=8.8, f=60, P=5.5e3, tau=29.2)
+base = base_values(nom, n_p=2)
 
 # %%
 # Create a saturation model, which will be used in the machine model in the
@@ -159,9 +159,9 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 par = control.sm.ModelPars(
     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47, J=.015)
 # Limit the maximum reference flux to the base value
-ref = control.sm.FluxTorqueReferenceCfg(
-    par, i_s_max=2*base.i, k_u=1, psi_s_max=base.psi)
-ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
+cfg = control.sm.FluxTorqueReferenceCfg(
+    par, max_i_s=2*base.i, k_u=1, max_psi_s=base.psi)
+ctrl = control.sm.FluxVectorCtrl(par, cfg, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
 ctrl.observer = control.sm.Observer(
     control.sm.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))
@@ -175,7 +175,7 @@ values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%

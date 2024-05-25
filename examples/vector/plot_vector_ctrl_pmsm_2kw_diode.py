@@ -10,13 +10,13 @@ drive, equipped with a diode bridge rectifier.
 # %%
 
 from motulator import model, control
-from motulator import BaseValues, plot, plot_extra
+from motulator import NominalValues, base_values, plot, plot_extra
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
+nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+base = base_values(nom, n_p=3)
 
 # %%
 # Configure the system model.
@@ -33,7 +33,7 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 par = control.sm.ModelPars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-ref = control.sm.CurrentReferenceCfg(par, w_m_nom=base.w, i_s_max=1.5*base.i)
+ref = control.sm.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
 ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%
@@ -43,7 +43,7 @@ ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
 # External load torque
-mdl.mechanics.tau_L_t = lambda t: (t > .6)*base.tau_nom
+mdl.mechanics.tau_L_t = lambda t: (t > .6)*nom.tau
 
 # %%
 # Create the simulation object and simulate it.

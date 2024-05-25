@@ -3,12 +3,12 @@
 
 This software includes continuous-time simulation models for induction machines 
 and synchronous machines. Furthermore, selected examples of discrete-time 
-control algorithms are also included as well as various utilities.
+control algorithms are included.
 
 """
 
 from motulator._helpers import (
-    abc2complex, complex2abc, BaseValues, Sequence, Step)
+    abc2complex, complex2abc, base_values, NominalValues, Sequence, Step)
 
 from motulator._plots import plot, plot_extra
 
@@ -18,7 +18,8 @@ from motulator import model
 __all__ = [
     "abc2complex",
     "complex2abc",
-    "BaseValues",
+    "base_values",
+    "NominalValues",
     "Sequence",
     "Step",
     "control",

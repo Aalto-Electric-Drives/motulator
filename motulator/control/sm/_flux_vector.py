@@ -28,7 +28,7 @@ class FluxVectorCtrl(DriveCtrl):
     par : ModelPars
         Machine model parameters.
     ref : FluxTorqueReferenceCfg
-        Reference generation parameters.
+        Reference generation configuration.
     alpha_psi : float, optional
         Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
     alpha_tau : float, optional
@@ -37,19 +37,6 @@ class FluxVectorCtrl(DriveCtrl):
         Sampling period (s). The default is 250e-6.
     sensorless : bool, optional
         If True, sensorless control is used. The default is True.
-
-    Attributes
-    ----------
-    observer : Observer
-        Flux observer, having both sensorless and sensored modes.
-    flux_torque_ref : FluxTorqueReference
-        Flux and torque reference generator.
-    speed_ctrl : SpeedCtrl
-        Speed controller.
-    w_m_ref : callable
-        Speed reference (electrical rad/s) as a function of time (s).
-    pwm : PWM
-        Pulse-width modulation.
 
     References
     ----------
@@ -67,7 +54,7 @@ class FluxVectorCtrl(DriveCtrl):
     def __init__(
             self,
             par,
-            ref_par,
+            cfg,
             alpha_psi=2*np.pi*100,
             alpha_tau=2*np.pi*200,
             alpha_o=2*np.pi*100,
@@ -75,7 +62,7 @@ class FluxVectorCtrl(DriveCtrl):
             sensorless=True):
         super().__init__(par, T_s, sensorless)
         # Subsystems
-        self.flux_torque_ref = FluxTorqueReference(ref_par)
+        self.flux_torque_reference = FluxTorqueReference(cfg)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
         self.observer = Observer(
             ObserverCfg(par, alpha_o=alpha_o, sensorless=sensorless))
@@ -91,9 +78,7 @@ class FluxVectorCtrl(DriveCtrl):
 
         ref = super().output(fbk)
         ref = super().get_torque_reference(fbk, ref)
-
-        ref.psi_s, ref.tau_M_lim = self.flux_torque_ref(
-            ref.tau_M, fbk.w_m, fbk.u_dc)
+        ref = self.flux_torque_reference(fbk, ref)
 
         # Flux and torque estimates
         tau_M = 1.5*par.n_p*np.imag(fbk.i_s*np.conj(fbk.psi_s))
@@ -133,40 +118,32 @@ class FluxTorqueReferenceCfg:
     ----------
     par : ModelPars
         Machine model parameters.
-    i_s_max : float
+    max_i_s : float
         Maximum stator current (A). 
-    psi_s_min : float, optional
-        Minimum stator flux (Vs). The default is `psi_f`.
-    psi_s_max : float, optional
+    min_psi_s : float, optional
+        Minimum stator flux (Vs). The default is `par.psi_f`.
+    max_psi_s : float, optional
         Maximum stator flux (Vs). The default is inf.
     k_u : float, optional
         Voltage utilization factor. The default is 0.95.
 
-    Attributes
-    ----------
-    psi_s_mtpa : callable
-        MTPA stator flux linkage (Vs) as a function of the torque (Nm).
-    tau_M_lim : callable
-        Torque limit (Nm) as a function of the stator flux linkage (Vs). This 
-        limit merges the MTPV and current limits. 
-
     """
     par: InitVar[ModelPars]
-    i_s_max: float = None
-    psi_s_min: float = None
-    psi_s_max: float = np.inf
+    max_i_s: float = None
+    min_psi_s: float = None
+    max_psi_s: float = np.inf
     k_u: float = .95
 
     def __post_init__(self, par):
-        self.psi_s_min = par.psi_f if self.psi_s_min is None else self.psi_s_min
+        self.min_psi_s = par.psi_f if self.min_psi_s is None else self.min_psi_s
         # Generate LUTs
         tq = TorqueCharacteristics(par)
-        mtpa = tq.mtpa_locus(self.i_s_max, self.psi_s_min)
-        lim = tq.mtpv_and_current_limits(self.i_s_max)
+        mtpa = tq.mtpa_locus(self.max_i_s, self.min_psi_s)
+        lim = tq.mtpv_and_current_limits(self.max_i_s)
         # MTPA locus
-        self.psi_s_mtpa = mtpa.abs_psi_s_vs_tau_M
+        self.mtpa_psi_s = mtpa.abs_psi_s_vs_tau_M
         # Merged MTPV and current limits
-        self.tau_M_lim = lim.tau_M_vs_abs_psi_s
+        self.lim_tau_M = lim.tau_M_vs_abs_psi_s
 
 
 # %%
@@ -186,48 +163,26 @@ class FluxTorqueReference:
     """
 
     def __init__(self, cfg):
-        self.psi_s_min, self.psi_s_max = cfg.psi_s_min, cfg.psi_s_max
-        self.k_u = cfg.k_u
-        # Merged MTPV and current limits
-        self.tau_M_lim = cfg.tau_M_lim
-        # MTPA locus
-        self.psi_s_mtpa = cfg.psi_s_mtpa
+        self.cfg = cfg
 
-    def __call__(self, tau_M_ref, w_m, u_dc):
-        """
-        Calculate the stator flux reference and limit the torque reference.
+    def __call__(self, fbk, ref):
+        """Compute the stator flux reference and limit the torque reference."""
+        cfg = self.cfg
 
-        Parameters
-        ----------
-        tau_M_ref : float
-            Unlimited torque reference (Nm).
-        w_m : float
-            Rotor speed or its reference (electrical rad/s).
-        u_dc : float
-            DC-bus voltage (V).
-
-        Returns
-        -------
-        psi_s_ref : float
-            Stator flux reference (Vs).
-        tau_M_ref_lim : float
-            Limited torque reference (Nm).
-
-        """
         # Get the MTPA flux
-        psi_s_mtpa = self.psi_s_mtpa(np.abs(tau_M_ref))
-        psi_s_mtpa = np.clip(psi_s_mtpa, self.psi_s_min, self.psi_s_max)
+        mtpa_psi_s = cfg.mtpa_psi_s(np.abs(ref.tau_M))
+        mtpa_psi_s = np.clip(mtpa_psi_s, cfg.min_psi_s, cfg.max_psi_s)
 
         # Field weakening
-        u_s_max = self.k_u*u_dc/np.sqrt(3)
-        psi_s_max = u_s_max/np.abs(w_m) if np.abs(w_m) > 0 else np.inf
+        max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
+        max_psi_s = max_u_s/np.abs(fbk.w_m) if np.abs(fbk.w_m) > 0 else np.inf
 
         # Flux reference
-        psi_s_ref = np.min([psi_s_max, psi_s_mtpa])
+        ref.psi_s = np.min([max_psi_s, mtpa_psi_s])
 
         # Limit the torque reference according to the MTPV and current limits
-        tau_M_lim = self.tau_M_lim(psi_s_ref)
-        tau_M_ref_lim = np.min([tau_M_lim, np.abs(tau_M_ref)
-                                ])*np.sign(tau_M_ref)
+        lim_tau_M = cfg.lim_tau_M(ref.psi_s)
+        ref.tau_M_lim = np.min([lim_tau_M, np.abs(ref.tau_M)])*np.sign(
+            ref.tau_M)
 
-        return psi_s_ref, tau_M_ref_lim
+        return ref

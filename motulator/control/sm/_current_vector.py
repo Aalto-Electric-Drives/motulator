@@ -1,4 +1,4 @@
-"""Current vector control methods for synchronous machine drives."""
+"""Current-vector control methods for synchronous machine drives."""
 
 from dataclasses import dataclass, InitVar
 import numpy as np
@@ -28,7 +28,7 @@ class CurrentVectorCtrl(DriveCtrl):
 
     Attributes
     ----------
-    current_ref : CurrentReference
+    current_reference : CurrentReference
         Current reference generator.
     observer : Observer
         Flux and rotor position observer, used in the sensorless mode only.
@@ -46,7 +46,7 @@ class CurrentVectorCtrl(DriveCtrl):
             alpha_o=2*np.pi*100,
             sensorless=True):
         super().__init__(par, T_s, sensorless)
-        self.current_ref = CurrentReference(par, ref_par)
+        self.current_reference = CurrentReference(par, ref_par)
         self.current_ctrl = CurrentCtrl(par, alpha_c)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
         if sensorless:
@@ -69,8 +69,7 @@ class CurrentVectorCtrl(DriveCtrl):
 
         ref = super().output(fbk)
         ref = super().get_torque_reference(fbk, ref)
-        ref.i_s, ref.tau_M_lim = self.current_ref.output(
-            ref.tau_M, fbk.w_m, fbk.u_dc)
+        ref = self.current_reference.output(fbk, ref)
         ref.u_s = self.current_ctrl.output(ref.i_s, fbk.i_s)
         ref.u_ss = ref.u_s*np.exp(1j*fbk.theta_m)
         ref.d_abc = self.pwm(ref.T_s, ref.u_ss, fbk.u_dc, fbk.w_s)
@@ -79,7 +78,7 @@ class CurrentVectorCtrl(DriveCtrl):
 
     def update(self, fbk, ref):
         super().update(fbk, ref)
-        self.current_ref.update(ref.T_s, ref.tau_M_lim, ref.u_s, fbk.u_dc)
+        self.current_reference.update(fbk, ref)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_s)
 
 
@@ -115,7 +114,8 @@ class CurrentCtrl(ComplexPICtrl):
 
     def output(self, i_ref, i):
         # Extends the base class method by transforming the currents to the
-        # flux linkages, which is a simple way to take the saliency into account
+        # flux linkages, which is a simple way to take the saliency into
+        # account
         psi_ref = self.L_d*i_ref.real + 1j*self.L_q*i_ref.imag
         psi = self.L_d*i.real + 1j*self.L_q*i.imag
         return super().output(psi_ref, psi)
@@ -159,29 +159,29 @@ class CurrentReferenceCfg:
     
     """
     par: InitVar[ModelPars]
-    i_s_max: float
-    psi_s_min: float = None
-    w_m_nom: InitVar[float] = None
+    max_i_s: float
+    min_psi_s: float = None
+    nom_w_m: InitVar[float] = None
     alpha_fw: InitVar[float] = 2*np.pi*20
     k_fw: float = None
-    k_u: float = 0.95
+    k_u: float = .95
 
-    def __post_init__(self, par, w_m_nom, alpha_fw):
+    def __post_init__(self, par, nom_w_m, alpha_fw):
         # Minimum stator flux
-        if self.psi_s_min is None:
-            self.psi_s_min = par.psi_f
+        if self.min_psi_s is None:
+            self.min_psi_s = par.psi_f
         # Field-weakening gain
         if self.k_fw is None:
-            self.k_fw = alpha_fw/(w_m_nom*par.L_d)
+            self.k_fw = alpha_fw/(nom_w_m*par.L_d)
         # Generate LUTs
         tq = TorqueCharacteristics(par)
-        mtpa = tq.mtpa_locus(self.i_s_max, self.psi_s_min)
-        lim = tq.mtpv_and_current_limits(self.i_s_max)
+        mtpa = tq.mtpa_locus(self.max_i_s, self.min_psi_s)
+        lim = tq.mtpv_and_current_limits(self.max_i_s)
         # MTPA locus
-        self.i_sd_mtpa = mtpa.i_sd_vs_tau_M
+        self.mtpa_i_sd = mtpa.i_sd_vs_tau_M
         # Merged MTPV and current limits
-        self.tau_M_lim = lim.tau_M_vs_abs_psi_s
-        self.i_sd_lim = lim.i_sd_vs_tau_M
+        self.lim_tau_M = lim.tau_M_vs_abs_psi_s
+        self.lim_i_sd = lim.i_sd_vs_tau_M
 
 
 # %%
@@ -217,22 +217,11 @@ class CurrentReference:
 
     """
 
-    def __init__(self, par, ref):
-        # Machine model parameters
-        self.n_p = par.n_p
-        self.L_d, self.L_q, self.psi_f = par.L_d, par.L_q, par.psi_f
-        # Reference generation parameters
-        self.i_sd_mtpa = ref.i_sd_mtpa  # MTPA locus
-        self.tau_M_lim = ref.tau_M_lim  # Merged MTPV and current limits
-        self.i_sd_lim = ref.i_sd_lim  # Merged MTPV and current limits
-        self.psi_s_min = ref.psi_s_min  # Minimum flux linkage
-        self.i_s_max = ref.i_s_max  # Maximum current
-        self.k_fw = ref.k_fw  # Field-weakening gain
-        self.k_u = ref.k_u  # Voltage utilization factor
-        # State
-        self.i_sd_ref = 0
+    def __init__(self, par, cfg):
+        self.par, self.cfg = par, cfg
+        self.ref_i_sd = 0  # State
 
-    def output(self, tau_M_ref, w_m, u_dc):
+    def output(self, fbk, ref):
         """
         Compute the stator current reference.
 
@@ -253,44 +242,45 @@ class CurrentReference:
             Limited torque reference (Nm).
 
         """
+        par, cfg = self.par, self.cfg
 
-        def limit_torque(tau_M_ref, w_m, u_dc):
-            if np.abs(w_m) > 0:
-                psi_s_max = self.k_u*u_dc/np.sqrt(3)/np.abs(w_m)
-                tau_M_max = self.tau_M_lim(psi_s_max)
+        def limit_torque(ref, fbk):
+            if np.abs(fbk.w_m) > 0:
+                max_psi_s = cfg.k_u*fbk.u_dc/np.sqrt(3)/np.abs(fbk.w_m)
+                max_tau_M = cfg.lim_tau_M(max_psi_s)
             else:
-                tau_M_max = self.tau_M_lim(np.inf)
+                max_tau_M = cfg.lim_tau_M(np.inf)
 
-            if np.abs(tau_M_ref) > tau_M_max:
-                tau_M_ref = np.sign(tau_M_ref)*tau_M_max
+            if np.abs(ref.tau_M) > max_tau_M:
+                ref.tau_M = np.sign(ref.tau_M)*max_tau_M
 
-            return tau_M_ref
+            return ref.tau_M
 
         # Limit the torque reference according to MTPV and current limits
-        tau_M_ref = limit_torque(tau_M_ref, w_m, u_dc)
+        ref.tau_M = limit_torque(ref, fbk)
 
         # q-axis current reference
-        psi_t = self.psi_f + (self.L_d - self.L_q)*self.i_sd_ref
-        i_sq_ref = tau_M_ref/(1.5*self.n_p*psi_t) if psi_t != 0 else 0
+        psi_t = par.psi_f + (par.L_d - par.L_q)*self.ref_i_sd
+        ref_i_sq = ref.tau_M/(1.5*par.n_p*psi_t) if psi_t != 0 else 0
 
         # Limit the q-axis current reference
-        i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M_ref))
-        i_sq_max = np.min([
-            np.sqrt(self.i_s_max**2 - self.i_sd_ref**2),
-            np.sqrt(self.i_s_max**2 - i_sd_mtpa**2)
+        mtpa_i_sd = cfg.mtpa_i_sd(np.abs(ref.tau_M))
+        max_i_sq = np.min([
+            np.sqrt(cfg.max_i_s**2 - self.ref_i_sd**2),
+            np.sqrt(cfg.max_i_s**2 - mtpa_i_sd**2)
         ])
-        if np.abs(i_sq_ref) > i_sq_max:
-            i_sq_ref = np.sign(i_sq_ref)*i_sq_max
+        if np.abs(ref_i_sq) > max_i_sq:
+            ref_i_sq = np.sign(ref_i_sq)*max_i_sq
 
         # Current reference
-        i_s_ref = self.i_sd_ref + 1j*i_sq_ref
+        ref.i_s = self.ref_i_sd + 1j*ref_i_sq
 
         # Limited torque (for the speed controller)
-        tau_M_ref_lim = 1.5*self.n_p*psi_t*i_sq_ref
+        ref.tau_M_lim = 1.5*par.n_p*psi_t*ref_i_sq
 
-        return i_s_ref, tau_M_ref_lim
+        return ref
 
-    def update(self, T_s, tau_M_ref_lim, u_s_ref, u_dc):
+    def update(self, fbk, ref):
         """
         Field-weakening control based on the unlimited reference voltage.
 
@@ -306,10 +296,11 @@ class CurrentReference:
             DC-bus voltage (V).
 
         """
-        u_s_max = self.k_u*u_dc/np.sqrt(3)
-        self.i_sd_ref += T_s*self.k_fw*(u_s_max - np.abs(u_s_ref))
+        cfg = self.cfg
+        max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
+        self.ref_i_sd += ref.T_s*cfg.k_fw*(max_u_s - np.abs(ref.u_s))
 
         # Limit the current
-        i_sd_mtpa = self.i_sd_mtpa(np.abs(tau_M_ref_lim))
-        i_sd_lim = self.i_sd_lim(np.abs(tau_M_ref_lim))
-        self.i_sd_ref = np.clip(self.i_sd_ref, i_sd_lim, i_sd_mtpa)
+        mtpa_i_sd = cfg.mtpa_i_sd(np.abs(ref.tau_M_lim))
+        lim_i_sd = cfg.lim_i_sd(np.abs(ref.tau_M_lim))
+        self.ref_i_sd = np.clip(self.ref_i_sd, lim_i_sd, mtpa_i_sd)

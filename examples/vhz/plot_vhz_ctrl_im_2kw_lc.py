@@ -11,13 +11,13 @@ drive equipped with an LC filter.
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import BaseValues, plot
+from motulator import base_values, plot, NominalValues
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
+nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
+base = base_values(nom, n_p=2)
 
 # %%
 # Create the system model. The filter parameters correspond to [#Sal2006]_.
@@ -34,9 +34,9 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # Control system (parametrized as open-loop V/Hz control).
 
 # Inverse-Γ model parameter estimates
-model_par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
 ctrl = control.im.VHzCtrl(
-    control.im.VHzCtrlCfg(model_par, nom_psi_s=base.psi, k_u=0, k_w=0))
+    control.im.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference and the external load torque.
@@ -44,7 +44,7 @@ ctrl = control.im.VHzCtrl(
 ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = 1.1*base.tau_nom/(base.w/base.n_p)**2
+k = 1.1*nom.tau/(base.w/base.n_p)**2
 mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # %%

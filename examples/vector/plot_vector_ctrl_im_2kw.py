@@ -11,13 +11,13 @@ system model, while the control system assumes constant parameters.
 # %%
 
 from motulator import model, control
-from motulator import BaseValues, plot
+from motulator import base_values, plot, NominalValues
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
+nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
+base = base_values(nom, n_p=2)
 
 # %%
 # Configure the system model.
@@ -75,10 +75,10 @@ mdl = model.im.Drive(machine, mechanics, converter)
 par = control.im.ModelPars(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2, J=.015)
 # Set nominal values and limits for reference generation
-ref = control.im.CurrentReferenceCfg(
-    par, i_s_max=1.5*base.i, u_s_nom=base.u, w_s_nom=base.w)
+cfg = control.im.CurrentReferenceCfg(
+    par, max_i_s=1.5*base.i, nom_u_s=base.u, nom_w_s=base.w)
 # Create the control system
-ctrl = control.im.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+ctrl = control.im.CurrentVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
 # As an example, you may replace the default 2DOF PI speed controller with the
 # regular PI speed controller by uncommenting the following line
 # ctrl.speed_ctrl = control.PICtrl(k_p=1, k_i=1)
@@ -89,7 +89,7 @@ ctrl = control.im.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # Simple acceleration and load torque step
 ctrl.ref.w_m = lambda t: (t > .2)*(.5*base.w)
-mdl.mechanics.tau_L_t = lambda t: (t > .75)*base.tau_nom
+mdl.mechanics.tau_L_t = lambda t: (t > .75)*nom.tau
 
 # No load, field-weakening (uncomment to try)
 # ctrl.ref.w_m = lambda t: (t > .2)*(2*base.w)

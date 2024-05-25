@@ -12,13 +12,13 @@ Square-wave signal injection is used with a simple phase-locked loop.
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import base_values, plot, NominalValues, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
+nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+base = base_values(nom, n_p=3)
 
 # %%
 # Configure the system model.
@@ -34,9 +34,9 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 
 par = control.sm.ModelPars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-ref = control.sm.CurrentReferenceCfg(par, w_m_nom=base.w, i_s_max=2*base.i)
-ctrl = control.sm.SignalInjectionCtrl(par, ref, T_s=250e-6)
-#ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
+cfg = control.sm.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=2*base.i)
+ctrl = control.sm.SignalInjectionCtrl(par, cfg, T_s=250e-6)
+# ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -47,7 +47,7 @@ values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w*.1
 ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%

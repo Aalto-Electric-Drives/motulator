@@ -307,16 +307,16 @@ class SpeedCtrl(PICtrl):
         Total inertia of the rotor (kgm²).
     alpha_s : float
         Closed-loop bandwidth (rad/s). 
-    tau_M_max : float, optional
+    max_tau_M : float, optional
         Maximum motor torque (Nm). The default is inf.
 
     """
 
-    def __init__(self, J, alpha_s, tau_M_max=np.inf):
+    def __init__(self, J, alpha_s, max_tau_M=np.inf):
         k_p = 2*alpha_s*J
         k_i = alpha_s**2*J
         k_t = alpha_s*J
-        super().__init__(k_p, k_i, k_t, tau_M_max)
+        super().__init__(k_p, k_i, k_t, max_tau_M)
 
 
 # %%

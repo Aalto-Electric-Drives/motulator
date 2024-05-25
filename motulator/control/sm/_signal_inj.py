@@ -1,6 +1,6 @@
 """Sensorless control with signal injection for synchronous machine drives."""
 
-from types import SimpleNamespace 
+from types import SimpleNamespace
 import numpy as np
 from motulator._helpers import wrap
 from motulator.control._common import SpeedCtrl, DriveCtrl
@@ -40,6 +40,7 @@ class SignalInjectionCtrl(DriveCtrl):
         PLL natural frequency (rad/s).
 
     """
+
     def __init__(self, model_par, ref_par, T_s=250e-6):
         super().__init__(model_par, T_s, sensorless=True)
         self.current_ref = CurrentReference(model_par, ref_par)
@@ -69,8 +70,7 @@ class SignalInjectionCtrl(DriveCtrl):
         ref = super().output(fbk)
         ref = super().get_torque_reference(fbk, ref)
 
-        ref.i_s, ref.tau_M_lim = self.current_ref.output(
-            ref.tau_M, fbk.w_m, fbk.u_dc)
+        ref = self.current_ref.output(fbk, ref)
 
         # Superimpose the excitation voltage on the d-axis
         ref.u_s = self.current_ctrl.output(
@@ -86,7 +86,7 @@ class SignalInjectionCtrl(DriveCtrl):
 
         err = self.signal_inj.output(ref.T_s, fbk.i_s.imag)
         self.pll.update(ref.T_s, err)
-        self.current_ref.update(ref.T_s, ref.tau_M_lim, ref.u_s, fbk.u_dc)
+        self.current_ref.update(fbk, ref)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_m)
         self.signal_inj.update(fbk.i_s)
 
@@ -109,6 +109,7 @@ class SignalInjection:
         Injected voltage amplitude (V).
 
     """
+
     def __init__(self, par, U_inj):
         # Error gain
         self.k = .5*par.L_d*par.L_q/((par.L_q - par.L_d))
@@ -184,6 +185,7 @@ class PhaseLockedLoop:
         Natural frequency (rad/s).
 
     """
+
     def __init__(self, w_o):
         self.gain = SimpleNamespace(k_p=w_o, k_i=w_o**2)
         self.state = SimpleNamespace(theta_m=0, w_m=0)
@@ -206,4 +208,3 @@ class PhaseLockedLoop:
         # Update the states
         self.state.w_m += T_s*self.gain.k_i*err
         self.state.theta_m = wrap(self.state.theta_m + T_s*w_m)
-

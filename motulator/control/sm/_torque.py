@@ -225,13 +225,13 @@ class TorqueCharacteristics:
 
         return i_s
 
-    def mtpa_locus(self, i_s_max, psi_s_min=None, N=20):
+    def mtpa_locus(self, max_i_s, psi_s_min=None, N=20):
         """
         Compute the MTPA locus.
 
         Parameters
         ----------
-        i_s_max : float
+        max_i_s : float
             Maximum stator current magnitude (A) at which the locus is 
             computed.
         psi_s_min : float, optional
@@ -255,7 +255,7 @@ class TorqueCharacteristics:
 
         """
         # Current  magnitudes
-        abs_i_s = np.linspace(0, i_s_max, N)
+        abs_i_s = np.linspace(0, max_i_s, N)
 
         # MTPA locus expressed with different quantities
         beta = self.mtpa(abs_i_s)
@@ -285,16 +285,16 @@ class TorqueCharacteristics:
             abs_psi_s_vs_tau_M=abs_psi_s_vs_tau_M,
             i_sd_vs_tau_M=i_sd_vs_tau_M)
 
-    def mtpv_locus(self, psi_s_max=None, i_s_max=None, N=20):
+    def mtpv_locus(self, max_psi_s=None, max_i_s=None, N=20):
         """
         Compute the MTPV locus.
 
         Parameters
         ----------
-        psi_s_max : float, optional
+        max_psi_s : float, optional
             Maximum stator flux magnitude (Vs) at which the locus is computed. 
-            Either `psi_s_max` or `i_s_max` must be given.
-        i_s_max : float, optional
+            Either `max_psi_s` or `max_i_s` must be given.
+        max_i_s : float, optional
             Maximum stator current magnitude (A) at which the locus is 
             computed.
         N : int, optional
@@ -313,13 +313,13 @@ class TorqueCharacteristics:
             Torque (Nm) as a function of the flux magnitude (Vs).
 
         """
-        # If i_s_max is given, compute the corresponding MTPV stator flux
-        if i_s_max is not None:
-            i_s_mtpv = self.mtpv_current(i_s_max)
-            psi_s_max = np.abs(self.flux(i_s_mtpv))
+        # If max_i_s is given, compute the corresponding MTPV stator flux
+        if max_i_s is not None:
+            i_s_mtpv = self.mtpv_current(max_i_s)
+            max_psi_s = np.abs(self.flux(i_s_mtpv))
 
         # Flux magnitudes
-        abs_psi_s = np.linspace(0, psi_s_max, N)
+        abs_psi_s = np.linspace(0, max_psi_s, N)
 
         # MTPV locus expressed with different quantities
         delta = self.mtpv(abs_psi_s)
@@ -337,18 +337,18 @@ class TorqueCharacteristics:
             tau_M=tau_M,
             tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s)
 
-    def current_limit(self, i_s_max, gamma1=np.pi, gamma2=0, N=20):
+    def current_limit(self, max_i_s, gamma1=np.pi, gamma2=0, N=20):
         """
         Compute the current limit.
 
         Parameters
         ----------
-        i_s_max : float
+        max_i_s : float
             Current limit (A). 
         gamma1 : float, optional
             Starting angle (electrical rad). The default is 0.
         gamma2 : float, optional
-            End angle (electrical rad). The defauls in pi.
+            End angle (electrical rad). The default is pi.
         N : int, optional
             Amount of points. The default is 20.
 
@@ -372,7 +372,7 @@ class TorqueCharacteristics:
         gamma = np.linspace(gamma1, gamma2, N)
 
         # MTPA locus expressed with different quantities
-        i_s = i_s_max*np.exp(1j*gamma)
+        i_s = max_i_s*np.exp(1j*gamma)
         psi_s = self.flux(i_s)
         tau_M = self.torque(psi_s)
 
@@ -390,13 +390,13 @@ class TorqueCharacteristics:
             tau_M=tau_M,
             tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s)
 
-    def mtpv_and_current_limits(self, i_s_max, N=20):
+    def mtpv_and_current_limits(self, max_i_s, N=20):
         """
         Merge the MTPV and current limits into a single interpolant.
 
         Parameters
         ----------
-        i_s_max : float
+        max_i_s : float
             Current limit (A).
         N : int, optional
             Amount of points. The default is 20.
@@ -410,24 +410,24 @@ class TorqueCharacteristics:
             d-axis current (A) as a function of the torque (Nm).
 
         """
-        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
-        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
-        clim = self.current_limit(
-            i_s_max=i_s_max,
+        mtpa = self.mtpa_locus(max_i_s=max_i_s, N=N)
+        mtpv = self.mtpv_locus(max_i_s=max_i_s, N=N)
+        current_lim = self.current_limit(
+            max_i_s=max_i_s,
             N=N,
             gamma1=np.angle(mtpv.i_s[-1]),
             gamma2=np.angle(mtpa.i_s[-1]))
 
         if np.isnan(mtpv.i_s).any():
             # No MTPV, only the current limit
-            psi_s = clim.psi_s
-            tau_M = clim.tau_M
-            i_sd = clim.i_s.real
+            psi_s = current_lim.psi_s
+            tau_M = current_lim.tau_M
+            i_sd = current_lim.i_s.real
         else:
             # Concatenate the MTPV and current limits
-            psi_s = np.concatenate((mtpv.psi_s, clim.psi_s))
-            tau_M = np.concatenate((mtpv.tau_M, clim.tau_M))
-            i_sd = np.concatenate((mtpv.i_s.real, clim.i_s.real))
+            psi_s = np.concatenate((mtpv.psi_s, current_lim.psi_s))
+            tau_M = np.concatenate((mtpv.tau_M, current_lim.tau_M))
+            i_sd = np.concatenate((mtpv.i_s.real, current_lim.i_s.real))
 
         # Create an interpolant that can be used as a look-up table
         tau_M_vs_abs_psi_s = interp1d(
@@ -440,7 +440,7 @@ class TorqueCharacteristics:
         return SimpleNamespace(
             tau_M_vs_abs_psi_s=tau_M_vs_abs_psi_s, i_sd_vs_tau_M=i_sd_vs_tau_M)
 
-    def plot_flux_loci(self, i_s_max, base, N=20):
+    def plot_flux_loci(self, max_i_s, base, N=20):
         """
         Plot the stator flux linkage loci.
 
@@ -448,7 +448,7 @@ class TorqueCharacteristics:
 
         Parameters
         ----------
-        i_s_max : float
+        max_i_s : float
             Maximum current (A) at which the loci are evaluated.
         base : BaseValues
             Base values.
@@ -457,10 +457,10 @@ class TorqueCharacteristics:
 
         """
         # Compute the characteristics
-        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
-        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
-        clim = self.current_limit(
-            i_s_max=i_s_max,
+        mtpa = self.mtpa_locus(max_i_s=max_i_s, N=N)
+        mtpv = self.mtpv_locus(max_i_s=max_i_s, N=N)
+        current_lim = self.current_limit(
+            max_i_s=max_i_s,
             N=N,
             gamma1=np.angle(mtpv.i_s[-1]),
             gamma2=np.angle(mtpa.i_s[-1]))
@@ -477,8 +477,8 @@ class TorqueCharacteristics:
         except AttributeError:
             pass
         ax.plot(
-            clim.psi_s.real/base.psi,
-            clim.psi_s.imag/base.psi,
+            current_lim.psi_s.real/base.psi,
+            current_lim.psi_s.imag/base.psi,
             label="Const current")
 
         ax.legend()
@@ -487,7 +487,7 @@ class TorqueCharacteristics:
         ax.set_ylim(0, None)
         ax.set_aspect("equal")
 
-    def plot_current_loci(self, i_s_max, base, N=20):
+    def plot_current_loci(self, max_i_s, base, N=20):
         """
         Plot the current loci.
 
@@ -495,7 +495,7 @@ class TorqueCharacteristics:
 
         Parameters
         ----------
-        i_s_max : float
+        max_i_s : float
             Maximum current (A) at which the loci are evaluated.
         base : BaseValues
             Base values.
@@ -504,10 +504,10 @@ class TorqueCharacteristics:
 
         """
         # Compute the characteristics
-        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
-        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
-        clim = self.current_limit(
-            i_s_max=i_s_max,
+        mtpa = self.mtpa_locus(max_i_s=max_i_s, N=N)
+        mtpv = self.mtpv_locus(max_i_s=max_i_s, N=N)
+        current_lim = self.current_limit(
+            max_i_s=max_i_s,
             N=N,
             gamma1=np.angle(mtpv.i_s[-1]),
             gamma2=np.angle(mtpa.i_s[-1]))
@@ -520,20 +520,22 @@ class TorqueCharacteristics:
         except AttributeError:
             pass
         ax.plot(
-            clim.i_s.real/base.i, clim.i_s.imag/base.i, label="Const current")
+            current_lim.i_s.real/base.i,
+            current_lim.i_s.imag/base.i,
+            label="Const current")
 
         ax.set_xlabel(r"$i_\mathrm{sd}$ (p.u.)")
         ax.set_ylabel(r"$i_\mathrm{sq}$ (p.u.)")
         ax.legend()
         if self.psi_f == 0:
-            ax.axis([0, i_s_max/base.i, 0, i_s_max/base.i])
+            ax.axis([0, max_i_s/base.i, 0, max_i_s/base.i])
         elif self.L_q > self.L_d:
-            ax.axis([-i_s_max/base.i, 0, 0, i_s_max/base.i])
+            ax.axis([-max_i_s/base.i, 0, 0, max_i_s/base.i])
         else:
-            ax.axis([-i_s_max/base.i, i_s_max/base.i, 0, i_s_max/base.i])
+            ax.axis([-max_i_s/base.i, max_i_s/base.i, 0, max_i_s/base.i])
         ax.set_aspect("equal")
 
-    def plot_torque_current(self, i_s_max, base, N=20):
+    def plot_torque_current(self, max_i_s, base, N=20):
         """
         Plot torque vs. current characteristics.
 
@@ -541,7 +543,7 @@ class TorqueCharacteristics:
 
         Parameters
         ----------
-        i_s_max : float
+        max_i_s : float
             Maximum current (A) at which the loci are evaluated.
         base : BaseValues
             Base values.
@@ -550,10 +552,10 @@ class TorqueCharacteristics:
 
         """
         # Compute the characteristics
-        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
-        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
-        clim = self.current_limit(
-            i_s_max=i_s_max,
+        mtpa = self.mtpa_locus(max_i_s=max_i_s, N=N)
+        mtpv = self.mtpv_locus(max_i_s=max_i_s, N=N)
+        current_lim = self.current_limit(
+            max_i_s=max_i_s,
             N=N,
             gamma1=np.angle(mtpv.i_s[-1]),
             gamma2=np.angle(mtpa.i_s[-1]))
@@ -565,9 +567,9 @@ class TorqueCharacteristics:
             ax1.plot(mtpv.tau_M/base.tau, mtpv.i_s.real/base.i)
         except AttributeError:
             pass
-        ax1.plot(clim.tau_M/base.tau, clim.i_s.real/base.i)
+        ax1.plot(current_lim.tau_M/base.tau, current_lim.i_s.real/base.i)
 
-        ax1.set_xlim(0, i_s_max/base.i)
+        ax1.set_xlim(0, max_i_s/base.i)
         if self.psi_f == 0:
             ax1.set_ylim(0, None)
         elif self.L_q > self.L_d:
@@ -581,15 +583,15 @@ class TorqueCharacteristics:
             ax2.plot(mtpv.tau_M/base.tau, mtpv.i_s.imag/base.i)
         except TypeError:
             pass
-        ax2.plot(clim.tau_M/base.tau, clim.i_s.imag/base.i)
+        ax2.plot(current_lim.tau_M/base.tau, current_lim.i_s.imag/base.i)
 
-        ax2.set_xlim(0, i_s_max/base.i)
+        ax2.set_xlim(0, max_i_s/base.i)
         ax2.set_ylim(0, None)
         ax2.legend(["MTPA", "MTPV", "Const current"])
         ax2.set_ylabel(r"$i_\mathrm{sq}$ (p.u.)")
         ax2.set_xlabel(r"$\tau_\mathrm{M}$ (p.u.)")
 
-    def plot_torque_flux(self, i_s_max, base, N=20):
+    def plot_torque_flux(self, max_i_s, base, N=20):
         """
         Plot torque vs. flux magnitude characteristics.
 
@@ -597,7 +599,7 @@ class TorqueCharacteristics:
 
         Parameters
         ----------
-        i_s_max : float
+        max_i_s : float
             Maximum current (A) at which the loci are evaluated.
         base : BaseValues
             Base values.
@@ -606,10 +608,10 @@ class TorqueCharacteristics:
 
         """
         # Compute the characteristics
-        mtpa = self.mtpa_locus(i_s_max=i_s_max, N=N)
-        mtpv = self.mtpv_locus(i_s_max=i_s_max, N=N)
-        clim = self.current_limit(
-            i_s_max=i_s_max,
+        mtpa = self.mtpa_locus(max_i_s=max_i_s, N=N)
+        mtpv = self.mtpv_locus(max_i_s=max_i_s, N=N)
+        current_lim = self.current_limit(
+            max_i_s=max_i_s,
             N=N,
             gamma1=np.angle(mtpv.i_s[-1]),
             gamma2=np.angle(mtpa.i_s[-1]))
@@ -621,7 +623,7 @@ class TorqueCharacteristics:
             ax.plot(np.abs(mtpv.psi_s)/base.psi, mtpv.tau_M/base.tau)
         except AttributeError:
             pass
-        ax.plot(np.abs(clim.psi_s)/base.psi, clim.tau_M/base.tau)
+        ax.plot(np.abs(current_lim.psi_s)/base.psi, current_lim.tau_M/base.tau)
 
         ax.legend(["MTPA", "MTPV", "Const current"])
         ax.set_xlabel(r"$\psi_\mathrm{s}$ (p.u.)")

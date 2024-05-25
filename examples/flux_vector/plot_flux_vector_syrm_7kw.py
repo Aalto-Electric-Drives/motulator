@@ -16,13 +16,13 @@ Naturally, the PM-flux estimation can be used in PM machine drives as well.
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import base_values, plot, NominalValues, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, n_p=2)
+nom = NominalValues(U=370, I=15.5, f=105.8, P=6.7e3, tau=20.1)
+base = base_values(nom, n_p=2)
 
 # %%
 # Create a saturation model, see the example
@@ -63,9 +63,9 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 par = control.sm.ModelPars(
     n_p=2, R_s=.54, L_d=.7*37e-3, L_q=.8*6.2e-3, psi_f=0, J=.015)
 # Disable MTPA since the control system does not consider the saturation
-ref = control.sm.FluxTorqueReferenceCfg(
-    par, i_s_max=2*base.i, k_u=.9, psi_s_min=base.psi, psi_s_max=base.psi)
-ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
+cfg = control.sm.FluxTorqueReferenceCfg(
+    par, max_i_s=2*base.i, k_u=.9, min_psi_s=base.psi, max_psi_s=base.psi)
+ctrl = control.sm.FluxVectorCtrl(par, cfg, sensorless=True)
 # Since the saturation is not considered in the control system, the speed
 # estimation bandwidth is set to a lower value. Furthermore, the PM-flux
 # disturbance estimation is enabled at speeds above 2*pi*20 rad/s (electrical).
@@ -85,7 +85,7 @@ values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%

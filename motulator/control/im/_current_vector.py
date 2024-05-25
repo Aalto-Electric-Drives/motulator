@@ -9,35 +9,30 @@ import numpy as np
 from motulator.control._common import ComplexPICtrl, SpeedCtrl, DriveCtrl
 from motulator.control.im._common import Observer, ObserverCfg, ModelPars
 
-#from motulator.control.im._common import FullOrderObserver, FullOrderObserverCfg, ModelPars
-
 
 # %%
 class CurrentVectorCtrl(DriveCtrl):
     """Vector control for induction machine drives."""
 
-    def __init__(self, par, ref, T_s=250e-6, sensorless=True):
+    def __init__(self, par, cfg, T_s=250e-6, sensorless=True):
         super().__init__(par, T_s, sensorless)
-        self.current_ref = CurrentReference(par, ref)
+        self.current_reference = CurrentReference(par, cfg)
         self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
         self.observer = Observer(ObserverCfg(par, T_s, sensorless=sensorless))
-        #self.observer = FullOrderObserver(
-        #    FullOrderObserverCfg(par, T_s, sensorless=sensorless))
 
     def output(self, fbk):
         ref = super().output(fbk)
         ref = super().get_torque_reference(fbk, ref)
-        ref.i_s, ref.tau_M_lim = self.current_ref.output(ref.tau_M, fbk.psi_R)
+        ref = self.current_reference.output(fbk, ref)
         ref.u_s = self.current_ctrl.output(ref.i_s, fbk.i_s)
         u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
         ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
-
         return ref
 
     def update(self, fbk, ref):
         super().update(fbk, ref)
-        self.current_ref.update(ref.T_s, ref.u_s, fbk.u_dc)
+        self.current_reference.update(fbk, ref)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_s)
 
 
@@ -81,36 +76,36 @@ class CurrentReferenceCfg:
     ----------
     par : ModelPars
         Machine model parameters.
-    i_s_max : float
+    max_i_s : float
         Maximum stator current (A). 
-    u_s_nom : float, optional
+    nom_u_s : float, optional
         Nominal stator voltage (V). The default is sqrt(2/3)*400.
-    w_s_nom : float, optional
+    nom_w_s : float, optional
         Nominal stator angular frequency (rad/s). The default is 2*pi*50.
-    psi_R_nom : float, optional
+    nom_psi_R : float, optional
         Nominal rotor flux linkage (Vs). The default is 
-        `(u_s_nom/w_s_nom)/(1 + L_sgm/L_M)`.
+        `(nom_u_s/nom_w_s)/(1 + L_sgm/L_M)`.
     k_fw : float, optional
-        Field-weakening gain (1/H). The default is `2*R_R/(w_s_nom*L_sgm**2)`.
+        Field-weakening gain (1/H). The default is `2*R_R/(nom_w_s*L_sgm**2)`.
     k_u : float, optional
         Voltage utilization factor. The default is 0.95.
     
     """
     par: InitVar[ModelPars] = None
-    i_s_max: float = None
-    u_s_nom: InitVar[float] = np.sqrt(2/3)*400
-    w_s_nom: InitVar[float] = 2*np.pi*50
-    psi_R_nom: float = None
+    max_i_s: float = None
+    nom_u_s: InitVar[float] = np.sqrt(2/3)*400
+    nom_w_s: InitVar[float] = 2*np.pi*50
+    nom_psi_R: float = None
     k_fw: float = None
     k_u: float = 0.95
 
-    def __post_init__(self, par, u_s_nom, w_s_nom):
-        psi_s_nom = u_s_nom/w_s_nom  # Nominal stator flux
-        if self.psi_R_nom is None:
+    def __post_init__(self, par, nom_u_s, nom_w_s):
+        nom_psi_s = nom_u_s/nom_w_s  # Nominal stator flux
+        if self.nom_psi_R is None:
             # Nominal rotor flux (omitting the slip)
-            self.psi_R_nom = psi_s_nom/(1 + par.L_sgm/par.L_M)
+            self.nom_psi_R = nom_psi_s/(1 + par.L_sgm/par.L_M)
         if self.k_fw is None:
-            self.k_fw = 2*par.R_R/(w_s_nom*par.L_sgm**2)
+            self.k_fw = 2*par.R_R/(nom_w_s*par.L_sgm**2)
 
 
 # %%
@@ -121,20 +116,20 @@ class CurrentReference:
     In the base-speed region, the current reference in rotor-flux coordinates 
     is given by::
 
-        i_s_ref = psi_R_nom/L_M + 1j*tau_M_ref/(1.5*n_p*abs(psi_R))
+        ref_i_s = nom_psi_R/L_M + 1j*ref_tau_M/(1.5*n_p*abs(psi_R))
 
-    where `psi_R_nom` is the nominal rotor flux magnitude and `psi_R` is the 
+    where `nom_psi_R` is the nominal rotor flux magnitude and `psi_R` is the 
     estimated rotor flux. The field-weakening operation is based on adjusting 
     the flux-producing current component::
 
-        i_s_ref.real = (k_fw/s)*(u_s_max - abs(u_s_ref))
+        ref_i_s.real = (k_fw/s)*(max_u_s - abs(ref_u_s))
 
-    where `1/s` refers to integration, ``u_s_max = k_u*u_dc/sqrt(3)`` is the 
-    maximum stator voltage in the linear modulation region, `u_s_ref` is the 
+    where `1/s` refers to integration, ``max_u_s = k_u*u_dc/sqrt(3)`` is the 
+    maximum stator voltage in the linear modulation region, `ref_u_s` is the 
     (unlimited) stator voltage reference, and `k_fw` is the field-weakening 
     gain. The field-weakening method and its tuning corresponds roughly to
     [#Hin2006]_. Furthermore, the torque-producing current component 
-    `i_s_ref.imag` is limited based on the maximum stator current and the 
+    `ref_i_s.imag` is limited based on the maximum stator current and the 
     breakdown slip. 
 
     Parameters
@@ -154,76 +149,42 @@ class CurrentReference:
     """
 
     def __init__(self, par, cfg):
-        # Machine model parameters
-        self.L_sgm, self.n_p = par.L_sgm, par.n_p
-        # Other parameters
-        self.i_s_max = cfg.i_s_max
-        self.k_u = cfg.k_u
-        # Field-weakening gain
-        self.k_fw = cfg.k_fw
-        # Nominal d-axis current
-        self.i_sd_nom = cfg.psi_R_nom/par.L_M
-        # State variable
-        self.i_sd_ref = self.i_sd_nom
+        self.par, self.cfg = par, cfg
+        self.cfg.nom_i_sd = cfg.nom_psi_R/par.L_M  # Nominal d-axis current
+        self.ref_i_sd = self.cfg.nom_i_sd  # State
 
-    def output(self, tau_M_ref, psi_R):
-        """
-        Compute the stator current reference.
+    def output(self, fbk, ref):
+        """Compute the stator current reference."""
+        par, cfg = self.par, self.cfg  # Unpack
+        ref_i_sd = self.ref_i_sd  # Get the state
 
-        Parameters
-        ----------
-        tau_M_ref : float
-            Torque reference (Nm).
-        psi_R : float
-            Rotor flux magnitude (Vs).
-
-        Returns
-        -------
-        i_s_ref : complex
-            Stator current reference (A).
-        tau_M_ref_lim : float
-            Limited torque reference (Nm).
-
-        """
-
-        def q_axis_current_limit(i_sd_ref, psi_R):
+        def q_axis_current_limit(ref_i_sd, psi_R):
             # Priority given to the d component
-            i_sq_max1 = np.sqrt(self.i_s_max**2 - i_sd_ref**2)
+            max_i_sq1 = np.sqrt(cfg.max_i_s**2 - ref_i_sd**2)
             # Breakdown torque limit
-            i_sq_max2 = psi_R/self.L_sgm + i_sd_ref
+            max_i_sq2 = psi_R/par.L_sgm + ref_i_sd
             # q-axis current limit
-            i_sq_max = np.min([i_sq_max1, i_sq_max2])
-            return i_sq_max
+            max_i_sq = np.min([max_i_sq1, max_i_sq2])
+            return max_i_sq
 
         # q-axis current reference
-        i_sq_ref = tau_M_ref/(1.5*self.n_p*psi_R) if psi_R > 0 else 0
+        ref_i_sq = ref.tau_M/(1.5*par.n_p*fbk.psi_R) if fbk.psi_R > 0 else 0
 
         # Limit the current
-        i_sq_max = q_axis_current_limit(self.i_sd_ref, psi_R)
-        i_sq_ref = np.clip(i_sq_ref, -i_sq_max, i_sq_max)
+        max_i_sq = q_axis_current_limit(ref_i_sd, fbk.psi_R)
+        ref_i_sq = np.clip(ref_i_sq, -max_i_sq, max_i_sq)
 
         # Current reference
-        i_s_ref = self.i_sd_ref + 1j*i_sq_ref
+        ref.i_s = ref_i_sd + 1j*ref_i_sq
 
         # Limited torque (for the speed controller)
-        tau_M_ref_lim = 1.5*self.n_p*psi_R*i_sq_ref
+        ref.tau_M_lim = 1.5*par.n_p*fbk.psi_R*ref_i_sq
 
-        return i_s_ref, tau_M_ref_lim
+        return ref
 
-    def update(self, T_s, u_s_ref, u_dc):
-        """
-        Field-weakening based on the unlimited reference voltage.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s)
-        u_s_ref : complex
-            Unlimited stator voltage reference (V).
-        u_dc : float
-            DC-bus voltage (V).
-
-        """
-        u_s_max = self.k_u*u_dc/np.sqrt(3)
-        self.i_sd_ref += T_s*self.k_fw*(u_s_max - np.abs(u_s_ref))
-        self.i_sd_ref = np.clip(self.i_sd_ref, -self.i_s_max, self.i_sd_nom)
+    def update(self, fbk, ref):
+        """Field-weakening based on the unlimited reference voltage."""
+        cfg = self.cfg
+        max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
+        self.ref_i_sd += ref.T_s*cfg.k_fw*(max_u_s - np.abs(ref.u_s))
+        self.ref_i_sd = np.clip(self.ref_i_sd, -cfg.max_i_s, cfg.nom_i_sd)

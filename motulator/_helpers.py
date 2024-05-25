@@ -1,6 +1,7 @@
 """Helper functions and classes."""
 
 # %%
+from types import SimpleNamespace
 from dataclasses import dataclass
 import numpy as np
 
@@ -62,66 +63,77 @@ def complex2abc(u):
 
 # %%
 @dataclass
-class BaseValues:
+class NominalValues:
     """
-    Base values.
-
-    Base values are computed from the nominal values and the number of pole
-    pairs. They can be used, e.g., for scaling the plotted waveforms.
+    Nominal values.
 
     Parameters
     ----------
-    U_nom : float
+    U : float
         Voltage (V, rms, line-line).
-    I_nom : float
+    I : float
         Current (A, rms).
-    f_nom : float
+    f : float
         Frequency (Hz).
-    tau_nom : float
-        Torque (Nm).
-    P_nom : float
+    P : float
         Power (W).
-    n_p : int
-        Number of pole pairs.
-
-    Attributes
-    ----------
-    u : float
-        Base voltage (V, peak, line-neutral).
-    i : float
-        Base current (A, peak).
-    w : float
-        Base angular frequency (rad/s).
-    psi : float
-        Base flux linkage (Vs).
-    p : float
-        Base power (W).
-    Z : float
-        Base impedance (Ω).
-    L : float
-        Base inductance (H).
     tau : float
-        Base torque (Nm).
+        Torque (Nm).
 
     """
 
-    # pylint: disable=too-many-instance-attributes
-    U_nom: float
-    I_nom: float
-    f_nom: float
-    P_nom: float
-    tau_nom: float
-    n_p: int
+    U: float
+    I: float
+    f: float
+    P: float
+    tau: float
 
-    def __post_init__(self):
-        self.u = np.sqrt(2/3)*self.U_nom
-        self.i = np.sqrt(2)*self.I_nom
-        self.w = 2*np.pi*self.f_nom
-        self.psi = self.u/self.w
-        self.p = 1.5*self.u*self.i
-        self.Z = self.u/self.i
-        self.L = self.Z/self.w
-        self.tau = self.n_p*self.p/self.w
+
+# %%
+def base_values(nom, n_p):
+    """
+    Compute base values.
+
+    Base values are computed from the nominal voltage, current, and frequency.
+    Furthermore, the number of pole pairs is needed for computing the base
+    torque. The base values can be used, e.g., for scaling the plots.
+
+    Parameters
+    ----------
+    nom : NominalValues
+        Must contain the following fields.
+        U : float
+            Voltage (V, rms, line-line).
+        I : float
+            Current (A, rms).
+        f : float
+            Frequency (Hz).
+    n_p : int
+        Number of pole pairs.
+        
+    Returns
+    -------
+    SimpleNamespace
+        Base values (peak, line-neutral).
+
+    Notes
+    -----
+    Notice that the nominal torque is larger than the base torque due to the
+    power factor and efficiency being less than unity.
+
+    """
+    base = SimpleNamespace()
+    base.u = np.sqrt(2/3)*nom.U
+    base.i = np.sqrt(2)*nom.I
+    base.w = 2*np.pi*nom.f
+    base.n_p = n_p
+    base.psi = base.u/base.w
+    base.p = 1.5*base.u*base.i
+    base.Z = base.u/base.i
+    base.L = base.Z/base.w
+    base.tau = base.n_p*base.p/base.w
+
+    return base
 
 
 # %%
