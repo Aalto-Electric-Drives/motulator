@@ -30,24 +30,22 @@ class SignalInjectionCtrl(DriveCtrl):
 
     Parameters
     ----------
-    model_par : ModelPars
+    par : ModelPars
         Machine model parameters.
+    cfg : CurrentReferenceCfg
+        Reference generation configuration.
     T_s : float
         Sampling period (s).
-    U_inj : float
-        Amplitude of the injected voltage (V).
-    w_o : float
-        PLL natural frequency (rad/s).
 
     """
 
-    def __init__(self, model_par, ref_par, T_s=250e-6):
-        super().__init__(model_par, T_s, sensorless=True)
-        self.current_ref = CurrentReference(model_par, ref_par)
-        self.current_ctrl = CurrentCtrl(model_par, 2*np.pi*200)
+    def __init__(self, par, cfg, T_s=250e-6):
+        super().__init__(par, T_s, sensorless=True)
+        self.current_ref = CurrentReference(par, cfg)
+        self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
         self.pll = PhaseLockedLoop(w_o=2*np.pi*40)
-        self.signal_inj = SignalInjection(model_par, U_inj=250)
-        self.speed_ctrl = SpeedCtrl(model_par.J, 2*np.pi*4)
+        self.signal_inj = SignalInjection(par, U_inj=250)
+        self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
         self.observer = None
 
     def get_feedback_signals(self, mdl):

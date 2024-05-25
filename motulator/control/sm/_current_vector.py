@@ -19,8 +19,8 @@ class CurrentVectorCtrl(DriveCtrl):
     ----------
     par : ModelPars
         Machine model parameters.
-    ref : ReferencePars
-        Reference generation parameters.
+    cfg : CurrentReferenceCfg
+        Reference generation configuration.
     T_s : float, optional
         Sampling period (s). The default is 250e-6.
     sensorless : bool, optional
@@ -40,13 +40,13 @@ class CurrentVectorCtrl(DriveCtrl):
     def __init__(
             self,
             par,
-            ref_par,
+            cfg,
             T_s=250e-6,
             alpha_c=2*np.pi*200,
             alpha_o=2*np.pi*100,
             sensorless=True):
         super().__init__(par, T_s, sensorless)
-        self.current_reference = CurrentReference(par, ref_par)
+        self.current_reference = CurrentReference(par, cfg)
         self.current_ctrl = CurrentCtrl(par, alpha_c)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
         if sensorless:
