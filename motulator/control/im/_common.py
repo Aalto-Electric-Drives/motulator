@@ -112,9 +112,9 @@ class Observer:
     def __init__(self, cfg):
         self.par, self.gain, self.T_s = cfg.par, cfg.gain, cfg.T_s
         self.sensorless = cfg.sensorless
-        # Initialize states
-        self.state = SimpleNamespace(psi_R=0, theta_s=0, w_m=0)
-        # Internal work variables for the update method
+        # Initialize the state estimates
+        self.est = SimpleNamespace(psi_R=0, theta_s=0, w_m=0)
+        # Private work variables for the update method
         self._work = SimpleNamespace(d_psi_R=0, d_w_m=0, old_i_s=0)
 
     def output(self, fbk):
@@ -160,10 +160,10 @@ class Observer:
         par, gain = self.par, self.gain
 
         # Get the rotor flux estimate
-        fbk.psi_R, fbk.theta_s = self.state.psi_R, self.state.theta_s
+        fbk.psi_R, fbk.theta_s = self.est.psi_R, self.est.theta_s
 
         # Get the rotor speed estimate in the sensorless mode
-        fbk.w_m = self.state.w_m if self.sensorless else fbk.w_m
+        fbk.w_m = self.est.w_m if self.sensorless else fbk.w_m
 
         # Current and voltage vectors in estimated rotor flux coordinates
         fbk.i_s = np.exp(-1j*fbk.theta_s)*fbk.i_ss
@@ -203,21 +203,10 @@ class Observer:
         return fbk
 
     def update(self, T_s, fbk):
-        """
-        Update the states.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-        fbk : SimpleNamespace
-            Feedback signals.
-
-        """
-        # Update the states
-        self.state.psi_R += T_s*self._work.d_psi_R
-        self.state.theta_s = wrap(self.state.theta_s + T_s*fbk.w_s)
-        self.state.w_m += T_s*self._work.d_w_m
+        """Update the state estimates."""
+        self.est.psi_R += T_s*self._work.d_psi_R
+        self.est.theta_s = wrap(fbk.theta_s + T_s*fbk.w_s)
+        self.est.w_m += T_s*self._work.d_w_m
 
         # Update the sampling period (needed in the output method)
         self.T_s = T_s
@@ -273,9 +262,9 @@ class FullOrderObserver:
     def __init__(self, cfg):
         self.par, self.gain = cfg.par, cfg.gain
         self.sensorless = cfg.sensorless
-        # Initialize states
-        self.state = SimpleNamespace(psi_R=0, i_s=0, theta_s=0, w_m=0)
-        # Internal work variables for the update method
+        # Initialize the state estimates
+        self.est = SimpleNamespace(psi_R=0, i_s=0, theta_s=0, w_m=0)
+        # Private work variables for the update method
         self._work = SimpleNamespace(d_psi_R=0, d_i_s=0, d_w_m=0)
 
         if not self.sensorless:
@@ -290,24 +279,24 @@ class FullOrderObserver:
         par.R_sgm, par.alpha = par.R_s + par.R_R, par.R_R/par.L_M
 
         # Get the estimates
-        fbk.psi_R, fbk.theta_s = self.state.psi_R, self.state.theta_s
-        fbk.w_m = self.state.w_m
+        fbk.psi_R, fbk.theta_s = self.est.psi_R, self.est.theta_s
+        fbk.w_m = self.est.w_m
 
         # Current and voltage vectors in estimated rotor flux coordinates
         fbk.i_s = np.exp(-1j*fbk.theta_s)*fbk.i_ss
         fbk.u_s = np.exp(-1j*fbk.theta_s)*fbk.u_ss
 
         # Stator flux estimate
-        fbk.psi_s = par.L_sgm*self.state.i_s + fbk.psi_R
+        fbk.psi_s = par.L_sgm*self.est.i_s + fbk.psi_R
 
         # Current estimation error
-        err_i_s = fbk.i_s - self.state.i_s
+        err_i_s = fbk.i_s - self.est.i_s
 
         # PI-type speed adaptation
         p_term = (
             -gain.alpha_o*par.L_sgm*err_i_s.imag/
             fbk.psi_R) if fbk.psi_R > 0 else 0
-        w_m = p_term + self.state.w_m
+        w_m = p_term + self.est.w_m
 
         # Angular frequency of the rotor flux vector
         den = fbk.psi_R - par.L_sgm*err_i_s.real
@@ -318,7 +307,7 @@ class FullOrderObserver:
         # Compute the derivatives
         k_i = par.L_sgm*(gain.g - 1j*(fbk.w_s - w_m)) - par.R_sgm
         self._work.d_i_s = (
-            fbk.u_s - (par.R_sgm + 1j*fbk.w_s*par.L_sgm)*self.state.i_s +
+            fbk.u_s - (par.R_sgm + 1j*fbk.w_s*par.L_sgm)*self.est.i_s +
             (par.alpha - 1j*w_m)*fbk.psi_R + k_i*err_i_s)/par.L_sgm
         self._work.d_psi_R = (
             -par.alpha*fbk.psi_R + par.R_R*fbk.i_s.real +
@@ -335,18 +324,8 @@ class FullOrderObserver:
         return fbk
 
     def update(self, T_s, fbk):
-        """
-        Update the states.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-        fbk : SimpleNamespace
-            Feedback signals.
-
-        """
-        self.state.i_s += T_s*self._work.d_i_s
-        self.state.psi_R += T_s*self._work.d_psi_R
-        self.state.w_m += T_s*self._work.d_w_m
-        self.state.theta_s = wrap(self.state.theta_s + T_s*fbk.w_s)
+        """Update the state estimates."""
+        self.est.i_s += T_s*self._work.d_i_s
+        self.est.psi_R += T_s*self._work.d_psi_R
+        self.est.w_m += T_s*self._work.d_w_m
+        self.est.theta_s = wrap(fbk.theta_s + T_s*fbk.w_s)

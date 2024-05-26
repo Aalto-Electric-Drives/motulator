@@ -26,13 +26,13 @@ import numpy as np
 from scipy.optimize import minimize_scalar
 from scipy.interpolate import LinearNDInterpolator
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import base_values, plot, NominalValues, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=220, I_nom=15.6, f_nom=85, tau_nom=19, P_nom=5.07e3, n_p=2)
+nom = NominalValues(U=220, I=15.6, f=85, P=5.07e3, tau=19)
+base = base_values(nom, n_p=2)
 
 # %%
 # Load and plot the flux maps.
@@ -97,7 +97,7 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 # Configure the control system.
 
 par = control.sm.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-cfg = control.sm.ObserverBasedVHzCtrlCfg(par, i_s_max=2*base.i)
+cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
 ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 # %%
@@ -106,15 +106,15 @@ ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = base.tau_nom/(base.w/base.n_p)**2
+k = nom.tau/(base.w/base.n_p)**2
 mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # Uncomment to try the rated load torque step at t = 1 s (set k = 0 above)
 # times = np.array([0, .125, .125, .875, .875, 1])*8
-# values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+# values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 # mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%

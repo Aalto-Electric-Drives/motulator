@@ -16,13 +16,13 @@ this example.
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import base_values, plot, NominalValues, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
+nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+base = base_values(nom, n_p=3)
 
 # %%
 # Configure the system model.
@@ -38,8 +38,8 @@ mdl = model.sm.DriveTwoMassMechanics(machine, mechanics, converter)
 # Configure the control system.
 
 par = control.sm.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-ctrl_par = control.sm.ObserverBasedVHzCtrlCfg(par, i_s_max=1.5*base.i)
-ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
+cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
+ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 # %%
@@ -48,10 +48,10 @@ ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
 # Speed reference
 times = np.array([0, .1, .2, 1])
 values = np.array([0, 0, 1, 1])*base.w*.5
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .4, .4, 1])
-values = np.array([0, 0, 1, 1])*base.tau_nom
+values = np.array([0, 0, 1, 1])*nom.tau
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%

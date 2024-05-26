@@ -66,17 +66,17 @@ class CurrentVectorCtrl(DriveCtrl):
         return fbk
 
     def output(self, fbk):
-
+        """Output"""
         ref = super().output(fbk)
         ref = super().get_torque_reference(fbk, ref)
         ref = self.current_reference.output(fbk, ref)
         ref.u_s = self.current_ctrl.output(ref.i_s, fbk.i_s)
         u_ss = ref.u_s*np.exp(1j*fbk.theta_m)
         ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
-
         return ref
 
     def update(self, fbk, ref):
+        """Update"""
         super().update(fbk, ref)
         self.current_reference.update(fbk, ref)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_s)

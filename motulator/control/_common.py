@@ -617,13 +617,13 @@ class Ctrl(ABC):
         # Feedback signals
         fbk = self.get_feedback_signals(mdl)
 
-        # Compute references
+        # Compute the references
         ref = self.output(fbk)
 
-        # Update states
+        # Update the states
         self.update(fbk, ref)
 
-        # Save data
+        # Save the data
         self.save(fbk=fbk, ref=ref)
 
         # Return the sampling period and the duty ratios for the PWM
@@ -641,7 +641,7 @@ class DriveCtrl(Ctrl, ABC):
 
     Parameters
     ----------
-    model_par : ModelPars
+    par : ModelPars
         Machine model parameters.
     T_s : float
         Sampling period (s).
@@ -663,9 +663,9 @@ class DriveCtrl(Ctrl, ABC):
 
     """
 
-    def __init__(self, model_par, T_s, sensorless):
+    def __init__(self, par, T_s, sensorless):
         super().__init__(T_s)
-        self.par = model_par
+        self.par = par
         self.sensorless = sensorless
         self.speed_ctrl = None
         self.observer = None

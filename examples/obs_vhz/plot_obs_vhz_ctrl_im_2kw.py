@@ -12,13 +12,13 @@ drive.
 
 import numpy as np
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import base_values, plot, NominalValues, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
+nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
+base = base_values(nom, n_p=2)
 
 # %%
 # Configure the system model.
@@ -36,7 +36,7 @@ mdl = model.im.Drive(machine, mechanics, converter)
 # Inverse-Γ model parameter estimates
 par = control.im.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 cfg = control.im.ObserverBasedVHzCtrlCfg(
-    psi_s_nom=base.psi, i_s_max=1.5*base.i)
+    nom_psi_s=base.psi, max_i_s=1.5*base.i, slip_compensation=False)
 ctrl = control.im.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 # %%
@@ -45,14 +45,14 @@ ctrl = control.im.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 
 # %%
 # Set the load torque reference.
 
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # Quadratic load torque profile, e.g. pumps and fans (uncomment to enable)

@@ -9,9 +9,13 @@ from motulator.control.im._current_vector import (
 )
 
 from motulator.control.im._common import Observer, ObserverCfg
-from motulator.control.im._common import FullOrderObserver, FullOrderObserverCfg
+from motulator.control.im._common import (
+    FullOrderObserver, FullOrderObserverCfg)
 
 from motulator.control.im._vhz import VHzCtrl, VHzCtrlCfg
+
+from motulator.control.im._obs_vhz import (
+    ObserverBasedVHzCtrl, ObserverBasedVHzCtrlCfg)
 
 __all__ = [
     "CurrentCtrl",
@@ -25,4 +29,6 @@ __all__ = [
     "FullOrderObserverCfg",
     "VHzCtrl",
     "VHzCtrlCfg",
+    "ObserverBasedVHzCtrl",
+    "ObserverBasedVHzCtrlCfg",
 ]

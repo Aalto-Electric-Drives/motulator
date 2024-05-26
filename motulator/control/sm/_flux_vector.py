@@ -174,16 +174,17 @@ class FluxTorqueReference:
         mtpa_psi_s = np.clip(mtpa_psi_s, cfg.min_psi_s, cfg.max_psi_s)
 
         # Field weakening
+        w_m = fbk.w_m if hasattr(fbk, 'w_m') else ref.w_m
         max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
-        max_psi_s = max_u_s/np.abs(fbk.w_m) if np.abs(fbk.w_m) > 0 else np.inf
+        max_psi_s = max_u_s/np.abs(w_m) if w_m != 0 else np.inf
+        #max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
+        #max_psi_s = max_u_s/np.abs(fbk.w_m) if fbk.w_m != 0 else np.inf
 
         # Flux reference
         ref.psi_s = np.min([max_psi_s, mtpa_psi_s])
 
         # Limit the torque reference according to the MTPV and current limits
         lim_tau_M = cfg.lim_tau_M(ref.psi_s)
-        #ref.tau_M_lim = np.min([lim_tau_M, np.abs(ref.tau_M)])*np.sign(
-        #    ref.tau_M)
         ref.tau_M = np.min([lim_tau_M, np.abs(ref.tau_M)])*np.sign(ref.tau_M)
 
         return ref

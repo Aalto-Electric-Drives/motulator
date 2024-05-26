@@ -44,7 +44,7 @@ class ObserverCfg:
 
     Parameters
     ----------
-    model_par : ModelPars
+    par : ModelPars
         Machine model parameters.
     sensorless : bool
         If True, sensorless mode is used. 
@@ -117,10 +117,10 @@ class Observer:
     def __init__(self, cfg):
         self.sensorless = cfg.sensorless
         self.par, self.gain = cfg.par, cfg.gain
-        # Initialize states
-        self.state = SimpleNamespace(
+        # Initialize the state estimates
+        self.est = SimpleNamespace(
             theta_m=0, w_m=0, psi_s=self.par.psi_f, psi_f=self.par.psi_f)
-        # Internal work variables for the update method
+        # Private work variables for the update method
         self._work = SimpleNamespace(d_psi_s=0, d_psi_d=0, d_w_m=0)
 
     def output(self, fbk):
@@ -167,11 +167,11 @@ class Observer:
         par, gain = self.par, self.gain
 
         # Get the flux estimates
-        fbk.psi_s, fbk.psi_f = self.state.psi_s, self.state.psi_f
+        fbk.psi_s, fbk.psi_f = self.est.psi_s, self.est.psi_f
 
         # Get the mechanical variables
         if self.sensorless:
-            fbk.theta_m, fbk.w_m = self.state.theta_m, self.state.w_m
+            fbk.theta_m, fbk.w_m = self.est.theta_m, self.est.w_m
 
         # Current and voltage vectors in (estimated) rotor coordinates
         fbk.i_s = np.exp(-1j*fbk.theta_m)*fbk.i_ss
@@ -215,18 +215,8 @@ class Observer:
         return fbk
 
     def update(self, T_s, fbk):
-        """
-        Update the states.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-        fbk : SimpleNamespace
-            Feedback signals.
-
-        """
-        self.state.psi_s += T_s*self._work.d_psi_s
-        self.state.psi_f += T_s*self._work.d_psi_f
-        self.state.w_m += T_s*self._work.d_w_m
-        self.state.theta_m = wrap(self.state.theta_m + T_s*fbk.w_s)
+        """Update the state estimates."""
+        self.est.psi_s += T_s*self._work.d_psi_s
+        self.est.psi_f += T_s*self._work.d_psi_f
+        self.est.w_m += T_s*self._work.d_w_m
+        self.est.theta_m = wrap(fbk.theta_m + T_s*fbk.w_s)
