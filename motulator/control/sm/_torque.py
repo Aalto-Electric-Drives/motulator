@@ -241,17 +241,18 @@ class TorqueCharacteristics:
 
         Returns
         -------
-        SimpleNamespace object with the following fields defined:
-        psi_s : complex
-            Stator flux (Vs).
-        i_s : complex
-            Stator current (A).
-        tau_M : float
-            Electromagnetic torque (Nm).
-        abs_psi_s_vs_tau_M : callable
-            Stator flux magnitude (Vs) as a function of the torque (Nm).
-        i_sd_vs_tau_M : callable
-            d-axis current (A) as a function of the torque (Nm).
+        Object with the following fields defined : SimpleNamespace
+
+            psi_s : complex
+                Stator flux (Vs).
+            i_s : complex
+                Stator current (A).
+            tau_M : float
+                Electromagnetic torque (Nm).
+            abs_psi_s_vs_tau_M : callable
+                Stator flux magnitude (Vs) as a function of the torque (Nm).
+            i_sd_vs_tau_M : callable
+                d-axis current (A) as a function of the torque (Nm).
 
         """
         # Current  magnitudes
@@ -302,15 +303,16 @@ class TorqueCharacteristics:
 
         Returns
         -------
-        SimpleNamespace object with the following fields defined:
-        psi_s : complex
-            Stator flux (Vs).
-        i_s : complex
-            Stator current (A).
-        tau_M : float
-            Electromagnetic torque (Nm).
-        tau_M_vs_abs_psi_s : interp1d object
-            Torque (Nm) as a function of the flux magnitude (Vs).
+        Object with the following fields defined : SimpleNamespace
+
+            psi_s : complex
+                Stator flux (Vs).
+            i_s : complex
+                Stator current (A).
+            tau_M : float
+                Electromagnetic torque (Nm).
+            tau_M_vs_abs_psi_s : interp1d object
+                Torque (Nm) as a function of the flux magnitude (Vs).
 
         """
         # If max_i_s is given, compute the corresponding MTPV stator flux
@@ -354,15 +356,16 @@ class TorqueCharacteristics:
 
         Returns
         -------
-        SimpleNamespace object with the following fields defined:
-        psi_s : complex
-            Stator flux (Vs).
-        i_s : complex
-            Stator current (A).
-        tau_M : float
-            Electromagnetic torque (Nm).
-        tau_M_vs_abs_psi_s : interp1d object
-            Torque (Nm) as a function of the flux magnitude (Vs).
+        Object with the following fields defined : SimpleNamespace
+
+            psi_s : complex
+                Stator flux (Vs).
+            i_s : complex
+                Stator current (A).
+            tau_M : float
+                Electromagnetic torque (Nm).
+            tau_M_vs_abs_psi_s : interp1d object
+                Torque (Nm) as a function of the flux magnitude (Vs).
 
         """
         if np.isnan(gamma1):
@@ -403,11 +406,12 @@ class TorqueCharacteristics:
 
         Returns
         -------
-        SimpleNamespace object with the following fields defined:
-        tau_M_vs_abs_psi_s : interp1d object
-            Torque (Nm) as a function of the flux magnitude (Vs).
-        i_sd_vs_tau_M : interp1d object
-            d-axis current (A) as a function of the torque (Nm).
+        Object with the following fields defined : SimpleNamespace
+
+            tau_M_vs_abs_psi_s : interp1d object
+                Torque (Nm) as a function of the flux magnitude (Vs).
+            i_sd_vs_tau_M : interp1d object
+                d-axis current (A) as a function of the torque (Nm).
 
         """
         mtpa = self.mtpa_locus(max_i_s=max_i_s, N=N)
@@ -450,7 +454,7 @@ class TorqueCharacteristics:
         ----------
         max_i_s : float
             Maximum current (A) at which the loci are evaluated.
-        base : BaseValues
+        base : SimpleNamespace
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -497,7 +501,7 @@ class TorqueCharacteristics:
         ----------
         max_i_s : float
             Maximum current (A) at which the loci are evaluated.
-        base : BaseValues
+        base : SimpleNamespace
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -545,7 +549,7 @@ class TorqueCharacteristics:
         ----------
         max_i_s : float
             Maximum current (A) at which the loci are evaluated.
-        base : BaseValues
+        base : SimpleNamespace
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -601,7 +605,7 @@ class TorqueCharacteristics:
         ----------
         max_i_s : float
             Maximum current (A) at which the loci are evaluated.
-        base : BaseValues
+        base : SimpleNamespace
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.

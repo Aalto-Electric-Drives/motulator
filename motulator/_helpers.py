@@ -101,13 +101,15 @@ def base_values(nom, n_p):
     Parameters
     ----------
     nom : NominalValues
-        Must contain the following fields.
-        U : float
-            Voltage (V, rms, line-line).
-        I : float
-            Current (A, rms).
-        f : float
-            Frequency (Hz).
+        Must contain the following fields:
+
+            U : float
+                Voltage (V, rms, line-line).
+            I : float
+                Current (A, rms).
+            f : float
+                Frequency (Hz).
+
     n_p : int
         Number of pole pairs.
         

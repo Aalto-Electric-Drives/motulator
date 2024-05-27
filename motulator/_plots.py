@@ -27,7 +27,7 @@ def plot(sim, base=None, t_span=None):
     ----------
     sim : Simulation
         Should contain the simulated data.
-    base : BaseValues, optional
+    base : SimpleNamespace, optional
         Base values for scaling the waveforms.
     t_span : 2-tuple, optional
         Time span. The default is (0, sim.ctrl.t[-1]).
@@ -210,7 +210,7 @@ def plot_extra(sim, base=None, t_span=None):
     ----------
     sim : Simulation
         Should contain the simulated data.
-    base : BaseValues, optional
+    base : SimpleNamespace, optional
         Base values for scaling the waveforms.
     t_span : 2-tuple, optional
         Time span. The default is (0, sim.ctrl.t[-1]).

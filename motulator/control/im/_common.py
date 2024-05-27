@@ -125,35 +125,37 @@ class Observer:
         ----------
         fbk : SimpleNamespace
             Measured signals, which should contain the following fields:
-            u_ss : complex
-                Stator voltage (V) in stator coordinates.
-            i_ss : complex
-                Stator current (A) in stator coordinates.
-            w_m : float, optional
-                Rotor angular speed (electrical rad/s). This is only needed in 
-                the sensored mode.
+
+                u_ss : complex
+                    Stator voltage (V) in stator coordinates.
+                i_ss : complex
+                    Stator current (A) in stator coordinates.
+                w_m : float, optional
+                    Rotor angular speed (electrical rad/s). This is only needed 
+                    in the sensored mode.
 
         Returns
         -------
         fbk : SimpleNamespace
             Measured and estimated feedback signals for the control system, 
             containing at least the following fields:
-            u_s : complex
-                Stator voltage (V) in estimated rotor flux coordinates.
-            i_s : complex
-                Stator current (A) in estimated rotor flux coordinates.
-            psi_R : float
-                Rotor flux magnitude estimate (Vs).
-            theta_s : float
-                Rotor flux angle estimate (rad).
-            w_s : float
-                Angular frequency (rad/s) of the coordinate system.
-            w_m : float
-                Rotor speed estimate (electrical rad/s).
-            w_r : float
-                Slip angular frequency (rad/s).
-            psi_s : complex
-                Stator flux estimate (Vs).
+
+                u_s : complex
+                    Stator voltage (V) in estimated rotor flux coordinates.
+                i_s : complex
+                    Stator current (A) in estimated rotor flux coordinates.
+                psi_R : float
+                    Rotor flux magnitude estimate (Vs).
+                theta_s : float
+                    Rotor flux angle estimate (rad).
+                w_s : float
+                    Angular frequency (rad/s) of the coordinate system.
+                w_m : float
+                    Rotor speed estimate (electrical rad/s).
+                w_r : float
+                    Slip angular frequency (rad/s).
+                psi_s : complex
+                    Stator flux estimate (Vs).
  
         """
         # Unpack

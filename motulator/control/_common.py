@@ -533,10 +533,11 @@ class Ctrl(ABC):
         -------
         ref : SimpleNamespace
             References, containing at least the following fields:
-            T_s : float
-                Next sampling period (s).
-            d_abc : ndarray, shape (3,)
-                Duty ratios.
+
+                T_s : float
+                    Next sampling period (s).
+                d_abc : ndarray, shape (3,)
+                    Duty ratios.
                     
         """
         ref = SimpleNamespace()
@@ -656,10 +657,11 @@ class DriveCtrl(Ctrl, ABC):
         Speed controller.   
     ref : SimpleNamespace
         References, possibly containing either of the following fields:
-        w_m : callable
-            Speed reference (mechanical rad/s) as a function of time (s).
-        tau_M : callable
-            Torque reference (Nm) as a function of time (s).
+
+            w_m : callable
+                Speed reference (mechanical rad/s) as a function of time (s).
+            tau_M : callable
+                Torque reference (Nm) as a function of time (s).
 
     """
 
