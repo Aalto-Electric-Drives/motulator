@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:27.903** total execution time for 3 files **from auto_examples/flux_vector**:
+**00:26.764** total execution time for 3 files **from auto_examples/flux_vector**:
 
 .. container::
 
@@ -32,12 +32,12 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py` (``plot_flux_vector_pmsyrm_5kw.py``)
-     - 00:11.774
-     - 0.0
    * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py` (``plot_flux_vector_syrm_7kw.py``)
-     - 00:11.627
+     - 00:11.238
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py` (``plot_flux_vector_pmsyrm_5kw.py``)
+     - 00:11.140
      - 0.0
    * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py` (``plot_flux_vector_pmsm_2kw.py``)
-     - 00:04.502
+     - 00:04.385
      - 0.0
