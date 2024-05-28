@@ -73,7 +73,6 @@ class VHzCtrl(DriveCtrl):
 
     def output(self, fbk):
         """Extend the base class method."""
-        ref = super().output(fbk)
 
         # Unpack
         par, gain = self.par, self.gain
@@ -113,6 +112,7 @@ class VHzCtrl(DriveCtrl):
             return ref
 
         # Get the reference signals
+        ref = super().output(fbk)
         ref.w_m = self.rate_limiter(ref.T_s, self.ref.w_m(ref.t))
         ref.i_s, ref.w_r = self.ref.i_s, self.ref.w_r
         ref.psi_s = self.nom_psi_s
