@@ -12,6 +12,11 @@ jobs:
       with:
         docs-folder: "docs/"
 
+    - uses: ammaraskar/sphinx-action@master
+      with:
+        build-command: "sphinx-build -b html . _build"
+        docs-folder: "docs/"
+
     - uses: actions/upload-artifact@v1
       with:
         name: DocumentationHTML
