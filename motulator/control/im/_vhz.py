@@ -1,19 +1,5 @@
-"""
-V/Hz control for induction motor drives.
+"""V/Hz control for induction motor drives."""
 
-The method is similar to [#Hin2022]_. Open-loop V/Hz control can be obtained as 
-a special case by choosing::
-
-    R_s, R_R = 0, 0
-    k_u, k_w = 0, 0
-
-References
-----------
-.. [#Hin2022] Hinkkanen, Tiitinen, Mölsä, Harnefors, "On the stability of
-   volts-per-hertz control for induction motors," IEEE J. Emerg. Sel. Topics
-   Power Electron., 2022, https://doi.org/10.1109/JESTPE.2021.3060583
-
-"""
 # %%
 from dataclasses import dataclass, field, InitVar
 from types import SimpleNamespace
@@ -31,7 +17,7 @@ class VHzCtrlCfg:
     nom_psi_s: float = None
     T_s: float = 250e-6
     six_step: bool = False
-    rate_limiter: callable = RateLimiter(2*np.pi*120)
+    rate_limit: float = 2*np.pi*120
     gain: SimpleNamespace = field(init=False)
     k_u: InitVar[float] = 1
     k_w: InitVar[float] = 4
@@ -49,14 +35,30 @@ class VHzCtrlCfg:
 
 # %%
 class VHzCtrl(DriveCtrl):
-    """V/Hz control with the stator current feedback."""
+    """
+    V/Hz control with the stator current feedback.
+
+    The method is similar to [#Hin2022]_. Open-loop V/Hz control can be 
+    obtained as a special case by choosing::
+
+        R_s, R_R = 0, 0
+        k_u, k_w = 0, 0
+
+    References
+    ----------
+    .. [#Hin2022] Hinkkanen, Tiitinen, Mölsä, Harnefors, "On the stability of
+       volts-per-hertz control for induction motors," IEEE J. Emerg. Sel. 
+       Topics Power Electron., 2022, 
+       https://doi.org/10.1109/JESTPE.2021.3060583
+
+    """
 
     def __init__(self, cfg):
         super().__init__(cfg.par, cfg.T_s, sensorless=True)
         self.gain = cfg.gain
         self.nom_psi_s = cfg.nom_psi_s
         self.pwm = PWM(six_step=cfg.six_step)
-        self.rate_limiter = cfg.rate_limiter
+        self.rate_limiter = RateLimiter(cfg.rate_limit)
         # Initialize the states
         self.ref.i_s, self.ref.w_r, self.theta_s = 0j, 0, 0
 
@@ -86,7 +88,7 @@ class VHzCtrl(DriveCtrl):
             if ref_psi_R_sqr > 0:
                 fbk.w_r = par.R_R*np.imag(
                     fbk.i_s*np.conj(ref.psi_R))/ref_psi_R_sqr
-                fbk.w_s = ref.w_s + self.gain.k_w*(ref.w_r - fbk.w_r)
+                fbk.w_s = ref.w_s + gain.k_w*(ref.w_r - fbk.w_r)
             else:
                 fbk.w_s, fbk.w_r = 0, 0
 
