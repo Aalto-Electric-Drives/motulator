@@ -143,14 +143,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/motulator/control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/control/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/control/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/motulator/control/index.html">motulator.control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/control/im/index.html">motulator.control.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/control/sm/index.html">motulator.control.sm</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/motulator/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/model/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/model/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/motulator/model/index.html">motulator.model</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/model/im/index.html">motulator.model.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/model/sm/index.html">motulator.model.sm</a></li>
 </ul>
 </li>
 </ul>
@@ -330,7 +330,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="Mechanics"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._mechanics.Mechanics">[docs]</a><span class="k">class</span> <span class="nc">Mechanics</span><span class="p">:</span>
+<div class="viewcode-block" id="Mechanics"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.Mechanics">[docs]</a><span class="k">class</span> <span class="nc">Mechanics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mechanics subsystem.</span>
 
@@ -356,7 +356,7 @@ document.write(`
         <span class="c1"># Initial values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_M0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="Mechanics.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._mechanics.Mechanics.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">):</span>
+<div class="viewcode-block" id="Mechanics.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the state derivatives.</span>
 
@@ -382,7 +382,7 @@ document.write(`
         <span class="n">dtheta_M</span> <span class="o">=</span> <span class="n">w_M</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">dw_M</span><span class="p">,</span> <span class="n">dtheta_M</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Mechanics.meas_speed"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._mechanics.Mechanics.meas_speed">[docs]</a>    <span class="k">def</span> <span class="nf">meas_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Mechanics.meas_speed"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.meas_speed">[docs]</a>    <span class="k">def</span> <span class="nf">meas_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the rotor speed.</span>
 
@@ -398,7 +398,7 @@ document.write(`
         <span class="c1"># by means of the rotor angle, to be done later.</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_M0</span></div>
 
-<div class="viewcode-block" id="Mechanics.meas_position"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._mechanics.Mechanics.meas_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Mechanics.meas_position"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.meas_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the rotor angle.</span>
 
@@ -414,7 +414,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="MechanicsTwoMass"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._mechanics.MechanicsTwoMass">[docs]</a><span class="k">class</span> <span class="nc">MechanicsTwoMass</span><span class="p">(</span><span class="n">Mechanics</span><span class="p">):</span>
+<div class="viewcode-block" id="MechanicsTwoMass"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass">[docs]</a><span class="k">class</span> <span class="nc">MechanicsTwoMass</span><span class="p">(</span><span class="n">Mechanics</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-mass mechanics subsystem.</span>
 
@@ -450,7 +450,7 @@ document.write(`
         <span class="c1"># Initial values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_M0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_L0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_ML0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="MechanicsTwoMass.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._mechanics.MechanicsTwoMass.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">w_L</span><span class="p">,</span> <span class="n">theta_ML</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">):</span>
+<div class="viewcode-block" id="MechanicsTwoMass.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">w_L</span><span class="p">,</span> <span class="n">theta_ML</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">):</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="c1"># pylint: disable=arguments-differ</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -487,7 +487,7 @@ document.write(`
 
         <span class="k">return</span> <span class="p">[</span><span class="n">dw_M</span><span class="p">,</span> <span class="n">dtheta_M</span><span class="p">,</span> <span class="n">dw_L</span><span class="p">,</span> <span class="n">dtheta_ML</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="MechanicsTwoMass.meas_load_speed"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._mechanics.MechanicsTwoMass.meas_load_speed">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MechanicsTwoMass.meas_load_speed"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.meas_load_speed">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the load speed.</span>
 
@@ -501,7 +501,7 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_L0</span></div>
 
-<div class="viewcode-block" id="MechanicsTwoMass.meas_load_position"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._mechanics.MechanicsTwoMass.meas_load_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MechanicsTwoMass.meas_load_position"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.meas_load_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the load angle.</span>
 

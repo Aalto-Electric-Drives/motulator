@@ -1,5 +1,5 @@
-:py:mod:`motulator.control.im`
-==============================
+motulator.control.im
+====================
 
 .. py:module:: motulator.control.im
 
@@ -27,11 +27,8 @@
        !! processed by numpydoc !!
 
 
-Package Contents
-----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -47,12 +44,13 @@ Classes
    motulator.control.im.VHzCtrl
 
 
-
+Package Contents
+----------------
 
 .. py:class:: CurrentCtrl(par, alpha_c)
 
-
    Bases: :py:obj:`motulator.control._common.ComplexPICtrl`
+
 
    
    2DOF PI current controller for induction machines.
@@ -84,7 +82,6 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CurrentReferencePars
-
 
    
    Parameters for reference generation.
@@ -127,7 +124,6 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: CurrentReference(par, ref)
-
 
    
    Current reference generation.
@@ -179,6 +175,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: output(tau_M_ref, psi_R)
 
       
@@ -208,6 +205,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: update(T_s, u_s_ref, u_dc)
 
@@ -240,7 +238,6 @@ Classes
 
 
 .. py:class:: ModelPars
-
 
    
    Inverse-Γ model parameters of an induction machine.
@@ -277,8 +274,8 @@ Classes
 
 .. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
 
-
    Bases: :py:obj:`motulator.control._common.Ctrl`
+
 
    
    Vector control for induction machine drives.
@@ -350,7 +347,6 @@ Classes
 
 .. py:class:: Observer(par, k=None, alpha_o=2 * np.pi * 40, sensorless=True)
 
-
    
    Reduced-order flux observer in estimated rotor flux coordinates.
 
@@ -421,7 +417,6 @@ Classes
 
 .. py:class:: FluxObserver(par, alpha_o, b=None)
 
-
    
    Sensorless reduced-order flux observer in external coordinates.
 
@@ -474,6 +469,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: update(T_s, u_s, i_s, w_s)
 
       
@@ -508,8 +504,8 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrl(par, ctrl_par, T_s=0.00025)
 
-
    Bases: :py:obj:`motulator.control._common.Ctrl`
+
 
    
    Observer-based V/Hz control for induction machines.
@@ -564,7 +560,6 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrlPars
 
-
    
    Parameters for the control system.
 
@@ -603,8 +598,8 @@ Classes
 
 .. py:class:: VHzCtrl(T_s, par, psi_s_nom, k_u=1.0, k_w=4.0, six_step=False)
 
-
    Bases: :py:obj:`motulator.control._common.Ctrl`
+
 
    
    V/Hz control with the stator current feedback.

@@ -143,14 +143,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/control/index.html">motulator.control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/im/index.html">motulator.control.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/sm/index.html">motulator.control.sm</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/model/index.html">motulator.model</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/im/index.html">motulator.model.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/sm/index.html">motulator.model.sm</a></li>
 </ul>
 </li>
 </ul>
@@ -356,7 +356,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="TorqueCharacteristics"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics">[docs]</a><span class="k">class</span> <span class="nc">TorqueCharacteristics</span><span class="p">:</span>
+<div class="viewcode-block" id="TorqueCharacteristics"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics">[docs]</a><span class="k">class</span> <span class="nc">TorqueCharacteristics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute MTPA and MTPV loci based on the machine parameters.</span>
 
@@ -375,7 +375,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
 
-<div class="viewcode-block" id="TorqueCharacteristics.torque"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.torque">[docs]</a>    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.torque"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.torque">[docs]</a>    <span class="k">def</span> <span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the torque as a function of the stator flux linkage.</span>
 
@@ -395,7 +395,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">tau_M</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.current">[docs]</a>    <span class="k">def</span> <span class="nf">current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.current">[docs]</a>    <span class="k">def</span> <span class="nf">current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the stator current as a function of the stator flux linkage.</span>
 
@@ -414,7 +414,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">i_s</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.flux"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.flux">[docs]</a>    <span class="k">def</span> <span class="nf">flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.flux"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.flux">[docs]</a>    <span class="k">def</span> <span class="nf">flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the stator flux linkage as a function of the current.</span>
 
@@ -433,7 +433,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">psi_s</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.mtpa"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.mtpa">[docs]</a>    <span class="k">def</span> <span class="nf">mtpa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_i_s</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.mtpa"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.mtpa">[docs]</a>    <span class="k">def</span> <span class="nf">mtpa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_i_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the MTPA stator current angle.</span>
 
@@ -468,7 +468,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">beta</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.mtpv"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.mtpv">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_psi_s</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.mtpv"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.mtpv">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_psi_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the MTPV stator flux angle.</span>
 
@@ -504,7 +504,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">delta</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.mtpv_current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.mtpv_current">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_i_s</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.mtpv_current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.mtpv_current">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abs_i_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the MTPV based on the current magnitude.</span>
 
@@ -553,7 +553,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">i_s</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.mtpa_locus"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.mtpa_locus">[docs]</a>    <span class="k">def</span> <span class="nf">mtpa_locus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">psi_s_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.mtpa_locus"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.mtpa_locus">[docs]</a>    <span class="k">def</span> <span class="nf">mtpa_locus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">psi_s_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the MTPA locus.</span>
 
@@ -614,7 +614,7 @@ document.write(`
             <span class="n">abs_psi_s_vs_tau_M</span><span class="o">=</span><span class="n">abs_psi_s_vs_tau_M</span><span class="p">,</span>
             <span class="n">i_sd_vs_tau_M</span><span class="o">=</span><span class="n">i_sd_vs_tau_M</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.mtpv_locus"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.mtpv_locus">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_locus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.mtpv_locus"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.mtpv_locus">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_locus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the MTPV locus.</span>
 
@@ -667,7 +667,7 @@ document.write(`
             <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
             <span class="n">tau_M_vs_abs_psi_s</span><span class="o">=</span><span class="n">tau_M_vs_abs_psi_s</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.current_limit"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.current_limit">[docs]</a>    <span class="k">def</span> <span class="nf">current_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">gamma1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">gamma2</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.current_limit"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.current_limit">[docs]</a>    <span class="k">def</span> <span class="nf">current_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">gamma1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">gamma2</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the current limit.</span>
 
@@ -721,7 +721,7 @@ document.write(`
             <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
             <span class="n">tau_M_vs_abs_psi_s</span><span class="o">=</span><span class="n">tau_M_vs_abs_psi_s</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.mtpv_and_current_limits"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.mtpv_and_current_limits">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_and_current_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.mtpv_and_current_limits"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.mtpv_and_current_limits">[docs]</a>    <span class="k">def</span> <span class="nf">mtpv_and_current_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merge the MTPV and current limits into a single interpolant.</span>
 
@@ -772,7 +772,7 @@ document.write(`
         <span class="k">return</span> <span class="n">Bunch</span><span class="p">(</span>
             <span class="n">tau_M_vs_abs_psi_s</span><span class="o">=</span><span class="n">tau_M_vs_abs_psi_s</span><span class="p">,</span> <span class="n">i_sd_vs_tau_M</span><span class="o">=</span><span class="n">i_sd_vs_tau_M</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.plot_flux_loci"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.plot_flux_loci">[docs]</a>    <span class="k">def</span> <span class="nf">plot_flux_loci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.plot_flux_loci"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.plot_flux_loci">[docs]</a>    <span class="k">def</span> <span class="nf">plot_flux_loci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the stator flux linkage loci.</span>
 
@@ -819,7 +819,7 @@ document.write(`
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.plot_current_loci"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.plot_current_loci">[docs]</a>    <span class="k">def</span> <span class="nf">plot_current_loci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.plot_current_loci"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.plot_current_loci">[docs]</a>    <span class="k">def</span> <span class="nf">plot_current_loci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the current loci.</span>
 
@@ -865,7 +865,7 @@ document.write(`
             <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">])</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.plot_torque_current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.plot_torque_current">[docs]</a>    <span class="k">def</span> <span class="nf">plot_torque_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.plot_torque_current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.plot_torque_current">[docs]</a>    <span class="k">def</span> <span class="nf">plot_torque_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot torque vs. current characteristics.</span>
 
@@ -921,7 +921,7 @@ document.write(`
         <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sq}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TorqueCharacteristics.plot_torque_flux"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._torque.TorqueCharacteristics.plot_torque_flux">[docs]</a>    <span class="k">def</span> <span class="nf">plot_torque_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="TorqueCharacteristics.plot_torque_flux"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.TorqueCharacteristics.plot_torque_flux">[docs]</a>    <span class="k">def</span> <span class="nf">plot_torque_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot torque vs. flux magnitude characteristics.</span>
 

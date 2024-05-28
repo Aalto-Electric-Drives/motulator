@@ -143,14 +143,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/motulator/control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/control/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/control/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/motulator/control/index.html">motulator.control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/control/im/index.html">motulator.control.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/control/sm/index.html">motulator.control.sm</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/motulator/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/model/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/model/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/motulator/model/index.html">motulator.model</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/model/im/index.html">motulator.model.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/motulator/model/sm/index.html">motulator.model.sm</a></li>
 </ul>
 </li>
 </ul>
@@ -339,7 +339,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="Inverter"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter">[docs]</a><span class="k">class</span> <span class="nc">Inverter</span><span class="p">:</span>
+<div class="viewcode-block" id="Inverter"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.Inverter">[docs]</a><span class="k">class</span> <span class="nc">Inverter</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Inverter with constant DC-bus voltage and switching-cycle averaging.</span>
 
@@ -353,8 +353,8 @@ document.write(`
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_dc0</span> <span class="o">=</span> <span class="n">u_dc</span>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="Inverter.ac_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.ac_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">ac_voltage</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="Inverter.ac_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.Inverter.ac_voltage">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ac_voltage</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the AC-side voltage of a lossless inverter.</span>
 
@@ -374,8 +374,8 @@ document.write(`
         <span class="n">u_c</span> <span class="o">=</span> <span class="n">q</span><span class="o">*</span><span class="n">u_dc</span>
         <span class="k">return</span> <span class="n">u_c</span></div>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="Inverter.dc_current"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.dc_current">[docs]</a>    <span class="k">def</span> <span class="nf">dc_current</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">i_c</span><span class="p">):</span>
+<div class="viewcode-block" id="Inverter.dc_current"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.Inverter.dc_current">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">dc_current</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">i_c</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the DC-side current of a lossless inverter.</span>
 
@@ -395,7 +395,7 @@ document.write(`
         <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_c</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">i_dc</span></div>
 
-<div class="viewcode-block" id="Inverter.meas_dc_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.Inverter.meas_dc_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">meas_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Inverter.meas_dc_voltage"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.Inverter.meas_dc_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">meas_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the DC-bus voltage.</span>
 
@@ -409,7 +409,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="FrequencyConverter"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.FrequencyConverter">[docs]</a><span class="k">class</span> <span class="nc">FrequencyConverter</span><span class="p">(</span><span class="n">Inverter</span><span class="p">):</span>
+<div class="viewcode-block" id="FrequencyConverter"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.FrequencyConverter">[docs]</a><span class="k">class</span> <span class="nc">FrequencyConverter</span><span class="p">(</span><span class="n">Inverter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Frequency converter.</span>
 
@@ -442,7 +442,7 @@ document.write(`
         <span class="c1"># Grid angular frequency</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f_g</span>
 
-<div class="viewcode-block" id="FrequencyConverter.grid_voltages"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.FrequencyConverter.grid_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">grid_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FrequencyConverter.grid_voltages"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.FrequencyConverter.grid_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">grid_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute three-phase grid voltages.</span>
 
@@ -465,7 +465,7 @@ document.write(`
         <span class="p">])</span>
         <span class="k">return</span> <span class="n">u_g_abc</span></div>
 
-<div class="viewcode-block" id="FrequencyConverter.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model._converter.FrequencyConverter.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">):</span>
+<div class="viewcode-block" id="FrequencyConverter.f"><a class="viewcode-back" href="../../../autoapi/motulator/model/index.html#motulator.model.FrequencyConverter.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the state derivatives.</span>
 

@@ -143,14 +143,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/control/index.html">motulator.control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/im/index.html">motulator.control.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/sm/index.html">motulator.control.sm</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/model/index.html">motulator.model</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/im/index.html">motulator.model.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/sm/index.html">motulator.model.sm</a></li>
 </ul>
 </li>
 </ul>
@@ -336,7 +336,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="SignalInjectionCtrl"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._signal_inj.SignalInjectionCtrl">[docs]</a><span class="k">class</span> <span class="nc">SignalInjectionCtrl</span><span class="p">(</span><span class="n">Ctrl</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalInjectionCtrl"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.SignalInjectionCtrl">[docs]</a><span class="k">class</span> <span class="nc">SignalInjectionCtrl</span><span class="p">(</span><span class="n">Ctrl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sensorless control with signal injection for synchronous machine drives.</span>
 
@@ -470,7 +470,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="SignalInjection"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._signal_inj.SignalInjection">[docs]</a><span class="k">class</span> <span class="nc">SignalInjection</span><span class="p">:</span>
+<div class="viewcode-block" id="SignalInjection"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.SignalInjection">[docs]</a><span class="k">class</span> <span class="nc">SignalInjection</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Estimate the rotor position error based on signal injection.</span>
 
@@ -495,7 +495,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_old</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_older</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span> <span class="o">=</span> <span class="n">U_inj</span>
 
-<div class="viewcode-block" id="SignalInjection.output"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._signal_inj.SignalInjection.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">i_sq</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalInjection.output"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.SignalInjection.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">i_sq</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the rotor position estimation error.</span>
 
@@ -517,7 +517,7 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">err</span></div>
 
-<div class="viewcode-block" id="SignalInjection.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._signal_inj.SignalInjection.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalInjection.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.SignalInjection.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Store the old current values for the next sampling period.</span>
 
@@ -533,7 +533,7 @@ document.write(`
         <span class="c1"># Reverse the d-axis square wave injection voltage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span></div>
 
-<div class="viewcode-block" id="SignalInjection.filter_current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm._signal_inj.SignalInjection.filter_current">[docs]</a>    <span class="k">def</span> <span class="nf">filter_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalInjection.filter_current"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/index.html#motulator.control.sm.SignalInjection.filter_current">[docs]</a>    <span class="k">def</span> <span class="nf">filter_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter the stator current using the previously measured value.</span>
 
@@ -554,7 +554,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="PhaseLockedLoop"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_signal_inj/index.html#motulator.control.sm._signal_inj.PhaseLockedLoop">[docs]</a><span class="k">class</span> <span class="nc">PhaseLockedLoop</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">PhaseLockedLoop</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simple phase-locked loop for rotor-position estimation.</span>
 
@@ -572,7 +572,7 @@ document.write(`
         <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="PhaseLockedLoop.update"><a class="viewcode-back" href="../../../../autoapi/motulator/control/sm/_signal_inj/index.html#motulator.control.sm._signal_inj.PhaseLockedLoop.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">err</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">err</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the states for the next sampling period.</span>
 
@@ -590,7 +590,7 @@ document.write(`
         <span class="c1"># Update the states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">k_i</span><span class="o">*</span><span class="n">err</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="n">w_m</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span>
 </pre></div>
 
                 </article>

@@ -1,5 +1,5 @@
-:py:mod:`motulator.control`
-===========================
+motulator.control
+=================
 
 .. py:module:: motulator.control
 
@@ -29,19 +29,16 @@
 
 Subpackages
 -----------
+
 .. toctree::
-   :titlesonly:
-   :maxdepth: 3
+   :maxdepth: 1
 
-   im/index.rst
-   sm/index.rst
+   /autoapi/motulator/control/im/index
+   /autoapi/motulator/control/sm/index
 
-
-Package Contents
-----------------
 
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -52,10 +49,10 @@ Classes
    motulator.control.PWM
 
 
-
+Package Contents
+----------------
 
 .. py:class:: ComplexPICtrl(k_p, k_i, k_t=None)
-
 
    
    2DOF synchronous-frame complex-vector PI controller.
@@ -118,6 +115,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: output(i_ref, i)
 
       
@@ -147,6 +145,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: update(T_s, u_lim, w)
 
@@ -181,7 +180,6 @@ Classes
 
 .. py:class:: RateLimiter(rate_limit=np.inf)
 
-
    
    Rate limiter.
 
@@ -207,8 +205,8 @@ Classes
 
 .. py:class:: SpeedCtrl(J, alpha_s, tau_M_max=np.inf)
 
-
    Bases: :py:obj:`PICtrl`
+
 
    
    2DOF PI speed controller.
@@ -241,7 +239,6 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: PICtrl(k_p, k_i, k_t=None, u_max=np.inf)
-
 
    
    2DOF PI controller.
@@ -299,6 +296,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: output(y_ref, y)
 
       
@@ -328,6 +326,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: update(T_s, u_lim)
 
@@ -359,7 +358,6 @@ Classes
 
 
 .. py:class:: PWM(six_step=False)
-
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -406,8 +404,10 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: six_step_overmodulation(u_s_ref, u_dc)
       :staticmethod:
+
 
       
       Overmodulation up to six-step operation.
@@ -447,8 +447,10 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: duty_ratios(u_s_ref, u_dc)
       :staticmethod:
+
 
       
       Compute the duty ratios for three-phase space-vector PWM.

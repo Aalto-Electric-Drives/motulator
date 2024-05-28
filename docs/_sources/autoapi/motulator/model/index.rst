@@ -1,5 +1,5 @@
-:py:mod:`motulator.model`
-=========================
+motulator.model
+===============
 
 .. py:module:: motulator.model
 
@@ -29,19 +29,16 @@
 
 Subpackages
 -----------
+
 .. toctree::
-   :titlesonly:
-   :maxdepth: 3
+   :maxdepth: 1
 
-   im/index.rst
-   sm/index.rst
+   /autoapi/motulator/model/im/index
+   /autoapi/motulator/model/sm/index
 
-
-Package Contents
-----------------
 
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -55,18 +52,18 @@ Classes
    motulator.model.Delay
 
 
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
    motulator.model.zoh
 
 
+Package Contents
+----------------
 
 .. py:class:: Mechanics(J, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
-
 
    
    Mechanics subsystem.
@@ -99,6 +96,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: f(t, w_M, tau_M)
 
       
@@ -131,6 +129,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: meas_speed()
 
       
@@ -157,6 +156,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: meas_position()
 
@@ -188,8 +188,8 @@ Functions
 
 .. py:class:: MechanicsTwoMass(J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None)
 
-
    Bases: :py:obj:`Mechanics`
+
 
    
    Two-mass mechanics subsystem.
@@ -228,6 +228,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: f(t, w_M, w_L, theta_ML, tau_M)
 
       
@@ -264,6 +265,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: meas_load_speed()
 
       
@@ -290,6 +292,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: meas_load_position()
 
@@ -321,8 +324,8 @@ Functions
 
 .. py:class:: FrequencyConverter(L, C, U_g, f_g)
 
-
    Bases: :py:obj:`Inverter`
+
 
    
    Frequency converter.
@@ -356,6 +359,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: grid_voltages(t)
 
       
@@ -383,6 +387,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: f(t, u_dc, i_L, i_dc)
 
@@ -421,7 +426,6 @@ Functions
 
 .. py:class:: Inverter(u_dc)
 
-
    
    Inverter with constant DC-bus voltage and switching-cycle averaging.
 
@@ -444,8 +448,10 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: ac_voltage(q, u_dc)
       :staticmethod:
+
 
       
       Compute the AC-side voltage of a lossless inverter.
@@ -475,8 +481,10 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: dc_current(q, i_c)
       :staticmethod:
+
 
       
       Compute the DC-side current of a lossless inverter.
@@ -506,6 +514,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: meas_dc_voltage()
 
       
@@ -534,7 +543,6 @@ Functions
 
 .. py:class:: LCFilter(L, C, R=0)
 
-
    
    LC-filter model.
 
@@ -561,6 +569,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: f(i_cs, u_ss, u_cs, i_ss)
 
       
@@ -595,6 +604,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: meas_currents()
 
       
@@ -619,6 +629,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: meas_voltages()
 
@@ -648,7 +659,6 @@ Functions
 
 
 .. py:class:: CarrierComparison(N=2**12, return_complex=True)
-
 
    
    Carrier comparison.
@@ -720,7 +730,6 @@ Functions
 
 .. py:class:: Simulation(mdl=None, ctrl=None)
 
-
    
    Simulation environment.
 
@@ -747,6 +756,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: simulate(t_stop=1, max_step=np.inf)
 
       
@@ -779,6 +789,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: save_mat(name='sim')
 
       
@@ -806,7 +817,6 @@ Functions
 
 
 .. py:class:: Delay(length=1, elem=3)
-
 
    
    Computational delay.

@@ -1,5 +1,5 @@
-:py:mod:`motulator.model.sm`
-============================
+motulator.model.sm
+==================
 
 .. py:module:: motulator.model.sm
 
@@ -27,11 +27,8 @@
        !! processed by numpydoc !!
 
 
-Package Contents
-----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -43,9 +40,8 @@ Classes
    motulator.model.sm.SynchronousMachineSaturated
 
 
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
@@ -54,11 +50,13 @@ Functions
    motulator.model.sm.plot_flux_vs_current
 
 
+Package Contents
+----------------
 
 .. py:class:: Drive(machine=None, mechanics=None, converter=None)
 
-
    Bases: :py:obj:`motulator.model._simulation.Model`
+
 
    
    Continuous-time model for a synchronous machine drive.
@@ -89,6 +87,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: clear()
 
       
@@ -111,6 +110,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: get_initial_values()
 
@@ -136,6 +136,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: set_initial_values(t0, x0)
 
@@ -163,6 +164,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: f(t, x)
 
@@ -194,6 +196,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: save(sol)
 
       
@@ -216,6 +219,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: post_process()
 
@@ -243,8 +247,8 @@ Functions
 
 .. py:class:: DriveWithDiodeBridge(machine=None, mechanics=None, converter=None)
 
-
    Bases: :py:obj:`Drive`
+
 
    
    Synchronous machine drive equipped with a diode bridge.
@@ -276,6 +280,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: clear()
 
       
@@ -298,6 +303,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: get_initial_values()
 
@@ -322,6 +328,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: set_initial_values(t0, x0)
 
       
@@ -344,6 +351,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: f(t, x)
 
@@ -368,6 +376,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: save(sol)
 
       
@@ -390,6 +399,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: post_process()
 
@@ -417,8 +427,8 @@ Functions
 
 .. py:class:: DriveTwoMassMechanics(machine=None, mechanics=None, converter=None)
 
-
    Bases: :py:obj:`Drive`
+
 
    
    Synchronous machine drive with two-mass mechanics.
@@ -446,6 +456,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: clear()
 
       
@@ -468,6 +479,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: get_initial_values()
 
@@ -492,6 +504,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: set_initial_values(t0, x0)
 
       
@@ -514,6 +527,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: f(t, x)
 
@@ -538,6 +552,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: save(sol)
 
       
@@ -560,6 +575,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: post_process()
 
@@ -587,8 +603,8 @@ Functions
 
 .. py:class:: DriveWithLCFilter(machine=None, mechanics=None, converter=None, lc_filter=None)
 
-
    Bases: :py:obj:`Drive`
+
 
    
    Synchronous machine drive with an output LC filter.
@@ -618,6 +634,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: clear()
 
       
@@ -640,6 +657,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: get_initial_values()
 
@@ -664,6 +682,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: set_initial_values(t0, x0)
 
       
@@ -686,6 +705,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: f(t, x)
 
@@ -710,6 +730,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: save(sol)
 
       
@@ -732,6 +753,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: post_process()
 
@@ -758,7 +780,6 @@ Functions
 
 
 .. py:class:: SynchronousMachine(n_p, R_s, L_d, L_q, psi_f)
-
 
    
    Synchronous machine model.
@@ -793,6 +814,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: current(psi_s)
 
       
@@ -821,6 +843,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: magnetic(psi_s)
 
       
@@ -848,6 +871,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: f(psi_s, u_s, w_M)
 
@@ -889,6 +913,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: meas_currents()
 
       
@@ -917,8 +942,8 @@ Functions
 
 .. py:class:: SynchronousMachineSaturated(n_p, R_s, current, psi_s0=0j)
 
-
    Bases: :py:obj:`SynchronousMachine`
+
 
    
    Model of a saturated synchronous machine.

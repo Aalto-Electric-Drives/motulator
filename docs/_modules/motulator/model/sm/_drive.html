@@ -143,14 +143,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/control/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.control.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/control/index.html">motulator.control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/im/index.html">motulator.control.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/sm/index.html">motulator.control.sm</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/im/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.im</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/sm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.model.sm</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/model/index.html">motulator.model</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/im/index.html">motulator.model.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/model/sm/index.html">motulator.model.sm</a></li>
 </ul>
 </li>
 </ul>
@@ -338,7 +338,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="SynchronousMachine"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.SynchronousMachine">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMachine</span><span class="p">:</span>
+<div class="viewcode-block" id="SynchronousMachine"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachine">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMachine</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous machine model.</span>
 
@@ -368,7 +368,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s0</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">psi_f</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m0</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="SynchronousMachine.current"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.SynchronousMachine.current">[docs]</a>    <span class="k">def</span> <span class="nf">current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
+<div class="viewcode-block" id="SynchronousMachine.current"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachine.current">[docs]</a>    <span class="k">def</span> <span class="nf">current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the stator current.</span>
 
@@ -386,7 +386,7 @@ document.write(`
         <span class="n">i_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span>
         <span class="k">return</span> <span class="n">i_s</span></div>
 
-<div class="viewcode-block" id="SynchronousMachine.magnetic"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.SynchronousMachine.magnetic">[docs]</a>    <span class="k">def</span> <span class="nf">magnetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
+<div class="viewcode-block" id="SynchronousMachine.magnetic"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachine.magnetic">[docs]</a>    <span class="k">def</span> <span class="nf">magnetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Magnetic model.</span>
 
@@ -407,7 +407,7 @@ document.write(`
         <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">tau_M</span></div>
 
-<div class="viewcode-block" id="SynchronousMachine.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.SynchronousMachine.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">w_M</span><span class="p">):</span>
+<div class="viewcode-block" id="SynchronousMachine.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachine.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">w_M</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the state derivative.</span>
 
@@ -442,7 +442,7 @@ document.write(`
         <span class="n">dtheta_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">w_M</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">dpsi_s</span><span class="p">,</span> <span class="n">dtheta_m</span><span class="p">],</span> <span class="n">i_s</span><span class="p">,</span> <span class="n">tau_M</span></div>
 
-<div class="viewcode-block" id="SynchronousMachine.meas_currents"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.SynchronousMachine.meas_currents">[docs]</a>    <span class="k">def</span> <span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SynchronousMachine.meas_currents"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachine.meas_currents">[docs]</a>    <span class="k">def</span> <span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the phase currents at the end of the sampling period.</span>
 
@@ -458,7 +458,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="SynchronousMachineSaturated"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.SynchronousMachineSaturated">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMachineSaturated</span><span class="p">(</span><span class="n">SynchronousMachine</span><span class="p">):</span>
+<div class="viewcode-block" id="SynchronousMachineSaturated"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.SynchronousMachineSaturated">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMachineSaturated</span><span class="p">(</span><span class="n">SynchronousMachine</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Model of a saturated synchronous machine.</span>
 
@@ -494,7 +494,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="Drive"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive">[docs]</a><span class="k">class</span> <span class="nc">Drive</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="Drive"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive">[docs]</a><span class="k">class</span> <span class="nc">Drive</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Continuous-time model for a synchronous machine drive.</span>
 
@@ -518,13 +518,13 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span> <span class="o">=</span> <span class="n">mechanics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
 
-<div class="viewcode-block" id="Drive.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Drive.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the simulation data of the system model.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="Drive.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Drive.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the initial values.</span>
 
@@ -542,7 +542,7 @@ document.write(`
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">x0</span></div>
 
-<div class="viewcode-block" id="Drive.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
+<div class="viewcode-block" id="Drive.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the initial values.</span>
 
@@ -562,7 +562,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">theta_m0</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">theta_M0</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Drive.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="Drive.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the complete state derivative list for the solver.</span>
 
@@ -594,7 +594,7 @@ document.write(`
         <span class="c1"># List of state derivatives</span>
         <span class="k">return</span> <span class="n">machine_f</span> <span class="o">+</span> <span class="n">mechanics_f</span></div>
 
-<div class="viewcode-block" id="Drive.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
+<div class="viewcode-block" id="Drive.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the solution.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -602,7 +602,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Drive.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.Drive.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Drive.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.Drive.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform the lists to the ndarray format and post-process them.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
         <span class="c1"># Compute some useful quantities</span>
@@ -619,7 +619,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="DriveWithDiodeBridge"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithDiodeBridge">[docs]</a><span class="k">class</span> <span class="nc">DriveWithDiodeBridge</span><span class="p">(</span><span class="n">Drive</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithDiodeBridge"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge">[docs]</a><span class="k">class</span> <span class="nc">DriveWithDiodeBridge</span><span class="p">(</span><span class="n">Drive</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous machine drive equipped with a diode bridge.</span>
 
@@ -643,25 +643,25 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-<div class="viewcode-block" id="DriveWithDiodeBridge.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithDiodeBridge.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_L</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="DriveWithDiodeBridge.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithDiodeBridge.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">i_L0</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">x0</span></div>
 
-<div class="viewcode-block" id="DriveWithDiodeBridge.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithDiodeBridge.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_initial_values</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">i_L0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">real</span></div>
 
-<div class="viewcode-block" id="DriveWithDiodeBridge.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithDiodeBridge.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Override the base class.&quot;&quot;&quot;</span>
         <span class="c1"># Unpack the states for better readability</span>
         <span class="n">psi_s</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span> <span class="o">=</span> <span class="n">x</span>
@@ -679,13 +679,13 @@ document.write(`
             <span class="n">machine_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">)</span> <span class="o">+</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_L</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="DriveWithDiodeBridge.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithDiodeBridge.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_dc</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_L</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DriveWithDiodeBridge.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithDiodeBridge.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithDiodeBridge.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithDiodeBridge.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
         <span class="c1"># From lists to the ndarray</span>
@@ -706,7 +706,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="DriveTwoMassMechanics"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics">[docs]</a><span class="k">class</span> <span class="nc">DriveTwoMassMechanics</span><span class="p">(</span><span class="n">Drive</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveTwoMassMechanics"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics">[docs]</a><span class="k">class</span> <span class="nc">DriveTwoMassMechanics</span><span class="p">(</span><span class="n">Drive</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous machine drive with two-mass mechanics.</span>
 
@@ -725,25 +725,25 @@ document.write(`
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-<div class="viewcode-block" id="DriveTwoMassMechanics.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveTwoMassMechanics.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="DriveTwoMassMechanics.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveTwoMassMechanics.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">w_L0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">theta_ML0</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">x0</span></div>
 
-<div class="viewcode-block" id="DriveTwoMassMechanics.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveTwoMassMechanics.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_initial_values</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">w_L0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">theta_ML0</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DriveTwoMassMechanics.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveTwoMassMechanics.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Override the base class.&quot;&quot;&quot;</span>
         <span class="c1"># Unpack the states</span>
         <span class="n">psi_s</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">w_L</span><span class="p">,</span> <span class="n">theta_ML</span> <span class="o">=</span> <span class="n">x</span>
@@ -756,13 +756,13 @@ document.write(`
         <span class="c1"># List of state derivatives</span>
         <span class="k">return</span> <span class="n">machine_f</span> <span class="o">+</span> <span class="n">mechanics_f</span></div>
 
-<div class="viewcode-block" id="DriveTwoMassMechanics.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveTwoMassMechanics.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_L</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_ML</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DriveTwoMassMechanics.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveTwoMassMechanics.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveTwoMassMechanics.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveTwoMassMechanics.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
         <span class="c1"># From lists to the ndarray</span>
@@ -771,7 +771,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="DriveWithLCFilter"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithLCFilter">[docs]</a><span class="k">class</span> <span class="nc">DriveWithLCFilter</span><span class="p">(</span><span class="n">Drive</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithLCFilter"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter">[docs]</a><span class="k">class</span> <span class="nc">DriveWithLCFilter</span><span class="p">(</span><span class="n">Drive</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous machine drive with an output LC filter.</span>
 
@@ -798,26 +798,26 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span> <span class="o">=</span> <span class="n">lc_filter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-<div class="viewcode-block" id="DriveWithLCFilter.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithLCFilter.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithLCFilter.clear"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_ss</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="DriveWithLCFilter.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithLCFilter.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithLCFilter.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="o">.</span><span class="n">i_cs0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="o">.</span><span class="n">u_ss0</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">x0</span></div>
 
-<div class="viewcode-block" id="DriveWithLCFilter.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithLCFilter.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithLCFilter.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_initial_values</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="o">.</span><span class="n">i_cs0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="o">.</span><span class="n">u_ss0</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span></div>
 
     <span class="c1"># pylint: disable=too-many-locals</span>
-<div class="viewcode-block" id="DriveWithLCFilter.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithLCFilter.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithLCFilter.f"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.f">[docs]</a>    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Override the base class.&quot;&quot;&quot;</span>
         <span class="c1"># Unpack the states</span>
         <span class="n">psi_s</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">i_cs</span><span class="p">,</span> <span class="n">u_ss</span> <span class="o">=</span> <span class="n">x</span>
@@ -832,13 +832,13 @@ document.write(`
         <span class="c1"># List of state derivatives</span>
         <span class="k">return</span> <span class="n">machine_f</span> <span class="o">+</span> <span class="n">mechanics_f</span> <span class="o">+</span> <span class="n">lc_filter_f</span></div>
 
-<div class="viewcode-block" id="DriveWithLCFilter.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithLCFilter.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithLCFilter.save"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_cs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_ss</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="DriveWithLCFilter.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm._drive.DriveWithLCFilter.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveWithLCFilter.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/model/sm/index.html#motulator.model.sm.DriveWithLCFilter.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
         <span class="c1"># From lists to the ndarray</span>

@@ -1,5 +1,5 @@
-:py:mod:`motulator.control.sm`
-==============================
+motulator.control.sm
+====================
 
 .. py:module:: motulator.control.sm
 
@@ -27,11 +27,8 @@
        !! processed by numpydoc !!
 
 
-Package Contents
-----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -52,10 +49,10 @@ Classes
    motulator.control.sm.SignalInjection
 
 
-
+Package Contents
+----------------
 
 .. py:class:: CurrentReferencePars
-
 
    
    Parameters for reference generation.
@@ -115,7 +112,6 @@ Classes
 
 .. py:class:: CurrentReference(par, ref)
 
-
    
    Current reference calculation.
 
@@ -159,6 +155,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: output(tau_M_ref, w_m, u_dc)
 
       
@@ -190,6 +187,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: update(T_s, tau_M_ref_lim, u_s_ref, u_dc)
 
@@ -225,8 +223,8 @@ Classes
 
 .. py:class:: CurrentCtrl(par, alpha_c)
 
-
    Bases: :py:obj:`motulator.control._common.ComplexPICtrl`
+
 
    
    Current controller for synchronous machines.
@@ -262,6 +260,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: output(i_ref, i)
 
       
@@ -294,7 +293,6 @@ Classes
 
 
 .. py:class:: ModelPars
-
 
    
    Model parameters of a synchronous machine.
@@ -331,8 +329,8 @@ Classes
 
 .. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
 
-
    Bases: :py:obj:`motulator.control._common.Ctrl`
+
 
    
    Vector control for synchronous machine drives.
@@ -403,7 +401,6 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: Observer(par, alpha_o=2 * np.pi * 40, k=None, k_f=None, sensorless=True)
-
 
    
    Observer for synchronous machines in estimated rotor coordinates.
@@ -490,6 +487,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: update(T_s, u_s, i_s, w_m=None)
 
       
@@ -524,7 +522,6 @@ Classes
 
 
 .. py:class:: FluxObserver(par, alpha_o=2 * np.pi * 20, zeta_inf=0.2)
-
 
    
    Sensorless stator flux observer in external coordinates.
@@ -573,6 +570,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: update(T_s, u_s, i_s, w_s)
 
       
@@ -607,8 +605,8 @@ Classes
 
 .. py:class:: FluxVectorCtrl(par, ref, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, T_s=0.00025, sensorless=True)
 
-
    Bases: :py:obj:`motulator.control._common.Ctrl`
+
 
    
    Flux-vector control of synchronous machine drives.
@@ -697,7 +695,6 @@ Classes
 
 .. py:class:: FluxTorqueReference(ref)
 
-
    
    Flux and torque references.
 
@@ -726,7 +723,6 @@ Classes
        !! processed by numpydoc !!
 
 .. py:class:: FluxTorqueReferencePars
-
 
    
    Parameters for reference generation.
@@ -774,8 +770,8 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrl(par, ctrl_par, T_s=0.00025)
 
-
    Bases: :py:obj:`motulator.control._common.Ctrl`
+
 
    
    Observer-based V/Hz control for synchronous motors.
@@ -820,8 +816,8 @@ Classes
 
 .. py:class:: ObserverBasedVHzCtrlPars
 
-
    Bases: :py:obj:`motulator.control.sm._flux_vector.FluxTorqueReferencePars`
+
 
    
    Parameters for the control system.
@@ -855,7 +851,6 @@ Classes
 
 .. py:class:: TorqueCharacteristics(par)
 
-
    
    Compute MTPA and MTPV loci based on the machine parameters.
 
@@ -880,6 +875,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: torque(psi_s)
 
       
@@ -907,6 +903,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: current(psi_s)
 
@@ -936,6 +933,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: flux(i_s)
 
       
@@ -963,6 +961,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: mtpa(abs_i_s)
 
@@ -992,6 +991,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: mtpv(abs_psi_s)
 
       
@@ -1019,6 +1019,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: mtpv_current(abs_i_s)
 
@@ -1054,6 +1055,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: mtpa_locus(i_s_max, psi_s_min=None, N=20)
 
@@ -1092,6 +1094,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: mtpv_locus(psi_s_max=None, i_s_max=None, N=20)
 
       
@@ -1128,6 +1131,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: current_limit(i_s_max, gamma1=np.pi, gamma2=0, N=20)
 
@@ -1166,6 +1170,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: mtpv_and_current_limits(i_s_max, N=20)
 
       
@@ -1196,6 +1201,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: plot_flux_loci(i_s_max, base, N=20)
 
@@ -1228,6 +1234,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: plot_current_loci(i_s_max, base, N=20)
 
       
@@ -1259,6 +1266,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: plot_torque_current(i_s_max, base, N=20)
 
       
@@ -1289,6 +1297,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: plot_torque_flux(i_s_max, base, N=20)
 
@@ -1324,8 +1333,8 @@ Classes
 
 .. py:class:: SignalInjectionCtrl(par, ref, T_s=0.00025)
 
-
    Bases: :py:obj:`motulator.control._common.Ctrl`
+
 
    
    Sensorless control with signal injection for synchronous machine drives.
@@ -1416,7 +1425,6 @@ Classes
 
 .. py:class:: SignalInjection(par, U_inj)
 
-
    
    Estimate the rotor position error based on signal injection.
 
@@ -1446,6 +1454,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: output(T_s, i_sq)
 
       
@@ -1476,6 +1485,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: update(i_s)
 
       
@@ -1500,6 +1510,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: filter_current(i_s)
 
