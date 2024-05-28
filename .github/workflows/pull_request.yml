@@ -1,0 +1,19 @@
+name: Check docs on pull request
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Easy to use GitHub hosted runner, self hosted runner would require manual configurations
+    steps:
+    - uses: actions/checkout@v2 # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Build Sphinx documentation
+      uses: ammaraskar/sphinx-action@master
+      with:
+        docs-folder: "docs/"
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: DocumentationHTML
+        path: docs/_build/html/
+
