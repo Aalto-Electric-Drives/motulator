@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "motulator"
-version = "0.3.0beta"
+version = "0.3.0"
 dependencies = [
     "numpy",
     "scipy",
@@ -53,8 +53,8 @@ doc = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mhinkkan/motulator"
-Documentation = "https://mhinkkan.github.io/motulator/"
+Homepage = "https://github.com/Aalto-Electric-Drives/motulator"
+Documentation = "https://Aalto-Electric-Drives.github.io/motulator/"
 
 [tool.yapf]
 based_on_style = "pep8"
