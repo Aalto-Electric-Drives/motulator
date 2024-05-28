@@ -6,19 +6,17 @@ This example simulates observer-based V/Hz control of a 2.2-kW induction motor
 drive.
 
 """
-
 # %%
-# Imports.
 
 import numpy as np
 from motulator import model, control
-from motulator import base_values, plot, NominalValues, Sequence
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
-base = base_values(nom, n_p=2)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Configure the system model.

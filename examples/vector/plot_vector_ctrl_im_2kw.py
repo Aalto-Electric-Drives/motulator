@@ -7,17 +7,16 @@ motor drive. The magnetic saturation of the machine is also included in the
 system model, while the control system assumes constant parameters. 
 
 """
-
 # %%
 
 from motulator import model, control
-from motulator import base_values, plot, NominalValues
+from motulator import BaseValues, NominalValues, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
-base = base_values(nom, n_p=2)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Configure the system model.

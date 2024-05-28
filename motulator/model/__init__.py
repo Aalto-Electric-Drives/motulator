@@ -4,14 +4,14 @@ from motulator.model._mechanics import Mechanics, MechanicsTwoMass
 from motulator.model._converter import FrequencyConverter, Inverter
 from motulator.model._lc_filter import LCFilter
 from motulator.model._simulation import (
-    CarrierComparison, Simulation, Delay, zoh)
+    CarrierComparison, Model, Simulation, Delay, zoh)
 
-import motulator.model.im as im
-import motulator.model.sm as sm
+from motulator.model import im, sm
 
 __all__ = [
     "Mechanics",
     "MechanicsTwoMass",
+    "Model",
     "FrequencyConverter",
     "Inverter",
     "LCFilter",

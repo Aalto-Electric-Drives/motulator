@@ -4,7 +4,7 @@
 from types import SimpleNamespace
 from dataclasses import dataclass
 import numpy as np
-from motulator.control._common import DriveCtrl, RateLimiter
+from motulator.control import DriveCtrl, RateLimiter
 from motulator._helpers import wrap
 
 

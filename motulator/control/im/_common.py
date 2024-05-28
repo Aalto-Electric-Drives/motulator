@@ -88,7 +88,7 @@ class ObserverCfg:
 # %%
 class Observer:
     """
-    Reduced-order flux observer in estimated rotor flux coordinates.
+    Reduced-order flux observer operating in estimated rotor flux coordinates.
 
     This class implements a reduced-order flux observer for induction machines.
     Both sensored and sensorless operation are supported. The observer 
@@ -131,8 +131,8 @@ class Observer:
                 i_ss : complex
                     Stator current (A) in stator coordinates.
                 w_m : float, optional
-                    Rotor angular speed (electrical rad/s). This is only needed 
-                    in the sensored mode.
+                    Rotor angular speed (electrical rad/s). This signal is only 
+                    needed in the sensored mode.
 
         Returns
         -------
@@ -241,7 +241,7 @@ class FullOrderObserverCfg(ObserverCfg):
 # %%
 class FullOrderObserver:
     """
-    Full-order flux observer in estimated rotor flux coordinates.
+    Full-order flux observer operating in estimated rotor flux coordinates.
 
     This class implements a full-order flux observer for induction machines. 
     The observer structure is similar to [#Tii2023]_. The observer operates in 
@@ -271,7 +271,7 @@ class FullOrderObserver:
 
         if not self.sensorless:
             raise NotImplementedError(
-                "Sensored mode not implemented for this full-order observer")
+                "Sensored mode not implemented for this full-order observer.")
 
     def output(self, fbk):
         """Output."""

@@ -9,20 +9,18 @@ of the mechanics is around 85 Hz. The mechanical parameters correspond to
 this example.
 
 """
-
 # %%
-# Imports.
 
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import base_values, plot, NominalValues, Sequence
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
-base = base_values(nom, n_p=3)
+base = BaseValues.from_nominal(nom, n_p=3)
 
 # %%
 # Configure the system model.

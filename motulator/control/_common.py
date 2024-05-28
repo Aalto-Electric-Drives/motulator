@@ -25,12 +25,6 @@ class PWM:
         Compensation factor for the delay effect on the voltage vector angle. 
         The default is 1.5.
 
-    Attributes
-    ----------
-    u_cs : complex
-        Realized converter voltage (V) in stator coordinates over the sampling 
-        period with the delay compensation.
-
     References
     ----------
     .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation 
@@ -61,14 +55,14 @@ class PWM:
         Parameters
         ----------
         ref_u_cs : complex
-            Converter voltage reference (V) in stator coordinates.
+            Converter voltage reference (V) in stationary coordinates.
         u_dc : float
             DC-bus voltage (V).
 
         Returns
         -------
         ref_u_cs : complex
-            Modified converter voltage reference (V) in stator coordinates.
+            Modified converter voltage reference (V) in stationary coordinates.
 
         References
         ----------
@@ -113,7 +107,7 @@ class PWM:
         Parameters
         ----------
         ref_u_cs : complex
-            Converter voltage reference (V) in stator coordinates.
+            Converter voltage reference (V) in stationary coordinates.
         u_dc : float
             DC-bus voltage (V).
 
@@ -153,7 +147,7 @@ class PWM:
         T_s : float
             Sampling period (s).
         ref_u_cs : complex
-            Converter voltage reference (V) in stator coordinates.
+            Converter voltage reference (V) in stationary coordinates.
         u_dc : float
             DC-bus voltage (V).
         w : float
@@ -164,7 +158,7 @@ class PWM:
         d_abc : ndarray, shape (3,)
             Duty ratios for the next sampling period.
         u_cs : complex
-            Limited voltage reference (V) in synchronous coordinates.
+            Limited voltage reference (V) in stationary coordinates.
         
         """
         # Advance the angle due to the computational delay (N*T_s) and the ZOH
@@ -184,9 +178,21 @@ class PWM:
 
         return d_abc, u_cs
 
+    def get_realized_voltage(self):
+        """
+        Get the realized voltage.
+        
+        Returns
+        -------
+        realized_voltage : complex
+            Realized converter voltage (V) in stationary coordinates. The 
+            effect of the digital delays on the angle are compensated for.
+        
+        """
+        return self.realized_voltage
+
     def update(self, u_cs):
         """Update the realized voltage."""
-
         # Update the voltage estimate for the next sampling instant
         self.realized_voltage = .5*(self._old_u_cs + u_cs)
         self._old_u_cs = u_cs
@@ -227,14 +233,7 @@ class PICtrl:
     k_t : float, optional
         Reference-feedforward gain. The default is `k_p`.
     max_u : float, optional
-        Maximum controller output. The default is inf.
-
-    Attributes
-    ----------
-    v : float
-        Input disturbance estimate.
-    u_i : float
-        Integral state.
+        Maximum controller output. The default is `inf`.
 
     """
 
@@ -305,7 +304,7 @@ class SpeedCtrl(PICtrl):
     alpha_s : float
         Closed-loop bandwidth (rad/s). 
     max_tau_M : float, optional
-        Maximum motor torque (Nm). The default is inf.
+        Maximum motor torque (Nm). The default is `inf`.
 
     """
 
@@ -341,13 +340,6 @@ class ComplexPICtrl:
         Integral gain.
     k_t : float, optional
         Reference-feedforward gain. The default is `k_p`.
-
-    Attributes
-    ----------
-    v : complex
-        Input disturbance estimate.
-    u_i : complex
-        Integral state.
 
     Notes
     -----
@@ -444,13 +436,11 @@ class RateLimiter:
         y : float
             Rate-limited output signal.
 
-        Notes
-        -----
-        In this implementation, the falling rate limit equals the (negative)
-        rising rate limit. If needed, these limits can be separated with minor
-        modifications in the class.
-
         """
+        # In this implementation, the falling rate limit equals the (negative)
+        # rising rate limit. If needed, these limits can be separated with
+        # minor modifications in the class.
+
         rate = (u - self._old_y)/T_s
 
         if rate > self.rate_limit:
@@ -491,7 +481,29 @@ class Clock:
 
 # %%
 class Ctrl(ABC):
-    """Base class for control systems."""
+    """
+    Base class for control systems.
+    
+    This base class provides typical functionalities for control systems. It
+    can be used as a template for implementing custom controllers. An instance 
+    of this class can be called as a function. When called, it runs the main
+    control loop.
+
+    Parameters
+    ----------
+    T_s : float
+        Sampling period (s).
+
+    Attributes
+    ----------
+    clock : Clock
+        Digital clock.
+    data : SimpleNamespace
+        Saved simulation data.
+    pwm : PWM   
+        Pulse-width modulator.
+
+    """
 
     def __init__(self, T_s):
         self.clock = Clock()
@@ -517,6 +529,7 @@ class Ctrl(ABC):
         
         """
         fbk = SimpleNamespace()
+
         return fbk
 
     @abstractmethod
@@ -543,6 +556,7 @@ class Ctrl(ABC):
         ref = SimpleNamespace()
         ref.t = self.clock.t
         ref.T_s = self.T_s  # Desired next sampling period
+
         return ref
 
     @abstractmethod
@@ -598,10 +612,21 @@ class Ctrl(ABC):
             for key, value in vars(values).items():
                 setattr(getattr(self.data, name), key, np.asarray(value))
 
-    def __call__(self, mdl):
+    def main(self, mdl):
         """
         Main control loop.
 
+        This method runs the main control loop, having the following structure:
+
+        1. Get the feedback signals. This step may contain first getting the 
+           measurements and then optionally computing the observer outputs.
+        2. Compute the reference signals (controller outputs) based on the
+           feedback signals.
+        3. Update the control system states for the next sampling instant.
+        4. Save the feedback signals and the reference signals.
+        5. Return the sampling period `T_s` and the duty ratios `d_abc` for the
+           carrier comparison.
+        
         Parameters
         ----------
         mdl : Model
@@ -627,8 +652,11 @@ class Ctrl(ABC):
         # Save the data
         self.save(fbk=fbk, ref=ref)
 
-        # Return the sampling period and the duty ratios for the PWM
+        # Return the sampling period and duty ratios for the carrier comparison
         return ref.T_s, ref.d_abc
+
+    def __call__(self, mdl):
+        return self.main(mdl)
 
 
 # %%
@@ -642,7 +670,7 @@ class DriveCtrl(Ctrl, ABC):
 
     Parameters
     ----------
-    par : ModelPars
+    par : motulator.control.im.ModelPars | motulator.control.sm.ModelPars
         Machine model parameters.
     T_s : float
         Sampling period (s).
@@ -651,17 +679,23 @@ class DriveCtrl(Ctrl, ABC):
 
     Attributes
     ----------
-    observer : Observer
-        State observer. 
-    speed_ctrl : SpeedCtrl 
-        Speed controller.   
     ref : SimpleNamespace
         References, possibly containing either of the following fields:
 
             w_m : callable
-                Speed reference (mechanical rad/s) as a function of time (s).
+                Speed reference (electrical rad/s) as a function of time (s). 
+                This signal is needed in speed-control mode.
             tau_M : callable
-                Torque reference (Nm) as a function of time (s).
+                Torque reference (Nm) as a function of time (s). This signal
+                is needed in torque-control mode.
+
+    observer : motulator.control.im.Observer | \
+               motulator.control.sm.Observer | None
+        State observer can be None or an instance of either 
+        `motulator.control.im.Observer` or `motulator.control.sm.Observer` 
+        depending on the machine type. The default is None.
+    speed_ctrl : SpeedCtrl | None
+        Speed controller. The default is None.
 
     """
 
@@ -674,16 +708,61 @@ class DriveCtrl(Ctrl, ABC):
         self.ref = SimpleNamespace()
 
     def get_electrical_measurements(self, fbk, mdl):
-        """Measure the currents and voltages."""
+        """
+        Measure the currents and voltages.
+        
+        Parameters
+        ----------
+        fbk : SimpleNamespace
+            Measured signals are added to this object.
+        mdl : Model
+            Continuous-time system model.
+
+        Returns
+        -------
+        fbk : SimpleNamespace
+            Measured signals, containing the following fields:
+
+                u_dc : float
+                    DC-bus voltage (V).
+                i_ss : complex
+                    Stator current (A) in stator coordinates.
+                u_ss : complex
+                    Realized stator voltage (V) in stator coordinates. This
+                    signal is obtained from the PWM.
+
+        """
         fbk.u_dc = mdl.converter.meas_dc_voltage()
         fbk.i_ss = abc2complex(mdl.machine.meas_currents())
-        fbk.u_ss = self.pwm.realized_voltage
+        fbk.u_ss = self.pwm.get_realized_voltage()
+
         return fbk
 
     def get_mechanical_measurements(self, fbk, mdl):
-        """Measure the speed and position."""
+        """
+        Measure the speed and position.
+        
+        Parameters
+        ----------
+        fbk : SimpleNamespace
+            Measured signals are added to this object.
+        mdl : Model
+            Continuous-time system model.
+
+        Returns
+        -------
+        fbk : SimpleNamespace
+            Measured signals, containing the following fields:
+
+                w_m : float
+                    Rotor speed (electrical rad/s).
+                theta_m : float
+                    Rotor position (electrical rad).
+    
+        """
         fbk.w_m = self.par.n_p*mdl.mechanics.meas_speed()
         fbk.theta_m = wrap(self.par.n_p*mdl.mechanics.meas_position())
+
         return fbk
 
     def get_feedback_signals(self, mdl):
@@ -694,10 +773,37 @@ class DriveCtrl(Ctrl, ABC):
             fbk = self.get_mechanical_measurements(fbk, mdl)
         if self.observer:
             fbk = self.observer.output(fbk)
+
         return fbk
 
     def get_torque_reference(self, fbk, ref):
-        """Get the torque reference in vector control."""
+        """
+        Get the torque reference in vector control.
+
+        This method can be used in vector control to get the torque reference 
+        from the speed controller. If the speed controller method `speed_ctrl` 
+        is None, the torque reference is obtained directly from the reference.
+
+        Parameters
+        ----------
+        fbk : SimpleNamespace
+            Feedback signals. In speed-control mode, the measured or estimated
+            rotor speed `w_m` is used to compute the torque reference.
+        ref : SimpleNamespace
+            Reference signals, containing the digital time `t`. The speed and 
+            torque references are added to this object.
+
+        Returns
+        -------
+        ref : SimpleNamespace
+            Reference signals, containing the following fields:
+                
+                w_m : float
+                    Speed reference (electrical rad/s).
+                tau_M : float
+                    Torque reference (Nm).  
+
+        """
         if self.speed_ctrl:
             # Speed-control mode
             ref.w_m = self.ref.w_m(ref.t)
@@ -708,6 +814,7 @@ class DriveCtrl(Ctrl, ABC):
             # Torque-control mode
             ref.w_m = None
             ref.tau_M = self.ref.tau_M(ref.t)
+
         return ref
 
     def update(self, fbk, ref):

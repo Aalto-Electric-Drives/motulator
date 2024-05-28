@@ -10,13 +10,13 @@ parameters in this example yield open-loop V/Hz control.
 
 import numpy as np
 from motulator import model, control
-from motulator import base_values, plot, plot_extra, NominalValues
+from motulator import BaseValues, NominalValues, plot, plot_extra
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
-base = base_values(nom, n_p=2)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Create the system model.

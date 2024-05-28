@@ -8,17 +8,16 @@ control algorithms are included.
 """
 
 from motulator._helpers import (
-    abc2complex, complex2abc, base_values, NominalValues, Sequence, Step)
+    abc2complex, complex2abc, BaseValues, NominalValues, Sequence, Step)
 
 from motulator._plots import plot, plot_extra
 
-from motulator import control
-from motulator import model
+from motulator import control, model
 
 __all__ = [
     "abc2complex",
     "complex2abc",
-    "base_values",
+    "BaseValues",
     "NominalValues",
     "Sequence",
     "Step",

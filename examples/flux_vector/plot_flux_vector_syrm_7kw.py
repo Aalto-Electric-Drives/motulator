@@ -10,19 +10,18 @@ this case, this PM-flux estimate lumps the effects of inductance errors.
 Naturally, the PM-flux estimation can be used in PM machine drives as well. 
 
 """
-
 # %%
 
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import base_values, plot, NominalValues, Sequence
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=370, I=15.5, f=105.8, P=6.7e3, tau=20.1)
-base = base_values(nom, n_p=2)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Create a saturation model, see the example

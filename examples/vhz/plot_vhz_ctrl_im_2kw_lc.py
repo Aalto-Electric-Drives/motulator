@@ -11,13 +11,13 @@ drive equipped with an LC filter.
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import base_values, plot, NominalValues
+from motulator import BaseValues, NominalValues, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
-base = base_values(nom, n_p=2)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Create the system model. The filter parameters correspond to [#Sal2006]_.

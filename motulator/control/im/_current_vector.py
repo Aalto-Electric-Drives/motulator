@@ -1,25 +1,54 @@
 """
-Vector control methods for induction machine drives.
+Current-vector control methods for induction machine drives.
 
 The algorithms are written based on the inverse-Γ model.
 
 """
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator.control._common import ComplexPICtrl, SpeedCtrl, DriveCtrl
-from motulator.control.im._common import Observer, ObserverCfg, ModelPars
+from motulator.control import ComplexPICtrl, SpeedCtrl, DriveCtrl, im
 
 
 # %%
 class CurrentVectorCtrl(DriveCtrl):
-    """Vector control for induction machine drives."""
+    """
+    Current-vector control for induction machine drives.
+    
+    This class provides an interface for current-vector control of induction 
+    machines. The control system consists of a current reference generator, a 
+    current controller, a flux observer, and speed controller (optional). 
+
+    Parameters
+    ----------
+    par : ModelPars
+        Machine parameters.
+    cfg : CurrentReferenceCfg
+        Current reference generator configuration.
+    T_s : float, optional
+        Sampling time (s). The default is 250e-6.
+    sensorless : bool, optional
+        Enable sensorless control. The default is True.
+
+    Attributes
+    ----------
+    observer : Observer
+        Flux observer.
+    current_reference : CurrentReference
+        Current reference generator.
+    current_ctrl : CurrentCtrl
+        Current controller. The default is CurrentCtrl(par, 2*np.pi*200).
+    speed_ctrl : SpeedCtrl | None
+        Speed controller. The default is SpeedCtrl(par.J, 2*np.pi*4)
+  
+    """
 
     def __init__(self, par, cfg, T_s=250e-6, sensorless=True):
         super().__init__(par, T_s, sensorless)
         self.current_reference = CurrentReference(par, cfg)
         self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
-        self.observer = Observer(ObserverCfg(par, T_s, sensorless=sensorless))
+        self.observer = im.Observer(
+            im.ObserverCfg(par, T_s, sensorless=sensorless))
 
     def output(self, fbk):
         ref = super().output(fbk)
@@ -91,7 +120,7 @@ class CurrentReferenceCfg:
         Voltage utilization factor. The default is 0.95.
     
     """
-    par: InitVar[ModelPars] = None
+    par: InitVar[im.ModelPars] = None
     max_i_s: float = None
     nom_u_s: InitVar[float] = np.sqrt(2/3)*400
     nom_w_s: InitVar[float] = 2*np.pi*50

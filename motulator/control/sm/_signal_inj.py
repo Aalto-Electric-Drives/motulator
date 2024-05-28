@@ -2,9 +2,9 @@
 
 from types import SimpleNamespace
 import numpy as np
+
+from motulator.control import SpeedCtrl, DriveCtrl, sm
 from motulator._helpers import wrap
-from motulator.control._common import SpeedCtrl, DriveCtrl
-from motulator.control.sm._current_vector import CurrentCtrl, CurrentReference
 
 
 # %%
@@ -41,8 +41,8 @@ class SignalInjectionCtrl(DriveCtrl):
 
     def __init__(self, par, cfg, T_s=250e-6):
         super().__init__(par, T_s, sensorless=True)
-        self.current_ref = CurrentReference(par, cfg)
-        self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
+        self.current_ref = sm.CurrentReference(par, cfg)
+        self.current_ctrl = sm.CurrentCtrl(par, 2*np.pi*200)
         self.pll = PhaseLockedLoop(w_o=2*np.pi*40)
         self.signal_inj = SignalInjection(par, U_inj=250)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
@@ -109,9 +109,8 @@ class SignalInjection:
     """
 
     def __init__(self, par, U_inj):
-        # Error gain
-        self.k = .5*par.L_d*par.L_q/((par.L_q - par.L_d))
-        self._i_s_old, self._i_s_older = 0, 0
+        self.k = .5*par.L_d*par.L_q/((par.L_q - par.L_d))  # Error gain
+        self._old_i_s, self._older_i_s = 0, 0
         self.u_sd_inj = U_inj
 
     def output(self, T_s, i_sq):
@@ -131,9 +130,10 @@ class SignalInjection:
             Rotor position estimation error (electrical rad).
 
         """
-        di_sq = i_sq - 2*self._i_s_old.imag + self._i_s_older.imag
+        di_sq = i_sq - 2*self._old_i_s.imag + self._older_i_s.imag
         err = (self.k/T_s)*di_sq/self.u_sd_inj if np.abs(
             self.u_sd_inj) > 0 else 0
+
         return err
 
     def filter_current(self, i_s):
@@ -152,7 +152,8 @@ class SignalInjection:
 
         """
         # Filter currents
-        i_s_flt = .5*(i_s + self._i_s_old)
+        i_s_flt = .5*(i_s + self._old_i_s)
+
         return i_s_flt
 
     def update(self, i_s):
@@ -166,8 +167,8 @@ class SignalInjection:
 
         """
         # Update the integral states
-        self._i_s_older = self._i_s_old
-        self._i_s_old = i_s
+        self._older_i_s = self._old_i_s
+        self._old_i_s = i_s
         # Reverse the d-axis square wave injection voltage
         self.u_sd_inj = -self.u_sd_inj
 

@@ -4,7 +4,7 @@ Torque characteristics for synchronous machines.
 This contains computation and plotting of torque characteristics for 
 synchronous machines, including the MTPA and MTPV loci [#Mor1990]_. The methods 
 can be used to define look-up tables for control and to analyze the 
-characteristics. This version omits the magnetic saturation.
+characteristics. This implementation omits the magnetic saturation.
 
 References
 ----------
@@ -32,8 +32,6 @@ class TorqueCharacteristics:
     """
     Compute MTPA and MTPV loci based on the machine parameters.
 
-    The magnetic saturation is omitted.
-
     Parameters
     ----------
     par : ModelPars
@@ -42,10 +40,7 @@ class TorqueCharacteristics:
     """
 
     def __init__(self, par):
-        self.n_p = par.n_p
-        self.L_d = par.L_d
-        self.L_q = par.L_q
-        self.psi_f = par.psi_f
+        self.par = par
 
     def torque(self, psi_s):
         """
@@ -63,7 +58,7 @@ class TorqueCharacteristics:
 
         """
         i_s = self.current(psi_s)
-        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
+        tau_M = 1.5*self.par.n_p*np.imag(i_s*np.conj(psi_s))
 
         return tau_M
 
@@ -82,7 +77,8 @@ class TorqueCharacteristics:
             Stator current (A).
 
         """
-        i_s = (psi_s.real - self.psi_f)/self.L_d + 1j*psi_s.imag/self.L_q
+        par = self.par
+        i_s = (psi_s.real - par.psi_f)/par.L_d + 1j*psi_s.imag/par.L_q
 
         return i_s
 
@@ -101,7 +97,8 @@ class TorqueCharacteristics:
             Stator flux linkage (Vs).
 
         """
-        psi_s = self.L_d*i_s.real + self.psi_f + 1j*self.L_q*i_s.imag
+        par = self.par
+        psi_s = par.L_d*i_s.real + par.psi_f + 1j*par.L_q*i_s.imag
 
         return psi_s
 
@@ -120,20 +117,22 @@ class TorqueCharacteristics:
             MTPA angle of the stator current vector (electrical rad).
 
         """
+        par = self.par
+
         # Replace zeros with epsilon
         abs_i_s = (abs_i_s > 0)*abs_i_s + (abs_i_s <= 0)*float_info.epsilon
 
-        if self.psi_f == 0:
+        if par.psi_f == 0:
             # SyRM (d-axis aligned with the maximum inductance)
             beta = .25*np.pi
-        elif self.L_d == self.L_q:
+        elif par.L_d == par.L_q:
             # Nonsalient machine
             beta = .5*np.pi
         else:
             # Salient machine
-            a = self.psi_f/((self.L_q - self.L_d)*abs_i_s)
+            a = par.psi_f/((par.L_q - par.L_d)*abs_i_s)
 
-            if self.L_q > self.L_d:
+            if par.L_q > par.L_d:
                 beta = np.arccos(.25*(a - np.sqrt(a**2 + 8)))
             else:
                 beta = np.arccos(.25*(a + np.sqrt(a**2 + 8)))
@@ -155,21 +154,22 @@ class TorqueCharacteristics:
             MTPV angle of the stator flux vector (electrical rad).
 
         """
+        par = self.par
         # Replace zeros with epsilon
         abs_psi_s = ((abs_psi_s > 0)*abs_psi_s +
                      (abs_psi_s <= 0)*float_info.epsilon)
 
-        if self.psi_f == 0:
+        if par.psi_f == 0:
             # SyRM (d-axis aligned with the maximum inductance)
             delta = .25*np.pi
-        elif self.L_d == self.L_q:
+        elif par.L_d == par.L_q:
             # Nonsalient machine
             delta = .5*np.pi
         else:
             # Salient machine
-            a = self.L_q/(self.L_q - self.L_d)*self.psi_f/abs_psi_s
+            a = par.L_q/(par.L_q - par.L_d)*par.psi_f/abs_psi_s
 
-            if self.L_q > self.L_d:
+            if par.L_q > par.L_d:
                 delta = np.arccos(.25*(a - np.sqrt(a**2 + 8)))
             else:
                 delta = np.arccos(.25*(a + np.sqrt(a**2 + 8)))
@@ -198,22 +198,24 @@ class TorqueCharacteristics:
             MTPV stator current (A).
 
         """
-        if self.psi_f == 0:
+        par = self.par
+
+        if par.psi_f == 0:
             # SyRM
-            i_s = abs_i_s*np.exp(1j*(np.arctan(self.L_d/self.L_q)))
-        elif self.psi_f/self.L_d < abs_i_s:
-            if self.L_d == self.L_q:
+            i_s = abs_i_s*np.exp(1j*(np.arctan(par.L_d/par.L_q)))
+        elif par.psi_f/par.L_d < abs_i_s:
+            if par.L_d == par.L_q:
                 # Nonsalient machine
-                i_sd = -self.psi_f/self.L_d
+                i_sd = -par.psi_f/par.L_d
                 i_sq = np.sqrt(abs_i_s**2 - i_sd**2)
                 i_s = i_sd + 1j*i_sq
             else:
                 # Salient machine
-                k = self.L_q/(self.L_d - self.L_q)
-                a = self.L_d**2 + self.L_q**2
-                b = (2 + k)*self.psi_f*self.L_d
-                c = (1 + k)*self.psi_f**2 - (self.L_q*abs_i_s)**2
-                if self.L_q > self.L_d:
+                k = par.L_q/(par.L_d - par.L_q)
+                a = par.L_d**2 + par.L_q**2
+                b = (2 + k)*par.psi_f*par.L_d
+                c = (1 + k)*par.psi_f**2 - (par.L_q*abs_i_s)**2
+                if par.L_q > par.L_d:
                     i_sd = .5*(-b - np.sqrt(b**2 - 4*a*c))/a
                 else:
                     i_sd = .5*(-b + np.sqrt(b**2 - 4*a*c))/a
@@ -225,7 +227,7 @@ class TorqueCharacteristics:
 
         return i_s
 
-    def mtpa_locus(self, max_i_s, psi_s_min=None, N=20):
+    def mtpa_locus(self, max_i_s, min_psi_s=None, N=20):
         """
         Compute the MTPA locus.
 
@@ -234,7 +236,7 @@ class TorqueCharacteristics:
         max_i_s : float
             Maximum stator current magnitude (A) at which the locus is 
             computed.
-        psi_s_min : float, optional
+        min_psi_s : float, optional
             Minimum stator flux magnitude (Vs) at which the locus is computed.
         N : int, optional
             Amount of points. The default is 20.
@@ -255,6 +257,8 @@ class TorqueCharacteristics:
                 d-axis current (A) as a function of the torque (Nm).
 
         """
+        par = self.par
+
         # Current  magnitudes
         abs_i_s = np.linspace(0, max_i_s, N)
 
@@ -262,11 +266,11 @@ class TorqueCharacteristics:
         beta = self.mtpa(abs_i_s)
         i_s = abs_i_s*np.exp(1j*beta)
 
-        if (psi_s_min is not None) and (self.psi_f == 0):
+        if (min_psi_s is not None) and (par.psi_f == 0):
             # Minimum d-axis current for sensorless SyRM drives
-            i_sd_min = psi_s_min/self.L_d
-            i_s.real = ((i_s.real < i_sd_min)*i_sd_min +
-                        (i_s.real >= i_sd_min)*i_s.real)
+            min_i_sd = min_psi_s/par.L_d
+            i_s.real = ((i_s.real < min_i_sd)*min_i_sd +
+                        (i_s.real >= min_i_sd)*i_s.real)
 
         psi_s = self.flux(i_s)
         abs_psi_s = np.abs(psi_s)
@@ -317,8 +321,8 @@ class TorqueCharacteristics:
         """
         # If max_i_s is given, compute the corresponding MTPV stator flux
         if max_i_s is not None:
-            i_s_mtpv = self.mtpv_current(max_i_s)
-            max_psi_s = np.abs(self.flux(i_s_mtpv))
+            mtpv_i_s = self.mtpv_current(max_i_s)
+            max_psi_s = np.abs(self.flux(mtpv_i_s))
 
         # Flux magnitudes
         abs_psi_s = np.linspace(0, max_psi_s, N)
@@ -448,13 +452,11 @@ class TorqueCharacteristics:
         """
         Plot the stator flux linkage loci.
 
-        Per-unit quantities are used.
-
         Parameters
         ----------
         max_i_s : float
             Maximum current (A) at which the loci are evaluated.
-        base : SimpleNamespace
+        base : BaseValues
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -483,7 +485,7 @@ class TorqueCharacteristics:
         ax.plot(
             current_lim.psi_s.real/base.psi,
             current_lim.psi_s.imag/base.psi,
-            label="Const current")
+            label="Constant current")
 
         ax.legend()
         ax.set_xlabel(r"$\psi_\mathrm{sd}$ (p.u.)")
@@ -495,13 +497,11 @@ class TorqueCharacteristics:
         """
         Plot the current loci.
 
-        Per-unit quantities are used.
-
         Parameters
         ----------
         max_i_s : float
             Maximum current (A) at which the loci are evaluated.
-        base : SimpleNamespace
+        base : BaseValues
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -526,14 +526,14 @@ class TorqueCharacteristics:
         ax.plot(
             current_lim.i_s.real/base.i,
             current_lim.i_s.imag/base.i,
-            label="Const current")
+            label="Constant current")
 
         ax.set_xlabel(r"$i_\mathrm{sd}$ (p.u.)")
         ax.set_ylabel(r"$i_\mathrm{sq}$ (p.u.)")
         ax.legend()
-        if self.psi_f == 0:
+        if self.par.psi_f == 0:
             ax.axis([0, max_i_s/base.i, 0, max_i_s/base.i])
-        elif self.L_q > self.L_d:
+        elif self.par.L_q > self.par.L_d:
             ax.axis([-max_i_s/base.i, 0, 0, max_i_s/base.i])
         else:
             ax.axis([-max_i_s/base.i, max_i_s/base.i, 0, max_i_s/base.i])
@@ -543,13 +543,11 @@ class TorqueCharacteristics:
         """
         Plot torque vs. current characteristics.
 
-        Per-unit quantities are used.
-
         Parameters
         ----------
         max_i_s : float
             Maximum current (A) at which the loci are evaluated.
-        base : SimpleNamespace
+        base : BaseValues
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -574,11 +572,11 @@ class TorqueCharacteristics:
         ax1.plot(current_lim.tau_M/base.tau, current_lim.i_s.real/base.i)
 
         ax1.set_xlim(0, max_i_s/base.i)
-        if self.psi_f == 0:
+        if self.par.psi_f == 0:
             ax1.set_ylim(0, None)
-        elif self.L_q > self.L_d:
+        elif self.par.L_q > self.par.L_d:
             ax1.set_ylim(None, 0)
-        ax1.legend(["MTPA", "MTPV", "Const current"])
+        ax1.legend(["MTPA", "MTPV", "Constant current"])
         ax1.set_ylabel(r"$i_\mathrm{sd}$ (p.u.)")
 
         # Plot i_sq vs. tau_M
@@ -591,7 +589,7 @@ class TorqueCharacteristics:
 
         ax2.set_xlim(0, max_i_s/base.i)
         ax2.set_ylim(0, None)
-        ax2.legend(["MTPA", "MTPV", "Const current"])
+        ax2.legend(["MTPA", "MTPV", "Constant current"])
         ax2.set_ylabel(r"$i_\mathrm{sq}$ (p.u.)")
         ax2.set_xlabel(r"$\tau_\mathrm{M}$ (p.u.)")
 
@@ -599,13 +597,11 @@ class TorqueCharacteristics:
         """
         Plot torque vs. flux magnitude characteristics.
 
-        Per-unit quantities are used.
-
         Parameters
         ----------
         max_i_s : float
             Maximum current (A) at which the loci are evaluated.
-        base : SimpleNamespace
+        base : BaseValues
             Base values.
         N : int, optional
             Amount of points to be evaluated. The default is 20.
@@ -629,6 +625,6 @@ class TorqueCharacteristics:
             pass
         ax.plot(np.abs(current_lim.psi_s)/base.psi, current_lim.tau_M/base.tau)
 
-        ax.legend(["MTPA", "MTPV", "Const current"])
+        ax.legend(["MTPA", "MTPV", "Constant current"])
         ax.set_xlabel(r"$\psi_\mathrm{s}$ (p.u.)")
         ax.set_ylabel(r"$\tau_\mathrm{m}$ (p.u.)")

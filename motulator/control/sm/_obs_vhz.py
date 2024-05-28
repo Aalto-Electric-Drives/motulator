@@ -3,15 +3,13 @@
 from types import SimpleNamespace
 from dataclasses import dataclass, InitVar
 import numpy as np
+from motulator.control import DriveCtrl, RateLimiter, sm
 from motulator._helpers import wrap
-from motulator.control._common import DriveCtrl, RateLimiter
-from motulator.control.sm._flux_vector import (
-    FluxTorqueReference, FluxTorqueReferenceCfg)
 
 
 # %%
 @dataclass
-class ObserverBasedVHzCtrlCfg(FluxTorqueReferenceCfg):
+class ObserverBasedVHzCtrlCfg(sm.FluxTorqueReferenceCfg):
     """
     Control system configuration.
 
@@ -69,7 +67,7 @@ class ObserverBasedVHzCtrl(DriveCtrl):
         super().__init__(par, T_s, sensorless=True)
         self.par, self.cfg = par, cfg
         # Subsystems
-        self.flux_torque_reference = FluxTorqueReference(cfg)
+        self.flux_torque_reference = sm.FluxTorqueReference(cfg)
         self.observer = FluxObserver(par)
         self.rate_limiter = RateLimiter(np.inf)
         # Initialize the states
@@ -92,7 +90,6 @@ class ObserverBasedVHzCtrl(DriveCtrl):
         fbk.u_s = np.exp(-1j*fbk.theta_s)*fbk.u_ss
 
         # Limited flux references
-        #ref.psi_s, _ = self.flux_torque_reference(ref.tau_M, ref.w_m, fbk.u_dc)
         ref = self.flux_torque_reference(fbk, ref)
 
         # Electromagnetic torque
@@ -152,11 +149,11 @@ class FluxObserver:
     def output(self, fbk):
         """Output."""
         fbk.psi_s, fbk.delta = self.est.psi_s, self.est.delta
+
         return fbk
 
     def update(self, T_s, fbk):
         """Update the states."""
-        # Unpack
         par = self.par
 
         # Transformations to rotor coordinates. This is mathematically

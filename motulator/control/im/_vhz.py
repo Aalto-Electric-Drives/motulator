@@ -18,8 +18,7 @@ References
 from dataclasses import dataclass, field, InitVar
 from types import SimpleNamespace
 import numpy as np
-from motulator.control._common import PWM, DriveCtrl, RateLimiter
-from motulator.control.im._common import ModelPars
+from motulator.control import PWM, DriveCtrl, RateLimiter, im
 from motulator._helpers import wrap
 
 
@@ -28,7 +27,7 @@ from motulator._helpers import wrap
 class VHzCtrlCfg:
     """V/Hz control configuration."""
 
-    par: ModelPars
+    par: im.ModelPars
     nom_psi_s: float = None
     T_s: float = 250e-6
     six_step: bool = False
@@ -58,7 +57,6 @@ class VHzCtrl(DriveCtrl):
         self.nom_psi_s = cfg.nom_psi_s
         self.pwm = PWM(six_step=cfg.six_step)
         self.rate_limiter = cfg.rate_limiter
-        #self.state = SimpleNamespace(theta_s=0, i_s=0j, w_r=0)
         # Initialize the states
         self.ref.i_s, self.ref.w_r, self.theta_s = 0j, 0, 0
 
@@ -91,6 +89,7 @@ class VHzCtrl(DriveCtrl):
                 fbk.w_s = ref.w_s + self.gain.k_w*(ref.w_r - fbk.w_r)
             else:
                 fbk.w_s, fbk.w_r = 0, 0
+
             return fbk, ref
 
         # Define the voltage reference computation
@@ -108,6 +107,7 @@ class VHzCtrl(DriveCtrl):
             ref.u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
 
             ref.d_abc = self.pwm(ref.T_s, ref.u_ss, fbk.u_dc, fbk.w_s)
+
             return ref
 
         # Get the reference signals
@@ -119,6 +119,7 @@ class VHzCtrl(DriveCtrl):
         # Compute the dynamic stator frequency and the voltage reference
         fbk, ref = stator_frequency(fbk, ref)
         ref = voltage_reference(fbk, ref)
+
         return ref
 
     def update(self, fbk, ref):

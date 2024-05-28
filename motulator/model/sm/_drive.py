@@ -5,8 +5,8 @@ Peak-valued complex space vectors are used.
 
 """
 import numpy as np
+from motulator.model import Model
 from motulator._helpers import abc2complex, complex2abc, wrap
-from motulator.model._simulation import Model
 
 
 # %%

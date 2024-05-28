@@ -6,17 +6,16 @@ This example simulates sensorless current-vector control of a 2.2-kW PMSM
 drive, equipped with a diode bridge rectifier. 
 
 """
-
 # %%
 
 from motulator import model, control
-from motulator import NominalValues, base_values, plot, plot_extra
+from motulator import NominalValues, BaseValues, plot, plot_extra
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
-base = base_values(nom, n_p=3)
+base = BaseValues.from_nominal(nom, n_p=3)
 
 # %%
 # Configure the system model.

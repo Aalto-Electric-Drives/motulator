@@ -1,16 +1,16 @@
 """This package contains example controllers for induction machines."""
 
+from motulator.control.im._common import ModelPars, Observer, ObserverCfg
+
+from motulator.control.im._common import (
+    FullOrderObserver, FullOrderObserverCfg)
+
 from motulator.control.im._current_vector import (
     CurrentCtrl,
     CurrentReferenceCfg,
     CurrentReference,
-    ModelPars,
     CurrentVectorCtrl,
 )
-
-from motulator.control.im._common import Observer, ObserverCfg
-from motulator.control.im._common import (
-    FullOrderObserver, FullOrderObserverCfg)
 
 from motulator.control.im._vhz import VHzCtrl, VHzCtrlCfg
 

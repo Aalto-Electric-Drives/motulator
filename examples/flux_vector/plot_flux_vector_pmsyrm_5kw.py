@@ -11,7 +11,6 @@ used in this example does not consider the saturation, only the system model
 does.
 
 """
-
 # %%
 
 from os import path
@@ -21,13 +20,13 @@ from scipy.io import loadmat
 from scipy.optimize import minimize_scalar
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import base_values, plot, NominalValues, Sequence
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=370, I=8.8, f=60, P=5.5e3, tau=29.2)
-base = base_values(nom, n_p=2)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Create a saturation model, which will be used in the machine model in the

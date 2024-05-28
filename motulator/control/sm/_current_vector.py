@@ -2,9 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator.control._common import ComplexPICtrl, SpeedCtrl, DriveCtrl
-from motulator.control.sm._torque import TorqueCharacteristics
-from motulator.control.sm._common import ModelPars, Observer, ObserverCfg
+from motulator.control import ComplexPICtrl, SpeedCtrl, DriveCtrl, sm
 
 
 # %%
@@ -30,10 +28,12 @@ class CurrentVectorCtrl(DriveCtrl):
     ----------
     current_reference : CurrentReference
         Current reference generator.
-    observer : Observer
+    observer : Observer | None
         Flux and rotor position observer, used in the sensorless mode only.
     current_ctrl : CurrentCtrl
-        Current controller.
+        Current controller. The default is CurrentCtrl(par, 2*np.pi*200).
+    speed_ctrl : SpeedCtrl | None
+        Speed controller. The default is SpeedCtrl(par.J, 2*np.pi*4).
         
     """
 
@@ -50,8 +50,8 @@ class CurrentVectorCtrl(DriveCtrl):
         self.current_ctrl = CurrentCtrl(par, alpha_c)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
         if sensorless:
-            self.observer = Observer(
-                ObserverCfg(par, sensorless, alpha_o=alpha_o))
+            self.observer = sm.Observer(
+                sm.ObserverCfg(par, sensorless, alpha_o=alpha_o))
 
     def get_feedback_signals(self, mdl):
         """Override the base class method."""
@@ -73,6 +73,7 @@ class CurrentVectorCtrl(DriveCtrl):
         ref.u_s = self.current_ctrl.output(ref.i_s, fbk.i_s)
         u_ss = ref.u_s*np.exp(1j*fbk.theta_m)
         ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
+
         return ref
 
     def update(self, fbk, ref):
@@ -118,6 +119,7 @@ class CurrentCtrl(ComplexPICtrl):
         # account
         ref_psi = self.L_d*ref_i.real + 1j*self.L_q*ref_i.imag
         psi = self.L_d*i.real + 1j*self.L_q*i.imag
+
         return super().output(ref_psi, psi)
 
 
@@ -158,7 +160,7 @@ class CurrentReferenceCfg:
         This limit merges the MTPV and current limits.
     
     """
-    par: InitVar[ModelPars]
+    par: InitVar[sm.ModelPars]
     max_i_s: float
     min_psi_s: float = None
     nom_w_m: InitVar[float] = None
@@ -174,7 +176,7 @@ class CurrentReferenceCfg:
         if self.k_fw is None:
             self.k_fw = alpha_fw/(nom_w_m*par.L_d)
         # Generate LUTs
-        tq = TorqueCharacteristics(par)
+        tq = sm.TorqueCharacteristics(par)
         mtpa = tq.mtpa_locus(self.max_i_s, self.min_psi_s)
         lim = tq.mtpv_and_current_limits(self.max_i_s)
         # MTPA locus
@@ -269,8 +271,6 @@ class CurrentReference:
         self.ref_i_sd += ref.T_s*cfg.k_fw*(max_u_s - np.abs(ref.u_s))
 
         # Limit the current
-        # mtpa_i_sd = cfg.mtpa_i_sd(np.abs(ref.tau_M_lim))
-        # lim_i_sd = cfg.lim_i_sd(np.abs(ref.tau_M_lim))
         mtpa_i_sd = cfg.mtpa_i_sd(np.abs(ref.tau_M))
         lim_i_sd = cfg.lim_i_sd(np.abs(ref.tau_M))
         self.ref_i_sd = np.clip(self.ref_i_sd, lim_i_sd, mtpa_i_sd)

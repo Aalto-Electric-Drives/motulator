@@ -16,9 +16,7 @@ model. Naturally, the control performance could be improved by taking the
 saturation into account in the control algorithm.
 
 """
-
 # %%
-# Imports.
 
 from os import path
 import inspect
@@ -26,13 +24,13 @@ import numpy as np
 from scipy.optimize import minimize_scalar
 from scipy.interpolate import LinearNDInterpolator
 from motulator import model, control
-from motulator import base_values, plot, NominalValues, Sequence
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
 nom = NominalValues(U=220, I=15.6, f=85, P=5.07e3, tau=19)
-base = base_values(nom, n_p=2)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Load and plot the flux maps.

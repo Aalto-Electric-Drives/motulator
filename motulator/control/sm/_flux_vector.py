@@ -2,9 +2,7 @@
 
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator.control._common import SpeedCtrl, DriveCtrl
-from motulator.control.sm._torque import TorqueCharacteristics
-from motulator.control.sm._common import ModelPars, Observer, ObserverCfg
+from motulator.control import SpeedCtrl, DriveCtrl, sm
 
 
 # %%
@@ -16,12 +14,8 @@ class FluxVectorCtrl(DriveCtrl):
     coordinates as well as decoupling between the stator flux and torque 
     channels are used according to [#Awa2019b]_. Here, the stator flux 
     magnitude and the electromagnetic torque are selected as controllable 
-    variables. 
-
-    Notes
-    -----
-    Proportional controllers are used for simplicity. The magnetic saturation 
-    is not considered in this implementation.
+    variables. Proportional controllers are used for simplicity. The magnetic 
+    saturation is not considered in this implementation.
 
     Parameters
     ----------
@@ -64,8 +58,8 @@ class FluxVectorCtrl(DriveCtrl):
         # Subsystems
         self.flux_torque_reference = FluxTorqueReference(cfg)
         self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
-        self.observer = Observer(
-            ObserverCfg(par, alpha_o=alpha_o, sensorless=sensorless))
+        self.observer = sm.Observer(
+            sm.ObserverCfg(par, alpha_o=alpha_o, sensorless=sensorless))
         # Bandwidths
         self.alpha_psi = alpha_psi
         self.alpha_tau = alpha_tau
@@ -73,9 +67,9 @@ class FluxVectorCtrl(DriveCtrl):
     # pylint: disable=too-many-locals
     def output(self, fbk):
         """Calculate references."""
-
         par = self.par
 
+        # Get the references from the outer loop
         ref = super().output(fbk)
         ref = super().get_torque_reference(fbk, ref)
         ref = self.flux_torque_reference(fbk, ref)
@@ -128,7 +122,7 @@ class FluxTorqueReferenceCfg:
         Voltage utilization factor. The default is 0.95.
 
     """
-    par: InitVar[ModelPars]
+    par: InitVar[sm.ModelPars]
     max_i_s: float = None
     min_psi_s: float = None
     max_psi_s: float = np.inf
@@ -137,7 +131,7 @@ class FluxTorqueReferenceCfg:
     def __post_init__(self, par):
         self.min_psi_s = par.psi_f if self.min_psi_s is None else self.min_psi_s
         # Generate LUTs
-        tq = TorqueCharacteristics(par)
+        tq = sm.TorqueCharacteristics(par)
         mtpa = tq.mtpa_locus(self.max_i_s, self.min_psi_s)
         lim = tq.mtpv_and_current_limits(self.max_i_s)
         # MTPA locus
@@ -174,11 +168,9 @@ class FluxTorqueReference:
         mtpa_psi_s = np.clip(mtpa_psi_s, cfg.min_psi_s, cfg.max_psi_s)
 
         # Field weakening
-        w_m = fbk.w_m if hasattr(fbk, 'w_m') else ref.w_m
+        w_m = fbk.w_m if hasattr(fbk, 'w_m') else ref.w_m  # For V/Hz control
         max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
         max_psi_s = max_u_s/np.abs(w_m) if w_m != 0 else np.inf
-        #max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
-        #max_psi_s = max_u_s/np.abs(fbk.w_m) if fbk.w_m != 0 else np.inf
 
         # Flux reference
         ref.psi_s = np.min([max_psi_s, mtpa_psi_s])
