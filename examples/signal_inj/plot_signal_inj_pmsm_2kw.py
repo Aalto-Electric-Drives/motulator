@@ -22,11 +22,11 @@ base = BaseValues.from_nominal(nom, n_p=3)
 # %%
 # Configure the system model.
 
-machine = model.sm.SynchronousMachine(
+machine = model.SynchronousMachine(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
@@ -62,12 +62,12 @@ sim.simulate(t_stop=4)
 plot(sim, base)
 
 # Plot also the angles
-mdl = sim.mdl.data  # Continuous-time data
+mdl = sim.mdl  # Continuous-time data
 ctrl = sim.ctrl.data  # Discrete-time data
 ctrl.t = ctrl.ref.t  # Discrete time
 
 plt.figure()
-plt.plot(mdl.t, mdl.theta_m, label=r"$\vartheta_\mathrm{m}$")
+plt.plot(mdl.data.t, mdl.machine.data.theta_m, label=r"$\vartheta_\mathrm{m}$")
 plt.plot(
     ctrl.t,
     ctrl.fbk.theta_m,

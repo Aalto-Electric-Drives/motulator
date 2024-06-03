@@ -34,7 +34,8 @@ def plot(sim, base=None, t_span=None):
 
     """
     # pylint: disable=too-many-statements
-    mdl = sim.mdl.data  # Continuous-time data
+    #mdl = sim.mdl.data  # Continuous-time data
+    mdl = sim.mdl  # Continuous-time data
     ctrl = sim.ctrl.data  # Discrete-time data
     ctrl.t = ctrl.ref.t  # Discrete time
 
@@ -68,7 +69,12 @@ def plot(sim, base=None, t_span=None):
             label=r"$\omega_\mathrm{m,ref}$")
     except (AttributeError, TypeError):
         pass
-    ax1.plot(mdl.t, mdl.w_m/base.w, label=r"$\omega_\mathrm{m}$")
+    ax1.plot(
+        mdl.data.t, mdl.machine.data.w_m/base.w, label=r"$\omega_\mathrm{m}$")
+    #ax1.plot(
+    #    mdl.data.t,
+    #    mdl.mechanics.data.w_M/base.w,
+    #    label=r"$\omega_\mathrm{m}$")
     try:
         ax1.plot(
             ctrl.t,
@@ -82,8 +88,15 @@ def plot(sim, base=None, t_span=None):
     ax1.set_xticklabels([])
 
     # Subplot 2: torques
-    ax2.plot(mdl.t, mdl.tau_L/base.tau, ":", label=r"$\tau_\mathrm{L}$")
-    ax2.plot(mdl.t, mdl.tau_M/base.tau, label=r"$\tau_\mathrm{M}$")
+    ax2.plot(
+        mdl.data.t,
+        mdl.mechanics.data.tau_L/base.tau,
+        ":",
+        label=r"$\tau_\mathrm{L}$")
+    ax2.plot(
+        mdl.data.t,
+        mdl.machine.data.tau_M/base.tau,
+        label=r"$\tau_\mathrm{M}$")
     try:
         ax2.plot(
             ctrl.t,
@@ -145,7 +158,10 @@ def plot(sim, base=None, t_span=None):
 
     # Subplot 5: flux linkages
     if motor_type == "sm":
-        ax5.plot(mdl.t, np.abs(mdl.psi_s)/base.psi, label=r"$\psi_\mathrm{s}$")
+        ax5.plot(
+            mdl.data.t,
+            np.abs(mdl.machine.data.psi_ss)/base.psi,
+            label=r"$\psi_\mathrm{s}$")
         try:
             ax5.plot(
                 ctrl.t,
@@ -166,7 +182,9 @@ def plot(sim, base=None, t_span=None):
 
     else:
         ax5.plot(
-            mdl.t, np.abs(mdl.psi_ss)/base.psi, label=r"$\psi_\mathrm{s}$")
+            mdl.data.t,
+            np.abs(mdl.machine.data.psi_ss)/base.psi,
+            label=r"$\psi_\mathrm{s}$")
         ax5.plot(
             mdl.t, np.abs(mdl.psi_Rs)/base.psi, label=r"$\psi_\mathrm{R}$")
         try:
@@ -216,8 +234,11 @@ def plot_extra(sim, base=None, t_span=None):
         Time span. The default is (0, sim.ctrl.t[-1]).
 
     """
-    mdl = sim.mdl.data  # Continuous-time data
+    #mdl = sim.mdl.data  # Continuous-time data
+    #ctrl = sim.ctrl.data  # Discrete-time data
+    mdl = sim.mdl  # Continuous-time data
     ctrl = sim.ctrl.data  # Discrete-time data
+    ctrl.t = ctrl.ref.t  # Discrete time
 
     # Check if the time span was given
     if t_span is None:
@@ -243,7 +264,10 @@ def plot_extra(sim, base=None, t_span=None):
     fig1, (ax1, ax2) = plt.subplots(2, 1)
 
     # Subplot 1: voltages
-    ax1.plot(mdl.t, mdl.u_cs.real/base.u, label=r"$u_\mathrm{sa}$")
+    ax1.plot(
+        mdl.data.t,
+        mdl.converter.data.u_cs.real/base.u,
+        label=r"$u_\mathrm{sa}$")
     ax1.plot(
         ctrl.t,
         ctrl.fbk.u_ss.real/base.u,
@@ -255,8 +279,8 @@ def plot_extra(sim, base=None, t_span=None):
 
     # Subplot 2: currents
     ax2.plot(
-        mdl.t,
-        complex2abc(mdl.i_ss).T/base.i,
+        mdl.data.t,
+        complex2abc(mdl.machine.data.i_ss).T/base.i,
         label=[r"$i_\mathrm{sa}$", r"$i_\mathrm{sb}$", r"$i_\mathrm{sc}$"])
     ax2.plot(ctrl.t, ctrl.fbk.i_ss.real/base.i, ds="steps-post")
     ax2.set_xlim(t_span)
@@ -273,27 +297,42 @@ def plot_extra(sim, base=None, t_span=None):
 
     # Plots the DC bus and grid-side variables (if exist)
     try:
-        mdl.i_L
+        mdl.converter.data.i_L
     except AttributeError:
-        mdl.i_L = None
+        mdl.converter.data.i_L = None
 
-    if mdl.i_L is not None:
+    if mdl.converter.data.i_L is not None:
 
         fig2, (ax1, ax2) = plt.subplots(2, 1)
 
         # Subplot 1: voltages
-        ax1.plot(mdl.t, mdl.u_di/base.u, label=r"$u_\mathrm{di}$")
-        ax1.plot(mdl.t, mdl.u_dc/base.u, label=r"$u_\mathrm{dc}$")
         ax1.plot(
-            mdl.t, complex2abc(mdl.u_g).T/base.u, label=r"$u_\mathrm{ga}$")
+            mdl.data.t,
+            mdl.converter.data.u_di/base.u,
+            label=r"$u_\mathrm{di}$")
+        ax1.plot(
+            mdl.data.t,
+            mdl.converter.data.u_dc/base.u,
+            label=r"$u_\mathrm{dc}$")
+        ax1.plot(
+            mdl.data.t,
+            complex2abc(mdl.converter.data.u_g).T/base.u,
+            label=r"$u_\mathrm{ga}$")
         ax1.legend()
         ax1.set_xlim(t_span)
         ax1.set_xticklabels([])
 
         # Subplot 2: currents
-        ax2.plot(mdl.t, mdl.i_L/base.i, label=r"$i_\mathrm{L}$")
-        ax2.plot(mdl.t, mdl.i_dc/base.i, label=r"$i_\mathrm{dc}$")
-        ax2.plot(mdl.t, mdl.i_g.real/base.i, label=r"$i_\mathrm{ga}$")
+        ax2.plot(
+            mdl.data.t, mdl.converter.data.i_L/base.i, label=r"$i_\mathrm{L}$")
+        ax2.plot(
+            mdl.data.t,
+            mdl.converter.data.i_dc/base.i,
+            label=r"$i_\mathrm{dc}$")
+        ax2.plot(
+            mdl.data.t,
+            mdl.converter.data.i_g.real/base.i,
+            label=r"$i_\mathrm{ga}$")
         ax2.legend()
         ax2.set_xlim(t_span)
 

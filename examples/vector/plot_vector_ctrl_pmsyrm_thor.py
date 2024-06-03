@@ -22,11 +22,11 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Configure the system model.
 
 # Configure magnetically linear motor model
-machine = model.sm.SynchronousMachine(
+machine = model.SynchronousMachine(
     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 mechanics = model.Mechanics(J=.0042)
 converter = model.Inverter(u_dc=310)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.

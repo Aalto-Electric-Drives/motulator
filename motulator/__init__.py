@@ -9,7 +9,6 @@ control algorithms are included.
 
 from motulator._helpers import (
     abc2complex, complex2abc, BaseValues, NominalValues, Sequence, Step)
-
 from motulator._plots import plot, plot_extra
 
 from motulator import control, model

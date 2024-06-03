@@ -21,11 +21,11 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # %%
 # Configure the system model.
 
-machine = model.sm.SynchronousMachine(
+machine = model.SynchronousMachine(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system. You may also try to change the parameters.

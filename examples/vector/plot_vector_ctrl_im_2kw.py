@@ -53,18 +53,19 @@ def L_s(psi):
 # Create the system model.
 
 # Γ-equivalent machine model with main-flux saturation included
-machine = model.im.InductionMachineSaturated(
-    n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
+machine = model.InductionMachine(n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
 # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
 #machine = model.im.InductionMachineInvGamma(
 #    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 # Alternatively, configure the machine model using its Γ parameters
-# machine = model.im.InductionMachine(
-#     n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)
+#machine = model.im.InductionMachine(
+#    n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)
 mechanics = model.Mechanics(J=.015)
+#mechanics = model.MechanicsTwoMass(
+#    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
 converter = model.Inverter(u_dc=540)
-mdl = model.im.Drive(machine, mechanics, converter)
-# mdl.pwm = model.CarrierComparison()  # Try to enable the PWM model
+mdl = model.Drive(converter, machine, mechanics)
+#mdl.pwm = model.CarrierComparison()  # Try to enable the PWM model
 # mdl.delay = model.Delay(2)  # Try longer computational delay
 
 # %%

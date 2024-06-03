@@ -21,11 +21,11 @@ base = BaseValues.from_nominal(nom, n_p=3)
 # %%
 # Configure the system model.
 
-machine = model.sm.SynchronousMachine(
+machine = model.SynchronousMachine(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 # mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%

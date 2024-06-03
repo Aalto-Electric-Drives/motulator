@@ -25,12 +25,12 @@ base = BaseValues.from_nominal(nom, n_p=3)
 # %%
 # Configure the system model.
 
-machine = model.sm.SynchronousMachine(
+machine = model.SynchronousMachine(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 mechanics = model.MechanicsTwoMass(
     J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.DriveTwoMassMechanics(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
@@ -65,9 +65,11 @@ plot(sim, base)  # Plot results in per-unit values
 
 t_span = (0, 1.2)
 _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
-ax1.plot(sim.mdl.data.t, sim.mdl.data.w_M, label=r"$\omega_\mathrm{M}$")
-ax1.plot(sim.mdl.data.t, sim.mdl.data.w_L, label=r"$\omega_\mathrm{L}$")
-ax2.plot(sim.mdl.data.t, sim.mdl.data.theta_ML*180/np.pi)
+ax1.plot(
+    sim.mdl.data.t, sim.mdl.mechanics.data.w_M, label=r"$\omega_\mathrm{M}$")
+ax1.plot(
+    sim.mdl.data.t, sim.mdl.mechanics.data.w_L, label=r"$\omega_\mathrm{L}$")
+ax2.plot(sim.mdl.data.t, sim.mdl.mechanics.data.theta_ML*180/np.pi)
 ax1.set_xlim(t_span)
 ax2.set_xlim(t_span)
 ax1.set_xticklabels([])

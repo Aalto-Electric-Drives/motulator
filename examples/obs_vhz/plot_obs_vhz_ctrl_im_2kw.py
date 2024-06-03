@@ -22,11 +22,11 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Configure the system model.
 
 # Configure the induction machine using its inverse-Γ parameters
-machine = model.im.InductionMachineInvGamma(
+machine = model.InductionMachineInvGamma(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.im.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.

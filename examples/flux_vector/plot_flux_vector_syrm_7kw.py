@@ -46,13 +46,13 @@ def i_s(psi_s):
 # %%
 # Configure the system model.
 
-machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
+machine = model.SynchronousMachine(n_p=2, R_s=.54, i_s=i_s, psi_s0=0)
 # Magnetically linear SyRM model for comparison
 # machine = model.sm.SynchronousMachine(
 #    n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system. The saturation is not taken into account.
@@ -104,11 +104,14 @@ plot(sim, base)
 # inductance errors and the magnetic saturation, it is nonzero even if the
 # machine has no magnets.
 
-mdl = sim.mdl.data  # Continuous-time data
+mdl = sim.mdl  # Continuous-time data
 ctrl = sim.ctrl.data  # Discrete-time data
 ctrl.t = ctrl.ref.t  # Discrete time
 plt.figure()
-plt.plot(mdl.t, np.abs(mdl.psi_s)/base.psi, label=r"$\psi_\mathrm{s}$")
+plt.plot(
+    mdl.data.t,
+    np.abs(mdl.machine.data.psi_s)/base.psi,
+    label=r"$\psi_\mathrm{s}$")
 plt.plot(
     ctrl.t, np.abs(ctrl.fbk.psi_s)/base.psi, label=r"$\hat{\psi}_\mathrm{s}$")
 plt.plot(ctrl.t, ctrl.fbk.psi_f/base.psi, label=r"$\hat{\psi}_\mathrm{f}$")

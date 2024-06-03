@@ -141,14 +141,13 @@ psi_s0 = complex(res.x)  # psi_s0 = 0.477
 # %%
 # Configure the system model.
 
-machine = model.sm.SynchronousMachineSaturated(
-    n_p=2, R_s=.63, current=i_s, psi_s0=psi_s0)
+machine = model.SynchronousMachine(n_p=2, R_s=.63, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model for comparison
 # machine = model.sm.SynchronousMachine(
 #    n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 # mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%

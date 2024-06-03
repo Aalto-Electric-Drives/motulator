@@ -22,13 +22,14 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Create the system model.
 
 # Machine model, using its inverse-Γ parameters
-machine = model.im.InductionMachineInvGamma(
+machine = model.InductionMachineInvGamma(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 # Mechanics model
 mechanics = model.Mechanics(J=.015)
 # Frequency converter with a diode bridge
 converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
-mdl = model.im.DriveWithDiodeBridge(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
+#mdl = model.im.DriveWithDiodeBridge(converter, machine, mechanics)
 mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%

@@ -38,7 +38,7 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Get the path of this file
 p = path.dirname(path.abspath(inspect.getfile(inspect.currentframe())))
 # Load the data from the MATLAB file
-data = model.sm.import_syre_data(p + "/THOR.mat")
+data = model.import_syre_data(p + "/THOR.mat")
 
 # You may also downsample or invert the flux map by uncommenting the following
 # lines. Not needed here, but these methods could be useful for other purposes.
@@ -46,8 +46,8 @@ data = model.sm.import_syre_data(p + "/THOR.mat")
 # from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map
 # data = downsample_flux_map(data, N_d=32, N_q=32)
 # data = invert_flux_map(data, N_d=128, N_q=128)
-model.sm.plot_flux_vs_current(data)
-model.sm.plot_flux_map(data)
+model.plot_flux_vs_current(data)
+model.plot_flux_map(data)
 
 # %%
 # Create the saturation model.
@@ -82,14 +82,13 @@ def i_s(psi_s):
 # Configure the system model.
 
 # Create the motor model
-machine = model.sm.SynchronousMachineSaturated(
-    n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
+machine = model.SynchronousMachine(n_p=2, R_s=.2, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model
 # machine = model.sm.SynchronousMachine(
 #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 mechanics = model.Mechanics(J=.0042)
 converter = model.Inverter(u_dc=310)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
