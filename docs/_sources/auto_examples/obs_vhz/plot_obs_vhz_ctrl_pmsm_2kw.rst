@@ -23,18 +23,14 @@
 
 This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-11
-
-Imports.
-
-.. GENERATED FROM PYTHON SOURCE LINES 11-16
+.. GENERATED FROM PYTHON SOURCE LINES 9-14
 
 .. code-block:: Python
 
 
     import numpy as np
     from motulator import model, control
-    from motulator import BaseValues, Sequence, plot
+    from motulator import BaseValues, NominalValues, Sequence, plot
 
 
 
@@ -43,17 +39,17 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: Python
 
 
-    base = BaseValues(
-        U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
+    nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+    base = BaseValues.from_nominal(nom, n_p=3)
 
 
 
@@ -62,20 +58,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-31
+.. GENERATED FROM PYTHON SOURCE LINES 22-29
 
 .. code-block:: Python
 
 
-    machine = model.sm.SynchronousMachine(
+    machine = model.SynchronousMachine(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
-    mdl = model.sm.Drive(machine, mechanics, converter)
+    mdl = model.Drive(converter, machine, mechanics)
 
 
 
@@ -84,18 +80,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-39
+.. GENERATED FROM PYTHON SOURCE LINES 31-37
 
 .. code-block:: Python
 
 
     par = control.sm.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-    ctrl_par = control.sm.ObserverBasedVHzCtrlPars(par, i_s_max=1.5*base.i)
-    ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
+    cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
+    ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
     #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 
@@ -105,11 +101,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-51
+.. GENERATED FROM PYTHON SOURCE LINES 39-49
 
 .. code-block:: Python
 
@@ -117,10 +113,10 @@ Set the speed reference and the external load torque.
     # Speed reference
     times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
     values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-    ctrl.w_m_ref = Sequence(times, values)
+    ctrl.ref.w_m = Sequence(times, values)
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*8
-    values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+    values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
     mdl.mechanics.tau_L_t = Sequence(times, values)
 
 
@@ -130,11 +126,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-57
+.. GENERATED FROM PYTHON SOURCE LINES 51-55
 
 .. code-block:: Python
 
@@ -149,12 +145,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-60
+.. GENERATED FROM PYTHON SOURCE LINES 56-58
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-62
+.. GENERATED FROM PYTHON SOURCE LINES 58-60
 
 .. code-block:: Python
 
@@ -175,7 +171,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 19.166 seconds)
+   **Total running time of the script:** (0 minutes 25.721 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py:

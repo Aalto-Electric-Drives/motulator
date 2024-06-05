@@ -28,11 +28,7 @@ has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In
 this case, this PM-flux estimate lumps the effects of inductance errors. 
 Naturally, the PM-flux estimation can be used in PM machine drives as well. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-16
-
-Imports.
-
-.. GENERATED FROM PYTHON SOURCE LINES 16-22
+.. GENERATED FROM PYTHON SOURCE LINES 14-20
 
 .. code-block:: Python
 
@@ -40,7 +36,7 @@ Imports.
     import numpy as np
     import matplotlib.pyplot as plt
     from motulator import model, control
-    from motulator import BaseValues, Sequence, plot
+    from motulator import BaseValues, NominalValues, Sequence, plot
 
 
 
@@ -49,17 +45,17 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-28
+.. GENERATED FROM PYTHON SOURCE LINES 22-26
 
 .. code-block:: Python
 
 
-    base = BaseValues(
-        U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, n_p=2)
+    nom = NominalValues(U=370, I=15.5, f=105.8, P=6.7e3, tau=20.1)
+    base = BaseValues.from_nominal(nom, n_p=2)
 
 
 
@@ -68,12 +64,12 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-31
+.. GENERATED FROM PYTHON SOURCE LINES 27-29
 
 Create a saturation model, see the example
 :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` for further details.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-48
+.. GENERATED FROM PYTHON SOURCE LINES 29-46
 
 .. code-block:: Python
 
@@ -101,22 +97,22 @@ Create a saturation model, see the example
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-59
+.. GENERATED FROM PYTHON SOURCE LINES 48-57
 
 .. code-block:: Python
 
 
-    machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
+    machine = model.SynchronousMachine(n_p=2, R_s=.54, i_s=i_s, psi_s0=0)
     # Magnetically linear SyRM model for comparison
     # machine = model.sm.SynchronousMachine(
     #    n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
-    mdl = model.sm.Drive(machine, mechanics, converter)
+    mdl = model.Drive(converter, machine, mechanics)
 
 
 
@@ -125,13 +121,13 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-63
+.. GENERATED FROM PYTHON SOURCE LINES 58-61
 
 Configure the control system. The saturation is not taken into account.
 Furthermore, the inductance estimates L_d and L_q are intentionally set to
 lower values in order to demonstrate the PM-flux disturbance estimation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-79
+.. GENERATED FROM PYTHON SOURCE LINES 61-78
 
 .. code-block:: Python
 
@@ -139,17 +135,18 @@ lower values in order to demonstrate the PM-flux disturbance estimation.
     par = control.sm.ModelPars(
         n_p=2, R_s=.54, L_d=.7*37e-3, L_q=.8*6.2e-3, psi_f=0, J=.015)
     # Disable MTPA since the control system does not consider the saturation
-    ref = control.sm.FluxTorqueReferencePars(
-        par, i_s_max=2*base.i, k_u=.9, psi_s_min=base.psi, psi_s_max=base.psi)
-    ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
+    cfg = control.sm.FluxTorqueReferenceCfg(
+        par, max_i_s=2*base.i, k_u=.9, min_psi_s=base.psi, max_psi_s=base.psi)
+    ctrl = control.sm.FluxVectorCtrl(par, cfg, sensorless=True)
     # Since the saturation is not considered in the control system, the speed
     # estimation bandwidth is set to a lower value. Furthermore, the PM-flux
     # disturbance estimation is enabled at speeds above 2*pi*20 rad/s (electrical).
     ctrl.observer = control.sm.Observer(
-        par,
-        alpha_o=2*np.pi*40,
-        k_f=lambda w_m: max(.05*(np.abs(w_m) - 2*np.pi*20), 0),
-        sensorless=True)
+        control.sm.ObserverCfg(
+            par,
+            alpha_o=2*np.pi*40,
+            k_f=lambda w_m: max(.05*(np.abs(w_m) - 2*np.pi*20), 0),
+            sensorless=True))
 
 
 
@@ -158,22 +155,22 @@ lower values in order to demonstrate the PM-flux disturbance estimation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-81
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-91
+.. GENERATED FROM PYTHON SOURCE LINES 80-90
 
 .. code-block:: Python
 
 
-    # Speed reference
+    # Speed reference (electrical rad/s)
     times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-    ctrl.w_m_ref = Sequence(times, values)
+    ctrl.ref.w_m = Sequence(times, values)
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*4
-    values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+    values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
     mdl.mechanics.tau_L_t = Sequence(times, values)
 
 
@@ -183,11 +180,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-93
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-97
+.. GENERATED FROM PYTHON SOURCE LINES 92-96
 
 .. code-block:: Python
 
@@ -202,12 +199,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-100
+.. GENERATED FROM PYTHON SOURCE LINES 97-99
 
 Plot results in per-unit values. The transient after t = 0.5 s is due to the
 errors in the inductances. The PM-flux estimate compensates for these errors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-103
+.. GENERATED FROM PYTHON SOURCE LINES 99-102
 
 .. code-block:: Python
 
@@ -226,24 +223,29 @@ errors in the inductances. The PM-flux estimate compensates for these errors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-107
+.. GENERATED FROM PYTHON SOURCE LINES 103-106
 
 Plot the flux linkages and the PM-flux disturbance estimate. Due to the
 inductance errors and the magnetic saturation, it is nonzero even if the
 machine has no magnets.
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-121
+.. GENERATED FROM PYTHON SOURCE LINES 106-125
 
 .. code-block:: Python
 
 
-    mdl = sim.mdl.data  # Continuous-time data
+    mdl = sim.mdl  # Continuous-time data
     ctrl = sim.ctrl.data  # Discrete-time data
+    ctrl.t = ctrl.ref.t  # Discrete time
     plt.figure()
-    plt.plot(mdl.t, np.abs(mdl.psi_s)/base.psi, label=r"$\psi_\mathrm{s}$")
-    plt.plot(ctrl.t, np.abs(ctrl.psi_s)/base.psi, label=r"$\hat{\psi}_\mathrm{s}$")
-    plt.plot(ctrl.t, ctrl.psi_f/base.psi, label=r"$\hat{\psi}_\mathrm{f}$")
-    plt.plot(ctrl.t, ctrl.psi_s_ref/base.psi, "--", label=r"$\psi_\mathrm{s,ref}$")
+    plt.plot(
+        mdl.data.t,
+        np.abs(mdl.machine.data.psi_s)/base.psi,
+        label=r"$\psi_\mathrm{s}$")
+    plt.plot(
+        ctrl.t, np.abs(ctrl.fbk.psi_s)/base.psi, label=r"$\hat{\psi}_\mathrm{s}$")
+    plt.plot(ctrl.t, ctrl.fbk.psi_f/base.psi, label=r"$\hat{\psi}_\mathrm{f}$")
+    plt.plot(ctrl.t, ctrl.ref.psi_s/base.psi, "--", label=r"$\psi_\mathrm{s,ref}$")
     plt.xlim(0, 4)
     plt.xlabel("Time (s)")
     plt.ylabel("Flux linkage (p.u.)")
@@ -262,7 +264,7 @@ machine has no magnets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-127
+.. GENERATED FROM PYTHON SOURCE LINES 126-131
 
 .. rubric:: References
 
@@ -273,7 +275,7 @@ machine has no magnets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.208 seconds)
+   **Total running time of the script:** (0 minutes 15.922 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

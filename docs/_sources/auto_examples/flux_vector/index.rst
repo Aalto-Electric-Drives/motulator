@@ -32,7 +32,7 @@ torque are selected as controllable variables.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 2.2-kW PMSM drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.">
 
 .. only:: html
 

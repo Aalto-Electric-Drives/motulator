@@ -164,7 +164,7 @@ The other parts of the above controller are not affected by the saturation. The 
 Synchronous Machines
 --------------------
 
-The flux-based control algorithms :eq:`cc_flux` and :eq:`cc_disturbance`  can be directly used for both non-salient and salient synchronous machines by mapping the stator current to the flux linkage, [#Awa2019]_
+The flux-based control algorithms :eq:`cc_flux` and :eq:`cc_disturbance` can be directly used for both non-salient and salient synchronous machines by mapping the stator current to the flux linkage, [#Awa2019]_
 
 .. math::
     \boldsymbol{\psi}_\mathrm{ref} &= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s,ref}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s,ref}\} \\

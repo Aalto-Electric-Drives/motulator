@@ -16,9 +16,7 @@ model. Naturally, the control performance could be improved by taking the
 saturation into account in the control algorithm.
 
 """
-
 # %%
-# Imports.
 
 from os import path
 import inspect
@@ -26,13 +24,13 @@ import numpy as np
 from scipy.optimize import minimize_scalar
 from scipy.interpolate import LinearNDInterpolator
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=220, I_nom=15.6, f_nom=85, tau_nom=19, P_nom=5.07e3, n_p=2)
+nom = NominalValues(U=220, I=15.6, f=85, P=5.07e3, tau=19)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Load and plot the flux maps.
@@ -40,7 +38,7 @@ base = BaseValues(
 # Get the path of this file
 p = path.dirname(path.abspath(inspect.getfile(inspect.currentframe())))
 # Load the data from the MATLAB file
-data = model.sm.import_syre_data(p + "/THOR.mat")
+data = model.import_syre_data(p + "/THOR.mat")
 
 # You may also downsample or invert the flux map by uncommenting the following
 # lines. Not needed here, but these methods could be useful for other purposes.
@@ -48,8 +46,8 @@ data = model.sm.import_syre_data(p + "/THOR.mat")
 # from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map
 # data = downsample_flux_map(data, N_d=32, N_q=32)
 # data = invert_flux_map(data, N_d=128, N_q=128)
-model.sm.plot_flux_vs_current(data)
-model.sm.plot_flux_map(data)
+model.plot_flux_vs_current(data)
+model.plot_flux_map(data)
 
 # %%
 # Create the saturation model.
@@ -84,21 +82,20 @@ def i_s(psi_s):
 # Configure the system model.
 
 # Create the motor model
-machine = model.sm.SynchronousMachineSaturated(
-    n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
+machine = model.SynchronousMachine(n_p=2, R_s=.2, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model
 # machine = model.sm.SynchronousMachine(
 #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 mechanics = model.Mechanics(J=.0042)
 converter = model.Inverter(u_dc=310)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
 
 par = control.sm.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-ctrl_par = control.sm.ObserverBasedVHzCtrlPars(par, i_s_max=2*base.i)
-ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
+cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
+ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -106,15 +103,15 @@ ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = base.tau_nom/(base.w/base.n_p)**2
+k = nom.tau/(base.w/base.n_p)**2
 mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # Uncomment to try the rated load torque step at t = 1 s (set k = 0 above)
 # times = np.array([0, .125, .125, .875, .875, 1])*8
-# values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+# values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 # mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%

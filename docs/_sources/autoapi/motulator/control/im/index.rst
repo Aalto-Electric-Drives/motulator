@@ -32,210 +32,23 @@ Classes
 
 .. autoapisummary::
 
-   motulator.control.im.CurrentCtrl
-   motulator.control.im.CurrentReferencePars
-   motulator.control.im.CurrentReference
    motulator.control.im.ModelPars
-   motulator.control.im.VectorCtrl
    motulator.control.im.Observer
-   motulator.control.im.FluxObserver
-   motulator.control.im.ObserverBasedVHzCtrl
-   motulator.control.im.ObserverBasedVHzCtrlPars
+   motulator.control.im.ObserverCfg
+   motulator.control.im.FullOrderObserver
+   motulator.control.im.FullOrderObserverCfg
+   motulator.control.im.CurrentCtrl
+   motulator.control.im.CurrentReferenceCfg
+   motulator.control.im.CurrentReference
+   motulator.control.im.CurrentVectorCtrl
    motulator.control.im.VHzCtrl
+   motulator.control.im.VHzCtrlCfg
+   motulator.control.im.ObserverBasedVHzCtrl
+   motulator.control.im.ObserverBasedVHzCtrlCfg
 
 
 Package Contents
 ----------------
-
-.. py:class:: CurrentCtrl(par, alpha_c)
-
-   Bases: :py:obj:`motulator.control._common.ComplexPICtrl`
-
-
-   
-   2DOF PI current controller for induction machines.
-
-   This class provides an interface for a current controller for induction
-   machines. The gains are initialized based on the desired closed-loop
-   bandwidth and the leakage inductance.
-
-   :param par: Machine parameters, contains the leakage inductance `L_sgm` (H).
-   :type par: ModelPars
-   :param alpha_c: Closed-loop bandwidth (rad/s).
-   :type alpha_c: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: CurrentReferencePars
-
-   
-   Parameters for reference generation.
-
-   This dataclass stores the nominal and limit values needed for reference
-   generation. For calculating the rotor flux reference, the machine
-   parameters are also required.
-
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param i_s_max: Maximum stator current (A).
-   :type i_s_max: float
-   :param u_s_nom: Nominal stator voltage (V). The default is sqrt(2/3)*400.
-   :type u_s_nom: float, optional
-   :param w_s_nom: Nominal stator angular frequency (rad/s). The default is 2*pi*50.
-   :type w_s_nom: float, optional
-   :param psi_R_nom: Nominal rotor flux linkage (Vs). The default is
-                     `(u_s_nom/w_s_nom)/(1 + L_sgm/L_M)`.
-   :type psi_R_nom: float, optional
-   :param k_fw: Field-weakening gain (1/H). The default is `2*R_R/(w_s_nom*L_sgm**2)`.
-   :type k_fw: float, optional
-   :param k_u: Voltage utilization factor. The default is 0.95.
-   :type k_u: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: CurrentReference(par, ref)
-
-   
-   Current reference generation.
-
-   In the base-speed region, the current reference in rotor-flux coordinates
-   is given by::
-
-       i_s_ref = psi_R_nom/L_M + 1j*tau_M_ref/(1.5*n_p*abs(psi_R))
-
-   where `psi_R_nom` is the nominal rotor flux magnitude and `psi_R` is the
-   estimated rotor flux. The field-weakening operation is based on adjusting
-   the flux-producing current component::
-
-       i_s_ref.real = (k_fw/s)*(u_s_max - abs(u_s_ref))
-
-   where `1/s` refers to integration, ``u_s_max = k_u*u_dc/sqrt(3)`` is the
-   maximum stator voltage in the linear modulation region, `u_s_ref` is the
-   (unlimited) stator voltage reference, and `k_fw` is the field-weakening
-   gain. The field-weakening method and its tuning corresponds roughly to
-   [#Hin2006]_. Furthermore, the torque-producing current component
-   `i_s_ref.imag` is limited based on the maximum stator current and the
-   breakdown slip.
-
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param ref: Reference generation parameters.
-   :type ref: CurrentReferencePars
-
-   .. rubric:: References
-
-   .. [#Hin2006] Hinkkanen, Luomi, "Braking scheme for vector-controlled
-      induction motor drives equipped with diode rectifier without braking
-      resistor," IEEE Trans. Ind. Appl., 2006,
-      https://doi.org/10.1109/TIA.2006.880852
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: output(tau_M_ref, psi_R)
-
-      
-      Compute the stator current reference.
-
-      :param tau_M_ref: Torque reference (Nm).
-      :type tau_M_ref: float
-      :param psi_R: Rotor flux magnitude (Vs).
-      :type psi_R: float
-
-      :returns: * **i_s_ref** (*complex*) -- Stator current reference (A).
-                * **tau_M_ref_lim** (*float*) -- Limited torque reference (Nm).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update(T_s, u_s_ref, u_dc)
-
-      
-      Field-weakening based on the unlimited reference voltage.
-
-      :param T_s: Sampling period (s)
-      :type T_s: float
-      :param u_s_ref: Unlimited stator voltage reference (V).
-      :type u_s_ref: complex
-      :param u_dc: DC-bus voltage (V).
-      :type u_dc: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
 .. py:class:: ModelPars
 
@@ -272,124 +85,18 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: VectorCtrl(par, ref, T_s=0.00025, sensorless=True)
-
-   Bases: :py:obj:`motulator.control._common.Ctrl`
-
+.. py:class:: Observer(cfg)
 
    
-   Vector control for induction machine drives.
-
-   This class interconnects the subsystems of the control system and provides
-   the interface to the solver.
-
-   :param par: Machine model parameters.
-   :type par: InductionMachinePars
-   :param ref: Parameters for reference generation.
-   :type ref: CurrentReferencePars
-   :param T_s: Sampling period (s). The default is 250e-6.
-   :type T_s: float, optional
-   :param sensorless: If True, sensorless control is used. The default is True.
-   :type sensorless: bool, optional
-
-   .. attribute:: current_ref
-
-      Current reference generator.
-
-      :type: CurrentReference
-
-   .. attribute:: observer
-
-      Flux and speed observer.
-
-      :type: Observer
-
-   .. attribute:: current_ctrl
-
-      Current controller.
-
-      :type: CurrentCtrl
-
-   .. attribute:: speed_ctrl
-
-      Speed controller.
-
-      :type: SpeedCtrl
-
-   .. attribute:: pwm
-
-      Pulse-width modulation.
-
-      :type: PWM
-
-   .. attribute:: w_m_ref
-
-      Speed reference (electrical rad/s) as a function of time (s).
-
-      :type: callable
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: Observer(par, k=None, alpha_o=2 * np.pi * 40, sensorless=True)
-
-   
-   Reduced-order flux observer in estimated rotor flux coordinates.
+   Reduced-order flux observer operating in estimated rotor flux coordinates.
 
    This class implements a reduced-order flux observer for induction machines.
    Both sensored and sensorless operation are supported. The observer
    structure is similar to [#Hin2010]_. The observer operates in estimated
    rotor flux coordinates.
 
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param k: Observer gain as a function of the rotor angular speed. The default is
-             ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
-             `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
-   :type k: callable, optional
-   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
-   :type alpha_o: float, optional
-   :param sensorless: If True, sensorless mode is used. The default is True.
-   :type sensorless: bool, optional
-
-   .. attribute:: psi_R
-
-      Rotor flux magnitude estimate (Vs).
-
-      :type: float
-
-   .. attribute:: theta_s
-
-      Rotor flux angle estimate (rad).
-
-      :type: float
-
-   .. attribute:: w_m
-
-      Rotor angular speed estimate (electrical rad/s). In sensored mode, this
-      is the measured low-pass-filtered speed.
-
-      :type: float
-
-   .. rubric:: Notes
-
-   The pure voltage model corresponds to ``k = lambda w_m: 0``, resulting in
-   the marginally stable estimation-error dynamics. The current model is
-   obtained by setting ``k = lambda w_m: 1``.
+   :param cfg: Observer configuration.
+   :type cfg: ObserverCfg
 
    .. rubric:: References
 
@@ -415,74 +122,43 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: FluxObserver(par, alpha_o, b=None)
-
-   
-   Sensorless reduced-order flux observer in external coordinates.
-
-   This is a sensorless reduced-order flux observer in synchronous coordinates
-   for an induction machine. The observer gain decouples the electrical and
-   mechanical dynamics and allows placing the poles of the linearized
-   estimation error dynamics. This implementation operates in external
-   coordinates (typically synchronous coordinates defined by reference signals
-   of a control system).
-
-   :param par: Machine model parameters.
-   :type par: ModelPars
-   :param alpha_o: Speed-estimation bandwidth (rad/s).
-   :type alpha_o: float
-   :param b: Coefficient (rad/s) of the characteristic polynomial as a function of
-             the rotor angular speed estimate. The default is
-             ``lambda w_m: R_R/L_M + .4*abs(w_m)``.
-   :type b: callable, optional
-
-   .. attribute:: psi_R
-
-      Rotor flux estimate (Vs).
-
-      :type: complex
-
-   .. attribute:: w_m
-
-      Rotor angular speed estimate (electrical rad/s).
-
-      :type: float
-
-   .. rubric:: Notes
-
-   The characteristic polynomial of the observer in synchronous coordinates is
-   ``s**2 + b*s + w_s**2``.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: update(T_s, u_s, i_s, w_s)
+   .. py:method:: output(fbk)
 
       
-      Update the states.
+      Compute the feedback signals for the control system.
 
-      :param T_s: Sampling period (s).
-      :type T_s: float
-      :param u_s: Stator voltage (V) in synchronous coordinates.
-      :type u_s: complex
-      :param i_s: Stator current (A) in synchronous coordinates.
-      :type i_s: complex
-      :param w_s: Angular frequency (rad/s) of the coordinate system.
-      :type w_s: float
+      :param fbk:
+                  Measured signals, which should contain the following fields:
+
+                      u_ss : complex
+                          Stator voltage (V) in stator coordinates.
+                      i_ss : complex
+                          Stator current (A) in stator coordinates.
+                      w_m : float, optional
+                          Rotor angular speed (electrical rad/s). This signal is only
+                          needed in the sensored mode.
+      :type fbk: SimpleNamespace
+
+      :returns: **fbk** -- Measured and estimated feedback signals for the control system,
+                containing at least the following fields:
+
+                    u_s : complex
+                        Stator voltage (V) in estimated rotor flux coordinates.
+                    i_s : complex
+                        Stator current (A) in estimated rotor flux coordinates.
+                    psi_R : float
+                        Rotor flux magnitude estimate (Vs).
+                    theta_s : float
+                        Rotor flux angle estimate (rad).
+                    w_s : float
+                        Angular frequency (rad/s) of the coordinate system.
+                    w_m : float
+                        Rotor speed estimate (electrical rad/s).
+                    w_r : float
+                        Slip angular frequency (rad/s).
+                    psi_s : complex
+                        Stator flux estimate (Vs).
+      :rtype: SimpleNamespace
 
 
 
@@ -502,44 +178,53 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedVHzCtrl(par, ctrl_par, T_s=0.00025)
+   .. py:method:: update(T_s, fbk)
 
-   Bases: :py:obj:`motulator.control._common.Ctrl`
+      
+      Update the state estimates.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ObserverCfg
 
    
-   Observer-based V/Hz control for induction machines.
+   Reduced-order flux observer configuration.
 
    :param par: Machine model parameters.
    :type par: ModelPars
-   :param ctrl_par: Control system parameters.
-   :type ctrl_par: ObserverBasedVHzCtrlPars
-   :param T_s: Sampling period (s). The default is 250e-6.
-   :type T_s: float, optional
+   :param T_s: Sampling period (s).
+   :type T_s: float
+   :param sensorless: If True, sensorless mode is used.
+   :type sensorless: bool
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
+   :type alpha_o: float, optional
+   :param k_o: Observer gain as a function of the rotor angular speed. The default is
+               ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
+               `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
+   :type k_o: callable, optional
 
-   .. attribute:: observer
+   .. rubric:: Notes
 
-      Sensorless reduced-order flux observer in external coordinates.
-
-      :type: SensorlessObserverExtCoord
-
-   .. attribute:: rate_limiter
-
-      Rate limiter for the speed reference.
-
-      :type: RateLimiter
-
-   .. attribute:: pwm
-
-      Pulse-width modulation.
-
-      :type: PWM
-
-   .. attribute:: w_m_ref
-
-      Speed reference (electrical rad/s) as a function of time (s).
-
-      :type: callable
+   The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in
+   the marginally stable estimation-error dynamics. The current model is
+   obtained by setting ``k_o = lambda w_m: 1``.
 
 
 
@@ -558,15 +243,648 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: ObserverBasedVHzCtrlPars
+.. py:class:: FullOrderObserver(cfg)
 
    
-   Parameters for the control system.
+   Full-order flux observer operating in estimated rotor flux coordinates.
 
-   :param psi_s_nom: Nominal stator flux linkage (Vs).
-   :type psi_s_nom: float
-   :param i_s_max: Maximum stator current (A). The default is inf.
-   :type i_s_max: float, optional
+   This class implements a full-order flux observer for induction machines.
+   The observer structure is similar to [#Tii2023]_. The observer operates in
+   estimated rotor flux coordinates.
+
+   :param cfg: Observer parameters.
+   :type cfg: ObserverCfg
+
+   .. rubric:: References
+
+   .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, "Speed-adaptive full-order
+      observer revisited: Closed-form design for induction motor drives,"
+      Proc. IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(fbk)
+
+      
+      Output.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, fbk)
+
+      
+      Update the state estimates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: FullOrderObserverCfg
+
+   Bases: :py:obj:`ObserverCfg`
+
+
+   
+   Full-order observer configuration.
+
+   :param alpha_i: Current estimation bandwidth (rad/s). The default is 2*pi*400.
+   :type alpha_i: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: CurrentCtrl(par, alpha_c)
+
+   Bases: :py:obj:`motulator.control.ComplexPICtrl`
+
+
+   
+   2DOF PI current controller for induction machines.
+
+   This class provides an interface for a current controller for induction
+   machines. The gains are initialized based on the desired closed-loop
+   bandwidth and the leakage inductance.
+
+   :param par: Machine parameters, contains the leakage inductance `L_sgm` (H).
+   :type par: ModelPars
+   :param alpha_c: Closed-loop bandwidth (rad/s).
+   :type alpha_c: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: CurrentReferenceCfg
+
+   
+   Reference generation configuration.
+
+   This dataclass stores the nominal and limit values needed for reference
+   generation. For calculating the rotor flux reference, the machine
+   parameters are also required.
+
+   :param par: Machine model parameters.
+   :type par: ModelPars
+   :param max_i_s: Maximum stator current (A).
+   :type max_i_s: float
+   :param nom_u_s: Nominal stator voltage (V). The default is sqrt(2/3)*400.
+   :type nom_u_s: float, optional
+   :param nom_w_s: Nominal stator angular frequency (rad/s). The default is 2*pi*50.
+   :type nom_w_s: float, optional
+   :param nom_psi_R: Nominal rotor flux linkage (Vs). The default is
+                     `(nom_u_s/nom_w_s)/(1 + L_sgm/L_M)`.
+   :type nom_psi_R: float, optional
+   :param k_fw: Field-weakening gain (1/H). The default is `2*R_R/(nom_w_s*L_sgm**2)`.
+   :type k_fw: float, optional
+   :param k_u: Voltage utilization factor. The default is 0.95.
+   :type k_u: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: CurrentReference(par, cfg)
+
+   
+   Current reference generation.
+
+   In the base-speed region, the current reference in rotor-flux coordinates
+   is given by::
+
+       ref_i_s = nom_psi_R/L_M + 1j*ref_tau_M/(1.5*n_p*abs(psi_R))
+
+   where `nom_psi_R` is the nominal rotor flux magnitude and `psi_R` is the
+   estimated rotor flux. The field-weakening operation is based on adjusting
+   the flux-producing current component::
+
+       ref_i_s.real = (k_fw/s)*(max_u_s - abs(ref_u_s))
+
+   where `1/s` refers to integration, ``max_u_s = k_u*u_dc/sqrt(3)`` is the
+   maximum stator voltage in the linear modulation region, `ref_u_s` is the
+   (unlimited) stator voltage reference, and `k_fw` is the field-weakening
+   gain. The field-weakening method and its tuning corresponds roughly to
+   [#Hin2006]_. Furthermore, the torque-producing current component
+   `ref_i_s.imag` is limited based on the maximum stator current and the
+   breakdown slip.
+
+   :param par: Machine model parameters.
+   :type par: ModelPars
+   :param cfg: Reference generation configuration.
+   :type cfg: CurrentReferenceCfg
+
+   .. rubric:: References
+
+   .. [#Hin2006] Hinkkanen, Luomi, "Braking scheme for vector-controlled
+      induction motor drives equipped with diode rectifier without braking
+      resistor," IEEE Trans. Ind. Appl., 2006,
+      https://doi.org/10.1109/TIA.2006.880852
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(fbk, ref)
+
+      
+      Compute the stator current reference.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(fbk, ref)
+
+      
+      Field-weakening based on the unlimited reference voltage.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: CurrentVectorCtrl(par, cfg, T_s=0.00025, sensorless=True)
+
+   Bases: :py:obj:`motulator.control.DriveCtrl`
+
+
+   
+   Current-vector control for induction machine drives.
+
+   This class provides an interface for current-vector control of induction
+   machines. The control system consists of a current reference generator, a
+   current controller, a flux observer, and speed controller (optional).
+
+   :param par: Machine parameters.
+   :type par: ModelPars
+   :param cfg: Current reference generator configuration.
+   :type cfg: CurrentReferenceCfg
+   :param T_s: Sampling time (s). The default is 250e-6.
+   :type T_s: float, optional
+   :param sensorless: Enable sensorless control. The default is True.
+   :type sensorless: bool, optional
+
+   .. attribute:: observer
+
+      Flux observer.
+
+      :type: Observer
+
+   .. attribute:: current_reference
+
+      Current reference generator.
+
+      :type: CurrentReference
+
+   .. attribute:: current_ctrl
+
+      Current controller. The default is CurrentCtrl(par, 2*np.pi*200).
+
+      :type: CurrentCtrl
+
+   .. attribute:: speed_ctrl
+
+      Speed controller. The default is SpeedCtrl(par.J, 2*np.pi*4)
+
+      :type: SpeedCtrl | None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(fbk)
+
+      
+      Compute the controller outputs.
+
+      :param fbk: Feedback signals.
+      :type fbk: SimpleNamespace
+
+      :returns: **ref** --
+
+                References, containing at least the following fields:
+
+                    T_s : float
+                        Next sampling period (s).
+                    d_abc : ndarray, shape (3,)
+                        Duty ratios.
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(fbk, ref)
+
+      
+      Extend the base class method.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: VHzCtrl(cfg)
+
+   Bases: :py:obj:`motulator.control.DriveCtrl`
+
+
+   
+   V/Hz control with the stator current feedback.
+
+   The method is similar to [#Hin2022]_. Open-loop V/Hz control can be
+   obtained as a special case by choosing::
+
+       R_s, R_R = 0, 0
+       k_u, k_w = 0, 0
+
+   .. rubric:: References
+
+   .. [#Hin2022] Hinkkanen, Tiitinen, Mölsä, Harnefors, "On the stability of
+      volts-per-hertz control for induction motors," IEEE J. Emerg. Sel.
+      Topics Power Electron., 2022,
+      https://doi.org/10.1109/JESTPE.2021.3060583
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_feedback_signals(mdl)
+
+      
+      Get the feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: output(fbk)
+
+      
+      Extend the base class method.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(fbk, ref)
+
+      
+      Extend the base class method.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: VHzCtrlCfg
+
+   
+   V/Hz control configuration.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: ObserverBasedVHzCtrl(par, cfg, T_s=0.00025)
+
+   Bases: :py:obj:`motulator.control.DriveCtrl`
+
+
+   
+   Observer-based V/Hz control for induction machines.
+
+   This implements the observer-based V/Hz control method [#Tii2022]_. The
+   state-feedback control law is in the alternative form which uses an
+   intermediate stator current reference.
+
+   :param par: Machine model parameters.
+   :type par: ModelPars
+   :param cfg: Control system configuration.
+   :type cfg: ObserverBasedVHzCtrlCfg
+   :param T_s: Sampling period (s). The default is 250e-6.
+   :type T_s: float, optional
+
+   .. rubric:: References
+
+   .. [#Tii2022] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-
+      based V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI,
+      Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9948057
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(fbk)
+
+      
+      Output.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(fbk, ref)
+
+      
+      Update the states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ObserverBasedVHzCtrlCfg
+
+   
+   Control system configuration.
+
+   :param nom_psi_s: Nominal stator flux linkage (Vs).
+   :type nom_psi_s: float
+   :param max_i_s: Maximum stator current (A). The default is inf.
+   :type max_i_s: float, optional
    :param k_tau: Torque controller gain. The default is 3.
    :type k_tau: float, optional
    :param alpha_psi: Stator flux control bandwidth (rad/s). The default is 2*pi*20.
@@ -578,34 +896,6 @@ Package Contents
    :type alpha_r: float, optional
    :param slip_compensation: Enable slip compensation. The default is False.
    :type slip_compensation: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: VHzCtrl(T_s, par, psi_s_nom, k_u=1.0, k_w=4.0, six_step=False)
-
-   Bases: :py:obj:`motulator.control._common.Ctrl`
-
-
-   
-   V/Hz control with the stator current feedback.
-
-   :param par: Control parameters.
-   :type par: ModelPars
 
 
 

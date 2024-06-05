@@ -21,20 +21,15 @@
 2.2-kW PMSM
 ===========
 
-This example simulates sensorless stator-flux-vector control of a 2.2-kW PMSM
-drive.
+This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-12
-
-Imports.
-
-.. GENERATED FROM PYTHON SOURCE LINES 12-16
+.. GENERATED FROM PYTHON SOURCE LINES 9-13
 
 .. code-block:: Python
 
 
     from motulator import model, control
-    from motulator import BaseValues, plot
+    from motulator import BaseValues, NominalValues, plot
 
 
 
@@ -43,17 +38,17 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 14-15
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 15-19
 
 .. code-block:: Python
 
 
-    base = BaseValues(
-        U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
+    nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+    base = BaseValues.from_nominal(nom, n_p=2)
 
 
 
@@ -62,20 +57,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-31
+.. GENERATED FROM PYTHON SOURCE LINES 21-28
 
 .. code-block:: Python
 
 
-    machine = model.sm.SynchronousMachine(
+    machine = model.SynchronousMachine(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
-    mdl = model.sm.Drive(machine, mechanics, converter)
+    mdl = model.Drive(converter, machine, mechanics)
 
 
 
@@ -84,19 +79,19 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 29-30
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-39
+.. GENERATED FROM PYTHON SOURCE LINES 30-36
 
 .. code-block:: Python
 
 
     par = control.sm.ModelPars(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-    ref = control.sm.FluxTorqueReferencePars(par, i_s_max=1.5*base.i, k_u=.9)
-    ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
+    cfg = control.sm.FluxTorqueReferenceCfg(par, max_i_s=1.5*base.i, k_u=.9)
+    ctrl = control.sm.FluxVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
 
 
 
@@ -105,18 +100,20 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-46
+.. GENERATED FROM PYTHON SOURCE LINES 38-45
 
 .. code-block:: Python
 
 
-    # Simple acceleration and load torque step
-    ctrl.w_m_ref = lambda t: (t > .2)*(2*base.w)
-    mdl.mechanics.tau_L_t = lambda t: (t > .8)*base.tau_nom*.7
+    # Speed reference (electrical rad/s)
+    ctrl.ref.w_m = lambda t: (t > .2)*2*base.w
+
+    # Load torque step
+    mdl.mechanics.tau_L_t = lambda t: (t > .8)*nom.tau*.7
 
 
 
@@ -125,11 +122,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-52
+.. GENERATED FROM PYTHON SOURCE LINES 47-51
 
 .. code-block:: Python
 
@@ -144,11 +141,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-56
+.. GENERATED FROM PYTHON SOURCE LINES 53-55
 
 .. code-block:: Python
 
@@ -169,7 +166,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.290 seconds)
+   **Total running time of the script:** (0 minutes 5.519 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py:

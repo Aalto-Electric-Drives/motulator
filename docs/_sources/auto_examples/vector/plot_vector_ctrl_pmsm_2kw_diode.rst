@@ -21,20 +21,16 @@
 2.2-kW PMSM, diode bridge
 =========================
 
-This example simulates sensorless vector control of a 2.2-kW PMSM drive, 
-equipped with a diode bridge rectifier. 
+This example simulates sensorless current-vector control of a 2.2-kW PMSM 
+drive, equipped with a diode bridge rectifier. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-12
-
-Imports.
-
-.. GENERATED FROM PYTHON SOURCE LINES 12-16
+.. GENERATED FROM PYTHON SOURCE LINES 10-14
 
 .. code-block:: Python
 
 
     from motulator import model, control
-    from motulator import BaseValues, plot, plot_extra
+    from motulator import NominalValues, BaseValues, plot, plot_extra
 
 
 
@@ -43,17 +39,17 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: Python
 
 
-    base = BaseValues(
-        U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
+    nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+    base = BaseValues.from_nominal(nom, n_p=3)
 
 
 
@@ -62,20 +58,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-32
+.. GENERATED FROM PYTHON SOURCE LINES 22-30
 
 .. code-block:: Python
 
 
-    machine = model.sm.SynchronousMachine(
+    machine = model.SynchronousMachine(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     mechanics = model.Mechanics(J=.015)
     converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
-    mdl = model.sm.DriveWithDiodeBridge(machine, mechanics, converter)
+    mdl = model.Drive(converter, machine, mechanics)
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 
@@ -85,19 +81,19 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-40
+.. GENERATED FROM PYTHON SOURCE LINES 32-38
 
 .. code-block:: Python
 
 
     par = control.sm.ModelPars(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-    ref = control.sm.CurrentReferencePars(par, w_m_nom=base.w, i_s_max=1.5*base.i)
-    ctrl = control.sm.VectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+    ref = control.sm.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
+    ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 
 
@@ -106,20 +102,20 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-49
+.. GENERATED FROM PYTHON SOURCE LINES 40-47
 
 .. code-block:: Python
 
 
-    # Speed reference
-    ctrl.w_m_ref = lambda t: (t > .2)*base.w
+    # Speed reference (electrical rad/s)
+    ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
     # External load torque
-    mdl.mechanics.tau_L_t = lambda t: (t > .6)*base.tau_nom
+    mdl.mechanics.tau_L_t = lambda t: (t > .6)*nom.tau
 
 
 
@@ -128,11 +124,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-59
+.. GENERATED FROM PYTHON SOURCE LINES 49-57
 
 .. code-block:: Python
 
@@ -178,7 +174,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.014 seconds)
+   **Total running time of the script:** (0 minutes 15.471 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py:

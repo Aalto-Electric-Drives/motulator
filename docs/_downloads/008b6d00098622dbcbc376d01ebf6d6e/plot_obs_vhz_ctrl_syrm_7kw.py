@@ -7,19 +7,17 @@ synchronous reluctance motor drive. The saturation is not taken into account
 in the control method (only in the system model).
 
 """
-
 # %%
-# Imports.
 
 import numpy as np
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=370, I_nom=15.5, f_nom=105.8, tau_nom=20.1, P_nom=6.7e3, n_p=2)
+nom = NominalValues(U=370, I=15.5, f=105.8, P=6.7e3, tau=20.1)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # A saturation model is created based on [#Hin2017]_, [#Awa2018]_. For
@@ -75,21 +73,21 @@ def i_s(psi_s):
 
 # %%
 # Configure the system model.
-machine = model.sm.SynchronousMachineSaturated(n_p=2, R_s=.54, current=i_s)
+machine = model.SynchronousMachine(n_p=2, R_s=.54, i_s=i_s, psi_s0=0)
 # Magnetically linear SyRM model for comparison
 # machine = model.SynchronousMachine(
 #     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
 
 par = control.sm.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
-ctrl_par = control.sm.ObserverBasedVHzCtrlPars(
-    par, i_s_max=2*base.i, psi_s_min=base.psi, psi_s_max=base.psi)
-ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par)
+cfg = control.sm.ObserverBasedVHzCtrlCfg(
+    par, max_i_s=2*base.i, min_psi_s=base.psi, max_psi_s=base.psi)
+ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -97,10 +95,10 @@ ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par)
 # Speed reference
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*8
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%

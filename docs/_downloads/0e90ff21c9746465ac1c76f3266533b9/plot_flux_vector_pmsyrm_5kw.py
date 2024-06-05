@@ -11,9 +11,7 @@ used in this example does not consider the saturation, only the system model
 does.
 
 """
-
 # %%
-# Imports.
 
 from os import path
 import inspect
@@ -22,13 +20,13 @@ from scipy.io import loadmat
 from scipy.optimize import minimize_scalar
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=370, I_nom=8.8, f_nom=60, tau_nom=29.2, P_nom=5.5e3, n_p=2)
+nom = NominalValues(U=370, I=8.8, f=60, P=5.5e3, tau=29.2)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Create a saturation model, which will be used in the machine model in the
@@ -143,14 +141,13 @@ psi_s0 = complex(res.x)  # psi_s0 = 0.477
 # %%
 # Configure the system model.
 
-machine = model.sm.SynchronousMachineSaturated(
-    n_p=2, R_s=.63, current=i_s, psi_s0=psi_s0)
+machine = model.SynchronousMachine(n_p=2, R_s=.63, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model for comparison
 # machine = model.sm.SynchronousMachine(
 #    n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 # mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
@@ -160,22 +157,23 @@ mdl = model.sm.Drive(machine, mechanics, converter)
 par = control.sm.ModelPars(
     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47, J=.015)
 # Limit the maximum reference flux to the base value
-ref = control.sm.FluxTorqueReferencePars(
-    par, i_s_max=2*base.i, k_u=1, psi_s_max=base.psi)
-ctrl = control.sm.FluxVectorCtrl(par, ref, sensorless=True)
+cfg = control.sm.FluxTorqueReferenceCfg(
+    par, max_i_s=2*base.i, k_u=1, max_psi_s=base.psi)
+ctrl = control.sm.FluxVectorCtrl(par, cfg, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
-ctrl.observer = control.sm.Observer(par, alpha_o=2*np.pi*40, sensorless=True)
+ctrl.observer = control.sm.Observer(
+    control.sm.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))
 
 # %%
 # Set the speed reference and the external load torque.
 
-# Speed reference
+# Speed reference (electrical rad/s)
 times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%

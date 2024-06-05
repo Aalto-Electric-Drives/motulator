@@ -34,11 +34,7 @@ saturation is not taken into account in the control method, only in the system
 model. Naturally, the control performance could be improved by taking the
 saturation into account in the control algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
-
-Imports.
-
-.. GENERATED FROM PYTHON SOURCE LINES 22-31
+.. GENERATED FROM PYTHON SOURCE LINES 20-29
 
 .. code-block:: Python
 
@@ -49,7 +45,7 @@ Imports.
     from scipy.optimize import minimize_scalar
     from scipy.interpolate import LinearNDInterpolator
     from motulator import model, control
-    from motulator import BaseValues, Sequence, plot
+    from motulator import BaseValues, NominalValues, Sequence, plot
 
 
 
@@ -58,17 +54,17 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-37
+.. GENERATED FROM PYTHON SOURCE LINES 31-35
 
 .. code-block:: Python
 
 
-    base = BaseValues(
-        U_nom=220, I_nom=15.6, f_nom=85, tau_nom=19, P_nom=5.07e3, n_p=2)
+    nom = NominalValues(U=220, I=15.6, f=85, P=5.07e3, tau=19)
+    base = BaseValues.from_nominal(nom, n_p=2)
 
 
 
@@ -77,11 +73,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Load and plot the flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-54
+.. GENERATED FROM PYTHON SOURCE LINES 37-52
 
 .. code-block:: Python
 
@@ -89,7 +85,7 @@ Load and plot the flux maps.
     # Get the path of this file
     p = path.dirname(path.abspath(inspect.getfile(inspect.currentframe())))
     # Load the data from the MATLAB file
-    data = model.sm.import_syre_data(p + "/THOR.mat")
+    data = model.import_syre_data(p + "/THOR.mat")
 
     # You may also downsample or invert the flux map by uncommenting the following
     # lines. Not needed here, but these methods could be useful for other purposes.
@@ -97,8 +93,8 @@ Load and plot the flux maps.
     # from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map
     # data = downsample_flux_map(data, N_d=32, N_q=32)
     # data = invert_flux_map(data, N_d=128, N_q=128)
-    model.sm.plot_flux_vs_current(data)
-    model.sm.plot_flux_map(data)
+    model.plot_flux_vs_current(data)
+    model.plot_flux_map(data)
 
 
 
@@ -124,11 +120,11 @@ Load and plot the flux maps.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Create the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-83
+.. GENERATED FROM PYTHON SOURCE LINES 54-81
 
 .. code-block:: Python
 
@@ -166,24 +162,23 @@ Create the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-85
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-96
+.. GENERATED FROM PYTHON SOURCE LINES 83-93
 
 .. code-block:: Python
 
 
     # Create the motor model
-    machine = model.sm.SynchronousMachineSaturated(
-        n_p=2, R_s=.2, current=i_s, psi_s0=psi_s0)
+    machine = model.SynchronousMachine(n_p=2, R_s=.2, i_s=i_s, psi_s0=psi_s0)
     # Magnetically linear PM-SyRM model
     # machine = model.sm.SynchronousMachine(
     #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
     mechanics = model.Mechanics(J=.0042)
     converter = model.Inverter(u_dc=310)
-    mdl = model.sm.Drive(machine, mechanics, converter)
+    mdl = model.Drive(converter, machine, mechanics)
 
 
 
@@ -192,18 +187,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-98
+.. GENERATED FROM PYTHON SOURCE LINES 94-95
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-103
+.. GENERATED FROM PYTHON SOURCE LINES 95-100
 
 .. code-block:: Python
 
 
     par = control.sm.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-    ctrl_par = control.sm.ObserverBasedVHzCtrlPars(par, i_s_max=2*base.i)
-    ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
+    cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
+    ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 
 
@@ -212,11 +207,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-105
+.. GENERATED FROM PYTHON SOURCE LINES 101-102
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-120
+.. GENERATED FROM PYTHON SOURCE LINES 102-117
 
 .. code-block:: Python
 
@@ -224,15 +219,15 @@ Set the speed reference and the external load torque.
     # Speed reference
     times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
     values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
-    ctrl.w_m_ref = Sequence(times, values)
+    ctrl.ref.w_m = Sequence(times, values)
 
     # Quadratic load torque profile (corresponding to pumps and fans)
-    k = base.tau_nom/(base.w/base.n_p)**2
+    k = nom.tau/(base.w/base.n_p)**2
     mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
     # Uncomment to try the rated load torque step at t = 1 s (set k = 0 above)
     # times = np.array([0, .125, .125, .875, .875, 1])*8
-    # values = np.array([0, 0, 1, 1, 0, 0])*base.tau_nom
+    # values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
     # mdl.mechanics.tau_L_t = Sequence(times, values)
 
 
@@ -242,11 +237,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-122
+.. GENERATED FROM PYTHON SOURCE LINES 118-119
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-126
+.. GENERATED FROM PYTHON SOURCE LINES 119-123
 
 .. code-block:: Python
 
@@ -261,12 +256,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-129
+.. GENERATED FROM PYTHON SOURCE LINES 124-126
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-131
+.. GENERATED FROM PYTHON SOURCE LINES 126-128
 
 .. code-block:: Python
 
@@ -287,7 +282,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 32.185 seconds)
+   **Total running time of the script:** (0 minutes 52.403 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:

@@ -27,18 +27,14 @@ well as the harmonics. Since the PWM is not synchronized with the stator
 frequency, the harmonic content also depends on the ratio between the stator 
 frequency and the sampling frequency.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-14
-
-Imports.
-
-.. GENERATED FROM PYTHON SOURCE LINES 14-19
+.. GENERATED FROM PYTHON SOURCE LINES 13-18
 
 .. code-block:: Python
 
 
     import numpy as np
     from motulator import model, control
-    from motulator import BaseValues, Sequence, plot, plot_extra
+    from motulator import BaseValues, NominalValues, Sequence, plot, plot_extra
 
 
 
@@ -47,17 +43,17 @@ Imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-25
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
 
-    base = BaseValues(
-        U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
+    nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
+    base = BaseValues.from_nominal(nom, n_p=2)
 
 
 
@@ -66,21 +62,21 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-36
+.. GENERATED FROM PYTHON SOURCE LINES 26-35
 
 .. code-block:: Python
 
 
     # Configure the induction machine using its inverse-Γ parameters
-    machine = model.im.InductionMachineInvGamma(
+    machine = model.InductionMachineInvGamma(
         R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
-    mdl = model.im.Drive(machine, mechanics, converter)
+    mdl = model.Drive(converter, machine, mechanics)
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 
@@ -90,19 +86,19 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-44
+.. GENERATED FROM PYTHON SOURCE LINES 37-42
 
 .. code-block:: Python
 
 
     par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
     ctrl = control.im.VHzCtrl(
-        250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0, six_step=True)
-    ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
+        control.im.VHzCtrlCfg(
+            par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
 
 
 
@@ -110,12 +106,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-58
+.. GENERATED FROM PYTHON SOURCE LINES 44-56
 
 .. code-block:: Python
 
@@ -123,13 +118,13 @@ Set the speed reference and the external load torque.
     # Speed reference
     times = np.array([0, .1, .3, 1])*2
     values = np.array([0, 0, 1, 1])*2*base.w
-    ctrl.w_m_ref = Sequence(times, values)
+    ctrl.ref.w_m = Sequence(times, values)
 
     # Quadratic load torque profile (corresponding to pumps and fans)
-    k = .2*base.tau_nom/(base.w/base.n_p)**2
+    k = .2*nom.tau/(base.w/base.n_p)**2
     mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
     # External load torque could be set here, now zero
-    mdl.mechanics.tau_L_t = lambda t: (t > 1.)*base.tau_nom*0
+    mdl.mechanics.tau_L_t = lambda t: (t > 1.)*nom.tau*0
 
 
 
@@ -138,11 +133,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-64
+.. GENERATED FROM PYTHON SOURCE LINES 58-62
 
 .. code-block:: Python
 
@@ -157,11 +152,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-70
+.. GENERATED FROM PYTHON SOURCE LINES 64-68
 
 .. code-block:: Python
 
@@ -196,7 +191,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.359 seconds)
+   **Total running time of the script:** (0 minutes 8.929 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:

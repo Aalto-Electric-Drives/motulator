@@ -43,6 +43,9 @@ Classes
 .. autoapisummary::
 
    motulator.control.ComplexPICtrl
+   motulator.control.Ctrl
+   motulator.control.Clock
+   motulator.control.DriveCtrl
    motulator.control.RateLimiter
    motulator.control.SpeedCtrl
    motulator.control.PICtrl
@@ -60,9 +63,9 @@ Package Contents
    This implements a discrete-time 2DOF synchronous-frame complex-vector PI
    controller, whose continuous-time counterpart is [#Bri2000]_::
 
-       u = k_t*i_ref - k_p*i + (k_i + 1j*w*k_t)/s*(i_ref - i)
+       u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i)
 
-   where `u` is the controller output, `i_ref` is the reference signal, `i` is
+   where `u` is the controller output, `ref_i` is the reference signal, `i` is
    the feedback signal, `w` is the angular speed of synchronous coordinates,
    and `1/s` refers to integration. This algorithm is compatible with both
    real and complex signals. The 1DOF version is obtained by setting
@@ -75,18 +78,6 @@ Package Contents
    :type k_i: float
    :param k_t: Reference-feedforward gain. The default is `k_p`.
    :type k_t: float, optional
-
-   .. attribute:: v
-
-      Input disturbance estimate.
-
-      :type: complex
-
-   .. attribute:: u_i
-
-      Integral state.
-
-      :type: complex
 
    .. rubric:: Notes
 
@@ -116,13 +107,13 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(i_ref, i)
+   .. py:method:: output(ref_i, i)
 
       
       Compute the controller output.
 
-      :param i_ref: Reference signal.
-      :type i_ref: complex
+      :param ref_i: Reference signal.
+      :type ref_i: complex
       :param i: Feedback signal.
       :type i: complex
 
@@ -147,18 +138,546 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s, u_lim, w)
+   .. py:method:: update(T_s, u, w)
 
       
       Update the integral state.
 
       :param T_s: Sampling period (s).
       :type T_s: float
-      :param u_lim: Realized (limited) controller output. If the actuator does not
-                    saturate, ``u_lim = u``.
-      :type u_lim: complex
+      :param u: Realized (limited) controller output.
+      :type u: complex
       :param w: Angular speed of the reference frame (rad/s).
       :type w: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Ctrl(T_s)
+
+   Bases: :py:obj:`abc.ABC`
+
+
+   
+   Base class for control systems.
+
+   This base class provides typical functionalities for control systems. It
+   can be used as a template for implementing custom controllers. An instance
+   of this class can be called as a function. When called, it runs the main
+   control loop.
+
+   :param T_s: Sampling period (s).
+   :type T_s: float
+
+   .. attribute:: clock
+
+      Digital clock.
+
+      :type: Clock
+
+   .. attribute:: data
+
+      Saved simulation data.
+
+      :type: SimpleNamespace
+
+   .. attribute:: pwm
+
+      Pulse-width modulator.
+
+      :type: PWM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_feedback_signals(mdl)
+      :abstractmethod:
+
+
+      
+      Get the feedback signals.
+
+      :param mdl: Continuous-time system model.
+      :type mdl: Model
+
+      :returns: **fbk** -- Feedback signals.
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: output(fbk)
+      :abstractmethod:
+
+
+      
+      Compute the controller outputs.
+
+      :param fbk: Feedback signals.
+      :type fbk: SimpleNamespace
+
+      :returns: **ref** --
+
+                References, containing at least the following fields:
+
+                    T_s : float
+                        Next sampling period (s).
+                    d_abc : ndarray, shape (3,)
+                        Duty ratios.
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(fbk, ref)
+      :abstractmethod:
+
+
+      
+      Update the states.
+
+      :param fbk: Feedback signals.
+      :type fbk: SimpleNamespace
+      :param ref: Reference signals.
+      :type ref: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: save(**kwargs)
+
+      
+      Save the data of the control system.
+
+      Each keyword represents a data category, and its value (a
+      SimpleNamespace) contains the data for that category.
+
+      :param \*\*kwargs: One or more keyword arguments where the key is the name and the
+                         value is a SimpleNamespace containing the data to be saved.
+      :type \*\*kwargs: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process()
+
+      
+      Transform the lists to the ndarray format.
+
+      This method can be run after the simulation has been completed in order
+      to simplify plotting and analysis of the stored data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: main(mdl)
+
+      
+      Main control loop.
+
+      This method runs the main control loop, having the following structure:
+
+      1. Get the feedback signals. This step may contain first getting the
+         measurements and then optionally computing the observer outputs.
+      2. Compute the reference signals (controller outputs) based on the
+         feedback signals.
+      3. Update the control system states for the next sampling instant.
+      4. Save the feedback signals and the reference signals.
+      5. Return the sampling period `T_s` and the duty ratios `d_abc` for the
+         carrier comparison.
+
+      :param mdl: Continuous-time system model.
+      :type mdl: Model
+
+      :returns: * **T_s** (*float*) -- Sampling period (s).
+                * **d_abc** (*ndarray, shape (3,)*) -- Duty ratios.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Clock
+
+   
+   Digital clock.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: update(T_s)
+
+      
+      Update the digital clock.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveCtrl(par, T_s, sensorless)
+
+   Bases: :py:obj:`Ctrl`, :py:obj:`abc.ABC`
+
+
+   
+   Base class for control of electric machine drives.
+
+   This base class provides typical functionalities for control of electric
+   machine drives. This can be used both in speed-control and torque-control
+   modes.
+
+   :param par: Machine model parameters.
+   :type par: motulator.control.im.ModelPars | motulator.control.sm.ModelPars
+   :param T_s: Sampling period (s).
+   :type T_s: float
+   :param sensorless: If True, sensorless control mode is used.
+   :type sensorless: bool
+
+   .. attribute:: ref
+
+      References, possibly containing either of the following fields:
+
+          w_m : callable
+              Speed reference (electrical rad/s) as a function of time (s).
+              This signal is needed in speed-control mode.
+          tau_M : callable
+              Torque reference (Nm) as a function of time (s). This signal
+              is needed in torque-control mode.
+
+      :type: SimpleNamespace
+
+   .. attribute:: observer
+
+      State observer can be None or an instance of either
+      `motulator.control.im.Observer` or `motulator.control.sm.Observer`
+      depending on the machine type. The default is None.
+
+      :type: motulator.control.im.Observer |                motulator.control.sm.Observer | None
+
+   .. attribute:: speed_ctrl
+
+      Speed controller. The default is None.
+
+      :type: SpeedCtrl | None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_electrical_measurements(fbk, mdl)
+
+      
+      Measure the currents and voltages.
+
+      :param fbk: Measured signals are added to this object.
+      :type fbk: SimpleNamespace
+      :param mdl: Continuous-time system model.
+      :type mdl: Model
+
+      :returns: **fbk** --
+
+                Measured signals, containing the following fields:
+
+                    u_dc : float
+                        DC-bus voltage (V).
+                    i_ss : complex
+                        Stator current (A) in stator coordinates.
+                    u_ss : complex
+                        Realized stator voltage (V) in stator coordinates. This
+                        signal is obtained from the PWM.
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_mechanical_measurements(fbk, mdl)
+
+      
+      Measure the speed and position.
+
+      :param fbk: Measured signals are added to this object.
+      :type fbk: SimpleNamespace
+      :param mdl: Continuous-time system model.
+      :type mdl: Model
+
+      :returns: **fbk** --
+
+                Measured signals, containing the following fields:
+
+                    w_m : float
+                        Rotor speed (electrical rad/s).
+                    theta_m : float
+                        Rotor position (electrical rad).
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback_signals(mdl)
+
+      
+      Get the feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_torque_reference(fbk, ref)
+
+      
+      Get the torque reference in vector control.
+
+      This method can be used in vector control to get the torque reference
+      from the speed controller. If the speed controller method `speed_ctrl`
+      is None, the torque reference is obtained directly from the reference.
+
+      :param fbk: Feedback signals. In speed-control mode, the measured or estimated
+                  rotor speed `w_m` is used to compute the torque reference.
+      :type fbk: SimpleNamespace
+      :param ref: Reference signals, containing the digital time `t`. The speed and
+                  torque references are added to this object.
+      :type ref: SimpleNamespace
+
+      :returns: **ref** --
+
+                Reference signals, containing the following fields:
+
+                    w_m : float
+                        Speed reference (electrical rad/s).
+                    tau_M : float
+                        Torque reference (Nm).
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(fbk, ref)
+
+      
+      Extend the base class method.
+
 
 
 
@@ -203,7 +722,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedCtrl(J, alpha_s, tau_M_max=np.inf)
+.. py:class:: SpeedCtrl(J, alpha_s, max_tau_M=np.inf)
 
    Bases: :py:obj:`PICtrl`
 
@@ -218,8 +737,8 @@ Package Contents
    :type J: float
    :param alpha_s: Closed-loop bandwidth (rad/s).
    :type alpha_s: float
-   :param tau_M_max: Maximum motor torque (Nm). The default is inf.
-   :type tau_M_max: float, optional
+   :param max_tau_M: Maximum motor torque (Nm). The default is `inf`.
+   :type max_tau_M: float, optional
 
 
 
@@ -238,7 +757,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: PICtrl(k_p, k_i, k_t=None, u_max=np.inf)
+.. py:class:: PICtrl(k_p, k_i, k_t=None, max_u=np.inf)
 
    
    2DOF PI controller.
@@ -246,7 +765,7 @@ Package Contents
    This implements a discrete-time 2DOF PI controller, whose continuous-time
    counterpart is::
 
-       u = k_t*y_ref - k_p*y + (k_i/s)*(y_ref - y)
+       u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y)
 
    where `u` is the controller output, `y_ref` is the reference signal, `y` is
    the feedback signal, and `1/s` refers to integration. The standard PI
@@ -257,7 +776,7 @@ Package Contents
 
    This controller can be used, e.g., as a speed controller. In this case, `y`
    corresponds to the rotor angular speed `w_M` and `u` to the torque
-   reference `tau_M_ref`.
+   reference `ref_tau_M`.
 
    :param k_p: Proportional gain.
    :type k_p: float
@@ -265,20 +784,8 @@ Package Contents
    :type k_i: float
    :param k_t: Reference-feedforward gain. The default is `k_p`.
    :type k_t: float, optional
-   :param u_max: Maximum controller output. The default is inf.
-   :type u_max: float, optional
-
-   .. attribute:: v
-
-      Input disturbance estimate.
-
-      :type: float
-
-   .. attribute:: u_i
-
-      Integral state.
-
-      :type: float
+   :param max_u: Maximum controller output. The default is `inf`.
+   :type max_u: float, optional
 
 
 
@@ -297,13 +804,13 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(y_ref, y)
+   .. py:method:: output(ref_y, y)
 
       
       Compute the controller output.
 
-      :param y_ref: Reference signal.
-      :type y_ref: float
+      :param ref_y: Reference signal.
+      :type ref_y: float
       :param y: Feedback signal.
       :type y: float
 
@@ -328,16 +835,15 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s, u_lim)
+   .. py:method:: update(T_s, u)
 
       
       Update the integral state.
 
       :param T_s: Sampling period (s).
       :type T_s: float
-      :param u_lim: Realized (limited) controller output. If the actuator does not
-                    saturate, ``u_lim = u``.
-      :type u_lim: float
+      :param u: Realized (limited) controller output.
+      :type u: float
 
 
 
@@ -357,7 +863,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(six_step=False)
+.. py:class:: PWM(six_step=False, k_comp=1.5)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -366,17 +872,13 @@ Package Contents
    and minimum-amplitude-error overmodulation [#Hav1999]_. The realized
    voltage is computed based on the measured DC-bus voltage and the duty
    ratios. The digital delay effects are taken into account in the realized
-   voltage, assuming the delay of a single sampling period. The total delay is
-   1.5 sampling periods due to the PWM (or ZOH) delay [#Bae2003]_.
+   voltage [#Bae2003]_.
 
    :param six_step: Enable six-step operation in overmodulation. The default is False.
    :type six_step: bool, optional
-
-   .. attribute:: realized_voltage
-
-      Realized voltage (V) in synchronous coordinates.
-
-      :type: complex
+   :param k_comp: Compensation factor for the delay effect on the voltage vector angle.
+                  The default is 1.5.
+   :type k_comp: float, optional
 
    .. rubric:: References
 
@@ -405,7 +907,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: six_step_overmodulation(u_s_ref, u_dc)
+   .. py:method:: six_step_overmodulation(ref_u_cs, u_dc)
       :staticmethod:
 
 
@@ -416,12 +918,12 @@ Package Contents
       overmodulation region such that the six-step operation is reached
       [#Bol1997]_.
 
-      :param u_s_ref: Reference voltage (V) in stator coordinates.
-      :type u_s_ref: complex
+      :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
+      :type ref_u_cs: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: **u_s_ref_mod** -- Reference voltage (V) in stator coordinates.
+      :returns: **ref_u_cs** -- Modified converter voltage reference (V) in stationary coordinates.
       :rtype: complex
 
       .. rubric:: References
@@ -448,7 +950,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: duty_ratios(u_s_ref, u_dc)
+   .. py:method:: duty_ratios(ref_u_cs, u_dc)
       :staticmethod:
 
 
@@ -458,13 +960,99 @@ Package Contents
       This computes the duty ratios corresponding to standard space-vector
       PWM and minimum-amplitude-error overmodulation [#Hav1999]_.
 
-      :param u_s_ref: Voltage reference in stator coordinates (V).
-      :type u_s_ref: complex
+      :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
+      :type ref_u_cs: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
       :returns: **d_abc** -- Duty ratios.
       :rtype: ndarray, shape (3,)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: output(T_s, ref_u_cs, u_dc, w)
+
+      
+      Compute the duty ratios and the limited voltage reference.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
+      :type ref_u_cs: complex
+      :param u_dc: DC-bus voltage (V).
+      :type u_dc: float
+      :param w: Angular speed of synchronous coordinates (rad/s).
+      :type w: float
+
+      :returns: * **d_abc** (*ndarray, shape (3,)*) -- Duty ratios for the next sampling period.
+                * **u_cs** (*complex*) -- Limited voltage reference (V) in stationary coordinates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_realized_voltage()
+
+      
+      Get the realized voltage.
+
+      :returns: **realized_voltage** -- Realized converter voltage (V) in stationary coordinates. The
+                effect of the digital delays on the angle are compensated for.
+      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(u_cs)
+
+      
+      Update the realized voltage.
+
 
 
 

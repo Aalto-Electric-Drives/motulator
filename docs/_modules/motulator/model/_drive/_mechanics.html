@@ -1,0 +1,558 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>motulator.model._drive._mechanics &#8212; motulator 0.3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=ea4a43d1"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/motulator/model/_drive/_mechanics';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">motulator 0.3.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/control/index.html">motulator.control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/im/index.html">motulator.control.im</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/control/sm/index.html">motulator.control.sm</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../autoapi/motulator/model/index.html">motulator.model</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/system.html">Drive System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/machines.html">Electric Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/mechanics.html">Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/converters.html">Converters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/ac_filter.html">Output LC Filter</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/design_notes.html">Design Notes</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/observers.html">Observers</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aalto-Electric-Drives/motulator" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for motulator.model._drive._mechanics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Continuous-time models for mechanical subsystems.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
+<span class="kn">from</span> <span class="nn">motulator._helpers</span> <span class="kn">import</span> <span class="n">wrap</span>
+<span class="kn">from</span> <span class="nn">motulator.model._simulation</span> <span class="kn">import</span> <span class="n">Subsystem</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Mechanics"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics">[docs]</a><span class="k">class</span> <span class="nc">Mechanics</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mechanics subsystem.</span>
+
+<span class="sd">    This models an equation of motion for stiff mechanics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    J : float</span>
+<span class="sd">        Total moment of inertia (kgm²).</span>
+<span class="sd">    tau_L_w : callable</span>
+<span class="sd">        Load torque (Nm) as a function of speed, `tau_L_w(w_M)`. For example,</span>
+<span class="sd">        ``tau_L_w = b*w_M``, where `b` is the viscous friction coefficient. The</span>
+<span class="sd">        default is zero, ``lambda w_M: 0*w_M``.</span>
+<span class="sd">    tau_L_t : callable</span>
+<span class="sd">        Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is </span>
+<span class="sd">        zero, ``lambda t: 0*t``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">tau_L_w</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">w_M</span><span class="p">,</span> <span class="n">tau_L_t</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">t</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="n">tau_L_t</span><span class="p">,</span> <span class="n">tau_L_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">w_M</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">theta_M</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sol_states</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">w_M</span><span class="o">=</span><span class="p">[],</span> <span class="n">theta_M</span><span class="o">=</span><span class="p">[])</span>
+
+<div class="viewcode-block" id="Mechanics.set_outputs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.set_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">theta_M</span>
+        <span class="c1"># Total load torque</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Mechanics.rhs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.rhs">[docs]</a>    <span class="k">def</span> <span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the state derivatives.&quot;&quot;&quot;</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
+        <span class="n">d_w_M</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span>
+        <span class="n">d_theta_M</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">w_M</span>
+        <span class="c1"># Wrap the angle, take the real parts</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">real</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">d_w_M</span><span class="p">,</span> <span class="n">d_theta_M</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Mechanics.meas_speed"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.meas_speed">[docs]</a>    <span class="k">def</span> <span class="nf">meas_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measure the rotor speed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        w_M : float</span>
+<span class="sd">            Rotor angular speed (mechanical rad/s).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># The quantization noise of an incremental encoder could be modeled.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_M</span></div>
+
+<div class="viewcode-block" id="Mechanics.meas_position"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.meas_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measure the rotor angle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        theta_M : float</span>
+<span class="sd">            Rotor angle (mechanical rad).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span></div>
+
+<div class="viewcode-block" id="Mechanics.post_process_states"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.post_process_states">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process the mechanics data.&quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Mechanics.post_process_with_inputs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.post_process_with_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_with_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process the mechanics data.&quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span><span class="p">))</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="MechanicsTwoMass"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass">[docs]</a><span class="k">class</span> <span class="nc">MechanicsTwoMass</span><span class="p">(</span><span class="n">Mechanics</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Two-mass mechanics subsystem.</span>
+
+<span class="sd">    This models an equation of motion for two-mass mechanics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    J_M : float</span>
+<span class="sd">        Motor moment of inertia (kgm²).</span>
+<span class="sd">    J_L : float</span>
+<span class="sd">        Load moment of inertia (kgm²).</span>
+<span class="sd">    K_S : float</span>
+<span class="sd">        Shaft torsional stiffness (Nm).</span>
+<span class="sd">    C_S : float</span>
+<span class="sd">        Shaft torsional damping (Nms).</span>
+<span class="sd">    tau_L_w : callable</span>
+<span class="sd">        Load torque (Nm) as a function of the load speed, `tau_L_w(w_L)`, e.g., </span>
+<span class="sd">        ``tau_L_w = B*w_L``, where `B` is the viscous friction coefficient. The</span>
+<span class="sd">        default is zero, ``lambda w_L: 0*w_L``.</span>
+<span class="sd">    tau_L_t : callable</span>
+<span class="sd">        Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is</span>
+<span class="sd">        zero, ``lambda t: 0*t``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">J_M</span><span class="p">,</span> <span class="n">J_L</span><span class="p">,</span> <span class="n">K_S</span><span class="p">,</span> <span class="n">C_S</span><span class="p">,</span> <span class="n">tau_L_w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tau_L_t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=super-init-not-called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">J_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">J_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_S</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_S</span> <span class="o">=</span> <span class="n">J_M</span><span class="p">,</span> <span class="n">J_L</span><span class="p">,</span> <span class="n">K_S</span><span class="p">,</span> <span class="n">C_S</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="n">tau_L_w</span> <span class="k">if</span> <span class="n">tau_L_w</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">w_L</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">w_L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">tau_L_t</span> <span class="k">if</span> <span class="n">tau_L_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">0</span><span class="o">*</span><span class="n">t</span>
+        <span class="c1"># Initial values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">w_M</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">theta_M</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">w_L</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">theta_ML</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">tau_M</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sol_states</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+            <span class="n">w_M</span><span class="o">=</span><span class="p">[],</span> <span class="n">theta_M</span><span class="o">=</span><span class="p">[],</span> <span class="n">w_L</span><span class="o">=</span><span class="p">[],</span> <span class="n">theta_ML</span><span class="o">=</span><span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MechanicsTwoMass.set_outputs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.set_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">w_L</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">w_L</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">theta_ML</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">tau_S</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_S</span><span class="o">*</span><span class="n">out</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_S</span><span class="o">*</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_M</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">w_L</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MechanicsTwoMass.rhs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.rhs">[docs]</a>    <span class="k">def</span> <span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the state derivatives.&quot;&quot;&quot;</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
+        <span class="n">d_w_M</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_S</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">J_M</span>
+        <span class="n">d_theta_M</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">w_M</span>
+        <span class="n">d_w_L</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">tau_S</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">J_L</span>
+        <span class="n">d_theta_ML</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">w_M</span> <span class="o">-</span> <span class="n">state</span><span class="o">.</span><span class="n">w_L</span>
+        <span class="c1"># Wrap the angle, take the real parts</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">theta_ML</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">w_L</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">w_L</span><span class="o">.</span><span class="n">real</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">d_w_M</span><span class="p">,</span> <span class="n">d_theta_M</span><span class="p">,</span> <span class="n">d_w_L</span><span class="p">,</span> <span class="n">d_theta_ML</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MechanicsTwoMass.meas_load_speed"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.meas_load_speed">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the load speed.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_L</span></div>
+
+<div class="viewcode-block" id="MechanicsTwoMass.meas_load_position"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.meas_load_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the load angle.&quot;&quot;&quot;</span>
+        <span class="n">theta_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_ML</span>
+        <span class="k">return</span> <span class="n">theta_L</span></div>
+
+<div class="viewcode-block" id="MechanicsTwoMass.post_process_states"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.post_process_states">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process the mechanics data.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process_states</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_L</span><span class="o">.</span><span class="n">real</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_ML</span><span class="o">.</span><span class="n">real</span></div></div>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aalto Electric Drives
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Aalto Electric Drives.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
