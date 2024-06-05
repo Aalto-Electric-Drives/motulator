@@ -56,7 +56,7 @@ where :math:`\omega_\mathrm{L}` is the angular speed of the load, :math:`\varthe
     \tau_\mathrm{S} = K_\mathrm{S}\vartheta_\mathrm{ML} + C_\mathrm{S}(\omega_\mathrm{M} - \omega_\mathrm{L})
     :label: shaft_torque
 
-where :math:`K_\mathrm{S}` is the torsional stiffness of the shaft, and :math:`C_\mathrm{S}` is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanics. Two-mass mechanics are modeled in the class :class:`motulator.model.MechanicsTwoMass`. See also the example in :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass`.
+where :math:`K_\mathrm{S}` is the torsional stiffness of the shaft, and :math:`C_\mathrm{S}` is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanics. Two-mass mechanics are modeled in the class :class:`motulator.model.TwoMassMechanics`. See also the example in :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass`.
 
 .. figure:: figs/two_mass_block.svg
    :width: 100%

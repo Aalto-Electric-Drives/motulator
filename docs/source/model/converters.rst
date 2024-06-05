@@ -41,7 +41,7 @@ The figure below shows an inverter equipped with a generic three-phase load. In 
 
    Instantaneous switching states are defined by the carrier comparison. In this example, the switching states are :math:`q_\mathrm{a}=1`, :math:`q_\mathrm{b}=0`, and :math:`q_\mathrm{c}=0`.
 
-The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class :class:`motulator.model.CarrierComparison`, where the switching instants are explicitly computed in the begininning of each sampling period (instead of searching for zero crossings), allowing faster simulations.
+The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class :class:`motulator.model.CarrierComparison`, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations.
 
 .. figure:: figs/carrier_comparison.svg
    :width: 100%
@@ -54,12 +54,12 @@ The figure below shows the principle of carrier comparison. The logic shown in t
 The zero-sequence voltage does not affect the phase currents if the neutral of the load is not connected. Therefore, the reference potential of the phase voltages can be freely chosen when computing the space vector of the converter output voltage. The converter voltage vector in stationary coordinates is
 
 .. math::
-	\boldsymbol{u} &= \frac{2}{3}\left(u_\mathrm{an} + u_\mathrm{bn}\mathrm{e}^{\mathrm{j}2\pi/3} + u_\mathrm{cn}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
+	\boldsymbol{u}_\mathrm{c}^\mathrm{s} &= \frac{2}{3}\left(u_\mathrm{an} + u_\mathrm{bn}\mathrm{e}^{\mathrm{j}2\pi/3} + u_\mathrm{cn}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
 	&= \frac{2}{3}\left(u_\mathrm{aN} + u_\mathrm{bN}\mathrm{e}^{\mathrm{j} 2\pi/3} + u_\mathrm{cN}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
-   &= \underbrace{\frac{2}{3}\left(q_\mathrm{a} + q_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + q_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{q}}u_\mathrm{dc}
+   &= \underbrace{\frac{2}{3}\left(q_\mathrm{a} + q_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + q_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{q}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}
    :label: carrier_comparison
     
-where :math:`\boldsymbol{q}` is the switching state space vector.
+where :math:`\boldsymbol{q}_\mathrm{c}^\mathrm{s}` is the switching-state space vector.
 
 .. note::
    The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see :class:`motulator.control.PWM`) and discontinuous PWM methods [#Hol1994]_, [#Hav1999]_.
@@ -68,18 +68,16 @@ where :math:`\boldsymbol{q}` is the switching state space vector.
 
    If the zero sequence is of interest, it could be easily added to the inverter model.
 
-   Since the converter models are invariably in stationary coordinates, the space vectors are not marked with the superscript s here to simplify the notation.
-
 Switching-Cycle Averaging
 -------------------------
 
 If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with zero-order hold (ZOH) of the duty ratios. In this case, the output voltage vector is
 
 .. math::
-	\boldsymbol{u} = \underbrace{\frac{2}{3}\left(d_\mathrm{a} + d_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + d_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{d}}u_\mathrm{dc}
+	\boldsymbol{u}_\mathrm{c}^\mathrm{s} = \underbrace{\frac{2}{3}\left(d_\mathrm{a} + d_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + d_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{d}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}
    :label: switching_cycle_averaging
 
-where :math:`\boldsymbol{d}` is the duty ratio space vector. This ZOH is the default option in most of :doc:`/auto_examples/index`.
+where :math:`\boldsymbol{d}_\mathrm{c}^\mathrm{s}` is the duty ratio space vector. This ZOH is the default option in most of :doc:`/auto_examples/index`.
 
 .. rubric:: References
 

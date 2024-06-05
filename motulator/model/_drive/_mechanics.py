@@ -89,7 +89,7 @@ class Mechanics(Subsystem):
 
 
 # %%
-class MechanicsTwoMass(Mechanics):
+class TwoMassMechanics(Mechanics):
     """
     Two-mass mechanics subsystem.
 

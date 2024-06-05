@@ -25,7 +25,7 @@ The space vector transformation in :eq:`space_vector` is implemented in the func
 Induction Machine
 -----------------
 
-The induction machine models are provided in the package :mod:`motulator.model.im`. The models are implemented in stator coordinates. A Γ-equivalent model is used as a base model since it can be extended with the magnetic saturation model in a straightforward manner [#Sle1989]_.
+The induction machine models are provided in the package :mod:`motulator.model`. The models are implemented in stator coordinates. A Γ-equivalent model is used as a base model since it can be extended with the magnetic saturation model in a straightforward manner [#Sle1989]_.
 
 .. figure:: figs/im_gamma.svg
    :width: 100%
@@ -57,13 +57,13 @@ where :math:`\boldsymbol{u}_\mathrm{s}^\mathrm{s}` is the stator voltage, :math:
     \boldsymbol{\psi}_\mathrm{r}^\mathrm{s} &= \boldsymbol{\psi}_\mathrm{s}^\mathrm{s} + L_\ell\boldsymbol{i}_\mathrm{r}^\mathrm{s} 
     :label: im_flux
 
-where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the leakage inductance. This linear magnetic model is applied in the class :class:`motulator.model.im.InductionMachine`. The electromagnetic torque is
+where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the leakage inductance. This linear magnetic model is applied in the class :class:`motulator.model.InductionMachine`. The electromagnetic torque is
 
 .. math::
     \tau_\mathrm{M} = \frac{3 n_\mathrm{p}}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s}^\mathrm{s} (\boldsymbol{\psi}_\mathrm{s}^\mathrm{s})^* \right\}
     :label: im_torque
 
-The class :class:`motulator.model.im.InductionMachineSaturated` extends the model with the main flux saturation, :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [#Qu2012]_. See also the example :doc:`/auto_examples/vector/plot_vector_ctrl_im_2kw`.
+The same class can also be used with the main-flux saturation models, such as :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [#Qu2012]_. See also the example :doc:`/auto_examples/vector/plot_vector_ctrl_im_2kw`.
 
 .. note::
    If the magnetic saturation is omitted, the Γ model is mathematically identical to the inverse-Γ and T models. For example, the parameters of the Γ model can be transformed to those of the inverse-Γ model parameters as follows:
@@ -86,7 +86,7 @@ The class :class:`motulator.model.im.InductionMachineSaturated` extends the mode
 Synchronous Machine
 -------------------
 
-A synchronous machine models is are provided in the package :mod:`motulator.model.sm`. The models can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs). 
+Synchronous machine models are provided in the package :mod:`motulator.model`. The models can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs). 
 
 .. figure:: figs/sm_block_rot.svg
    :width: 100%
@@ -126,7 +126,7 @@ Since the machine is fed and observed from stator coordinates, the quantities ar
 
    Synchronous machine model seen from stator coordinates.
 
-The linear magnetic model in :eq:`sm_flux` can be replaced with nonlinear saturation characteristics :math:`\boldsymbol{\psi}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}(\boldsymbol{i}_\mathrm{s})`, either in a form of flux maps or explicit functions [#Hin2017]_. The generic saturation model is provided in the class :class:`motulator.model.sm.SynchronousMachineSaturated`. For its usage, see the examples :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor`, :doc:`/auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw`, and :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw`. Methods for importing and plotting the flux map data are also provided. 
+The linear magnetic model in :eq:`sm_flux` can be replaced with nonlinear saturation characteristics :math:`\boldsymbol{\psi}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}(\boldsymbol{i}_\mathrm{s})`, either in a form of flux maps or explicit functions [#Hin2017]_. See the examples :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor`, :doc:`/auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw`, and :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw`. Methods for importing and plotting the flux map data are also provided. 
 
 .. rubric:: References
 
