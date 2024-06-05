@@ -299,7 +299,7 @@ class Model(ABC):
         self.pwm = zoh if pwm is None else pwm
         self.t = 0
         self.converter = None
-        self.subsystems = [self.converter]
+        self.subsystems = []  # Contains the list of subsystems
         self.sol_t = []
         self.data = SimpleNamespace()
 

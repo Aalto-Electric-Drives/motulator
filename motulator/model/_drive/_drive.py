@@ -10,18 +10,17 @@ from motulator.model._simulation import Model
 # %%
 class Drive(Model):
     """
-    Continuous-time model for an induction machine drive.
+    Continuous-time model for machine drives.
 
-    This interconnects the subsystems of an induction machine drive and 
-    provides an interface to the solver. 
+    This interconnects the subsystems of a machine drive and provides an interface to the solver. 
 
     Parameters
     ----------
-    converter : Inverter
-        Inverter model.
-    machine : InductionMachine 
-        Induction machine model.
-    mechanics : Mechanics
+    converter : Inverter | FrequencyConverter
+        Converter model.
+    machine : InductionMachine | SynchronousMachine
+        Machine model.
+    mechanics : Mechanics | TwoMassMechanics
         Mechanics model.
 
     """
@@ -56,16 +55,16 @@ class Drive(Model):
 # %%
 class DriveWithLCFilter(Model):
     """
-    Induction machine drive with an output LC filter.
+    Machine drive with an output LC filter.
 
     Parameters
     ----------
-    machine : InductionMachine | InductionMachineSaturated
-        Induction machine model.
-    mechanics : Mechanics
+    converter : Inverter | FrequencyConverter
+        Converter model.
+    machine : InductionMachine | SynchronousMachine
+        Machine model.
+    mechanics : Mechanics | TwoMassMechanics
         Mechanics model.
-    converter : Inverter
-        Inverter model.
     lc_filter : LCFilter
         LC-filter model.
 
