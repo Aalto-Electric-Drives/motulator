@@ -62,7 +62,7 @@ class Mechanics(Subsystem):
 
         """
         # The quantization noise of an incremental encoder could be modeled.
-        return self.state.w_M
+        return self.state.w_M.real
 
     def meas_position(self):
         """
@@ -74,7 +74,7 @@ class Mechanics(Subsystem):
             Rotor angle (mechanical rad).
 
         """
-        return self.state.theta_M
+        return self.state.theta_M.real
 
     def post_process_states(self):
         """Post-process the mechanics data."""
@@ -152,12 +152,12 @@ class MechanicsTwoMass(Mechanics):
 
     def meas_load_speed(self):
         """Measure the load speed."""
-        return self.state.w_L
+        return self.state.w_L.real
 
     def meas_load_position(self):
         """Measure the load angle."""
         theta_L = self.state.theta_M - self.state.theta_ML
-        return theta_L
+        return theta_L.real
 
     def post_process_states(self):
         """Post-process the mechanics data."""
