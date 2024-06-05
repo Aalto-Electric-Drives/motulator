@@ -9,37 +9,35 @@ of the mechanics is around 85 Hz. The mechanical parameters correspond to
 this example.
 
 """
-
 # %%
-# Imports.
 
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot
+from motulator import BaseValues, NominalValues, Sequence, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=370, I_nom=4.3, f_nom=75, tau_nom=14, P_nom=2.2e3, n_p=3)
+nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+base = BaseValues.from_nominal(nom, n_p=3)
 
 # %%
 # Configure the system model.
 
-machine = model.sm.SynchronousMachine(
+machine = model.SynchronousMachine(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 mechanics = model.MechanicsTwoMass(
     J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
 converter = model.Inverter(u_dc=540)
-mdl = model.sm.DriveTwoMassMechanics(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
 
 par = control.sm.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-ctrl_par = control.sm.ObserverBasedVHzCtrlPars(par, i_s_max=1.5*base.i)
-ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
+cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
+ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 # %%
@@ -48,10 +46,10 @@ ctrl = control.sm.ObserverBasedVHzCtrl(par, ctrl_par, T_s=250e-6)
 # Speed reference
 times = np.array([0, .1, .2, 1])
 values = np.array([0, 0, 1, 1])*base.w*.5
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .4, .4, 1])
-values = np.array([0, 0, 1, 1])*base.tau_nom
+values = np.array([0, 0, 1, 1])*nom.tau
 mdl.mechanics.tau_L_t = Sequence(times, values)
 
 # %%
@@ -67,9 +65,11 @@ plot(sim, base)  # Plot results in per-unit values
 
 t_span = (0, 1.2)
 _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
-ax1.plot(sim.mdl.data.t, sim.mdl.data.w_M, label=r"$\omega_\mathrm{M}$")
-ax1.plot(sim.mdl.data.t, sim.mdl.data.w_L, label=r"$\omega_\mathrm{L}$")
-ax2.plot(sim.mdl.data.t, sim.mdl.data.theta_ML*180/np.pi)
+ax1.plot(
+    sim.mdl.data.t, sim.mdl.mechanics.data.w_M, label=r"$\omega_\mathrm{M}$")
+ax1.plot(
+    sim.mdl.data.t, sim.mdl.mechanics.data.w_L, label=r"$\omega_\mathrm{L}$")
+ax2.plot(sim.mdl.data.t, sim.mdl.mechanics.data.theta_ML*180/np.pi)
 ax1.set_xlim(t_span)
 ax2.set_xlim(t_span)
 ax1.set_xticklabels([])

@@ -7,28 +7,27 @@ drive equipped with an LC filter.
 
 """
 # %%
-# Imports.
 
 import numpy as np
 import matplotlib.pyplot as plt
 from motulator import model, control
-from motulator import BaseValues, plot
+from motulator import BaseValues, NominalValues, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
+nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Create the system model. The filter parameters correspond to [#Sal2006]_.
 
-machine = model.im.InductionMachineInvGamma(  # Inverse-Γ parameters
+machine = model.InductionMachineInvGamma(  # Inverse-Γ parameters
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 lc_filter = model.LCFilter(L=8e-3, C=9.9e-6, R=.1)
-mdl = model.im.DriveWithLCFilter(machine, mechanics, converter, lc_filter)
+mdl = model.DriveWithLCFilter(converter, machine, mechanics, lc_filter)
 mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
@@ -36,16 +35,16 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # Inverse-Γ model parameter estimates
 par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-ctrl = control.im.VHzCtrl(250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0)
-ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
+ctrl = control.im.VHzCtrl(
+    control.im.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference and the external load torque.
 
-ctrl.w_m_ref = lambda t: (t > .2)*base.w
+ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = 1.1*base.tau_nom/(base.w/base.n_p)**2
+k = 1.1*nom.tau/(base.w/base.n_p)**2
 mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # %%
@@ -64,18 +63,22 @@ plot(sim, base)
 # Plot additional waveforms.
 
 t_span = (1.1, 1.125)  # Time span for the zoomed-in plot
-mdl = sim.mdl.data  # Continuous-time data
+mdl = sim.mdl  # Continuous-time data
 # Plot the converter and stator voltages (phase a)
 fig1, (ax1, ax2) = plt.subplots(2, 1)
-ax1.plot(mdl.t, mdl.u_cs.real/base.u, label=r"$u_\mathrm{ca}$")
-ax1.plot(mdl.t, mdl.u_ss.real/base.u, label=r"$u_\mathrm{sa}$")
+ax1.plot(
+    mdl.data.t, mdl.converter.data.u_cs.real/base.u, label=r"$u_\mathrm{ca}$")
+ax1.plot(
+    mdl.data.t, mdl.machine.data.u_ss.real/base.u, label=r"$u_\mathrm{sa}$")
 ax1.set_xlim(t_span)
 ax1.legend()
 ax1.set_xticklabels([])
 ax1.set_ylabel("Voltage (p.u.)")
 # Plot the converter and stator currents (phase a)
-ax2.plot(mdl.t, mdl.i_cs.real/base.i, label=r"$i_\mathrm{ca}$")
-ax2.plot(mdl.t, mdl.i_ss.real/base.i, label=r"$i_\mathrm{sa}$")
+ax2.plot(
+    mdl.data.t, mdl.converter.data.i_cs.real/base.i, label=r"$i_\mathrm{ca}$")
+ax2.plot(
+    mdl.data.t, mdl.machine.data.i_ss.real/base.i, label=r"$i_\mathrm{sa}$")
 ax2.set_xlim(t_span)
 ax2.legend()
 ax2.set_ylabel("Current (p.u.)")

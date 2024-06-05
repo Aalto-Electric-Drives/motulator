@@ -1,12 +1,12 @@
 """Import and plot flux maps from the SyR-e project."""
 
 # %%
+from types import SimpleNamespace
 import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
 from scipy.io import loadmat
 from scipy.interpolate import griddata
-from motulator._utils import Bunch
 
 # Plotting parameters
 plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")
@@ -37,7 +37,7 @@ def import_syre_data(fname, add_negative_q_axis=True):
 
     Returns
     -------
-    Bunch object with the following fields defined:
+    SimpleNamespace object with the following fields defined:
     i_s : complex ndarray
         Stator current data (A).
     psi_s : complex ndarray
@@ -78,7 +78,7 @@ def import_syre_data(fname, add_negative_q_axis=True):
     i_s = i_d + 1j*i_q
     psi_s = psi_d + 1j*psi_q
 
-    return Bunch(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
+    return SimpleNamespace(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
 
 
 # %%
@@ -88,7 +88,7 @@ def plot_flux_map(data):
 
     Parameters
     ----------
-    data : Bunch
+    data : SimpleNamespace
         Flux map data.
 
     """
@@ -114,7 +114,7 @@ def plot_torque_map(data):
 
     Parameters
     ----------
-    data : Bunch
+    data : SimpleNamespace
         Flux map data.
 
     """
@@ -133,7 +133,7 @@ def plot_flux_vs_current(data):
 
     Parameters
     ----------
-    data : Bunch
+    data : SimpleNamespace
         Flux map data.
 
     """
@@ -189,7 +189,7 @@ def downsample_flux_map(data, N_d=32, N_q=32):
 
     Parameters
     ----------
-    data : Bunch
+    data : SimpleNamespace
         Flux map data.
     N_d : int, optional
         Number of interpolated samples in the d axis. The default is 32.
@@ -198,7 +198,7 @@ def downsample_flux_map(data, N_d=32, N_q=32):
 
     Returns
     -------
-    Bunch object with the following fields defined:
+    SimpleNamespace object with the following fields defined:
     i_s : complex ndarray, shape (N_d, N_q)
         Stator current data (A).
     psi_s : complex ndarray, shape (N_d, N_q)
@@ -218,7 +218,7 @@ def downsample_flux_map(data, N_d=32, N_q=32):
     tau_M = griddata(points, np.ravel(data.tau_M), (i_d, i_q), method="linear")
     i_s = i_d + 1j*i_q
 
-    return Bunch(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
+    return SimpleNamespace(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
 
 
 # %%
@@ -228,7 +228,7 @@ def invert_flux_map(data, N_d=32, N_q=32):
 
     Parameters
     ----------
-    data : Bunch
+    data : SimpleNamespace
         Flux map data.
     N_d : int, optional
         Number of interpolated samples in the d axis. The default is 32.
@@ -237,7 +237,7 @@ def invert_flux_map(data, N_d=32, N_q=32):
 
     Returns
     -------
-    Bunch object with the following fields defined:
+    SimpleNamespace object with the following fields defined:
     psi_s : complex ndarray, shape (N_d, N_q)
         Stator flux linkage data (Vs).
     i_s : complex ndarray, shape (N_d, N_q)
@@ -264,4 +264,4 @@ def invert_flux_map(data, N_d=32, N_q=32):
         points, np.ravel(data.tau_M), (psi_d, psi_q), method="linear")
     psi_s = psi_d + 1j*psi_q
 
-    return Bunch(psi_s=psi_s, i_s=i_s, tau_M=tau_M)
+    return SimpleNamespace(psi_s=psi_s, i_s=i_s, tau_M=tau_M)

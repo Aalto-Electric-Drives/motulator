@@ -10,27 +10,26 @@ frequency and the sampling frequency.
 
 """
 # %%
-# Imports.
 
 import numpy as np
 from motulator import model, control
-from motulator import BaseValues, Sequence, plot, plot_extra
+from motulator import BaseValues, NominalValues, Sequence, plot, plot_extra
 
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base = BaseValues(
-    U_nom=400, I_nom=5, f_nom=50, tau_nom=14.6, P_nom=2.2e3, n_p=2)
+nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
+base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Create the system model.
 
 # Configure the induction machine using its inverse-Γ parameters
-machine = model.im.InductionMachineInvGamma(
+machine = model.InductionMachineInvGamma(
     R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
-mdl = model.im.Drive(machine, mechanics, converter)
+mdl = model.Drive(converter, machine, mechanics)
 mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
@@ -38,22 +37,21 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
 ctrl = control.im.VHzCtrl(
-    250e-6, par, psi_s_nom=base.psi, k_u=0, k_w=0, six_step=True)
-ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
-
+    control.im.VHzCtrlCfg(
+        par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
 # %%
 # Set the speed reference and the external load torque.
 
 # Speed reference
 times = np.array([0, .1, .3, 1])*2
 values = np.array([0, 0, 1, 1])*2*base.w
-ctrl.w_m_ref = Sequence(times, values)
+ctrl.ref.w_m = Sequence(times, values)
 
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = .2*base.tau_nom/(base.w/base.n_p)**2
+k = .2*nom.tau/(base.w/base.n_p)**2
 mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 # External load torque could be set here, now zero
-mdl.mechanics.tau_L_t = lambda t: (t > 1.)*base.tau_nom*0
+mdl.mechanics.tau_L_t = lambda t: (t > 1.)*nom.tau*0
 
 # %%
 # Create the simulation object and simulate it.

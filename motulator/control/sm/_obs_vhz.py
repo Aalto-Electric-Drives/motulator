@@ -1,24 +1,17 @@
 """Observer-based V/Hz control of synchronous motor drives."""
 
+from types import SimpleNamespace
 from dataclasses import dataclass, InitVar
 import numpy as np
-from motulator._helpers import abc2complex, wrap
-from motulator.control._common import Ctrl, PWM, RateLimiter
-from motulator.control.sm._flux_vector import (
-    FluxTorqueReference, FluxTorqueReferencePars)
-from motulator.control.sm._observers import FluxObserver
-from motulator._utils import Bunch
+from motulator.control import DriveCtrl, RateLimiter, sm
+from motulator._helpers import wrap
 
 
 # %%
-# pylint: disable=too-many-instance-attributes
 @dataclass
-class ObserverBasedVHzCtrlPars(FluxTorqueReferencePars):
+class ObserverBasedVHzCtrlCfg(sm.FluxTorqueReferenceCfg):
     """
-    Parameters for the control system.
-
-    This class extends FluxTorqueReferencePars with the parameters needed for
-    the observer-based V/Hz control.
+    Control system configuration.
 
     Parameters
     ----------
@@ -34,12 +27,11 @@ class ObserverBasedVHzCtrlPars(FluxTorqueReferencePars):
     alpha_tau: InitVar[float] = 2*np.pi*50
     alpha_f: float = 2*np.pi*1
 
-    # pylint: disable=arguments-differ
     def __post_init__(self, par, alpha_tau):
         super().__post_init__(par)
         # Gain k_tau
         G = (par.L_d - par.L_q)/(par.L_d*par.L_q)
-        psi_s0 = par.psi_f if par.psi_f > 0 else self.psi_s_min
+        psi_s0 = par.psi_f if par.psi_f > 0 else self.min_psi_s
         if par.psi_f > 0:  # PMSM or PM-SyRM
             c_delta0 = 1.5*par.n_p*(par.psi_f*psi_s0/par.L_d - G*psi_s0**2)
         else:  # SyRM
@@ -48,7 +40,7 @@ class ObserverBasedVHzCtrlPars(FluxTorqueReferencePars):
 
 
 # %%
-class ObserverBasedVHzCtrl(Ctrl):
+class ObserverBasedVHzCtrl(DriveCtrl):
     """
     Observer-based V/Hz control for synchronous motors.
 
@@ -58,15 +50,10 @@ class ObserverBasedVHzCtrl(Ctrl):
     ----------
     par : ModelPars
         Machine model parameters.
-    ctrl_par : ObserverBasedVHzCtrlPars
-        Control system parameters.
+    cfg : ObserverBasedVHzCtrlCfg
+        Control system configuration.
     T_s : float, optional
         Sampling period (s). The default is 250e-6.
-
-    Attributes
-    ----------
-    w_m_ref : callable
-        Rotor speed reference (electrical rad/s).
 
     References
     ----------
@@ -76,101 +63,122 @@ class ObserverBasedVHzCtrl(Ctrl):
 
     """
 
-    # pylint: disable=too-many-instance-attributes, too-many-arguments
-    def __init__(self, par, ctrl_par, T_s=250e-6):
-        super().__init__()
-        self.T_s = T_s
-        # Motor parameter estimates
-        self.R_s = par.R_s
-        self.n_p = par.n_p
-        # Controller parameters
-        self.alpha_f = ctrl_par.alpha_f
-        self.alpha_psi = ctrl_par.alpha_psi
-        self.k_tau = ctrl_par.k_tau
+    def __init__(self, par, cfg, T_s=250e-6):
+        super().__init__(par, T_s, sensorless=True)
+        self.par, self.cfg = par, cfg
         # Subsystems
-        self.pwm = PWM()
-        self.flux_torque_ref = FluxTorqueReference(ctrl_par)
+        self.flux_torque_reference = sm.FluxTorqueReference(cfg)
         self.observer = FluxObserver(par)
         self.rate_limiter = RateLimiter(np.inf)
-        self.w_m_ref = callable
-        # States
-        self.theta_s, self.tau_M_ref = 0, 0
+        # Initialize the states
+        self.ref.tau_M, self.theta_s = 0, 0
 
-    # pylint: disable=too-many-locals
-    def __call__(self, mdl):
-        """
-        Run the main control loop.
+    def output(self, fbk):
+        """Output."""
+        ref = super().output(fbk)
 
-        Parameters
-        ----------
-        mdl : Drive
-            Continuous-time system model for getting the feedback signals.
+        # Unpack
+        par, cfg = self.par, self.cfg
 
-        Returns
-        -------
-        T_s : float
-            Sampling period (s).
-        d_abc : ndarray, shape (3,)
-            Duty ratios.
+        # Get the reference signals
+        ref.w_m = self.rate_limiter(ref.T_s, self.ref.w_m(ref.t))
+        ref.tau_M = self.ref.tau_M
 
-        """
-        # Get the speed reference
-        if self.rate_limiter is not None:
-            w_m_ref = self.rate_limiter(self.T_s, self.w_m_ref(self.clock.t))
-        else:
-            w_m_ref = self.w_m_ref(self.clock.t)
+        # Coordinate transformations
+        fbk.theta_s = self.theta_s
+        fbk.i_s = np.exp(-1j*fbk.theta_s)*fbk.i_ss
+        fbk.u_s = np.exp(-1j*fbk.theta_s)*fbk.u_ss
 
-        # Feedback signals
-        i_s_abc = mdl.machine.meas_currents()  # Phase currents
-        u_dc = mdl.converter.meas_dc_voltage()  # DC-bus voltage
-        u_s = self.pwm.realized_voltage  # Realized voltage from PWM
-
-        # Get the states
-        psi_s = self.observer.psi_s
-        theta_s = self.theta_s
-
-        # Space vector and coordinate transformation
-        i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
-
-        # Get the states
-        tau_M_ref = self.tau_M_ref
-
-        # Limited flux and torque references
-        psi_s_ref, _ = self.flux_torque_ref(tau_M_ref, w_m_ref, u_dc)
+        # Limited flux references
+        ref = self.flux_torque_reference(fbk, ref)
 
         # Electromagnetic torque
-        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_s))
+        fbk.tau_M = 1.5*par.n_p*np.imag(fbk.i_s*np.conj(fbk.psi_s))
 
         # Dynamic frequency
-        w_s = w_m_ref - self.k_tau*(tau_M - tau_M_ref)
+        fbk.w_s = ref.w_m - cfg.k_tau*(fbk.tau_M - ref.tau_M)
 
         # Voltage reference
-        err = psi_s_ref - psi_s
-        u_s_ref = self.R_s*i_s + 1j*w_s*psi_s_ref + self.alpha_psi*err
+        err = ref.psi_s - fbk.psi_s
+        ref.u_s = par.R_s*fbk.i_s + 1j*fbk.w_s*ref.psi_s + cfg.alpha_psi*err
+        u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
+        ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
+        return ref
 
-        # Data logging
-        data = Bunch(
-            i_s=i_s,
-            psi_s=psi_s,
-            psi_s_ref=psi_s_ref,
-            t=self.clock.t,
-            theta_s=theta_s,
-            u_dc=u_dc,
-            u_s=u_s,
-            w_m_ref=w_m_ref,
-            w_s=w_s,
-            tau_M=tau_M,
-        )
-        self.save(data)
+    def update(self, fbk, ref):
+        """Update the states."""
+        super().update(fbk, ref)
+        # Low-pass filtered torque
+        self.ref.tau_M += ref.T_s*self.cfg.alpha_f*(fbk.tau_M - ref.tau_M)
+        # Update the angle
+        self.theta_s = wrap(fbk.theta_s + ref.T_s*fbk.w_s)
+
+
+# %%
+class FluxObserver:
+    """
+    Sensorless stator flux observer in external coordinates.
+
+    This observer estimates the stator flux linkage and the angle of the 
+    coordinate system with respect to the d-axis of the rotor. Speed-estimation 
+    is omitted. The observer gain decouples the electrical and mechanical 
+    dynamics and allows placing the poles of the corresponding linearized 
+    estimation error dynamics. This implementation operates in external 
+    coordinates (typically synchronous coordinates defined by reference signals 
+    of a control system).
+
+    Parameters
+    ----------
+    par : ModelPars
+        Machine model parameters.
+    alpha_o : float, optional
+        Observer gain (rad/s). The default is 2*pi*20.
+    zeta_inf : float, optional
+        Damping ratio at infinite speed. The default is 0.2.
+  
+    """
+
+    def __init__(self, par, alpha_o=2*np.pi*20, zeta_inf=.2):
+        self.par = par
+        self.alpha_o = alpha_o
+        self.b_p = .5*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
+        self.zeta_inf = zeta_inf
+        # Initial states
+        self.est = SimpleNamespace(psi_s=par.psi_f, delta=0)
+
+    def output(self, fbk):
+        """Output."""
+        fbk.psi_s, fbk.delta = self.est.psi_s, self.est.delta
+
+        return fbk
+
+    def update(self, T_s, fbk):
+        """Update the states."""
+        par = self.par
+
+        # Transformations to rotor coordinates. This is mathematically
+        # equivalent to the version in [Tii2022].
+        i_sr = fbk.i_s*np.exp(1j*fbk.delta)
+        psi_sr = fbk.psi_s*np.exp(1j*fbk.delta)
+
+        # Auxiliary flux and estimation error in rotor coordinates
+        psi_ar = par.psi_f + (par.L_d - par.L_q)*np.conj(i_sr)
+        e_r = par.L_d*i_sr.real + 1j*par.L_q*i_sr.imag + par.psi_f - psi_sr
+
+        # Auxiliary flux in controller coordinates
+        psi_a = np.exp(-1j*fbk.delta)*psi_ar
+
+        k = self.b_p + 2*self.zeta_inf*np.abs(fbk.w_s)
+
+        if np.abs(psi_ar) > 0:
+            # Correction voltage in controller coordinates
+            v = k*psi_a*np.real(e_r/psi_ar)
+            # Error signal
+            w_delta = self.alpha_o*np.imag(e_r/psi_ar)
+        else:
+            v, w_delta = 0, 0
 
         # Update the states
-        self.observer.update(self.T_s, u_s, i_s, w_s)
-        self.tau_M_ref += self.T_s*self.alpha_f*(tau_M - self.tau_M_ref)
-        self.theta_s += self.T_s*w_s
-        self.theta_s = wrap(self.theta_s)
-        self.clock.update(self.T_s)
-
-        # PWM output
-        d_abc = self.pwm(self.T_s, u_s_ref, u_dc, theta_s, w_s)
-
-        return self.T_s, d_abc
+        self.est.psi_s += T_s*(
+            fbk.u_s - par.R_s*fbk.i_s - 1j*fbk.w_s*fbk.psi_s + v)
+        self.est.delta += T_s*w_delta

@@ -62,66 +62,112 @@ def complex2abc(u):
 
 # %%
 @dataclass
-class BaseValues:
+class NominalValues:
     """
-    Base values.
-
-    Base values are computed from the nominal values and the number of pole
-    pairs. They can be used, e.g., for scaling the plotted waveforms.
+    Nominal values.
 
     Parameters
     ----------
-    U_nom : float
+    U : float
         Voltage (V, rms, line-line).
-    I_nom : float
+    I : float
         Current (A, rms).
-    f_nom : float
+    f : float
         Frequency (Hz).
-    tau_nom : float
-        Torque (Nm).
-    P_nom : float
+    P : float
         Power (W).
-    n_p : int
-        Number of pole pairs.
-
-    Attributes
-    ----------
-    u : float
-        Base voltage (V, peak, line-neutral).
-    i : float
-        Base current (A, peak).
-    w : float
-        Base angular frequency (rad/s).
-    psi : float
-        Base flux linkage (Vs).
-    p : float
-        Base power (W).
-    Z : float
-        Base impedance (Ω).
-    L : float
-        Base inductance (H).
     tau : float
-        Base torque (Nm).
+        Torque (Nm).
 
     """
 
+    U: float
+    I: float
+    f: float
+    P: float
+    tau: float
+
+
+# %%
+@dataclass
+class BaseValues:
     # pylint: disable=too-many-instance-attributes
-    U_nom: float
-    I_nom: float
-    f_nom: float
-    P_nom: float
-    tau_nom: float
+    """
+    Base values.
+
+    Parameters
+    ----------
+    u : float
+        Voltage (V, peak, line-neutral).
+    i : float
+        Current (A, peak).
+    w : float
+        Angular frequency (rad/s).
+    psi : float
+        Flux linkage (Vs).
+    p : float
+        Power (W).
+    Z : float
+        Impedance (Ω).
+    L : float
+        Inductance (H).
+    tau : float
+        Torque (Nm).
+    n_p : int
+        Number of pole pairs.
+
+    """
+    u: float
+    i: float
+    w: float
+    psi: float
+    p: float
+    Z: float
+    L: float
+    tau: float
     n_p: int
 
-    def __post_init__(self):
-        self.u = np.sqrt(2/3)*self.U_nom
-        self.i = np.sqrt(2)*self.I_nom
-        self.w = 2*np.pi*self.f_nom
-        self.psi = self.u/self.w
-        self.p = 1.5*self.u*self.i
-        self.Z = self.u/self.i
-        self.L = self.Z/self.w
-        self.tau = self.n_p*self.p/self.w
+    @classmethod
+    def from_nominal(cls, nom, n_p):
+        """
+        Compute base values from nominal values.
+
+        Parameters
+        ----------
+        nom : NominalValues
+            Nominal values containing the following fields:
+
+                U : float
+                    Voltage (V, rms, line-line).
+                I : float
+                    Current (A, rms).
+                f : float
+                    Frequency (Hz).
+
+        n_p : int
+            Number of pole pairs.
+
+        Returns
+        -------
+        BaseValues
+            Base values.
+
+        Notes
+        -----
+        Notice that the nominal torque is larger than the base torque due to 
+        the power factor and efficiency being less than unity.
+
+        """
+        u = np.sqrt(2/3)*nom.U
+        i = np.sqrt(2)*nom.I
+        w = 2*np.pi*nom.f
+        psi = u/w
+        p = 1.5*u*i
+        Z = u/i
+        L = Z/w
+        tau = n_p*p/w
+
+        return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, tau=tau, n_p=n_p)
 
 
 # %%

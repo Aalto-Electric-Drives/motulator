@@ -1,18 +1,17 @@
 """Simulation environment."""
 
+from abc import ABC, abstractmethod
+from types import SimpleNamespace
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.io import savemat
 from motulator._helpers import abc2complex
-from motulator._utils import Bunch
 
 
 # %%
 class Delay:
     """
-    Computational delay.
-
-    This models the computational delay as a ring buffer.
+    Computational delay modeled as a ring buffer.
 
     Parameters
     ----------
@@ -68,21 +67,21 @@ class CarrierComparison:
     >>> from motulator.model import CarrierComparison
     >>> carrier_cmp = CarrierComparison(return_complex=False)
     >>> # First call gives rising edges
-    >>> t_steps, q_abc = carrier_cmp(1e-3, [.4, .2, .8])
+    >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.4, .2, .8])
     >>> # Durations of the switching states
     >>> t_steps
     array([0.00019995, 0.00040015, 0.00019995, 0.00019995])
     >>> # Switching states
-    >>> q_abc
+    >>> q_c_abc
     array([[0, 0, 0],
            [0, 0, 1],
            [1, 0, 1],
            [1, 1, 1]])
     >>> # Second call gives falling edges
-    >>> t_steps, q_abc = carrier_cmp(.001, [.4, .2, .8])
+    >>> t_steps, q_c_abc = carrier_cmp(.001, [.4, .2, .8])
     >>> t_steps
     array([0.00019995, 0.00019995, 0.00040015, 0.00019995])
-    >>> q_abc
+    >>> q_c_abc
     array([[1, 1, 1],
            [1, 0, 1],
            [0, 0, 1],
@@ -91,10 +90,10 @@ class CarrierComparison:
     >>> np.sum(t_steps)
     0.001
     >>> # 50% duty ratios in all phases
-    >>> t_steps, q_abc = carrier_cmp(1e-3, [.5, .5, .5])
+    >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.5, .5, .5])
     >>> t_steps
     array([0.0005, 0.    , 0.    , 0.0005])
-    >>> q_abc
+    >>> q_c_abc
     array([[0, 0, 0],
            [0, 0, 0],
            [0, 0, 0],
@@ -107,7 +106,7 @@ class CarrierComparison:
         self.return_complex = return_complex
         self._rising_edge = True  # Stores the carrier direction
 
-    def __call__(self, T_s, d_abc):
+    def __call__(self, T_s, d_c_abc):
         """
         Compute the switching state durations and vectors.
 
@@ -115,30 +114,30 @@ class CarrierComparison:
         ----------
         T_s : float
             Half carrier period (s).
-        d_abc : array_like of floats, shape (3,)
+        d_c_abc : array_like of floats, shape (3,)
             Duty ratios in the range [0, 1].
 
         Returns
         -------
         t_steps : ndarray, shape (4,)
             Switching state durations (s), `[t0, t1, t2, t3]`.
-        q : complex ndarray, shape (4,)
+        q_cs : complex ndarray, shape (4,)
             Switching state vectors, `[q0, q1, q2, q3]`, where `q1` and `q2`
             are active vectors.
 
         Notes
         -----
-        No switching (e.g. `d_a == 0` or `d_a == 1`) or simultaneous switchings
+        No switching (e.g. `d_a == 0` or `d_a == 1`) or simultaneous switching
         (e.g. `d_a == d_b`) lead to zeroes in `t_steps`.
 
         """
         # Quantize the duty ratios to N levels
-        d_abc = np.round(self.N*np.asarray(d_abc))/self.N
+        d_c_abc = np.round(self.N*np.asarray(d_c_abc))/self.N
 
         # Assume falling edge and compute the normalized switching instants:
-        t_n = np.append(0, np.sort(d_abc))
+        t_n = np.append(0, np.sort(d_c_abc))
         # Compute the corresponding switching states:
-        q_abc = (t_n[:, np.newaxis] < d_abc).astype(int)
+        q_c_abc = (t_n[:, np.newaxis] < d_c_abc).astype(int)
 
         # Durations of switching states
         t_steps = T_s*np.diff(t_n, append=1)
@@ -146,17 +145,17 @@ class CarrierComparison:
         # Flip the sequence if rising edge
         if self._rising_edge:
             t_steps = np.flip(t_steps)
-            q_abc = np.flipud(q_abc)
+            q_c_abc = np.flipud(q_c_abc)
 
         # Change the carrier direction for the next call
         self._rising_edge = not self._rising_edge
 
-        return ((t_steps, abc2complex(q_abc.T)) if self.return_complex else
-                (t_steps, q_abc))
+        return ((t_steps, abc2complex(q_c_abc.T)) if self.return_complex else
+                (t_steps, q_c_abc))
 
 
 # %%
-def zoh(T_s, d_abc):
+def zoh(T_s, d_c_abc):
     """
     Zero-order hold of the duty ratios over the sampling period.
 
@@ -164,21 +163,21 @@ def zoh(T_s, d_abc):
     ----------
     T_s : float
         Sampling period.
-    d_abc : array_like of floats, shape (3,)
+    d_c_abc : array_like of floats, shape (3,)
         Duty ratios in the range [0, 1].
 
     Returns
     -------
     t_steps : ndarray, shape (1,)
         Sampling period as an array compatible with the solver.
-    q : complex ndarray, shape (1,)
+    q_cs : complex ndarray, shape (1,)
         Duty ratio vector as an array compatible with the solver.
 
     """
     # Shape the output arrays to be compatible with the solver
     t_steps = np.array([T_s])
-    q = np.array([abc2complex(d_abc)])
-    return t_steps, q
+    q_cs = np.array([abc2complex(d_c_abc)])
+    return t_steps, q_cs
 
 
 # %%
@@ -222,44 +221,45 @@ class Simulation:
             self._simulation_loop(t_stop, max_step)
         except FloatingPointError:
             print(f"Invalid value encountered at {self.mdl.t0:.2f} seconds.")
-        # Call the post-processing functions
+        # Post-process the solution data
         self.mdl.post_process()
         self.ctrl.post_process()
 
     @np.errstate(invalid="raise")
     def _simulation_loop(self, t_stop, max_step):
         """Run the main simulation loop."""
-        while self.mdl.t0 <= t_stop:
+        while self.mdl.t <= t_stop:
 
             # Run the digital controller
-            T_s, d_abc_ref = self.ctrl(self.mdl)
+            T_s, ref_d_c_abc = self.ctrl(self.mdl)
 
             # Computational delay model
-            d_abc = self.mdl.delay(d_abc_ref)
+            d_c_abc = self.mdl.delay(ref_d_c_abc)
 
             # Carrier comparison
-            t_steps, q = self.mdl.pwm(T_s, d_abc)
+            t_steps, q_cs = self.mdl.pwm(T_s, d_c_abc)
 
             # Loop over the sampling period T_s
             for i, t_step in enumerate(t_steps):
 
                 if t_step > 0:
-                    # Update the switching state
-                    self.mdl.q = q[i]
+                    # Update the converter switching state
+                    self.mdl.converter.inp.q_cs = q_cs[i]
 
                     # Get initial values
-                    x0 = self.mdl.get_initial_values()
+                    state0 = self.mdl.get_initial_values()
 
                     # Integrate over t_span
-                    t_span = (self.mdl.t0, self.mdl.t0 + t_step)
-                    sol = solve_ivp(self.mdl.f, t_span, x0, max_step=max_step)
+                    t_span = (self.mdl.t, self.mdl.t + t_step)
+                    sol = solve_ivp(
+                        self.mdl.rhs, t_span, state0, max_step=max_step)
 
                     # Set the new initial values (last points of the solution)
-                    t0_new, x0_new = t_span[-1], sol.y[:, -1]
-                    self.mdl.set_initial_values(t0_new, x0_new)
+                    t0_new, state0_new = t_span[-1], sol.y[:, -1]
+                    self.mdl.set_initial_values(t0_new, state0_new)
 
                     # Save the solution
-                    sol.q = len(sol.t)*[self.mdl.q]
+                    sol.q_cs = len(sol.t)*[q_cs[i]]
                     self.mdl.save(sol)
 
     def save_mat(self, name="sim"):
@@ -277,7 +277,7 @@ class Simulation:
 
 
 # %%
-class Model:
+class Model(ABC):
     """
     Base class for continuous-time system models.
 
@@ -297,85 +297,113 @@ class Model:
     def __init__(self, pwm=None, delay=1):
         self.delay = Delay(delay)
         self.pwm = zoh if pwm is None else pwm
-        self.t0 = 0  # Initial time
-        self.q = 0j  # Switching state vector
-        self.clear()
-
-    def clear(self):
-        """
-        Clear the simulation data of the system model.
-        
-        This method is automatically run when the instance for the system model
-        is created. It can also be used in the case of repeated simulations to 
-        clear the data from the previous simulation run.
-        
-        """
-        # Initial time
-        self.t0 = 0
-        # Solution will be stored in the following lists
-        self.data = Bunch()
-        self.data.t, self.data.q = [], []
+        self.t = 0
+        self.converter = None
+        self.subsystems = [self.converter]
+        self.sol_t = []
+        self.data = SimpleNamespace()
 
     def get_initial_values(self):
-        """
-        Get the initial values.
+        """Get initial values of all subsystems."""
+        state0 = []
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "state"):
+                state0 += list(vars(subsystem.state).values())
 
-        Returns
-        -------
-        x0 : complex list
-            Initial values of the state variables.
+        return state0
 
-        """
-        raise NotImplementedError
+    def set_initial_values(self, t0, state0):
+        """Set initial values to all subsystems."""
+        self.t = t0
+        index = 0
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "state"):
+                for attr in vars(subsystem.state):
+                    value = state0[index]
+                    setattr(subsystem.state, attr, value)
+                    index += 1
 
-    def set_initial_values(self, t0, x0):
-        """
-        Set the initial values.
+    def set_states(self, state_list):
+        """Set the states in all subsystems."""
+        index = 0
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "state"):
+                for attr in vars(subsystem.state):
+                    setattr(subsystem.state, attr, state_list[index])
+                    index += 1
 
-        Parameters
-        ----------
-        t0 : float
-            Initial time (s).
-        x0 : complex ndarray
-            Initial values of the state variables.
+    def set_outputs(self, t):
+        """Compute the output variables."""
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "set_outputs"):
+                subsystem.set_outputs(t)
 
-        """
-        raise NotImplementedError
+    @abstractmethod
+    def interconnect(self, t):
+        """Interconnect the subsystems."""
 
-    def f(self, t, x):
-        """
-        Compute the complete state derivative list for the solver.
+    def rhs(self, t, state_list):
+        """Compute the complete state derivative list for the solver."""
+        # Get the states from the list and set them to the subsystems
+        self.set_states(state_list)
 
-        Parameters
-        ----------
-        t : float
-            Time (s).
-        x : complex ndarray
-            State vector.
+        # Set the outputs for the interconnections and for the rhs
+        self.set_outputs(t)
 
-        Returns
-        -------
-        complex list
-            State derivatives.
+        # Interconnections
+        self.interconnect(t)
 
-        """
-        raise NotImplementedError
+        # State derivatives
+        rhs_list = []
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "rhs"):
+                subsystem_rhs = subsystem.rhs()
+                rhs_list += subsystem_rhs
+
+        # List of state derivatives
+        return rhs_list
 
     def save(self, sol):
-        """
-        Save the solution.
+        """Save the solution."""
+        self.sol_t.extend(sol.t)
+        self.converter.sol_q_cs.extend(sol.q_cs)
 
-        Parameters
-        ----------
-        sol : Bunch
-            Solution from the solver.
+        index = 0
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "sol_states"):
+                for attr in vars(subsystem.sol_states):
+                    subsystem.sol_states.__dict__[attr].extend(sol.y[index])
+                    index += 1
 
-        """
-        self.data.t.extend(sol.t)
-        self.data.q.extend(sol.q)
-
-    def post_process(self):
+    def post_process_states(self):
         """Transform the lists to the ndarray format and post-process them."""
-        # From lists to the ndarray
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
+        self.data.t = np.asarray(self.sol_t)
+        self.converter.data.q_cs = np.asarray(self.converter.sol_q_cs)
+
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "sol_states"):
+                for key, value in vars(subsystem.sol_states).items():
+                    setattr(subsystem.data, key, np.asarray(value))
+            if hasattr(subsystem, "post_process_states"):
+                subsystem.post_process_states()
+
+    def post_process_with_inputs(self):
+        """Post-process after the inputs have been added."""
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "post_process_with_inputs"):
+                subsystem.data.t = self.data.t
+                subsystem.post_process_with_inputs()
+
+
+class Subsystem(ABC):
+    """Base class for subsystems."""
+
+    def __init__(self):
+        # States, inputs, and outputs
+        self.state = SimpleNamespace()
+        self.inp = SimpleNamespace()
+        self.out = SimpleNamespace()
+        # Store the solutions in these lists
+        self.sol_states = SimpleNamespace()
+        # For post-processed data
+        self.data = SimpleNamespace()

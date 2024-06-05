@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "motulator"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
     "numpy",
     "scipy",
@@ -44,7 +44,7 @@ doc = [
     "scipy",
     "matplotlib",
     "numpydoc",
-    "sphinx==6.2.1",
+    "sphinx==7.1.2",
     "sphinx-autoapi",
     "sphinx-copybutton",
     "sphinx-gallery",
@@ -54,7 +54,7 @@ doc = [
 
 [project.urls]
 Homepage = "https://github.com/Aalto-Electric-Drives/motulator"
-Documentation = "https://aalto-electric-drives.github.io/motulator/"
+Documentation = "https://Aalto-Electric-Drives.github.io/motulator/"
 
 [tool.yapf]
 based_on_style = "pep8"

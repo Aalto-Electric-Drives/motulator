@@ -1,39 +1,24 @@
-"""
-Observer-based V/Hz control for induction machine drives.
-
-This implements the observer-based V/Hz control method [#Tii2022]_. The 
-state-feedback control law is in the alternative form which uses an 
-intermediate stator current reference.
-
-References
-----------
-.. [#Tii2022] Tiitinen, Hinkkanen, Harnefors, "Stable and passive 
-   observer-based V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, 
-   MI, Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9948057
-
-"""
+"""Observer-based V/Hz control for induction machine drives."""
 
 # %%
+from types import SimpleNamespace
 from dataclasses import dataclass
 import numpy as np
-from motulator.control._common import Ctrl, PWM, RateLimiter
-from motulator.control.im._observers import FluxObserver
-from motulator._helpers import abc2complex, wrap
-from motulator._utils import Bunch
+from motulator.control import DriveCtrl, RateLimiter
+from motulator._helpers import wrap
 
 
 # %%
-# pylint: disable=too-many-instance-attributes
 @dataclass
-class ObserverBasedVHzCtrlPars:
+class ObserverBasedVHzCtrlCfg:
     """
-    Parameters for the control system.
+    Control system configuration.
 
     Parameters
     ----------
-    psi_s_nom : float
+    nom_psi_s : float
         Nominal stator flux linkage (Vs). 
-    i_s_max : float, optional
+    max_i_s : float, optional
         Maximum stator current (A). The default is inf.
     k_tau : float, optional
         Torque controller gain. The default is 3.
@@ -48,9 +33,8 @@ class ObserverBasedVHzCtrlPars:
         Enable slip compensation. The default is False.
 
     """
-    # par: InitVar[ModelPars | None] = None
-    psi_s_nom: float = None
-    i_s_max: float = np.inf
+    nom_psi_s: float = None
+    max_i_s: float = np.inf
     k_tau: float = 3.
     alpha_psi: float = 2*np.pi*20
     alpha_f: float = 2*np.pi*1
@@ -59,150 +43,168 @@ class ObserverBasedVHzCtrlPars:
 
 
 # %%
-class ObserverBasedVHzCtrl(Ctrl):
+class ObserverBasedVHzCtrl(DriveCtrl):
     """
     Observer-based V/Hz control for induction machines.
+
+    This implements the observer-based V/Hz control method [#Tii2022]_. The 
+    state-feedback control law is in the alternative form which uses an 
+    intermediate stator current reference.
 
     Parameters
     ----------
     par : ModelPars
         Machine model parameters.
-    ctrl_par : ObserverBasedVHzCtrlPars
-        Control system parameters.
+    cfg : ObserverBasedVHzCtrlCfg
+        Control system configuration.
     T_s : float, optional
         Sampling period (s). The default is 250e-6.
 
-    Attributes
+    References
     ----------
-    observer : SensorlessObserverExtCoord
-        Sensorless reduced-order flux observer in external coordinates.
-    rate_limiter : RateLimiter
-        Rate limiter for the speed reference.
-    pwm : PWM
-        Pulse-width modulation.
-    w_m_ref : callable
-        Speed reference (electrical rad/s) as a function of time (s).
+    .. [#Tii2022] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-
+       based V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI, 
+       Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9948057
 
     """
 
-    # pylint: disable=too-many-instance-attributes, too-many-arguments
-    def __init__(self, par, ctrl_par, T_s=250e-6):
-        super().__init__()
-        self.T_s = T_s
-        # Model parameters
-        self.R_s, self.R_R = par.R_s, par.R_R
-        self.L_sgm = par.L_sgm
-        self.n_p = par.n_p
-        # References
-        self.w_m_ref = callable
-        self.psi_s_ref = ctrl_par.psi_s_nom
-        self.i_s_max = ctrl_par.i_s_max
-        # Control parameters
-        self.slip_compensation = ctrl_par.slip_compensation
-        self.alpha_f = ctrl_par.alpha_f
-        self.alpha_r = ctrl_par.alpha_r
-        self.alpha_psi = ctrl_par.alpha_psi
-        self.k_tau = ctrl_par.k_tau
-        # Instantiate classes
+    def __init__(self, par, cfg, T_s=250e-6):
+        super().__init__(par, T_s, sensorless=True)
+        self.par, self.cfg = par, cfg
+        # Subsystems
         self.observer = FluxObserver(par, alpha_o=2*np.pi*40)
-        self.rate_limiter = RateLimiter()
-        self.pwm = PWM(six_step=False)
-        # States
-        self.theta_s, self.tau_M_ref, self.w_r_ref = 0, 0, 0
+        self.rate_limiter = RateLimiter(np.inf)
+        # Initialize the states
+        self.ref.tau_M, self.ref.w_r, self.theta_s = 0, 0, 0
 
-    # pylint: disable=too-many-locals
-    def __call__(self, mdl):
-        """
-        Run the main control loop.
+    def output(self, fbk):
+        """Output."""
+        ref = super().output(fbk)
 
-        Parameters
-        ----------
-        mdl : Drive
-            Continuous-time system model for getting the feedback signals.
+        # Unpack
+        par, cfg = self.par, self.cfg
 
-        Returns
-        -------
-        T_s : float
-            Sampling period (s).
-        d_abc : ndarray, shape (3,)
-            Duty ratios.
+        # Define the reference voltage computation
+        def reference_voltage(fbk, ref):
+            # Internal current reference for state feedback
+            ref.i_s = (ref.psi_s - fbk.psi_R)/par.L_sgm
+            # Limit the reference
+            if np.abs(ref.i_s) > cfg.max_i_s:
+                ref.i_s = cfg.max_i_s*ref.i_s/np.abs(ref.i_s)
+            # State feedback
+            ref.u_s = (
+                par.R_s*ref.i_s + 1j*fbk.w_s*ref.psi_s +
+                par.L_sgm*cfg.alpha_psi*(ref.i_s - fbk.i_s))
+            u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
+            ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
+            return ref
 
-        """
-        # Get the speed reference
-        w_m_ref = self.rate_limiter(self.T_s, self.w_m_ref(self.clock.t))
+        # Get the reference signals
+        ref.w_m = self.rate_limiter(ref.T_s, self.ref.w_m(ref.t))
+        ref.w_r = self.ref.w_r
+        ref.w_s = ref.w_m + int(cfg.slip_compensation)*ref.w_r
+        ref.psi_s, ref.tau_M = self.cfg.nom_psi_s, self.ref.tau_M
 
-        # Measure the feedback signals
-        i_s_abc = mdl.machine.meas_currents()  # Phase currents
-        u_dc = mdl.converter.meas_dc_voltage()  # DC-bus voltage
+        # Coordinate transformations
+        fbk.theta_s = self.theta_s
+        fbk.i_s = np.exp(-1j*fbk.theta_s)*fbk.i_ss
+        fbk.u_s = np.exp(-1j*fbk.theta_s)*fbk.u_ss
 
-        # Get the states
-        u_s = self.pwm.realized_voltage
-        psi_R = self.observer.psi_R
-        tau_M_ref = self.tau_M_ref
-        w_r_ref = self.w_r_ref
-        theta_s = self.theta_s
-
-        # Space vector and coordinate transformation
-        i_s = np.exp(-1j*theta_s)*abc2complex(i_s_abc)
-
-        # Torque estimate
-        tau_M = 1.5*self.n_p*np.imag(i_s*np.conj(psi_R))
-
-        # Slip frequency compensation (if enabled) for the low-pass filter.
-        # Note, could also be based on the low-pass filtered torque.
-        psi_R_sqr = np.abs(psi_R)**2
-        if self.slip_compensation and psi_R_sqr > 0:
-            w_r = self.R_R*tau_M/(1.5*self.n_p*psi_R_sqr)
-        else:
-            w_r = 0
-
-        # Slip compensation. Uses the low-pass filtered slip estimate w_r_ref.
-        # Note if slip compensation disabled w_r_ref == 0.
-        w_s_ref = w_m_ref + w_r_ref
+        # Torque and slip estimates
+        fbk.tau_M = 1.5*par.n_p*np.imag(fbk.i_s*np.conj(fbk.psi_R))
+        psi_R_sqr = np.abs(fbk.psi_R)**2
+        fbk.w_r = par.R_R*fbk.tau_M/(
+            1.5*par.n_p*psi_R_sqr) if psi_R_sqr > 0 else 0
 
         # Dynamic frequency
-        w_s = w_s_ref - self.k_tau*(tau_M - tau_M_ref)
+        fbk.w_s = ref.w_s - cfg.k_tau*(fbk.tau_M - ref.tau_M)
 
         # State feedback
-        u_s_ref = self._state_feedback(i_s, psi_R, w_s)
+        ref = reference_voltage(fbk, ref)
 
-        # Data logging
-        data = Bunch(
-            i_s=i_s,
-            psi_s=psi_R + self.L_sgm*i_s,
-            psi_s_ref=self.psi_s_ref,
-            t=self.clock.t,
-            theta_s=self.theta_s,
-            u_dc=u_dc,
-            u_s=u_s,
-            w_m=self.observer.w_m,
-            w_m_ref=w_m_ref,
-            w_s=w_s,
-            tau_M=tau_M,
-        )
-        self.save(data)
+        return ref
+
+    def update(self, fbk, ref):
+        """Update the states."""
+        super().update(fbk, ref)
+        # Low-pass filtered signals
+        self.ref.w_r += ref.T_s*self.cfg.alpha_r*(fbk.w_r - ref.w_r)
+        self.ref.tau_M += ref.T_s*self.cfg.alpha_f*(fbk.tau_M - ref.tau_M)
+        # Update the angle
+        self.theta_s = wrap(fbk.theta_s + ref.T_s*fbk.w_s)
+
+
+# %%
+class FluxObserver:
+    """
+    Sensorless reduced-order flux observer in external coordinates.
+
+    This is a sensorless reduced-order flux observer in synchronous coordinates
+    for an induction machine. The observer gain decouples the electrical and
+    mechanical dynamics and allows placing the poles of the linearized 
+    estimation error dynamics. This implementation operates in external 
+    coordinates (typically synchronous coordinates defined by reference signals 
+    of a control system).
+
+    Parameters
+    ----------
+    par : ModelPars
+        Machine model parameters.
+    alpha_o : float
+        Speed-estimation bandwidth (rad/s).
+    b : callable, optional 
+        Coefficient (rad/s) of the characteristic polynomial as a function of 
+        the rotor angular speed estimate. The default is 
+        ``lambda w_m: R_R/L_M + .4*abs(w_m)``.
+
+    Notes
+    -----
+    The characteristic polynomial of the observer in synchronous coordinates is 
+    ``s**2 + b*s + w_s**2``.  
+
+    """
+
+    def __init__(self, par, alpha_o, b=None):
+        self.par = par
+        # Design parameters
+        self.alpha_o = alpha_o
+        zeta_inf = .2  # Damping ratio at high speeds
+        alpha = par.R_R/par.L_M
+        self.b = lambda w_m: alpha + 2*zeta_inf*np.abs(w_m) if b is None else b
+        # Initialize states
+        self.est = SimpleNamespace(psi_R=0, w_m=0)
+        # Private work variable
+        self._old_i_s = 0
+
+    def output(self, fbk):
+        """Output."""
+        fbk.psi_R, fbk.w_m = self.est.psi_R, self.est.w_m
+        return fbk
+
+    def update(self, T_s, fbk):
+        """Update the states."""
+        # Unpack
+        par = self.par
+        par.alpha = par.R_R/par.L_M
+
+        # Observer gain with c = w_s**2 (without the orthogonal projection
+        # which is embedded into the error signal and the state update)
+        g = self.b(fbk.w_m)/(par.alpha - 1j*fbk.w_m)
+
+        # Time derivative of the stator current
+        d_i_s = (fbk.i_s - self._old_i_s)/T_s
+
+        # Induced voltage from the rotor quantities
+        e_r = par.R_R*fbk.i_s - (par.alpha - 1j*fbk.w_m)*fbk.psi_R
+
+        # Induced voltage from stator quantities
+        e_s = fbk.u_s - par.R_s*fbk.i_s - par.L_sgm*(
+            d_i_s + 1j*fbk.w_s*fbk.i_s)
+
+        # Error signal (rad/s)
+        err = (e_s - e_r)/fbk.psi_R if np.abs(fbk.psi_R) > 0 else 0
 
         # Update the states
-        self.observer.update(self.T_s, u_s, i_s, w_s)
-        self.w_r_ref += self.T_s*self.alpha_r*(w_r - self.w_r_ref)
-        self.tau_M_ref += self.T_s*self.alpha_f*(tau_M - self.tau_M_ref)
-        self.theta_s += self.T_s*w_s
-        self.theta_s = wrap(self.theta_s)
-        self.clock.update(self.T_s)
-
-        # Calculate the duty ratios and update the voltage estimate state
-        d_abc = self.pwm(self.T_s, u_s_ref, u_dc, theta_s, w_s)
-
-        return self.T_s, d_abc
-
-    def _state_feedback(self, i_s, psi_R, w_s):
-        # Internal current reference for state feedback
-        i_s_ref = (self.psi_s_ref - psi_R)/self.L_sgm
-        # Limit the reference
-        if np.abs(i_s_ref) > self.i_s_max:
-            i_s_ref = self.i_s_max*i_s_ref/np.abs(i_s_ref)
-        # State feedback
-        u_s_ref = (
-            self.R_s*i_s_ref + 1j*w_s*self.psi_s_ref +
-            self.L_sgm*self.alpha_psi*(i_s_ref - i_s))
-        return u_s_ref
+        self.est.psi_R += T_s*(e_s - (1j*fbk.w_s + g*err.real)*fbk.psi_R)
+        self.est.w_m += T_s*self.alpha_o*err.imag
+        self._old_i_s = fbk.i_s
