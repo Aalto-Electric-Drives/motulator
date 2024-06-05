@@ -407,12 +407,12 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Mechanics.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">Mechanics.post_process_with_inputs()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.set_outputs"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.set_outputs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.rhs"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.rhs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.meas_load_speed()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.meas_load_position"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.meas_load_position()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.post_process_states"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.post_process_states()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.set_outputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.rhs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.meas_load_speed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.meas_load_position()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.post_process_states"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.post_process_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter"><code class="docutils literal notranslate"><span class="pre">LCFilter</span></code></a><ul class="nav section-nav flex-column">
@@ -497,7 +497,7 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.Mechanics" title="motulator.model.Mechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mechanics</span></code></a></p></td>
 <td><p>Mechanics subsystem.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.MechanicsTwoMass" title="motulator.model.MechanicsTwoMass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MechanicsTwoMass</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.TwoMassMechanics" title="motulator.model.TwoMassMechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoMassMechanics</span></code></a></p></td>
 <td><p>Two-mass mechanics subsystem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.LCFilter" title="motulator.model.LCFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LCFilter</span></code></a></p></td>
@@ -513,10 +513,10 @@ document.write(`
 <td><p>Synchronous machine model.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.model.Drive" title="motulator.model.Drive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drive</span></code></a></p></td>
-<td><p>Continuous-time model for an induction machine drive.</p></td>
+<td><p>Continuous-time model for machine drives.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.model.DriveWithLCFilter" title="motulator.model.DriveWithLCFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveWithLCFilter</span></code></a></p></td>
-<td><p>Induction machine drive with an output LC filter.</p></td>
+<td><p>Machine drive with an output LC filter.</p></td>
 </tr>
 </tbody>
 </table>
@@ -863,8 +863,8 @@ zero, <code class="docutils literal notranslate"><span class="pre">lambda</span>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.model.MechanicsTwoMass">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">MechanicsTwoMass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#MechanicsTwoMass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.MechanicsTwoMass" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.model.TwoMassMechanics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">TwoMassMechanics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#TwoMassMechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.TwoMassMechanics" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.model.Mechanics" title="motulator.model.Mechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mechanics</span></code></a></p>
 <p>Two-mass mechanics subsystem.</p>
 <p>This models an equation of motion for two-mass mechanics.</p>
@@ -884,32 +884,32 @@ zero, <code class="docutils literal notranslate"><span class="pre">lambda</span>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.model.MechanicsTwoMass.set_outputs">
-<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#MechanicsTwoMass.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.MechanicsTwoMass.set_outputs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.model.TwoMassMechanics.set_outputs">
+<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#TwoMassMechanics.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.TwoMassMechanics.set_outputs" title="Permalink to this definition">#</a></dt>
 <dd><p>Set output variables.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.model.MechanicsTwoMass.rhs">
-<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#MechanicsTwoMass.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.MechanicsTwoMass.rhs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.model.TwoMassMechanics.rhs">
+<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#TwoMassMechanics.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.TwoMassMechanics.rhs" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute the state derivatives.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.model.MechanicsTwoMass.meas_load_speed">
-<span class="sig-name descname"><span class="pre">meas_load_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#MechanicsTwoMass.meas_load_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.MechanicsTwoMass.meas_load_speed" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.model.TwoMassMechanics.meas_load_speed">
+<span class="sig-name descname"><span class="pre">meas_load_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#TwoMassMechanics.meas_load_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.TwoMassMechanics.meas_load_speed" title="Permalink to this definition">#</a></dt>
 <dd><p>Measure the load speed.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.model.MechanicsTwoMass.meas_load_position">
-<span class="sig-name descname"><span class="pre">meas_load_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#MechanicsTwoMass.meas_load_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.MechanicsTwoMass.meas_load_position" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.model.TwoMassMechanics.meas_load_position">
+<span class="sig-name descname"><span class="pre">meas_load_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#TwoMassMechanics.meas_load_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.TwoMassMechanics.meas_load_position" title="Permalink to this definition">#</a></dt>
 <dd><p>Measure the load angle.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.model.MechanicsTwoMass.post_process_states">
-<span class="sig-name descname"><span class="pre">post_process_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#MechanicsTwoMass.post_process_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.MechanicsTwoMass.post_process_states" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.model.TwoMassMechanics.post_process_states">
+<span class="sig-name descname"><span class="pre">post_process_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_mechanics.html#TwoMassMechanics.post_process_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.TwoMassMechanics.post_process_states" title="Permalink to this definition">#</a></dt>
 <dd><p>Post-process the mechanics data.</p>
 </dd></dl>
 
@@ -1135,15 +1135,14 @@ linkage and the electrical angle of the rotor are the state variables.</p>
 <dt class="sig sig-object py" id="motulator.model.Drive">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">Drive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mechanics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_drive.html#Drive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.Drive" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.model._simulation.Model</span></code></p>
-<p>Continuous-time model for an induction machine drive.</p>
-<p>This interconnects the subsystems of an induction machine drive and
-provides an interface to the solver.</p>
+<p>Continuous-time model for machine drives.</p>
+<p>This interconnects the subsystems of a machine drive and provides an interface to the solver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.model.Inverter" title="motulator.model.Inverter"><em>Inverter</em></a>) – Inverter model.</p></li>
-<li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.model.InductionMachine" title="motulator.model.InductionMachine"><em>InductionMachine</em></a>) – Induction machine model.</p></li>
-<li><p><strong>mechanics</strong> (<a class="reference internal" href="#motulator.model.Mechanics" title="motulator.model.Mechanics"><em>Mechanics</em></a>) – Mechanics model.</p></li>
+<li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.model.Inverter" title="motulator.model.Inverter"><em>Inverter</em></a><em> | </em><a class="reference internal" href="#motulator.model.FrequencyConverter" title="motulator.model.FrequencyConverter"><em>FrequencyConverter</em></a>) – Converter model.</p></li>
+<li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.model.InductionMachine" title="motulator.model.InductionMachine"><em>InductionMachine</em></a><em> | </em><a class="reference internal" href="#motulator.model.SynchronousMachine" title="motulator.model.SynchronousMachine"><em>SynchronousMachine</em></a>) – Machine model.</p></li>
+<li><p><strong>mechanics</strong> (<a class="reference internal" href="#motulator.model.Mechanics" title="motulator.model.Mechanics"><em>Mechanics</em></a><em> | </em><a class="reference internal" href="#motulator.model.TwoMassMechanics" title="motulator.model.TwoMassMechanics"><em>TwoMassMechanics</em></a>) – Mechanics model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1165,13 +1164,13 @@ provides an interface to the solver.</p>
 <dt class="sig sig-object py" id="motulator.model.DriveWithLCFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.model.</span></span><span class="sig-name descname"><span class="pre">DriveWithLCFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mechanics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lc_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/motulator/model/_drive/_drive.html#DriveWithLCFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.model.DriveWithLCFilter" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.model._simulation.Model</span></code></p>
-<p>Induction machine drive with an output LC filter.</p>
+<p>Machine drive with an output LC filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.model.InductionMachine" title="motulator.model.InductionMachine"><em>InductionMachine</em></a><em> | </em><em>InductionMachineSaturated</em>) – Induction machine model.</p></li>
-<li><p><strong>mechanics</strong> (<a class="reference internal" href="#motulator.model.Mechanics" title="motulator.model.Mechanics"><em>Mechanics</em></a>) – Mechanics model.</p></li>
-<li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.model.Inverter" title="motulator.model.Inverter"><em>Inverter</em></a>) – Inverter model.</p></li>
+<li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.model.Inverter" title="motulator.model.Inverter"><em>Inverter</em></a><em> | </em><a class="reference internal" href="#motulator.model.FrequencyConverter" title="motulator.model.FrequencyConverter"><em>FrequencyConverter</em></a>) – Converter model.</p></li>
+<li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.model.InductionMachine" title="motulator.model.InductionMachine"><em>InductionMachine</em></a><em> | </em><a class="reference internal" href="#motulator.model.SynchronousMachine" title="motulator.model.SynchronousMachine"><em>SynchronousMachine</em></a>) – Machine model.</p></li>
+<li><p><strong>mechanics</strong> (<a class="reference internal" href="#motulator.model.Mechanics" title="motulator.model.Mechanics"><em>Mechanics</em></a><em> | </em><a class="reference internal" href="#motulator.model.TwoMassMechanics" title="motulator.model.TwoMassMechanics"><em>TwoMassMechanics</em></a>) – Mechanics model.</p></li>
 <li><p><strong>lc_filter</strong> (<a class="reference internal" href="#motulator.model.LCFilter" title="motulator.model.LCFilter"><em>LCFilter</em></a>) – LC-filter model.</p></li>
 </ul>
 </dd>
@@ -1341,12 +1340,12 @@ repository, licensed under the Apache License, Version 2.0.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.Mechanics.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">Mechanics.post_process_with_inputs()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.set_outputs"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.set_outputs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.rhs"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.rhs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.meas_load_speed()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.meas_load_position"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.meas_load_position()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.MechanicsTwoMass.post_process_states"><code class="docutils literal notranslate"><span class="pre">MechanicsTwoMass.post_process_states()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.set_outputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.rhs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.meas_load_speed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.meas_load_position()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.TwoMassMechanics.post_process_states"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.post_process_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.model.LCFilter"><code class="docutils literal notranslate"><span class="pre">LCFilter</span></code></a><ul class="nav section-nav flex-column">

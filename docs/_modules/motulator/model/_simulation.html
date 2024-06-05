@@ -622,7 +622,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">zoh</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pwm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Contains the list of subsystems</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sol_t</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
 

@@ -27,7 +27,7 @@ base = BaseValues.from_nominal(nom, n_p=3)
 
 machine = model.SynchronousMachine(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-mechanics = model.MechanicsTwoMass(
+mechanics = model.TwoMassMechanics(
     J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)

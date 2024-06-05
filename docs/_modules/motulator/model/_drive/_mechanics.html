@@ -385,7 +385,7 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># The quantization noise of an incremental encoder could be modeled.</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_M</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">real</span></div>
 
 <div class="viewcode-block" id="Mechanics.meas_position"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.meas_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -397,7 +397,7 @@ document.write(`
 <span class="sd">            Rotor angle (mechanical rad).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span></div>
 
 <div class="viewcode-block" id="Mechanics.post_process_states"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Mechanics.post_process_states">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process the mechanics data.&quot;&quot;&quot;</span>
@@ -412,7 +412,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="MechanicsTwoMass"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass">[docs]</a><span class="k">class</span> <span class="nc">MechanicsTwoMass</span><span class="p">(</span><span class="n">Mechanics</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoMassMechanics"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.TwoMassMechanics">[docs]</a><span class="k">class</span> <span class="nc">TwoMassMechanics</span><span class="p">(</span><span class="n">Mechanics</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-mass mechanics subsystem.</span>
 
@@ -452,14 +452,14 @@ document.write(`
             <span class="n">w_M</span><span class="o">=</span><span class="p">[],</span> <span class="n">theta_M</span><span class="o">=</span><span class="p">[],</span> <span class="n">w_L</span><span class="o">=</span><span class="p">[],</span> <span class="n">theta_ML</span><span class="o">=</span><span class="p">[])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
 
-<div class="viewcode-block" id="MechanicsTwoMass.set_outputs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.set_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoMassMechanics.set_outputs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.TwoMassMechanics.set_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="n">state</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_L</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">w_L</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">theta_ML</span>
         <span class="n">out</span><span class="o">.</span><span class="n">tau_S</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_S</span><span class="o">*</span><span class="n">out</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_S</span><span class="o">*</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_M</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">w_L</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MechanicsTwoMass.rhs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.rhs">[docs]</a>    <span class="k">def</span> <span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoMassMechanics.rhs"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.TwoMassMechanics.rhs">[docs]</a>    <span class="k">def</span> <span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the state derivatives.&quot;&quot;&quot;</span>
         <span class="n">state</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
         <span class="n">d_w_M</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_S</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">J_M</span>
@@ -473,16 +473,16 @@ document.write(`
 
         <span class="k">return</span> <span class="p">[</span><span class="n">d_w_M</span><span class="p">,</span> <span class="n">d_theta_M</span><span class="p">,</span> <span class="n">d_w_L</span><span class="p">,</span> <span class="n">d_theta_ML</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="MechanicsTwoMass.meas_load_speed"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.meas_load_speed">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoMassMechanics.meas_load_speed"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.TwoMassMechanics.meas_load_speed">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the load speed.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_L</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_L</span><span class="o">.</span><span class="n">real</span></div>
 
-<div class="viewcode-block" id="MechanicsTwoMass.meas_load_position"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.meas_load_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoMassMechanics.meas_load_position"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.TwoMassMechanics.meas_load_position">[docs]</a>    <span class="k">def</span> <span class="nf">meas_load_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the load angle.&quot;&quot;&quot;</span>
         <span class="n">theta_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_ML</span>
-        <span class="k">return</span> <span class="n">theta_L</span></div>
+        <span class="k">return</span> <span class="n">theta_L</span><span class="o">.</span><span class="n">real</span></div>
 
-<div class="viewcode-block" id="MechanicsTwoMass.post_process_states"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.MechanicsTwoMass.post_process_states">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoMassMechanics.post_process_states"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.TwoMassMechanics.post_process_states">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process the mechanics data.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process_states</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_L</span><span class="o">.</span><span class="n">real</span>

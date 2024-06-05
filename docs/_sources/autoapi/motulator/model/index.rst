@@ -38,7 +38,7 @@ Classes
    motulator.model.Delay
    motulator.model.Simulation
    motulator.model.Mechanics
-   motulator.model.MechanicsTwoMass
+   motulator.model.TwoMassMechanics
    motulator.model.LCFilter
    motulator.model.InductionMachine
    motulator.model.InductionMachineInvGamma
@@ -814,7 +814,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: MechanicsTwoMass(J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None)
+.. py:class:: TwoMassMechanics(J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None)
 
    Bases: :py:obj:`Mechanics`
 
@@ -1623,17 +1623,16 @@ Package Contents
 
 
    
-   Continuous-time model for an induction machine drive.
+   Continuous-time model for machine drives.
 
-   This interconnects the subsystems of an induction machine drive and
-   provides an interface to the solver.
+   This interconnects the subsystems of a machine drive and provides an interface to the solver.
 
-   :param converter: Inverter model.
-   :type converter: Inverter
-   :param machine: Induction machine model.
-   :type machine: InductionMachine
+   :param converter: Converter model.
+   :type converter: Inverter | FrequencyConverter
+   :param machine: Machine model.
+   :type machine: InductionMachine | SynchronousMachine
    :param mechanics: Mechanics model.
-   :type mechanics: Mechanics
+   :type mechanics: Mechanics | TwoMassMechanics
 
 
 
@@ -1706,14 +1705,14 @@ Package Contents
 
 
    
-   Induction machine drive with an output LC filter.
+   Machine drive with an output LC filter.
 
-   :param machine: Induction machine model.
-   :type machine: InductionMachine | InductionMachineSaturated
+   :param converter: Converter model.
+   :type converter: Inverter | FrequencyConverter
+   :param machine: Machine model.
+   :type machine: InductionMachine | SynchronousMachine
    :param mechanics: Mechanics model.
-   :type mechanics: Mechanics
-   :param converter: Inverter model.
-   :type converter: Inverter
+   :type mechanics: Mechanics | TwoMassMechanics
    :param lc_filter: LC-filter model.
    :type lc_filter: LCFilter
 

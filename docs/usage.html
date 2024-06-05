@@ -381,11 +381,11 @@ from<span class="w"> </span>motulator<span class="w"> </span>import<span class="
 from<span class="w"> </span>motulator<span class="w"> </span>import<span class="w"> </span>plot<span class="w">  </span><span class="c1"># Example plotting functions</span>
 
 <span class="c1"># Continuous-time model for the drive system</span>
-<span class="nv">machine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.im.InductionMachineInvGamma<span class="o">(</span>
+<span class="nv">converter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Inverter<span class="o">(</span><span class="nv">u_dc</span><span class="o">=</span><span class="m">540</span><span class="o">)</span>
+<span class="nv">machine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.InductionMachineInvGamma<span class="o">(</span>
 <span class="w">   </span><span class="nv">R_s</span><span class="o">=</span><span class="m">3</span>.7,<span class="w"> </span><span class="nv">R_R</span><span class="o">=</span><span class="m">2</span>.1,<span class="w"> </span><span class="nv">L_sgm</span><span class="o">=</span>.021,<span class="w"> </span><span class="nv">L_M</span><span class="o">=</span>.224,<span class="w"> </span><span class="nv">n_p</span><span class="o">=</span><span class="m">2</span><span class="o">)</span>
 <span class="nv">mechanics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Mechanics<span class="o">(</span><span class="nv">J</span><span class="o">=</span>.015<span class="o">)</span>
-<span class="nv">converter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Inverter<span class="o">(</span><span class="nv">u_dc</span><span class="o">=</span><span class="m">540</span><span class="o">)</span>
-<span class="nv">mdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.im.Drive<span class="o">(</span>machine,<span class="w"> </span>mechanics,<span class="w"> </span>converter<span class="o">)</span>
+<span class="nv">mdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Drive<span class="o">(</span>converter,<span class="w"> </span>machine,<span class="w"> </span>mechanics<span class="o">)</span>
 
 <span class="c1"># Discrete-time controller</span>
 <span class="nv">par</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>control.im.ModelPars<span class="o">(</span>

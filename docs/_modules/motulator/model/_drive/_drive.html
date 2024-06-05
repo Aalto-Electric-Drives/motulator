@@ -333,18 +333,17 @@ document.write(`
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="Drive"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.Drive">[docs]</a><span class="k">class</span> <span class="nc">Drive</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Continuous-time model for an induction machine drive.</span>
+<span class="sd">    Continuous-time model for machine drives.</span>
 
-<span class="sd">    This interconnects the subsystems of an induction machine drive and </span>
-<span class="sd">    provides an interface to the solver. </span>
+<span class="sd">    This interconnects the subsystems of a machine drive and provides an interface to the solver. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    converter : Inverter</span>
-<span class="sd">        Inverter model.</span>
-<span class="sd">    machine : InductionMachine </span>
-<span class="sd">        Induction machine model.</span>
-<span class="sd">    mechanics : Mechanics</span>
+<span class="sd">    converter : Inverter | FrequencyConverter</span>
+<span class="sd">        Converter model.</span>
+<span class="sd">    machine : InductionMachine | SynchronousMachine</span>
+<span class="sd">        Machine model.</span>
+<span class="sd">    mechanics : Mechanics | TwoMassMechanics</span>
 <span class="sd">        Mechanics model.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -379,16 +378,16 @@ document.write(`
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="DriveWithLCFilter"><a class="viewcode-back" href="../../../../autoapi/motulator/model/index.html#motulator.model.DriveWithLCFilter">[docs]</a><span class="k">class</span> <span class="nc">DriveWithLCFilter</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Induction machine drive with an output LC filter.</span>
+<span class="sd">    Machine drive with an output LC filter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    machine : InductionMachine | InductionMachineSaturated</span>
-<span class="sd">        Induction machine model.</span>
-<span class="sd">    mechanics : Mechanics</span>
+<span class="sd">    converter : Inverter | FrequencyConverter</span>
+<span class="sd">        Converter model.</span>
+<span class="sd">    machine : InductionMachine | SynchronousMachine</span>
+<span class="sd">        Machine model.</span>
+<span class="sd">    mechanics : Mechanics | TwoMassMechanics</span>
 <span class="sd">        Mechanics model.</span>
-<span class="sd">    converter : Inverter</span>
-<span class="sd">        Inverter model.</span>
 <span class="sd">    lc_filter : LCFilter</span>
 <span class="sd">        LC-filter model.</span>
 

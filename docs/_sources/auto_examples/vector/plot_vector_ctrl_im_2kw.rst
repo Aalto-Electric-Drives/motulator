@@ -122,7 +122,7 @@ Create the system model.
     #machine = model.im.InductionMachine(
     #    n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)
     mechanics = model.Mechanics(J=.015)
-    #mechanics = model.MechanicsTwoMass(
+    #mechanics = model.TwoMassMechanics(
     #    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
@@ -243,7 +243,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.199 seconds)
+   **Total running time of the script:** (0 minutes 4.089 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw.py:

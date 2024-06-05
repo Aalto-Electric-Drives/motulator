@@ -416,7 +416,7 @@ document.write(`
 <p><span class="caption-text">Instantaneous switching states are defined by the carrier comparison. In this example, the switching states are <span class="math notranslate nohighlight">\(q_\mathrm{a}=1\)</span>, <span class="math notranslate nohighlight">\(q_\mathrm{b}=0\)</span>, and <span class="math notranslate nohighlight">\(q_\mathrm{c}=0\)</span>.</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class <a class="reference internal" href="../autoapi/motulator/model/index.html#motulator.model.CarrierComparison" title="motulator.model.CarrierComparison"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.CarrierComparison</span></code></a>, where the switching instants are explicitly computed in the begininning of each sampling period (instead of searching for zero crossings), allowing faster simulations.</p>
+<p>The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class <a class="reference internal" href="../autoapi/motulator/model/index.html#motulator.model.CarrierComparison" title="motulator.model.CarrierComparison"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.model.CarrierComparison</span></code></a>, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations.</p>
 <figure class="align-center" id="id6">
 <a class="reference external image-reference" href="."><img alt="Carrier comparison" src="../_images/carrier_comparison.svg" width="100%" /></a>
 <figcaption>
@@ -425,24 +425,23 @@ document.write(`
 </figure>
 <p>The zero-sequence voltage does not affect the phase currents if the neutral of the load is not connected. Therefore, the reference potential of the phase voltages can be freely chosen when computing the space vector of the converter output voltage. The converter voltage vector in stationary coordinates is</p>
 <div class="math notranslate nohighlight" id="equation-carrier-comparison">
-<span class="eqno">(1)<a class="headerlink" href="#equation-carrier-comparison" title="Permalink to this equation">#</a></span>\[\begin{split}\boldsymbol{u} &amp;= \frac{2}{3}\left(u_\mathrm{an} + u_\mathrm{bn}\mathrm{e}^{\mathrm{j}2\pi/3} + u_\mathrm{cn}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
+<span class="eqno">(1)<a class="headerlink" href="#equation-carrier-comparison" title="Permalink to this equation">#</a></span>\[\begin{split}\boldsymbol{u}_\mathrm{c}^\mathrm{s} &amp;= \frac{2}{3}\left(u_\mathrm{an} + u_\mathrm{bn}\mathrm{e}^{\mathrm{j}2\pi/3} + u_\mathrm{cn}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
      &amp;= \frac{2}{3}\left(u_\mathrm{aN} + u_\mathrm{bN}\mathrm{e}^{\mathrm{j} 2\pi/3} + u_\mathrm{cN}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
-&amp;= \underbrace{\frac{2}{3}\left(q_\mathrm{a} + q_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + q_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{q}}u_\mathrm{dc}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{q}\)</span> is the switching state space vector.</p>
+&amp;= \underbrace{\frac{2}{3}\left(q_\mathrm{a} + q_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + q_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{q}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{q}_\mathrm{c}^\mathrm{s}\)</span> is the switching-state space vector.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see <a class="reference internal" href="../autoapi/motulator/control/index.html#motulator.control.PWM" title="motulator.control.PWM"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.control.PWM</span></code></a>) and discontinuous PWM methods <a class="footnote-reference brackets" href="#hol1994" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#hav1999" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <p>The sampling period <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> is returned by the control method, and it does not need to be constant.</p>
 <p>If the zero sequence is of interest, it could be easily added to the inverter model.</p>
-<p>Since the converter models are invariably in stationary coordinates, the space vectors are not marked with the superscript s here to simplify the notation.</p>
 </div>
 </section>
 <section id="switching-cycle-averaging">
 <h2>Switching-Cycle Averaging<a class="headerlink" href="#switching-cycle-averaging" title="Permalink to this heading">#</a></h2>
 <p>If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with zero-order hold (ZOH) of the duty ratios. In this case, the output voltage vector is</p>
 <div class="math notranslate nohighlight" id="equation-switching-cycle-averaging">
-<span class="eqno">(2)<a class="headerlink" href="#equation-switching-cycle-averaging" title="Permalink to this equation">#</a></span>\[\boldsymbol{u} = \underbrace{\frac{2}{3}\left(d_\mathrm{a} + d_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + d_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{d}}u_\mathrm{dc}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{d}\)</span> is the duty ratio space vector. This ZOH is the default option in most of <a class="reference internal" href="../auto_examples/index.html"><span class="doc">Examples</span></a>.</p>
+<span class="eqno">(2)<a class="headerlink" href="#equation-switching-cycle-averaging" title="Permalink to this equation">#</a></span>\[\boldsymbol{u}_\mathrm{c}^\mathrm{s} = \underbrace{\frac{2}{3}\left(d_\mathrm{a} + d_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + d_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{d}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{d}_\mathrm{c}^\mathrm{s}\)</span> is the duty ratio space vector. This ZOH is the default option in most of <a class="reference internal" href="../auto_examples/index.html"><span class="doc">Examples</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hol1994" role="doc-footnote">
