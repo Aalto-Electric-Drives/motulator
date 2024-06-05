@@ -15,7 +15,7 @@ from motulator._helpers import abc2complex
 # %%
 class Inverter(Subsystem):
     """
-    Three-phase inverter with constant DC-bus voltage.
+    Lossless three-phase inverter with constant DC-bus voltage.
 
     Parameters
     ----------
@@ -31,21 +31,21 @@ class Inverter(Subsystem):
 
     @property
     def u_dc(self):
-        """DC-bus voltage."""
+        """DC-bus voltage (V)."""
         return self.par.u_dc
 
     @property
     def u_cs(self):
-        """AC-side voltage of a lossless inverter."""
+        """AC-side voltage (V)."""
         return self.inp.q_cs*self.u_dc
 
     @property
     def i_dc(self):
-        """DC-side current of a lossless inverter."""
+        """DC-side current (A)."""
         return 1.5*np.real(self.inp.q_cs*np.conj(self.inp.i_cs))
 
     def set_outputs(self, _):
-        """Output variables."""
+        """Set output variables."""
         self.out.u_cs = self.u_cs
 
     def meas_dc_voltage(self):
@@ -53,7 +53,7 @@ class Inverter(Subsystem):
         return self.u_dc
 
     def post_process_states(self):
-        """Post-process the converter data."""
+        """Post-process data."""
         self.data.u_cs = self.data.q_cs*self.par.u_dc
 
 
@@ -115,7 +115,7 @@ class FrequencyConverter(Inverter):
         return u_g_abc
 
     def set_outputs(self, t):
-        """Output variables."""
+        """Set output variables."""
         super().set_outputs(t)
         self.out.u_dc, self.out.i_L = self.state.u_dc.real, self.state.i_L.real
         self.out.i_dc = self.i_dc.real
@@ -123,7 +123,7 @@ class FrequencyConverter(Inverter):
         self.out.u_g_abc = self.grid_voltages(t)
 
     def rhs(self):
-        """State derivatives."""
+        """Compute state derivatives."""
         state, out, par = self.state, self.out, self.par
         # Output voltage of the diode bridge
         u_di = np.amax(out.u_g_abc, axis=0) - np.amin(out.u_g_abc, axis=0)
@@ -137,13 +137,13 @@ class FrequencyConverter(Inverter):
         return [d_u_dc, d_i_L]
 
     def post_process_states(self):
-        """Post-process the converter data."""
+        """Post-process data."""
         data = self.data
         data.u_dc, data.i_L = data.u_dc.real, data.i_L.real
         data.u_cs = data.q_cs*data.u_dc
 
     def post_process_with_inputs(self):
-        """Post-process the converter inputs."""
+        """Post-process data with inputs."""
         data = self.data
         data.i_dc = 1.5*np.real(data.q_cs*np.conj(data.i_cs))
         data.u_g_abc = self.grid_voltages(data.t)

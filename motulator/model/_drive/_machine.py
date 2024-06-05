@@ -30,7 +30,7 @@ class InductionMachine(Subsystem):
         Rotor resistance (Ω).
     L_ell : float
         Leakage inductance (H).
-    L_s : float
+    L_s : float | callable
         Stator inductance (H) or a callable L_s = L_s(abs(psi_ss)).
     n_p : int
         Number of pole pairs.
@@ -60,24 +60,24 @@ class InductionMachine(Subsystem):
 
     @property
     def L_s(self):
-        """Stator inductance."""
+        """Stator inductance (H)."""
         if callable(self._L_s):
             return self._L_s(np.abs(self.state.psi_ss))
         return self._L_s
 
     @property
     def i_rs(self):
-        """Rotor current."""
+        """Rotor current (A)."""
         return (self.state.psi_rs - self.state.psi_ss)/self.par.L_ell
 
     @property
     def i_ss(self):
-        """Stator current."""
+        """Stator current (A)."""
         return self.state.psi_ss/self.L_s - self.i_rs
 
     @property
     def tau_M(self):
-        """Electromagnetic torque."""
+        """Electromagnetic torque (Nm)."""
         return 1.5*self.par.n_p*np.imag(self.i_ss*np.conj(self.state.psi_ss))
 
     def set_outputs(self, _):
@@ -86,7 +86,7 @@ class InductionMachine(Subsystem):
         out.i_ss, out.i_rs, out.tau_M = self.i_ss, self.i_rs, self.tau_M
 
     def rhs(self):
-        """State derivatives."""
+        """Compute state derivatives."""
         state, inp, out, par = self.state, self.inp, self.out, self.par
         d_psi_ss = inp.u_ss - par.R_s*out.i_ss
         d_psi_rs = (-par.R_r*out.i_rs + 1j*par.n_p*inp.w_M*state.psi_rs)
@@ -189,7 +189,7 @@ class SynchronousMachine(Subsystem):
 
     @property
     def i_s(self):
-        """Stator current."""
+        """Stator current (A)."""
         if callable(self._i_s):
             return self._i_s(self.state.psi_s)
         return ((self.state.psi_s.real - self.par.psi_f)/self.par.L_d +
@@ -197,7 +197,7 @@ class SynchronousMachine(Subsystem):
 
     @property
     def tau_M(self):
-        """Electromagnetic torque."""
+        """Electromagnetic torque (Nm)."""
         return 1.5*self.par.n_p*np.imag(self.i_s*np.conj(self.state.psi_s))
 
     def set_outputs(self, _):
@@ -207,7 +207,7 @@ class SynchronousMachine(Subsystem):
         out.i_ss = self.i_s*np.exp(1j*self.state.theta_m)
 
     def rhs(self):
-        """State derivatives."""
+        """Compute state derivatives."""
         state, inp, out, par = self.state, self.inp, self.out, self.par
         inp.u_s = inp.u_ss*np.exp(-1j*state.theta_m)
         d_psi_s = inp.u_s - par.R_s*out.i_s - 1j*par.n_p*inp.w_M*state.psi_s

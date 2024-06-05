@@ -41,7 +41,7 @@ class Mechanics(Subsystem):
         out.tau_L = self.tau_L_w(state.w_M) + self.tau_L_t(t)
 
     def rhs(self):
-        """Compute the state derivatives."""
+        """Compute state derivatives."""
         state, inp, out = self.state, self.inp, self.out
         d_w_M = (inp.tau_M - out.tau_L)/self.J
         d_theta_M = state.w_M
@@ -77,13 +77,13 @@ class Mechanics(Subsystem):
         return self.state.theta_M.real
 
     def post_process_states(self):
-        """Post-process the mechanics data."""
+        """Post-process data."""
         data = self.data
         data.w_M = data.w_M.real
         data.theta_M = wrap(data.theta_M.real)
 
     def post_process_with_inputs(self):
-        """Post-process the mechanics data."""
+        """Post-process data with inputs."""
         data = self.data
         data.tau_L = (self.tau_L_t(data.t) + self.tau_L_w(data.w_M))
 
@@ -137,7 +137,7 @@ class TwoMassMechanics(Mechanics):
         out.tau_S = self.K_S*out.theta_ML + self.C_S*(out.w_M - out.w_L)
 
     def rhs(self):
-        """Compute the state derivatives."""
+        """Compute state derivatives."""
         state, inp, out = self.state, self.inp, self.out
         d_w_M = (inp.tau_M - out.tau_S)/self.J_M
         d_theta_M = state.w_M
@@ -160,7 +160,7 @@ class TwoMassMechanics(Mechanics):
         return theta_L.real
 
     def post_process_states(self):
-        """Post-process the mechanics data."""
+        """Post-process data."""
         super().post_process_states()
         self.data.w_L = self.data.w_L.real
         self.data.theta_ML = self.data.theta_ML.real

@@ -37,7 +37,7 @@ class LCFilter(Subsystem):
         out.i_cs, out.u_fs = state.i_cs, state.u_fs
 
     def rhs(self):
-        """Compute the state derivative."""
+        """Compute state derivatives."""
         state, inp, par = self.state, self.inp, self.par
         d_i_cs = (inp.u_cs - state.u_fs - par.R*state.i_cs)/par.L
         d_u_fs = (state.i_cs - inp.i_fs)/par.C

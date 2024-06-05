@@ -12,7 +12,8 @@ class Drive(Model):
     """
     Continuous-time model for machine drives.
 
-    This interconnects the subsystems of a machine drive and provides an interface to the solver. 
+    This interconnects the subsystems of a machine drive and provides an 
+    interface to the solver. 
 
     Parameters
     ----------

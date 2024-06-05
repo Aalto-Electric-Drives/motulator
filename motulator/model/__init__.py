@@ -2,7 +2,7 @@
 
 from motulator.model._converter import FrequencyConverter, Inverter
 from motulator.model._simulation import (
-    CarrierComparison, Delay, Simulation, zoh)
+    Model, Subsystem, CarrierComparison, Delay, Simulation, zoh)
 
 from motulator.model._drive._mechanics import Mechanics, TwoMassMechanics
 from motulator.model._drive._lc_filter import LCFilter
@@ -31,4 +31,6 @@ __all__ = [
     "Simulation",
     "Delay",
     "zoh",
+    "Model",
+    "Subsystem",
 ]
