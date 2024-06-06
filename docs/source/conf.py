@@ -48,7 +48,7 @@ autoapi_dirs = ["../../motulator"]
 autodoc_typehints = "description"
 autoapi_options = [
     "members",
-    "show-inheritance",
+    #    "show-inheritance",
     "show-module-summary",
     "imported-members",
 ]  # "private-members", "imported-members", "undoc-members", "special-members",

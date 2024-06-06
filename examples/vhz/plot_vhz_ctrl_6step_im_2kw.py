@@ -12,8 +12,10 @@ frequency and the sampling frequency.
 # %%
 
 import numpy as np
-from motulator import model, control
-from motulator import BaseValues, NominalValues, Sequence, plot, plot_extra
+from motulator.drive import model
+import motulator.drive.control.im as control
+from motulator.drive.utils import BaseValues, NominalValues, plot, plot_extra
+from motulator.utils import Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -35,10 +37,9 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # %%
 # Control system (parametrized as open-loop V/Hz control).
 
-par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-ctrl = control.im.VHzCtrl(
-    control.im.VHzCtrlCfg(
-        par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
+par = control.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+ctrl = control.VHzCtrl(
+    control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
 # %%
 # Set the speed reference and the external load torque.
 

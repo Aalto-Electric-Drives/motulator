@@ -8,8 +8,10 @@ This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.
 # %%
 
 import numpy as np
-from motulator import model, control
-from motulator import BaseValues, NominalValues, Sequence, plot
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot
+from motulator.utils import Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -29,9 +31,9 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.sm.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
-ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
+ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 # %%

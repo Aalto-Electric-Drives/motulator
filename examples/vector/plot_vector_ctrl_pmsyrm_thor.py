@@ -9,8 +9,9 @@ magnet synchronous reluctance motor. Control look-up tables are also plotted.
 # %%
 
 import numpy as np
-from motulator import model, control
-from motulator import BaseValues, NominalValues, plot
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -31,13 +32,13 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.sm.ModelPars(
+par = control.ModelPars(
     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134, J=.0042)
-cfg = control.sm.CurrentReferenceCfg(
+cfg = control.CurrentReferenceCfg(
     par, nom_w_m=base.w, max_i_s=2*base.i, k_u=.9)
-ctrl = control.sm.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
-ctrl.observer = control.sm.Observer(
-    control.sm.ObserverCfg(par, sensorless=True, alpha_o=2*np.pi*200))
+ctrl = control.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
+ctrl.observer = control.Observer(
+    control.ObserverCfg(par, sensorless=True, alpha_o=2*np.pi*200))
 ctrl.speed_ctrl = control.SpeedCtrl(
     J=par.J, alpha_s=2*np.pi*4, max_tau_M=1.5*nom.tau)
 
@@ -45,7 +46,7 @@ ctrl.speed_ctrl = control.SpeedCtrl(
 # Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
 # sphinx_gallery_thumbnail_number = 1
-tq = control.sm.TorqueCharacteristics(par)
+tq = control.TorqueCharacteristics(par)
 tq.plot_current_loci(ctrl.current_reference.cfg.max_i_s, base)
 tq.plot_torque_flux(ctrl.current_reference.cfg.max_i_s, base)
 tq.plot_torque_current(ctrl.current_reference.cfg.max_i_s, base)

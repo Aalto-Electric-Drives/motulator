@@ -7,8 +7,9 @@ This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.
 """
 # %%
 
-from motulator import model, control
-from motulator import BaseValues, NominalValues, plot
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -28,10 +29,9 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.sm.ModelPars(
-    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-cfg = control.sm.FluxTorqueReferenceCfg(par, max_i_s=1.5*base.i, k_u=.9)
-ctrl = control.sm.FluxVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
+par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+cfg = control.FluxTorqueReferenceCfg(par, max_i_s=1.5*base.i, k_u=.9)
+ctrl = control.FluxVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

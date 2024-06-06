@@ -10,8 +10,10 @@ Square-wave signal injection is used with a simple phase-locked loop.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from motulator import model, control
-from motulator import BaseValues, NominalValues, Sequence, plot
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot
+from motulator.utils import Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -31,10 +33,9 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.sm.ModelPars(
-    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-cfg = control.sm.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=2*base.i)
-ctrl = control.sm.SignalInjectionCtrl(par, cfg, T_s=250e-6)
+par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+cfg = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=2*base.i)
+ctrl = control.SignalInjectionCtrl(par, cfg, T_s=250e-6)
 # ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
 
 # %%

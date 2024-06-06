@@ -4,7 +4,7 @@ Converters
 Inverter
 --------
 
-The figure below shows a three-phase two-level inverter and its equivalent model, where ideal switches  are assumed. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The inverter model is provided in the class :class:`motulator.model.Inverter`. 
+The figure below shows a three-phase two-level inverter and its equivalent model, where ideal switches  are assumed. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The inverter model is provided in the class :class:`motulator._common._model.Inverter`. 
 
 
 .. figure:: figs/inverter.svg

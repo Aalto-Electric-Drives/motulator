@@ -10,8 +10,10 @@ in the control method (only in the system model).
 # %%
 
 import numpy as np
-from motulator import model, control
-from motulator import BaseValues, NominalValues, Sequence, plot
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot
+from motulator.utils import Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -84,10 +86,10 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.sm.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
-cfg = control.sm.ObserverBasedVHzCtrlCfg(
+par = control.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+cfg = control.ObserverBasedVHzCtrlCfg(
     par, max_i_s=2*base.i, min_psi_s=base.psi, max_psi_s=base.psi)
-ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg)
+ctrl = control.ObserverBasedVHzCtrl(par, cfg)
 
 # %%
 # Set the speed reference and the external load torque.
