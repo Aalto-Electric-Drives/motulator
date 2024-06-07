@@ -9,6 +9,7 @@ parameters in this example yield open-loop V/Hz control.
 # %%
 
 import numpy as np
+
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import BaseValues, NominalValues, plot, plot_extra

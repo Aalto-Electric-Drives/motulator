@@ -3,6 +3,7 @@ from motulator.drive.utils._helpers import BaseValues, NominalValues
 from motulator.drive.utils._plots import plot, plot_extra
 from motulator.drive.utils._flux_maps import (
     import_syre_data, plot_flux_map, plot_flux_vs_current, plot_torque_map)
+from motulator.common.utils import Sequence, Step
 
 __all__ = [
     "BaseValues",
@@ -13,4 +14,6 @@ __all__ = [
     "plot_flux_map",
     "plot_flux_vs_current",
     "plot_torque_map",
+    "Sequence",
+    "Step",
 ]

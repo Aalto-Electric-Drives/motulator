@@ -3,10 +3,12 @@
 # %%
 from types import SimpleNamespace
 from dataclasses import dataclass
+
 import numpy as np
-from motulator._common._control import RateLimiter
-from motulator.drive.control._common import DriveCtrl
-from motulator.utils import wrap
+
+from motulator.drive.control import DriveCtrl
+from motulator.common.control import RateLimiter
+from motulator.common.utils import wrap
 
 
 # %%

@@ -20,12 +20,12 @@ where :math:`i_\mathrm{a}`, :math:`i_\mathrm{b}`, and :math:`i_\mathrm{c}` are t
 
 Even though the zero-sequence voltage exists at the ouput of typical converters (see :doc:`/model/converters`), there is no path for the zero-sequence current to flow if the stator winding is either delta-connected or the star point is not connected, i.e., :math:`i_\mathrm{s0} = 0`. Consequently, the zero-sequence voltage cannot produce neither power nor torque. 
 
-The space vector transformation in :eq:`space_vector` is implemented in the function :func:`motulator.abc2complex` and its inverse transformation in the function :func:`motulator.complex2abc`. 
+The space vector transformation in :eq:`space_vector` is implemented in the function :func:`motulator.common.utils.abc2complex` and its inverse transformation in the function :func:`motulator.common.utils.complex2abc`. 
 
 Induction Machine
 -----------------
 
-The induction machine models are provided in the package :mod:`motulator.model`. The models are implemented in stator coordinates. A Γ-equivalent model is used as a base model since it can be extended with the magnetic saturation model in a straightforward manner [#Sle1989]_.
+The induction machine models are provided in the package :mod:`motulator.drive.model`. The models are implemented in stator coordinates. A Γ-equivalent model is used as a base model since it can be extended with the magnetic saturation model in a straightforward manner [#Sle1989]_.
 
 .. figure:: figs/im_gamma.svg
    :width: 100%
@@ -57,7 +57,7 @@ where :math:`\boldsymbol{u}_\mathrm{s}^\mathrm{s}` is the stator voltage, :math:
     \boldsymbol{\psi}_\mathrm{r}^\mathrm{s} &= \boldsymbol{\psi}_\mathrm{s}^\mathrm{s} + L_\ell\boldsymbol{i}_\mathrm{r}^\mathrm{s} 
     :label: im_flux
 
-where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the leakage inductance. This linear magnetic model is applied in the class :class:`motulator.model.InductionMachine`. The electromagnetic torque is
+where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the leakage inductance. This linear magnetic model is applied in the class :class:`motulator.drive.model.InductionMachine`. The electromagnetic torque is
 
 .. math::
     \tau_\mathrm{M} = \frac{3 n_\mathrm{p}}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s}^\mathrm{s} (\boldsymbol{\psi}_\mathrm{s}^\mathrm{s})^* \right\}
@@ -81,12 +81,12 @@ The same class can also be used with the main-flux saturation models, such as :m
 
       Inverse-Γ model.
 
-   Example control methods in the package :mod:`motulator.control.im` are based on the inverse-Γ model.
+   Example control methods in the package :mod:`motulator.drive.control.im` are based on the inverse-Γ model.
 
 Synchronous Machine
 -------------------
 
-Synchronous machine models are provided in the package :mod:`motulator.model`. The models can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs). 
+Synchronous machine models are provided in the package :mod:`motulator.drive.model`. The models can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs). 
 
 .. figure:: figs/sm_block_rot.svg
    :width: 100%

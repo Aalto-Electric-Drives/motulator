@@ -8,8 +8,8 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from motulator._common._model import Subsystem
-from motulator.utils import complex2abc, wrap
+from motulator.common.model import Subsystem
+from motulator.common.utils import complex2abc, wrap
 
 
 # %%

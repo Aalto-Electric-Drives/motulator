@@ -5,10 +5,12 @@ The algorithms are written based on the inverse-Γ model.
 
 """
 from dataclasses import dataclass, InitVar
+
 import numpy as np
-from motulator.drive.control._common import SpeedCtrl, DriveCtrl
-from motulator._common._control import ComplexPICtrl
-from motulator.drive.control.im._common import Observer, ObserverCfg, ModelPars
+
+from motulator.drive.control import DriveCtrl, SpeedCtrl
+from motulator.common.control import ComplexPICtrl
+from motulator.drive.control.im._common import ModelPars, Observer, ObserverCfg
 
 
 # %%
@@ -58,6 +60,7 @@ class CurrentVectorCtrl(DriveCtrl):
         ref.u_s = self.current_ctrl.output(ref.i_s, fbk.i_s)
         u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
         ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
+
         return ref
 
     def update(self, fbk, ref):

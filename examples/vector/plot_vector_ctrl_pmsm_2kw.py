@@ -9,6 +9,7 @@ drive.
 # %%
 
 import time
+
 from motulator.drive import model
 import motulator.drive.control.sm as control
 from motulator.drive.utils import BaseValues, NominalValues, plot

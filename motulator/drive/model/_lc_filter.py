@@ -6,8 +6,8 @@ The space vector model is implemented in stator coordinates.
 """
 from types import SimpleNamespace
 
-from motulator._common._model import Subsystem
-from motulator.utils import complex2abc
+from motulator.common.model import Subsystem
+from motulator.common.utils import complex2abc
 
 
 # %%

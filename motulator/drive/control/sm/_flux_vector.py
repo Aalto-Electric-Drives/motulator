@@ -4,7 +4,7 @@ from dataclasses import dataclass, InitVar
 
 import numpy as np
 
-from motulator.drive.control._common import DriveCtrl, SpeedCtrl
+from motulator.drive.control import DriveCtrl, SpeedCtrl
 from motulator.drive.control.sm._common import ModelPars, Observer, ObserverCfg
 from motulator.drive.control.sm._torque import TorqueCharacteristics
 

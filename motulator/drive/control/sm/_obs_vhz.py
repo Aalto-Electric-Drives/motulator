@@ -5,11 +5,11 @@ from dataclasses import dataclass, InitVar
 
 import numpy as np
 
-from motulator._common._control import RateLimiter
-from motulator.drive.control._common import DriveCtrl
+from motulator.drive.control import DriveCtrl
+from motulator.common.control import RateLimiter
 from motulator.drive.control.sm._flux_vector import (
     FluxTorqueReference, FluxTorqueReferenceCfg)
-from motulator.utils import wrap
+from motulator.common.utils import wrap
 
 
 # %%

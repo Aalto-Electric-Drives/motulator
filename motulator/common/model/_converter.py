@@ -10,8 +10,8 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from motulator._common._model import Subsystem
-from motulator.utils import abc2complex
+from motulator.common.model import Subsystem
+from motulator.common.utils import abc2complex
 
 
 # %%

@@ -10,6 +10,7 @@ drive equipped with an LC filter.
 
 import numpy as np
 import matplotlib.pyplot as plt
+
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import BaseValues, NominalValues, plot

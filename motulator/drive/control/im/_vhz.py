@@ -3,11 +3,13 @@
 # %%
 from dataclasses import dataclass, field, InitVar
 from types import SimpleNamespace
+
 import numpy as np
-from motulator._common._control import PWM, RateLimiter
-from motulator.drive.control._common import DriveCtrl
+
+from motulator.drive.control import DriveCtrl
 from motulator.drive.control.im._common import ModelPars
-from motulator.utils import wrap
+from motulator.common.control import PWM, RateLimiter
+from motulator.common.utils import wrap
 
 
 # %%

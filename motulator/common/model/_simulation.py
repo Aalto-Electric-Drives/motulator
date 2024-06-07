@@ -2,10 +2,12 @@
 
 from abc import ABC, abstractmethod
 from types import SimpleNamespace
+
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.io import savemat
-from motulator.utils import abc2complex
+
+from motulator.common.utils import abc2complex
 
 
 # %%

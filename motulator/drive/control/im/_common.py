@@ -2,8 +2,10 @@
 
 from types import SimpleNamespace
 from dataclasses import dataclass, field, InitVar
+
 import numpy as np
-from motulator.utils import wrap
+
+from motulator.common.utils import wrap
 
 
 # %%

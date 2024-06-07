@@ -2,8 +2,8 @@
 
 from types import SimpleNamespace
 
-from motulator._common._model import Subsystem
-from motulator.utils import wrap
+from motulator.common.model import Subsystem
+from motulator.common.utils import wrap
 
 
 # %%

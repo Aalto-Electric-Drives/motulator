@@ -3,10 +3,10 @@
 from types import SimpleNamespace
 import numpy as np
 
-from motulator.drive.control._common import DriveCtrl, SpeedCtrl
+from motulator.drive.control import DriveCtrl, SpeedCtrl
 from motulator.drive.control.sm._current_vector import (
     CurrentCtrl, CurrentReference)
-from motulator.utils import wrap
+from motulator.common.utils import wrap
 
 
 # %%
@@ -67,6 +67,7 @@ class SignalInjectionCtrl(DriveCtrl):
         return fbk
 
     def output(self, fbk):
+        """Compute outputs."""
         ref = super().output(fbk)
         ref = super().get_torque_reference(fbk, ref)
 

@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
 
-from motulator.utils import complex2abc
+from motulator.common.utils import complex2abc
 
 # Plotting parameters
 plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")

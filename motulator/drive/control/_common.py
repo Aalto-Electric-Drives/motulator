@@ -5,8 +5,8 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from motulator.utils import abc2complex, wrap
-from motulator._common._control import Ctrl, PICtrl
+from motulator.common.control import Ctrl, PICtrl
+from motulator.common.utils import abc2complex, wrap
 
 
 # %%

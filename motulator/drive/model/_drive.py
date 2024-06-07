@@ -4,7 +4,7 @@ Continuous-time models for electric machine drives.
 Peak-valued complex space vectors are used.
 
 """
-from motulator._common._model import Model
+from motulator.common.model import Model
 
 
 # %%

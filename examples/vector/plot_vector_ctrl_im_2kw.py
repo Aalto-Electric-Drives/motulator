@@ -56,17 +56,17 @@ def L_s(psi):
 # Γ-equivalent machine model with main-flux saturation included
 machine = model.InductionMachine(n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
 # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
-#machine = model.im.InductionMachineInvGamma(
+#machine = model.InductionMachineInvGamma(
 #    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 # Alternatively, configure the machine model using its Γ parameters
-#machine = model.im.InductionMachine(
+#machine = model.InductionMachine(
 #    n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)
 mechanics = model.Mechanics(J=.015)
 #mechanics = model.TwoMassMechanics(
 #    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
-#mdl.pwm = model.CarrierComparison()  # Try to enable the PWM model
+# mdl.pwm = model.CarrierComparison()  # Try to enable the PWM model
 # mdl.delay = model.Delay(2)  # Try longer computational delay
 
 # %%
@@ -81,7 +81,8 @@ cfg = control.CurrentReferenceCfg(
 ctrl = control.CurrentVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
 # As an example, you may replace the default 2DOF PI speed controller with the
 # regular PI speed controller by uncommenting the following line
-# ctrl.speed_ctrl = control.PICtrl(k_p=1, k_i=1)
+# from motulator.common import PICtrl
+# ctrl.speed_ctrl = PICtrl(k_p=1, k_i=1)
 
 # %%
 # Set the speed reference and the external load torque. You may also try to
