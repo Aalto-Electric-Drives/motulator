@@ -23,7 +23,8 @@ import matplotlib.pyplot as plt
 
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -144,14 +145,15 @@ psi_s0 = complex(res.x)  # psi_s0 = 0.477
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(n_p=2, R_s=.63, i_s=i_s, psi_s0=psi_s0)
+mdl_par = SynchronousMachinePars(n_p=2, R_s=.63)
+machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model for comparison
-# machine = model.sm.SynchronousMachine(
-#    n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
+# mdl_par = SynchronousMachinePars(
+#     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
+# machine = model.SynchronousMachine(mdl_par)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
-# mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
 # Configure the control system.

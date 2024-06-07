@@ -10,7 +10,8 @@ drive, equipped with a diode bridge rectifier.
 
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import BaseValues, NominalValues, plot, plot_extra
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, plot_extra, SynchronousMachinePars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -21,8 +22,9 @@ base = BaseValues.from_nominal(nom, n_p=3)
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(
+mdl_par = SynchronousMachinePars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+machine = model.SynchronousMachine(mdl_par)
 mechanics = model.Mechanics(J=.015)
 converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
 mdl = model.Drive(converter, machine, mechanics)

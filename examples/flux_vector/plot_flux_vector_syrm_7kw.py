@@ -17,7 +17,8 @@ import matplotlib.pyplot as plt
 
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -48,10 +49,12 @@ def i_s(psi_s):
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(n_p=2, R_s=.54, i_s=i_s, psi_s0=0)
+mdl_par = SynchronousMachinePars(n_p=2, R_s=.54)
+machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=0)
 # Magnetically linear SyRM model for comparison
-# machine = model.sm.SynchronousMachine(
-#    n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+# mdl_par = SynchronousMachinePars(
+#     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+# machine = model.SynchronousMachine(mdl_par)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)

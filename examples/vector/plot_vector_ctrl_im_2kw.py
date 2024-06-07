@@ -11,7 +11,9 @@ system model, while the control system assumes constant parameters.
 
 from motulator.drive import model
 import motulator.drive.control.im as control
-from motulator.drive.utils import BaseValues, NominalValues, plot
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, InductionMachinePars,
+    InductionMachineInvGammaPars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -54,13 +56,12 @@ def L_s(psi):
 # Create the system model.
 
 # Γ-equivalent machine model with main-flux saturation included
-machine = model.InductionMachine(n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
+mdl_par = InductionMachinePars(n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
 # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
-#machine = model.InductionMachineInvGamma(
-#    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
-# Alternatively, configure the machine model using its Γ parameters
-#machine = model.InductionMachine(
-#    n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)
+# par = InductionMachineInvGammaPars(
+#     n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
+# mdl_par = InductionMachinePars.from_inv_gamma_model_pars(par)
+machine = model.InductionMachine(mdl_par)
 mechanics = model.Mechanics(J=.015)
 #mechanics = model.TwoMassMechanics(
 #    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13

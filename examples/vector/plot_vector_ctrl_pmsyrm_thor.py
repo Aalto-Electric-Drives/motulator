@@ -12,7 +12,8 @@ import numpy as np
 
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import BaseValues, NominalValues, plot
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, SynchronousMachinePars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -24,8 +25,9 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Configure the system model.
 
 # Configure magnetically linear motor model
-machine = model.SynchronousMachine(
+mdl_par = SynchronousMachinePars(
     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+machine = model.SynchronousMachine(mdl_par)
 mechanics = model.Mechanics(J=.0042)
 converter = model.Inverter(u_dc=310)
 mdl = model.Drive(converter, machine, mechanics)

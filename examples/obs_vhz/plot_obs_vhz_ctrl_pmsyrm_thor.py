@@ -27,7 +27,8 @@ from scipy.interpolate import LinearNDInterpolator
 
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
 from motulator.drive.utils import (
     import_syre_data, plot_flux_vs_current, plot_flux_map)
 
@@ -86,11 +87,14 @@ def i_s(psi_s):
 # %%
 # Configure the system model.
 
-# Create the motor model
-machine = model.SynchronousMachine(n_p=2, R_s=.2, i_s=i_s, psi_s0=psi_s0)
+# Create the machine model
+mdl_par = SynchronousMachinePars(
+    n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model
-# machine = model.sm.SynchronousMachine(
+# mdl_par = SynchronousMachinePars(
 #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+# machine = model.SynchronousMachine(mdl_par)
 mechanics = model.Mechanics(J=.0042)
 converter = model.Inverter(u_dc=310)
 mdl = model.Drive(converter, machine, mechanics)
