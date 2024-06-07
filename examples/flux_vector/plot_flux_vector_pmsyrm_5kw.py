@@ -15,12 +15,15 @@ does.
 
 from os import path
 import inspect
+
 import numpy as np
 from scipy.io import loadmat
 from scipy.optimize import minimize_scalar
 import matplotlib.pyplot as plt
-from motulator import model, control
-from motulator import BaseValues, NominalValues, Sequence, plot
+
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -154,15 +157,15 @@ mdl = model.Drive(converter, machine, mechanics)
 # Configure the control system.
 
 # Control system is based on the constant inductances
-par = control.sm.ModelPars(
+par = control.ModelPars(
     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47, J=.015)
 # Limit the maximum reference flux to the base value
-cfg = control.sm.FluxTorqueReferenceCfg(
+cfg = control.FluxTorqueReferenceCfg(
     par, max_i_s=2*base.i, k_u=1, max_psi_s=base.psi)
-ctrl = control.sm.FluxVectorCtrl(par, cfg, sensorless=True)
+ctrl = control.FluxVectorCtrl(par, cfg, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
-ctrl.observer = control.sm.Observer(
-    control.sm.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))
+ctrl.observer = control.Observer(
+    control.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))
 
 # %%
 # Set the speed reference and the external load torque.

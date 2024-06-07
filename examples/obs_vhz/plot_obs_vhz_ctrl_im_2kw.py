@@ -9,8 +9,10 @@ drive.
 # %%
 
 import numpy as np
-from motulator import model, control
-from motulator import BaseValues, NominalValues, Sequence, plot
+
+from motulator.drive import model
+import motulator.drive.control.im as control
+from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -32,10 +34,10 @@ mdl = model.Drive(converter, machine, mechanics)
 # Configure the control system.
 
 # Inverse-Γ model parameter estimates
-par = control.im.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
-cfg = control.im.ObserverBasedVHzCtrlCfg(
+par = control.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+cfg = control.ObserverBasedVHzCtrlCfg(
     nom_psi_s=base.psi, max_i_s=1.5*base.i, slip_compensation=False)
-ctrl = control.im.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 # %%
 # Set the speed reference.

@@ -24,7 +24,7 @@ A dynamic model of the filter is
 
 where :math:`L` and :math:`R` are the inductance and the series resistance of the inductor, respectively, and :math:`C` is the capacitance. Furthermore, :math:`\boldsymbol{i}_\mathrm{c}^\mathrm{s}` is the converter current, :math:`\boldsymbol{i}_\mathrm{s}^\mathrm{s}` is the stator current, :math:`\boldsymbol{u}_\mathrm{c}^\mathrm{s}` is the converter voltage, and :math:`\boldsymbol{u}_\mathrm{s}^\mathrm{s}` is the capacitor voltage (corresponding to the stator voltage). 
 
-The filter model is implemented in the class :class:`motulator.model.LCFilter`. For its usage, see the example :doc:`/auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc`. 
+The filter model is implemented in the class :class:`motulator.drive.model.LCFilter`. For its usage, see the example :doc:`/auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc`. 
 
 .. rubric:: References
 

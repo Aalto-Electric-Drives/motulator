@@ -4,7 +4,7 @@ Converters
 Inverter
 --------
 
-The figure below shows a three-phase two-level inverter and its equivalent model, where ideal switches  are assumed. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The inverter model is provided in the class :class:`motulator.model.Inverter`. 
+The figure below shows a three-phase two-level inverter and its equivalent model, where ideal switches  are assumed. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The inverter model is provided in the class :class:`motulator.drive.model.Inverter`. 
 
 
 .. figure:: figs/inverter.svg
@@ -18,7 +18,7 @@ The figure below shows a three-phase two-level inverter and its equivalent model
 Six-Pulse Diode Bridge
 ----------------------
 
-The figure below shows a six-pulse diode bridge rectifier, where the inductor :math:`L` and the capacitor :math:`C` are placed in the DC link. For simplicity, a three-phase supply voltage is assumed to be stiff. The class :class:`motulator.model.FrequencyConverter` applies this model as a part of a frequency converter model.
+The figure below shows a six-pulse diode bridge rectifier, where the inductor :math:`L` and the capacitor :math:`C` are placed in the DC link. For simplicity, a three-phase supply voltage is assumed to be stiff. The class :class:`motulator.drive.model.FrequencyConverter` applies this model as a part of a frequency converter model.
 
 .. figure:: figs/diode_bridge.svg
    :width: 100%
@@ -41,7 +41,7 @@ The figure below shows an inverter equipped with a generic three-phase load. In 
 
    Instantaneous switching states are defined by the carrier comparison. In this example, the switching states are :math:`q_\mathrm{a}=1`, :math:`q_\mathrm{b}=0`, and :math:`q_\mathrm{c}=0`.
 
-The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class :class:`motulator.model.CarrierComparison`, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations.
+The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class :class:`motulator.drive.model.CarrierComparison`, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations.
 
 .. figure:: figs/carrier_comparison.svg
    :width: 100%
@@ -62,7 +62,7 @@ The zero-sequence voltage does not affect the phase currents if the neutral of t
 where :math:`\boldsymbol{q}_\mathrm{c}^\mathrm{s}` is the switching-state space vector.
 
 .. note::
-   The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see :class:`motulator.control.PWM`) and discontinuous PWM methods [#Hol1994]_, [#Hav1999]_.
+   The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see :class:`motulator.common.control.PWM`) and discontinuous PWM methods [#Hol1994]_, [#Hav1999]_.
 
    The sampling period :math:`T_\mathrm{s}` is returned by the control method, and it does not need to be constant. 
 
