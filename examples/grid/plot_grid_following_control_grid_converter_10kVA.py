@@ -77,4 +77,4 @@ print('\nExecution time: {:.2f} s'.format((time.time() - start_time)))
 # %%
 # Plot results in SI or per unit values.
 
-plot_grid(sim, base=base_values,plot_pcc_voltage=True)
+plot_grid(sim, base, plot_pcc_voltage=True)

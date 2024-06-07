@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 
 # %%
-@dataclass 
+@dataclass
 class NominalValues:
     """
     Nominal values.
@@ -49,6 +49,8 @@ class BaseValues:
         Base angular frequency (rad/s).
     psi : float
         Base flux linkage (Vs).
+    f : float
+        Base frequency (Hz).
     p : float
         Base power (W).
     Z : float
@@ -60,12 +62,17 @@ class BaseValues:
     # pylint: disable=too-many-instance-attributes
     u: float
     i: float
+    w: float
+    psi: float
     f: float
     p: float
+    f: float
+    Z: float
+    L: float
 
-@classmethod
-def from_nominal(cls, nom):
-     """
+    @classmethod
+    def from_nominal(cls, nom):
+        """
         Compute base values from nominal values.
 
         Parameters
@@ -84,15 +91,13 @@ def from_nominal(cls, nom):
         Returns
         -------
         BaseValues
-            Base values.
-
         """
-    u = np.sqrt(2/3)*nom.U
-    i = np.sqrt(2)*nom.I
-    w = 2*np.pi*nom.f
-    psi = u/w
-    p = 1.5*u*i
-    Z = u/i
-    L = Z/w
+        u = np.sqrt(2/3)*nom.U
+        i = np.sqrt(2)*nom.I
+        w = 2*np.pi*nom.f
+        psi = u/w
+        p = 1.5*u*i
+        Z = u/i
+        L = Z/w
 
-    return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L)
+        return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L)
