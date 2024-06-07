@@ -14,7 +14,7 @@ current controller.
 
 import numpy as np
 from motulator.grid import model, control
-from motulator import BaseValuesElectrical, plot_grid
+from motulator.grid.utils import BaseValues, NominalValues, plot_grid
 
 # To check the computation time of the program
 import time
@@ -24,9 +24,8 @@ start_time = time.time()
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-base_values = BaseValuesElectrical(
-    U_nom=400, I_nom=14.5, f_nom=50.0, P_nom=10e3)
-
+nom = NominalValues(U=400, I=14.5, f=50, P=10e3)
+base = BaseValues.from_nominal(nom)
 
 # %%
 # Create the system model.
