@@ -3,7 +3,8 @@
 # %%
 from abc import ABC
 from dataclasses import dataclass
-from typing import Callable
+# Note: Union can be replaced by "|" in Python 3.10
+from typing import Callable, Union
 
 import numpy as np
 
@@ -183,7 +184,8 @@ class InductionMachinePars(MachinePars):
     """
     R_r: float = None
     L_ell: float = None
-    L_s: float | Callable = None
+    #L_s: float | Callable = None  # Can be used in Python 3.10 and later
+    L_s: Union[float, Callable] = None
 
     @classmethod
     def from_inv_gamma_model_pars(cls, par):
