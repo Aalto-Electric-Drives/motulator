@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import numpy as np
 
 from motulator.drive.control import DriveCtrl
-from motulator.drive.control.im._common import ModelPars
+from motulator.drive.utils import InductionMachineInvGammaPars
 from motulator.common.control import PWM, RateLimiter
 from motulator.common.utils import wrap
 
@@ -17,7 +17,7 @@ from motulator.common.utils import wrap
 class VHzCtrlCfg:
     """V/Hz control configuration."""
 
-    par: ModelPars
+    par: InductionMachineInvGammaPars
     nom_psi_s: float = None
     T_s: float = 250e-6
     six_step: bool = False

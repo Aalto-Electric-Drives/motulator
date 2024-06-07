@@ -26,16 +26,7 @@ class InductionMachine(Subsystem):
 
     Parameters
     ----------
-    R_s : float
-        Stator resistance (Ω).
-    R_r : float
-        Rotor resistance (Ω).
-    L_ell : float
-        Leakage inductance (H).
-    L_s : float | callable
-        Stator inductance (H) or a callable L_s = L_s(abs(psi_ss)).
-    n_p : int
-        Number of pole pairs.
+    par : InductionMachinePars
 
     Notes
     -----
@@ -51,10 +42,10 @@ class InductionMachine(Subsystem):
 
     """
 
-    def __init__(self, n_p, R_s, R_r, L_ell, L_s):
+    def __init__(self, par):
         super().__init__()
-        self.par = SimpleNamespace(n_p=n_p, R_s=R_s, R_r=R_r, L_ell=L_ell)
-        self._L_s = L_s
+        self.par = par
+        self._L_s = par.L_s
         # States
         self.state = SimpleNamespace(psi_ss=0j, psi_rs=0j)
         # Store the solutions in these lists
@@ -63,9 +54,9 @@ class InductionMachine(Subsystem):
     @property
     def L_s(self):
         """Stator inductance (H)."""
-        if callable(self._L_s):
-            return self._L_s(np.abs(self.state.psi_ss))
-        return self._L_s
+        if callable(self.par.L_s):
+            return self.par.L_s(np.abs(self.state.psi_ss))
+        return self.par.L_s
 
     @property
     def i_rs(self):
@@ -117,35 +108,6 @@ class InductionMachine(Subsystem):
 
 
 # %%
-class InductionMachineInvGamma(InductionMachine):
-    """
-    Inverse-Γ model of an induction machine.
-
-    This extends the InductionMachine class (based on the Γ model) by providing
-    an interface for the inverse-Γ model parameters. Linear magnetics are 
-    assumed. If magnetic saturation is to be modeled, the Γ model is preferred.
-
-    Parameters
-    ----------
-    n_p : int
-        Number of pole pairs.
-    R_s : float
-        Stator resistance (Ω).
-    R_R : float
-        Rotor resistance (Ω).
-    L_sgm : float
-        Leakage inductance (H).
-    L_M : float
-        Magnetizing inductance (H).
-
-    """
-
-    def __init__(self, n_p, R_s, R_R, L_sgm, L_M):
-        gamma = L_M/(L_M + L_sgm)
-        super().__init__(n_p, R_s, R_R/gamma**2, L_sgm/gamma, L_M + L_sgm)
-
-
-# %%
 class SynchronousMachine(Subsystem):
     """
     Synchronous machine model.
@@ -155,37 +117,29 @@ class SynchronousMachine(Subsystem):
 
     Parameters
     ----------
-    R_s : float
-        Stator resistance (Ω).
-    L_d : float
-        d-axis inductance (H).
-    L_q : float
-        q-axis inductance (H).
-    psi_f : float
-        PM-flux linkage (Vs).
-    n_p : int
-        Number of pole pairs.
+    par : SynchronousMachinePars
+        Machine parameters.
+    i_s : callable, optional
+        Stator current (A) as a function of the stator flux linkage (A) in 
+        order to model the magnetic saturation. If this function is given, the
+        stator current is computed using this function instead of constants
+        `par.L_d`, `par.L_q`, and `par.psi_f`.  
+    psi_s0 : float, optional
+        Initial stator flux linkage (Vs). If not given, `par.psi_f` is used.
 
     """
 
-    def __init__(
-            self,
-            n_p,
-            R_s,
-            L_d=None,
-            L_q=None,
-            psi_f=None,
-            i_s=None,
-            psi_s0=None):
+    def __init__(self, par, i_s=None, psi_s0=None):
         super().__init__()
-        self.par = SimpleNamespace(
-            n_p=n_p, R_s=R_s, L_d=L_d, L_q=L_q, psi_f=psi_f)
+        # self.par = SimpleNamespace(
+        #     n_p=n_p, R_s=R_s, L_d=L_d, L_q=L_q, psi_f=psi_f)
+        self.par = par
         self._i_s = i_s
         # Initial values
         if psi_s0 is not None:
             self.state = SimpleNamespace(psi_s=complex(psi_s0), theta_m=0)
         else:
-            self.state = SimpleNamespace(psi_s=complex(psi_f), theta_m=0)
+            self.state = SimpleNamespace(psi_s=complex(par.psi_f), theta_m=0)
         # Store the solutions in these lists
         self.sol_states = SimpleNamespace(psi_s=[], theta_m=[])
 

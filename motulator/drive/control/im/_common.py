@@ -5,37 +5,8 @@ from dataclasses import dataclass, field, InitVar
 
 import numpy as np
 
+from motulator.drive.utils import InductionMachineInvGammaPars
 from motulator.common.utils import wrap
-
-
-# %%
-@dataclass
-class ModelPars:
-    """
-    Inverse-Γ model parameters of an induction machine.
-    
-    Parameters
-    ----------
-    R_s : float
-        Stator resistance (Ω).
-    R_R : float
-        Rotor resistance (Ω).
-    L_sgm : float
-        Leakage inductance (H).
-    L_M : float
-        Magnetizing inductance (H).
-    n_p : int
-        Number of pole pairs.  
-    J : float
-        Moment of inertia (kgm²).  
-    
-    """
-    R_s: float = None
-    R_R: float = None
-    L_sgm: float = None
-    L_M: float = None
-    n_p: int = None
-    J: float = None
 
 
 # %%
@@ -46,7 +17,7 @@ class ObserverCfg:
 
     Parameters
     ----------
-    par : ModelPars
+    par : InductionMachineInvGammaPars
         Machine model parameters.
     T_s : float
         Sampling period (s).
@@ -66,7 +37,7 @@ class ObserverCfg:
     obtained by setting ``k_o = lambda w_m: 1``. 
             
     """
-    par: ModelPars
+    par: InductionMachineInvGammaPars
     T_s: float
     sensorless: bool
     gain: SimpleNamespace = field(init=False)

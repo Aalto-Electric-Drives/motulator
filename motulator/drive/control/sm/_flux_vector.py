@@ -5,7 +5,8 @@ from dataclasses import dataclass, InitVar
 import numpy as np
 
 from motulator.drive.control import DriveCtrl, SpeedCtrl
-from motulator.drive.control.sm._common import ModelPars, Observer, ObserverCfg
+from motulator.drive.utils import SynchronousMachinePars
+from motulator.drive.control.sm._common import Observer, ObserverCfg
 from motulator.drive.control.sm._torque import TorqueCharacteristics
 
 
@@ -23,7 +24,7 @@ class FluxVectorCtrl(DriveCtrl):
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
     cfg : FluxTorqueReferenceCfg
         Reference generation configuration.
@@ -31,6 +32,10 @@ class FluxVectorCtrl(DriveCtrl):
         Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
     alpha_tau : float, optional
         Bandwidth of the torque controller (rad/s). The default is 2*pi*200.
+    alpha_o : float, optional
+        Observer bandwidth (rad/s). The default is 2*pi*100.
+    J : float, optional
+        Moment of inertia (kg*m^2). Needed for the speed controller. 
     T_s : float
         Sampling period (s). The default is 250e-6.
     sensorless : bool, optional
@@ -56,19 +61,19 @@ class FluxVectorCtrl(DriveCtrl):
             alpha_psi=2*np.pi*100,
             alpha_tau=2*np.pi*200,
             alpha_o=2*np.pi*100,
+            J=None,
             T_s=250e-6,
             sensorless=True):
         super().__init__(par, T_s, sensorless)
         # Subsystems
         self.flux_torque_reference = FluxTorqueReference(cfg)
-        self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
+        self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
         self.observer = Observer(
             ObserverCfg(par, alpha_o=alpha_o, sensorless=sensorless))
         # Bandwidths
         self.alpha_psi = alpha_psi
         self.alpha_tau = alpha_tau
 
-    # pylint: disable=too-many-locals
     def output(self, fbk):
         """Calculate references."""
         par = self.par
@@ -114,7 +119,7 @@ class FluxTorqueReferenceCfg:
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
     max_i_s : float
         Maximum stator current (A). 
@@ -126,14 +131,15 @@ class FluxTorqueReferenceCfg:
         Voltage utilization factor. The default is 0.95.
 
     """
-    par: InitVar[ModelPars]
+    par: InitVar[SynchronousMachinePars]
     max_i_s: float = None
     min_psi_s: float = None
     max_psi_s: float = np.inf
     k_u: float = .95
 
     def __post_init__(self, par):
-        self.min_psi_s = par.psi_f if self.min_psi_s is None else self.min_psi_s
+        self.min_psi_s = (
+            par.psi_f if self.min_psi_s is None else self.min_psi_s)
         # Generate LUTs
         tq = TorqueCharacteristics(par)
         mtpa = tq.mtpa_locus(self.max_i_s, self.min_psi_s)

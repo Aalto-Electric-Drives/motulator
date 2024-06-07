@@ -6,7 +6,8 @@ import numpy as np
 
 from motulator.drive.control import DriveCtrl, SpeedCtrl
 from motulator.common.control import ComplexPICtrl
-from motulator.drive.control.sm._common import ModelPars, Observer, ObserverCfg
+from motulator.drive.utils import SynchronousMachinePars
+from motulator.drive.control.sm._common import Observer, ObserverCfg
 from motulator.drive.control.sm._torque import TorqueCharacteristics
 
 
@@ -20,12 +21,18 @@ class CurrentVectorCtrl(DriveCtrl):
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
     cfg : CurrentReferenceCfg
         Reference generation configuration.
     T_s : float, optional
         Sampling period (s). The default is 250e-6.
+    J : float, optional
+        Moment of inertia (kg*m^2). Needed for the speed controller.
+    alpha_c : float, optional
+        Current controller bandwidth (rad/s). The default is 2*pi*200.
+    alpha_o : float, optional
+        Observer bandwidth (rad/s). The default is 2*pi*100.
     sensorless : bool, optional
         If True, sensorless control is used. The default is True.
 
@@ -47,13 +54,14 @@ class CurrentVectorCtrl(DriveCtrl):
             par,
             cfg,
             T_s=250e-6,
+            J=None,
             alpha_c=2*np.pi*200,
             alpha_o=2*np.pi*100,
             sensorless=True):
         super().__init__(par, T_s, sensorless)
         self.current_reference = CurrentReference(par, cfg)
         self.current_ctrl = CurrentCtrl(par, alpha_c)
-        self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
+        self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
         if sensorless:
             self.observer = Observer(
                 ObserverCfg(par, sensorless, alpha_o=alpha_o))
@@ -99,7 +107,7 @@ class CurrentCtrl(ComplexPICtrl):
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Synchronous machine parameters, should contain `L_d` and `L_q` (H). 
     alpha_c : float
         Closed-loop bandwidth (rad/s).
@@ -137,7 +145,7 @@ class CurrentReferenceCfg:
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
     max_i_s : float
         Maximum stator current (A). 
@@ -165,7 +173,7 @@ class CurrentReferenceCfg:
         This limit merges the MTPV and current limits.
     
     """
-    par: InitVar[ModelPars]
+    par: InitVar[SynchronousMachinePars]
     max_i_s: float
     min_psi_s: float = None
     nom_w_m: InitVar[float] = None
@@ -202,7 +210,7 @@ class CurrentReference:
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
     cfg : CurrentReferenceCfg
         Reference generation configuration.

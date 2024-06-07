@@ -35,7 +35,7 @@ class TorqueCharacteristics:
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
 
     """
