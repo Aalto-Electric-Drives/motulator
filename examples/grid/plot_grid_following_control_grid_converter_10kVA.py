@@ -14,7 +14,7 @@ current controller.
 
 import numpy as np
 from motulator.grid import model, control
-from motulator import BaseValuesElectrical, plot_grid
+from motulator.grid.utils import BaseValuesElectrical, plot_grid
 
 # To check the computation time of the program
 import time
