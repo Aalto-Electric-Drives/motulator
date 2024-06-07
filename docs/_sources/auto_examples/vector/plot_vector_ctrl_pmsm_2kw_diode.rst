@@ -24,14 +24,15 @@
 This example simulates sensorless current-vector control of a 2.2-kW PMSM 
 drive, equipped with a diode bridge rectifier. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-15
+.. GENERATED FROM PYTHON SOURCE LINES 10-16
 
 .. code-block:: Python
 
 
     from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot, plot_extra
+    from motulator.drive.utils import (
+        BaseValues, NominalValues, plot, plot_extra, SynchronousMachinePars)
 
 
 
@@ -40,11 +41,11 @@ drive, equipped with a diode bridge rectifier.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 18-22
 
 .. code-block:: Python
 
@@ -59,17 +60,18 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-31
+.. GENERATED FROM PYTHON SOURCE LINES 24-33
 
 .. code-block:: Python
 
 
-    machine = model.SynchronousMachine(
+    mdl_par = SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+    machine = model.SynchronousMachine(mdl_par)
     mechanics = model.Mechanics(J=.015)
     converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
     mdl = model.Drive(converter, machine, mechanics)
@@ -82,18 +84,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-38
+.. GENERATED FROM PYTHON SOURCE LINES 35-40
 
 .. code-block:: Python
 
 
-    par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+    par = mdl_par  # Assume accurate machine model parameter estimates
     ref = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
-    ctrl = control.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+    ctrl = control.CurrentVectorCtrl(par, ref, J=.015, T_s=250e-6, sensorless=True)
 
 
 
@@ -102,11 +104,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-47
+.. GENERATED FROM PYTHON SOURCE LINES 42-49
 
 .. code-block:: Python
 
@@ -124,11 +126,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-57
+.. GENERATED FROM PYTHON SOURCE LINES 51-59
 
 .. code-block:: Python
 
@@ -174,7 +176,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 15.704 seconds)
+   **Total running time of the script:** (0 minutes 15.266 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py:

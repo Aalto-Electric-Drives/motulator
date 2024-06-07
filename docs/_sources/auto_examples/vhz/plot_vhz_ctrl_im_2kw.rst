@@ -24,7 +24,7 @@
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
 parameters in this example yield open-loop V/Hz control. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-17
+.. GENERATED FROM PYTHON SOURCE LINES 10-19
 
 .. code-block:: Python
 
@@ -33,7 +33,9 @@ parameters in this example yield open-loop V/Hz control.
 
     from motulator.drive import model
     import motulator.drive.control.im as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot, plot_extra
+    from motulator.drive.utils import (
+        BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
+        NominalValues, plot, plot_extra)
 
 
 
@@ -42,11 +44,11 @@ parameters in this example yield open-loop V/Hz control.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 21-25
 
 .. code-block:: Python
 
@@ -61,24 +63,25 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-37
+.. GENERATED FROM PYTHON SOURCE LINES 27-40
 
 .. code-block:: Python
 
 
     # Machine model, using its inverse-Γ parameters
-    machine = model.InductionMachineInvGamma(
-        R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+    mdl_ig_par = InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
+    mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
+    machine = model.InductionMachine(mdl_par)
     # Mechanics model
     mechanics = model.Mechanics(J=.015)
     # Frequency converter with a diode bridge
     converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
     mdl = model.Drive(converter, machine, mechanics)
-    #mdl = model.im.DriveWithDiodeBridge(converter, machine, mechanics)
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 
@@ -88,17 +91,17 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-45
+.. GENERATED FROM PYTHON SOURCE LINES 42-48
 
 .. code-block:: Python
 
 
     # Inverse-Γ model parameter estimates
-    par = control.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+    par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
     ctrl = control.VHzCtrl(
         control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
@@ -109,11 +112,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-57
+.. GENERATED FROM PYTHON SOURCE LINES 50-60
 
 .. code-block:: Python
 
@@ -134,11 +137,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-63
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
@@ -153,7 +156,7 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-71
+.. GENERATED FROM PYTHON SOURCE LINES 67-74
 
 Plot results in per-unit values.
 
@@ -163,7 +166,7 @@ Plot results in per-unit values.
    resistance to the DC link. You can notice this instability if simulating a
    longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-76
+.. GENERATED FROM PYTHON SOURCE LINES 74-79
 
 .. code-block:: Python
 
@@ -203,7 +206,7 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-82
+.. GENERATED FROM PYTHON SOURCE LINES 80-85
 
 .. rubric:: References
 
@@ -214,7 +217,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.334 seconds)
+   **Total running time of the script:** (0 minutes 18.036 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:

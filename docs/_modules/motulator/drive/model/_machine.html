@@ -359,16 +359,7 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    R_s : float</span>
-<span class="sd">        Stator resistance (Ω).</span>
-<span class="sd">    R_r : float</span>
-<span class="sd">        Rotor resistance (Ω).</span>
-<span class="sd">    L_ell : float</span>
-<span class="sd">        Leakage inductance (H).</span>
-<span class="sd">    L_s : float | callable</span>
-<span class="sd">        Stator inductance (H) or a callable L_s = L_s(abs(psi_ss)).</span>
-<span class="sd">    n_p : int</span>
-<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    par : InductionMachinePars</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -384,10 +375,10 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="p">,</span> <span class="n">L_s</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="n">L_ell</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_L_s</span> <span class="o">=</span> <span class="n">L_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_L_s</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_s</span>
         <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">psi_ss</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">psi_rs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">)</span>
         <span class="c1"># Store the solutions in these lists</span>
@@ -396,9 +387,9 @@ document.write(`
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">L_s</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Stator inductance (H).&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_L_s</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_L_s</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">psi_ss</span><span class="p">))</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_L_s</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">psi_ss</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">i_rs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -450,35 +441,6 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="InductionMachineInvGamma"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGamma">[docs]</a><span class="k">class</span> <span class="nc">InductionMachineInvGamma</span><span class="p">(</span><span class="n">InductionMachine</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Inverse-Γ model of an induction machine.</span>
-
-<span class="sd">    This extends the InductionMachine class (based on the Γ model) by providing</span>
-<span class="sd">    an interface for the inverse-Γ model parameters. Linear magnetics are </span>
-<span class="sd">    assumed. If magnetic saturation is to be modeled, the Γ model is preferred.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    n_p : int</span>
-<span class="sd">        Number of pole pairs.</span>
-<span class="sd">    R_s : float</span>
-<span class="sd">        Stator resistance (Ω).</span>
-<span class="sd">    R_R : float</span>
-<span class="sd">        Rotor resistance (Ω).</span>
-<span class="sd">    L_sgm : float</span>
-<span class="sd">        Leakage inductance (H).</span>
-<span class="sd">    L_M : float</span>
-<span class="sd">        Magnetizing inductance (H).</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span><span class="p">,</span> <span class="n">R_R</span><span class="p">,</span> <span class="n">L_sgm</span><span class="p">,</span> <span class="n">L_M</span><span class="p">):</span>
-        <span class="n">gamma</span> <span class="o">=</span> <span class="n">L_M</span><span class="o">/</span><span class="p">(</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">L_sgm</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span><span class="p">,</span> <span class="n">R_R</span><span class="o">/</span><span class="n">gamma</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">/</span><span class="n">gamma</span><span class="p">,</span> <span class="n">L_M</span> <span class="o">+</span> <span class="n">L_sgm</span><span class="p">)</span></div>
-
-
-<span class="c1"># %%</span>
 <div class="viewcode-block" id="SynchronousMachine"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine">[docs]</a><span class="k">class</span> <span class="nc">SynchronousMachine</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous machine model.</span>
@@ -488,37 +450,29 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    R_s : float</span>
-<span class="sd">        Stator resistance (Ω).</span>
-<span class="sd">    L_d : float</span>
-<span class="sd">        d-axis inductance (H).</span>
-<span class="sd">    L_q : float</span>
-<span class="sd">        q-axis inductance (H).</span>
-<span class="sd">    psi_f : float</span>
-<span class="sd">        PM-flux linkage (Vs).</span>
-<span class="sd">    n_p : int</span>
-<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    par : SynchronousMachinePars</span>
+<span class="sd">        Machine parameters.</span>
+<span class="sd">    i_s : callable, optional</span>
+<span class="sd">        Stator current (A) as a function of the stator flux linkage (A) in </span>
+<span class="sd">        order to model the magnetic saturation. If this function is given, the</span>
+<span class="sd">        stator current is computed using this function instead of constants</span>
+<span class="sd">        `par.L_d`, `par.L_q`, and `par.psi_f`.  </span>
+<span class="sd">    psi_s0 : float, optional</span>
+<span class="sd">        Initial stator flux linkage (Vs). If not given, `par.psi_f` is used.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">n_p</span><span class="p">,</span>
-            <span class="n">R_s</span><span class="p">,</span>
-            <span class="n">L_d</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">L_q</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">psi_f</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">i_s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">psi_s0</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
-            <span class="n">n_p</span><span class="o">=</span><span class="n">n_p</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="n">R_s</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="n">L_d</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="n">L_q</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="n">psi_f</span><span class="p">)</span>
+        <span class="c1"># self.par = SimpleNamespace(</span>
+        <span class="c1">#     n_p=n_p, R_s=R_s, L_d=L_d, L_q=L_q, psi_f=psi_f)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_s</span> <span class="o">=</span> <span class="n">i_s</span>
         <span class="c1"># Initial values</span>
         <span class="k">if</span> <span class="n">psi_s0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="nb">complex</span><span class="p">(</span><span class="n">psi_s0</span><span class="p">),</span> <span class="n">theta_m</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="nb">complex</span><span class="p">(</span><span class="n">psi_f</span><span class="p">),</span> <span class="n">theta_m</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span><span class="p">),</span> <span class="n">theta_m</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1"># Store the solutions in these lists</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sol_states</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="p">[],</span> <span class="n">theta_m</span><span class="o">=</span><span class="p">[])</span>
 

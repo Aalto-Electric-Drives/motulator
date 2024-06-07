@@ -27,7 +27,7 @@ of the mechanics is around 85 Hz. The mechanical parameters correspond to
 [#Saa2015]_, except that the torsional damping is set to a smaller value in 
 this example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-21
+.. GENERATED FROM PYTHON SOURCE LINES 13-22
 
 .. code-block:: Python
 
@@ -37,7 +37,8 @@ this example.
 
     from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+    from motulator.drive.utils import (
+        BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
 
 
 
@@ -46,11 +47,11 @@ this example.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-27
+.. GENERATED FROM PYTHON SOURCE LINES 24-28
 
 .. code-block:: Python
 
@@ -65,17 +66,18 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 29-30
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-37
+.. GENERATED FROM PYTHON SOURCE LINES 30-39
 
 .. code-block:: Python
 
 
-    machine = model.SynchronousMachine(
+    mdl_par = SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+    machine = model.SynchronousMachine(mdl_par)
     mechanics = model.TwoMassMechanics(
         J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
     converter = model.Inverter(u_dc=540)
@@ -88,16 +90,16 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-45
+.. GENERATED FROM PYTHON SOURCE LINES 41-47
 
 .. code-block:: Python
 
 
-    par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+    par = mdl_par  # Assume accurate machine model parameter estimates
     cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
     ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
     #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
@@ -109,11 +111,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-57
+.. GENERATED FROM PYTHON SOURCE LINES 49-59
 
 .. code-block:: Python
 
@@ -134,11 +136,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-65
+.. GENERATED FROM PYTHON SOURCE LINES 61-67
 
 .. code-block:: Python
 
@@ -160,11 +162,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Plot the load speed and the twist angle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-84
+.. GENERATED FROM PYTHON SOURCE LINES 69-86
 
 .. code-block:: Python
 
@@ -197,12 +199,12 @@ Plot the load speed and the twist angle.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-87
+.. GENERATED FROM PYTHON SOURCE LINES 87-89
 
 Plot also the frequency response from the electromagnetic torque tau_M to the
 rotor speed w_M.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-116
+.. GENERATED FROM PYTHON SOURCE LINES 89-118
 
 .. code-block:: Python
 
@@ -247,7 +249,7 @@ rotor speed w_M.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-122
+.. GENERATED FROM PYTHON SOURCE LINES 119-124
 
 .. rubric:: References
 
@@ -258,7 +260,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.783 seconds)
+   **Total running time of the script:** (0 minutes 4.613 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py:

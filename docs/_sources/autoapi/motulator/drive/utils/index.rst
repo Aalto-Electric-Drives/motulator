@@ -34,6 +34,9 @@ Classes
 
    motulator.drive.utils.BaseValues
    motulator.drive.utils.NominalValues
+   motulator.drive.utils.InductionMachineInvGammaPars
+   motulator.drive.utils.InductionMachinePars
+   motulator.drive.utils.SynchronousMachinePars
    motulator.drive.utils.Sequence
    motulator.drive.utils.Step
 
@@ -156,6 +159,180 @@ Package Contents
    :type P: float
    :param tau: Torque (Nm).
    :type tau: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: InductionMachineInvGammaPars
+
+   Bases: :py:obj:`MachinePars`
+
+
+   
+   Inverse-Γ model parameters of an induction machine.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param R_R: Rotor resistance (Ω).
+   :type R_R: float
+   :param L_sgm: Leakage inductance (H).
+   :type L_sgm: float
+   :param L_M: Magnetizing inductance (H).
+   :type L_M: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: from_gamma_model_pars(par)
+      :classmethod:
+
+
+      
+      Compute inverse-Γ model parameters from Γ model parameters.
+
+      This transformation assumes that the parameters are constant.
+
+      :param par: Γ-model parameters.
+      :type par: InductionMachinePars
+
+      :returns: Inverse-Γ model parameters.
+      :rtype: InductionMachineInvGammaPars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: InductionMachinePars
+
+   Bases: :py:obj:`MachinePars`
+
+
+   
+   Γ-model parameters of an induction machine.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param R_r: Rotor resistance (Ω).
+   :type R_r: float
+   :param L_ell: Leakage inductance (H).
+   :type L_ell: float
+   :param L_s: Stator inductance (H).
+   :type L_s: float | callable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: from_inv_gamma_model_pars(par)
+      :classmethod:
+
+
+      
+      Compute Γ-model parameters from inverse-Γ model parameters.
+
+      This transformation assumes that the parameters are constant.
+
+      :param par: Inverse-Γ model parameters.
+      :type par: InductionMachineInvGammaPars
+
+      :returns: Γ model parameters.
+      :rtype: InductionMachinePars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SynchronousMachinePars
+
+   Bases: :py:obj:`MachinePars`
+
+
+   
+   Synchronous machine parameters.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param L_d: d-axis inductance (H).
+   :type L_d: float
+   :param L_q: q-axis inductance (H).
+   :type L_q: float
+   :param psi_f: Permanent-magnet flux linkage (Vs).
+   :type psi_f: float
 
 
 

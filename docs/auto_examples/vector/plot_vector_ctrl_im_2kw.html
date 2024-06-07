@@ -393,7 +393,9 @@ motor drive. The magnetic saturation of the machine is also included in the
 system model, while the control system assumes constant parameters.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">motulator.drive</span> <span class="kn">import</span> <span class="n">model</span>
 <span class="kn">import</span> <span class="nn">motulator.drive.control.im</span> <span class="k">as</span> <span class="nn">control</span>
-<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span>
+<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span><span class="p">,</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
+    <span class="n">InductionMachineInvGammaPars</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
@@ -429,13 +431,12 @@ be used also for other induction machines.</p>
 </div>
 <p>Create the system model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Γ-equivalent machine model with main-flux saturation included</span>
-<span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InductionMachine</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">)</span>
+<span class="n">mdl_par</span> <span class="o">=</span> <span class="n">InductionMachinePars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">)</span>
 <span class="c1"># Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)</span>
-<span class="c1">#machine = model.InductionMachineInvGamma(</span>
-<span class="c1">#    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)</span>
-<span class="c1"># Alternatively, configure the machine model using its Γ parameters</span>
-<span class="c1">#machine = model.InductionMachine(</span>
-<span class="c1">#    n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)</span>
+<span class="c1"># par = InductionMachineInvGammaPars(</span>
+<span class="c1">#     n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)</span>
+<span class="c1"># mdl_par = InductionMachinePars.from_inv_gamma_model_pars(par)</span>
+<span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InductionMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="c1">#mechanics = model.TwoMassMechanics(</span>
 <span class="c1">#    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13</span>
@@ -446,13 +447,14 @@ be used also for other induction machines.</p>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Machine model parameters</span>
-<span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Machine model parameter estimates</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">(</span>
+    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
 <span class="c1"># Set nominal values and limits for reference generation</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentReferenceCfg</span><span class="p">(</span>
     <span class="n">par</span><span class="p">,</span> <span class="n">max_i_s</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">nom_u_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">nom_w_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
 <span class="c1"># Create the control system</span>
-<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">250e-6</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">250e-6</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># As an example, you may replace the default 2DOF PI speed controller with the</span>
 <span class="c1"># regular PI speed controller by uncommenting the following line</span>
 <span class="c1"># from motulator.common import PICtrl</span>
@@ -489,7 +491,7 @@ of induction motor drives,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.108 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.132 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/822ca16ec2c87f4b1cb305aa4eafaca5/plot_vector_ctrl_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vector_ctrl_im_2kw.ipynb</span></code></a></p>

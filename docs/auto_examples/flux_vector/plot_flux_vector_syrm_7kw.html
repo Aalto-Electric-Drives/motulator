@@ -399,7 +399,8 @@ Naturally, the PM-flux estimation can be used in PM machine drives as well.</p>
 
 <span class="kn">from</span> <span class="nn">motulator.drive</span> <span class="kn">import</span> <span class="n">model</span>
 <span class="kn">import</span> <span class="nn">motulator.drive.control.sm</span> <span class="k">as</span> <span class="nn">control</span>
-<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">SynchronousMachinePars</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
@@ -425,10 +426,12 @@ Naturally, the PM-flux estimation can be used in PM machine drives as well.</p>
 </pre></div>
 </div>
 <p>Configure the system model.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">SynchronousMachine</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mdl_par</span> <span class="o">=</span> <span class="n">SynchronousMachinePars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">)</span>
+<span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">SynchronousMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="c1"># Magnetically linear SyRM model for comparison</span>
-<span class="c1"># machine = model.sm.SynchronousMachine(</span>
-<span class="c1">#    n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)</span>
+<span class="c1"># mdl_par = SynchronousMachinePars(</span>
+<span class="c1">#     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)</span>
+<span class="c1"># machine = model.SynchronousMachine(mdl_par)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">)</span>
@@ -437,12 +440,12 @@ Naturally, the PM-flux estimation can be used in PM machine drives as well.</p>
 <p>Configure the control system. The saturation is not taken into account.
 Furthermore, the inductance estimates L_d and L_q are intentionally set to
 lower values in order to demonstrate the PM-flux disturbance estimation.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span>
-    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">.7</span><span class="o">*</span><span class="mf">37e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">.8</span><span class="o">*</span><span class="mf">6.2e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">SynchronousMachinePars</span><span class="p">(</span>
+    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">.7</span><span class="o">*</span><span class="mf">37e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">.8</span><span class="o">*</span><span class="mf">6.2e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="c1"># Disable MTPA since the control system does not consider the saturation</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">FluxTorqueReferenceCfg</span><span class="p">(</span>
     <span class="n">par</span><span class="p">,</span> <span class="n">max_i_s</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">k_u</span><span class="o">=</span><span class="mf">.9</span><span class="p">,</span> <span class="n">min_psi_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">max_psi_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
-<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">FluxVectorCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">FluxVectorCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># Since the saturation is not considered in the control system, the speed</span>
 <span class="c1"># estimation bandwidth is set to a lower value. Furthermore, the PM-flux</span>
 <span class="c1"># disturbance estimation is enabled at speeds above 2*pi*20 rad/s (electrical).</span>
@@ -506,7 +509,7 @@ magnet flux adaptation for sensorless synchronous motor drives,” Proc.
 IEEE SLED, 2018, <a class="reference external" href="https://doi.org/10.1109/SLED.2018.8485899">https://doi.org/10.1109/SLED.2018.8485899</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 15.637 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 15.438 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-vector-plot-flux-vector-syrm-7kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e6572a075a4cfc4ead4a22a9a67ff8d4/plot_flux_vector_syrm_7kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_flux_vector_syrm_7kw.ipynb</span></code></a></p>

@@ -338,37 +338,8 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="n">SynchronousMachinePars</span>
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">wrap</span>
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="ModelPars"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ModelPars">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ModelPars</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Model parameters of a synchronous machine.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    R_s : float</span>
-<span class="sd">        Stator resistance (Ω).</span>
-<span class="sd">    L_d : float</span>
-<span class="sd">        d-axis inductance (H).</span>
-<span class="sd">    L_q : float</span>
-<span class="sd">        q-axis inductance (H).</span>
-<span class="sd">    psi_f : float</span>
-<span class="sd">        PM flux linkage (Vs).</span>
-<span class="sd">    n_p : int</span>
-<span class="sd">        Number of pole pairs.</span>
-<span class="sd">    J : float</span>
-<span class="sd">        Moment of inertia (kgm²).</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">L_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">L_q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <span class="c1"># %%</span>
@@ -379,7 +350,7 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    par : ModelPars</span>
+<span class="sd">    par : SynchronousMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    sensorless : bool</span>
 <span class="sd">        If True, sensorless mode is used. </span>
@@ -397,7 +368,7 @@ document.write(`
 <span class="sd">        slope `k` (Vs).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">par</span><span class="p">:</span> <span class="n">ModelPars</span>
+    <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span>
     <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">gain</span><span class="p">:</span> <span class="n">SimpleNamespace</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">alpha_o</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">40</span>

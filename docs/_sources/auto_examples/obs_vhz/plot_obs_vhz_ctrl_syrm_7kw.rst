@@ -25,7 +25,7 @@ This example simulates observer-based V/Hz control of a saturated 6.7-kW
 synchronous reluctance motor drive. The saturation is not taken into account
 in the control method (only in the system model).
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-17
+.. GENERATED FROM PYTHON SOURCE LINES 11-18
 
 .. code-block:: Python
 
@@ -33,7 +33,8 @@ in the control method (only in the system model).
     import numpy as np
     from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+    from motulator.drive.utils import (
+        BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
 
 
 
@@ -42,11 +43,11 @@ in the control method (only in the system model).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
@@ -61,7 +62,7 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-33
+.. GENERATED FROM PYTHON SOURCE LINES 25-34
 
 A saturation model is created based on [#Hin2017]_, [#Awa2018]_. For
 simplicity, the saturation model parameters are hard-coded in function below,
@@ -73,7 +74,7 @@ and of the PMs are in series. This model cannot capture the desaturation
 phenomenon of thin iron ribs, see [#Arm2009]_ for details. For such motors,
 look-up tables can be used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-75
+.. GENERATED FROM PYTHON SOURCE LINES 34-76
 
 .. code-block:: Python
 
@@ -126,18 +127,21 @@ look-up tables can be used.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-85
+.. GENERATED FROM PYTHON SOURCE LINES 78-89
 
 .. code-block:: Python
 
-    machine = model.SynchronousMachine(n_p=2, R_s=.54, i_s=i_s, psi_s0=0)
+
+    mdl_par = SynchronousMachinePars(n_p=2, R_s=.54)
+    machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=0)
     # Magnetically linear SyRM model for comparison
-    # machine = model.SynchronousMachine(
+    # mdl_par = SynchronousMachinePars(
     #     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+    # machine = model.SynchronousMachine(mdl_par)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
@@ -149,16 +153,16 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+.. GENERATED FROM PYTHON SOURCE LINES 90-91
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-93
+.. GENERATED FROM PYTHON SOURCE LINES 91-97
 
 .. code-block:: Python
 
 
-    par = control.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+    par = SynchronousMachinePars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
     cfg = control.ObserverBasedVHzCtrlCfg(
         par, max_i_s=2*base.i, min_psi_s=base.psi, max_psi_s=base.psi)
     ctrl = control.ObserverBasedVHzCtrl(par, cfg)
@@ -170,11 +174,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-95
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-105
+.. GENERATED FROM PYTHON SOURCE LINES 99-109
 
 .. code-block:: Python
 
@@ -195,11 +199,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-107
+.. GENERATED FROM PYTHON SOURCE LINES 110-111
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-111
+.. GENERATED FROM PYTHON SOURCE LINES 111-115
 
 .. code-block:: Python
 
@@ -214,12 +218,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-114
+.. GENERATED FROM PYTHON SOURCE LINES 116-118
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-117
+.. GENERATED FROM PYTHON SOURCE LINES 118-121
 
 .. code-block:: Python
 
@@ -238,7 +242,7 @@ the results in SI units.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-136
+.. GENERATED FROM PYTHON SOURCE LINES 122-140
 
 .. rubric:: References
 
@@ -262,7 +266,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 29.248 seconds)
+   **Total running time of the script:** (0 minutes 29.049 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py:

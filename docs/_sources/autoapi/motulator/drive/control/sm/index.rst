@@ -32,7 +32,6 @@ Classes
 
 .. autoapisummary::
 
-   motulator.drive.control.sm.ModelPars
    motulator.drive.control.sm.Observer
    motulator.drive.control.sm.ObserverCfg
    motulator.drive.control.sm.FluxTorqueReference
@@ -52,41 +51,6 @@ Classes
 
 Package Contents
 ----------------
-
-.. py:class:: ModelPars
-
-   
-   Model parameters of a synchronous machine.
-
-   :param R_s: Stator resistance (Ω).
-   :type R_s: float
-   :param L_d: d-axis inductance (H).
-   :type L_d: float
-   :param L_q: q-axis inductance (H).
-   :type L_q: float
-   :param psi_f: PM flux linkage (Vs).
-   :type psi_f: float
-   :param n_p: Number of pole pairs.
-   :type n_p: int
-   :param J: Moment of inertia (kgm²).
-   :type J: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 
 .. py:class:: Observer(cfg)
 
@@ -218,7 +182,7 @@ Package Contents
    Observer configuration.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param sensorless: If True, sensorless mode is used.
    :type sensorless: bool
    :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
@@ -286,7 +250,7 @@ Package Contents
    Reference generation configuration.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param max_i_s: Maximum stator current (A).
    :type max_i_s: float
    :param min_psi_s: Minimum stator flux (Vs). The default is `par.psi_f`.
@@ -313,7 +277,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: FluxVectorCtrl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_o=2 * np.pi * 100, T_s=0.00025, sensorless=True)
+.. py:class:: FluxVectorCtrl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_o=2 * np.pi * 100, J=None, T_s=0.00025, sensorless=True)
 
    Bases: :py:obj:`motulator.drive.control.DriveCtrl`
 
@@ -329,13 +293,17 @@ Package Contents
    saturation is not considered in this implementation.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param cfg: Reference generation configuration.
    :type cfg: FluxTorqueReferenceCfg
    :param alpha_psi: Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
    :type alpha_psi: float, optional
    :param alpha_tau: Bandwidth of the torque controller (rad/s). The default is 2*pi*200.
    :type alpha_tau: float, optional
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*100.
+   :type alpha_o: float, optional
+   :param J: Moment of inertia (kg*m^2). Needed for the speed controller.
+   :type J: float, optional
    :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float
    :param sensorless: If True, sensorless control is used. The default is True.
@@ -406,7 +374,7 @@ Package Contents
    bandwidth and the inductances.
 
    :param par: Synchronous machine parameters, should contain `L_d` and `L_q` (H).
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param alpha_c: Closed-loop bandwidth (rad/s).
    :type alpha_c: float
 
@@ -474,7 +442,7 @@ Package Contents
    taken into account. This resembles the method presented [#Bed2020]_.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param cfg: Reference generation configuration.
    :type cfg: CurrentReferenceCfg
 
@@ -564,7 +532,7 @@ Package Contents
    Reference generation configuration.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param max_i_s: Maximum stator current (A).
    :type max_i_s: float
    :param min_psi_s: Minimum stator flux (Vs). The default is `psi_f`.
@@ -616,7 +584,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentVectorCtrl(par, cfg, T_s=0.00025, alpha_c=2 * np.pi * 200, alpha_o=2 * np.pi * 100, sensorless=True)
+.. py:class:: CurrentVectorCtrl(par, cfg, T_s=0.00025, J=None, alpha_c=2 * np.pi * 200, alpha_o=2 * np.pi * 100, sensorless=True)
 
    Bases: :py:obj:`motulator.drive.control.DriveCtrl`
 
@@ -628,11 +596,17 @@ Package Contents
    the interface to the solver.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param cfg: Reference generation configuration.
    :type cfg: CurrentReferenceCfg
    :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float, optional
+   :param J: Moment of inertia (kg*m^2). Needed for the speed controller.
+   :type J: float, optional
+   :param alpha_c: Current controller bandwidth (rad/s). The default is 2*pi*200.
+   :type alpha_c: float, optional
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*100.
+   :type alpha_o: float, optional
    :param sensorless: If True, sensorless control is used. The default is True.
    :type sensorless: bool, optional
 
@@ -760,7 +734,7 @@ Package Contents
    This observer-based V/Hz control control method is based on [#Tii2022]_.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param cfg: Control system configuration.
    :type cfg: ObserverBasedVHzCtrlCfg
    :param T_s: Sampling period (s). The default is 250e-6.
@@ -880,7 +854,7 @@ Package Contents
    operation.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param U_inj: Injected voltage amplitude (V).
    :type U_inj: float
 
@@ -987,7 +961,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SignalInjectionCtrl(par, cfg, T_s=0.00025)
+.. py:class:: SignalInjectionCtrl(par, cfg, J=None, T_s=0.00025)
 
    Bases: :py:obj:`motulator.drive.control.DriveCtrl`
 
@@ -1012,9 +986,11 @@ Package Contents
       https://doi.org/10.1109/TIA.2012.2210175
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
    :param cfg: Reference generation configuration.
    :type cfg: CurrentReferenceCfg
+   :param J: Moment of inertia (kg*m^2). Needed for the speed controller.
+   :type J: float, optional
    :param T_s: Sampling period (s).
    :type T_s: float
 
@@ -1113,7 +1089,7 @@ Package Contents
    Compute MTPA and MTPV loci based on the machine parameters.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: SynchronousMachinePars
 
 
 

@@ -27,7 +27,7 @@ well as the harmonics. Since the PWM is not synchronized with the stator
 frequency, the harmonic content also depends on the ratio between the stator 
 frequency and the sampling frequency.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-21
+.. GENERATED FROM PYTHON SOURCE LINES 13-22
 
 .. code-block:: Python
 
@@ -37,7 +37,8 @@ frequency and the sampling frequency.
     from motulator.drive import model
     import motulator.drive.control.im as control
     from motulator.drive.utils import (
-        BaseValues, NominalValues, plot, plot_extra, Sequence)
+        BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
+        NominalValues, plot, plot_extra, Sequence)
 
 
 
@@ -46,11 +47,11 @@ frequency and the sampling frequency.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-27
+.. GENERATED FROM PYTHON SOURCE LINES 24-28
 
 .. code-block:: Python
 
@@ -65,18 +66,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 29-30
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-38
+.. GENERATED FROM PYTHON SOURCE LINES 30-41
 
 .. code-block:: Python
 
 
     # Configure the induction machine using its inverse-Γ parameters
-    machine = model.InductionMachineInvGamma(
-        R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+    mdl_ig_par = InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
+    mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
+    machine = model.InductionMachine(mdl_par)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
@@ -89,16 +92,16 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-44
+.. GENERATED FROM PYTHON SOURCE LINES 43-47
 
 .. code-block:: Python
 
 
-    par = control.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+    par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
     ctrl = control.VHzCtrl(
         control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
 
@@ -108,11 +111,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-58
+.. GENERATED FROM PYTHON SOURCE LINES 49-61
 
 .. code-block:: Python
 
@@ -135,11 +138,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-64
+.. GENERATED FROM PYTHON SOURCE LINES 63-67
 
 .. code-block:: Python
 
@@ -154,11 +157,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-70
+.. GENERATED FROM PYTHON SOURCE LINES 69-73
 
 .. code-block:: Python
 
@@ -193,7 +196,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.759 seconds)
+   **Total running time of the script:** (0 minutes 8.625 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:

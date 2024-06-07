@@ -331,10 +331,13 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for motulator.drive.utils._helpers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Helper functions and classes for machine drives.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Common dataclasses usable in models and control of machine drives.&quot;&quot;&quot;</span>
 
 <span class="c1"># %%</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="c1"># Note: Union can be replaced by &quot;|&quot; in Python 3.10</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -447,6 +450,146 @@ document.write(`
         <span class="n">tau</span> <span class="o">=</span> <span class="n">n_p</span><span class="o">*</span><span class="n">p</span><span class="o">/</span><span class="n">w</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="n">u</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">psi</span><span class="o">=</span><span class="n">psi</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">Z</span><span class="o">=</span><span class="n">Z</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="n">n_p</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># %%</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">MachinePars</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for electrical parameters of an electric machine.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_p : int</span>
+<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    R_s : float</span>
+<span class="sd">        Stator resistance (Ω).</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="SynchronousMachinePars"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.SynchronousMachinePars">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SynchronousMachinePars</span><span class="p">(</span><span class="n">MachinePars</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Synchronous machine parameters.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_p : int</span>
+<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    R_s : float</span>
+<span class="sd">        Stator resistance (Ω).</span>
+<span class="sd">    L_d : float</span>
+<span class="sd">        d-axis inductance (H).</span>
+<span class="sd">    L_q : float</span>
+<span class="sd">        q-axis inductance (H).</span>
+<span class="sd">    psi_f : float</span>
+<span class="sd">        Permanent-magnet flux linkage (Vs).</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">L_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">L_q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="InductionMachinePars"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.InductionMachinePars">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">InductionMachinePars</span><span class="p">(</span><span class="n">MachinePars</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Γ-model parameters of an induction machine.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_p : int</span>
+<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    R_s : float</span>
+<span class="sd">        Stator resistance (Ω).</span>
+<span class="sd">    R_r : float</span>
+<span class="sd">        Rotor resistance (Ω).</span>
+<span class="sd">    L_ell : float</span>
+<span class="sd">        Leakage inductance (H).</span>
+<span class="sd">    L_s : float | callable</span>
+<span class="sd">        Stator inductance (H).</span>
+<span class="sd"> </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">R_r</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">L_ell</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1">#L_s: float | Callable = None  # Can be used in Python 3.10 and later</span>
+    <span class="n">L_s</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="InductionMachinePars.from_inv_gamma_model_pars"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_inv_gamma_model_pars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute Γ-model parameters from inverse-Γ model parameters.</span>
+
+<span class="sd">        This transformation assumes that the parameters are constant. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par : InductionMachineInvGammaPars</span>
+<span class="sd">            Inverse-Γ model parameters.</span>
+<span class="sd"> </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InductionMachinePars</span>
+<span class="sd">            Γ model parameters.</span>
+<span class="sd"> </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span><span class="p">)</span>
+        <span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="p">,</span> <span class="n">L_s</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_R</span><span class="o">/</span><span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">/</span><span class="n">g</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="n">L_ell</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="InductionMachineInvGammaPars"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.InductionMachineInvGammaPars">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">InductionMachineInvGammaPars</span><span class="p">(</span><span class="n">MachinePars</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inverse-Γ model parameters of an induction machine.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_p : int</span>
+<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    R_s : float</span>
+<span class="sd">        Stator resistance (Ω).</span>
+<span class="sd">    R_R : float</span>
+<span class="sd">        Rotor resistance (Ω).</span>
+<span class="sd">    L_sgm : float</span>
+<span class="sd">        Leakage inductance (H).</span>
+<span class="sd">    L_M : float</span>
+<span class="sd">        Magnetizing inductance (H).</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">R_R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">L_sgm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">L_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="InductionMachineInvGammaPars.from_gamma_model_pars"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_gamma_model_pars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute inverse-Γ model parameters from Γ model parameters.</span>
+
+<span class="sd">        This transformation assumes that the parameters are constant. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par : InductionMachinePars</span>
+<span class="sd">            Γ-model parameters.</span>
+<span class="sd"> </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InductionMachineInvGammaPars</span>
+<span class="sd">            Inverse-Γ model parameters.</span>
+<span class="sd"> </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_s</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_ell</span><span class="p">)</span>
+        <span class="n">R_R</span><span class="p">,</span> <span class="n">L_sgm</span><span class="p">,</span> <span class="n">L_M</span> <span class="o">=</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R_r</span><span class="p">,</span> <span class="n">g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_ell</span><span class="p">,</span> <span class="n">g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="n">R_R</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="n">L_sgm</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="n">L_M</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span></div></div>
 </pre></div>
 
                 </article>

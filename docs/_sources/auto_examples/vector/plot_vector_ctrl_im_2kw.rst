@@ -25,14 +25,16 @@ This example simulates sensorless current-vector control of a 2.2-kW induction
 motor drive. The magnetic saturation of the machine is also included in the 
 system model, while the control system assumes constant parameters. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-16
+.. GENERATED FROM PYTHON SOURCE LINES 11-18
 
 .. code-block:: Python
 
 
     from motulator.drive import model
     import motulator.drive.control.im as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot
+    from motulator.drive.utils import (
+        BaseValues, NominalValues, plot, InductionMachinePars,
+        InductionMachineInvGammaPars)
 
 
 
@@ -41,11 +43,11 @@ system model, while the control system assumes constant parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
@@ -60,17 +62,17 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-29
+.. GENERATED FROM PYTHON SOURCE LINES 28-31
 
 The main-flux saturation is modeled based on [#Qu2012]_. For simplicity, the
 parameters are hardcoded in the function below, but this model structure can
 be used also for other induction machines.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-53
+.. GENERATED FROM PYTHON SOURCE LINES 31-55
 
 .. code-block:: Python
 
@@ -105,23 +107,22 @@ be used also for other induction machines.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-72
+.. GENERATED FROM PYTHON SOURCE LINES 57-73
 
 .. code-block:: Python
 
 
     # Γ-equivalent machine model with main-flux saturation included
-    machine = model.InductionMachine(n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
+    mdl_par = InductionMachinePars(n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=L_s)
     # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
-    #machine = model.InductionMachineInvGamma(
-    #    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
-    # Alternatively, configure the machine model using its Γ parameters
-    #machine = model.InductionMachine(
-    #    n_p=2, R_s=3.7, R_r=2.5, L_ell=.023, L_s=.245)
+    # par = InductionMachineInvGammaPars(
+    #     n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
+    # mdl_par = InductionMachinePars.from_inv_gamma_model_pars(par)
+    machine = model.InductionMachine(mdl_par)
     mechanics = model.Mechanics(J=.015)
     #mechanics = model.TwoMassMechanics(
     #    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
@@ -137,22 +138,23 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-74
+.. GENERATED FROM PYTHON SOURCE LINES 74-75
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-87
+.. GENERATED FROM PYTHON SOURCE LINES 75-89
 
 .. code-block:: Python
 
 
-    # Machine model parameters
-    par = control.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2, J=.015)
+    # Machine model parameter estimates
+    par = InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
     # Set nominal values and limits for reference generation
     cfg = control.CurrentReferenceCfg(
         par, max_i_s=1.5*base.i, nom_u_s=base.u, nom_w_s=base.w)
     # Create the control system
-    ctrl = control.CurrentVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
+    ctrl = control.CurrentVectorCtrl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
     # As an example, you may replace the default 2DOF PI speed controller with the
     # regular PI speed controller by uncommenting the following line
     # from motulator.common import PICtrl
@@ -165,12 +167,12 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-90
+.. GENERATED FROM PYTHON SOURCE LINES 90-92
 
 Set the speed reference and the external load torque. You may also try to
 uncomment the field-weakening sequence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-99
+.. GENERATED FROM PYTHON SOURCE LINES 92-101
 
 .. code-block:: Python
 
@@ -190,11 +192,11 @@ uncomment the field-weakening sequence.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-101
+.. GENERATED FROM PYTHON SOURCE LINES 102-103
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-105
+.. GENERATED FROM PYTHON SOURCE LINES 103-107
 
 .. code-block:: Python
 
@@ -209,12 +211,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-108
+.. GENERATED FROM PYTHON SOURCE LINES 108-110
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-111
+.. GENERATED FROM PYTHON SOURCE LINES 110-113
 
 .. code-block:: Python
 
@@ -233,7 +235,7 @@ the results in SI units.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-117
+.. GENERATED FROM PYTHON SOURCE LINES 114-119
 
 .. rubric:: References
 
@@ -244,7 +246,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.108 seconds)
+   **Total running time of the script:** (0 minutes 4.132 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw.py:

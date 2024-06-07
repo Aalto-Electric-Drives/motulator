@@ -24,7 +24,7 @@
 This example simulates sensorless current-vector control of a 5-kW permanent-
 magnet synchronous reluctance motor. Control look-up tables are also plotted.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-17
+.. GENERATED FROM PYTHON SOURCE LINES 10-18
 
 .. code-block:: Python
 
@@ -33,7 +33,8 @@ magnet synchronous reluctance motor. Control look-up tables are also plotted.
 
     from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot
+    from motulator.drive.utils import (
+        BaseValues, NominalValues, plot, SynchronousMachinePars)
 
 
 
@@ -42,11 +43,11 @@ magnet synchronous reluctance motor. Control look-up tables are also plotted.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
@@ -61,18 +62,19 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-33
+.. GENERATED FROM PYTHON SOURCE LINES 26-35
 
 .. code-block:: Python
 
 
     # Configure magnetically linear motor model
-    machine = model.SynchronousMachine(
+    mdl_par = SynchronousMachinePars(
         n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+    machine = model.SynchronousMachine(mdl_par)
     mechanics = model.Mechanics(J=.0042)
     converter = model.Inverter(u_dc=310)
     mdl = model.Drive(converter, machine, mechanics)
@@ -84,24 +86,24 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-46
+.. GENERATED FROM PYTHON SOURCE LINES 37-48
 
 .. code-block:: Python
 
 
-    par = control.ModelPars(
-        n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134, J=.0042)
+    par = mdl_par  # Assume accurate machine model parameter estimates
     cfg = control.CurrentReferenceCfg(
         par, nom_w_m=base.w, max_i_s=2*base.i, k_u=.9)
-    ctrl = control.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
+    ctrl = control.CurrentVectorCtrl(
+        par, cfg, T_s=125e-6, J=.0042, sensorless=True)
     ctrl.observer = control.Observer(
         control.ObserverCfg(par, sensorless=True, alpha_o=2*np.pi*200))
     ctrl.speed_ctrl = control.SpeedCtrl(
-        J=par.J, alpha_s=2*np.pi*4, max_tau_M=1.5*nom.tau)
+        J=.0042, alpha_s=2*np.pi*4, max_tau_M=1.5*nom.tau)
 
 
 
@@ -110,11 +112,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-56
+.. GENERATED FROM PYTHON SOURCE LINES 50-58
 
 .. code-block:: Python
 
@@ -157,11 +159,11 @@ Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-58
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-65
+.. GENERATED FROM PYTHON SOURCE LINES 60-67
 
 .. code-block:: Python
 
@@ -179,11 +181,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Create the simulation object, simulate, and plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-71
+.. GENERATED FROM PYTHON SOURCE LINES 69-73
 
 .. code-block:: Python
 
@@ -206,7 +208,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.992 seconds)
+   **Total running time of the script:** (0 minutes 5.061 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:

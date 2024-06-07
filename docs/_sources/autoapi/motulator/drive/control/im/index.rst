@@ -34,7 +34,6 @@ Classes
 
    motulator.drive.control.im.FullOrderObserver
    motulator.drive.control.im.FullOrderObserverCfg
-   motulator.drive.control.im.ModelPars
    motulator.drive.control.im.Observer
    motulator.drive.control.im.ObserverCfg
    motulator.drive.control.im.CurrentCtrl
@@ -144,41 +143,6 @@ Package Contents
 
    :param alpha_i: Current estimation bandwidth (rad/s). The default is 2*pi*400.
    :type alpha_i: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: ModelPars
-
-   
-   Inverse-Γ model parameters of an induction machine.
-
-   :param R_s: Stator resistance (Ω).
-   :type R_s: float
-   :param R_R: Rotor resistance (Ω).
-   :type R_R: float
-   :param L_sgm: Leakage inductance (H).
-   :type L_sgm: float
-   :param L_M: Magnetizing inductance (H).
-   :type L_M: float
-   :param n_p: Number of pole pairs.
-   :type n_p: int
-   :param J: Moment of inertia (kgm²).
-   :type J: float
 
 
 
@@ -320,7 +284,7 @@ Package Contents
    Reduced-order flux observer configuration.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: InductionMachineInvGammaPars
    :param T_s: Sampling period (s).
    :type T_s: float
    :param sensorless: If True, sensorless mode is used.
@@ -368,7 +332,7 @@ Package Contents
    bandwidth and the leakage inductance.
 
    :param par: Machine parameters, contains the leakage inductance `L_sgm` (H).
-   :type par: ModelPars
+   :type par: InductionMachineInvGammaPars
    :param alpha_c: Closed-loop bandwidth (rad/s).
    :type alpha_c: float
 
@@ -414,7 +378,7 @@ Package Contents
    breakdown slip.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: InductionMachineInvGammaPars
    :param cfg: Reference generation configuration.
    :type cfg: CurrentReferenceCfg
 
@@ -500,7 +464,7 @@ Package Contents
    parameters are also required.
 
    :param par: Machine model parameters.
-   :type par: ModelPars
+   :type par: InductionMachineInvGammaPars
    :param max_i_s: Maximum stator current (A).
    :type max_i_s: float
    :param nom_u_s: Nominal stator voltage (V). The default is sqrt(2/3)*400.
@@ -532,7 +496,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentVectorCtrl(par, cfg, T_s=0.00025, sensorless=True)
+.. py:class:: CurrentVectorCtrl(par, cfg, J=None, T_s=0.00025, sensorless=True)
 
    Bases: :py:obj:`motulator.drive.control.DriveCtrl`
 
@@ -545,9 +509,11 @@ Package Contents
    current controller, a flux observer, and speed controller (optional).
 
    :param par: Machine parameters.
-   :type par: ModelPars
+   :type par: InductionMachineInvGammaPars
    :param cfg: Current reference generator configuration.
    :type cfg: CurrentReferenceCfg
+   :param J: Moment of inertia (kgm^2). Needed for speed control.
+   :type J: float, optional
    :param T_s: Sampling time (s). The default is 250e-6.
    :type T_s: float, optional
    :param sensorless: Enable sensorless control. The default is True.
@@ -573,7 +539,7 @@ Package Contents
 
    .. attribute:: speed_ctrl
 
-      Speed controller. The default is SpeedCtrl(par.J, 2*np.pi*4)
+      Speed controller. The default is SpeedCtrl(J, 2*np.pi*4)
 
       :type: SpeedCtrl | None
 

@@ -34,7 +34,7 @@ saturation is not taken into account in the control method, only in the system
 model. Naturally, the control performance could be improved by taking the
 saturation into account in the control algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-34
+.. GENERATED FROM PYTHON SOURCE LINES 20-35
 
 .. code-block:: Python
 
@@ -48,7 +48,8 @@ saturation into account in the control algorithm.
 
     from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+    from motulator.drive.utils import (
+        BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
     from motulator.drive.utils import (
         import_syre_data, plot_flux_vs_current, plot_flux_map)
 
@@ -59,11 +60,11 @@ saturation into account in the control algorithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-36
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-40
+.. GENERATED FROM PYTHON SOURCE LINES 37-41
 
 .. code-block:: Python
 
@@ -78,11 +79,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Load and plot the flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-57
+.. GENERATED FROM PYTHON SOURCE LINES 43-58
 
 .. code-block:: Python
 
@@ -125,11 +126,11 @@ Load and plot the flux maps.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Create the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-86
+.. GENERATED FROM PYTHON SOURCE LINES 60-87
 
 .. code-block:: Python
 
@@ -167,20 +168,23 @@ Create the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-88
+.. GENERATED FROM PYTHON SOURCE LINES 88-89
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-98
+.. GENERATED FROM PYTHON SOURCE LINES 89-102
 
 .. code-block:: Python
 
 
-    # Create the motor model
-    machine = model.SynchronousMachine(n_p=2, R_s=.2, i_s=i_s, psi_s0=psi_s0)
+    # Create the machine model
+    mdl_par = SynchronousMachinePars(
+        n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+    machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
     # Magnetically linear PM-SyRM model
-    # machine = model.sm.SynchronousMachine(
+    # mdl_par = SynchronousMachinePars(
     #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+    # machine = model.SynchronousMachine(mdl_par)
     mechanics = model.Mechanics(J=.0042)
     converter = model.Inverter(u_dc=310)
     mdl = model.Drive(converter, machine, mechanics)
@@ -192,16 +196,16 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-100
+.. GENERATED FROM PYTHON SOURCE LINES 103-104
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-105
+.. GENERATED FROM PYTHON SOURCE LINES 104-109
 
 .. code-block:: Python
 
 
-    par = control.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+    par = SynchronousMachinePars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
     cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
     ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
@@ -212,11 +216,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-107
+.. GENERATED FROM PYTHON SOURCE LINES 110-111
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-122
+.. GENERATED FROM PYTHON SOURCE LINES 111-126
 
 .. code-block:: Python
 
@@ -242,11 +246,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-124
+.. GENERATED FROM PYTHON SOURCE LINES 127-128
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-128
+.. GENERATED FROM PYTHON SOURCE LINES 128-132
 
 .. code-block:: Python
 
@@ -261,12 +265,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-131
+.. GENERATED FROM PYTHON SOURCE LINES 133-135
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-133
+.. GENERATED FROM PYTHON SOURCE LINES 135-137
 
 .. code-block:: Python
 
@@ -287,7 +291,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 52.692 seconds)
+   **Total running time of the script:** (0 minutes 51.153 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:

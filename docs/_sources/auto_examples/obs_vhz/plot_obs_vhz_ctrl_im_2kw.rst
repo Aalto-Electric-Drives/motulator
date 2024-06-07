@@ -24,7 +24,7 @@
 This example simulates observer-based V/Hz control of a 2.2-kW induction motor
 drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-17
+.. GENERATED FROM PYTHON SOURCE LINES 10-19
 
 .. code-block:: Python
 
@@ -33,7 +33,9 @@ drive.
 
     from motulator.drive import model
     import motulator.drive.control.im as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+    from motulator.drive.utils import (
+        BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
+        NominalValues, plot, Sequence)
 
 
 
@@ -42,11 +44,11 @@ drive.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 21-25
 
 .. code-block:: Python
 
@@ -61,18 +63,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-33
+.. GENERATED FROM PYTHON SOURCE LINES 27-37
 
 .. code-block:: Python
 
 
     # Configure the induction machine using its inverse-Γ parameters
-    machine = model.InductionMachineInvGamma(
-        R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+    mdl_ig_par = InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
+    mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
+    machine = model.InductionMachine(mdl_par)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
@@ -84,17 +88,17 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-42
+.. GENERATED FROM PYTHON SOURCE LINES 39-46
 
 .. code-block:: Python
 
 
     # Inverse-Γ model parameter estimates
-    par = control.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+    par = mdl_ig_par  # Assume accurate machine model parameter estimates
     cfg = control.ObserverBasedVHzCtrlCfg(
         nom_psi_s=base.psi, max_i_s=1.5*base.i, slip_compensation=False)
     ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
@@ -106,11 +110,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Set the speed reference.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-50
+.. GENERATED FROM PYTHON SOURCE LINES 48-54
 
 .. code-block:: Python
 
@@ -127,11 +131,11 @@ Set the speed reference.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Set the load torque reference.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-62
+.. GENERATED FROM PYTHON SOURCE LINES 56-66
 
 .. code-block:: Python
 
@@ -152,11 +156,11 @@ Set the load torque reference.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-68
+.. GENERATED FROM PYTHON SOURCE LINES 68-72
 
 .. code-block:: Python
 
@@ -171,12 +175,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-71
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 75-77
 
 .. code-block:: Python
 
@@ -197,7 +201,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.307 seconds)
+   **Total running time of the script:** (0 minutes 9.256 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py:

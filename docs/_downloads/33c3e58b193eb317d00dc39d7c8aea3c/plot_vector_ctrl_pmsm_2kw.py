@@ -12,7 +12,8 @@ import time
 
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import BaseValues, NominalValues, plot
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, SynchronousMachinePars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -23,8 +24,9 @@ base = BaseValues.from_nominal(nom, n_p=3)
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(
+mdl_par = SynchronousMachinePars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+machine = model.SynchronousMachine(mdl_par)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
@@ -33,9 +35,9 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+par = mdl_par  # Assume accurate machine model parameter estimates
 cfg = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
-ctrl = control.CurrentVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
+ctrl = control.CurrentVectorCtrl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

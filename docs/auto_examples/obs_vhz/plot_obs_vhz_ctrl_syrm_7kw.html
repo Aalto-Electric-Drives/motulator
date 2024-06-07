@@ -394,7 +394,8 @@ in the control method (only in the system model).</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">motulator.drive</span> <span class="kn">import</span> <span class="n">model</span>
 <span class="kn">import</span> <span class="nn">motulator.drive.control.sm</span> <span class="k">as</span> <span class="nn">control</span>
-<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">SynchronousMachinePars</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
@@ -452,17 +453,19 @@ look-up tables can be used.</p>
 </pre></div>
 </div>
 <p>Configure the system model.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">SynchronousMachine</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mdl_par</span> <span class="o">=</span> <span class="n">SynchronousMachinePars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">)</span>
+<span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">SynchronousMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">,</span> <span class="n">i_s</span><span class="o">=</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s0</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="c1"># Magnetically linear SyRM model for comparison</span>
-<span class="c1"># machine = model.SynchronousMachine(</span>
+<span class="c1"># mdl_par = SynchronousMachinePars(</span>
 <span class="c1">#     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)</span>
+<span class="c1"># machine = model.SynchronousMachine(mdl_par)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">37e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">6.2e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">SynchronousMachinePars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">.54</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">37e-3</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">6.2e-3</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ObserverBasedVHzCtrlCfg</span><span class="p">(</span>
     <span class="n">par</span><span class="p">,</span> <span class="n">max_i_s</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">min_psi_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">max_psi_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ObserverBasedVHzCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
@@ -518,7 +521,7 @@ modeling and performance analysis of IPM-PMASR motors,” IEEE Trans. Ind.
 Appl., 2009, <a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009493">https://doi.org/10.1109/TIA.2008.2009493</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 29.248 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 29.049 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-obs-vhz-plot-obs-vhz-ctrl-syrm-7kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/2a8735a75a47cb0897acb78102cddd78/plot_obs_vhz_ctrl_syrm_7kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_obs_vhz_ctrl_syrm_7kw.ipynb</span></code></a></p>

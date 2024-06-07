@@ -387,6 +387,15 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachineInvGammaPars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.from_gamma_model_pars()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachinePars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.from_inv_gamma_model_pars()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_extra"><code class="docutils literal notranslate"><span class="pre">plot_extra()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.import_syre_data"><code class="docutils literal notranslate"><span class="pre">import_syre_data()</span></code></a></li>
@@ -421,10 +430,19 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
 <td><p>Nominal values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.Sequence" title="motulator.drive.utils.Sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a></p></td>
+<td><p>Inverse-Γ model parameters of an induction machine.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.InductionMachinePars" title="motulator.drive.utils.InductionMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a></p></td>
+<td><p>Γ-model parameters of an induction machine.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.SynchronousMachinePars" title="motulator.drive.utils.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
+<td><p>Synchronous machine parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.Sequence" title="motulator.drive.utils.Sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a></p></td>
 <td><p>Sequence generator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.Step" title="motulator.drive.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.Step" title="motulator.drive.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
 <td><p>Step function.</p></td>
 </tr>
 </tbody>
@@ -524,6 +542,96 @@ the power factor and efficiency being less than unity.</p>
 <li><p><strong>f</strong> (<em>float</em>) – Frequency (Hz).</p></li>
 <li><p><strong>P</strong> (<em>float</em>) – Power (W).</p></li>
 <li><p><strong>tau</strong> (<em>float</em>) – Torque (Nm).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.InductionMachineInvGammaPars">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">InductionMachineInvGammaPars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#InductionMachineInvGammaPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.InductionMachineInvGammaPars" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">MachinePars</span></code></p>
+<p>Inverse-Γ model parameters of an induction machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
+<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ω).</p></li>
+<li><p><strong>R_R</strong> (<em>float</em>) – Rotor resistance (Ω).</p></li>
+<li><p><strong>L_sgm</strong> (<em>float</em>) – Leakage inductance (H).</p></li>
+<li><p><strong>L_M</strong> (<em>float</em>) – Magnetizing inductance (H).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_gamma_model_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#InductionMachineInvGammaPars.from_gamma_model_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute inverse-Γ model parameters from Γ model parameters.</p>
+<p>This transformation assumes that the parameters are constant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.utils.InductionMachinePars" title="motulator.drive.utils.InductionMachinePars"><em>InductionMachinePars</em></a>) – Γ-model parameters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Inverse-Γ model parameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars">InductionMachineInvGammaPars</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.InductionMachinePars">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">InductionMachinePars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#InductionMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.InductionMachinePars" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">MachinePars</span></code></p>
+<p>Γ-model parameters of an induction machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
+<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ω).</p></li>
+<li><p><strong>R_r</strong> (<em>float</em>) – Rotor resistance (Ω).</p></li>
+<li><p><strong>L_ell</strong> (<em>float</em>) – Leakage inductance (H).</p></li>
+<li><p><strong>L_s</strong> (<em>float</em><em> | </em><em>callable</em>) – Stator inductance (H).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_inv_gamma_model_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#InductionMachinePars.from_inv_gamma_model_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute Γ-model parameters from inverse-Γ model parameters.</p>
+<p>This transformation assumes that the parameters are constant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Inverse-Γ model parameters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Γ model parameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.InductionMachinePars" title="motulator.drive.utils.InductionMachinePars">InductionMachinePars</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.SynchronousMachinePars">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SynchronousMachinePars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#SynchronousMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SynchronousMachinePars" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">MachinePars</span></code></p>
+<p>Synchronous machine parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_p</strong> (<em>int</em>) – Number of pole pairs.</p></li>
+<li><p><strong>R_s</strong> (<em>float</em>) – Stator resistance (Ω).</p></li>
+<li><p><strong>L_d</strong> (<em>float</em>) – d-axis inductance (H).</p></li>
+<li><p><strong>L_q</strong> (<em>float</em>) – q-axis inductance (H).</p></li>
+<li><p><strong>psi_f</strong> (<em>float</em>) – Permanent-magnet flux linkage (Vs).</p></li>
 </ul>
 </dd>
 </dl>
@@ -705,6 +813,15 @@ between the data points.</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachineInvGammaPars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.from_gamma_model_pars()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachinePars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.from_inv_gamma_model_pars()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_extra"><code class="docutils literal notranslate"><span class="pre">plot_extra()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.import_syre_data"><code class="docutils literal notranslate"><span class="pre">import_syre_data()</span></code></a></li>

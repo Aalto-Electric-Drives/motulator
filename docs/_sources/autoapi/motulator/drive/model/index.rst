@@ -40,7 +40,6 @@ Classes
    motulator.drive.model.FrequencyConverter
    motulator.drive.model.Inverter
    motulator.drive.model.InductionMachine
-   motulator.drive.model.InductionMachineInvGamma
    motulator.drive.model.SynchronousMachine
    motulator.drive.model.Mechanics
    motulator.drive.model.TwoMassMechanics
@@ -752,7 +751,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMachine(n_p, R_s, R_r, L_ell, L_s)
+.. py:class:: InductionMachine(par)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -767,16 +766,8 @@ Package Contents
 
        L_s = L_s(abs(psi_ss))
 
-   :param R_s: Stator resistance (Ω).
-   :type R_s: float
-   :param R_r: Rotor resistance (Ω).
-   :type R_r: float
-   :param L_ell: Leakage inductance (H).
-   :type L_ell: float
-   :param L_s: Stator inductance (H) or a callable L_s = L_s(abs(psi_ss)).
-   :type L_s: float | callable
-   :param n_p: Number of pole pairs.
-   :type n_p: int
+   :param par:
+   :type par: InductionMachinePars
 
    .. rubric:: Notes
 
@@ -1019,47 +1010,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMachineInvGamma(n_p, R_s, R_R, L_sgm, L_M)
-
-   Bases: :py:obj:`InductionMachine`
-
-
-   
-   Inverse-Γ model of an induction machine.
-
-   This extends the InductionMachine class (based on the Γ model) by providing
-   an interface for the inverse-Γ model parameters. Linear magnetics are
-   assumed. If magnetic saturation is to be modeled, the Γ model is preferred.
-
-   :param n_p: Number of pole pairs.
-   :type n_p: int
-   :param R_s: Stator resistance (Ω).
-   :type R_s: float
-   :param R_R: Rotor resistance (Ω).
-   :type R_R: float
-   :param L_sgm: Leakage inductance (H).
-   :type L_sgm: float
-   :param L_M: Magnetizing inductance (H).
-   :type L_M: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: SynchronousMachine(n_p, R_s, L_d=None, L_q=None, psi_f=None, i_s=None, psi_s0=None)
+.. py:class:: SynchronousMachine(par, i_s=None, psi_s0=None)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -1070,16 +1021,15 @@ Package Contents
    This models a synchronous machine in rotor coordinates. The stator flux
    linkage and the electrical angle of the rotor are the state variables.
 
-   :param R_s: Stator resistance (Ω).
-   :type R_s: float
-   :param L_d: d-axis inductance (H).
-   :type L_d: float
-   :param L_q: q-axis inductance (H).
-   :type L_q: float
-   :param psi_f: PM-flux linkage (Vs).
-   :type psi_f: float
-   :param n_p: Number of pole pairs.
-   :type n_p: int
+   :param par: Machine parameters.
+   :type par: SynchronousMachinePars
+   :param i_s: Stator current (A) as a function of the stator flux linkage (A) in
+               order to model the magnetic saturation. If this function is given, the
+               stator current is computed using this function instead of constants
+               `par.L_d`, `par.L_q`, and `par.psi_f`.
+   :type i_s: callable, optional
+   :param psi_s0: Initial stator flux linkage (Vs). If not given, `par.psi_f` is used.
+   :type psi_s0: float, optional
 
 
 

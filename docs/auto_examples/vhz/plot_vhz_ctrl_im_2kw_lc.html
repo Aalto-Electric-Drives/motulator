@@ -395,7 +395,9 @@ drive equipped with an LC filter.</p>
 
 <span class="kn">from</span> <span class="nn">motulator.drive</span> <span class="kn">import</span> <span class="n">model</span>
 <span class="kn">import</span> <span class="nn">motulator.drive.control.im</span> <span class="k">as</span> <span class="nn">control</span>
-<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span>
+<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseValues</span><span class="p">,</span> <span class="n">InductionMachinePars</span><span class="p">,</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
+    <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
@@ -404,8 +406,10 @@ drive equipped with an LC filter.</p>
 </pre></div>
 </div>
 <p>Create the system model. The filter parameters correspond to <a class="footnote-reference brackets" href="#sal2006" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InductionMachineInvGamma</span><span class="p">(</span>  <span class="c1"># Inverse-Γ parameters</span>
-    <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mdl_ig_par</span> <span class="o">=</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">(</span>
+    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
+<span class="n">mdl_par</span> <span class="o">=</span> <span class="n">InductionMachinePars</span><span class="o">.</span><span class="n">from_inv_gamma_model_pars</span><span class="p">(</span><span class="n">mdl_ig_par</span><span class="p">)</span>
+<span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InductionMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">lc_filter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">LCFilter</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="mf">8e-3</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">9.9e-6</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span>
@@ -415,7 +419,7 @@ drive equipped with an LC filter.</p>
 </div>
 <p>Control system (parametrized as open-loop V/Hz control).</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inverse-Γ model parameter estimates</span>
-<span class="n">par</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ModelPars</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">VHzCtrl</span><span class="p">(</span>
     <span class="n">control</span><span class="o">.</span><span class="n">VHzCtrlCfg</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">nom_psi_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">k_u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">k_w</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 </pre></div>
@@ -474,7 +478,7 @@ motor drives equipped with inverter output filter,” IEEE Trans. Ind.
 Electron., 2006, <a class="reference external" href="https://doi.org/10.1109/TIE.2006.878314">https://doi.org/10.1109/TIE.2006.878314</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.064 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.697 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-im-2kw-lc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/8d71d9beddebfc5186f11a98c9c29e77/plot_vhz_ctrl_im_2kw_lc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vhz_ctrl_im_2kw_lc.ipynb</span></code></a></p>

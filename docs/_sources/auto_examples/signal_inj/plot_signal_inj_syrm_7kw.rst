@@ -24,7 +24,7 @@
 This example simulates sensorless vector control of a 6.7-kW SyRM drive.
 Square-wave signal injection is used with a simple phase-locked loop.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-18
+.. GENERATED FROM PYTHON SOURCE LINES 10-19
 
 .. code-block:: Python
 
@@ -34,7 +34,8 @@ Square-wave signal injection is used with a simple phase-locked loop.
 
     from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+    from motulator.drive.utils import (
+        BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
 
 
 
@@ -43,11 +44,11 @@ Square-wave signal injection is used with a simple phase-locked loop.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-20
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-24
+.. GENERATED FROM PYTHON SOURCE LINES 21-25
 
 .. code-block:: Python
 
@@ -62,17 +63,18 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-33
+.. GENERATED FROM PYTHON SOURCE LINES 27-35
 
 .. code-block:: Python
 
 
-    machine = model.SynchronousMachine(
+    mdl_par = SynchronousMachinePars(
         n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
+    machine = model.SynchronousMachine(mdl_par)
     mechanics = model.Mechanics(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
@@ -84,20 +86,19 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-44
+.. GENERATED FROM PYTHON SOURCE LINES 37-45
 
 .. code-block:: Python
 
 
-    par = control.ModelPars(
-        n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, J=.015)
+    par = mdl_par  # Assume accurate machine model parameter estimates
     cfg = control.CurrentReferenceCfg(
         par, nom_w_m=base.w, max_i_s=2*base.i, min_psi_s=.5*base.psi)
-    ctrl = control.SignalInjectionCtrl(par, cfg, T_s=250e-6)
+    ctrl = control.SignalInjectionCtrl(par, cfg, J=.015, T_s=250e-6)
     # ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
     # ctrl.signal_inj = control.sm.SignalInjection(par, U_inj=200)
 
@@ -108,11 +109,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-56
+.. GENERATED FROM PYTHON SOURCE LINES 47-57
 
 .. code-block:: Python
 
@@ -133,11 +134,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-58
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-62
+.. GENERATED FROM PYTHON SOURCE LINES 59-63
 
 .. code-block:: Python
 
@@ -152,11 +153,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-84
+.. GENERATED FROM PYTHON SOURCE LINES 65-85
 
 .. code-block:: Python
 
@@ -207,7 +208,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.140 seconds)
+   **Total running time of the script:** (0 minutes 12.996 seconds)
 
 
 .. _sphx_glr_download_auto_examples_signal_inj_plot_signal_inj_syrm_7kw.py:
