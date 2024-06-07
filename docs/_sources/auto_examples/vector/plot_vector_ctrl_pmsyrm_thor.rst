@@ -24,14 +24,16 @@
 This example simulates sensorless current-vector control of a 5-kW permanent-
 magnet synchronous reluctance motor. Control look-up tables are also plotted.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-15
+.. GENERATED FROM PYTHON SOURCE LINES 10-17
 
 .. code-block:: Python
 
 
     import numpy as np
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, plot
+
+    from motulator.drive import model
+    import motulator.drive.control.sm as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot
 
 
 
@@ -40,11 +42,11 @@ magnet synchronous reluctance motor. Control look-up tables are also plotted.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: Python
 
@@ -59,11 +61,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-31
+.. GENERATED FROM PYTHON SOURCE LINES 25-33
 
 .. code-block:: Python
 
@@ -82,22 +84,22 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-44
+.. GENERATED FROM PYTHON SOURCE LINES 35-46
 
 .. code-block:: Python
 
 
-    par = control.sm.ModelPars(
+    par = control.ModelPars(
         n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134, J=.0042)
-    cfg = control.sm.CurrentReferenceCfg(
+    cfg = control.CurrentReferenceCfg(
         par, nom_w_m=base.w, max_i_s=2*base.i, k_u=.9)
-    ctrl = control.sm.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
-    ctrl.observer = control.sm.Observer(
-        control.sm.ObserverCfg(par, sensorless=True, alpha_o=2*np.pi*200))
+    ctrl = control.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
+    ctrl.observer = control.Observer(
+        control.ObserverCfg(par, sensorless=True, alpha_o=2*np.pi*200))
     ctrl.speed_ctrl = control.SpeedCtrl(
         J=par.J, alpha_s=2*np.pi*4, max_tau_M=1.5*nom.tau)
 
@@ -108,17 +110,17 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-54
+.. GENERATED FROM PYTHON SOURCE LINES 48-56
 
 .. code-block:: Python
 
 
     # sphinx_gallery_thumbnail_number = 1
-    tq = control.sm.TorqueCharacteristics(par)
+    tq = control.TorqueCharacteristics(par)
     tq.plot_current_loci(ctrl.current_reference.cfg.max_i_s, base)
     tq.plot_torque_flux(ctrl.current_reference.cfg.max_i_s, base)
     tq.plot_torque_current(ctrl.current_reference.cfg.max_i_s, base)
@@ -155,11 +157,11 @@ Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-63
+.. GENERATED FROM PYTHON SOURCE LINES 58-65
 
 .. code-block:: Python
 
@@ -177,11 +179,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-65
+.. GENERATED FROM PYTHON SOURCE LINES 66-67
 
 Create the simulation object, simulate, and plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-69
+.. GENERATED FROM PYTHON SOURCE LINES 67-71
 
 .. code-block:: Python
 
@@ -204,7 +206,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.015 seconds)
+   **Total running time of the script:** (0 minutes 4.992 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:

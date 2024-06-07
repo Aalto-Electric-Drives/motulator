@@ -24,14 +24,16 @@
 This example simulates sensorless current-vector control of a 6.7-kW SyRM 
 drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-15
+.. GENERATED FROM PYTHON SOURCE LINES 10-17
 
 .. code-block:: Python
 
 
     import numpy as np
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, Sequence, plot
+
+    from motulator.drive import model
+    import motulator.drive.control.sm as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
 
 
 
@@ -40,11 +42,11 @@ drive.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: Python
 
@@ -59,11 +61,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-30
+.. GENERATED FROM PYTHON SOURCE LINES 25-32
 
 .. code-block:: Python
 
@@ -81,20 +83,20 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 Configure the control system. You may also try to change the parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-39
+.. GENERATED FROM PYTHON SOURCE LINES 34-41
 
 .. code-block:: Python
 
 
-    par = control.sm.ModelPars(
+    par = control.ModelPars(
         n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, J=.015)
-    cfg = control.sm.CurrentReferenceCfg(
+    cfg = control.CurrentReferenceCfg(
         par, nom_w_m=base.w, max_i_s=1.5*base.i, min_psi_s=.5*base.psi, k_u=.9)
-    ctrl = control.sm.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
+    ctrl = control.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
 
 
 
@@ -103,11 +105,11 @@ Configure the control system. You may also try to change the parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-51
+.. GENERATED FROM PYTHON SOURCE LINES 43-53
 
 .. code-block:: Python
 
@@ -128,11 +130,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Create the simulation object, simulate, and plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-57
+.. GENERATED FROM PYTHON SOURCE LINES 55-59
 
 .. code-block:: Python
 
@@ -155,7 +157,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 26.702 seconds)
+   **Total running time of the script:** (0 minutes 26.888 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py:

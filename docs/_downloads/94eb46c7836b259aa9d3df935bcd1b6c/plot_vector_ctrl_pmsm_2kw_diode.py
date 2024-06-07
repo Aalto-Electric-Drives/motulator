@@ -8,8 +8,9 @@ drive, equipped with a diode bridge rectifier.
 """
 # %%
 
-from motulator import model, control
-from motulator import NominalValues, BaseValues, plot, plot_extra
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot, plot_extra
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -30,10 +31,9 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # %%
 # Configure the control system.
 
-par = control.sm.ModelPars(
-    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-ref = control.sm.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
-ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+ref = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
+ctrl = control.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

@@ -24,15 +24,17 @@
 This example simulates sensorless vector control of a 2.2-kW PMSM drive.
 Square-wave signal injection is used with a simple phase-locked loop.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-16
+.. GENERATED FROM PYTHON SOURCE LINES 10-18
 
 .. code-block:: Python
 
 
     import numpy as np
     import matplotlib.pyplot as plt
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, Sequence, plot
+
+    from motulator.drive import model
+    import motulator.drive.control.sm as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
 
 
 
@@ -41,11 +43,11 @@ Square-wave signal injection is used with a simple phase-locked loop.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
@@ -60,11 +62,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-31
+.. GENERATED FROM PYTHON SOURCE LINES 26-33
 
 .. code-block:: Python
 
@@ -82,19 +84,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-40
+.. GENERATED FROM PYTHON SOURCE LINES 35-41
 
 .. code-block:: Python
 
 
-    par = control.sm.ModelPars(
-        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-    cfg = control.sm.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=2*base.i)
-    ctrl = control.sm.SignalInjectionCtrl(par, cfg, T_s=250e-6)
+    par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+    cfg = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=2*base.i)
+    ctrl = control.SignalInjectionCtrl(par, cfg, T_s=250e-6)
     # ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
 
 
@@ -104,11 +105,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-52
+.. GENERATED FROM PYTHON SOURCE LINES 43-53
 
 .. code-block:: Python
 
@@ -129,11 +130,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-58
+.. GENERATED FROM PYTHON SOURCE LINES 55-59
 
 .. code-block:: Python
 
@@ -148,11 +149,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-81
+.. GENERATED FROM PYTHON SOURCE LINES 61-82
 
 .. code-block:: Python
 
@@ -204,7 +205,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.970 seconds)
+   **Total running time of the script:** (0 minutes 13.300 seconds)
 
 
 .. _sphx_glr_download_auto_examples_signal_inj_plot_signal_inj_pmsm_2kw.py:

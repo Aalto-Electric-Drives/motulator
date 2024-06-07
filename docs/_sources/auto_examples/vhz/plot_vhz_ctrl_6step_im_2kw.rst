@@ -27,14 +27,17 @@ well as the harmonics. Since the PWM is not synchronized with the stator
 frequency, the harmonic content also depends on the ratio between the stator 
 frequency and the sampling frequency.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-18
+.. GENERATED FROM PYTHON SOURCE LINES 13-21
 
 .. code-block:: Python
 
 
     import numpy as np
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, Sequence, plot, plot_extra
+
+    from motulator.drive import model
+    import motulator.drive.control.im as control
+    from motulator.drive.utils import (
+        BaseValues, NominalValues, plot, plot_extra, Sequence)
 
 
 
@@ -43,11 +46,11 @@ frequency and the sampling frequency.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-20
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-24
+.. GENERATED FROM PYTHON SOURCE LINES 23-27
 
 .. code-block:: Python
 
@@ -62,11 +65,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 28-29
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-35
+.. GENERATED FROM PYTHON SOURCE LINES 29-38
 
 .. code-block:: Python
 
@@ -86,19 +89,18 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-42
+.. GENERATED FROM PYTHON SOURCE LINES 40-44
 
 .. code-block:: Python
 
 
-    par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-    ctrl = control.im.VHzCtrl(
-        control.im.VHzCtrlCfg(
-            par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
+    par = control.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+    ctrl = control.VHzCtrl(
+        control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
 
 
 
@@ -106,11 +108,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-56
+.. GENERATED FROM PYTHON SOURCE LINES 46-58
 
 .. code-block:: Python
 
@@ -133,11 +135,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-58
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-62
+.. GENERATED FROM PYTHON SOURCE LINES 60-64
 
 .. code-block:: Python
 
@@ -152,11 +154,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-68
+.. GENERATED FROM PYTHON SOURCE LINES 66-70
 
 .. code-block:: Python
 
@@ -191,7 +193,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.600 seconds)
+   **Total running time of the script:** (0 minutes 8.759 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:

@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:56.142** total execution time for 5 files **from auto_examples/vector**:
+**00:57.000** total execution time for 5 files **from auto_examples/vector**:
 
 .. container::
 
@@ -33,17 +33,17 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py` (``plot_vector_ctrl_syrm_7kw.py``)
-     - 00:26.702
+     - 00:26.888
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py` (``plot_vector_ctrl_pmsm_2kw_diode.py``)
-     - 00:15.060
+     - 00:15.704
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py` (``plot_vector_ctrl_pmsm_2kw.py``)
-     - 00:05.275
+     - 00:05.309
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py` (``plot_vector_ctrl_pmsyrm_thor.py``)
-     - 00:05.015
+     - 00:04.992
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_im_2kw.py` (``plot_vector_ctrl_im_2kw.py``)
-     - 00:04.089
+     - 00:04.108
      - 0.0

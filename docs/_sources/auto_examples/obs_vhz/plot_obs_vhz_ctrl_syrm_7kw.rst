@@ -25,14 +25,15 @@ This example simulates observer-based V/Hz control of a saturated 6.7-kW
 synchronous reluctance motor drive. The saturation is not taken into account
 in the control method (only in the system model).
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-16
+.. GENERATED FROM PYTHON SOURCE LINES 11-17
 
 .. code-block:: Python
 
 
     import numpy as np
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, Sequence, plot
+    from motulator.drive import model
+    import motulator.drive.control.sm as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
 
 
 
@@ -41,11 +42,11 @@ in the control method (only in the system model).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: Python
 
@@ -60,7 +61,7 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-32
+.. GENERATED FROM PYTHON SOURCE LINES 24-33
 
 A saturation model is created based on [#Hin2017]_, [#Awa2018]_. For
 simplicity, the saturation model parameters are hard-coded in function below,
@@ -72,7 +73,7 @@ and of the PMs are in series. This model cannot capture the desaturation
 phenomenon of thin iron ribs, see [#Arm2009]_ for details. For such motors,
 look-up tables can be used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-74
+.. GENERATED FROM PYTHON SOURCE LINES 33-75
 
 .. code-block:: Python
 
@@ -125,11 +126,11 @@ look-up tables can be used.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-76
+.. GENERATED FROM PYTHON SOURCE LINES 76-77
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-84
+.. GENERATED FROM PYTHON SOURCE LINES 77-85
 
 .. code-block:: Python
 
@@ -148,19 +149,19 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-86
+.. GENERATED FROM PYTHON SOURCE LINES 86-87
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-92
+.. GENERATED FROM PYTHON SOURCE LINES 87-93
 
 .. code-block:: Python
 
 
-    par = control.sm.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
-    cfg = control.sm.ObserverBasedVHzCtrlCfg(
+    par = control.ModelPars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+    cfg = control.ObserverBasedVHzCtrlCfg(
         par, max_i_s=2*base.i, min_psi_s=base.psi, max_psi_s=base.psi)
-    ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg)
+    ctrl = control.ObserverBasedVHzCtrl(par, cfg)
 
 
 
@@ -169,11 +170,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-94
+.. GENERATED FROM PYTHON SOURCE LINES 94-95
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-104
+.. GENERATED FROM PYTHON SOURCE LINES 95-105
 
 .. code-block:: Python
 
@@ -194,11 +195,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-106
+.. GENERATED FROM PYTHON SOURCE LINES 106-107
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-110
+.. GENERATED FROM PYTHON SOURCE LINES 107-111
 
 .. code-block:: Python
 
@@ -213,12 +214,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-113
+.. GENERATED FROM PYTHON SOURCE LINES 112-114
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-116
+.. GENERATED FROM PYTHON SOURCE LINES 114-117
 
 .. code-block:: Python
 
@@ -237,7 +238,7 @@ the results in SI units.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-135
+.. GENERATED FROM PYTHON SOURCE LINES 118-136
 
 .. rubric:: References
 
@@ -261,7 +262,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 29.025 seconds)
+   **Total running time of the script:** (0 minutes 29.248 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py:

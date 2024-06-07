@@ -20,11 +20,16 @@ saturation into account in the control algorithm.
 
 from os import path
 import inspect
+
 import numpy as np
 from scipy.optimize import minimize_scalar
 from scipy.interpolate import LinearNDInterpolator
-from motulator import model, control
-from motulator import BaseValues, NominalValues, Sequence, plot
+
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+from motulator.drive.utils import (
+    import_syre_data, plot_flux_vs_current, plot_flux_map)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -38,7 +43,7 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Get the path of this file
 p = path.dirname(path.abspath(inspect.getfile(inspect.currentframe())))
 # Load the data from the MATLAB file
-data = model.import_syre_data(p + "/THOR.mat")
+data = import_syre_data(p + "/THOR.mat")
 
 # You may also downsample or invert the flux map by uncommenting the following
 # lines. Not needed here, but these methods could be useful for other purposes.
@@ -46,8 +51,8 @@ data = model.import_syre_data(p + "/THOR.mat")
 # from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map
 # data = downsample_flux_map(data, N_d=32, N_q=32)
 # data = invert_flux_map(data, N_d=128, N_q=128)
-model.plot_flux_vs_current(data)
-model.plot_flux_map(data)
+plot_flux_vs_current(data)
+plot_flux_map(data)
 
 # %%
 # Create the saturation model.
@@ -93,9 +98,9 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.sm.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
-ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+par = control.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
+ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 # %%
 # Set the speed reference and the external load torque.

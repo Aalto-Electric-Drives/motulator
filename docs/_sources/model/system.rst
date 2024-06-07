@@ -15,7 +15,7 @@ The continuous-time system (named `mdl` in :doc:`/auto_examples/index`) is the m
 
 The discrete-time controller (named `ctrl`) contains control algorithms, such as the current control and speed control. The reference signals could be, e.g., the speed and flux references. The feedback signal :math:`\boldsymbol{y}(k)` typically contains the measured DC-bus voltage and stator currents. 
 
-Digital control systems typically have a computational delay of one sampling period, :math:`N=1`. The PWM block shown in the figure models the carrier comparison, see more details in :doc:`converters`. The carrier comparison is implemented in the class :class:`motulator.model.CarrierComparison`. If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with zero-order hold (ZOH).
+Digital control systems typically have a computational delay of one sampling period, :math:`N=1`. The PWM block shown in the figure models the carrier comparison, see more details in :doc:`converters`. The carrier comparison is implemented in the class :class:`motulator.drive.model.CarrierComparison`. If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with zero-order hold (ZOH).
 
 .. rubric:: References
 

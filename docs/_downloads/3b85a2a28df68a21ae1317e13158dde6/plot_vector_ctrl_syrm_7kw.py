@@ -9,8 +9,10 @@ drive.
 # %%
 
 import numpy as np
-from motulator import model, control
-from motulator import BaseValues, NominalValues, Sequence, plot
+
+from motulator.drive import model
+import motulator.drive.control.sm as control
+from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -30,11 +32,11 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system. You may also try to change the parameters.
 
-par = control.sm.ModelPars(
+par = control.ModelPars(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, J=.015)
-cfg = control.sm.CurrentReferenceCfg(
+cfg = control.CurrentReferenceCfg(
     par, nom_w_m=base.w, max_i_s=1.5*base.i, min_psi_s=.5*base.psi, k_u=.9)
-ctrl = control.sm.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
+ctrl = control.CurrentVectorCtrl(par, cfg, T_s=125e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

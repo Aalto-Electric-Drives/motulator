@@ -23,14 +23,16 @@
 
 This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-14
+.. GENERATED FROM PYTHON SOURCE LINES 9-16
 
 .. code-block:: Python
 
 
     import numpy as np
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, Sequence, plot
+
+    from motulator.drive import model
+    import motulator.drive.control.sm as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
 
 
 
@@ -39,11 +41,11 @@ This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-16
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-20
+.. GENERATED FROM PYTHON SOURCE LINES 18-22
 
 .. code-block:: Python
 
@@ -58,11 +60,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-29
+.. GENERATED FROM PYTHON SOURCE LINES 24-31
 
 .. code-block:: Python
 
@@ -80,18 +82,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-37
+.. GENERATED FROM PYTHON SOURCE LINES 33-39
 
 .. code-block:: Python
 
 
-    par = control.sm.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-    cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
-    ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+    par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+    cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
+    ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
     #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 
@@ -101,11 +103,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-49
+.. GENERATED FROM PYTHON SOURCE LINES 41-51
 
 .. code-block:: Python
 
@@ -126,11 +128,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-55
+.. GENERATED FROM PYTHON SOURCE LINES 53-57
 
 .. code-block:: Python
 
@@ -145,12 +147,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-58
+.. GENERATED FROM PYTHON SOURCE LINES 58-60
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-60
+.. GENERATED FROM PYTHON SOURCE LINES 60-62
 
 .. code-block:: Python
 
@@ -171,7 +173,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 24.845 seconds)
+   **Total running time of the script:** (0 minutes 25.462 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py:

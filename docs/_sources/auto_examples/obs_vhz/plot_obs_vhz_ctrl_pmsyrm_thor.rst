@@ -34,18 +34,23 @@ saturation is not taken into account in the control method, only in the system
 model. Naturally, the control performance could be improved by taking the
 saturation into account in the control algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-29
+.. GENERATED FROM PYTHON SOURCE LINES 20-34
 
 .. code-block:: Python
 
 
     from os import path
     import inspect
+
     import numpy as np
     from scipy.optimize import minimize_scalar
     from scipy.interpolate import LinearNDInterpolator
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, Sequence, plot
+
+    from motulator.drive import model
+    import motulator.drive.control.sm as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+    from motulator.drive.utils import (
+        import_syre_data, plot_flux_vs_current, plot_flux_map)
 
 
 
@@ -54,11 +59,11 @@ saturation into account in the control algorithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-35
+.. GENERATED FROM PYTHON SOURCE LINES 36-40
 
 .. code-block:: Python
 
@@ -73,11 +78,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Load and plot the flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-52
+.. GENERATED FROM PYTHON SOURCE LINES 42-57
 
 .. code-block:: Python
 
@@ -85,7 +90,7 @@ Load and plot the flux maps.
     # Get the path of this file
     p = path.dirname(path.abspath(inspect.getfile(inspect.currentframe())))
     # Load the data from the MATLAB file
-    data = model.import_syre_data(p + "/THOR.mat")
+    data = import_syre_data(p + "/THOR.mat")
 
     # You may also downsample or invert the flux map by uncommenting the following
     # lines. Not needed here, but these methods could be useful for other purposes.
@@ -93,8 +98,8 @@ Load and plot the flux maps.
     # from motulator.model.sm_flux_maps import downsample_flux_map, invert_flux_map
     # data = downsample_flux_map(data, N_d=32, N_q=32)
     # data = invert_flux_map(data, N_d=128, N_q=128)
-    model.plot_flux_vs_current(data)
-    model.plot_flux_map(data)
+    plot_flux_vs_current(data)
+    plot_flux_map(data)
 
 
 
@@ -120,11 +125,11 @@ Load and plot the flux maps.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
 Create the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-81
+.. GENERATED FROM PYTHON SOURCE LINES 59-86
 
 .. code-block:: Python
 
@@ -162,11 +167,11 @@ Create the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-83
+.. GENERATED FROM PYTHON SOURCE LINES 87-88
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-93
+.. GENERATED FROM PYTHON SOURCE LINES 88-98
 
 .. code-block:: Python
 
@@ -187,18 +192,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-95
+.. GENERATED FROM PYTHON SOURCE LINES 99-100
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-100
+.. GENERATED FROM PYTHON SOURCE LINES 100-105
 
 .. code-block:: Python
 
 
-    par = control.sm.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-    cfg = control.sm.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
-    ctrl = control.sm.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+    par = control.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+    cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
+    ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 
 
@@ -207,11 +212,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-102
+.. GENERATED FROM PYTHON SOURCE LINES 106-107
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-117
+.. GENERATED FROM PYTHON SOURCE LINES 107-122
 
 .. code-block:: Python
 
@@ -237,11 +242,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-119
+.. GENERATED FROM PYTHON SOURCE LINES 123-124
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-123
+.. GENERATED FROM PYTHON SOURCE LINES 124-128
 
 .. code-block:: Python
 
@@ -256,12 +261,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-126
+.. GENERATED FROM PYTHON SOURCE LINES 129-131
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-128
+.. GENERATED FROM PYTHON SOURCE LINES 131-133
 
 .. code-block:: Python
 
@@ -282,7 +287,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 50.856 seconds)
+   **Total running time of the script:** (0 minutes 52.692 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:

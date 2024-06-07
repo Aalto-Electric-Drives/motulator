@@ -24,13 +24,14 @@
 This example simulates sensorless current-vector control of a 2.2-kW PMSM 
 drive, equipped with a diode bridge rectifier. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-14
+.. GENERATED FROM PYTHON SOURCE LINES 10-15
 
 .. code-block:: Python
 
 
-    from motulator import model, control
-    from motulator import NominalValues, BaseValues, plot, plot_extra
+    from motulator.drive import model
+    import motulator.drive.control.sm as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot, plot_extra
 
 
 
@@ -39,11 +40,11 @@ drive, equipped with a diode bridge rectifier.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-16
+.. GENERATED FROM PYTHON SOURCE LINES 16-17
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-20
+.. GENERATED FROM PYTHON SOURCE LINES 17-21
 
 .. code-block:: Python
 
@@ -58,11 +59,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-30
+.. GENERATED FROM PYTHON SOURCE LINES 23-31
 
 .. code-block:: Python
 
@@ -81,19 +82,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-38
+.. GENERATED FROM PYTHON SOURCE LINES 33-38
 
 .. code-block:: Python
 
 
-    par = control.sm.ModelPars(
-        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-    ref = control.sm.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
-    ctrl = control.sm.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+    par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+    ref = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
+    ctrl = control.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
 
 
 
@@ -174,7 +174,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 15.060 seconds)
+   **Total running time of the script:** (0 minutes 15.704 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py:

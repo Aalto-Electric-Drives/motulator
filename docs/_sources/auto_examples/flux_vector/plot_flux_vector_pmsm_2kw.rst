@@ -23,13 +23,14 @@
 
 This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-13
+.. GENERATED FROM PYTHON SOURCE LINES 9-14
 
 .. code-block:: Python
 
 
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, plot
+    from motulator.drive import model
+    import motulator.drive.control.sm as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot
 
 
 
@@ -38,11 +39,11 @@ This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-15
+.. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-19
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: Python
 
@@ -57,11 +58,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-28
+.. GENERATED FROM PYTHON SOURCE LINES 22-29
 
 .. code-block:: Python
 
@@ -79,19 +80,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-30
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-36
+.. GENERATED FROM PYTHON SOURCE LINES 31-36
 
 .. code-block:: Python
 
 
-    par = control.sm.ModelPars(
-        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
-    cfg = control.sm.FluxTorqueReferenceCfg(par, max_i_s=1.5*base.i, k_u=.9)
-    ctrl = control.sm.FluxVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
+    par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+    cfg = control.FluxTorqueReferenceCfg(par, max_i_s=1.5*base.i, k_u=.9)
+    ctrl = control.FluxVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
 
 
 
@@ -166,7 +166,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.387 seconds)
+   **Total running time of the script:** (0 minutes 5.414 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py:

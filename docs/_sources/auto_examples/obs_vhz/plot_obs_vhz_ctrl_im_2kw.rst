@@ -24,14 +24,16 @@
 This example simulates observer-based V/Hz control of a 2.2-kW induction motor
 drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-15
+.. GENERATED FROM PYTHON SOURCE LINES 10-17
 
 .. code-block:: Python
 
 
     import numpy as np
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, Sequence, plot
+
+    from motulator.drive import model
+    import motulator.drive.control.im as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
 
 
 
@@ -40,11 +42,11 @@ drive.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: Python
 
@@ -59,11 +61,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-31
+.. GENERATED FROM PYTHON SOURCE LINES 25-33
 
 .. code-block:: Python
 
@@ -82,20 +84,20 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-40
+.. GENERATED FROM PYTHON SOURCE LINES 35-42
 
 .. code-block:: Python
 
 
     # Inverse-Γ model parameter estimates
-    par = control.im.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
-    cfg = control.im.ObserverBasedVHzCtrlCfg(
+    par = control.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+    cfg = control.ObserverBasedVHzCtrlCfg(
         nom_psi_s=base.psi, max_i_s=1.5*base.i, slip_compensation=False)
-    ctrl = control.im.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+    ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 
 
 
@@ -104,11 +106,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
 Set the speed reference.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-48
+.. GENERATED FROM PYTHON SOURCE LINES 44-50
 
 .. code-block:: Python
 
@@ -125,11 +127,11 @@ Set the speed reference.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Set the load torque reference.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-60
+.. GENERATED FROM PYTHON SOURCE LINES 52-62
 
 .. code-block:: Python
 
@@ -150,11 +152,11 @@ Set the load torque reference.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-66
+.. GENERATED FROM PYTHON SOURCE LINES 64-68
 
 .. code-block:: Python
 
@@ -169,12 +171,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-69
+.. GENERATED FROM PYTHON SOURCE LINES 69-71
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-71
+.. GENERATED FROM PYTHON SOURCE LINES 71-73
 
 .. code-block:: Python
 
@@ -195,7 +197,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.208 seconds)
+   **Total running time of the script:** (0 minutes 9.307 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py:

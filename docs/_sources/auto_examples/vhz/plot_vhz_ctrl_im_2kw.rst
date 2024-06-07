@@ -24,14 +24,16 @@
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
 parameters in this example yield open-loop V/Hz control. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-15
+.. GENERATED FROM PYTHON SOURCE LINES 10-17
 
 .. code-block:: Python
 
 
     import numpy as np
-    from motulator import model, control
-    from motulator import BaseValues, NominalValues, plot, plot_extra
+
+    from motulator.drive import model
+    import motulator.drive.control.im as control
+    from motulator.drive.utils import BaseValues, NominalValues, plot, plot_extra
 
 
 
@@ -40,11 +42,11 @@ parameters in this example yield open-loop V/Hz control.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: Python
 
@@ -59,11 +61,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-35
+.. GENERATED FROM PYTHON SOURCE LINES 25-37
 
 .. code-block:: Python
 
@@ -86,19 +88,19 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-43
+.. GENERATED FROM PYTHON SOURCE LINES 39-45
 
 .. code-block:: Python
 
 
     # Inverse-Γ model parameter estimates
-    par = control.im.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-    ctrl = control.im.VHzCtrl(
-        control.im.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
+    par = control.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+    ctrl = control.VHzCtrl(
+        control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 
 
@@ -107,11 +109,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-55
+.. GENERATED FROM PYTHON SOURCE LINES 47-57
 
 .. code-block:: Python
 
@@ -132,11 +134,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-57
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-61
+.. GENERATED FROM PYTHON SOURCE LINES 59-63
 
 .. code-block:: Python
 
@@ -151,7 +153,7 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-69
+.. GENERATED FROM PYTHON SOURCE LINES 64-71
 
 Plot results in per-unit values.
 
@@ -161,7 +163,7 @@ Plot results in per-unit values.
    resistance to the DC link. You can notice this instability if simulating a
    longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-74
+.. GENERATED FROM PYTHON SOURCE LINES 71-76
 
 .. code-block:: Python
 
@@ -201,7 +203,7 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-80
+.. GENERATED FROM PYTHON SOURCE LINES 77-82
 
 .. rubric:: References
 
@@ -212,7 +214,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 17.661 seconds)
+   **Total running time of the script:** (0 minutes 18.334 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:
