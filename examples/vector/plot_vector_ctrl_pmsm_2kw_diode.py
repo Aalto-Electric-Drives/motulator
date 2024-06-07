@@ -33,9 +33,9 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+par = mdl_par  # Assume accurate machine model parameter estimates
 ref = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
-ctrl = control.CurrentVectorCtrl(par, ref, T_s=250e-6, sensorless=True)
+ctrl = control.CurrentVectorCtrl(par, ref, J=.015, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

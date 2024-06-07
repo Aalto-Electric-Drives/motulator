@@ -73,13 +73,14 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-# Machine model parameters
-par = control.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2, J=.015)
+# Machine model parameter estimates
+par = InductionMachineInvGammaPars(
+    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 # Set nominal values and limits for reference generation
 cfg = control.CurrentReferenceCfg(
     par, max_i_s=1.5*base.i, nom_u_s=base.u, nom_w_s=base.w)
 # Create the control system
-ctrl = control.CurrentVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
+ctrl = control.CurrentVectorCtrl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
 # As an example, you may replace the default 2DOF PI speed controller with the
 # regular PI speed controller by uncommenting the following line
 # from motulator.common import PICtrl

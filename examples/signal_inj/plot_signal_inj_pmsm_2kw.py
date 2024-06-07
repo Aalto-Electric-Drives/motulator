@@ -35,9 +35,9 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545, J=.015)
+par = mdl_par  # Assume accurate machine model parameter estimates
 cfg = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=2*base.i)
-ctrl = control.SignalInjectionCtrl(par, cfg, T_s=250e-6)
+ctrl = control.SignalInjectionCtrl(par, cfg, J=.015, T_s=250e-6)
 # ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
 
 # %%

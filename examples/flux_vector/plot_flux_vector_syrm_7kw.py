@@ -64,12 +64,12 @@ mdl = model.Drive(converter, machine, mechanics)
 # Furthermore, the inductance estimates L_d and L_q are intentionally set to
 # lower values in order to demonstrate the PM-flux disturbance estimation.
 
-par = control.ModelPars(
-    n_p=2, R_s=.54, L_d=.7*37e-3, L_q=.8*6.2e-3, psi_f=0, J=.015)
+par = SynchronousMachinePars(
+    n_p=2, R_s=.54, L_d=.7*37e-3, L_q=.8*6.2e-3, psi_f=0)
 # Disable MTPA since the control system does not consider the saturation
 cfg = control.FluxTorqueReferenceCfg(
     par, max_i_s=2*base.i, k_u=.9, min_psi_s=base.psi, max_psi_s=base.psi)
-ctrl = control.FluxVectorCtrl(par, cfg, sensorless=True)
+ctrl = control.FluxVectorCtrl(par, cfg, J=.015, sensorless=True)
 # Since the saturation is not considered in the control system, the speed
 # estimation bandwidth is set to a lower value. Furthermore, the PM-flux
 # disturbance estimation is enabled at speeds above 2*pi*20 rad/s (electrical).

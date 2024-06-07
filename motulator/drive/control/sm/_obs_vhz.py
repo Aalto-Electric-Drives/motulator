@@ -53,7 +53,7 @@ class ObserverBasedVHzCtrl(DriveCtrl):
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
     cfg : ObserverBasedVHzCtrlCfg
         Control system configuration.
@@ -134,7 +134,7 @@ class FluxObserver:
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
     alpha_o : float, optional
         Observer gain (rad/s). The default is 2*pi*20.

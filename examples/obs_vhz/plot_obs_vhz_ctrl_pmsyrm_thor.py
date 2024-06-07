@@ -102,7 +102,7 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
+par = SynchronousMachinePars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
 ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 

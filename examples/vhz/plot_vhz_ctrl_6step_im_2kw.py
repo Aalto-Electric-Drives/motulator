@@ -16,7 +16,8 @@ import numpy as np
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, plot_extra, Sequence)
+    BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
+    NominalValues, plot, plot_extra, Sequence)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -28,8 +29,10 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Create the system model.
 
 # Configure the induction machine using its inverse-Γ parameters
-machine = model.InductionMachineInvGamma(
-    R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+mdl_ig_par = InductionMachineInvGammaPars(
+    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
+mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
+machine = model.InductionMachine(mdl_par)
 mechanics = model.Mechanics(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
@@ -38,7 +41,7 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # %%
 # Control system (parametrized as open-loop V/Hz control).
 
-par = control.ModelPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
+par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
 ctrl = control.VHzCtrl(
     control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
 # %%

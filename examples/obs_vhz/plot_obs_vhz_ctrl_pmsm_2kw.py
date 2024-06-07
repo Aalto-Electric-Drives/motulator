@@ -33,7 +33,7 @@ mdl = model.Drive(converter, machine, mechanics)
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+par = mdl_par  # Assume accurate machine model parameter estimates
 cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
 ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
