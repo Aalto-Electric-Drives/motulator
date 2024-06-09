@@ -230,7 +230,7 @@ class Simulation:
     @np.errstate(invalid="raise")
     def _simulation_loop(self, t_stop, max_step):
         """Run the main simulation loop."""
-        while self.mdl.t <= t_stop:
+        while self.mdl.t0 <= t_stop:
 
             # Run the digital controller
             T_s, ref_d_c_abc = self.ctrl(self.mdl)
@@ -252,13 +252,12 @@ class Simulation:
                     state0 = self.mdl.get_initial_values()
 
                     # Integrate over t_span
-                    t_span = (self.mdl.t, self.mdl.t + t_step)
+                    t_span = (self.mdl.t0, self.mdl.t0 + t_step)
                     sol = solve_ivp(
                         self.mdl.rhs, t_span, state0, max_step=max_step)
 
-                    # Set the new initial values (last points of the solution)
-                    t0_new, state0_new = t_span[-1], sol.y[:, -1]
-                    self.mdl.set_initial_values(t0_new, state0_new)
+                    # Set the new initial time
+                    self.mdl.t0 = t_span[-1]
 
                     # Save the solution
                     sol.q_cs = len(sol.t)*[q_cs[i]]
@@ -299,31 +298,19 @@ class Model(ABC):
     def __init__(self, pwm=None, delay=1):
         self.delay = Delay(delay)
         self.pwm = zoh if pwm is None else pwm
-        self.t = 0
+        self.t0 = 0
         self.converter = None
         self.subsystems = []  # Contains the list of subsystems
         self.sol_t = []
-        self.data = SimpleNamespace()
 
     def get_initial_values(self):
-        """Get initial values of all subsystems."""
+        """Get initial values of all subsystems before the solver."""
         state0 = []
         for subsystem in self.subsystems:
             if hasattr(subsystem, "state"):
                 state0 += list(vars(subsystem.state).values())
 
         return state0
-
-    def set_initial_values(self, t0, state0):
-        """Set initial values to all subsystems."""
-        self.t = t0
-        index = 0
-        for subsystem in self.subsystems:
-            if hasattr(subsystem, "state"):
-                for attr in vars(subsystem.state):
-                    value = state0[index]
-                    setattr(subsystem.state, attr, value)
-                    index += 1
 
     def set_states(self, state_list):
         """Set the states in all subsystems."""
@@ -379,13 +366,14 @@ class Model(ABC):
 
     def post_process_states(self):
         """Transform the lists to the ndarray format and post-process them."""
-        self.data.t = np.asarray(self.sol_t)
         self.converter.data.q_cs = np.asarray(self.converter.sol_q_cs)
 
         for subsystem in self.subsystems:
+            subsystem.data.t = np.asarray(self.sol_t)
             if hasattr(subsystem, "sol_states"):
                 for key, value in vars(subsystem.sol_states).items():
                     setattr(subsystem.data, key, np.asarray(value))
+
             if hasattr(subsystem, "post_process_states"):
                 subsystem.post_process_states()
 
@@ -393,7 +381,6 @@ class Model(ABC):
         """Post-process after the inputs have been added."""
         for subsystem in self.subsystems:
             if hasattr(subsystem, "post_process_with_inputs"):
-                subsystem.data.t = self.data.t
                 subsystem.post_process_with_inputs()
 
 
@@ -405,7 +392,7 @@ class Subsystem(ABC):
         self.state = SimpleNamespace()
         self.inp = SimpleNamespace()
         self.out = SimpleNamespace()
-        # Store the solutions in these lists
+        # Save the solution in these lists
         self.sol_states = SimpleNamespace()
         # For post-processed data
         self.data = SimpleNamespace()

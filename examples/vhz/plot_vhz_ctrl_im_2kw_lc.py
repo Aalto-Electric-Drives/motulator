@@ -30,7 +30,9 @@ mdl_ig_par = InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
 machine = model.InductionMachine(mdl_par)
-mechanics = model.Mechanics(J=.015)
+# Quadratic load torque profile (corresponding to pumps and fans)
+k = 1.1*nom.tau/(base.w/base.n_p)**2
+mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
 converter = model.Inverter(u_dc=540)
 lc_filter = model.LCFilter(L=8e-3, C=9.9e-6, R=.1)
 mdl = model.DriveWithLCFilter(converter, machine, mechanics, lc_filter)
@@ -45,13 +47,9 @@ ctrl = control.VHzCtrl(
     control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 # %%
-# Set the speed reference and the external load torque.
+# Set the speed reference. The external load torque is zero (by default).
 
 ctrl.ref.w_m = lambda t: (t > .2)*base.w
-
-# Quadratic load torque profile (corresponding to pumps and fans)
-k = 1.1*nom.tau/(base.w/base.n_p)**2
-mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # %%
 # Create the simulation object and simulate it.
@@ -73,18 +71,26 @@ mdl = sim.mdl  # Continuous-time data
 # Plot the converter and stator voltages (phase a)
 fig1, (ax1, ax2) = plt.subplots(2, 1)
 ax1.plot(
-    mdl.data.t, mdl.converter.data.u_cs.real/base.u, label=r"$u_\mathrm{ca}$")
+    mdl.converter.data.t,
+    mdl.converter.data.u_cs.real/base.u,
+    label=r"$u_\mathrm{ca}$")
 ax1.plot(
-    mdl.data.t, mdl.machine.data.u_ss.real/base.u, label=r"$u_\mathrm{sa}$")
+    mdl.converter.data.t,
+    mdl.machine.data.u_ss.real/base.u,
+    label=r"$u_\mathrm{sa}$")
 ax1.set_xlim(t_span)
 ax1.legend()
 ax1.set_xticklabels([])
 ax1.set_ylabel("Voltage (p.u.)")
 # Plot the converter and stator currents (phase a)
 ax2.plot(
-    mdl.data.t, mdl.converter.data.i_cs.real/base.i, label=r"$i_\mathrm{ca}$")
+    mdl.converter.data.t,
+    mdl.converter.data.i_cs.real/base.i,
+    label=r"$i_\mathrm{ca}$")
 ax2.plot(
-    mdl.data.t, mdl.machine.data.i_ss.real/base.i, label=r"$i_\mathrm{sa}$")
+    mdl.converter.data.t,
+    mdl.machine.data.i_ss.real/base.i,
+    label=r"$i_\mathrm{sa}$")
 ax2.set_xlim(t_span)
 ax2.legend()
 ax2.set_ylabel("Current (p.u.)")

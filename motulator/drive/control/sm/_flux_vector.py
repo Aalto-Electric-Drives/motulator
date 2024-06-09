@@ -35,7 +35,7 @@ class FluxVectorCtrl(DriveCtrl):
     alpha_o : float, optional
         Observer bandwidth (rad/s). The default is 2*pi*100.
     J : float, optional
-        Moment of inertia (kg*m^2). Needed for the speed controller. 
+        Moment of inertia (kg*m^2). Needed only for the speed controller. 
     T_s : float
         Sampling period (s). The default is 250e-6.
     sensorless : bool, optional
@@ -67,7 +67,10 @@ class FluxVectorCtrl(DriveCtrl):
         super().__init__(par, T_s, sensorless)
         # Subsystems
         self.flux_torque_reference = FluxTorqueReference(cfg)
-        self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        if J is not None:
+            self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        else:
+            self.speed_ctrl = None
         self.observer = Observer(
             ObserverCfg(par, alpha_o=alpha_o, sensorless=sensorless))
         # Bandwidths

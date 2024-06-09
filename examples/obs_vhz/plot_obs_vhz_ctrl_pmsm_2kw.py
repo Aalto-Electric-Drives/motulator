@@ -26,7 +26,7 @@ base = BaseValues.from_nominal(nom, n_p=3)
 mdl_par = SynchronousMachinePars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 machine = model.SynchronousMachine(mdl_par)
-mechanics = model.Mechanics(J=.015)
+mechanics = model.StiffMechanicalSystem(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -48,7 +48,7 @@ ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-mdl.mechanics.tau_L_t = Sequence(times, values)
+mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it.
