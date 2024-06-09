@@ -411,7 +411,7 @@ in torque-control mode.</p>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
 <span class="n">mdl_par</span> <span class="o">=</span> <span class="n">InductionMachinePars</span><span class="o">.</span><span class="n">from_inv_gamma_model_pars</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 <span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InductionMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">)</span>
-<span class="c1"># Use external speed w_M_t, defined subsequently below</span>
+<span class="c1"># Use externally specified actual speed w_M(t), defined subsequently below</span>
 <span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ExternalRotorSpeed</span><span class="p">()</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">)</span>
@@ -445,7 +445,7 @@ the results in SI units.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_tq_mode_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_tq_mode_001.png" alt="plot vector ctrl im 2kw tq mode" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.612 seconds)</p>
+<img src="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_tq_mode_001.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_tq_mode_001.png" alt="plot vector ctrl im 2kw tq mode" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.478 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-im-2kw-tq-mode-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/fc1bb42574e8322215754e6aca6ffdc5/plot_vector_ctrl_im_2kw_tq_mode.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vector_ctrl_im_2kw_tq_mode.ipynb</span></code></a></p>
