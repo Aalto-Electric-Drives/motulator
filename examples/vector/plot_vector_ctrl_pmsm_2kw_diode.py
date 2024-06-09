@@ -25,7 +25,7 @@ base = BaseValues.from_nominal(nom, n_p=3)
 mdl_par = SynchronousMachinePars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 machine = model.SynchronousMachine(mdl_par)
-mechanics = model.Mechanics(J=.015)
+mechanics = model.StiffMechanicalSystem(J=.015)
 converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
 mdl = model.Drive(converter, machine, mechanics)
 mdl.pwm = model.CarrierComparison()  # Enable the PWM model
@@ -44,7 +44,7 @@ ctrl = control.CurrentVectorCtrl(par, ref, J=.015, T_s=250e-6, sensorless=True)
 ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
 # External load torque
-mdl.mechanics.tau_L_t = lambda t: (t > .6)*nom.tau
+mdl.mechanics.tau_L = lambda t: (t > .6)*nom.tau
 
 # %%
 # Create the simulation object and simulate it.

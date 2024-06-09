@@ -30,7 +30,7 @@ mdl_ig_par = InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
 machine = model.InductionMachine(mdl_par)
-mechanics = model.Mechanics(J=.015)
+mechanics = model.StiffMechanicalSystem(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -57,11 +57,7 @@ ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-mdl.mechanics.tau_L_t = Sequence(times, values)
-
-# Quadratic load torque profile, e.g. pumps and fans (uncomment to enable)
-# k = 1.1*base.tau_nom/(base.w/base.n_p)**2
-# mdl.mechanics.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2
+mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it.

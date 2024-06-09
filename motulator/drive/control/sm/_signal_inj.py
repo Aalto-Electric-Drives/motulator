@@ -37,7 +37,7 @@ class SignalInjectionCtrl(DriveCtrl):
     cfg : CurrentReferenceCfg
         Reference generation configuration.
     J : float, optional
-        Moment of inertia (kg*m^2). Needed for the speed controller.
+        Moment of inertia (kg*m^2). Needed only for the speed controller.
     T_s : float
         Sampling period (s).
 
@@ -49,7 +49,10 @@ class SignalInjectionCtrl(DriveCtrl):
         self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
         self.pll = PhaseLockedLoop(w_o=2*np.pi*40)
         self.signal_inj = SignalInjection(par, U_inj=250)
-        self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        if J is not None:
+            self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        else:
+            self.speed_ctrl = None
         self.observer = None
 
     def get_feedback_signals(self, mdl):

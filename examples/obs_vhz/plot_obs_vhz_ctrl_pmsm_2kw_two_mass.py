@@ -17,7 +17,8 @@ import matplotlib.pyplot as plt
 from motulator.drive import model
 import motulator.drive.control.sm as control
 from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars,
+    TwoMassMechanicalSystemPars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -31,8 +32,8 @@ base = BaseValues.from_nominal(nom, n_p=3)
 mdl_par = SynchronousMachinePars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 machine = model.SynchronousMachine(mdl_par)
-mechanics = model.TwoMassMechanics(
-    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
+mdl_mec_par = TwoMassMechanicalSystemPars(J_M=.005, J_L=.005, K_S=700, C_S=.01)
+mechanics = model.TwoMassMechanicalSystem(mdl_mec_par)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -54,7 +55,7 @@ ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .4, .4, 1])
 values = np.array([0, 0, 1, 1])*nom.tau
-mdl.mechanics.tau_L_t = Sequence(times, values)
+mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it.
@@ -70,10 +71,14 @@ plot(sim, base)  # Plot results in per-unit values
 t_span = (0, 1.2)
 _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
 ax1.plot(
-    sim.mdl.data.t, sim.mdl.mechanics.data.w_M, label=r"$\omega_\mathrm{M}$")
+    sim.mdl.mechanics.data.t,
+    sim.mdl.mechanics.data.w_M,
+    label=r"$\omega_\mathrm{M}$")
 ax1.plot(
-    sim.mdl.data.t, sim.mdl.mechanics.data.w_L, label=r"$\omega_\mathrm{L}$")
-ax2.plot(sim.mdl.data.t, sim.mdl.mechanics.data.theta_ML*180/np.pi)
+    sim.mdl.mechanics.data.t,
+    sim.mdl.mechanics.data.w_L,
+    label=r"$\omega_\mathrm{L}$")
+ax2.plot(sim.mdl.mechanics.data.t, sim.mdl.mechanics.data.theta_ML*180/np.pi)
 ax1.set_xlim(t_span)
 ax2.set_xlim(t_span)
 ax1.set_xticklabels([])
@@ -91,8 +96,8 @@ plt.show()
 f_span = (5, 500)
 num = 200
 # Parameters
-J_M, J_L = mdl.mechanics.J_M, mdl.mechanics.J_L
-K_S, C_S = mdl.mechanics.K_S, mdl.mechanics.C_S
+J_M, J_L = mdl_mec_par.J_M, mdl_mec_par.J_L
+K_S, C_S = mdl_mec_par.K_S, mdl_mec_par.C_S
 # Frequencies
 w = 2*np.pi*np.logspace(np.log10(f_span[0]), np.log10(f_span[-1]), num=num)
 s = 1j*w

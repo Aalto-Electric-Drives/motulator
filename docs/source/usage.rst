@@ -14,7 +14,7 @@ After :doc:`installation`, *motulator* can be used by creating a continuous-time
    converter = model.Inverter(u_dc=540)
    machine = model.InductionMachineInvGamma(
       R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
-   mechanics = model.Mechanics(J=.015)
+   mechanics = model.StiffMechanicalSystem(J=.015)
    mdl = model.Drive(converter, machine, mechanics)
    
    # Discrete-time controller
@@ -25,7 +25,7 @@ After :doc:`installation`, *motulator* can be used by creating a continuous-time
 
    # Acceleration at t = 0.2 s and load torque step of 14 Nm at t = 0.75 s 
    ctrl.ref.w_m = lambda t: (t > .2)*(2*np.pi*50)
-   mdl.mechanics.tau_L_t = lambda t: (t > .75)*14
+   mdl.mechanics.tau_L = lambda t: (t > .75)*14
 
    # Create a simulation object, simulate, and plot example figures
    sim = model.Simulation(mdl, ctrl)

@@ -30,8 +30,9 @@ mdl_ig_par = InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
 machine = model.InductionMachine(mdl_par)
-# Mechanics model
-mechanics = model.Mechanics(J=.015)
+# Mechanical subsystem with the quadratic load torque profile
+k = 1.1*nom.tau/(base.w/base.n_p)**2
+mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
 # Frequency converter with a diode bridge
 converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
 mdl = model.Drive(converter, machine, mechanics)
@@ -50,12 +51,8 @@ ctrl = control.VHzCtrl(
 
 ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
-# Quadratic load torque profile (corresponding to pumps and fans)
-k = 1.1*nom.tau/(base.w/base.n_p)**2
-mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
-
 # Stepwise load torque at t = 1 s, 20% of the rated torque
-mdl.mechanics.tau_L_t = lambda t: (t > 1.)*.2*nom.tau
+mdl.mechanics.tau_L = lambda t: (t > 1.)*.2*nom.tau
 
 # %%
 # Create the simulation object and simulate it.

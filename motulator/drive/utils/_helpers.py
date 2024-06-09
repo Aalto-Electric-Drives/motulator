@@ -257,3 +257,33 @@ class InductionMachineInvGammaPars(MachinePars):
         R_R, L_sgm, L_M = g**2*par.R_r, g*par.L_ell, g*par.L_s
 
         return cls(R_s=par.R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, n_p=par.n_p)
+
+
+# %%
+@dataclass
+class TwoMassMechanicalSystemPars():
+    """
+    Two-mass mechanical system parameters.
+    
+    Parameters
+    ----------
+    J_M : float
+        Motor moment of inertia (kgm²).
+    J_L : float
+        Load moment of inertia (kgm²).
+    K_S : float
+        Shaft torsional stiffness (Nm/rad).
+    C_S : float
+        Shaft torsional damping (Nm/(rad/s)).
+    B_L : float | callable
+        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding 
+        to viscous friction, or an arbitrary function of the load speed. For 
+        example, choosing ``B_L = lambda w_L: k*abs(w_M)`` leads to the 
+        quadratic load torque ``k*w_L**2``. The default is ``B_L = 0``.
+
+    """
+    J_M: float = None
+    J_L: float = None
+    K_S: float = None
+    C_S: float = None
+    B_L: Union[float, Callable] = 0

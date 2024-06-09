@@ -95,7 +95,9 @@ machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 # mdl_par = SynchronousMachinePars(
 #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 # machine = model.SynchronousMachine(mdl_par)
-mechanics = model.Mechanics(J=.0042)
+# Quadratic load torque profile (corresponding to pumps and fans)
+k = nom.tau/(base.w/base.n_p)**2
+mechanics = model.StiffMechanicalSystem(J=.0042, B_L=lambda w_M: k*np.abs(w_M))
 converter = model.Inverter(u_dc=310)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -114,14 +116,8 @@ times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.ref.w_m = Sequence(times, values)
 
-# Quadratic load torque profile (corresponding to pumps and fans)
-k = nom.tau/(base.w/base.n_p)**2
-mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
-
-# Uncomment to try the rated load torque step at t = 1 s (set k = 0 above)
-# times = np.array([0, .125, .125, .875, .875, 1])*8
-# values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-# mdl.mechanics.tau_L_t = Sequence(times, values)
+# External load torque set to zero
+mdl.mechanics.tau_L = lambda t: (t > 0)*0
 
 # %%
 # Create the simulation object and simulate it.

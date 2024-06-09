@@ -28,7 +28,7 @@ class CurrentVectorCtrl(DriveCtrl):
     T_s : float, optional
         Sampling period (s). The default is 250e-6.
     J : float, optional
-        Moment of inertia (kg*m^2). Needed for the speed controller.
+        Moment of inertia (kgm^2). Needed only for the speed controller. 
     alpha_c : float, optional
         Current controller bandwidth (rad/s). The default is 2*pi*200.
     alpha_o : float, optional
@@ -61,7 +61,10 @@ class CurrentVectorCtrl(DriveCtrl):
         super().__init__(par, T_s, sensorless)
         self.current_reference = CurrentReference(par, cfg)
         self.current_ctrl = CurrentCtrl(par, alpha_c)
-        self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        if J is not None:
+            self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        else:
+            self.speed_ctrl = None
         if sensorless:
             self.observer = Observer(
                 ObserverCfg(par, sensorless, alpha_o=alpha_o))

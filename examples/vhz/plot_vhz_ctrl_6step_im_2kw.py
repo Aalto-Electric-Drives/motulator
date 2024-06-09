@@ -33,7 +33,9 @@ mdl_ig_par = InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
 mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
 machine = model.InductionMachine(mdl_par)
-mechanics = model.Mechanics(J=.015)
+# Mechanics with quadratic load torque coefficient
+k = .2*nom.tau/(base.w/base.n_p)**2
+mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 mdl.pwm = model.CarrierComparison()  # Enable the PWM model
@@ -44,6 +46,7 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
 ctrl = control.VHzCtrl(
     control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
+
 # %%
 # Set the speed reference and the external load torque.
 
@@ -52,11 +55,8 @@ times = np.array([0, .1, .3, 1])*2
 values = np.array([0, 0, 1, 1])*2*base.w
 ctrl.ref.w_m = Sequence(times, values)
 
-# Quadratic load torque profile (corresponding to pumps and fans)
-k = .2*nom.tau/(base.w/base.n_p)**2
-mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 # External load torque could be set here, now zero
-mdl.mechanics.tau_L_t = lambda t: (t > 1.)*nom.tau*0
+mdl.mechanics.tau_L = lambda t: (t > 1.)*nom.tau*.1
 
 # %%
 # Create the simulation object and simulate it.

@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import numpy as np
 
 from motulator.common.model import Subsystem
-from motulator.common.utils import complex2abc, wrap
+from motulator.common.utils import complex2abc
 
 
 # %%
@@ -45,7 +45,6 @@ class InductionMachine(Subsystem):
     def __init__(self, par):
         super().__init__()
         self.par = par
-        self._L_s = par.L_s
         # States
         self.state = SimpleNamespace(psi_ss=0j, psi_rs=0j)
         # Store the solutions in these lists
@@ -82,7 +81,7 @@ class InductionMachine(Subsystem):
         """Compute state derivatives."""
         state, inp, out, par = self.state, self.inp, self.out, self.par
         d_psi_ss = inp.u_ss - par.R_s*out.i_ss
-        d_psi_rs = (-par.R_r*out.i_rs + 1j*par.n_p*inp.w_M*state.psi_rs)
+        d_psi_rs = -par.R_r*out.i_rs + 1j*par.n_p*inp.w_M*state.psi_rs
 
         return [d_psi_ss, d_psi_rs]
 
@@ -94,8 +93,8 @@ class InductionMachine(Subsystem):
     def post_process_states(self):
         """Post-process the solution."""
         data = self.data
-        L_s = self._L_s(np.abs(data.psi_ss)) if callable(
-            self._L_s) else self._L_s
+        L_s = self.par.L_s(np.abs(data.psi_ss)) if callable(
+            self.par.L_s) else self.par.L_s
         gamma = L_s/(L_s + self.par.L_ell)
         data.psi_Rs = gamma*data.psi_rs
         data.i_rs = (data.psi_rs - data.psi_ss)/self.par.L_ell
@@ -131,17 +130,17 @@ class SynchronousMachine(Subsystem):
 
     def __init__(self, par, i_s=None, psi_s0=None):
         super().__init__()
-        # self.par = SimpleNamespace(
-        #     n_p=n_p, R_s=R_s, L_d=L_d, L_q=L_q, psi_f=psi_f)
         self.par = par
         self._i_s = i_s
         # Initial values
         if psi_s0 is not None:
-            self.state = SimpleNamespace(psi_s=complex(psi_s0), theta_m=0)
+            self.state = SimpleNamespace(
+                psi_s=complex(psi_s0), exp_j_theta_m=complex(1))
         else:
-            self.state = SimpleNamespace(psi_s=complex(par.psi_f), theta_m=0)
+            self.state = SimpleNamespace(
+                psi_s=complex(par.psi_f), exp_j_theta_m=complex(1))
         # Store the solutions in these lists
-        self.sol_states = SimpleNamespace(psi_s=[], theta_m=[])
+        self.sol_states = SimpleNamespace(psi_s=[], exp_j_theta_m=[])
 
     @property
     def i_s(self):
@@ -158,23 +157,22 @@ class SynchronousMachine(Subsystem):
 
     def set_outputs(self, _):
         """Set output variables."""
-        out = self.out
+        state, out = self.state, self.out
         out.i_s, out.tau_M = self.i_s, self.tau_M
-        out.i_ss = self.i_s*np.exp(1j*self.state.theta_m)
+        out.i_ss = self.i_s*state.exp_j_theta_m
 
     def rhs(self):
         """Compute state derivatives."""
         state, inp, out, par = self.state, self.inp, self.out, self.par
-        inp.u_s = inp.u_ss*np.exp(-1j*state.theta_m)
+        inp.u_s = inp.u_ss*np.conj(state.exp_j_theta_m)
         d_psi_s = inp.u_s - par.R_s*out.i_s - 1j*par.n_p*inp.w_M*state.psi_s
-        d_theta_m = par.n_p*inp.w_M
-        # TODO: Wrap the angle
+        d_exp_j_theta_m = 1j*par.n_p*inp.w_M*state.exp_j_theta_m
 
-        return [d_psi_s, d_theta_m]
+        return [d_psi_s, d_exp_j_theta_m]
 
     def meas_currents(self):
         """Measure the phase currents."""
-        i_s_abc = complex2abc(np.exp(1j*self.state.theta_m)*self.i_s)
+        i_s_abc = complex2abc(self.state.exp_j_theta_m*self.i_s)
         return i_s_abc
 
     def post_process_states(self):
@@ -185,10 +183,10 @@ class SynchronousMachine(Subsystem):
         else:
             data.i_s = ((data.psi_s.real - par.psi_f)/par.L_d +
                         1j*data.psi_s.imag/par.L_q)
-        data.i_ss = data.i_s*np.exp(1j*data.theta_m)
-        data.psi_ss = data.psi_s*np.exp(1j*data.theta_m)
+        data.i_ss = data.i_s*data.exp_j_theta_m
+        data.psi_ss = data.psi_s*data.exp_j_theta_m
         data.tau_M = 1.5*self.par.n_p*np.imag(data.i_s*np.conj(data.psi_s))
-        data.theta_m = wrap(data.theta_m.real)
+        data.theta_m = np.angle(data.exp_j_theta_m)
 
     def post_process_with_inputs(self):
         """Post-process the solution."""

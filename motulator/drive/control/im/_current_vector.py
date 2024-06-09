@@ -30,7 +30,7 @@ class CurrentVectorCtrl(DriveCtrl):
     cfg : CurrentReferenceCfg
         Current reference generator configuration.
     J : float, optional
-        Moment of inertia (kgm^2). Needed for speed control. 
+        Moment of inertia (kgm^2). Needed only for the speed controller.
     T_s : float, optional
         Sampling time (s). The default is 250e-6.
     sensorless : bool, optional
@@ -53,7 +53,10 @@ class CurrentVectorCtrl(DriveCtrl):
         super().__init__(par, T_s, sensorless)
         self.current_reference = CurrentReference(par, cfg)
         self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
-        self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        if J is not None:
+            self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        else:
+            self.speed_ctrl = None
         self.observer = Observer(ObserverCfg(par, T_s, sensorless=sensorless))
 
     def output(self, fbk):
