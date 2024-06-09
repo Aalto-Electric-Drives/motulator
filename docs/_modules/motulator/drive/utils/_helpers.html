@@ -179,9 +179,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -590,6 +591,36 @@ document.write(`
         <span class="n">R_R</span><span class="p">,</span> <span class="n">L_sgm</span><span class="p">,</span> <span class="n">L_M</span> <span class="o">=</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R_r</span><span class="p">,</span> <span class="n">g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_ell</span><span class="p">,</span> <span class="n">g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="n">R_R</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="n">L_sgm</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="n">L_M</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="TwoMassMechanicalSystemPars"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.TwoMassMechanicalSystemPars">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TwoMassMechanicalSystemPars</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Two-mass mechanical system parameters.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    J_M : float</span>
+<span class="sd">        Motor moment of inertia (kgm²).</span>
+<span class="sd">    J_L : float</span>
+<span class="sd">        Load moment of inertia (kgm²).</span>
+<span class="sd">    K_S : float</span>
+<span class="sd">        Shaft torsional stiffness (Nm/rad).</span>
+<span class="sd">    C_S : float</span>
+<span class="sd">        Shaft torsional damping (Nm/(rad/s)).</span>
+<span class="sd">    B_L : float | callable</span>
+<span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding </span>
+<span class="sd">        to viscous friction, or an arbitrary function of the load speed. For </span>
+<span class="sd">        example, choosing ``B_L = lambda w_L: k*abs(w_M)`` leads to the </span>
+<span class="sd">        quadratic load torque ``k*w_L**2``. The default is ``B_L = 0``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">J_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">J_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">K_S</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">C_S</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">B_L</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></div>
 </pre></div>
 
                 </article>

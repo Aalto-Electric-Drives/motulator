@@ -183,9 +183,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -380,8 +381,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stiff-mechanics">Stiff Mechanics</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-mass-system">Two-Mass System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stiff-mechanical-system">Stiff Mechanical System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-mass-mechanical-system">Two-Mass Mechanical System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#externally-specified-rotor-speed">Externally Specified Rotor Speed</a></li>
 </ul>
             </nav>
         </div>
@@ -395,46 +397,44 @@ document.write(`
                   
   <section id="mechanics">
 <h1>Mechanics<a class="headerlink" href="#mechanics" title="Permalink to this heading">#</a></h1>
-<section id="stiff-mechanics">
-<h2>Stiff Mechanics<a class="headerlink" href="#stiff-mechanics" title="Permalink to this heading">#</a></h2>
-<p>The stiff rotational mechanics are governed by</p>
+<section id="stiff-mechanical-system">
+<h2>Stiff Mechanical System<a class="headerlink" href="#stiff-mechanical-system" title="Permalink to this heading">#</a></h2>
+<p>The dynamics of a stiff rotational mechanical system are governed by</p>
 <div class="math notranslate nohighlight" id="equation-mech-stiff">
-<span class="eqno">(1)<a class="headerlink" href="#equation-mech-stiff" title="Permalink to this equation">#</a></span>\[\begin{split}J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &amp;= \tau_\mathrm{M} - \tau_\mathrm{L} \\
+<span class="eqno">(1)<a class="headerlink" href="#equation-mech-stiff" title="Permalink to this equation">#</a></span>\[\begin{split}J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &amp;= \tau_\mathrm{M} - B_\mathrm{L}\omega_\mathrm{M} - \tau_\mathrm{L} \\
 \frac{\mathrm{d}\vartheta_\mathrm{M}}{\mathrm{d} t} &amp;= \omega_\mathrm{M}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\vartheta_\mathrm{M}\)</span> is the mechanical angle of the rotor, <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> is the electromagnetic torque, and <span class="math notranslate nohighlight">\(J\)</span> is the total moment of inertia. The total load torque is</p>
-<div class="math notranslate nohighlight" id="equation-load-torque">
-<span class="eqno">(2)<a class="headerlink" href="#equation-load-torque" title="Permalink to this equation">#</a></span>\[\tau_\mathrm{L} = \tau_{\mathrm{L},\omega} + \tau_{\mathrm{L},t}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\tau_{\mathrm{L},\omega}\)</span> is the speed-dependent load torque and <span class="math notranslate nohighlight">\(\tau_{\mathrm{L},t}\)</span> is the external load torque as a function of time. One typical speed-dependent load torque component is viscous friction</p>
-<div class="math notranslate nohighlight" id="equation-viscous-friction">
-<span class="eqno">(3)<a class="headerlink" href="#equation-viscous-friction" title="Permalink to this equation">#</a></span>\[\tau_{\mathrm{L},\omega} = B\omega_\mathrm{M}\]</div>
-<p>where <span class="math notranslate nohighlight">\(B\)</span> is the viscous damping coefficient. Viscous friction appears, e.g., due to laminar fluid flow in bearings. Another typical component is quadratic load torque</p>
-<div class="math notranslate nohighlight" id="equation-quadratic-load">
-<span class="eqno">(4)<a class="headerlink" href="#equation-quadratic-load" title="Permalink to this equation">#</a></span>\[\tau_{\mathrm{L},\omega} = k\omega_\mathrm{M}^2\mathrm{sign}(\omega_\mathrm{M})\]</div>
-<p>which appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance. The model of stiff mechanics is provided in the class <a class="reference internal" href="../autoapi/motulator/drive/model/index.html#motulator.drive.model.Mechanics" title="motulator.drive.model.Mechanics"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.Mechanics</span></code></a>.</p>
+<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\vartheta_\mathrm{M}\)</span> is the mechanical angle of the rotor, <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> is the electromagnetic torque, <span class="math notranslate nohighlight">\(\tau_\mathrm{L}\)</span> is the external load torque as a function of time, <span class="math notranslate nohighlight">\(B_\mathrm{L}\)</span> is the friction coefficient, and <span class="math notranslate nohighlight">\(J\)</span> is the total moment of inertia. The total load torque is</p>
+<div class="math notranslate nohighlight" id="equation-total-load-torque">
+<span class="eqno">(2)<a class="headerlink" href="#equation-total-load-torque" title="Permalink to this equation">#</a></span>\[\tau_\mathrm{L,tot} = B_\mathrm{L}\omega_\mathrm{M} + \tau_{\mathrm{L}}\]</div>
+<p>A constant friction coefficient <span class="math notranslate nohighlight">\(B_\mathrm{L}\)</span> models viscous friction that appears, e.g., due to laminar fluid flow in bearings. The friction coefficient is allowed to depend on the rotor speed, <span class="math notranslate nohighlight">\(B_\mathrm{L} = B_\mathrm{L}(\omega_\mathrm{M})\)</span>. As an example, the quadratic load torque profile is achieved choosing <span class="math notranslate nohighlight">\(B_\mathrm{L} = k|\omega_\mathrm{M}|\)</span>, where <span class="math notranslate nohighlight">\(k\)</span> is a constant. The quadratic load torque appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance. The model of a stiff mechanical system is provided in the class <a class="reference internal" href="../autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem" title="motulator.drive.model.StiffMechanicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.StiffMechanicalSystem</span></code></a>.</p>
 <figure class="align-center" id="id1">
-<a class="reference external image-reference" href="."><img alt="Block diagram of the stiff mechanics." src="../_images/mech_block.svg" width="100%" /></a>
+<a class="reference external image-reference" href="."><img alt="Block diagram of a stiff mechanical system." src="../_images/mech_block.svg" width="100%" /></a>
 <figcaption>
-<p><span class="caption-text">Block diagram of the stiff mechanics.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">Block diagram of a stiff mechanical system.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
-<section id="two-mass-system">
-<h2>Two-Mass System<a class="headerlink" href="#two-mass-system" title="Permalink to this heading">#</a></h2>
-<p>The two-mass mechanics are governed by</p>
+<section id="two-mass-mechanical-system">
+<h2>Two-Mass Mechanical System<a class="headerlink" href="#two-mass-mechanical-system" title="Permalink to this heading">#</a></h2>
+<p>A two-mass mechanical system can be modeled as</p>
 <div class="math notranslate nohighlight" id="equation-mech-two-mass">
-<span class="eqno">(5)<a class="headerlink" href="#equation-mech-two-mass" title="Permalink to this equation">#</a></span>\[\begin{split}J_\mathrm{M}\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &amp;= \tau_\mathrm{M} - \tau_\mathrm{S} \\
+<span class="eqno">(3)<a class="headerlink" href="#equation-mech-two-mass" title="Permalink to this equation">#</a></span>\[\begin{split}J_\mathrm{M}\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &amp;= \tau_\mathrm{M} - \tau_\mathrm{S} \\
 J_\mathrm{L}\frac{\mathrm{d}\omega_\mathrm{L}}{\mathrm{d} t} &amp;= \tau_\mathrm{S} - \tau_\mathrm{L} \\
 \frac{\mathrm{d}\vartheta_\mathrm{ML}}{\mathrm{d} t} &amp;= \omega_\mathrm{M} - \omega_\mathrm{L}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{L}\)</span> is the angular speed of the load, <span class="math notranslate nohighlight">\(\vartheta_\mathrm{ML}=\vartheta_\mathrm{M}-\vartheta_\mathrm{L}\)</span> is the twist angle, <span class="math notranslate nohighlight">\(J_\mathrm{M}\)</span> is the moment of inertia of the machine, and <span class="math notranslate nohighlight">\(J_\mathrm{L}\)</span> is the moment of inertia of the load. The shaft torque is</p>
 <div class="math notranslate nohighlight" id="equation-shaft-torque">
-<span class="eqno">(6)<a class="headerlink" href="#equation-shaft-torque" title="Permalink to this equation">#</a></span>\[\tau_\mathrm{S} = K_\mathrm{S}\vartheta_\mathrm{ML} + C_\mathrm{S}(\omega_\mathrm{M} - \omega_\mathrm{L})\]</div>
-<p>where <span class="math notranslate nohighlight">\(K_\mathrm{S}\)</span> is the torsional stiffness of the shaft, and <span class="math notranslate nohighlight">\(C_\mathrm{S}\)</span> is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanics. Two-mass mechanics are modeled in the class <a class="reference internal" href="../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanics" title="motulator.drive.model.TwoMassMechanics"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.TwoMassMechanics</span></code></a>. See also the example in <a class="reference internal" href="../auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html"><span class="doc">2.2-kW PMSM, 2-mass mechanics</span></a>.</p>
+<span class="eqno">(4)<a class="headerlink" href="#equation-shaft-torque" title="Permalink to this equation">#</a></span>\[\tau_\mathrm{S} = K_\mathrm{S}\vartheta_\mathrm{ML} + C_\mathrm{S}(\omega_\mathrm{M} - \omega_\mathrm{L})\]</div>
+<p>where <span class="math notranslate nohighlight">\(K_\mathrm{S}\)</span> is the torsional stiffness of the shaft, and <span class="math notranslate nohighlight">\(C_\mathrm{S}\)</span> is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanical system. A two-mass mechanical system is modeled in the class <a class="reference internal" href="../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.TwoMassMechanicalSystem</span></code></a>. See also the example in <a class="reference internal" href="../auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html"><span class="doc">2.2-kW PMSM, 2-mass mechanics</span></a>.</p>
 <figure class="align-center" id="id2">
-<a class="reference external image-reference" href="."><img alt="Block diagram of the two-mass mechanical system." src="../_images/two_mass_block.svg" width="100%" /></a>
+<a class="reference external image-reference" href="."><img alt="Block diagram of a two-mass mechanical system." src="../_images/two_mass_block.svg" width="100%" /></a>
 <figcaption>
-<p><span class="caption-text">Block diagram of the two-mass mechanical system.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">Block diagram of a two-mass mechanical system.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
+</section>
+<section id="externally-specified-rotor-speed">
+<h2>Externally Specified Rotor Speed<a class="headerlink" href="#externally-specified-rotor-speed" title="Permalink to this heading">#</a></h2>
+<p>It is also possible to omit the mechanical dynamics and directly specify the actual rotor speed <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> as a function of time, see the class <a class="reference internal" href="../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed" title="motulator.drive.model.ExternalRotorSpeed"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.ExternalRotorSpeed</span></code></a>. This feature is typically needed when torque-control mode is studied, see the example <a class="reference internal" href="../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html"><span class="doc">2.2-kW induction motor, torque-control mode</span></a>.</p>
 </section>
 </section>
 
@@ -482,8 +482,9 @@ J_\mathrm{L}\frac{\mathrm{d}\omega_\mathrm{L}}{\mathrm{d} t} &amp;= \tau_\mathrm
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stiff-mechanics">Stiff Mechanics</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-mass-system">Two-Mass System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stiff-mechanical-system">Stiff Mechanical System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-mass-mechanical-system">Two-Mass Mechanical System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#externally-specified-rotor-speed">Externally Specified Rotor Speed</a></li>
 </ul>
   </nav></div>
 

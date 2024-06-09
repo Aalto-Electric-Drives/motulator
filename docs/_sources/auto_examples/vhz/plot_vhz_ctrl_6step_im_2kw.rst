@@ -70,7 +70,7 @@ Compute base values based on the nominal values (just for figures).
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-41
+.. GENERATED FROM PYTHON SOURCE LINES 30-43
 
 .. code-block:: Python
 
@@ -80,7 +80,9 @@ Create the system model.
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
     mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
     machine = model.InductionMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
+    # Mechanics with quadratic load torque coefficient
+    k = .2*nom.tau/(base.w/base.n_p)**2
+    mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
@@ -92,11 +94,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-50
 
 .. code-block:: Python
 
@@ -111,11 +113,12 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-61
+.. GENERATED FROM PYTHON SOURCE LINES 52-61
 
 .. code-block:: Python
 
@@ -125,11 +128,8 @@ Set the speed reference and the external load torque.
     values = np.array([0, 0, 1, 1])*2*base.w
     ctrl.ref.w_m = Sequence(times, values)
 
-    # Quadratic load torque profile (corresponding to pumps and fans)
-    k = .2*nom.tau/(base.w/base.n_p)**2
-    mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
     # External load torque could be set here, now zero
-    mdl.mechanics.tau_L_t = lambda t: (t > 1.)*nom.tau*0
+    mdl.mechanics.tau_L = lambda t: (t > 1.)*nom.tau*.1
 
 
 
@@ -196,7 +196,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.625 seconds)
+   **Total running time of the script:** (0 minutes 8.631 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:

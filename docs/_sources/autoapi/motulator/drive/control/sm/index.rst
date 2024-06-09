@@ -302,7 +302,7 @@ Package Contents
    :type alpha_tau: float, optional
    :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*100.
    :type alpha_o: float, optional
-   :param J: Moment of inertia (kg*m^2). Needed for the speed controller.
+   :param J: Moment of inertia (kg*m^2). Needed only for the speed controller.
    :type J: float, optional
    :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float
@@ -601,7 +601,7 @@ Package Contents
    :type cfg: CurrentReferenceCfg
    :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float, optional
-   :param J: Moment of inertia (kg*m^2). Needed for the speed controller.
+   :param J: Moment of inertia (kgm^2). Needed only for the speed controller.
    :type J: float, optional
    :param alpha_c: Current controller bandwidth (rad/s). The default is 2*pi*200.
    :type alpha_c: float, optional
@@ -989,7 +989,7 @@ Package Contents
    :type par: SynchronousMachinePars
    :param cfg: Reference generation configuration.
    :type cfg: CurrentReferenceCfg
-   :param J: Moment of inertia (kg*m^2). Needed for the speed controller.
+   :param J: Moment of inertia (kg*m^2). Needed only for the speed controller.
    :type J: float, optional
    :param T_s: Sampling period (s).
    :type T_s: float

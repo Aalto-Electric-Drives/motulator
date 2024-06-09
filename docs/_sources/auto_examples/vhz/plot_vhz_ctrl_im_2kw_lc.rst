@@ -68,7 +68,7 @@ Compute base values based on the nominal values (just for figures).
 
 Create the system model. The filter parameters correspond to [#Sal2006]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-39
+.. GENERATED FROM PYTHON SOURCE LINES 28-41
 
 .. code-block:: Python
 
@@ -77,7 +77,9 @@ Create the system model. The filter parameters correspond to [#Sal2006]_.
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
     mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
     machine = model.InductionMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
+    # Quadratic load torque profile (corresponding to pumps and fans)
+    k = 1.1*nom.tau/(base.w/base.n_p)**2
+    mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
     converter = model.Inverter(u_dc=540)
     lc_filter = model.LCFilter(L=8e-3, C=9.9e-6, R=.1)
     mdl = model.DriveWithLCFilter(converter, machine, mechanics, lc_filter)
@@ -90,11 +92,11 @@ Create the system model. The filter parameters correspond to [#Sal2006]_.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-47
+.. GENERATED FROM PYTHON SOURCE LINES 43-49
 
 .. code-block:: Python
 
@@ -111,20 +113,17 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
-Set the speed reference and the external load torque.
+Set the speed reference. The external load torque is zero (by default).
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-56
+.. GENERATED FROM PYTHON SOURCE LINES 51-54
 
 .. code-block:: Python
 
 
     ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
-    # Quadratic load torque profile (corresponding to pumps and fans)
-    k = 1.1*nom.tau/(base.w/base.n_p)**2
-    mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 
 
@@ -132,12 +131,11 @@ Set the speed reference and the external load torque.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 57-58
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-62
+.. GENERATED FROM PYTHON SOURCE LINES 56-60
 
 .. code-block:: Python
 
@@ -152,11 +150,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-68
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
@@ -176,11 +174,11 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Plot additional waveforms.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-96
+.. GENERATED FROM PYTHON SOURCE LINES 68-102
 
 .. code-block:: Python
 
@@ -190,18 +188,26 @@ Plot additional waveforms.
     # Plot the converter and stator voltages (phase a)
     fig1, (ax1, ax2) = plt.subplots(2, 1)
     ax1.plot(
-        mdl.data.t, mdl.converter.data.u_cs.real/base.u, label=r"$u_\mathrm{ca}$")
+        mdl.converter.data.t,
+        mdl.converter.data.u_cs.real/base.u,
+        label=r"$u_\mathrm{ca}$")
     ax1.plot(
-        mdl.data.t, mdl.machine.data.u_ss.real/base.u, label=r"$u_\mathrm{sa}$")
+        mdl.converter.data.t,
+        mdl.machine.data.u_ss.real/base.u,
+        label=r"$u_\mathrm{sa}$")
     ax1.set_xlim(t_span)
     ax1.legend()
     ax1.set_xticklabels([])
     ax1.set_ylabel("Voltage (p.u.)")
     # Plot the converter and stator currents (phase a)
     ax2.plot(
-        mdl.data.t, mdl.converter.data.i_cs.real/base.i, label=r"$i_\mathrm{ca}$")
+        mdl.converter.data.t,
+        mdl.converter.data.i_cs.real/base.i,
+        label=r"$i_\mathrm{ca}$")
     ax2.plot(
-        mdl.data.t, mdl.machine.data.i_ss.real/base.i, label=r"$i_\mathrm{sa}$")
+        mdl.converter.data.t,
+        mdl.machine.data.i_ss.real/base.i,
+        label=r"$i_\mathrm{sa}$")
     ax2.set_xlim(t_span)
     ax2.legend()
     ax2.set_ylabel("Current (p.u.)")
@@ -222,7 +228,7 @@ Plot additional waveforms.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-102
+.. GENERATED FROM PYTHON SOURCE LINES 103-108
 
 .. rubric:: References
 
@@ -233,7 +239,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.697 seconds)
+   **Total running time of the script:** (0 minutes 9.716 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py:

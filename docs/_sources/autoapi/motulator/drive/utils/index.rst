@@ -37,6 +37,7 @@ Classes
    motulator.drive.utils.InductionMachineInvGammaPars
    motulator.drive.utils.InductionMachinePars
    motulator.drive.utils.SynchronousMachinePars
+   motulator.drive.utils.TwoMassMechanicalSystemPars
    motulator.drive.utils.Sequence
    motulator.drive.utils.Step
 
@@ -333,6 +334,42 @@ Package Contents
    :type L_q: float
    :param psi_f: Permanent-magnet flux linkage (Vs).
    :type psi_f: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: TwoMassMechanicalSystemPars
+
+   
+   Two-mass mechanical system parameters.
+
+   :param J_M: Motor moment of inertia (kgm²).
+   :type J_M: float
+   :param J_L: Load moment of inertia (kgm²).
+   :type J_L: float
+   :param K_S: Shaft torsional stiffness (Nm/rad).
+   :type K_S: float
+   :param C_S: Shaft torsional damping (Nm/(rad/s)).
+   :type C_S: float
+   :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
+               to viscous friction, or an arbitrary function of the load speed. For
+               example, choosing ``B_L = lambda w_L: k*abs(w_M)`` leads to the
+               quadratic load torque ``k*w_L**2``. The default is ``B_L = 0``.
+   :type B_L: float | callable
 
 
 

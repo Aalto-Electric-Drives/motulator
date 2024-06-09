@@ -174,31 +174,7 @@ Package Contents
    .. py:method:: get_initial_values()
 
       
-      Get initial values of all subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_initial_values(t0, state0)
-
-      
-      Set initial values to all subsystems.
+      Get initial values of all subsystems before the solver.
 
 
 

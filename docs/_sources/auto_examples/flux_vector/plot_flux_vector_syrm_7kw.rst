@@ -115,7 +115,7 @@ Configure the system model.
     # mdl_par = SynchronousMachinePars(
     #     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
     # machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
+    mechanics = model.StiffMechanicalSystem(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
@@ -176,7 +176,7 @@ Set the speed reference and the external load torque.
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-    mdl.mechanics.tau_L_t = Sequence(times, values)
+    mdl.mechanics.tau_L = Sequence(times, values)
 
 
 
@@ -244,7 +244,7 @@ machine has no magnets.
     ctrl.t = ctrl.ref.t  # Discrete time
     plt.figure()
     plt.plot(
-        mdl.data.t,
+        mdl.machine.data.t,
         np.abs(mdl.machine.data.psi_s)/base.psi,
         label=r"$\psi_\mathrm{s}$")
     plt.plot(
@@ -280,7 +280,7 @@ machine has no magnets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 15.438 seconds)
+   **Total running time of the script:** (0 minutes 15.062 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

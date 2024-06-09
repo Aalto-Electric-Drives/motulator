@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -385,7 +386,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Delay"><code class="docutils literal notranslate"><span class="pre">Delay</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.get_initial_values"><code class="docutils literal notranslate"><span class="pre">Model.get_initial_values()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_initial_values"><code class="docutils literal notranslate"><span class="pre">Model.set_initial_values()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_states"><code class="docutils literal notranslate"><span class="pre">Model.set_states()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_outputs"><code class="docutils literal notranslate"><span class="pre">Model.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.interconnect"><code class="docutils literal notranslate"><span class="pre">Model.interconnect()</span></code></a></li>
@@ -527,13 +527,7 @@ default is <cite>zoh</cite>.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Model.get_initial_values">
 <span class="sig-name descname"><span class="pre">get_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Model.get_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.get_initial_values" title="Permalink to this definition">#</a></dt>
-<dd><p>Get initial values of all subsystems.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.model.Model.set_initial_values">
-<span class="sig-name descname"><span class="pre">set_initial_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Model.set_initial_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.set_initial_values" title="Permalink to this definition">#</a></dt>
-<dd><p>Set initial values to all subsystems.</p>
+<dd><p>Get initial values of all subsystems before the solver.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -683,7 +677,6 @@ simplicity, only <cite>max_step</cite> is included as an option of this method.<
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Delay"><code class="docutils literal notranslate"><span class="pre">Delay</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.get_initial_values"><code class="docutils literal notranslate"><span class="pre">Model.get_initial_values()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_initial_values"><code class="docutils literal notranslate"><span class="pre">Model.set_initial_values()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_states"><code class="docutils literal notranslate"><span class="pre">Model.set_states()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_outputs"><code class="docutils literal notranslate"><span class="pre">Model.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.interconnect"><code class="docutils literal notranslate"><span class="pre">Model.interconnect()</span></code></a></li>

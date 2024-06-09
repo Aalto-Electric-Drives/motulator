@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -410,7 +411,7 @@ drive.</p>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
 <span class="n">mdl_par</span> <span class="o">=</span> <span class="n">InductionMachinePars</span><span class="o">.</span><span class="n">from_inv_gamma_model_pars</span><span class="p">(</span><span class="n">mdl_ig_par</span><span class="p">)</span>
 <span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InductionMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">)</span>
-<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
+<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">StiffMechanicalSystem</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">)</span>
 </pre></div>
@@ -434,11 +435,7 @@ drive.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># External load torque</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-
-<span class="c1"># Quadratic load torque profile, e.g. pumps and fans (uncomment to enable)</span>
-<span class="c1"># k = 1.1*base.tau_nom/(base.w/base.n_p)**2</span>
-<span class="c1"># mdl.mechanics.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
@@ -451,7 +448,7 @@ the results in SI units.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" alt="plot obs vhz ctrl im 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.256 seconds)</p>
+<img src="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_obs_vhz_ctrl_im_2kw_001.png" alt="plot obs vhz ctrl im 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.052 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-obs-vhz-plot-obs-vhz-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/575fba068cfee95663babe7799456a42/plot_obs_vhz_ctrl_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_obs_vhz_ctrl_im_2kw.ipynb</span></code></a></p>

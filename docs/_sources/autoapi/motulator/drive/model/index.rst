@@ -41,8 +41,9 @@ Classes
    motulator.drive.model.Inverter
    motulator.drive.model.InductionMachine
    motulator.drive.model.SynchronousMachine
-   motulator.drive.model.Mechanics
-   motulator.drive.model.TwoMassMechanics
+   motulator.drive.model.ExternalRotorSpeed
+   motulator.drive.model.StiffMechanicalSystem
+   motulator.drive.model.TwoMassMechanicalSystem
    motulator.drive.model.LCFilter
 
 
@@ -247,8 +248,8 @@ Package Contents
    :type converter: Inverter | FrequencyConverter
    :param machine: Machine model.
    :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanics model.
-   :type mechanics: Mechanics | TwoMassMechanics
+   :param mechanics: Mechanical subsystem model.
+   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
 
 
 
@@ -327,8 +328,8 @@ Package Contents
    :type converter: Inverter | FrequencyConverter
    :param machine: Machine model.
    :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanics model.
-   :type mechanics: Mechanics | TwoMassMechanics
+   :param mechanics: Mechanical subsystem model.
+   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
    :param lc_filter: LC-filter model.
    :type lc_filter: LCFilter
 
@@ -1214,25 +1215,17 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: Mechanics(J, tau_L_w=lambda w_M: 0 * w_M, tau_L_t=lambda t: 0 * t)
+.. py:class:: ExternalRotorSpeed(w_M=lambda t: 0 * t)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
 
    
-   Mechanics subsystem.
+   Integrate the rotor angle from the externally given rotor speed.
 
-   This models an equation of motion for stiff mechanics.
-
-   :param J: Total moment of inertia (kgm²).
-   :type J: float
-   :param tau_L_w: Load torque (Nm) as a function of speed, `tau_L_w(w_M)`. For example,
-                   ``tau_L_w = b*w_M``, where `b` is the viscous friction coefficient. The
-                   default is zero, ``lambda w_M: 0*w_M``.
-   :type tau_L_w: callable
-   :param tau_L_t: Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is
-                   zero, ``lambda t: 0*t``.
-   :type tau_L_t: callable
+   :param w_M: Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is
+               zero, ``lambda t: 0*t``.
+   :type w_M: callable
 
 
 
@@ -1250,6 +1243,189 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_speed()
+
+      
+      Measure the rotor speed.
+
+      :returns: **w_M** -- Rotor angular speed (mechanical rad/s).
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_position()
+
+      
+      Measure the rotor angle.
+
+      :returns: **theta_M** -- Rotor angle (mechanical rad).
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_states()
+
+      
+      Post-process data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: StiffMechanicalSystem(J, B_L=0, tau_L=lambda t: 0 * t)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   Stiff mechanical system.
+
+   :param J: Total moment of inertia (kgm²).
+   :type J: float
+   :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
+               to viscous friction, or an arbitrary function of the rotor speed. For
+               example, choosing ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic
+               load torque ``k*w_M**2``. The default is ``B_L = 0``.
+   :type B_L: float | callable
+   :param tau_L: External load torque (Nm) as a function of time, `tau_L_t(t)`. The
+                 default is zero, ``lambda t: 0*t``.
+   :type tau_L: callable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: B_L
+      
+      Friction coefficient (Nm/(rad/s)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
    .. py:method:: set_outputs(t)
 
@@ -1399,31 +1575,19 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: TwoMassMechanics(J_M, J_L, K_S, C_S, tau_L_w=None, tau_L_t=None)
+.. py:class:: TwoMassMechanicalSystem(par, tau_L=lambda t: 0 * t)
 
-   Bases: :py:obj:`Mechanics`
+   Bases: :py:obj:`StiffMechanicalSystem`
 
 
    
-   Two-mass mechanics subsystem.
+   Two-mass mechanical subsystem.
 
-   This models an equation of motion for two-mass mechanics.
-
-   :param J_M: Motor moment of inertia (kgm²).
-   :type J_M: float
-   :param J_L: Load moment of inertia (kgm²).
-   :type J_L: float
-   :param K_S: Shaft torsional stiffness (Nm).
-   :type K_S: float
-   :param C_S: Shaft torsional damping (Nms).
-   :type C_S: float
-   :param tau_L_w: Load torque (Nm) as a function of the load speed, `tau_L_w(w_L)`, e.g.,
-                   ``tau_L_w = B*w_L``, where `B` is the viscous friction coefficient. The
-                   default is zero, ``lambda w_L: 0*w_L``.
-   :type tau_L_w: callable
-   :param tau_L_t: Load torque (Nm) as a function of time, `tau_L_t(t)`. The default is
-                   zero, ``lambda t: 0*t``.
-   :type tau_L_t: callable
+   :param par: Two-mass mechanical system parameters.
+   :type par: TwoMassMechanicalSystemPars
+   :param tau_L: Load torque (Nm) as a function of time, `tau_L(t)`. The default is
+                 zero, ``lambda t: 0*t``.
+   :type tau_L: callable
 
 
 
@@ -1441,6 +1605,29 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:property:: B_L
+      
+      Friction coefficient (Nm/(rad/s)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
    .. py:method:: set_outputs(t)
 
@@ -1542,6 +1729,30 @@ Package Contents
 
       
       Post-process data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process data with inputs.
 
 
 

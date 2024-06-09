@@ -179,9 +179,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -405,7 +406,9 @@ document.write(`
     <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
         <span class="k">pass</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_m</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\omega_\mathrm</span><span class="si">{m}</span><span class="s2">$&quot;</span><span class="p">)</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_m</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\omega_\mathrm</span><span class="si">{m}</span><span class="s2">$&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
@@ -419,13 +422,16 @@ document.write(`
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
 
     <span class="c1"># Subplot 2: torques</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_L_tot</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
+            <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm{L,tot}$&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">pass</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_L</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-        <span class="s2">&quot;:&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{L}</span><span class="s2">$&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_M</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -490,7 +496,7 @@ document.write(`
     <span class="c1"># Subplot 5: flux linkages</span>
     <span class="k">if</span> <span class="n">motor_type</span> <span class="o">==</span> <span class="s2">&quot;sm&quot;</span><span class="p">:</span>
         <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_ss</span><span class="p">)</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -513,7 +519,7 @@ document.write(`
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_ss</span><span class="p">)</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
@@ -594,7 +600,7 @@ document.write(`
 
     <span class="c1"># Subplot 1: voltages</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_cs</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
@@ -608,7 +614,7 @@ document.write(`
 
     <span class="c1"># Subplot 2: currents</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_ss</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sb}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sc}</span><span class="s2">$&quot;</span><span class="p">])</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_ss</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>
@@ -636,15 +642,15 @@ document.write(`
 
         <span class="c1"># Subplot 1: voltages</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_di</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{di}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_dc</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{dc}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_g</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
@@ -653,13 +659,15 @@ document.write(`
 
         <span class="c1"># Subplot 2: currents</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_L</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{L}</span><span class="s2">$&quot;</span><span class="p">)</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_L</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{L}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_dc</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{dc}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_g</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>

@@ -75,7 +75,7 @@ Configure the system model.
     mdl_par = SynchronousMachinePars(
         n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
     machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
+    mechanics = model.StiffMechanicalSystem(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
@@ -125,7 +125,7 @@ Set the speed reference and the external load torque.
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-    mdl.mechanics.tau_L_t = Sequence(times, values)
+    mdl.mechanics.tau_L = Sequence(times, values)
 
 
 
@@ -157,7 +157,7 @@ Create the simulation object and simulate it.
 
 Plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-85
+.. GENERATED FROM PYTHON SOURCE LINES 65-88
 
 .. code-block:: Python
 
@@ -170,7 +170,10 @@ Plot results in per-unit values.
     ctrl = sim.ctrl.data  # Discrete-time data
     ctrl.t = ctrl.ref.t  # Discrete time
     plt.figure()
-    plt.plot(mdl.data.t, mdl.machine.data.theta_m, label=r"$\vartheta_\mathrm{m}$")
+    plt.plot(
+        mdl.machine.data.t,
+        mdl.machine.data.theta_m,
+        label=r"$\vartheta_\mathrm{m}$")
     plt.plot(
         ctrl.t,
         ctrl.fbk.theta_m,
@@ -208,7 +211,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.996 seconds)
+   **Total running time of the script:** (0 minutes 12.740 seconds)
 
 
 .. _sphx_glr_download_auto_examples_signal_inj_plot_signal_inj_syrm_7kw.py:

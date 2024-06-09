@@ -66,7 +66,7 @@ Compute base values based on the nominal values (just for figures).
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-35
+.. GENERATED FROM PYTHON SOURCE LINES 26-37
 
 .. code-block:: Python
 
@@ -75,7 +75,9 @@ Configure the system model.
     mdl_par = SynchronousMachinePars(
         n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
     machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.Mechanics(J=.0042)
+    # Quadratic load torque profile
+    k = .05*nom.tau/(base.w/base.n_p)**2
+    mechanics = model.StiffMechanicalSystem(J=.0042, B_L=lambda w_M: k*np.abs(w_M))
     converter = model.Inverter(u_dc=310)
     mdl = model.Drive(converter, machine, mechanics)
 
@@ -86,11 +88,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-48
+.. GENERATED FROM PYTHON SOURCE LINES 39-50
 
 .. code-block:: Python
 
@@ -112,11 +114,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-58
+.. GENERATED FROM PYTHON SOURCE LINES 52-60
 
 .. code-block:: Python
 
@@ -159,20 +161,17 @@ Plot control characteristics, computed using constant L_d, L_q, and psi_f.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
-Set the speed reference and the external load torque.
+Set the speed reference. The external load torque is zero (by default).
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-67
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
 
     # Acceleration and load torque step
     ctrl.ref.w_m = lambda t: (t > .1)*base.w*3
-    # Quadratic load torque profile
-    k = .05*nom.tau/(base.w/base.n_p)**2
-    mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 
 
@@ -181,11 +180,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Create the simulation object, simulate, and plot results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-73
+.. GENERATED FROM PYTHON SOURCE LINES 68-72
 
 .. code-block:: Python
 
@@ -208,7 +207,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.061 seconds)
+   **Total running time of the script:** (0 minutes 4.956 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:

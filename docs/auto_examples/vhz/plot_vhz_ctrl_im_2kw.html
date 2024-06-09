@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -410,8 +411,9 @@ parameters in this example yield open-loop V/Hz control.</p>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
 <span class="n">mdl_par</span> <span class="o">=</span> <span class="n">InductionMachinePars</span><span class="o">.</span><span class="n">from_inv_gamma_model_pars</span><span class="p">(</span><span class="n">mdl_ig_par</span><span class="p">)</span>
 <span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InductionMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">)</span>
-<span class="c1"># Mechanics model</span>
-<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
+<span class="c1"># Mechanical subsystem with the quadratic load torque profile</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mf">1.1</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span><span class="o">/</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">StiffMechanicalSystem</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">,</span> <span class="n">B_L</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="n">k</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_M</span><span class="p">))</span>
 <span class="c1"># Frequency converter with a diode bridge</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">FrequencyConverter</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">235e-6</span><span class="p">,</span> <span class="n">U_g</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">f_g</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">)</span>
@@ -428,12 +430,8 @@ parameters in this example yield open-loop V/Hz control.</p>
 <p>Set the speed reference and the external load torque.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
 
-<span class="c1"># Quadratic load torque profile (corresponding to pumps and fans)</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mf">1.1</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span><span class="o">/</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_w</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w_M</span><span class="p">:</span> <span class="n">k</span><span class="o">*</span><span class="n">w_M</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">w_M</span><span class="p">)</span>
-
 <span class="c1"># Stepwise load torque at t = 1 s, 20% of the rated torque</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">)</span><span class="o">*</span><span class="mf">.2</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">)</span><span class="o">*</span><span class="mf">.2</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
@@ -468,7 +466,7 @@ equipped with small DC-Link capacitance,” Proc. EPE, 2007,
 <a class="reference external" href="https://doi.org/10.1109/EPE.2007.4417763">https://doi.org/10.1109/EPE.2007.4417763</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.036 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 17.874 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/976c00e094a2f509f63377205e8e22fd/plot_vhz_ctrl_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vhz_ctrl_im_2kw.ipynb</span></code></a></p>

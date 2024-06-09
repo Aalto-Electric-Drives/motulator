@@ -179,9 +179,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -563,7 +564,7 @@ document.write(`
     <span class="nd">@np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_simulation_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_stop</span><span class="p">,</span> <span class="n">max_step</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the main simulation loop.&quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="n">t_stop</span><span class="p">:</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span> <span class="o">&lt;=</span> <span class="n">t_stop</span><span class="p">:</span>
 
             <span class="c1"># Run the digital controller</span>
             <span class="n">T_s</span><span class="p">,</span> <span class="n">ref_d_c_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="p">)</span>
@@ -585,13 +586,12 @@ document.write(`
                     <span class="n">state0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span>
 
                     <span class="c1"># Integrate over t_span</span>
-                    <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span> <span class="o">+</span> <span class="n">t_step</span><span class="p">)</span>
+                    <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span> <span class="o">+</span> <span class="n">t_step</span><span class="p">)</span>
                     <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">rhs</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">state0</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="n">max_step</span><span class="p">)</span>
 
-                    <span class="c1"># Set the new initial values (last points of the solution)</span>
-                    <span class="n">t0_new</span><span class="p">,</span> <span class="n">state0_new</span> <span class="o">=</span> <span class="n">t_span</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">set_initial_values</span><span class="p">(</span><span class="n">t0_new</span><span class="p">,</span> <span class="n">state0_new</span><span class="p">)</span>
+                    <span class="c1"># Set the new initial time</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">t_span</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
                     <span class="c1"># Save the solution</span>
                     <span class="n">sol</span><span class="o">.</span><span class="n">q_cs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="n">q_cs</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
@@ -632,31 +632,19 @@ document.write(`
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">zoh</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pwm</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Contains the list of subsystems</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sol_t</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Model.get_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.get_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get initial values of all subsystems.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get initial values of all subsystems before the solver.&quot;&quot;&quot;</span>
         <span class="n">state0</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">):</span>
                 <span class="n">state0</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="n">state0</span></div>
-
-<div class="viewcode-block" id="Model.set_initial_values"><a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_initial_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">state0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set initial values to all subsystems.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">t0</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">state</span><span class="p">):</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">state0</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-                    <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="Model.set_states"><a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_states">[docs]</a>    <span class="k">def</span> <span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the states in all subsystems.&quot;&quot;&quot;</span>
@@ -712,13 +700,14 @@ document.write(`
 
 <div class="viewcode-block" id="Model.post_process_states"><a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.post_process_states">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform the lists to the ndarray format and post-process them.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sol_t</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">q_cs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">sol_q_cs</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
+            <span class="n">subsystem</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sol_t</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="s2">&quot;sol_states&quot;</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">sol_states</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="nb">setattr</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="s2">&quot;post_process_states&quot;</span><span class="p">):</span>
                 <span class="n">subsystem</span><span class="o">.</span><span class="n">post_process_states</span><span class="p">()</span></div>
 
@@ -726,7 +715,6 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process after the inputs have been added.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">subsystem</span><span class="p">,</span> <span class="s2">&quot;post_process_with_inputs&quot;</span><span class="p">):</span>
-                <span class="n">subsystem</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span>
                 <span class="n">subsystem</span><span class="o">.</span><span class="n">post_process_with_inputs</span><span class="p">()</span></div></div>
 
 
@@ -738,7 +726,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
-        <span class="c1"># Store the solutions in these lists</span>
+        <span class="c1"># Save the solution in these lists</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sol_states</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
         <span class="c1"># For post-processed data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span></div>

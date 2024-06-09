@@ -512,7 +512,7 @@ Package Contents
    :type par: InductionMachineInvGammaPars
    :param cfg: Current reference generator configuration.
    :type cfg: CurrentReferenceCfg
-   :param J: Moment of inertia (kgm^2). Needed for speed control.
+   :param J: Moment of inertia (kgm^2). Needed only for the speed controller.
    :type J: float, optional
    :param T_s: Sampling time (s). The default is 250e-6.
    :type T_s: float, optional

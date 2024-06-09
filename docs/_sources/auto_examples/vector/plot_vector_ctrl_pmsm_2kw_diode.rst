@@ -72,7 +72,7 @@ Configure the system model.
     mdl_par = SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
+    mechanics = model.StiffMechanicalSystem(J=.015)
     converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
     mdl = model.Drive(converter, machine, mechanics)
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
@@ -117,7 +117,7 @@ Set the speed reference and the external load torque.
     ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
     # External load torque
-    mdl.mechanics.tau_L_t = lambda t: (t > .6)*nom.tau
+    mdl.mechanics.tau_L = lambda t: (t > .6)*nom.tau
 
 
 
@@ -176,7 +176,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 15.266 seconds)
+   **Total running time of the script:** (0 minutes 14.535 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py:

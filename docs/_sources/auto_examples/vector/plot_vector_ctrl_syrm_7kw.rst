@@ -74,7 +74,7 @@ Configure the system model.
     mdl_par = SynchronousMachinePars(
         n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
     machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
+    mechanics = model.StiffMechanicalSystem(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
@@ -122,7 +122,7 @@ Set the speed reference and the external load torque.
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-    mdl.mechanics.tau_L_t = Sequence(times, values)
+    mdl.mechanics.tau_L = Sequence(times, values)
 
 
 
@@ -158,7 +158,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 26.588 seconds)
+   **Total running time of the script:** (0 minutes 25.800 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py:

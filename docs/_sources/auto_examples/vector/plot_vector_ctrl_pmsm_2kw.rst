@@ -66,7 +66,7 @@ Compute base values based on the nominal values (just for figures).
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-35
+.. GENERATED FROM PYTHON SOURCE LINES 26-34
 
 .. code-block:: Python
 
@@ -74,10 +74,9 @@ Configure the system model.
     mdl_par = SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
+    mechanics = model.StiffMechanicalSystem(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
-    # mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 
 
@@ -86,11 +85,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-42
+.. GENERATED FROM PYTHON SOURCE LINES 36-41
 
 .. code-block:: Python
 
@@ -106,11 +105,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-51
+.. GENERATED FROM PYTHON SOURCE LINES 43-50
 
 .. code-block:: Python
 
@@ -119,7 +118,7 @@ Set the speed reference and the external load torque.
     ctrl.ref.w_m = lambda t: (t > .2)*2*base.w
 
     # External load torque
-    mdl.mechanics.tau_L_t = lambda t: (t > .8)*.7*nom.tau
+    mdl.mechanics.tau_L = lambda t: (t > .8)*.7*nom.tau
 
 
 
@@ -128,11 +127,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-61
+.. GENERATED FROM PYTHON SOURCE LINES 52-60
 
 .. code-block:: Python
 
@@ -157,7 +156,7 @@ Create the simulation object and simulate it.
 
  .. code-block:: none
 
-    Simulation time: 4.48 s
+    Simulation time: 4.30 s
 
 
 
@@ -165,7 +164,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.278 seconds)
+   **Total running time of the script:** (0 minutes 5.353 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:

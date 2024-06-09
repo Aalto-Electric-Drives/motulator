@@ -27,7 +27,7 @@ of the mechanics is around 85 Hz. The mechanical parameters correspond to
 [#Saa2015]_, except that the torsional damping is set to a smaller value in 
 this example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-22
+.. GENERATED FROM PYTHON SOURCE LINES 13-23
 
 .. code-block:: Python
 
@@ -38,7 +38,8 @@ this example.
     from motulator.drive import model
     import motulator.drive.control.sm as control
     from motulator.drive.utils import (
-        BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+        BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars,
+        TwoMassMechanicalSystemPars)
 
 
 
@@ -47,11 +48,11 @@ this example.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-28
+.. GENERATED FROM PYTHON SOURCE LINES 25-29
 
 .. code-block:: Python
 
@@ -66,11 +67,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-30
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-39
+.. GENERATED FROM PYTHON SOURCE LINES 31-40
 
 .. code-block:: Python
 
@@ -78,8 +79,8 @@ Configure the system model.
     mdl_par = SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.TwoMassMechanics(
-        J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
+    mdl_mec_par = TwoMassMechanicalSystemPars(J_M=.005, J_L=.005, K_S=700, C_S=.01)
+    mechanics = model.TwoMassMechanicalSystem(mdl_mec_par)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
@@ -90,11 +91,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-47
+.. GENERATED FROM PYTHON SOURCE LINES 42-48
 
 .. code-block:: Python
 
@@ -111,11 +112,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-59
+.. GENERATED FROM PYTHON SOURCE LINES 50-60
 
 .. code-block:: Python
 
@@ -127,7 +128,7 @@ Set the speed reference and the external load torque.
     # External load torque
     times = np.array([0, .4, .4, 1])
     values = np.array([0, 0, 1, 1])*nom.tau
-    mdl.mechanics.tau_L_t = Sequence(times, values)
+    mdl.mechanics.tau_L = Sequence(times, values)
 
 
 
@@ -136,11 +137,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-67
+.. GENERATED FROM PYTHON SOURCE LINES 62-68
 
 .. code-block:: Python
 
@@ -162,11 +163,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 69-70
 
 Plot the load speed and the twist angle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-86
+.. GENERATED FROM PYTHON SOURCE LINES 70-91
 
 .. code-block:: Python
 
@@ -174,10 +175,14 @@ Plot the load speed and the twist angle.
     t_span = (0, 1.2)
     _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
     ax1.plot(
-        sim.mdl.data.t, sim.mdl.mechanics.data.w_M, label=r"$\omega_\mathrm{M}$")
+        sim.mdl.mechanics.data.t,
+        sim.mdl.mechanics.data.w_M,
+        label=r"$\omega_\mathrm{M}$")
     ax1.plot(
-        sim.mdl.data.t, sim.mdl.mechanics.data.w_L, label=r"$\omega_\mathrm{L}$")
-    ax2.plot(sim.mdl.data.t, sim.mdl.mechanics.data.theta_ML*180/np.pi)
+        sim.mdl.mechanics.data.t,
+        sim.mdl.mechanics.data.w_L,
+        label=r"$\omega_\mathrm{L}$")
+    ax2.plot(sim.mdl.mechanics.data.t, sim.mdl.mechanics.data.theta_ML*180/np.pi)
     ax1.set_xlim(t_span)
     ax2.set_xlim(t_span)
     ax1.set_xticklabels([])
@@ -199,12 +204,12 @@ Plot the load speed and the twist angle.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-89
+.. GENERATED FROM PYTHON SOURCE LINES 92-94
 
 Plot also the frequency response from the electromagnetic torque tau_M to the
 rotor speed w_M.
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-118
+.. GENERATED FROM PYTHON SOURCE LINES 94-123
 
 .. code-block:: Python
 
@@ -213,8 +218,8 @@ rotor speed w_M.
     f_span = (5, 500)
     num = 200
     # Parameters
-    J_M, J_L = mdl.mechanics.J_M, mdl.mechanics.J_L
-    K_S, C_S = mdl.mechanics.K_S, mdl.mechanics.C_S
+    J_M, J_L = mdl_mec_par.J_M, mdl_mec_par.J_L
+    K_S, C_S = mdl_mec_par.K_S, mdl_mec_par.C_S
     # Frequencies
     w = 2*np.pi*np.logspace(np.log10(f_span[0]), np.log10(f_span[-1]), num=num)
     s = 1j*w
@@ -249,7 +254,7 @@ rotor speed w_M.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-124
+.. GENERATED FROM PYTHON SOURCE LINES 124-129
 
 .. rubric:: References
 
@@ -260,7 +265,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.613 seconds)
+   **Total running time of the script:** (0 minutes 4.786 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py:

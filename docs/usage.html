@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -394,7 +395,7 @@ from<span class="w"> </span>motulator.drive.utils<span class="w"> </span>import<
 <span class="nv">converter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Inverter<span class="o">(</span><span class="nv">u_dc</span><span class="o">=</span><span class="m">540</span><span class="o">)</span>
 <span class="nv">machine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.InductionMachineInvGamma<span class="o">(</span>
 <span class="w">   </span><span class="nv">R_s</span><span class="o">=</span><span class="m">3</span>.7,<span class="w"> </span><span class="nv">R_R</span><span class="o">=</span><span class="m">2</span>.1,<span class="w"> </span><span class="nv">L_sgm</span><span class="o">=</span>.021,<span class="w"> </span><span class="nv">L_M</span><span class="o">=</span>.224,<span class="w"> </span><span class="nv">n_p</span><span class="o">=</span><span class="m">2</span><span class="o">)</span>
-<span class="nv">mechanics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Mechanics<span class="o">(</span><span class="nv">J</span><span class="o">=</span>.015<span class="o">)</span>
+<span class="nv">mechanics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.StiffMechanicalSystem<span class="o">(</span><span class="nv">J</span><span class="o">=</span>.015<span class="o">)</span>
 <span class="nv">mdl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Drive<span class="o">(</span>converter,<span class="w"> </span>machine,<span class="w"> </span>mechanics<span class="o">)</span>
 
 <span class="c1"># Discrete-time controller</span>
@@ -405,7 +406,7 @@ from<span class="w"> </span>motulator.drive.utils<span class="w"> </span>import<
 
 <span class="c1"># Acceleration at t = 0.2 s and load torque step of 14 Nm at t = 0.75 s</span>
 ctrl.ref.w_m<span class="w"> </span><span class="o">=</span><span class="w"> </span>lambda<span class="w"> </span>t:<span class="w"> </span><span class="o">(</span>t<span class="w"> </span>&gt;<span class="w"> </span>.2<span class="o">)</span>*<span class="o">(</span><span class="m">2</span>*np.pi*50<span class="o">)</span>
-mdl.mechanics.tau_L_t<span class="w"> </span><span class="o">=</span><span class="w"> </span>lambda<span class="w"> </span>t:<span class="w"> </span><span class="o">(</span>t<span class="w"> </span>&gt;<span class="w"> </span>.75<span class="o">)</span>*14
+mdl.mechanics.tau_L<span class="w"> </span><span class="o">=</span><span class="w"> </span>lambda<span class="w"> </span>t:<span class="w"> </span><span class="o">(</span>t<span class="w"> </span>&gt;<span class="w"> </span>.75<span class="o">)</span>*14
 
 <span class="c1"># Create a simulation object, simulate, and plot example figures</span>
 <span class="nv">sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.Simulation<span class="o">(</span>mdl,<span class="w"> </span>ctrl<span class="o">)</span>

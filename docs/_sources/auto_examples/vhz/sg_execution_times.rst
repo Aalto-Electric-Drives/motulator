@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:36.357** total execution time for 3 files **from auto_examples/vhz**:
+**00:36.220** total execution time for 3 files **from auto_examples/vhz**:
 
 .. container::
 
@@ -33,11 +33,11 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py` (``plot_vhz_ctrl_im_2kw.py``)
-     - 00:18.036
+     - 00:17.874
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py` (``plot_vhz_ctrl_im_2kw_lc.py``)
-     - 00:09.697
+     - 00:09.716
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py` (``plot_vhz_ctrl_6step_im_2kw.py``)
-     - 00:08.625
+     - 00:08.631
      - 0.0

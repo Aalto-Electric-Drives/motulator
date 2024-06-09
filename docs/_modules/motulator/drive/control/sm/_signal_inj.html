@@ -179,9 +179,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -370,7 +371,7 @@ document.write(`
 <span class="sd">    cfg : CurrentReferenceCfg</span>
 <span class="sd">        Reference generation configuration.</span>
 <span class="sd">    J : float, optional</span>
-<span class="sd">        Moment of inertia (kg*m^2). Needed for the speed controller.</span>
+<span class="sd">        Moment of inertia (kg*m^2). Needed only for the speed controller.</span>
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s).</span>
 
@@ -382,7 +383,10 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span> <span class="o">=</span> <span class="n">CurrentCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">200</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pll</span> <span class="o">=</span> <span class="n">PhaseLockedLoop</span><span class="p">(</span><span class="n">w_o</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">40</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">signal_inj</span> <span class="o">=</span> <span class="n">SignalInjection</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">U_inj</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedCtrl</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">J</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedCtrl</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="SignalInjectionCtrl.get_feedback_signals"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SignalInjectionCtrl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>

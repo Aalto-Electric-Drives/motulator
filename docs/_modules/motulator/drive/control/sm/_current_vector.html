@@ -179,9 +179,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -361,7 +362,7 @@ document.write(`
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s). The default is 250e-6.</span>
 <span class="sd">    J : float, optional</span>
-<span class="sd">        Moment of inertia (kg*m^2). Needed for the speed controller.</span>
+<span class="sd">        Moment of inertia (kgm^2). Needed only for the speed controller. </span>
 <span class="sd">    alpha_c : float, optional</span>
 <span class="sd">        Current controller bandwidth (rad/s). The default is 2*pi*200.</span>
 <span class="sd">    alpha_o : float, optional</span>
@@ -394,7 +395,10 @@ document.write(`
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">sensorless</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_reference</span> <span class="o">=</span> <span class="n">CurrentReference</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span> <span class="o">=</span> <span class="n">CurrentCtrl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedCtrl</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">J</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedCtrl</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">sensorless</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span>
                 <span class="n">ObserverCfg</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">sensorless</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="n">alpha_o</span><span class="p">))</span>

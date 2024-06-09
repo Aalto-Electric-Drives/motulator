@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -396,6 +397,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.TwoMassMechanicalSystemPars"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystemPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_extra"><code class="docutils literal notranslate"><span class="pre">plot_extra()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.import_syre_data"><code class="docutils literal notranslate"><span class="pre">import_syre_data()</span></code></a></li>
@@ -439,10 +441,13 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.SynchronousMachinePars" title="motulator.drive.utils.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
 <td><p>Synchronous machine parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.Sequence" title="motulator.drive.utils.Sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.TwoMassMechanicalSystemPars" title="motulator.drive.utils.TwoMassMechanicalSystemPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoMassMechanicalSystemPars</span></code></a></p></td>
+<td><p>Two-mass mechanical system parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.Sequence" title="motulator.drive.utils.Sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a></p></td>
 <td><p>Sequence generator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.Step" title="motulator.drive.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.Step" title="motulator.drive.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
 <td><p>Step function.</p></td>
 </tr>
 </tbody>
@@ -637,6 +642,26 @@ the power factor and efficiency being less than unity.</p>
 </dl>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.TwoMassMechanicalSystemPars">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">TwoMassMechanicalSystemPars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#TwoMassMechanicalSystemPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.TwoMassMechanicalSystemPars" title="Permalink to this definition">#</a></dt>
+<dd><p>Two-mass mechanical system parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>J_M</strong> (<em>float</em>) – Motor moment of inertia (kgm²).</p></li>
+<li><p><strong>J_L</strong> (<em>float</em>) – Load moment of inertia (kgm²).</p></li>
+<li><p><strong>K_S</strong> (<em>float</em>) – Shaft torsional stiffness (Nm/rad).</p></li>
+<li><p><strong>C_S</strong> (<em>float</em>) – Shaft torsional damping (Nm/(rad/s)).</p></li>
+<li><p><strong>B_L</strong> (<em>float</em><em> | </em><em>callable</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
+to viscous friction, or an arbitrary function of the load speed. For
+example, choosing <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_L:</span> <span class="pre">k*abs(w_M)</span></code> leads to the
+quadratic load torque <code class="docutils literal notranslate"><span class="pre">k*w_L**2</span></code>. The default is <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="motulator.drive.utils.plot">
 <span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_plots.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot" title="Permalink to this definition">#</a></dt>
@@ -822,6 +847,7 @@ between the data points.</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.TwoMassMechanicalSystemPars"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystemPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_extra"><code class="docutils literal notranslate"><span class="pre">plot_extra()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.import_syre_data"><code class="docutils literal notranslate"><span class="pre">import_syre_data()</span></code></a></li>

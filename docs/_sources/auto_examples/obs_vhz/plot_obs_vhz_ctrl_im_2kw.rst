@@ -77,7 +77,7 @@ Configure the system model.
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
     mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
     machine = model.InductionMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
+    mechanics = model.StiffMechanicalSystem(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
@@ -135,7 +135,7 @@ Set the speed reference.
 
 Set the load torque reference.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-66
+.. GENERATED FROM PYTHON SOURCE LINES 56-62
 
 .. code-block:: Python
 
@@ -143,11 +143,7 @@ Set the load torque reference.
     # External load torque
     times = np.array([0, .125, .125, .875, .875, 1])*4
     values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-    mdl.mechanics.tau_L_t = Sequence(times, values)
-
-    # Quadratic load torque profile, e.g. pumps and fans (uncomment to enable)
-    # k = 1.1*base.tau_nom/(base.w/base.n_p)**2
-    # mdl.mechanics.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2
+    mdl.mechanics.tau_L = Sequence(times, values)
 
 
 
@@ -156,11 +152,11 @@ Set the load torque reference.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-72
+.. GENERATED FROM PYTHON SOURCE LINES 64-68
 
 .. code-block:: Python
 
@@ -175,12 +171,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-75
+.. GENERATED FROM PYTHON SOURCE LINES 69-71
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-77
+.. GENERATED FROM PYTHON SOURCE LINES 71-73
 
 .. code-block:: Python
 
@@ -201,7 +197,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.256 seconds)
+   **Total running time of the script:** (0 minutes 9.052 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py:

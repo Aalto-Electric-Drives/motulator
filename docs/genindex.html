@@ -179,9 +179,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -338,6 +339,7 @@ document.write(`
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
@@ -364,6 +366,14 @@ document.write(`
 
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem.B_L">B_L (motulator.drive.model.StiffMechanicalSystem property)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.B_L">(motulator.drive.model.TwoMassMechanicalSystem property)</a>
+</li>
+      </ul></li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.BaseValues">BaseValues (class in motulator.drive.utils)</a>
 </li>
@@ -452,6 +462,14 @@ document.write(`
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DriveWithLCFilter">DriveWithLCFilter (class in motulator.drive.model)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.PWM.duty_ratios">duty_ratios() (motulator.common.control.PWM static method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed">ExternalRotorSpeed (class in motulator.drive.model)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -583,17 +601,23 @@ document.write(`
       </ul></li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Inverter.meas_dc_voltage">meas_dc_voltage() (motulator.drive.model.Inverter method)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanics.meas_load_position">meas_load_position() (motulator.drive.model.TwoMassMechanics method)</a>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position">meas_load_position() (motulator.drive.model.TwoMassMechanicalSystem method)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanics.meas_load_speed">meas_load_speed() (motulator.drive.model.TwoMassMechanics method)</a>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed">meas_load_speed() (motulator.drive.model.TwoMassMechanicalSystem method)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Mechanics.meas_position">meas_position() (motulator.drive.model.Mechanics method)</a>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.meas_position">meas_position() (motulator.drive.model.ExternalRotorSpeed method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem.meas_position">(motulator.drive.model.StiffMechanicalSystem method)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Mechanics.meas_speed">meas_speed() (motulator.drive.model.Mechanics method)</a>
+      </ul></li>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.meas_speed">meas_speed() (motulator.drive.model.ExternalRotorSpeed method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem.meas_speed">(motulator.drive.model.StiffMechanicalSystem method)</a>
 </li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter.meas_voltages">meas_voltages() (motulator.drive.model.LCFilter method)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Mechanics">Mechanics (class in motulator.drive.model)</a>
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model">Model (class in motulator.common.model)</a>
 </li>
@@ -835,24 +859,26 @@ document.write(`
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DriveWithLCFilter.post_process">(motulator.drive.model.DriveWithLCFilter method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.post_process_states">post_process_states() (motulator.common.model.Model method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.post_process_states">(motulator.drive.model.ExternalRotorSpeed method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.post_process_states">(motulator.drive.model.FrequencyConverter method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.post_process_states">(motulator.drive.model.InductionMachine method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Inverter.post_process_states">(motulator.drive.model.Inverter method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Mechanics.post_process_states">(motulator.drive.model.Mechanics method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem.post_process_states">(motulator.drive.model.StiffMechanicalSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.post_process_states">(motulator.drive.model.SynchronousMachine method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanics.post_process_states">(motulator.drive.model.TwoMassMechanics method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.post_process_states">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.post_process_with_inputs">post_process_with_inputs() (motulator.common.model.Model method)</a>
 
       <ul>
@@ -860,9 +886,11 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.post_process_with_inputs">(motulator.drive.model.InductionMachine method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Mechanics.post_process_with_inputs">(motulator.drive.model.Mechanics method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem.post_process_with_inputs">(motulator.drive.model.StiffMechanicalSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.post_process_with_inputs">(motulator.drive.model.SynchronousMachine method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.post_process_with_inputs">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.PWM">PWM (class in motulator.common.control)</a>
@@ -882,17 +910,19 @@ document.write(`
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.rhs">rhs() (motulator.common.model.Model method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.rhs">(motulator.drive.model.ExternalRotorSpeed method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.rhs">(motulator.drive.model.FrequencyConverter method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.rhs">(motulator.drive.model.InductionMachine method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter.rhs">(motulator.drive.model.LCFilter method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Mechanics.rhs">(motulator.drive.model.Mechanics method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem.rhs">(motulator.drive.model.StiffMechanicalSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.rhs">(motulator.drive.model.SynchronousMachine method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanics.rhs">(motulator.drive.model.TwoMassMechanics method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.rhs">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -919,11 +949,11 @@ document.write(`
         <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.Sequence">(class in motulator.drive.utils)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_initial_values">set_initial_values() (motulator.common.model.Model method)</a>
-</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_outputs">set_outputs() (motulator.common.model.Model method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_outputs">(motulator.drive.model.ExternalRotorSpeed method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.set_outputs">(motulator.drive.model.FrequencyConverter method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.set_outputs">(motulator.drive.model.InductionMachine method)</a>
@@ -932,11 +962,11 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter.set_outputs">(motulator.drive.model.LCFilter method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Mechanics.set_outputs">(motulator.drive.model.Mechanics method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem.set_outputs">(motulator.drive.model.StiffMechanicalSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.set_outputs">(motulator.drive.model.SynchronousMachine method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanics.set_outputs">(motulator.drive.model.TwoMassMechanics method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.set_outputs">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_states">set_states() (motulator.common.model.Model method)</a>
@@ -983,6 +1013,8 @@ document.write(`
         <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.Step">(class in motulator.drive.utils)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.StiffMechanicalSystem">StiffMechanicalSystem (class in motulator.drive.model)</a>
+</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem">Subsystem (class in motulator.common.model)</a>
 </li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine">SynchronousMachine (class in motulator.drive.model)</a>
@@ -1001,13 +1033,15 @@ document.write(`
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.tau_M">(motulator.drive.model.SynchronousMachine property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.TorqueCharacteristics.torque">torque() (motulator.drive.control.sm.TorqueCharacteristics method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.TorqueCharacteristics">TorqueCharacteristics (class in motulator.drive.control.sm)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanics">TwoMassMechanics (class in motulator.drive.model)</a>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem">TwoMassMechanicalSystem (class in motulator.drive.model)</a>
+</li>
+      <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.TwoMassMechanicalSystemPars">TwoMassMechanicalSystemPars (class in motulator.drive.utils)</a>
 </li>
   </ul></td>
 </tr></table>

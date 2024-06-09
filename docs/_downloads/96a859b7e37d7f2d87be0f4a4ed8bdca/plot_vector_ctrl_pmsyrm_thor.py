@@ -28,7 +28,9 @@ base = BaseValues.from_nominal(nom, n_p=2)
 mdl_par = SynchronousMachinePars(
     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 machine = model.SynchronousMachine(mdl_par)
-mechanics = model.Mechanics(J=.0042)
+# Quadratic load torque profile
+k = .05*nom.tau/(base.w/base.n_p)**2
+mechanics = model.StiffMechanicalSystem(J=.0042, B_L=lambda w_M: k*np.abs(w_M))
 converter = model.Inverter(u_dc=310)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -56,13 +58,10 @@ tq.plot_torque_current(ctrl.current_reference.cfg.max_i_s, base)
 # tq.plot_flux_loci(ctrl.current_reference.cfg.max_i_s, base)
 
 # %%
-# Set the speed reference and the external load torque.
+# Set the speed reference. The external load torque is zero (by default).
 
 # Acceleration and load torque step
 ctrl.ref.w_m = lambda t: (t > .1)*base.w*3
-# Quadratic load torque profile
-k = .05*nom.tau/(base.w/base.n_p)**2
-mdl.mechanics.tau_L_w = lambda w_M: k*w_M**2*np.sign(w_M)
 
 # %%
 # Create the simulation object, simulate, and plot results in per-unit values.

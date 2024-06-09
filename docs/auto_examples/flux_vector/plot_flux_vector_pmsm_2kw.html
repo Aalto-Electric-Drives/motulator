@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -404,7 +405,7 @@ to download the full example code.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mdl_par</span> <span class="o">=</span> <span class="n">SynchronousMachinePars</span><span class="p">(</span>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">.036</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">.051</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">.545</span><span class="p">)</span>
 <span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">SynchronousMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">)</span>
-<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
+<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">StiffMechanicalSystem</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">)</span>
 </pre></div>
@@ -420,7 +421,7 @@ to download the full example code.</p>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">w</span>
 
 <span class="c1"># Load torque step</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.8</span><span class="p">)</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span><span class="o">*</span><span class="mf">.7</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.8</span><span class="p">)</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span><span class="o">*</span><span class="mf">.7</span>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
@@ -432,7 +433,7 @@ to download the full example code.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_flux_vector_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsm_2kw_001.png" alt="plot flux vector pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.362 seconds)</p>
+<img src="../../_images/sphx_glr_plot_flux_vector_pmsm_2kw_001.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsm_2kw_001.png" alt="plot flux vector pmsm 2kw" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.193 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-vector-plot-flux-vector-pmsm-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1a902c1ab2092d406c661fb4146e7d95/plot_flux_vector_pmsm_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_flux_vector_pmsm_2kw.ipynb</span></code></a></p>

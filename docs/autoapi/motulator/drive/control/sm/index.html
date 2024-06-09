@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -688,7 +689,7 @@ saturation is not considered in this implementation.</p>
 <li><p><strong>alpha_psi</strong> (<em>float</em><em>, </em><em>optional</em>) – Bandwidth of the flux controller (rad/s). The default is 2*pi*100.</p></li>
 <li><p><strong>alpha_tau</strong> (<em>float</em><em>, </em><em>optional</em>) – Bandwidth of the torque controller (rad/s). The default is 2*pi*200.</p></li>
 <li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer bandwidth (rad/s). The default is 2*pi*100.</p></li>
-<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kg*m^2). Needed for the speed controller.</p></li>
+<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kg*m^2). Needed only for the speed controller.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s). The default is 250e-6.</p></li>
 <li><p><strong>sensorless</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, sensorless control is used. The default is True.</p></li>
 </ul>
@@ -879,7 +880,7 @@ the interface to the solver.</p>
 <li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.SynchronousMachinePars" title="motulator.drive.utils.SynchronousMachinePars"><em>SynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.CurrentReferenceCfg" title="motulator.drive.control.sm.CurrentReferenceCfg"><em>CurrentReferenceCfg</em></a>) – Reference generation configuration.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period (s). The default is 250e-6.</p></li>
-<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kg*m^2). Needed for the speed controller.</p></li>
+<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kgm^2). Needed only for the speed controller.</p></li>
 <li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current controller bandwidth (rad/s). The default is 2*pi*200.</p></li>
 <li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer bandwidth (rad/s). The default is 2*pi*100.</p></li>
 <li><p><strong>sensorless</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, sensorless control is used. The default is True.</p></li>
@@ -1096,7 +1097,7 @@ sensorless method in IPMSM,” IEEE Trans. Ind. Appl., 2012,
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.SynchronousMachinePars" title="motulator.drive.utils.SynchronousMachinePars"><em>SynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.CurrentReferenceCfg" title="motulator.drive.control.sm.CurrentReferenceCfg"><em>CurrentReferenceCfg</em></a>) – Reference generation configuration.</p></li>
-<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kg*m^2). Needed for the speed controller.</p></li>
+<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kg*m^2). Needed only for the speed controller.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
 </ul>
 </dd>

@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -432,7 +433,7 @@ Naturally, the PM-flux estimation can be used in PM machine drives as well.</p>
 <span class="c1"># mdl_par = SynchronousMachinePars(</span>
 <span class="c1">#     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)</span>
 <span class="c1"># machine = model.SynchronousMachine(mdl_par)</span>
-<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Mechanics</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
+<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">StiffMechanicalSystem</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Inverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">)</span>
 </pre></div>
@@ -465,7 +466,7 @@ lower values in order to demonstrate the PM-flux disturbance estimation.</p>
 <span class="c1"># External load torque</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.125</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mf">.875</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_t</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
@@ -486,7 +487,7 @@ machine has no magnets.</p>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">t</span>  <span class="c1"># Discrete time</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-    <span class="n">mdl</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+    <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
     <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
     <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
@@ -509,7 +510,7 @@ magnet flux adaptation for sensorless synchronous motor drives,” Proc.
 IEEE SLED, 2018, <a class="reference external" href="https://doi.org/10.1109/SLED.2018.8485899">https://doi.org/10.1109/SLED.2018.8485899</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 15.438 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 15.062 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-flux-vector-plot-flux-vector-syrm-7kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e6572a075a4cfc4ead4a22a9a67ff8d4/plot_flux_vector_syrm_7kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_flux_vector_syrm_7kw.ipynb</span></code></a></p>

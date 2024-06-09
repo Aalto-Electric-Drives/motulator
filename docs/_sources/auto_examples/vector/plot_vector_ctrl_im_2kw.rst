@@ -62,41 +62,19 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 25-27
 
-Configure the system model.
+The main-flux saturation in the system model is modeled based on [#Qu2012]_.
+The default parameters correspond to the measured data of a 2.2-kW machine.
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-31
-
-The main-flux saturation is modeled based on [#Qu2012]_. For simplicity, the
-parameters are hardcoded in the function below, but this model structure can
-be used also for other induction machines.
-
-.. GENERATED FROM PYTHON SOURCE LINES 31-55
+.. GENERATED FROM PYTHON SOURCE LINES 27-34
 
 .. code-block:: Python
 
 
 
-    def L_s(psi):
-        """
-        Stator inductance saturation model for a 2.2-kW induction machine.
-
-        Parameters
-        ----------
-        psi : float
-            Magnitude of the stator flux linkage (Vs).
-    
-        Returns
-        -------
-        float
-            Stator inductance (H).
-
-        """
-        # Saturation model parameters for a 2.2-kW induction machine, based on the
-        # measured data
-        L_su, beta, S = .34, .84, 7
-        # Stator inductance
+    def L_s(psi, L_su=.34, beta=.84, S=7):
+        """Stator inductance saturation model."""
         return L_su/(1 + (beta*psi)**S)
 
 
@@ -107,11 +85,11 @@ be used also for other induction machines.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-57
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
-Create the system model.
+Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-73
+.. GENERATED FROM PYTHON SOURCE LINES 36-50
 
 .. code-block:: Python
 
@@ -123,9 +101,7 @@ Create the system model.
     #     n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
     # mdl_par = InductionMachinePars.from_inv_gamma_model_pars(par)
     machine = model.InductionMachine(mdl_par)
-    mechanics = model.Mechanics(J=.015)
-    #mechanics = model.TwoMassMechanics(
-    #    J_M=.005, J_L=.005, K_S=700, C_S=.01)  # C_S=.13
+    mechanics = model.StiffMechanicalSystem(J=.015)
     converter = model.Inverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
     # mdl.pwm = model.CarrierComparison()  # Try to enable the PWM model
@@ -138,11 +114,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-75
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-89
+.. GENERATED FROM PYTHON SOURCE LINES 52-66
 
 .. code-block:: Python
 
@@ -157,7 +133,7 @@ Configure the control system.
     ctrl = control.CurrentVectorCtrl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
     # As an example, you may replace the default 2DOF PI speed controller with the
     # regular PI speed controller by uncommenting the following line
-    # from motulator.common import PICtrl
+    # from motulator.common.control import PICtrl
     # ctrl.speed_ctrl = PICtrl(k_p=1, k_i=1)
 
 
@@ -167,23 +143,23 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-92
+.. GENERATED FROM PYTHON SOURCE LINES 67-69
 
 Set the speed reference and the external load torque. You may also try to
 uncomment the field-weakening sequence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-101
+.. GENERATED FROM PYTHON SOURCE LINES 69-78
 
 .. code-block:: Python
 
 
     # Simple acceleration and load torque step
     ctrl.ref.w_m = lambda t: (t > .2)*(.5*base.w)
-    mdl.mechanics.tau_L_t = lambda t: (t > .75)*nom.tau
+    mdl.mechanics.tau_L = lambda t: (t > .75)*nom.tau
 
     # No load, field-weakening (uncomment to try)
     # ctrl.ref.w_m = lambda t: (t > .2)*(2*base.w)
-    # mdl.mechanics.tau_L_t = lambda t: 0
+    # mdl.mechanics.tau_L = lambda t: 0
 
 
 
@@ -192,11 +168,11 @@ uncomment the field-weakening sequence.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-103
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-107
+.. GENERATED FROM PYTHON SOURCE LINES 80-84
 
 .. code-block:: Python
 
@@ -211,12 +187,12 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-110
+.. GENERATED FROM PYTHON SOURCE LINES 85-87
 
 Plot results in per-unit values. By omitting the argument `base` you can plot
 the results in SI units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-113
+.. GENERATED FROM PYTHON SOURCE LINES 87-90
 
 .. code-block:: Python
 
@@ -235,7 +211,7 @@ the results in SI units.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-119
+.. GENERATED FROM PYTHON SOURCE LINES 91-96
 
 .. rubric:: References
 
@@ -246,7 +222,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.132 seconds)
+   **Total running time of the script:** (0 minutes 4.037 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw.py:

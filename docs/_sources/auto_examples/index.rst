@@ -33,23 +33,6 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive, equipped with...">
-
-.. only:: html
-
-  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_diode_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive. ">
 
 .. only:: html
@@ -67,6 +50,23 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive, equipped with...">
+
+.. only:: html
+
+  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_diode_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM  drive.">
 
 .. only:: html
@@ -79,6 +79,23 @@ These examples are for current-vector control of induction machines and synchron
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-contr...">
+
+.. only:: html
+
+  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_im_2kw_tq_mode_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_im_2kw_tq_mode.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, torque-control mode</div>
     </div>
 
 

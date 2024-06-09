@@ -182,9 +182,10 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 </ul>
@@ -438,21 +439,32 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.post_process_with_inputs()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics"><code class="docutils literal notranslate"><span class="pre">Mechanics</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.set_outputs"><code class="docutils literal notranslate"><span class="pre">Mechanics.set_outputs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.rhs"><code class="docutils literal notranslate"><span class="pre">Mechanics.rhs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.meas_speed"><code class="docutils literal notranslate"><span class="pre">Mechanics.meas_speed()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.meas_position"><code class="docutils literal notranslate"><span class="pre">Mechanics.meas_position()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.post_process_states"><code class="docutils literal notranslate"><span class="pre">Mechanics.post_process_states()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">Mechanics.post_process_with_inputs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_outputs"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.rhs"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.meas_speed"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.meas_speed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.meas_position"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.meas_position()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.post_process_states"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.post_process_states()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.set_outputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.set_outputs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.rhs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.rhs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.meas_load_speed()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.meas_load_position()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.post_process_states"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.post_process_states()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.B_L"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.B_L</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.rhs"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.meas_speed"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.meas_speed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.meas_position"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.meas_position()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.post_process_states"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.post_process_states()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.post_process_with_inputs()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.B_L"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.B_L</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.rhs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_speed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_position()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.post_process_states"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.post_process_states()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.post_process_with_inputs()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter"><code class="docutils literal notranslate"><span class="pre">LCFilter</span></code></a><ul class="nav section-nav flex-column">
@@ -509,13 +521,16 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.SynchronousMachine" title="motulator.drive.model.SynchronousMachine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a></p></td>
 <td><p>Synchronous machine model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.Mechanics" title="motulator.drive.model.Mechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mechanics</span></code></a></p></td>
-<td><p>Mechanics subsystem.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.ExternalRotorSpeed" title="motulator.drive.model.ExternalRotorSpeed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExternalRotorSpeed</span></code></a></p></td>
+<td><p>Integrate the rotor angle from the externally given rotor speed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.TwoMassMechanics" title="motulator.drive.model.TwoMassMechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoMassMechanics</span></code></a></p></td>
-<td><p>Two-mass mechanics subsystem.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.StiffMechanicalSystem" title="motulator.drive.model.StiffMechanicalSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StiffMechanicalSystem</span></code></a></p></td>
+<td><p>Stiff mechanical system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.LCFilter" title="motulator.drive.model.LCFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LCFilter</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a></p></td>
+<td><p>Two-mass mechanical subsystem.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.LCFilter" title="motulator.drive.model.LCFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LCFilter</span></code></a></p></td>
 <td><p>LC-filter model.</p></td>
 </tr>
 </tbody>
@@ -645,7 +660,7 @@ interface to the solver.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.drive.model.Inverter" title="motulator.drive.model.Inverter"><em>Inverter</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.FrequencyConverter" title="motulator.drive.model.FrequencyConverter"><em>FrequencyConverter</em></a>) – Converter model.</p></li>
 <li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><em>InductionMachine</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.SynchronousMachine" title="motulator.drive.model.SynchronousMachine"><em>SynchronousMachine</em></a>) – Machine model.</p></li>
-<li><p><strong>mechanics</strong> (<a class="reference internal" href="#motulator.drive.model.Mechanics" title="motulator.drive.model.Mechanics"><em>Mechanics</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.TwoMassMechanics" title="motulator.drive.model.TwoMassMechanics"><em>TwoMassMechanics</em></a>) – Mechanics model.</p></li>
+<li><p><strong>mechanics</strong> (<a class="reference internal" href="#motulator.drive.model.ExternalRotorSpeed" title="motulator.drive.model.ExternalRotorSpeed"><em>ExternalRotorSpeed</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.StiffMechanicalSystem" title="motulator.drive.model.StiffMechanicalSystem"><em>StiffMechanicalSystem</em></a><em> |                </em><a class="reference internal" href="#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><em>TwoMassMechanicalSystem</em></a>) – Mechanical subsystem model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -673,7 +688,7 @@ interface to the solver.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.drive.model.Inverter" title="motulator.drive.model.Inverter"><em>Inverter</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.FrequencyConverter" title="motulator.drive.model.FrequencyConverter"><em>FrequencyConverter</em></a>) – Converter model.</p></li>
 <li><p><strong>machine</strong> (<a class="reference internal" href="#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><em>InductionMachine</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.SynchronousMachine" title="motulator.drive.model.SynchronousMachine"><em>SynchronousMachine</em></a>) – Machine model.</p></li>
-<li><p><strong>mechanics</strong> (<a class="reference internal" href="#motulator.drive.model.Mechanics" title="motulator.drive.model.Mechanics"><em>Mechanics</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.TwoMassMechanics" title="motulator.drive.model.TwoMassMechanics"><em>TwoMassMechanics</em></a>) – Mechanics model.</p></li>
+<li><p><strong>mechanics</strong> (<a class="reference internal" href="#motulator.drive.model.ExternalRotorSpeed" title="motulator.drive.model.ExternalRotorSpeed"><em>ExternalRotorSpeed</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.StiffMechanicalSystem" title="motulator.drive.model.StiffMechanicalSystem"><em>StiffMechanicalSystem</em></a><em> |                </em><a class="reference internal" href="#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><em>TwoMassMechanicalSystem</em></a>) – Mechanical subsystem model.</p></li>
 <li><p><strong>lc_filter</strong> (<a class="reference internal" href="#motulator.drive.model.LCFilter" title="motulator.drive.model.LCFilter"><em>LCFilter</em></a>) – LC-filter model.</p></li>
 </ul>
 </dd>
@@ -957,38 +972,31 @@ stator current is computed using this function instead of constants
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.model.Mechanics">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">Mechanics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">...</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#Mechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Mechanics" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">ExternalRotorSpeed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Subsystem</span></code></a></p>
-<p>Mechanics subsystem.</p>
-<p>This models an equation of motion for stiff mechanics.</p>
+<p>Integrate the rotor angle from the externally given rotor speed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>J</strong> (<em>float</em>) – Total moment of inertia (kgm²).</p></li>
-<li><p><strong>tau_L_w</strong> (<em>callable</em>) – Load torque (Nm) as a function of speed, <cite>tau_L_w(w_M)</cite>. For example,
-<code class="docutils literal notranslate"><span class="pre">tau_L_w</span> <span class="pre">=</span> <span class="pre">b*w_M</span></code>, where <cite>b</cite> is the viscous friction coefficient. The
-default is zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">0*w_M</span></code>.</p></li>
-<li><p><strong>tau_L_t</strong> (<em>callable</em>) – Load torque (Nm) as a function of time, <cite>tau_L_t(t)</cite>. The default is
-zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">0*t</span></code>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>w_M</strong> (<em>callable</em>) – Rotor speed (rad/s) as a function of time, <cite>w_M(t)</cite>. The default is
+zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">0*t</span></code>.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.Mechanics.set_outputs">
-<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#Mechanics.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Mechanics.set_outputs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed.set_outputs">
+<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed.set_outputs" title="Permalink to this definition">#</a></dt>
 <dd><p>Set output variables.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.Mechanics.rhs">
-<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#Mechanics.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Mechanics.rhs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed.rhs">
+<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed.rhs" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute state derivatives.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.Mechanics.meas_speed">
-<span class="sig-name descname"><span class="pre">meas_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#Mechanics.meas_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Mechanics.meas_speed" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed.meas_speed">
+<span class="sig-name descname"><span class="pre">meas_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed.meas_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed.meas_speed" title="Permalink to this definition">#</a></dt>
 <dd><p>Measure the rotor speed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1001,8 +1009,8 @@ zero, <code class="docutils literal notranslate"><span class="pre">lambda</span>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.Mechanics.meas_position">
-<span class="sig-name descname"><span class="pre">meas_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#Mechanics.meas_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Mechanics.meas_position" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed.meas_position">
+<span class="sig-name descname"><span class="pre">meas_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed.meas_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed.meas_position" title="Permalink to this definition">#</a></dt>
 <dd><p>Measure the rotor angle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1015,68 +1023,145 @@ zero, <code class="docutils literal notranslate"><span class="pre">lambda</span>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.Mechanics.post_process_states">
-<span class="sig-name descname"><span class="pre">post_process_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#Mechanics.post_process_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Mechanics.post_process_states" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed.post_process_states">
+<span class="sig-name descname"><span class="pre">post_process_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed.post_process_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed.post_process_states" title="Permalink to this definition">#</a></dt>
+<dd><p>Post-process data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.model.StiffMechanicalSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">StiffMechanicalSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B_L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#StiffMechanicalSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.StiffMechanicalSystem" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Subsystem</span></code></a></p>
+<p>Stiff mechanical system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>J</strong> (<em>float</em>) – Total moment of inertia (kgm²).</p></li>
+<li><p><strong>B_L</strong> (<em>float</em><em> | </em><em>callable</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
+to viscous friction, or an arbitrary function of the rotor speed. For
+example, choosing <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">k*abs(w_M)</span></code> gives the quadratic
+load torque <code class="docutils literal notranslate"><span class="pre">k*w_M**2</span></code>. The default is <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+<li><p><strong>tau_L</strong> (<em>callable</em>) – External load torque (Nm) as a function of time, <cite>tau_L_t(t)</cite>. The
+default is zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">0*t</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="motulator.drive.model.StiffMechanicalSystem.B_L">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">B_L</span></span><a class="headerlink" href="#motulator.drive.model.StiffMechanicalSystem.B_L" title="Permalink to this definition">#</a></dt>
+<dd><p>Friction coefficient (Nm/(rad/s)).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.StiffMechanicalSystem.set_outputs">
+<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#StiffMechanicalSystem.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.StiffMechanicalSystem.set_outputs" title="Permalink to this definition">#</a></dt>
+<dd><p>Set output variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.StiffMechanicalSystem.rhs">
+<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#StiffMechanicalSystem.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.StiffMechanicalSystem.rhs" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute state derivatives.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.StiffMechanicalSystem.meas_speed">
+<span class="sig-name descname"><span class="pre">meas_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#StiffMechanicalSystem.meas_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.StiffMechanicalSystem.meas_speed" title="Permalink to this definition">#</a></dt>
+<dd><p>Measure the rotor speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w_M</strong> – Rotor angular speed (mechanical rad/s).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.StiffMechanicalSystem.meas_position">
+<span class="sig-name descname"><span class="pre">meas_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#StiffMechanicalSystem.meas_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.StiffMechanicalSystem.meas_position" title="Permalink to this definition">#</a></dt>
+<dd><p>Measure the rotor angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>theta_M</strong> – Rotor angle (mechanical rad).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.StiffMechanicalSystem.post_process_states">
+<span class="sig-name descname"><span class="pre">post_process_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#StiffMechanicalSystem.post_process_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.StiffMechanicalSystem.post_process_states" title="Permalink to this definition">#</a></dt>
 <dd><p>Post-process data.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.Mechanics.post_process_with_inputs">
-<span class="sig-name descname"><span class="pre">post_process_with_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#Mechanics.post_process_with_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Mechanics.post_process_with_inputs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.StiffMechanicalSystem.post_process_with_inputs">
+<span class="sig-name descname"><span class="pre">post_process_with_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#StiffMechanicalSystem.post_process_with_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.StiffMechanicalSystem.post_process_with_inputs" title="Permalink to this definition">#</a></dt>
 <dd><p>Post-process data with inputs.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanics">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">TwoMassMechanics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanics" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.drive.model.Mechanics" title="motulator.drive.model.Mechanics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mechanics</span></code></a></p>
-<p>Two-mass mechanics subsystem.</p>
-<p>This models an equation of motion for two-mass mechanics.</p>
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">TwoMassMechanicalSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.model.StiffMechanicalSystem" title="motulator.drive.model.StiffMechanicalSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StiffMechanicalSystem</span></code></a></p>
+<p>Two-mass mechanical subsystem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J_M</strong> (<em>float</em>) – Motor moment of inertia (kgm²).</p></li>
-<li><p><strong>J_L</strong> (<em>float</em>) – Load moment of inertia (kgm²).</p></li>
-<li><p><strong>K_S</strong> (<em>float</em>) – Shaft torsional stiffness (Nm).</p></li>
-<li><p><strong>C_S</strong> (<em>float</em>) – Shaft torsional damping (Nms).</p></li>
-<li><p><strong>tau_L_w</strong> (<em>callable</em>) – Load torque (Nm) as a function of the load speed, <cite>tau_L_w(w_L)</cite>, e.g.,
-<code class="docutils literal notranslate"><span class="pre">tau_L_w</span> <span class="pre">=</span> <span class="pre">B*w_L</span></code>, where <cite>B</cite> is the viscous friction coefficient. The
-default is zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_L:</span> <span class="pre">0*w_L</span></code>.</p></li>
-<li><p><strong>tau_L_t</strong> (<em>callable</em>) – Load torque (Nm) as a function of time, <cite>tau_L_t(t)</cite>. The default is
+<li><p><strong>par</strong> (<a class="reference internal" href="../utils/index.html#motulator.drive.utils.TwoMassMechanicalSystemPars" title="motulator.drive.utils.TwoMassMechanicalSystemPars"><em>TwoMassMechanicalSystemPars</em></a>) – Two-mass mechanical system parameters.</p></li>
+<li><p><strong>tau_L</strong> (<em>callable</em>) – Load torque (Nm) as a function of time, <cite>tau_L(t)</cite>. The default is
 zero, <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">t:</span> <span class="pre">0*t</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.B_L">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">B_L</span></span><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.B_L" title="Permalink to this definition">#</a></dt>
+<dd><p>Friction coefficient (Nm/(rad/s)).</p>
+</dd></dl>
+
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanics.set_outputs">
-<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanics.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanics.set_outputs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.set_outputs">
+<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.set_outputs" title="Permalink to this definition">#</a></dt>
 <dd><p>Set output variables.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanics.rhs">
-<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanics.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanics.rhs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.rhs">
+<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.rhs" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute state derivatives.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanics.meas_load_speed">
-<span class="sig-name descname"><span class="pre">meas_load_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanics.meas_load_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanics.meas_load_speed" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed">
+<span class="sig-name descname"><span class="pre">meas_load_speed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.meas_load_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed" title="Permalink to this definition">#</a></dt>
 <dd><p>Measure the load speed.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanics.meas_load_position">
-<span class="sig-name descname"><span class="pre">meas_load_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanics.meas_load_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanics.meas_load_position" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.meas_load_position">
+<span class="sig-name descname"><span class="pre">meas_load_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.meas_load_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position" title="Permalink to this definition">#</a></dt>
 <dd><p>Measure the load angle.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanics.post_process_states">
-<span class="sig-name descname"><span class="pre">post_process_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanics.post_process_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanics.post_process_states" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.post_process_states">
+<span class="sig-name descname"><span class="pre">post_process_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.post_process_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.post_process_states" title="Permalink to this definition">#</a></dt>
 <dd><p>Post-process data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.post_process_with_inputs">
+<span class="sig-name descname"><span class="pre">post_process_with_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.post_process_with_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.post_process_with_inputs" title="Permalink to this definition">#</a></dt>
+<dd><p>Post-process data with inputs.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1227,21 +1312,32 @@ zero, <code class="docutils literal notranslate"><span class="pre">lambda</span>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.post_process_with_inputs()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics"><code class="docutils literal notranslate"><span class="pre">Mechanics</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.set_outputs"><code class="docutils literal notranslate"><span class="pre">Mechanics.set_outputs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.rhs"><code class="docutils literal notranslate"><span class="pre">Mechanics.rhs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.meas_speed"><code class="docutils literal notranslate"><span class="pre">Mechanics.meas_speed()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.meas_position"><code class="docutils literal notranslate"><span class="pre">Mechanics.meas_position()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.post_process_states"><code class="docutils literal notranslate"><span class="pre">Mechanics.post_process_states()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.Mechanics.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">Mechanics.post_process_with_inputs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_outputs"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.rhs"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.meas_speed"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.meas_speed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.meas_position"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.meas_position()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.post_process_states"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.post_process_states()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.set_outputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.set_outputs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.rhs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.rhs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.meas_load_speed()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.meas_load_position()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanics.post_process_states"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanics.post_process_states()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.B_L"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.B_L</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.rhs"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.meas_speed"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.meas_speed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.meas_position"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.meas_position()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.post_process_states"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.post_process_states()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.StiffMechanicalSystem.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">StiffMechanicalSystem.post_process_with_inputs()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.B_L"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.B_L</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.rhs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_speed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_position()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.post_process_states"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.post_process_states()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.post_process_with_inputs()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter"><code class="docutils literal notranslate"><span class="pre">LCFilter</span></code></a><ul class="nav section-nav flex-column">
