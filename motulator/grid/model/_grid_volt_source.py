@@ -8,12 +8,12 @@ synchronous generator are considered. In this module, all space vectors are in
 stationary coordinates.
 
 """
+from types import SimpleNamespace
 
 import numpy as np
 
 from motulator.common.model import Subsystem
 from motulator.common.utils._utils import (complex2abc, abc2complex)
-from types import SimpleNamespace
 
 # %%
 class StiffSource(Subsystem):
@@ -34,11 +34,13 @@ class StiffSource(Subsystem):
                  e_g_abs=lambda t: 400*np.sqrt(2/3)):
         super().__init__()
         self.par = SimpleNamespace(w_N=w_N, e_g_abs=e_g_abs)
-        
+
+
     @property
     def w_N(self):
         """Grid constant frequency (rad/s)."""
         return self.par.w_N
+
 
     def voltages(self, t):
         """
@@ -59,13 +61,17 @@ class StiffSource(Subsystem):
         theta = self.w_N*t
 
         # Calculation of the three-phase voltage
-        e_g_a = self.e_g_abs(t)*np.cos(theta)
-        e_g_b = self.e_g_abs(t)*np.cos(theta-2*np.pi/3)
-        e_g_c = self.e_g_abs(t)*np.cos(theta-4*np.pi/3)
-
+        e_g_a = self.par.e_g_abs(t)*np.cos(theta)
+        e_g_b = self.par.e_g_abs(t)*np.cos(theta-2*np.pi/3)
+        e_g_c = self.par.e_g_abs(t)*np.cos(theta-4*np.pi/3)
 
         e_gs = abc2complex([e_g_a, e_g_b, e_g_c])
         return e_gs
+
+
+    def set_outputs(self, t):
+        """Set output variables."""
+        self.out.e_gs = self.voltages(t)
 
 
     def meas_voltages(self, t):
