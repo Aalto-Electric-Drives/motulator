@@ -10,7 +10,8 @@ from types import SimpleNamespace
 import numpy as np
 
 from motulator.common.utils._utils import abc2complex
-from motulator.common.control import (Ctrl, PWM, ComplexFFPICtrl, Clock)
+from motulator.common.control import (PWM, ComplexFFPICtrl, Clock)
+from motulator.grid.control._common import (Ctrl, DCBusVoltCtrl)
 
 
 # %%
