@@ -13,7 +13,8 @@ current controller.
 # Imports.
 
 import numpy as np
-from motulator.grid import model, control
+from motulator.grid import model
+import motulator.grid.control.grid_following as control
 from motulator.grid.utils import BaseValues, NominalValues, plot_grid
 
 # To check the computation time of the program
@@ -35,7 +36,7 @@ grid_filter = model.LFilter(L_f=10e-3, L_g=0, R_g=0)
 # AC grid model (either constant frequency or dynamic electromechanical model)
 grid_model = model.StiffSource(w_N=2*np.pi*50)
 converter = model.Inverter(u_dc=650)
-mdl = model.ac_grid.StiffSourceAndLFilterModel(
+mdl = model.StiffSourceAndLFilterModel(
     grid_filter, grid_model, converter)
 
 
@@ -43,13 +44,13 @@ mdl = model.ac_grid.StiffSourceAndLFilterModel(
 # Configure the control system.
 
 # Control parameters
-pars = control.grid_following.GridFollowingCtrlPars(
+pars = control.GridFollowingCtrlPars(
             L_f=10e-3,
             f_sw = 5e3,
             T_s = 1/(10e3),
-            i_max = 1.5*base_values.i,
+            i_max = 1.5*base.i,
             )
-ctrl = control.grid_following.GridFollowingCtrl(pars)
+ctrl = control.GridFollowingCtrl(pars)
 
 
 # %%

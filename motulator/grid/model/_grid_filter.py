@@ -127,7 +127,7 @@ class LFilter:
         return u_g_abc
 
 
-    # %%
+# %%
 class LCLFilter:
     """
     Dynamic model for an inductive-capacitive-inductive (LCL) filter and a grid.
