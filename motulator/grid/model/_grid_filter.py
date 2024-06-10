@@ -36,9 +36,9 @@ class LFilter(Subsystem):
         Grid resistance (Ω)
 
     """
-    def __init__(self, U_gN, L_f, R_f=0, L_g=0, R_g=0, u_gs=None):
+    def __init__(self, L_f, R_f=0, L_g=0, R_g=0, u_gs=None):
         super().__init__()
-        self.par = SimpleNamespace(U_gN=U_gN, L_f=L_f, R_f=R_f, L_g=L_g, R_g=R_g)
+        self.par = SimpleNamespace(L_f=L_f, R_f=R_f, L_g=L_g, R_g=R_g)
         self._u_gs = u_gs
         self.state = SimpleNamespace(i_gs=0)
         self.sol_states = SimpleNamespace(i_gs=[])
@@ -57,7 +57,7 @@ class LFilter(Subsystem):
     def set_outputs(self, _):
         """Set output variables."""
         state, out = self.state, self.out
-        out.i_gs = state.i_gs
+        out.i_gs, out.i_cs = state.i_gs, state.i_gs
 
 
     def rhs(self):
