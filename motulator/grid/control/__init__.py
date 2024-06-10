@@ -7,5 +7,5 @@ from motulator.grid.control._common import (
 
 __all__ = [
     "Ctrl",
-    "DCBusVoltCtrl"
+    "DCBusVoltCtrl",
 ]

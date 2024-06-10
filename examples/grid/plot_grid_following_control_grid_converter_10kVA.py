@@ -13,8 +13,9 @@ current controller.
 # Imports.
 
 import numpy as np
-from motulator.grid import model
-import motulator.grid.control.grid_following as control
+from motulator.grid import model, control
+import motulator.grid.control.grid_following as control   
+#import motulator.grid.control.grid_following as control
 from motulator.grid.utils import BaseValues, NominalValues, plot_grid
 
 # To check the computation time of the program
@@ -32,12 +33,13 @@ base = BaseValues.from_nominal(nom)
 # Create the system model.
 
 # grid impedance and filter model
-grid_filter = model.LFilter(L_f=10e-3, L_g=0, R_g=0)
+grid_filter = model.LFilter(U_gN=400*np.sqrt(2/3) ,R_f=0 ,L_f=10e-3, L_g=0, R_g=0)
 # AC grid model (either constant frequency or dynamic electromechanical model)
 grid_model = model.StiffSource(w_N=2*np.pi*50)
 converter = model.Inverter(u_dc=650)
 mdl = model.StiffSourceAndLFilterModel(
     grid_filter, grid_model, converter)
+mdl.pwm = None  # disable the PWM model
 
 
 # %%
@@ -68,7 +70,7 @@ mdl.grid_model.e_g_abs = e_g_abs_var # grid voltage magnitude
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl, pwm=False)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop = .1)
 
 # Print the execution time

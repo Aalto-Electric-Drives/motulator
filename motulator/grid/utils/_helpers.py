@@ -64,9 +64,7 @@ class BaseValues:
     i: float
     w: float
     psi: float
-    f: float
     p: float
-    f: float
     Z: float
     L: float
 
