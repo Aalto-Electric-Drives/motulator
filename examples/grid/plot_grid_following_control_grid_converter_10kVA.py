@@ -37,9 +37,11 @@ grid_filter = model.LFilter(U_gN=400*np.sqrt(2/3) ,R_f=0 ,L_f=10e-3, L_g=0, R_g=
 # AC grid model (either constant frequency or dynamic electromechanical model)
 grid_model = model.StiffSource(w_N=2*np.pi*50)
 converter = model.Inverter(u_dc=650)
-mdl = model.StiffSourceAndLFilterModel(
-    grid_filter, grid_model, converter)
+
+
 mdl.pwm = None  # disable the PWM model
+mdl = model.StiffSourceAndLFilterModel(converter, grid_filter, grid_model)
+
 
 
 # %%
