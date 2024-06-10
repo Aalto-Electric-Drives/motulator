@@ -10,8 +10,7 @@ Electromechanical stiff AC grid and converter model interconnectors.
 """
 
 import numpy as np
-
-#from gritulator._utils import Bunch
+from types import SimpleNamespace
 
 # %%
 class StiffSourceAndLFilterModel:
@@ -38,7 +37,7 @@ class StiffSourceAndLFilterModel:
         self.t0 = 0
 
         # Store the solution in these lists
-        self.data = Bunch()
+        self.data = SimpleNamespace()
         self.data.t, self.data.q = [], []
         self.data.i_gs = []
 
@@ -109,7 +108,7 @@ class StiffSourceAndLFilterModel:
 
         Parameters
         ----------
-        sol : Bunch object
+        sol : SimpleNamespace object
             Solution from the solver.
 
         """
@@ -163,7 +162,7 @@ class StiffSourceAndLCLFilterModel:
         self.t0 = 0
 
         # Store the solution in these lists
-        self.data = Bunch()
+        self.data = SimpleNamespace()
         self.data.t, self.data.q = [], []
         self.data.i_gs = []
         self.data.i_cs = []
@@ -239,7 +238,7 @@ class StiffSourceAndLCLFilterModel:
 
         Parameters
         ----------
-        sol : Bunch object
+        sol : SimpleNamespace object
             Solution from the solver.
 
         """

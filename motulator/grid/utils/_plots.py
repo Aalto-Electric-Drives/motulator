@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from cycler import cycler
 
 from motulator.common.utils import complex2abc
-from gritulator._utils import Bunch
+from types import SimpleNamespace
 
 # Plotting parameters
 plt.rcParams['axes.prop_cycle'] = cycler(color='brgcmyk')
@@ -57,7 +57,7 @@ def plot_grid(
     if base is None:
         pu_vals = False
         # Scaling with unity base values except for power use kW
-        base = Bunch(w=1, u=1, i=1, p=1000)
+        base = SimpleNamespace(w=1, u=1, i=1, p=1000)
     else:
         pu_vals = True
         
