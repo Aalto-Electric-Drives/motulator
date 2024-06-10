@@ -44,6 +44,7 @@ class LFilter(Subsystem):
         self.sol_states = SimpleNamespace(i_gs=[])
 
 
+    @property
     def u_gs(self):
         """Compute the PCC voltage between the L filter and grid impedance."""
         if callable(self._u_gs):
