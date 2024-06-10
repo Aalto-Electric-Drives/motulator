@@ -3,7 +3,8 @@
 import numpy as np
 #from motulator.common.utils._utils import (abc2complex, complex2abc)
 from motulator.common.control._control import (Clock, PICtrl)
-from gritulator._utils import Bunch
+from types import SimpleNamespace
+#from gritulator._utils import Bunch
 
 
 # %%
@@ -46,7 +47,7 @@ class Ctrl:
     """Base class for the control system."""
 
     def __init__(self):
-        self.data = Bunch()  # Data store
+        self.data = SimpleNamespace()  # Data store
         self.clock = Clock()  # Digital clock
 
     def __call__(self, mdl):
@@ -71,7 +72,7 @@ class Ctrl:
 
         Parameters
         ----------
-        data : bunch or dict
+        data : SimpleNamespace or dict
             Contains the data to be saved.
 
         """
