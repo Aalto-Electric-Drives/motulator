@@ -4,7 +4,6 @@ import numpy as np
 #from motulator.common.utils._utils import (abc2complex, complex2abc)
 from motulator.common.control._control import (Clock, PICtrl)
 from types import SimpleNamespace
-#from gritulator._utils import Bunch
 
 
 # %%

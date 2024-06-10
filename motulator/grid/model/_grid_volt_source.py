@@ -10,10 +10,13 @@ stationary coordinates.
 """
 
 import numpy as np
+
+from motulator.common.model import Subsystem
 from motulator.common.utils._utils import (complex2abc, abc2complex)
+from types import SimpleNamespace
 
 # %%
-class StiffSource:
+class StiffSource(Subsystem):
     """
     Grid subsystem.
 
@@ -29,8 +32,13 @@ class StiffSource:
 
     def __init__(self, w_N=2*np.pi*50,
                  e_g_abs=lambda t: 400*np.sqrt(2/3)):
-        self.w_N = w_N
-        self.e_g_abs = e_g_abs
+        super().__init__()
+        self.par = SimpleNamespace(w_N=w_N, e_g_abs=e_g_abs)
+        
+    @property
+    def w_N(self):
+        """Grid constant frequency (rad/s)."""
+        return self.par.w_N
 
     def voltages(self, t):
         """
@@ -80,7 +88,7 @@ class StiffSource:
         return e_g_abc
 
 # %%
-class FlexSource:
+class FlexSource(Subsystem):
     """
     Grid subsystem.
     
@@ -129,17 +137,12 @@ class FlexSource:
             e_g_abs=lambda t: 400*np.sqrt(2/3),
             p_m_ref=lambda t: 0,
             p_e=lambda t: 0):
-        self.e_g_abs=e_g_abs
-        self.w_N=w_N
-        self.S_grid=S_grid
-        self.T_D=T_D
-        self.T_N=T_N
-        self.H_g=H_g
-        self.D_g=D_g
-        self.r_d=r_d*w_N/S_grid
-        self.T_gov=T_gov
-        self.p_e=p_e
-        self.p_m_ref=p_m_ref
+        
+        super().__init__()
+        self.par = SimpleNamespace(
+            T_D=T_D, T_N=T_N, H_g=H_g, D_g=D_g, r_d=r_d, T_gov=T_gov, w_N=w_N,
+            S_grid=S_grid, e_g_abs=e_g_abs, p_m_ref=p_m_ref, p_e=p_e)
+        
         # Initial values
         self.w_g0 = w_N
         self.err_w_g0, self.p_gov0, self.x_turb0, self.theta_g0 = 0, 0, 0, 0
