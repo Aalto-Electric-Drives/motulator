@@ -11,7 +11,8 @@ import numpy as np
 
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -22,16 +23,17 @@ base = BaseValues.from_nominal(nom, n_p=3)
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(
+mdl_par = SynchronousMachinePars(
     n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-mechanics = model.Mechanics(J=.015)
+machine = model.SynchronousMachine(mdl_par)
+mechanics = model.StiffMechanicalSystem(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
 
-par = control.ModelPars(n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
+par = mdl_par  # Assume accurate machine model parameter estimates
 cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
 ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
 #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
@@ -46,7 +48,7 @@ ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*8
 values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-mdl.mechanics.tau_L_t = Sequence(times, values)
+mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it.

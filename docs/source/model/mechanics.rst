@@ -1,48 +1,36 @@
 Mechanics
 =========
 
-Stiff Mechanics
----------------
+Stiff Mechanical System
+-----------------------
 
-The stiff rotational mechanics are governed by
+The dynamics of a stiff rotational mechanical system are governed by
 
 .. math::
-    J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &= \tau_\mathrm{M} - \tau_\mathrm{L} \\
+    J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &= \tau_\mathrm{M} - B_\mathrm{L}\omega_\mathrm{M} - \tau_\mathrm{L} \\
     \frac{\mathrm{d}\vartheta_\mathrm{M}}{\mathrm{d} t} &= \omega_\mathrm{M}
     :label: mech_stiff
 
-where :math:`\omega_\mathrm{M}` is the mechanical angular speed of the rotor, :math:`\vartheta_\mathrm{M}` is the mechanical angle of the rotor, :math:`\tau_\mathrm{M}` is the electromagnetic torque, and :math:`J` is the total moment of inertia. The total load torque is
+where :math:`\omega_\mathrm{M}` is the mechanical angular speed of the rotor, :math:`\vartheta_\mathrm{M}` is the mechanical angle of the rotor, :math:`\tau_\mathrm{M}` is the electromagnetic torque, :math:`\tau_\mathrm{L}` is the external load torque as a function of time, :math:`B_\mathrm{L}` is the friction coefficient, and :math:`J` is the total moment of inertia. The total load torque is
 
 .. math::
-    \tau_\mathrm{L} = \tau_{\mathrm{L},\omega} + \tau_{\mathrm{L},t}
-    :label: load_torque
+    \tau_\mathrm{L,tot} = B_\mathrm{L}\omega_\mathrm{M} + \tau_{\mathrm{L}}
+    :label: total_load_torque
 
-where :math:`\tau_{\mathrm{L},\omega}` is the speed-dependent load torque and :math:`\tau_{\mathrm{L},t}` is the external load torque as a function of time. One typical speed-dependent load torque component is viscous friction  
-
-.. math::
-    \tau_{\mathrm{L},\omega} = B\omega_\mathrm{M}
-    :label: viscous_friction
-    
-where :math:`B` is the viscous damping coefficient. Viscous friction appears, e.g., due to laminar fluid flow in bearings. Another typical component is quadratic load torque
-
-.. math:: 
-    \tau_{\mathrm{L},\omega} = k\omega_\mathrm{M}^2\mathrm{sign}(\omega_\mathrm{M})
-    :label: quadratic_load
-    
-which appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance. The model of stiff mechanics is provided in the class :class:`motulator.drive.model.Mechanics`. 
+A constant friction coefficient :math:`B_\mathrm{L}` models viscous friction that appears, e.g., due to laminar fluid flow in bearings. The friction coefficient is allowed to depend on the rotor speed, :math:`B_\mathrm{L} = B_\mathrm{L}(\omega_\mathrm{M})`. As an example, the quadratic load torque profile is achieved choosing :math:`B_\mathrm{L} = k|\omega_\mathrm{M}|`, where :math:`k` is a constant. The quadratic load torque appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance. The model of a stiff mechanical system is provided in the class :class:`motulator.drive.model.StiffMechanicalSystem`. 
 
 .. figure:: figs/mech_block.svg
    :width: 100%
    :align: center
-   :alt: Block diagram of the stiff mechanics.
+   :alt: Block diagram of a stiff mechanical system.
    :target: .
 
-   Block diagram of the stiff mechanics.
+   Block diagram of a stiff mechanical system.
 
-Two-Mass System
----------------
+Two-Mass Mechanical System
+--------------------------
 
-The two-mass mechanics are governed by
+A two-mass mechanical system can be modeled as
 
 .. math::
     J_\mathrm{M}\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} &= \tau_\mathrm{M} - \tau_\mathrm{S} \\
@@ -56,12 +44,17 @@ where :math:`\omega_\mathrm{L}` is the angular speed of the load, :math:`\varthe
     \tau_\mathrm{S} = K_\mathrm{S}\vartheta_\mathrm{ML} + C_\mathrm{S}(\omega_\mathrm{M} - \omega_\mathrm{L})
     :label: shaft_torque
 
-where :math:`K_\mathrm{S}` is the torsional stiffness of the shaft, and :math:`C_\mathrm{S}` is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanics. Two-mass mechanics are modeled in the class :class:`motulator.drive.model.TwoMassMechanics`. See also the example in :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass`.
+where :math:`K_\mathrm{S}` is the torsional stiffness of the shaft, and :math:`C_\mathrm{S}` is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanical system. A two-mass mechanical system is modeled in the class :class:`motulator.drive.model.TwoMassMechanicalSystem`. See also the example in :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass`.
 
 .. figure:: figs/two_mass_block.svg
    :width: 100%
    :align: center
-   :alt: Block diagram of the two-mass mechanical system.
+   :alt: Block diagram of a two-mass mechanical system.
    :target: .
 
-   Block diagram of the two-mass mechanical system.
+   Block diagram of a two-mass mechanical system.
+
+Externally Specified Rotor Speed
+--------------------------------
+
+It is also possible to omit the mechanical dynamics and directly specify the actual rotor speed :math:`\omega_\mathrm{M}` as a function of time, see the class :class:`motulator.drive.model.ExternalRotorSpeed`. This feature is typically needed when torque-control mode is studied, see the example :doc:`/auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode`.

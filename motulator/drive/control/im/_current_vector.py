@@ -10,7 +10,8 @@ import numpy as np
 
 from motulator.drive.control import DriveCtrl, SpeedCtrl
 from motulator.common.control import ComplexPICtrl
-from motulator.drive.control.im._common import ModelPars, Observer, ObserverCfg
+from motulator.drive.control.im._common import Observer, ObserverCfg
+from motulator.drive.utils import InductionMachineInvGammaPars
 
 
 # %%
@@ -24,10 +25,12 @@ class CurrentVectorCtrl(DriveCtrl):
 
     Parameters
     ----------
-    par : ModelPars
+    par : InductionMachineInvGammaPars
         Machine parameters.
     cfg : CurrentReferenceCfg
         Current reference generator configuration.
+    J : float, optional
+        Moment of inertia (kgm^2). Needed only for the speed controller.
     T_s : float, optional
         Sampling time (s). The default is 250e-6.
     sensorless : bool, optional
@@ -42,15 +45,18 @@ class CurrentVectorCtrl(DriveCtrl):
     current_ctrl : CurrentCtrl
         Current controller. The default is CurrentCtrl(par, 2*np.pi*200).
     speed_ctrl : SpeedCtrl | None
-        Speed controller. The default is SpeedCtrl(par.J, 2*np.pi*4)
+        Speed controller. The default is SpeedCtrl(J, 2*np.pi*4)
   
     """
 
-    def __init__(self, par, cfg, T_s=250e-6, sensorless=True):
+    def __init__(self, par, cfg, J=None, T_s=250e-6, sensorless=True):
         super().__init__(par, T_s, sensorless)
         self.current_reference = CurrentReference(par, cfg)
         self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
-        self.speed_ctrl = SpeedCtrl(par.J, 2*np.pi*4)
+        if J is not None:
+            self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+        else:
+            self.speed_ctrl = None
         self.observer = Observer(ObserverCfg(par, T_s, sensorless=sensorless))
 
     def output(self, fbk):
@@ -80,7 +86,7 @@ class CurrentCtrl(ComplexPICtrl):
 
     Parameters
     ----------
-    par : ModelPars
+    par : InductionMachineInvGammaPars
         Machine parameters, contains the leakage inductance `L_sgm` (H).  
     alpha_c : float
         Closed-loop bandwidth (rad/s).
@@ -107,7 +113,7 @@ class CurrentReferenceCfg:
 
     Parameters
     ----------
-    par : ModelPars
+    par : InductionMachineInvGammaPars
         Machine model parameters.
     max_i_s : float
         Maximum stator current (A). 
@@ -124,7 +130,7 @@ class CurrentReferenceCfg:
         Voltage utilization factor. The default is 0.95.
     
     """
-    par: InitVar[ModelPars] = None
+    par: InitVar[InductionMachineInvGammaPars] = None
     max_i_s: float = None
     nom_u_s: InitVar[float] = np.sqrt(2/3)*400
     nom_w_s: InitVar[float] = 2*np.pi*50
@@ -167,7 +173,7 @@ class CurrentReference:
 
     Parameters
     ----------
-    par : ModelPars
+    par : InductionMachineInvGammaPars
         Machine model parameters.
     cfg : CurrentReferenceCfg
         Reference generation configuration.

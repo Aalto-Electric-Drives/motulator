@@ -3,9 +3,9 @@ from motulator.common.model._simulation import (
     CarrierComparison, Delay, Simulation)
 from motulator.drive.model._drive import Drive, DriveWithLCFilter
 from motulator.common.model._converter import FrequencyConverter, Inverter
-from motulator.drive.model._machine import (
-    InductionMachine, InductionMachineInvGamma, SynchronousMachine)
-from motulator.drive.model._mechanics import Mechanics, TwoMassMechanics
+from motulator.drive.model._machine import InductionMachine, SynchronousMachine
+from motulator.drive.model._mechanics import (
+    ExternalRotorSpeed, StiffMechanicalSystem, TwoMassMechanicalSystem)
 from motulator.drive.model._lc_filter import LCFilter
 
 __all__ = [
@@ -17,9 +17,9 @@ __all__ = [
     "FrequencyConverter",
     "Inverter",
     "InductionMachine",
-    "InductionMachineInvGamma",
     "SynchronousMachine",
-    "Mechanics",
-    "TwoMassMechanics",
+    "ExternalRotorSpeed",
+    "StiffMechanicalSystem",
+    "TwoMassMechanicalSystem",
     "LCFilter",
 ]

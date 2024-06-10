@@ -72,7 +72,9 @@ def plot(sim, base=None, t_span=None):
     except (AttributeError, TypeError):
         pass
     ax1.plot(
-        mdl.data.t, mdl.machine.data.w_m/base.w, label=r"$\omega_\mathrm{m}$")
+        mdl.machine.data.t,
+        mdl.machine.data.w_m/base.w,
+        label=r"$\omega_\mathrm{m}$")
     try:
         ax1.plot(
             ctrl.t,
@@ -86,13 +88,16 @@ def plot(sim, base=None, t_span=None):
     ax1.set_xticklabels([])
 
     # Subplot 2: torques
+    try:
+        ax2.plot(
+            mdl.mechanics.data.t,
+            mdl.mechanics.data.tau_L_tot/base.tau,
+            ":",
+            label=r"$\tau_\mathrm{L,tot}$")
+    except AttributeError:
+        pass
     ax2.plot(
-        mdl.data.t,
-        mdl.mechanics.data.tau_L/base.tau,
-        ":",
-        label=r"$\tau_\mathrm{L}$")
-    ax2.plot(
-        mdl.data.t,
+        mdl.machine.data.t,
         mdl.machine.data.tau_M/base.tau,
         label=r"$\tau_\mathrm{M}$")
     try:
@@ -157,7 +162,7 @@ def plot(sim, base=None, t_span=None):
     # Subplot 5: flux linkages
     if motor_type == "sm":
         ax5.plot(
-            mdl.data.t,
+            mdl.machine.data.t,
             np.abs(mdl.machine.data.psi_ss)/base.psi,
             label=r"$\psi_\mathrm{s}$")
         try:
@@ -180,7 +185,7 @@ def plot(sim, base=None, t_span=None):
 
     else:
         ax5.plot(
-            mdl.data.t,
+            mdl.machine.data.t,
             np.abs(mdl.machine.data.psi_ss)/base.psi,
             label=r"$\psi_\mathrm{s}$")
         ax5.plot(
@@ -261,7 +266,7 @@ def plot_extra(sim, base=None, t_span=None):
 
     # Subplot 1: voltages
     ax1.plot(
-        mdl.data.t,
+        mdl.converter.data.t,
         mdl.converter.data.u_cs.real/base.u,
         label=r"$u_\mathrm{sa}$")
     ax1.plot(
@@ -275,7 +280,7 @@ def plot_extra(sim, base=None, t_span=None):
 
     # Subplot 2: currents
     ax2.plot(
-        mdl.data.t,
+        mdl.machine.data.t,
         complex2abc(mdl.machine.data.i_ss).T/base.i,
         label=[r"$i_\mathrm{sa}$", r"$i_\mathrm{sb}$", r"$i_\mathrm{sc}$"])
     ax2.plot(ctrl.t, ctrl.fbk.i_ss.real/base.i, ds="steps-post")
@@ -303,15 +308,15 @@ def plot_extra(sim, base=None, t_span=None):
 
         # Subplot 1: voltages
         ax1.plot(
-            mdl.data.t,
+            mdl.converter.data.t,
             mdl.converter.data.u_di/base.u,
             label=r"$u_\mathrm{di}$")
         ax1.plot(
-            mdl.data.t,
+            mdl.converter.data.t,
             mdl.converter.data.u_dc/base.u,
             label=r"$u_\mathrm{dc}$")
         ax1.plot(
-            mdl.data.t,
+            mdl.converter.data.t,
             complex2abc(mdl.converter.data.u_g).T/base.u,
             label=r"$u_\mathrm{ga}$")
         ax1.legend()
@@ -320,13 +325,15 @@ def plot_extra(sim, base=None, t_span=None):
 
         # Subplot 2: currents
         ax2.plot(
-            mdl.data.t, mdl.converter.data.i_L/base.i, label=r"$i_\mathrm{L}$")
+            mdl.converter.data.t,
+            mdl.converter.data.i_L/base.i,
+            label=r"$i_\mathrm{L}$")
         ax2.plot(
-            mdl.data.t,
+            mdl.converter.data.t,
             mdl.converter.data.i_dc/base.i,
             label=r"$i_\mathrm{dc}$")
         ax2.plot(
-            mdl.data.t,
+            mdl.converter.data.t,
             mdl.converter.data.i_g.real/base.i,
             label=r"$i_\mathrm{ga}$")
         ax2.legend()

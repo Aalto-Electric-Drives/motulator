@@ -1,5 +1,5 @@
 """Controls for synchronous machines."""
-from motulator.drive.control.sm._common import ModelPars, Observer, ObserverCfg
+from motulator.drive.control.sm._common import Observer, ObserverCfg
 from motulator.drive.control.sm._flux_vector import (
     FluxTorqueReference, FluxTorqueReferenceCfg, FluxVectorCtrl)
 from motulator.drive.control.sm._current_vector import (
@@ -12,7 +12,6 @@ from motulator.drive.control.sm._torque import TorqueCharacteristics
 from motulator.drive.control._common import SpeedCtrl
 
 __all__ = [
-    "ModelPars",
     "Observer",
     "ObserverCfg",
     "FluxTorqueReference",

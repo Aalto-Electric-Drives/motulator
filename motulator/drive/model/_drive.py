@@ -21,8 +21,9 @@ class Drive(Model):
         Converter model.
     machine : InductionMachine | SynchronousMachine
         Machine model.
-    mechanics : Mechanics | TwoMassMechanics
-        Mechanics model.
+    mechanics : ExternalRotorSpeed | StiffMechanicalSystem |\
+                TwoMassMechanicalSystem                
+        Mechanical subsystem model.
 
     """
 
@@ -37,8 +38,8 @@ class Drive(Model):
         """Interconnect the subsystems."""
         self.converter.inp.i_cs = self.machine.out.i_ss
         self.machine.inp.u_ss = self.converter.out.u_cs
-        self.machine.inp.w_M = self.mechanics.out.w_M
         self.mechanics.inp.tau_M = self.machine.out.tau_M
+        self.machine.inp.w_M = self.mechanics.out.w_M
 
     def post_process(self):
         """Post-process the solution."""
@@ -64,8 +65,9 @@ class DriveWithLCFilter(Model):
         Converter model.
     machine : InductionMachine | SynchronousMachine
         Machine model.
-    mechanics : Mechanics | TwoMassMechanics
-        Mechanics model.
+    mechanics : ExternalRotorSpeed | StiffMechanicalSystem |\
+                TwoMassMechanicalSystem                
+        Mechanical subsystem model.
     lc_filter : LCFilter
         LC-filter model.
 

@@ -23,7 +23,8 @@ import matplotlib.pyplot as plt
 
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -144,25 +145,25 @@ psi_s0 = complex(res.x)  # psi_s0 = 0.477
 # %%
 # Configure the system model.
 
-machine = model.SynchronousMachine(n_p=2, R_s=.63, i_s=i_s, psi_s0=psi_s0)
+mdl_par = SynchronousMachinePars(n_p=2, R_s=.63)
+machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model for comparison
-# machine = model.sm.SynchronousMachine(
-#    n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
-mechanics = model.Mechanics(J=.015)
+# mdl_par = SynchronousMachinePars(
+#     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
+# machine = model.SynchronousMachine(mdl_par)
+mechanics = model.StiffMechanicalSystem(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
-# mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
 # Configure the control system.
 
 # Control system is based on the constant inductances
-par = control.ModelPars(
-    n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47, J=.015)
+par = SynchronousMachinePars(n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
 # Limit the maximum reference flux to the base value
 cfg = control.FluxTorqueReferenceCfg(
     par, max_i_s=2*base.i, k_u=1, max_psi_s=base.psi)
-ctrl = control.FluxVectorCtrl(par, cfg, sensorless=True)
+ctrl = control.FluxVectorCtrl(par, cfg, J=.015, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
 ctrl.observer = control.Observer(
     control.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))
@@ -177,7 +178,7 @@ ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-mdl.mechanics.tau_L_t = Sequence(times, values)
+mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it.

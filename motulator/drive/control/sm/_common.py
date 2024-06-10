@@ -5,37 +5,8 @@ from dataclasses import dataclass, field, InitVar
 
 import numpy as np
 
+from motulator.drive.utils import SynchronousMachinePars
 from motulator.common.utils import wrap
-
-
-# %%
-@dataclass
-class ModelPars:
-    """
-    Model parameters of a synchronous machine.
-    
-    Parameters
-    ----------
-    R_s : float
-        Stator resistance (Ω).
-    L_d : float
-        d-axis inductance (H).
-    L_q : float
-        q-axis inductance (H).
-    psi_f : float
-        PM flux linkage (Vs).
-    n_p : int
-        Number of pole pairs.
-    J : float
-        Moment of inertia (kgm²).
-
-    """
-    R_s: float = None
-    L_d: float = None
-    L_q: float = None
-    psi_f: float = None
-    n_p: int = None
-    J: float = None
 
 
 # %%
@@ -46,7 +17,7 @@ class ObserverCfg:
 
     Parameters
     ----------
-    par : ModelPars
+    par : SynchronousMachinePars
         Machine model parameters.
     sensorless : bool
         If True, sensorless mode is used. 
@@ -64,7 +35,7 @@ class ObserverCfg:
         slope `k` (Vs).
 
     """
-    par: ModelPars
+    par: SynchronousMachinePars
     sensorless: bool
     gain: SimpleNamespace = field(init=False)
     alpha_o: InitVar[float] = 2*np.pi*40

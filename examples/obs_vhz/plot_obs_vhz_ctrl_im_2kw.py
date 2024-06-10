@@ -12,7 +12,9 @@ import numpy as np
 
 from motulator.drive import model
 import motulator.drive.control.im as control
-from motulator.drive.utils import BaseValues, NominalValues, plot, Sequence
+from motulator.drive.utils import (
+    BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
+    NominalValues, plot, Sequence)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -24,9 +26,11 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Configure the system model.
 
 # Configure the induction machine using its inverse-Γ parameters
-machine = model.InductionMachineInvGamma(
-    R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
-mechanics = model.Mechanics(J=.015)
+mdl_ig_par = InductionMachineInvGammaPars(
+    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
+mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
+machine = model.InductionMachine(mdl_par)
+mechanics = model.StiffMechanicalSystem(J=.015)
 converter = model.Inverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -34,7 +38,7 @@ mdl = model.Drive(converter, machine, mechanics)
 # Configure the control system.
 
 # Inverse-Γ model parameter estimates
-par = control.ModelPars(R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
+par = mdl_ig_par  # Assume accurate machine model parameter estimates
 cfg = control.ObserverBasedVHzCtrlCfg(
     nom_psi_s=base.psi, max_i_s=1.5*base.i, slip_compensation=False)
 ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
@@ -53,11 +57,7 @@ ctrl.ref.w_m = Sequence(times, values)
 # External load torque
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-mdl.mechanics.tau_L_t = Sequence(times, values)
-
-# Quadratic load torque profile, e.g. pumps and fans (uncomment to enable)
-# k = 1.1*base.tau_nom/(base.w/base.n_p)**2
-# mdl.mechanics.tau_L_w = lambda w_M: np.sign(w_M)*k*w_M**2
+mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%
 # Create the simulation object and simulate it.
