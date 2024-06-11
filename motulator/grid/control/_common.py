@@ -1,8 +1,9 @@
 """Common control functions and classes."""
-
+from abc import ABC
 import numpy as np
 #from motulator.common.utils._utils import (abc2complex, complex2abc)
-from motulator.common.control._control import (Clock, PICtrl)
+from motulator.common.control import (Ctrl, PICtrl)
+from motulator.common.utils import abc2complex, wrap
 from types import SimpleNamespace
 
 
@@ -42,49 +43,132 @@ class DCBusVoltCtrl(PICtrl):
 
 
 # %%
-class Ctrl:
-    """Base class for the control system."""
+class GridConverterCtrl(Ctrl, ABC):
+    """
+    Base class for control of grid-connected converters.
+    """
+    def __init__(self, par, T_s, sensorless):
+        super().__init__(T_s)
+        self.par = par
+        self.sensorless = sensorless
+        self.speed_ctrl = None
+        self.observer = None
+        self.ref = SimpleNamespace()
 
-    def __init__(self):
-        self.data = SimpleNamespace()  # Data store
-        self.clock = Clock()  # Digital clock
-
-    def __call__(self, mdl):
+    def get_electrical_measurements(self, fbk, mdl):
         """
-        Run the main control loop.
-
-        The main control loop is callable that returns the sampling
-        period `T_s` (float)  and the duty ratios `d_abc` (ndarray, shape (3,)) 
-        for the next sampling period.
-
+        Measure the currents and voltages.
+        
         Parameters
         ----------
+        fbk : SimpleNamespace
+            Measured signals are added to this object.
         mdl : Model
-            System model containing methods for getting the feedback signals.
+            Continuous-time system model.
+
+        Returns
+        -------
+        fbk : SimpleNamespace
+            Measured signals, containing the following fields:
+
+                u_dc : float
+                    DC-bus voltage (V).
+                i_ss : complex
+                    Stator current (A) in stator coordinates.
+                u_ss : complex
+                    Realized stator voltage (V) in stator coordinates. This
+                    signal is obtained from the PWM.
 
         """
-        raise NotImplementedError
+        fbk.u_dc = mdl.converter.meas_dc_voltage()
+        fbk.i_ss = abc2complex(mdl.machine.meas_currents())
+        fbk.u_ss = self.pwm.get_realized_voltage()
 
-    def save(self, data):
+        return fbk
+
+    def get_mechanical_measurements(self, fbk, mdl):
         """
-        Save the internal date of the control system.
+        Measure the speed and position.
+        
+        Parameters
+        ----------
+        fbk : SimpleNamespace
+            Measured signals are added to this object.
+        mdl : Model
+            Continuous-time system model.
+
+        Returns
+        -------
+        fbk : SimpleNamespace
+            Measured signals, containing the following fields:
+
+                w_m : float
+                    Rotor speed (electrical rad/s).
+                theta_m : float
+                    Rotor position (electrical rad).
+    
+        """
+        fbk.w_m = self.par.n_p*mdl.mechanics.meas_speed()
+        fbk.theta_m = wrap(self.par.n_p*mdl.mechanics.meas_position())
+
+        return fbk
+
+    def get_feedback_signals(self, mdl):
+        """Get the feedback signals."""
+        fbk = super().get_feedback_signals(mdl)
+        fbk = self.get_electrical_measurements(fbk, mdl)
+        if not self.sensorless:
+            fbk = self.get_mechanical_measurements(fbk, mdl)
+        if self.observer:
+            fbk = self.observer.output(fbk)
+
+        return fbk
+
+    def get_torque_reference(self, fbk, ref):
+        """
+        Get the torque reference in vector control.
+
+        This method can be used in vector control to get the torque reference 
+        from the speed controller. If the speed controller method `speed_ctrl` 
+        is None, the torque reference is obtained directly from the reference.
 
         Parameters
         ----------
-        data : SimpleNamespace or dict
-            Contains the data to be saved.
+        fbk : SimpleNamespace
+            Feedback signals. In speed-control mode, the measured or estimated
+            rotor speed `w_m` is used to compute the torque reference.
+        ref : SimpleNamespace
+            Reference signals, containing the digital time `t`. The speed and 
+            torque references are added to this object.
+
+        Returns
+        -------
+        ref : SimpleNamespace
+            Reference signals, containing the following fields:
+                
+                w_m : float
+                    Speed reference (electrical rad/s).
+                tau_M : float
+                    Torque reference (Nm).  
 
         """
-        for key, value in data.items():
-            self.data.setdefault(key, []).extend([value])
+        if self.speed_ctrl:
+            # Speed-control mode
+            ref.w_m = self.ref.w_m(ref.t)
+            ref_w_M = ref.w_m/self.par.n_p
+            w_M = fbk.w_m/self.par.n_p
+            ref.tau_M = self.speed_ctrl.output(ref_w_M, w_M)
+        else:
+            # Torque-control mode
+            ref.w_m = None
+            ref.tau_M = self.ref.tau_M(ref.t)
 
-    def post_process(self):
-        """
-        Transform the lists to the ndarray format.
+        return ref
 
-        This method can be run after the simulation has been completed in order 
-        to simplify plotting and analysis of the stored data.
-
-        """
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
+    def update(self, fbk, ref):
+        """Extend the base class method."""
+        super().update(fbk, ref)
+        if self.speed_ctrl:
+            self.speed_ctrl.update(ref.T_s, ref.tau_M)
+        if self.observer:
+            self.observer.update(ref.T_s, fbk)

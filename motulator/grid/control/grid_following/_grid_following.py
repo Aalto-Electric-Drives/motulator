@@ -67,7 +67,7 @@ class GridFollowingCtrlPars:
 
 
 # %%
-class GridFollowingCtrl(Ctrl):
+class GridFollowingCtrl(GridConverterCtrl):
     """
     Grid following control for power converters.
 
