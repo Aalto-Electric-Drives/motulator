@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from motulator.drive.control import DriveCtrl
+from motulator.drive.control import DriveControlSystem
 from motulator.drive.utils import InductionMachineInvGammaPars
 from motulator.common.control import PWM, RateLimiter
 from motulator.common.utils import wrap
@@ -14,7 +14,7 @@ from motulator.common.utils import wrap
 
 # %%
 @dataclass
-class VHzCtrlCfg:
+class VHzControlCfg:
     """V/Hz control configuration."""
 
     par: InductionMachineInvGammaPars
@@ -38,7 +38,7 @@ class VHzCtrlCfg:
 
 
 # %%
-class VHzCtrl(DriveCtrl):
+class VHzControl(DriveControlSystem):
     """
     V/Hz control with the stator current feedback.
 
@@ -77,7 +77,6 @@ class VHzCtrl(DriveCtrl):
 
     def output(self, fbk):
         """Extend the base class method."""
-
         # Unpack
         par, gain = self.par, self.gain
         par.alpha = par.R_R/par.L_M

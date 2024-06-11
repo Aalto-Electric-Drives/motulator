@@ -1,4 +1,4 @@
 """Controllers for machine drives."""
-from motulator.drive.control._common import DriveCtrl, SpeedCtrl
+from motulator.drive.control._common import DriveControlSystem, SpeedController
 
-__all__ = ["DriveCtrl", "SpeedCtrl"]
+__all__ = ["DriveControlSystem", "SpeedController"]

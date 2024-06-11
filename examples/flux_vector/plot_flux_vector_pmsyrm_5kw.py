@@ -163,7 +163,7 @@ par = SynchronousMachinePars(n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
 # Limit the maximum reference flux to the base value
 cfg = control.FluxTorqueReferenceCfg(
     par, max_i_s=2*base.i, k_u=1, max_psi_s=base.psi)
-ctrl = control.FluxVectorCtrl(par, cfg, J=.015, sensorless=True)
+ctrl = control.FluxVectorControl(par, cfg, J=.015, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
 ctrl.observer = control.Observer(
     control.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))

@@ -69,7 +69,7 @@ par = SynchronousMachinePars(
 # Disable MTPA since the control system does not consider the saturation
 cfg = control.FluxTorqueReferenceCfg(
     par, max_i_s=2*base.i, k_u=.9, min_psi_s=base.psi, max_psi_s=base.psi)
-ctrl = control.FluxVectorCtrl(par, cfg, J=.015, sensorless=True)
+ctrl = control.FluxVectorControl(par, cfg, J=.015, sensorless=True)
 # Since the saturation is not considered in the control system, the speed
 # estimation bandwidth is set to a lower value. Furthermore, the PM-flux
 # disturbance estimation is enabled at speeds above 2*pi*20 rad/s (electrical).
