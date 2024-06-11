@@ -37,7 +37,7 @@ class SignalInjectionCtrl(DriveCtrl):
     cfg : CurrentReferenceCfg
         Reference generation configuration.
     J : float, optional
-        Moment of inertia (kg*m^2). Needed only for the speed controller.
+        Moment of inertia (kgm²). Needed only for the speed controller.
     T_s : float
         Sampling period (s).
 

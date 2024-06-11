@@ -75,7 +75,7 @@ ax1.plot(
     mdl.converter.data.u_cs.real/base.u,
     label=r"$u_\mathrm{ca}$")
 ax1.plot(
-    mdl.converter.data.t,
+    mdl.machine.data.t,
     mdl.machine.data.u_ss.real/base.u,
     label=r"$u_\mathrm{sa}$")
 ax1.set_xlim(t_span)
@@ -88,7 +88,7 @@ ax2.plot(
     mdl.converter.data.i_cs.real/base.i,
     label=r"$i_\mathrm{ca}$")
 ax2.plot(
-    mdl.converter.data.t,
+    mdl.machine.data.t,
     mdl.machine.data.i_ss.real/base.i,
     label=r"$i_\mathrm{sa}$")
 ax2.set_xlim(t_span)

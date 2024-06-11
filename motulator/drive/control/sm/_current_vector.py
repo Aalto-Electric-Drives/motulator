@@ -28,7 +28,7 @@ class CurrentVectorCtrl(DriveCtrl):
     T_s : float, optional
         Sampling period (s). The default is 250e-6.
     J : float, optional
-        Moment of inertia (kgm^2). Needed only for the speed controller. 
+        Moment of inertia (kgm²). Needed only for the speed controller. 
     alpha_c : float, optional
         Current controller bandwidth (rad/s). The default is 2*pi*200.
     alpha_o : float, optional
