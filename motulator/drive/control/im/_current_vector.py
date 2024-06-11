@@ -30,7 +30,7 @@ class CurrentVectorCtrl(DriveCtrl):
     cfg : CurrentReferenceCfg
         Current reference generator configuration.
     J : float, optional
-        Moment of inertia (kgm^2). Needed only for the speed controller.
+        Moment of inertia (kgm²). Needed only for the speed controller.
     T_s : float, optional
         Sampling time (s). The default is 250e-6.
     sensorless : bool, optional
