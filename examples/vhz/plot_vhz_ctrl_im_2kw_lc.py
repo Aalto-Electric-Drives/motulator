@@ -43,8 +43,8 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # Inverse-Γ model parameter estimates
 par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-ctrl = control.VHzCtrl(
-    control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
+ctrl = control.VHzControl(
+    control.VHzControlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference. The external load torque is zero (by default).

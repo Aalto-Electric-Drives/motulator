@@ -4,15 +4,15 @@ from dataclasses import dataclass, InitVar
 
 import numpy as np
 
-from motulator.drive.control import DriveCtrl, SpeedCtrl
-from motulator.common.control import ComplexPICtrl
+from motulator.drive.control import DriveControlSystem, SpeedController
+from motulator.common.control import ComplexPIController
 from motulator.drive.utils import SynchronousMachinePars
 from motulator.drive.control.sm._common import Observer, ObserverCfg
 from motulator.drive.control.sm._torque import TorqueCharacteristics
 
 
 # %%
-class CurrentVectorCtrl(DriveCtrl):
+class CurrentVectorControl(DriveControlSystem):
     """
     Current vector control for synchronous machine drives.
 
@@ -42,10 +42,10 @@ class CurrentVectorCtrl(DriveCtrl):
         Current reference generator.
     observer : Observer | None
         Flux and rotor position observer, used in the sensorless mode only.
-    current_ctrl : CurrentCtrl
-        Current controller. The default is CurrentCtrl(par, 2*np.pi*200).
-    speed_ctrl : SpeedCtrl | None
-        Speed controller. The default is SpeedCtrl(par.J, 2*np.pi*4).
+    current_ctrl : CurrentController
+        Current controller. The default is CurrentController(par, 2*np.pi*200).
+    speed_ctrl : SpeedController | None
+        Speed controller. The default is SpeedController(par.J, 2*np.pi*4).
         
     """
 
@@ -60,9 +60,9 @@ class CurrentVectorCtrl(DriveCtrl):
             sensorless=True):
         super().__init__(par, T_s, sensorless)
         self.current_reference = CurrentReference(par, cfg)
-        self.current_ctrl = CurrentCtrl(par, alpha_c)
+        self.current_ctrl = CurrentController(par, alpha_c)
         if J is not None:
-            self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+            self.speed_ctrl = SpeedController(J, 2*np.pi*4)
         else:
             self.speed_ctrl = None
         if sensorless:
@@ -100,7 +100,7 @@ class CurrentVectorCtrl(DriveCtrl):
 
 
 # %%
-class CurrentCtrl(ComplexPICtrl):
+class CurrentController(ComplexPIController):
     """
     Current controller for synchronous machines.
 

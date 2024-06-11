@@ -1,7 +1,7 @@
 Speed Control
 =============
 
-Proportional-integral (PI) control is widely used in machine drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degrees-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately [#Sko1996]_. In the following, we will use a speed controller as an example, cf. the :class:`motulator.drive.control.SpeedCtrl` class. The presented control design can be extended to many other control tasks as well. 
+Proportional-integral (PI) control is widely used in machine drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degrees-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately [#Sko1996]_. In the following, we will use a speed controller as an example, cf. the :class:`motulator.drive.control.SpeedController` class. The presented control design can be extended to many other control tasks as well. 
 
 Continuous-Time Design
 ----------------------
@@ -52,7 +52,7 @@ where :math:`\mathrm{sat}(\cdot)` is the saturation function. If this saturation
 .. math::
 	\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} = \alpha_\mathrm{i}\left(\bar{\tau}_\mathrm{M,ref} - \hat \tau_\mathrm{L}\right) 
 
-The other parts of the above controller are not affected by the saturation. The implementation in the :class:`motulator.drive.control.SpeedCtrl` class is based on this disturbance-observer form.
+The other parts of the above controller are not affected by the saturation. The implementation in the :class:`motulator.drive.control.SpeedController` class is based on this disturbance-observer form.
 
 Gain Selection Example
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -94,7 +94,7 @@ The discrete-time variant of the controller is given by
     \tau_\mathrm{M,ref}(k) &= k_\mathrm{t}\left[\omega_\mathrm{M,ref}(k) - \omega_\mathrm{M}(k)\right] + \hat \tau_\mathrm{L}(k) \\
     \bar{\tau}_\mathrm{M,ref}(k) &= \mathrm{sat}[\tau_\mathrm{M,ref}(k)]
 
-where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. This corresponds to the implementation in the :class:`motulator.drive.control.SpeedCtrl` class. 
+where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. This corresponds to the implementation in the :class:`motulator.drive.control.SpeedController` class. 
 
 .. rubric:: References
 

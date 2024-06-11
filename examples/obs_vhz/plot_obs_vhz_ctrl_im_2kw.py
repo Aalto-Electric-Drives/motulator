@@ -39,9 +39,9 @@ mdl = model.Drive(converter, machine, mechanics)
 
 # Inverse-Γ model parameter estimates
 par = mdl_ig_par  # Assume accurate machine model parameter estimates
-cfg = control.ObserverBasedVHzCtrlCfg(
+cfg = control.ObserverBasedVHzControlCfg(
     nom_psi_s=base.psi, max_i_s=1.5*base.i, slip_compensation=False)
-ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+ctrl = control.ObserverBasedVHzControl(par, cfg, T_s=250e-6)
 
 # %%
 # Set the speed reference.

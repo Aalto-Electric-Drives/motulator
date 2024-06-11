@@ -193,7 +193,7 @@ class Simulation:
     ----------
     mdl : Model 
         Continuous-time system model.
-    ctrl : Ctrl
+    ctrl : ControlSystem
         Discrete-time controller.
 
     """

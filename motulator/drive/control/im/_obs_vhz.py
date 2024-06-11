@@ -6,14 +6,14 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from motulator.drive.control import DriveCtrl
+from motulator.drive.control import DriveControlSystem
 from motulator.common.control import RateLimiter
 from motulator.common.utils import wrap
 
 
 # %%
 @dataclass
-class ObserverBasedVHzCtrlCfg:
+class ObserverBasedVHzControlCfg:
     """
     Control system configuration.
 
@@ -46,7 +46,7 @@ class ObserverBasedVHzCtrlCfg:
 
 
 # %%
-class ObserverBasedVHzCtrl(DriveCtrl):
+class ObserverBasedVHzControl(DriveControlSystem):
     """
     Observer-based V/Hz control for induction machines.
 
@@ -58,7 +58,7 @@ class ObserverBasedVHzCtrl(DriveCtrl):
     ----------
     par : ModelPars
         Machine model parameters.
-    cfg : ObserverBasedVHzCtrlCfg
+    cfg : ObserverBasedVHzControlCfg
         Control system configuration.
     T_s : float, optional
         Sampling period (s). The default is 250e-6.

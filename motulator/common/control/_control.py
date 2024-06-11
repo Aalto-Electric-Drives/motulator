@@ -206,7 +206,7 @@ class PWM:
 
 
 # %%
-class PICtrl:
+class PIController:
     """
     2DOF PI controller.
 
@@ -292,7 +292,7 @@ class PICtrl:
 
 
 # %%
-class ComplexPICtrl:
+class ComplexPIController:
     """
     2DOF synchronous-frame complex-vector PI controller.
 
@@ -456,7 +456,7 @@ class Clock:
 
 
 # %%
-class Ctrl(ABC):
+class ControlSystem(ABC):
     """
     Base class for control systems.
     

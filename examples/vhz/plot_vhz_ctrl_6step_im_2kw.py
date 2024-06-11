@@ -44,8 +44,9 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 # Control system (parametrized as open-loop V/Hz control).
 
 par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-ctrl = control.VHzCtrl(
-    control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
+ctrl = control.VHzControl(
+    control.VHzControlCfg(
+        par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
 
 # %%
 # Set the speed reference and the external load torque.

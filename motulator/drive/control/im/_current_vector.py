@@ -8,14 +8,14 @@ from dataclasses import dataclass, InitVar
 
 import numpy as np
 
-from motulator.drive.control import DriveCtrl, SpeedCtrl
-from motulator.common.control import ComplexPICtrl
+from motulator.drive.control import DriveControlSystem, SpeedController
+from motulator.common.control import ComplexPIController
 from motulator.drive.control.im._common import Observer, ObserverCfg
 from motulator.drive.utils import InductionMachineInvGammaPars
 
 
 # %%
-class CurrentVectorCtrl(DriveCtrl):
+class CurrentVectorControl(DriveControlSystem):
     """
     Current-vector control for induction machine drives.
     
@@ -42,19 +42,19 @@ class CurrentVectorCtrl(DriveCtrl):
         Flux observer.
     current_reference : CurrentReference
         Current reference generator.
-    current_ctrl : CurrentCtrl
-        Current controller. The default is CurrentCtrl(par, 2*np.pi*200).
-    speed_ctrl : SpeedCtrl | None
-        Speed controller. The default is SpeedCtrl(J, 2*np.pi*4)
+    current_ctrl : CurrentController
+        Current controller. The default is CurrentController(par, 2*np.pi*200).
+    speed_ctrl : SpeedController | None
+        Speed controller. The default is SpeedController(J, 2*np.pi*4)
   
     """
 
     def __init__(self, par, cfg, J=None, T_s=250e-6, sensorless=True):
         super().__init__(par, T_s, sensorless)
         self.current_reference = CurrentReference(par, cfg)
-        self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
+        self.current_ctrl = CurrentController(par, 2*np.pi*200)
         if J is not None:
-            self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+            self.speed_ctrl = SpeedController(J, 2*np.pi*4)
         else:
             self.speed_ctrl = None
         self.observer = Observer(ObserverCfg(par, T_s, sensorless=sensorless))
@@ -76,7 +76,7 @@ class CurrentVectorCtrl(DriveCtrl):
 
 
 # %%
-class CurrentCtrl(ComplexPICtrl):
+class CurrentController(ComplexPIController):
     """
     2DOF PI current controller for induction machines.
 
