@@ -32,9 +32,9 @@ Classes
 
 .. autoapisummary::
 
-   motulator.common.control.Ctrl
-   motulator.common.control.ComplexPICtrl
-   motulator.common.control.PICtrl
+   motulator.common.control.ControlSystem
+   motulator.common.control.ComplexPIController
+   motulator.common.control.PIController
    motulator.common.control.PWM
    motulator.common.control.RateLimiter
 
@@ -42,7 +42,7 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: Ctrl(T_s)
+.. py:class:: ControlSystem(T_s)
 
    Bases: :py:obj:`abc.ABC`
 
@@ -288,7 +288,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ComplexPICtrl(k_p, k_i, k_t=None)
+.. py:class:: ComplexPIController(k_p, k_i, k_t=None)
 
    
    2DOF synchronous-frame complex-vector PI controller.
@@ -401,7 +401,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PICtrl(k_p, k_i, k_t=None, max_u=np.inf)
+.. py:class:: PIController(k_p, k_i, k_t=None, max_u=np.inf)
 
    
    2DOF PI controller.

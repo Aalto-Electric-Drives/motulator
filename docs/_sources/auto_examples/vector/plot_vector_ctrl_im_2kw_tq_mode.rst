@@ -104,7 +104,7 @@ Configure the control system.
     cfg = control.CurrentReferenceCfg(
         par, max_i_s=1.5*base.i, nom_u_s=base.u, nom_w_s=base.w)
     # Create the control system
-    ctrl = control.CurrentVectorCtrl(par, cfg, T_s=250e-6, sensorless=True)
+    ctrl = control.CurrentVectorControl(par, cfg, T_s=250e-6, sensorless=True)
 
 
 
@@ -179,7 +179,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.584 seconds)
+   **Total running time of the script:** (0 minutes 4.616 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw_tq_mode.py:

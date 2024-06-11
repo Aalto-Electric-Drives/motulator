@@ -38,8 +38,8 @@ mdl = model.Drive(converter, machine, mechanics)
 par = mdl_par  # Assume accurate machine model parameter estimates
 cfg = control.CurrentReferenceCfg(
     par, nom_w_m=base.w, max_i_s=2*base.i, min_psi_s=.5*base.psi)
-ctrl = control.SignalInjectionCtrl(par, cfg, J=.015, T_s=250e-6)
-# ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
+ctrl = control.SignalInjectionControl(par, cfg, J=.015, T_s=250e-6)
+# ctrl.current_ctrl = control.sm.CurrentControl(par, 2*np.pi*100)
 # ctrl.signal_inj = control.sm.SignalInjection(par, U_inj=200)
 
 # %%

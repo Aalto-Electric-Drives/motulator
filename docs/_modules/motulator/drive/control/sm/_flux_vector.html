@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control.sm._flux_vector &#8212; motulator 0.3.0 documentation</title>
+    <title>motulator.drive.control.sm._flux_vector &#8212; motulator 0.3.1 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
 <link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
   <script src="../../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=ea4a43d1"></script>
+    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=51b6c1cc"></script>
     <script src="../../../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -132,7 +132,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.3.0 documentation</p>
+    <p class="title logo__title">motulator 0.3.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -188,8 +188,8 @@
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
@@ -338,14 +338,14 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">motulator.drive.control</span> <span class="kn">import</span> <span class="n">DriveCtrl</span><span class="p">,</span> <span class="n">SpeedCtrl</span>
+<span class="kn">from</span> <span class="nn">motulator.drive.control</span> <span class="kn">import</span> <span class="n">DriveControlSystem</span><span class="p">,</span> <span class="n">SpeedController</span>
 <span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="n">SynchronousMachinePars</span>
 <span class="kn">from</span> <span class="nn">motulator.drive.control.sm._common</span> <span class="kn">import</span> <span class="n">Observer</span><span class="p">,</span> <span class="n">ObserverCfg</span>
 <span class="kn">from</span> <span class="nn">motulator.drive.control.sm._torque</span> <span class="kn">import</span> <span class="n">TorqueCharacteristics</span>
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="FluxVectorCtrl"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorCtrl">[docs]</a><span class="k">class</span> <span class="nc">FluxVectorCtrl</span><span class="p">(</span><span class="n">DriveCtrl</span><span class="p">):</span>
+<div class="viewcode-block" id="FluxVectorControl"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorControl">[docs]</a><span class="k">class</span> <span class="nc">FluxVectorControl</span><span class="p">(</span><span class="n">DriveControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Flux-vector control of synchronous machine drives.</span>
 
@@ -369,7 +369,7 @@ document.write(`
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Observer bandwidth (rad/s). The default is 2*pi*100.</span>
 <span class="sd">    J : float, optional</span>
-<span class="sd">        Moment of inertia (kg*m^2). Needed only for the speed controller. </span>
+<span class="sd">        Moment of inertia (kgm²). Needed only for the speed controller. </span>
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s). The default is 250e-6.</span>
 <span class="sd">    sensorless : bool, optional</span>
@@ -402,7 +402,7 @@ document.write(`
         <span class="c1"># Subsystems</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_reference</span> <span class="o">=</span> <span class="n">FluxTorqueReference</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">J</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedCtrl</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">SpeedController</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span>
@@ -411,7 +411,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_psi</span> <span class="o">=</span> <span class="n">alpha_psi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_tau</span> <span class="o">=</span> <span class="n">alpha_tau</span>
 
-<div class="viewcode-block" id="FluxVectorCtrl.output"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorCtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
+<div class="viewcode-block" id="FluxVectorControl.output"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorControl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate references.&quot;&quot;&quot;</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
 

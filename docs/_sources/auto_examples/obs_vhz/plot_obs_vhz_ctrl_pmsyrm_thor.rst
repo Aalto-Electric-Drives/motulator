@@ -208,8 +208,8 @@ Configure the control system.
 
 
     par = SynchronousMachinePars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-    cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
-    ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+    cfg = control.ObserverBasedVHzControlCfg(par, max_i_s=2*base.i)
+    ctrl = control.ObserverBasedVHzControl(par, cfg, T_s=250e-6)
 
 
 
@@ -287,7 +287,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 50.639 seconds)
+   **Total running time of the script:** (0 minutes 52.385 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:

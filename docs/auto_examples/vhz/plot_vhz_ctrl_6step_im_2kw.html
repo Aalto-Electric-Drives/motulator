@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2.2-kW induction motor, 6-step mode &#8212; motulator 0.3.0 documentation</title>
+    <title>2.2-kW induction motor, 6-step mode &#8212; motulator 0.3.1 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
   <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=ea4a43d1"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=51b6c1cc"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,8 +51,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="2.2-kW induction motor, diode bridge" href="plot_vhz_ctrl_im_2kw.html" />
-    <link rel="prev" title="V/Hz Control" href="index.html" />
+    <link rel="next" title="2.2-kW induction motor, LC filter" href="plot_vhz_ctrl_im_2kw_lc.html" />
+    <link rel="prev" title="2.2-kW induction motor, diode bridge" href="plot_vhz_ctrl_im_2kw.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -135,7 +135,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.3.0 documentation</p>
+    <p class="title logo__title">motulator 0.3.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -191,8 +191,8 @@
 </ul>
 </li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">V/Hz Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
@@ -424,8 +424,9 @@ frequency and the sampling frequency.</p>
 </div>
 <p>Control system (parametrized as open-loop V/Hz control).</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
-<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">VHzCtrl</span><span class="p">(</span>
-    <span class="n">control</span><span class="o">.</span><span class="n">VHzCtrlCfg</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">nom_psi_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">k_u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">k_w</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">six_step</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">VHzControl</span><span class="p">(</span>
+    <span class="n">control</span><span class="o">.</span><span class="n">VHzControlCfg</span><span class="p">(</span>
+        <span class="n">par</span><span class="p">,</span> <span class="n">nom_psi_s</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">k_u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">k_w</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">six_step</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Set the speed reference and the external load torque.</p>
@@ -453,7 +454,7 @@ frequency and the sampling frequency.</p>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_001.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_001.png" alt="plot vhz ctrl 6step im 2kw" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_002.png" srcset="../../_images/sphx_glr_plot_vhz_ctrl_6step_im_2kw_002.png" alt="plot vhz ctrl 6step im 2kw" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.626 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.623 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vhz-plot-vhz-ctrl-6step-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7b8c7612bd84de9f52110b924d3ec0fb/plot_vhz_ctrl_6step_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vhz_ctrl_6step_im_2kw.ipynb</span></code></a></p>
@@ -477,20 +478,20 @@ frequency and the sampling frequency.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="index.html"
+       href="plot_vhz_ctrl_im_2kw.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">V/Hz Control</p>
+        <p class="prev-next-title">2.2-kW induction motor, diode bridge</p>
       </div>
     </a>
     <a class="right-next"
-       href="plot_vhz_ctrl_im_2kw.html"
+       href="plot_vhz_ctrl_im_2kw_lc.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">2.2-kW induction motor, diode bridge</p>
+        <p class="prev-next-title">2.2-kW induction motor, LC filter</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

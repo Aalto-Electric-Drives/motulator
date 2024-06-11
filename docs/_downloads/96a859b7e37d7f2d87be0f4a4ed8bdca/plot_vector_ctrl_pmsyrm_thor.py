@@ -40,11 +40,11 @@ mdl = model.Drive(converter, machine, mechanics)
 par = mdl_par  # Assume accurate machine model parameter estimates
 cfg = control.CurrentReferenceCfg(
     par, nom_w_m=base.w, max_i_s=2*base.i, k_u=.9)
-ctrl = control.CurrentVectorCtrl(
+ctrl = control.CurrentVectorControl(
     par, cfg, T_s=125e-6, J=.0042, sensorless=True)
 ctrl.observer = control.Observer(
     control.ObserverCfg(par, sensorless=True, alpha_o=2*np.pi*200))
-ctrl.speed_ctrl = control.SpeedCtrl(
+ctrl.speed_ctrl = control.SpeedController(
     J=.0042, alpha_s=2*np.pi*4, max_tau_M=1.5*nom.tau)
 
 # %%

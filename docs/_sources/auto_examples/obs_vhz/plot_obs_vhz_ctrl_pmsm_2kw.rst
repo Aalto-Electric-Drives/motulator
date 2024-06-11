@@ -94,8 +94,8 @@ Configure the control system.
 
 
     par = mdl_par  # Assume accurate machine model parameter estimates
-    cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=1.5*base.i)
-    ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+    cfg = control.ObserverBasedVHzControlCfg(par, max_i_s=1.5*base.i)
+    ctrl = control.ObserverBasedVHzControl(par, cfg, T_s=250e-6)
     #ctrl.rate_limiter = control.RateLimiter(2*np.pi*120)
 
 
@@ -175,7 +175,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 23.606 seconds)
+   **Total running time of the script:** (0 minutes 24.357 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py:

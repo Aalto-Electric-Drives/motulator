@@ -36,15 +36,15 @@ Classes
    motulator.drive.control.im.FullOrderObserverCfg
    motulator.drive.control.im.Observer
    motulator.drive.control.im.ObserverCfg
-   motulator.drive.control.im.CurrentCtrl
+   motulator.drive.control.im.CurrentController
    motulator.drive.control.im.CurrentReference
    motulator.drive.control.im.CurrentReferenceCfg
-   motulator.drive.control.im.CurrentVectorCtrl
-   motulator.drive.control.im.ObserverBasedVHzCtrl
-   motulator.drive.control.im.ObserverBasedVHzCtrlCfg
-   motulator.drive.control.im.VHzCtrl
-   motulator.drive.control.im.VHzCtrlCfg
-   motulator.drive.control.im.SpeedCtrl
+   motulator.drive.control.im.CurrentVectorControl
+   motulator.drive.control.im.ObserverBasedVHzControl
+   motulator.drive.control.im.ObserverBasedVHzControlCfg
+   motulator.drive.control.im.VHzControl
+   motulator.drive.control.im.VHzControlCfg
+   motulator.drive.control.im.SpeedController
 
 
 Package Contents
@@ -319,9 +319,9 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentCtrl(par, alpha_c)
+.. py:class:: CurrentController(par, alpha_c)
 
-   Bases: :py:obj:`motulator.common.control.ComplexPICtrl`
+   Bases: :py:obj:`motulator.common.control.ComplexPIController`
 
 
    
@@ -496,9 +496,9 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentVectorCtrl(par, cfg, J=None, T_s=0.00025, sensorless=True)
+.. py:class:: CurrentVectorControl(par, cfg, J=None, T_s=0.00025, sensorless=True)
 
-   Bases: :py:obj:`motulator.drive.control.DriveCtrl`
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
 
 
    
@@ -512,7 +512,7 @@ Package Contents
    :type par: InductionMachineInvGammaPars
    :param cfg: Current reference generator configuration.
    :type cfg: CurrentReferenceCfg
-   :param J: Moment of inertia (kgm^2). Needed only for the speed controller.
+   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
    :type J: float, optional
    :param T_s: Sampling time (s). The default is 250e-6.
    :type T_s: float, optional
@@ -533,15 +533,15 @@ Package Contents
 
    .. attribute:: current_ctrl
 
-      Current controller. The default is CurrentCtrl(par, 2*np.pi*200).
+      Current controller. The default is CurrentController(par, 2*np.pi*200).
 
-      :type: CurrentCtrl
+      :type: CurrentController
 
    .. attribute:: speed_ctrl
 
-      Speed controller. The default is SpeedCtrl(J, 2*np.pi*4)
+      Speed controller. The default is SpeedController(J, 2*np.pi*4)
 
-      :type: SpeedCtrl | None
+      :type: SpeedController | None
 
 
 
@@ -620,9 +620,9 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedVHzCtrl(par, cfg, T_s=0.00025)
+.. py:class:: ObserverBasedVHzControl(par, cfg, T_s=0.00025)
 
-   Bases: :py:obj:`motulator.drive.control.DriveCtrl`
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
 
 
    
@@ -635,7 +635,7 @@ Package Contents
    :param par: Machine model parameters.
    :type par: ModelPars
    :param cfg: Control system configuration.
-   :type cfg: ObserverBasedVHzCtrlCfg
+   :type cfg: ObserverBasedVHzControlCfg
    :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float, optional
 
@@ -710,7 +710,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedVHzCtrlCfg
+.. py:class:: ObserverBasedVHzControlCfg
 
    
    Control system configuration.
@@ -748,9 +748,9 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: VHzCtrl(cfg)
+.. py:class:: VHzControl(cfg)
 
-   Bases: :py:obj:`motulator.drive.control.DriveCtrl`
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
 
 
    
@@ -858,7 +858,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VHzCtrlCfg
+.. py:class:: VHzControlCfg
 
    
    V/Hz control configuration.
@@ -881,9 +881,9 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedCtrl(J, alpha_s, max_tau_M=np.inf)
+.. py:class:: SpeedController(J, alpha_s, max_tau_M=np.inf)
 
-   Bases: :py:obj:`motulator.common.control.PICtrl`
+   Bases: :py:obj:`motulator.common.control.PIController`
 
 
    

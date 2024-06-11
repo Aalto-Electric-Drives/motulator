@@ -100,11 +100,11 @@ Configure the control system.
     par = mdl_par  # Assume accurate machine model parameter estimates
     cfg = control.CurrentReferenceCfg(
         par, nom_w_m=base.w, max_i_s=2*base.i, k_u=.9)
-    ctrl = control.CurrentVectorCtrl(
+    ctrl = control.CurrentVectorControl(
         par, cfg, T_s=125e-6, J=.0042, sensorless=True)
     ctrl.observer = control.Observer(
         control.ObserverCfg(par, sensorless=True, alpha_o=2*np.pi*200))
-    ctrl.speed_ctrl = control.SpeedCtrl(
+    ctrl.speed_ctrl = control.SpeedController(
         J=.0042, alpha_s=2*np.pi*4, max_tau_M=1.5*nom.tau)
 
 
@@ -207,7 +207,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.985 seconds)
+   **Total running time of the script:** (0 minutes 4.891 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:

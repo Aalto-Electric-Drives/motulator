@@ -42,20 +42,20 @@ Classes
 
 .. autoapisummary::
 
-   motulator.drive.control.DriveCtrl
-   motulator.drive.control.SpeedCtrl
+   motulator.drive.control.DriveControlSystem
+   motulator.drive.control.SpeedController
 
 
 Package Contents
 ----------------
 
-.. py:class:: DriveCtrl(par, T_s, sensorless)
+.. py:class:: DriveControlSystem(par, T_s, sensorless)
 
-   Bases: :py:obj:`motulator.common.control.Ctrl`, :py:obj:`abc.ABC`
+   Bases: :py:obj:`motulator.common.control.ControlSystem`, :py:obj:`abc.ABC`
 
 
    
-   Base class for control of electric machine drives.
+   Base class for drive control systems.
 
    This base class provides typical functionalities for control of electric
    machine drives. This can be used both in speed-control and torque-control
@@ -94,7 +94,7 @@ Package Contents
 
       Speed controller. The default is None.
 
-      :type: SpeedCtrl | None
+      :type: SpeedController | None
 
 
 
@@ -284,9 +284,9 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SpeedCtrl(J, alpha_s, max_tau_M=np.inf)
+.. py:class:: SpeedController(J, alpha_s, max_tau_M=np.inf)
 
-   Bases: :py:obj:`motulator.common.control.PICtrl`
+   Bases: :py:obj:`motulator.common.control.PIController`
 
 
    

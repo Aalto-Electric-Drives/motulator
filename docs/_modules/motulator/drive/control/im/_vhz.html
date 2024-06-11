@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control.im._vhz &#8212; motulator 0.3.0 documentation</title>
+    <title>motulator.drive.control.im._vhz &#8212; motulator 0.3.1 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
 <link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
   <script src="../../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=ea4a43d1"></script>
+    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=51b6c1cc"></script>
     <script src="../../../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -132,7 +132,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.3.0 documentation</p>
+    <p class="title logo__title">motulator 0.3.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -188,8 +188,8 @@
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
@@ -340,15 +340,15 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">motulator.drive.control</span> <span class="kn">import</span> <span class="n">DriveCtrl</span>
+<span class="kn">from</span> <span class="nn">motulator.drive.control</span> <span class="kn">import</span> <span class="n">DriveControlSystem</span>
 <span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="n">InductionMachineInvGammaPars</span>
 <span class="kn">from</span> <span class="nn">motulator.common.control</span> <span class="kn">import</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">RateLimiter</span>
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">wrap</span>
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="VHzCtrlCfg"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzCtrlCfg">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">VHzCtrlCfg</span><span class="p">:</span>
+<div class="viewcode-block" id="VHzControlCfg"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzControlCfg">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">VHzControlCfg</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;V/Hz control configuration.&quot;&quot;&quot;</span>
 
     <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span>
@@ -372,7 +372,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="VHzCtrl"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzCtrl">[docs]</a><span class="k">class</span> <span class="nc">VHzCtrl</span><span class="p">(</span><span class="n">DriveCtrl</span><span class="p">):</span>
+<div class="viewcode-block" id="VHzControl"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzControl">[docs]</a><span class="k">class</span> <span class="nc">VHzControl</span><span class="p">(</span><span class="n">DriveControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    V/Hz control with the stator current feedback.</span>
 
@@ -400,7 +400,7 @@ document.write(`
         <span class="c1"># Initialize the states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="VHzCtrl.get_feedback_signals"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzCtrl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+<div class="viewcode-block" id="VHzControl.get_feedback_signals"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the feedback signals.&quot;&quot;&quot;</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_feedback_signals</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">theta_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_s</span>
@@ -409,9 +409,8 @@ document.write(`
 
         <span class="k">return</span> <span class="n">fbk</span></div>
 
-<div class="viewcode-block" id="VHzCtrl.output"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzCtrl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
+<div class="viewcode-block" id="VHzControl.output"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzControl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
-
         <span class="c1"># Unpack</span>
         <span class="n">par</span><span class="p">,</span> <span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain</span>
         <span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_R</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">L_M</span>
@@ -462,7 +461,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">ref</span></div>
 
-<div class="viewcode-block" id="VHzCtrl.update"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzCtrl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+<div class="viewcode-block" id="VHzControl.update"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VHzControl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span> <span class="o">+=</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">gain</span><span class="o">.</span><span class="n">alpha_i</span><span class="o">*</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="p">)</span>

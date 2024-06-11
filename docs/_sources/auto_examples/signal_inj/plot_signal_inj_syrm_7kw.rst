@@ -98,8 +98,8 @@ Configure the control system.
     par = mdl_par  # Assume accurate machine model parameter estimates
     cfg = control.CurrentReferenceCfg(
         par, nom_w_m=base.w, max_i_s=2*base.i, min_psi_s=.5*base.psi)
-    ctrl = control.SignalInjectionCtrl(par, cfg, J=.015, T_s=250e-6)
-    # ctrl.current_ctrl = control.sm.CurrentCtrl(par, 2*np.pi*100)
+    ctrl = control.SignalInjectionControl(par, cfg, J=.015, T_s=250e-6)
+    # ctrl.current_ctrl = control.sm.CurrentControl(par, 2*np.pi*100)
     # ctrl.signal_inj = control.sm.SignalInjection(par, U_inj=200)
 
 
@@ -211,7 +211,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.642 seconds)
+   **Total running time of the script:** (0 minutes 12.745 seconds)
 
 
 .. _sphx_glr_download_auto_examples_signal_inj_plot_signal_inj_syrm_7kw.py:

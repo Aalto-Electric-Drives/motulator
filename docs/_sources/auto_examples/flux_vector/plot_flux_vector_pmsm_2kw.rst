@@ -93,7 +93,7 @@ Configure the control system.
 
     par = mdl_par  # Assume accurate machine model parameter estimates
     cfg = control.FluxTorqueReferenceCfg(par, max_i_s=1.5*base.i, k_u=.9)
-    ctrl = control.FluxVectorCtrl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
+    ctrl = control.FluxVectorControl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
 
 
 
@@ -168,7 +168,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.127 seconds)
+   **Total running time of the script:** (0 minutes 5.265 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py:

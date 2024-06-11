@@ -159,7 +159,7 @@ where :math:`\mathrm{sat}(\cdot)` is the saturation function. The limited voltag
 .. math::
 	\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} = \boldsymbol{\alpha}_\mathrm{i}\left(\bar{\boldsymbol{u}}_\mathrm{s,ref} - \hat{\boldsymbol{v}}_\mathrm{s}\right) 
 
-The other parts of the above controller are not affected by the saturation. The implementation in the :class:`motulator.common.control.ComplexPICtrl` class is based on this disturbance-observer form.
+The other parts of the above controller are not affected by the saturation. The implementation in the :class:`motulator.common.control.ComplexPIController` class is based on this disturbance-observer form.
 
 Synchronous Machines
 --------------------
@@ -184,7 +184,7 @@ The discrete-time variant of the disturbance-observer form :eq:`cc_disturbance` 
     \boldsymbol{u}_\mathrm{s,ref}(k) &= \boldsymbol{k}_\mathrm{t}\left[\boldsymbol{\psi}_{\mathrm{ref}}(k) - \hat{\boldsymbol{\psi}}(k)\right] + \hat{\boldsymbol{v}}_\mathrm{s} \\
      \bar{\boldsymbol{u}}_\mathrm{s,ref}(k) &= \mathrm{sat}\left[\boldsymbol{u}_\mathrm{s,ref}(k)\right]
 
-where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. Depending on the machine type, either :eq:`flux_mapping_im` or :eq:`flux_mapping_sm` is used to map the stator current to the flux linkage. This discrete-time algorithm corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentCtrl` class. The default gain selection corresponds to the complex-vector gains in :eq:`complex_vector_gains_flux`.
+where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. Depending on the machine type, either :eq:`flux_mapping_im` or :eq:`flux_mapping_sm` is used to map the stator current to the flux linkage. This discrete-time algorithm corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class. The default gain selection corresponds to the complex-vector gains in :eq:`complex_vector_gains_flux`.
 
 .. rubric:: References
 

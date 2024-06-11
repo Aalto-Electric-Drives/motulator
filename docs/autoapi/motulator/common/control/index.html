@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.common.control &#8212; motulator 0.3.0 documentation</title>
+    <title>motulator.common.control &#8212; motulator 0.3.1 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
   <script src="../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=ea4a43d1"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=51b6c1cc"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -135,7 +135,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.3.0 documentation</p>
+    <p class="title logo__title">motulator 0.3.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -191,8 +191,8 @@
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
@@ -382,26 +382,26 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl"><code class="docutils literal notranslate"><span class="pre">Ctrl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.clock"><code class="docutils literal notranslate"><span class="pre">Ctrl.clock</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.data"><code class="docutils literal notranslate"><span class="pre">Ctrl.data</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.pwm"><code class="docutils literal notranslate"><span class="pre">Ctrl.pwm</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">Ctrl.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.output"><code class="docutils literal notranslate"><span class="pre">Ctrl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.update"><code class="docutils literal notranslate"><span class="pre">Ctrl.update()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.save"><code class="docutils literal notranslate"><span class="pre">Ctrl.save()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.post_process"><code class="docutils literal notranslate"><span class="pre">Ctrl.post_process()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.main"><code class="docutils literal notranslate"><span class="pre">Ctrl.main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem"><code class="docutils literal notranslate"><span class="pre">ControlSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.clock"><code class="docutils literal notranslate"><span class="pre">ControlSystem.clock</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.data"><code class="docutils literal notranslate"><span class="pre">ControlSystem.data</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.pwm"><code class="docutils literal notranslate"><span class="pre">ControlSystem.pwm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_feedback_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.update"><code class="docutils literal notranslate"><span class="pre">ControlSystem.update()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.save"><code class="docutils literal notranslate"><span class="pre">ControlSystem.save()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">ControlSystem.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.main"><code class="docutils literal notranslate"><span class="pre">ControlSystem.main()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPICtrl"><code class="docutils literal notranslate"><span class="pre">ComplexPICtrl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPICtrl.output"><code class="docutils literal notranslate"><span class="pre">ComplexPICtrl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPICtrl.update"><code class="docutils literal notranslate"><span class="pre">ComplexPICtrl.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController"><code class="docutils literal notranslate"><span class="pre">ComplexPIController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.output"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.update"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PICtrl"><code class="docutils literal notranslate"><span class="pre">PICtrl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PICtrl.output"><code class="docutils literal notranslate"><span class="pre">PICtrl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PICtrl.update"><code class="docutils literal notranslate"><span class="pre">PICtrl.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController"><code class="docutils literal notranslate"><span class="pre">PIController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.output"><code class="docutils literal notranslate"><span class="pre">PIController.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.update"><code class="docutils literal notranslate"><span class="pre">PIController.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM"><code class="docutils literal notranslate"><span class="pre">PWM</span></code></a><ul class="nav section-nav flex-column">
@@ -433,13 +433,13 @@ document.write(`
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.Ctrl" title="motulator.common.control.Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ctrl</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ControlSystem</span></code></a></p></td>
 <td><p>Base class for control systems.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.ComplexPICtrl" title="motulator.common.control.ComplexPICtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComplexPICtrl</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComplexPIController</span></code></a></p></td>
 <td><p>2DOF synchronous-frame complex-vector PI controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.PICtrl" title="motulator.common.control.PICtrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PICtrl</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
 <td><p>2DOF PI controller.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
@@ -454,8 +454,8 @@ document.write(`
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading">#</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">Ctrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#Ctrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.Ctrl" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Base class for control systems.</p>
 <p>This base class provides typical functionalities for control systems. It
@@ -468,8 +468,8 @@ control loop.</p>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.clock">
-<span class="sig-name descname"><span class="pre">clock</span></span><a class="headerlink" href="#motulator.common.control.Ctrl.clock" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.clock">
+<span class="sig-name descname"><span class="pre">clock</span></span><a class="headerlink" href="#motulator.common.control.ControlSystem.clock" title="Permalink to this definition">#</a></dt>
 <dd><p>Digital clock.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -479,8 +479,8 @@ control loop.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.data">
-<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#motulator.common.control.Ctrl.data" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#motulator.common.control.ControlSystem.data" title="Permalink to this definition">#</a></dt>
 <dd><p>Saved simulation data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -490,8 +490,8 @@ control loop.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.pwm">
-<span class="sig-name descname"><span class="pre">pwm</span></span><a class="headerlink" href="#motulator.common.control.Ctrl.pwm" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.pwm">
+<span class="sig-name descname"><span class="pre">pwm</span></span><a class="headerlink" href="#motulator.common.control.ControlSystem.pwm" title="Permalink to this definition">#</a></dt>
 <dd><p>Pulse-width modulator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -501,8 +501,8 @@ control loop.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.get_feedback_signals">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#Ctrl.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.Ctrl.get_feedback_signals" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.get_feedback_signals">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ControlSystem.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_feedback_signals" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -518,8 +518,8 @@ control loop.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.output">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#Ctrl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.Ctrl.output" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.output">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ControlSystem.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.output" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute the controller outputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -545,8 +545,8 @@ control loop.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.update">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#Ctrl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.Ctrl.update" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.update">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ControlSystem.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.update" title="Permalink to this definition">#</a></dt>
 <dd><p>Update the states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -559,8 +559,8 @@ control loop.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#Ctrl.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.Ctrl.save" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ControlSystem.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.save" title="Permalink to this definition">#</a></dt>
 <dd><p>Save the data of the control system.</p>
 <p>Each keyword represents a data category, and its value (a
 SimpleNamespace) contains the data for that category.</p>
@@ -573,16 +573,16 @@ value is a SimpleNamespace containing the data to be saved.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.post_process">
-<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#Ctrl.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.Ctrl.post_process" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ControlSystem.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.post_process" title="Permalink to this definition">#</a></dt>
 <dd><p>Transform the lists to the ndarray format.</p>
 <p>This method can be run after the simulation has been completed in order
 to simplify plotting and analysis of the stored data.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.Ctrl.main">
-<span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#Ctrl.main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.Ctrl.main" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.main">
+<span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ControlSystem.main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.main" title="Permalink to this definition">#</a></dt>
 <dd><p>Main control loop.</p>
 <p>This method runs the main control loop, having the following structure:</p>
 <ol class="arabic simple">
@@ -612,8 +612,8 @@ carrier comparison.</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.common.control.ComplexPICtrl">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ComplexPICtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ComplexPICtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPICtrl" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ComplexPIController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ComplexPIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ComplexPIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPIController" title="Permalink to this definition">#</a></dt>
 <dd><p>2DOF synchronous-frame complex-vector PI controller.</p>
 <p>This implements a discrete-time 2DOF synchronous-frame complex-vector PI
 controller, whose continuous-time counterpart is <a class="footnote-reference brackets" href="#bri2000" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
@@ -648,8 +648,8 @@ regulators using complex vectors,” IEEE Trans. Ind. Appl., 2000,
 </aside>
 </aside>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.ComplexPICtrl.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ComplexPICtrl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPICtrl.output" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ComplexPIController.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ComplexPIController.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPIController.output" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute the controller output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -668,8 +668,8 @@ regulators using complex vectors,” IEEE Trans. Ind. Appl., 2000,
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.ComplexPICtrl.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ComplexPICtrl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPICtrl.update" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.ComplexPIController.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ComplexPIController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPIController.update" title="Permalink to this definition">#</a></dt>
 <dd><p>Update the integral state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -685,8 +685,8 @@ regulators using complex vectors,” IEEE Trans. Ind. Appl., 2000,
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.common.control.PICtrl">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PICtrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PICtrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PICtrl" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.PIController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PIController" title="Permalink to this definition">#</a></dt>
 <dd><p>2DOF PI controller.</p>
 <p>This implements a discrete-time 2DOF PI controller, whose continuous-time
 counterpart is:</p>
@@ -712,8 +712,8 @@ reference <cite>ref_tau_M</cite>.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.PICtrl.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PICtrl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PICtrl.output" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.PIController.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PIController.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PIController.output" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute the controller output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -732,8 +732,8 @@ reference <cite>ref_tau_M</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.PICtrl.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PICtrl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PICtrl.update" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.common.control.PIController.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PIController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PIController.update" title="Permalink to this definition">#</a></dt>
 <dd><p>Update the integral state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -941,26 +941,26 @@ effect of the digital delays on the angle are compensated for.</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl"><code class="docutils literal notranslate"><span class="pre">Ctrl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.clock"><code class="docutils literal notranslate"><span class="pre">Ctrl.clock</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.data"><code class="docutils literal notranslate"><span class="pre">Ctrl.data</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.pwm"><code class="docutils literal notranslate"><span class="pre">Ctrl.pwm</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">Ctrl.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.output"><code class="docutils literal notranslate"><span class="pre">Ctrl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.update"><code class="docutils literal notranslate"><span class="pre">Ctrl.update()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.save"><code class="docutils literal notranslate"><span class="pre">Ctrl.save()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.post_process"><code class="docutils literal notranslate"><span class="pre">Ctrl.post_process()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.Ctrl.main"><code class="docutils literal notranslate"><span class="pre">Ctrl.main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem"><code class="docutils literal notranslate"><span class="pre">ControlSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.clock"><code class="docutils literal notranslate"><span class="pre">ControlSystem.clock</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.data"><code class="docutils literal notranslate"><span class="pre">ControlSystem.data</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.pwm"><code class="docutils literal notranslate"><span class="pre">ControlSystem.pwm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_feedback_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.update"><code class="docutils literal notranslate"><span class="pre">ControlSystem.update()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.save"><code class="docutils literal notranslate"><span class="pre">ControlSystem.save()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">ControlSystem.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.main"><code class="docutils literal notranslate"><span class="pre">ControlSystem.main()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPICtrl"><code class="docutils literal notranslate"><span class="pre">ComplexPICtrl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPICtrl.output"><code class="docutils literal notranslate"><span class="pre">ComplexPICtrl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPICtrl.update"><code class="docutils literal notranslate"><span class="pre">ComplexPICtrl.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController"><code class="docutils literal notranslate"><span class="pre">ComplexPIController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.output"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.update"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PICtrl"><code class="docutils literal notranslate"><span class="pre">PICtrl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PICtrl.output"><code class="docutils literal notranslate"><span class="pre">PICtrl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PICtrl.update"><code class="docutils literal notranslate"><span class="pre">PICtrl.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController"><code class="docutils literal notranslate"><span class="pre">PIController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.output"><code class="docutils literal notranslate"><span class="pre">PIController.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.update"><code class="docutils literal notranslate"><span class="pre">PIController.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM"><code class="docutils literal notranslate"><span class="pre">PWM</span></code></a><ul class="nav section-nav flex-column">

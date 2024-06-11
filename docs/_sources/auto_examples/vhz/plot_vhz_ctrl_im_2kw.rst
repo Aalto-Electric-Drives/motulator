@@ -103,8 +103,8 @@ Control system (parametrized as open-loop V/Hz control).
 
     # Inverse-Γ model parameter estimates
     par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-    ctrl = control.VHzCtrl(
-        control.VHzCtrlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
+    ctrl = control.VHzControl(
+        control.VHzControlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 
 
@@ -214,7 +214,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 17.871 seconds)
+   **Total running time of the script:** (0 minutes 18.377 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:

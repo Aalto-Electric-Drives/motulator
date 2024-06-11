@@ -99,9 +99,9 @@ Configure the control system.
 
     # Inverse-Γ model parameter estimates
     par = mdl_ig_par  # Assume accurate machine model parameter estimates
-    cfg = control.ObserverBasedVHzCtrlCfg(
+    cfg = control.ObserverBasedVHzControlCfg(
         nom_psi_s=base.psi, max_i_s=1.5*base.i, slip_compensation=False)
-    ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+    ctrl = control.ObserverBasedVHzControl(par, cfg, T_s=250e-6)
 
 
 
@@ -197,7 +197,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.805 seconds)
+   **Total running time of the script:** (0 minutes 9.055 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py:

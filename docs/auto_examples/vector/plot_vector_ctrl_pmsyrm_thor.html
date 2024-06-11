@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>5-kW PM-SyRM &#8212; motulator 0.3.0 documentation</title>
+    <title>5-kW PM-SyRM &#8212; motulator 0.3.1 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
   <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=ea4a43d1"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=51b6c1cc"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -135,7 +135,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.3.0 documentation</p>
+    <p class="title logo__title">motulator 0.3.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -191,8 +191,8 @@
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
@@ -420,11 +420,11 @@ magnet synchronous reluctance motor. Control look-up tables are also plotted.</p
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">par</span> <span class="o">=</span> <span class="n">mdl_par</span>  <span class="c1"># Assume accurate machine model parameter estimates</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentReferenceCfg</span><span class="p">(</span>
     <span class="n">par</span><span class="p">,</span> <span class="n">nom_w_m</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">max_i_s</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">k_u</span><span class="o">=</span><span class="mf">.9</span><span class="p">)</span>
-<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorCtrl</span><span class="p">(</span>
+<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorControl</span><span class="p">(</span>
     <span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">125e-6</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.0042</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">Observer</span><span class="p">(</span>
     <span class="n">control</span><span class="o">.</span><span class="n">ObserverCfg</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">200</span><span class="p">))</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedCtrl</span><span class="p">(</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedController</span><span class="p">(</span>
     <span class="n">J</span><span class="o">=</span><span class="mf">.0042</span><span class="p">,</span> <span class="n">alpha_s</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_tau_M</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -453,7 +453,7 @@ magnet synchronous reluctance motor. Control look-up tables are also plotted.</p
 <span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_004.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_004.png" alt="plot vector ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.985 seconds)</p>
+<img src="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_004.png" srcset="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_004.png" alt="plot vector ctrl pmsyrm thor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.891 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-vector-plot-vector-ctrl-pmsyrm-thor-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/8e207436b84cf331b0ee771aa344acf5/plot_vector_ctrl_pmsyrm_thor.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vector_ctrl_pmsyrm_thor.ipynb</span></code></a></p>

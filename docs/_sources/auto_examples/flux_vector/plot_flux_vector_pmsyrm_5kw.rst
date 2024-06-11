@@ -267,7 +267,7 @@ Configure the control system.
     # Limit the maximum reference flux to the base value
     cfg = control.FluxTorqueReferenceCfg(
         par, max_i_s=2*base.i, k_u=1, max_psi_s=base.psi)
-    ctrl = control.FluxVectorCtrl(par, cfg, J=.015, sensorless=True)
+    ctrl = control.FluxVectorControl(par, cfg, J=.015, sensorless=True)
     # Select a lower speed-estimation bandwidth to mitigate the saturation effects
     ctrl.observer = control.Observer(
         control.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))
@@ -357,7 +357,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 15.423 seconds)
+   **Total running time of the script:** (0 minutes 15.704 seconds)
 
 
 .. _sphx_glr_download_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py:

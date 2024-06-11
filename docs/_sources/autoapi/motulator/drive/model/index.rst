@@ -155,7 +155,7 @@ Package Contents
    :param mdl: Continuous-time system model.
    :type mdl: Model
    :param ctrl: Discrete-time controller.
-   :type ctrl: Ctrl
+   :type ctrl: ControlSystem
 
 
 

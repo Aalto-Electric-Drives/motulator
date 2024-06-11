@@ -21,7 +21,7 @@ After :doc:`installation`, *motulator* can be used by creating a continuous-time
    par = control.ModelPars(
       R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2, J=.015)
    cfg = control.CurrentReferenceCfg(par, max_i_s=1.5*np.sqrt(2)*5)
-   ctrl = control.VectorCtrl(par, cfg)
+   ctrl = control.VectorControl(par, cfg)
 
    # Acceleration at t = 0.2 s and load torque step of 14 Nm at t = 0.75 s 
    ctrl.ref.w_m = lambda t: (t > .2)*(2*np.pi*50)

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Usage &#8212; motulator 0.3.0 documentation</title>
+    <title>Usage &#8212; motulator 0.3.1 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
   <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=ea4a43d1"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=51b6c1cc"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -135,7 +135,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.3.0 documentation</p>
+    <p class="title logo__title">motulator 0.3.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -191,8 +191,8 @@
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
@@ -402,7 +402,7 @@ from<span class="w"> </span>motulator.drive.utils<span class="w"> </span>import<
 <span class="nv">par</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>control.ModelPars<span class="o">(</span>
 <span class="w">   </span><span class="nv">R_s</span><span class="o">=</span><span class="m">3</span>.7,<span class="w"> </span><span class="nv">R_R</span><span class="o">=</span><span class="m">2</span>.1,<span class="w"> </span><span class="nv">L_sgm</span><span class="o">=</span>.021,<span class="w"> </span><span class="nv">L_M</span><span class="o">=</span>.224,<span class="w"> </span><span class="nv">n_p</span><span class="o">=</span><span class="m">2</span>,<span class="w"> </span><span class="nv">J</span><span class="o">=</span>.015<span class="o">)</span>
 <span class="nv">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>control.CurrentReferenceCfg<span class="o">(</span>par,<span class="w"> </span><span class="nv">max_i_s</span><span class="o">=</span><span class="m">1</span>.5*np.sqrt<span class="o">(</span><span class="m">2</span><span class="o">)</span>*5<span class="o">)</span>
-<span class="nv">ctrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>control.VectorCtrl<span class="o">(</span>par,<span class="w"> </span>cfg<span class="o">)</span>
+<span class="nv">ctrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>control.VectorControl<span class="o">(</span>par,<span class="w"> </span>cfg<span class="o">)</span>
 
 <span class="c1"># Acceleration at t = 0.2 s and load torque step of 14 Nm at t = 0.75 s</span>
 ctrl.ref.w_m<span class="w"> </span><span class="o">=</span><span class="w"> </span>lambda<span class="w"> </span>t:<span class="w"> </span><span class="o">(</span>t<span class="w"> </span>&gt;<span class="w"> </span>.2<span class="o">)</span>*<span class="o">(</span><span class="m">2</span>*np.pi*50<span class="o">)</span>

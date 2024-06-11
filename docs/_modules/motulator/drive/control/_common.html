@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._common &#8212; motulator 0.3.0 documentation</title>
+    <title>motulator.drive.control._common &#8212; motulator 0.3.1 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
   <script src="../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=ea4a43d1"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=51b6c1cc"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -132,7 +132,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.3.0 documentation</p>
+    <p class="title logo__title">motulator 0.3.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -188,8 +188,8 @@
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
@@ -339,12 +339,12 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">motulator.common.control</span> <span class="kn">import</span> <span class="n">Ctrl</span><span class="p">,</span> <span class="n">PICtrl</span>
+<span class="kn">from</span> <span class="nn">motulator.common.control</span> <span class="kn">import</span> <span class="n">ControlSystem</span><span class="p">,</span> <span class="n">PIController</span>
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">wrap</span>
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="SpeedCtrl"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.SpeedCtrl">[docs]</a><span class="k">class</span> <span class="nc">SpeedCtrl</span><span class="p">(</span><span class="n">PICtrl</span><span class="p">):</span>
+<div class="viewcode-block" id="SpeedController"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.SpeedController">[docs]</a><span class="k">class</span> <span class="nc">SpeedController</span><span class="p">(</span><span class="n">PIController</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2DOF PI speed controller.</span>
 
@@ -370,9 +370,9 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="DriveCtrl"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveCtrl">[docs]</a><span class="k">class</span> <span class="nc">DriveCtrl</span><span class="p">(</span><span class="n">Ctrl</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveControlSystem"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveControlSystem">[docs]</a><span class="k">class</span> <span class="nc">DriveControlSystem</span><span class="p">(</span><span class="n">ControlSystem</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Base class for control of electric machine drives.</span>
+<span class="sd">    Base class for drive control systems.</span>
 
 <span class="sd">    This base class provides typical functionalities for control of electric</span>
 <span class="sd">    machine drives. This can be used both in speed-control and torque-control </span>
@@ -406,7 +406,7 @@ document.write(`
 <span class="sd">        `motulator.drive.control.im.Observer` or </span>
 <span class="sd">        `motulator.drive.control.sm.Observer` </span>
 <span class="sd">        depending on the machine type. The default is None.</span>
-<span class="sd">    speed_ctrl : SpeedCtrl | None</span>
+<span class="sd">    speed_ctrl : SpeedController | None</span>
 <span class="sd">        Speed controller. The default is None.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -419,7 +419,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
 
-<div class="viewcode-block" id="DriveCtrl.get_electrical_measurements"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveCtrl.get_electrical_measurements">[docs]</a>    <span class="k">def</span> <span class="nf">get_electrical_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveControlSystem.get_electrical_measurements"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveControlSystem.get_electrical_measurements">[docs]</a>    <span class="k">def</span> <span class="nf">get_electrical_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the currents and voltages.</span>
 <span class="sd">        </span>
@@ -450,7 +450,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">fbk</span></div>
 
-<div class="viewcode-block" id="DriveCtrl.get_mechanical_measurements"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveCtrl.get_mechanical_measurements">[docs]</a>    <span class="k">def</span> <span class="nf">get_mechanical_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveControlSystem.get_mechanical_measurements"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveControlSystem.get_mechanical_measurements">[docs]</a>    <span class="k">def</span> <span class="nf">get_mechanical_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the speed and position.</span>
 <span class="sd">        </span>
@@ -477,7 +477,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">fbk</span></div>
 
-<div class="viewcode-block" id="DriveCtrl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveCtrl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveControlSystem.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveControlSystem.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the feedback signals.&quot;&quot;&quot;</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_feedback_signals</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_electrical_measurements</span><span class="p">(</span><span class="n">fbk</span><span class="p">,</span> <span class="n">mdl</span><span class="p">)</span>
@@ -488,7 +488,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">fbk</span></div>
 
-<div class="viewcode-block" id="DriveCtrl.get_torque_reference"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveCtrl.get_torque_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_torque_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveControlSystem.get_torque_reference"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveControlSystem.get_torque_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_torque_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the torque reference in vector control.</span>
 
@@ -529,7 +529,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">ref</span></div>
 
-<div class="viewcode-block" id="DriveCtrl.update"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveCtrl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+<div class="viewcode-block" id="DriveControlSystem.update"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveControlSystem.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="p">:</span>

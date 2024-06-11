@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Current Control &#8212; motulator 0.3.0 documentation</title>
+    <title>Current Control &#8212; motulator 0.3.1 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
   <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ea4a43d1"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=51b6c1cc"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -136,7 +136,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.3.0 documentation</p>
+    <p class="title logo__title">motulator 0.3.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -192,8 +192,8 @@
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
 </ul>
 </li>
@@ -512,7 +512,7 @@ document.write(`
 <p>where <span class="math notranslate nohighlight">\(\mathrm{sat}(\cdot)\)</span> is the saturation function. The limited voltage can be obtained from a pulse-width modulation (PWM) algorithm. The anti-windup of the integrator can be implemented simply as</p>
 <div class="math notranslate nohighlight">
 \[\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} = \boldsymbol{\alpha}_\mathrm{i}\left(\bar{\boldsymbol{u}}_\mathrm{s,ref} - \hat{\boldsymbol{v}}_\mathrm{s}\right)\]</div>
-<p>The other parts of the above controller are not affected by the saturation. The implementation in the <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPICtrl" title="motulator.common.control.ComplexPICtrl"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPICtrl</span></code></a> class is based on this disturbance-observer form.</p>
+<p>The other parts of the above controller are not affected by the saturation. The implementation in the <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> class is based on this disturbance-observer form.</p>
 </section>
 </section>
 <section id="synchronous-machines">
@@ -531,7 +531,7 @@ document.write(`
 \hat{\boldsymbol{v}}_\mathrm{s}(k) &amp;= \boldsymbol{u}_\mathrm{i}(k) - (\boldsymbol{k}_\mathrm{p} - \boldsymbol{k}_\mathrm{t})\hat{\boldsymbol{\psi}}(k) \\
 \boldsymbol{u}_\mathrm{s,ref}(k) &amp;= \boldsymbol{k}_\mathrm{t}\left[\boldsymbol{\psi}_{\mathrm{ref}}(k) - \hat{\boldsymbol{\psi}}(k)\right] + \hat{\boldsymbol{v}}_\mathrm{s} \\
  \bar{\boldsymbol{u}}_\mathrm{s,ref}(k) &amp;= \mathrm{sat}\left[\boldsymbol{u}_\mathrm{s,ref}(k)\right]\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> is the sampling period and <span class="math notranslate nohighlight">\(k\)</span> is the discrete-time index. Depending on the machine type, either <a class="reference internal" href="#equation-flux-mapping-im">(6)</a> or <a class="reference internal" href="#equation-flux-mapping-sm">(10)</a> is used to map the stator current to the flux linkage. This discrete-time algorithm corresponds to the implementation in the <a class="reference internal" href="../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentCtrl" title="motulator.drive.control.sm.CurrentCtrl"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentCtrl</span></code></a> class. The default gain selection corresponds to the complex-vector gains in <a class="reference internal" href="#equation-complex-vector-gains-flux">(8)</a>.</p>
+<p>where <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> is the sampling period and <span class="math notranslate nohighlight">\(k\)</span> is the discrete-time index. Depending on the machine type, either <a class="reference internal" href="#equation-flux-mapping-im">(6)</a> or <a class="reference internal" href="#equation-flux-mapping-sm">(10)</a> is used to map the stator current to the flux linkage. This discrete-time algorithm corresponds to the implementation in the <a class="reference internal" href="../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class. The default gain selection corresponds to the complex-vector gains in <a class="reference internal" href="#equation-complex-vector-gains-flux">(8)</a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har1998" role="doc-footnote">

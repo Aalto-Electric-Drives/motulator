@@ -57,11 +57,12 @@ par = InductionMachineInvGammaPars(
 cfg = control.CurrentReferenceCfg(
     par, max_i_s=1.5*base.i, nom_u_s=base.u, nom_w_s=base.w)
 # Create the control system
-ctrl = control.CurrentVectorCtrl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
+ctrl = control.CurrentVectorControl(
+    par, cfg, J=.015, T_s=250e-6, sensorless=True)
 # As an example, you may replace the default 2DOF PI speed controller with the
 # regular PI speed controller by uncommenting the following line
-# from motulator.common.control import PICtrl
-# ctrl.speed_ctrl = PICtrl(k_p=1, k_i=1)
+# from motulator.common.control import PIController
+# ctrl.speed_ctrl = PIController(k_p=1, k_i=1)
 
 # %%
 # Set the speed reference and the external load torque. You may also try to

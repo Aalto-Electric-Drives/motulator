@@ -89,14 +89,15 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-41
+.. GENERATED FROM PYTHON SOURCE LINES 36-42
 
 .. code-block:: Python
 
 
     par = mdl_par  # Assume accurate machine model parameter estimates
     cfg = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
-    ctrl = control.CurrentVectorCtrl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
+    ctrl = control.CurrentVectorControl(
+        par, cfg, J=.015, T_s=250e-6, sensorless=True)
 
 
 
@@ -105,11 +106,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-50
+.. GENERATED FROM PYTHON SOURCE LINES 44-51
 
 .. code-block:: Python
 
@@ -127,11 +128,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-60
+.. GENERATED FROM PYTHON SOURCE LINES 53-61
 
 .. code-block:: Python
 
@@ -156,7 +157,7 @@ Create the simulation object and simulate it.
 
  .. code-block:: none
 
-    Simulation time: 4.23 s
+    Simulation time: 4.26 s
 
 
 
@@ -164,7 +165,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.270 seconds)
+   **Total running time of the script:** (0 minutes 5.358 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:

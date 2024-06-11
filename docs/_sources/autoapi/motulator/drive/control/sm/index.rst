@@ -36,17 +36,17 @@ Classes
    motulator.drive.control.sm.ObserverCfg
    motulator.drive.control.sm.FluxTorqueReference
    motulator.drive.control.sm.FluxTorqueReferenceCfg
-   motulator.drive.control.sm.FluxVectorCtrl
-   motulator.drive.control.sm.CurrentCtrl
+   motulator.drive.control.sm.FluxVectorControl
+   motulator.drive.control.sm.CurrentController
    motulator.drive.control.sm.CurrentReference
    motulator.drive.control.sm.CurrentReferenceCfg
-   motulator.drive.control.sm.CurrentVectorCtrl
-   motulator.drive.control.sm.ObserverBasedVHzCtrl
-   motulator.drive.control.sm.ObserverBasedVHzCtrlCfg
+   motulator.drive.control.sm.CurrentVectorControl
+   motulator.drive.control.sm.ObserverBasedVHzControl
+   motulator.drive.control.sm.ObserverBasedVHzControlCfg
    motulator.drive.control.sm.SignalInjection
-   motulator.drive.control.sm.SignalInjectionCtrl
+   motulator.drive.control.sm.SignalInjectionControl
    motulator.drive.control.sm.TorqueCharacteristics
-   motulator.drive.control.sm.SpeedCtrl
+   motulator.drive.control.sm.SpeedController
 
 
 Package Contents
@@ -277,9 +277,9 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: FluxVectorCtrl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_o=2 * np.pi * 100, J=None, T_s=0.00025, sensorless=True)
+.. py:class:: FluxVectorControl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_o=2 * np.pi * 100, J=None, T_s=0.00025, sensorless=True)
 
-   Bases: :py:obj:`motulator.drive.control.DriveCtrl`
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
 
 
    
@@ -302,7 +302,7 @@ Package Contents
    :type alpha_tau: float, optional
    :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*100.
    :type alpha_o: float, optional
-   :param J: Moment of inertia (kg*m^2). Needed only for the speed controller.
+   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
    :type J: float, optional
    :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float
@@ -361,9 +361,9 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: CurrentCtrl(par, alpha_c)
+.. py:class:: CurrentController(par, alpha_c)
 
-   Bases: :py:obj:`motulator.common.control.ComplexPICtrl`
+   Bases: :py:obj:`motulator.common.control.ComplexPIController`
 
 
    
@@ -584,9 +584,9 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentVectorCtrl(par, cfg, T_s=0.00025, J=None, alpha_c=2 * np.pi * 200, alpha_o=2 * np.pi * 100, sensorless=True)
+.. py:class:: CurrentVectorControl(par, cfg, T_s=0.00025, J=None, alpha_c=2 * np.pi * 200, alpha_o=2 * np.pi * 100, sensorless=True)
 
-   Bases: :py:obj:`motulator.drive.control.DriveCtrl`
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
 
 
    
@@ -601,7 +601,7 @@ Package Contents
    :type cfg: CurrentReferenceCfg
    :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float, optional
-   :param J: Moment of inertia (kgm^2). Needed only for the speed controller.
+   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
    :type J: float, optional
    :param alpha_c: Current controller bandwidth (rad/s). The default is 2*pi*200.
    :type alpha_c: float, optional
@@ -624,15 +624,15 @@ Package Contents
 
    .. attribute:: current_ctrl
 
-      Current controller. The default is CurrentCtrl(par, 2*np.pi*200).
+      Current controller. The default is CurrentController(par, 2*np.pi*200).
 
-      :type: CurrentCtrl
+      :type: CurrentController
 
    .. attribute:: speed_ctrl
 
-      Speed controller. The default is SpeedCtrl(par.J, 2*np.pi*4).
+      Speed controller. The default is SpeedController(par.J, 2*np.pi*4).
 
-      :type: SpeedCtrl | None
+      :type: SpeedController | None
 
 
 
@@ -723,9 +723,9 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedVHzCtrl(par, cfg, T_s=0.00025)
+.. py:class:: ObserverBasedVHzControl(par, cfg, T_s=0.00025)
 
-   Bases: :py:obj:`motulator.drive.control.DriveCtrl`
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
 
 
    
@@ -736,7 +736,7 @@ Package Contents
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars
    :param cfg: Control system configuration.
-   :type cfg: ObserverBasedVHzCtrlCfg
+   :type cfg: ObserverBasedVHzControlCfg
    :param T_s: Sampling period (s). The default is 250e-6.
    :type T_s: float, optional
 
@@ -811,7 +811,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedVHzCtrlCfg
+.. py:class:: ObserverBasedVHzControlCfg
 
    Bases: :py:obj:`motulator.drive.control.sm._flux_vector.FluxTorqueReferenceCfg`
 
@@ -961,9 +961,9 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SignalInjectionCtrl(par, cfg, J=None, T_s=0.00025)
+.. py:class:: SignalInjectionControl(par, cfg, J=None, T_s=0.00025)
 
-   Bases: :py:obj:`motulator.drive.control.DriveCtrl`
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
 
 
    
@@ -989,7 +989,7 @@ Package Contents
    :type par: SynchronousMachinePars
    :param cfg: Reference generation configuration.
    :type cfg: CurrentReferenceCfg
-   :param J: Moment of inertia (kg*m^2). Needed only for the speed controller.
+   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
    :type J: float, optional
    :param T_s: Sampling period (s).
    :type T_s: float
@@ -1578,9 +1578,9 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SpeedCtrl(J, alpha_s, max_tau_M=np.inf)
+.. py:class:: SpeedController(J, alpha_s, max_tau_M=np.inf)
 
-   Bases: :py:obj:`motulator.common.control.PICtrl`
+   Bases: :py:obj:`motulator.common.control.PIController`
 
 
    
