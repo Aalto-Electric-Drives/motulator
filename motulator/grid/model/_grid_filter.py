@@ -36,28 +36,22 @@ class LFilter(Subsystem):
         Grid resistance (Ω)
 
     """
-    def __init__(self, L_f, R_f=0, L_g=0, R_g=0, u_gs=None):
+    def __init__(self, U_gN, L_f, R_f=0, L_g=0, R_g=0):
         super().__init__()
         self.par = SimpleNamespace(L_f=L_f, R_f=R_f, L_g=L_g, R_g=R_g)
-        self._u_gs = u_gs
+        #self.inp = SimpleNamespace(u_cs=0+0j)
+        self.out = SimpleNamespace(u_gs=U_gN+0j)  # Needed for direct feedthrough
         self.state = SimpleNamespace(i_gs=0)
         self.sol_states = SimpleNamespace(i_gs=[])
-
-
-    @property
-    def u_gs(self):
-        """Compute the PCC voltage between the L filter and grid impedance."""
-        if callable(self._u_gs):
-            return self._u_gs(self.state.i_gs)
-        return (self.par.L_g*self.inp.u_cs + self.par.L_f*self.inp.e_gs +
-            (self.par.R_g*self.par.L_f - self.par.R_f*self.par.L_g)*
-            self.state.i_gs)/(self.par.L_g+self.par.L_f)
 
 
     def set_outputs(self, _):
         """Set output variables."""
         state, out = self.state, self.out
-        out.i_gs, out.i_cs = state.i_gs, state.i_gs
+        u_gs = (self.par.L_g*self.inp.u_cs + self.par.L_f*self.inp.e_gs +
+            (self.par.R_g*self.par.L_f - self.par.R_f*self.par.L_g)*
+            self.state.i_gs)/(self.par.L_g+self.par.L_f)
+        out.i_gs, out.i_cs, out.u_gs = state.i_gs, state.i_gs, u_gs
 
 
     def rhs(self):
@@ -93,7 +87,7 @@ class LFilter(Subsystem):
         return i_g_abc
 
 
-    def meas_voltages(self):
+    def meas_pcc_voltage(self):
         """
         Measure the phase voltages at PCC at the end of the sampling period.
 
@@ -104,7 +98,7 @@ class LFilter(Subsystem):
 
         """
         # PCC phase voltages from the corresponding space vector
-        u_g_abc = complex2abc(self.state.u_gs)
+        u_g_abc = complex2abc(self.out.u_gs)
         return u_g_abc
 
 

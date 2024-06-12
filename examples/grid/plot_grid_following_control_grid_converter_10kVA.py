@@ -12,14 +12,15 @@ current controller.
 # %%
 # Imports.
 
+import time
 import numpy as np
-from motulator.grid import model, control
-import motulator.grid.control.grid_following as control   
+
+from motulator.grid import model
+import motulator.grid.control.grid_following as control
 #import motulator.grid.control.grid_following as control
 from motulator.grid.utils import BaseValues, NominalValues, plot_grid
 
 # To check the computation time of the program
-import time
 start_time = time.time()
 
 
@@ -39,8 +40,8 @@ grid_model = model.StiffSource(w_N=2*np.pi*50)
 converter = model.Inverter(u_dc=650)
 
 
-mdl.pwm = None  # disable the PWM model
 mdl = model.StiffSourceAndLFilterModel(converter, grid_filter, grid_model)
+mdl.pwm = None  # disable the PWM model
 
 
 
