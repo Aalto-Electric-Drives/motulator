@@ -616,7 +616,7 @@ class Ctrl:
         """
         raise NotImplementedError
 
-    def save(self, data):
+    def save(self, **kwargs):
         """
         Save the internal date of the control system.
 
@@ -626,8 +626,14 @@ class Ctrl:
             Contains the data to be saved.
 
         """
-        for key, value in data.items():
-            self.data.setdefault(key, []).extend([value])
+        for name, arg in kwargs.items():
+            if not hasattr(self.data, name):
+                setattr(self.data, name, SimpleNamespace())
+            data = getattr(self.data, name)
+            for key, value in vars(arg).items():
+                if not hasattr(data, key):
+                    setattr(data, key, [])
+                getattr(data, key).append(value)
 
     def post_process(self):
         """
@@ -637,8 +643,11 @@ class Ctrl:
         to simplify plotting and analysis of the stored data.
 
         """
-        for key in self.data:
-            self.data[key] = np.asarray(self.data[key])
+        self.data = SimpleNamespace()
+        for name, values in vars(self.data).items():
+            setattr(self.data, name, SimpleNamespace())
+            for key, value in vars(values).items():
+                setattr(getattr(self.data, name), key, np.asarray(value))
 
 
 # %%

@@ -202,14 +202,7 @@ class GridFollowingCtrl(Ctrl):
                                            self.theta_p, self.w_g)
 
         # Data logging
-        data = SimpleNamespace(
-            w_c = w_pll, theta_c = self.theta_p, u_c_ref = u_c_ref,
-            u_c = u_c, i_c = i_c, abs_u_g = abs_u_g,
-            d_abc_ref = d_abc_ref, i_c_ref = i_c_ref, u_dc = u_dc,
-            t = self.clock.t, p_g_ref = p_g_ref, u_dc_ref = u_dc_ref,
-            q_g_ref=q_g_ref, u_g = u_g,
-                     )
-        self.save(data)
+        self.save(fbk=mdl.fbk, ref=mdl.ref)
 
         # Update the states
         self.theta_p = theta_pll
