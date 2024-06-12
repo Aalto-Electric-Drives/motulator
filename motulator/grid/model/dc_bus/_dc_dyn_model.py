@@ -7,11 +7,10 @@ DC-bus and filter model interconnectors.
     used. The space vector models are implemented in stationary coordinates.
 
 """
-
+from types import SimpleNamespace
 import numpy as np
 
-from gritulator._helpers import complex2abc
-from gritulator._utils import Bunch
+from motulator.common.utils import complex2abc
 
 # %%
 class DCBusAndLFilterModel:
@@ -43,7 +42,7 @@ class DCBusAndLFilterModel:
         self.t0 = 0
 
         # Store the solution in these lists
-        self.data = Bunch()
+        self.data = SimpleNamespace()
         self.data.t, self.data.q = [], []
         self.data.i_gs = []
         self.data.u_dc = [] 
@@ -84,7 +83,7 @@ class DCBusAndLFilterModel:
         self.grid_filter.u_gs0 = self.grid_filter.pcc_voltages(
                                                 x0[0], u_cs0, e_gs0)
 
-    def f(self, t, x):
+    def rhs(self, t, x):
         """
         Compute the complete state derivative list for the solver.
 
@@ -121,7 +120,7 @@ class DCBusAndLFilterModel:
 
         Parameters
         ----------
-        sol : Bunch object
+        sol : SimpleNamespace object
             Solution from the solver.
 
         """
@@ -187,7 +186,7 @@ class DCBusAndLCLFilterModel:
         self.t0 = 0
 
         # Store the solution in these lists
-        self.data = Bunch()
+        self.data = SimpleNamespace()
         self.data.t, self.data.q = [], []
         self.data.i_gs = []
         self.data.i_cs = []
@@ -235,7 +234,7 @@ class DCBusAndLCLFilterModel:
         self.grid_filter.u_gs0 = self.grid_filter.pcc_voltages(
                                                     x0[2], x0[1], e_gs0)
 
-    def f(self, t, x):
+    def rhs(self, t, x):
         """
         Compute the complete state derivative list for the solver.
 
@@ -273,7 +272,7 @@ class DCBusAndLCLFilterModel:
 
         Parameters
         ----------
-        sol : Bunch object
+        sol : SimpleNamespace object
             Solution from the solver.
 
         """

@@ -4,11 +4,14 @@ Dynamic model of a DC bus.
 A DC bus between an external current source or sink and a converter is modeled 
 considering an equivalent circuit comprising a capacitor and parallel resistor.
 """
+from types import SimpleNamespace
 
 from motulator.common.utils import complex2abc
 
+from motulator.common.model import Subsystem
+
 # %%
-class DCBus:
+class DCBus(Subsystem):
     """
     DC bus model
 
@@ -28,11 +31,17 @@ class DCBus:
 
     """
     def __init__(self, C_dc=1e-3, G_dc=0, i_ext=lambda t: 0, u_dc0 = 650):
-        self.C_dc = C_dc
-        self.G_dc = G_dc
-        self.i_ext = i_ext
+        super().__init__()
+        self.par = SimpleNamespace(C_dc=C_dc, G_dc=G_dc, i_ext=i_ext) 
+        self.udc0 = u_dc0
         # Initial values
-        self.u_dc0 = u_dc0
+        self.state = SimpleNamespace(u_dc = u_dc0)
+        self.sol_states = SimpleNamespace(u_dc = [])
+
+    def set_outputs(self, _):
+        """Set output variables."""
+        state, out = self.state, self.out
+        out.u_dc = state.u_dc
     
     @staticmethod
     def dc_current(i_c_abc, q):
@@ -80,7 +89,7 @@ class DCBus:
 
         """
         # State derivative
-        du_dc = (self.i_ext(t) - i_dc - self.G_dc*u_dc)/self.C_dc
+        du_dc = (self.par.i_ext(t) - i_dc - self.par.G_dc*u_dc)/self.par.C_dc
         return du_dc
 
     def meas_dc_voltage(self):
@@ -93,4 +102,4 @@ class DCBus:
             DC bus voltage (V)
     
         """
-        return self.u_dc0
+        return self.state.u_dc
