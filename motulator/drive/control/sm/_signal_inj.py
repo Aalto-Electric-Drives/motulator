@@ -3,14 +3,14 @@
 from types import SimpleNamespace
 import numpy as np
 
-from motulator.drive.control import DriveCtrl, SpeedCtrl
+from motulator.drive.control import DriveControlSystem, SpeedController
 from motulator.drive.control.sm._current_vector import (
-    CurrentCtrl, CurrentReference)
+    CurrentController, CurrentReference)
 from motulator.common.utils import wrap
 
 
 # %%
-class SignalInjectionCtrl(DriveCtrl):
+class SignalInjectionControl(DriveControlSystem):
     """
     Sensorless control with signal injection for synchronous machine drives.
 
@@ -37,7 +37,7 @@ class SignalInjectionCtrl(DriveCtrl):
     cfg : CurrentReferenceCfg
         Reference generation configuration.
     J : float, optional
-        Moment of inertia (kg*m^2). Needed only for the speed controller.
+        Moment of inertia (kgm²). Needed only for the speed controller.
     T_s : float
         Sampling period (s).
 
@@ -46,11 +46,11 @@ class SignalInjectionCtrl(DriveCtrl):
     def __init__(self, par, cfg, J=None, T_s=250e-6):
         super().__init__(par, T_s, sensorless=True)
         self.current_ref = CurrentReference(par, cfg)
-        self.current_ctrl = CurrentCtrl(par, 2*np.pi*200)
+        self.current_ctrl = CurrentController(par, 2*np.pi*200)
         self.pll = PhaseLockedLoop(w_o=2*np.pi*40)
         self.signal_inj = SignalInjection(par, U_inj=250)
         if J is not None:
-            self.speed_ctrl = SpeedCtrl(J, 2*np.pi*4)
+            self.speed_ctrl = SpeedController(J, 2*np.pi*4)
         else:
             self.speed_ctrl = None
         self.observer = None

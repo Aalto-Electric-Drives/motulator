@@ -37,7 +37,8 @@ mdl = model.Drive(converter, machine, mechanics)
 par = mdl_par  # Assume accurate machine model parameter estimates
 cfg = control.CurrentReferenceCfg(
     par, nom_w_m=base.w, max_i_s=1.5*base.i, min_psi_s=.5*base.psi, k_u=.9)
-ctrl = control.CurrentVectorCtrl(par, cfg, J=.015, T_s=125e-6, sensorless=True)
+ctrl = control.CurrentVectorControl(
+    par, cfg, J=.015, T_s=125e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

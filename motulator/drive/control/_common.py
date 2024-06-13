@@ -5,12 +5,12 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from motulator.common.control import Ctrl, PICtrl
+from motulator.common.control import ControlSystem, PIController
 from motulator.common.utils import abc2complex, wrap
 
 
 # %%
-class SpeedCtrl(PICtrl):
+class SpeedController(PIController):
     """
     2DOF PI speed controller.
 
@@ -36,9 +36,9 @@ class SpeedCtrl(PICtrl):
 
 
 # %%
-class DriveCtrl(Ctrl, ABC):
+class DriveControlSystem(ControlSystem, ABC):
     """
-    Base class for control of electric machine drives.
+    Base class for drive control systems.
 
     This base class provides typical functionalities for control of electric
     machine drives. This can be used both in speed-control and torque-control 
@@ -72,7 +72,7 @@ class DriveCtrl(Ctrl, ABC):
         `motulator.drive.control.im.Observer` or 
         `motulator.drive.control.sm.Observer` 
         depending on the machine type. The default is None.
-    speed_ctrl : SpeedCtrl | None
+    speed_ctrl : SpeedController | None
         Speed controller. The default is None.
 
     """

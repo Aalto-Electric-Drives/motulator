@@ -105,8 +105,8 @@ mdl = model.Drive(converter, machine, mechanics)
 # Configure the control system.
 
 par = SynchronousMachinePars(n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
-cfg = control.ObserverBasedVHzCtrlCfg(par, max_i_s=2*base.i)
-ctrl = control.ObserverBasedVHzCtrl(par, cfg, T_s=250e-6)
+cfg = control.ObserverBasedVHzControlCfg(par, max_i_s=2*base.i)
+ctrl = control.ObserverBasedVHzControl(par, cfg, T_s=250e-6)
 
 # %%
 # Set the speed reference and the external load torque.

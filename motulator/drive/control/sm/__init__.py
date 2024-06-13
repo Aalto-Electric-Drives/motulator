@@ -1,30 +1,31 @@
 """Controls for synchronous machines."""
 from motulator.drive.control.sm._common import Observer, ObserverCfg
 from motulator.drive.control.sm._flux_vector import (
-    FluxTorqueReference, FluxTorqueReferenceCfg, FluxVectorCtrl)
+    FluxTorqueReference, FluxTorqueReferenceCfg, FluxVectorControl)
 from motulator.drive.control.sm._current_vector import (
-    CurrentCtrl, CurrentReference, CurrentReferenceCfg, CurrentVectorCtrl)
+    CurrentController, CurrentReference, CurrentReferenceCfg,
+    CurrentVectorControl)
 from motulator.drive.control.sm._obs_vhz import (
-    ObserverBasedVHzCtrl, ObserverBasedVHzCtrlCfg)
+    ObserverBasedVHzControl, ObserverBasedVHzControlCfg)
 from motulator.drive.control.sm._signal_inj import (
-    SignalInjection, SignalInjectionCtrl)
+    SignalInjection, SignalInjectionControl)
 from motulator.drive.control.sm._torque import TorqueCharacteristics
-from motulator.drive.control._common import SpeedCtrl
+from motulator.drive.control._common import SpeedController
 
 __all__ = [
     "Observer",
     "ObserverCfg",
     "FluxTorqueReference",
     "FluxTorqueReferenceCfg",
-    "FluxVectorCtrl",
-    "CurrentCtrl",
+    "FluxVectorControl",
+    "CurrentController",
     "CurrentReference",
     "CurrentReferenceCfg",
-    "CurrentVectorCtrl",
-    "ObserverBasedVHzCtrl",
-    "ObserverBasedVHzCtrlCfg",
+    "CurrentVectorControl",
+    "ObserverBasedVHzControl",
+    "ObserverBasedVHzControlCfg",
     "SignalInjection",
-    "SignalInjectionCtrl",
+    "SignalInjectionControl",
     "TorqueCharacteristics",
-    "SpeedCtrl",
+    "SpeedController",
 ]

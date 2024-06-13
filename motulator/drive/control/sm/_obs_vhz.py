@@ -5,7 +5,7 @@ from dataclasses import dataclass, InitVar
 
 import numpy as np
 
-from motulator.drive.control import DriveCtrl
+from motulator.drive.control import DriveControlSystem
 from motulator.common.control import RateLimiter
 from motulator.drive.control.sm._flux_vector import (
     FluxTorqueReference, FluxTorqueReferenceCfg)
@@ -14,7 +14,7 @@ from motulator.common.utils import wrap
 
 # %%
 @dataclass
-class ObserverBasedVHzCtrlCfg(FluxTorqueReferenceCfg):
+class ObserverBasedVHzControlCfg(FluxTorqueReferenceCfg):
     """
     Control system configuration.
 
@@ -45,7 +45,7 @@ class ObserverBasedVHzCtrlCfg(FluxTorqueReferenceCfg):
 
 
 # %%
-class ObserverBasedVHzCtrl(DriveCtrl):
+class ObserverBasedVHzControl(DriveControlSystem):
     """
     Observer-based V/Hz control for synchronous motors.
 
@@ -55,7 +55,7 @@ class ObserverBasedVHzCtrl(DriveCtrl):
     ----------
     par : SynchronousMachinePars
         Machine model parameters.
-    cfg : ObserverBasedVHzCtrlCfg
+    cfg : ObserverBasedVHzControlCfg
         Control system configuration.
     T_s : float, optional
         Sampling period (s). The default is 250e-6.
