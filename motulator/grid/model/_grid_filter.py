@@ -39,11 +39,10 @@ class LFilter(Subsystem):
     def __init__(self, U_gN, L_f, R_f=0, L_g=0, R_g=0):
         super().__init__()
         self.par = SimpleNamespace(L_f=L_f, R_f=R_f, L_g=L_g, R_g=R_g)
-        #self.inp = SimpleNamespace(u_cs=0+0j)
+        self.inp = SimpleNamespace(u_cs=0+0j, e_gs=U_gN+0j)
         self.out = SimpleNamespace(u_gs=U_gN+0j)  # Needed for direct feedthrough
-        self.state = SimpleNamespace(i_gs=0)
+        self.state = SimpleNamespace(i_gs=0+0j)
         self.sol_states = SimpleNamespace(i_gs=[])
-
 
     def set_outputs(self, _):
         """Set output variables."""
@@ -52,7 +51,6 @@ class LFilter(Subsystem):
             (self.par.R_g*self.par.L_f - self.par.R_f*self.par.L_g)*
             self.state.i_gs)/(self.par.L_g+self.par.L_f)
         out.i_gs, out.i_cs, out.u_gs = state.i_gs, state.i_gs, u_gs
-
 
     def rhs(self):
         # pylint: disable=R0913
@@ -69,8 +67,7 @@ class LFilter(Subsystem):
         L_t = par.L_f + par.L_g
         R_t = par.R_f + par.R_g
         di_gs = (inp.u_cs - inp.e_gs - R_t*state.i_gs)/L_t
-        return di_gs
-
+        return [di_gs]
 
     def meas_currents(self):
         """
@@ -86,7 +83,6 @@ class LFilter(Subsystem):
         i_g_abc = complex2abc(self.state.i_gs)
         return i_g_abc
 
-
     def meas_pcc_voltage(self):
         """
         Measure the phase voltages at PCC at the end of the sampling period.
@@ -100,6 +96,17 @@ class LFilter(Subsystem):
         # PCC phase voltages from the corresponding space vector
         u_g_abc = complex2abc(self.out.u_gs)
         return u_g_abc
+
+    def post_process_states(self):
+        """Post-process data."""
+        self.data.i_cs=self.data.i_gs
+
+    #def post_process_with_inputs(self):
+    #    """Post-process data with inputs."""
+    #    data=self.data
+    #    data.u_gs=(self.par.L_g*data.u_cs + self.par.L_f*data.e_gs +
+    #        (self.par.R_g*self.par.L_f - self.par.R_f*self.par.L_g)*
+    #        data.i_gs)/(self.par.L_g+self.par.L_f)
 
 
 # %%

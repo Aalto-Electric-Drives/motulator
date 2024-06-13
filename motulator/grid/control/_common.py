@@ -3,9 +3,9 @@ from abc import ABC
 from types import SimpleNamespace
 
 import numpy as np
-#from motulator.common.utils._utils import (abc2complex, complex2abc)
 #from motulator.common.control import (Ctrl, PICtrl)
 from motulator.common.utils import (complex2abc, abc2complex, wrap)
+from motulator.grid.utils import Bunch
 
 # %%
 class PWM:
@@ -597,7 +597,7 @@ class Ctrl:
     """Base class for the control system."""
 
     def __init__(self):
-        self.data = SimpleNamespace()  # Data store
+        self.data = Bunch()  # Data store
         self.clock = Clock()  # Digital clock
 
     def __call__(self, mdl):
@@ -616,7 +616,7 @@ class Ctrl:
         """
         raise NotImplementedError
 
-    def save(self, **kwargs):
+    def save(self, data):
         """
         Save the internal date of the control system.
 
@@ -626,14 +626,8 @@ class Ctrl:
             Contains the data to be saved.
 
         """
-        for name, arg in kwargs.items():
-            if not hasattr(self.data, name):
-                setattr(self.data, name, SimpleNamespace())
-            data = getattr(self.data, name)
-            for key, value in vars(arg).items():
-                if not hasattr(data, key):
-                    setattr(data, key, [])
-                getattr(data, key).append(value)
+        for key, value in data.items():
+            self.data.setdefault(key, []).extend([value])
 
     def post_process(self):
         """
@@ -643,11 +637,8 @@ class Ctrl:
         to simplify plotting and analysis of the stored data.
 
         """
-        self.data = SimpleNamespace()
-        for name, values in vars(self.data).items():
-            setattr(self.data, name, SimpleNamespace())
-            for key, value in vars(values).items():
-                setattr(getattr(self.data, name), key, np.asarray(value))
+        for key in self.data:
+            self.data[key] = np.asarray(self.data[key])
 
 
 # %%

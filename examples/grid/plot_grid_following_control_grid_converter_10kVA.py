@@ -14,11 +14,13 @@ current controller.
 
 import time
 import numpy as np
+import matplotlib.pyplot as plt
 
 from motulator.grid import model
 import motulator.grid.control.grid_following as control
 #import motulator.grid.control.grid_following as control
 from motulator.grid.utils import BaseValues, NominalValues, plot_grid
+from motulator.common.utils import complex2abc
 
 # To check the computation time of the program
 start_time = time.time()
@@ -41,7 +43,7 @@ converter = model.Inverter(u_dc=650)
 
 
 mdl = model.StiffSourceAndLFilterModel(converter, grid_filter, grid_model)
-mdl.pwm = None  # disable the PWM model
+
 
 
 
@@ -83,4 +85,32 @@ print('\nExecution time: {:.2f} s'.format((time.time() - start_time)))
 # %%
 # Plot results in SI or per unit values.
 
-plot_grid(sim, base, plot_pcc_voltage=True)
+#plot_grid(sim, base, plot_pcc_voltage=True)
+
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 7))
+FS = 16 # Font size of the plots axis
+FL = 16 # Font size of the legends only
+LW = 3 # Line width in plots
+t_range = (0, 0.1)
+ctrl=sim.ctrl.data
+
+# Subplot 1: PCC voltage
+ax1.plot(ctrl.t, ctrl.u_g_abc/base.u, linewidth=LW)
+#ax1.plot(mdl.grid_filter.data.t, (mdl.grid_filter.data.e_gs)/base.u, linewidth=LW)
+ax1.legend([r'$u_g^a$',r'$u_g^b$',r'$u_g^c$'],
+            prop={'size': FL}, loc= 'upper right')
+ax1.set_xlim(t_range)
+ax1.set_xticklabels([])
+
+ax2.plot(ctrl.t, np.real(ctrl.i_c/base.i), linewidth=LW)
+ax2.plot(ctrl.t, np.imag(ctrl.i_c/base.i), linewidth=LW)
+ax2.plot(ctrl.t, np.real(ctrl.i_c_ref/base.i), '--', linewidth=LW)
+ax2.plot(ctrl.t, np.imag(ctrl.i_c_ref/base.i), '--', linewidth=LW)
+#ax2.plot(mdl.t, mdl.iL, linewidth=LW) converter-side dc current for debug
+ax2.legend([r'$i_{c}^d$',r'$i_{c}^q$',r'$i_{c,ref}^d$',r'$i_{c,ref}^q$'],
+            prop={'size': FL}, loc= 'upper right')
+ax2.set_xlim(t_range)
+ax2.set_xticklabels([])
+
+plt.show()
+print(mdl.grid_filter.data.e_gs)
