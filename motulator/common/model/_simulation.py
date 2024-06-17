@@ -363,7 +363,7 @@ class Model(ABC):
                 for attr in vars(subsystem.sol_states):
                     subsystem.sol_states.__dict__[attr].extend(sol.y[index])
                     index += 1
-            
+
 
     def post_process_states(self):
         """Transform the lists to the ndarray format and post-process them."""

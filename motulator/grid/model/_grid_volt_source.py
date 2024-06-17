@@ -42,7 +42,7 @@ class StiffSource(Subsystem):
         # states
         self.state = SimpleNamespace(theta_g=0)
         # Store the solutions in these lists
-        self.sol_states = SimpleNamespace(theta_g=[]) 
+        self.sol_states = SimpleNamespace(theta_g=[])
 
     @property
     def w_N(self):
@@ -50,7 +50,7 @@ class StiffSource(Subsystem):
         if callable(self.par.w_N):
             return self.par.w_N()
         return self.par.w_N
-    
+
     def rhs(self):
         """
         Compute the state derivatives.
@@ -63,8 +63,8 @@ class StiffSource(Subsystem):
         """
         dtheta_g = self.par.w_N
         return [dtheta_g]
-        
-    def voltages(self, t):
+
+    def voltages(self, t, theta_g):
         """
         Compute the grid voltage in stationary frame.
            
@@ -72,6 +72,8 @@ class StiffSource(Subsystem):
         ----------
         t : float
             Time (s).
+        theta_g : float
+            Grid voltage angle (rad)
 
         Returns
         -------
@@ -79,20 +81,18 @@ class StiffSource(Subsystem):
             grid complex voltage (V).
 
         """
-        # Calculation of theta angle based on time and grid fixed frequency
-        theta = self.w_N*t
 
-        # Calculation of the three-phase voltage
-        e_g_a = self.par.e_g_abs(t)*np.cos(theta)
-        e_g_b = self.par.e_g_abs(t)*np.cos(theta-2*np.pi/3)
-        e_g_c = self.par.e_g_abs(t)*np.cos(theta-4*np.pi/3)
+        # Calculation of the three-phase voltages
+        e_g_a = self.par.e_g_abs(t)*np.cos(theta_g)
+        e_g_b = self.par.e_g_abs(t)*np.cos(theta_g-2*np.pi/3)
+        e_g_c = self.par.e_g_abs(t)*np.cos(theta_g-4*np.pi/3)
 
         e_gs = abc2complex([e_g_a, e_g_b, e_g_c])
         return e_gs
 
     def set_outputs(self, t):
         """Set output variables."""
-        self.out.e_gs = self.voltages(t)
+        self.out.e_gs = self.voltages(t, self.state.theta_g)
 
     def meas_voltages(self, t):
         """
@@ -110,12 +110,13 @@ class StiffSource(Subsystem):
 
         """
         # Grid voltage
-        e_g_abc = complex2abc(self.voltages(t))
+        e_g_abc = complex2abc(self.voltages(t, self.state.theta_g))
         return e_g_abc
 
     def post_process_states(self):
         """Post-process the solution."""
-        self.data.e_gs=self.out.e_gs
+        self.data.e_gs=self.voltages(self.data.t, self.data.theta_g)
+
 
 # %%
 class FlexSource(Subsystem):

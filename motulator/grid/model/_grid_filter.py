@@ -101,12 +101,12 @@ class LFilter(Subsystem):
         """Post-process data."""
         self.data.i_cs=self.data.i_gs
 
-    #def post_process_with_inputs(self):
-    #    """Post-process data with inputs."""
-    #    data=self.data
-    #    data.u_gs=(self.par.L_g*data.u_cs + self.par.L_f*data.e_gs +
-    #        (self.par.R_g*self.par.L_f - self.par.R_f*self.par.L_g)*
-    #        data.i_gs)/(self.par.L_g+self.par.L_f)
+    def post_process_with_inputs(self):
+        """Post-process data with inputs."""
+        data=self.data
+        data.u_gs=(self.par.L_g*data.u_cs + self.par.L_f*data.e_gs +
+            (self.par.R_g*self.par.L_f - self.par.R_f*self.par.L_g)*
+            data.i_gs)/(self.par.L_g+self.par.L_f)
 
 
 # %%

@@ -103,9 +103,9 @@ ax1.set_xlim(t_range)
 ax1.set_xticklabels([])
 
  # Subplot 2: Converter currents
-ax2.plot(ctrl.t, complex2abc(ctrl.u_gs).T/base.i, linewidth=LW)
-ax2.legend([r'$i_g^a$',r'$i_g^b$',r'$i_g^c$']
-            ,prop={'size': FL}, loc= 'upper right')
+ax2.plot(mdl.grid_filter.data.t, mdl.grid_filter.data.e_gs/base.u, linewidth=LW)
+#ax2.legend([r'$i_g^a$',r'$i_g^b$',r'$i_g^c$']
+#            ,prop={'size': FL}, loc= 'upper right')
 ax2.set_xlim(t_range)
 ax2.set_xticklabels([])
 # ax2.plot(ctrl.t, np.real(ctrl.i_c/base.i), linewidth=LW)
