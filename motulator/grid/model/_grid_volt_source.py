@@ -40,9 +40,9 @@ class StiffSource(Subsystem):
         super().__init__()
         self.par = SimpleNamespace(w_N=w_N, e_g_abs=e_g_abs)
         # states
-        self.state = SimpleNamespace(theta_g=0)
+        self.state = SimpleNamespace(exp_j_theta_g=complex(1))
         # Store the solutions in these lists
-        self.sol_states = SimpleNamespace(theta_g=[])
+        self.sol_states = SimpleNamespace(exp_j_theta_g=[])
 
     @property
     def w_N(self):
@@ -61,8 +61,8 @@ class StiffSource(Subsystem):
             Time derivatives of the state vector.
             
         """
-        dtheta_g = self.par.w_N
-        return [dtheta_g]
+        d_exp_j_theta_g = 1j*self.par.w_N*self.state.exp_j_theta_g
+        return [d_exp_j_theta_g]
 
     def voltages(self, t, theta_g):
         """
@@ -92,7 +92,7 @@ class StiffSource(Subsystem):
 
     def set_outputs(self, t):
         """Set output variables."""
-        self.out.e_gs = self.voltages(t, self.state.theta_g)
+        self.out.e_gs = self.voltages(t, np.angle(self.state.exp_j_theta_g))
 
     def meas_voltages(self, t):
         """
@@ -110,11 +110,12 @@ class StiffSource(Subsystem):
 
         """
         # Grid voltage
-        e_g_abc = complex2abc(self.voltages(t, self.state.theta_g))
+        e_g_abc = complex2abc(self.voltages(t, np.angle(self.state.exp_j_theta_g)))
         return e_g_abc
 
     def post_process_states(self):
         """Post-process the solution."""
+        self.data.theta_g = np.angle(self.data.exp_j_theta_g)
         self.data.e_gs=self.voltages(self.data.t, self.data.theta_g)
 
 

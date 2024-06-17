@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from cycler import cycler
 
-from motulator.common.utils import complex2abc
+from motulator.common.utils import (complex2abc, wrap)
 from types import SimpleNamespace
 
 # Plotting parameters
@@ -44,14 +44,14 @@ def plot_grid(
     FS = 16 # Font size of the plots axis
     FL = 16 # Font size of the legends only
     LW = 3 # Line width in plots
-    
-    
+
+
     mdl = sim.mdl      # Continuous-time data
     ctrl = sim.ctrl.data    # Discrete-time data
-    
+
     # Check if the time span was given
     if t_range is None:
-        t_range = (0, mdl.t[-1]) # Time span
+        t_range = (0, mdl.converter.data.t[-1]) # Time span
 
     # Check if the base values were given
     if base is None:
@@ -60,30 +60,26 @@ def plot_grid(
         base = SimpleNamespace(w=1, u=1, i=1, p=1000)
     else:
         pu_vals = True
-        
+
     # 3-phase quantities
-    i_g_abc = complex2abc(mdl.grid_filter.data.i_gs).T
-    #u_g_abc = complex2abc(mdl.u_gs).T
-    #e_g_abc = complex2abc(mdl.e_gs).T
-    
-    # grid voltage magnitude
-    #abs_e_g = np.abs(mdl.e_gs)
-    
+    i_c_abc = complex2abc(mdl.converter.data.i_cs).T
+    e_g_abc = complex2abc(mdl.grid_model.data.e_gs).T
+
     # Calculation of active and reactive powers
-    p_g = 1.5*np.asarray(np.real(ctrl.u_g*np.conj(ctrl.i_c)))
-    q_g = 1.5*np.asarray(np.imag(ctrl.u_g*np.conj(ctrl.i_c)))
-    #p_g = 1.5*np.asarray(np.real(mdl.u_gs*np.conj(mdl.i_gs)))
-    #q_g = 1.5*np.asarray(np.imag(mdl.u_gs*np.conj(mdl.i_gs)))
+    #p_g = 1.5*np.asarray(np.real(ctrl.u_g*np.conj(ctrl.i_c)))
+    #q_g = 1.5*np.asarray(np.imag(ctrl.u_g*np.conj(ctrl.i_c)))
+    p_g = 1.5*np.asarray(np.real(mdl.grid_filter.data.u_gs*np.conj(mdl.grid_filter.data.i_gs)))
+    q_g = 1.5*np.asarray(np.imag(mdl.grid_filter.data.u_gs*np.conj(mdl.grid_filter.data.i_gs)))
     p_g_ref = np.asarray(ctrl.p_g_ref)
     q_g_ref = np.asarray(ctrl.q_g_ref)
-    
+
     # %%
     fig, (ax1, ax2,ax3) = plt.subplots(3, 1, figsize=(10, 7))
 
     if sim.ctrl.on_v_dc==False:
         if plot_pcc_voltage == False:
             # Subplot 1: Grid voltage
-            ax1.plot(mdl.t, e_g_abc/base.u, linewidth=LW)
+            ax1.plot(mdl.grid_model.data.t, e_g_abc/base.u, linewidth=LW)
             ax1.legend([r'$e_g^a$',r'$e_g^b$',r'$e_g^c$'],
                        prop={'size': FL}, loc= 'upper right')
             ax1.set_xlim(t_range)
@@ -98,31 +94,31 @@ def plot_grid(
             #ax1.set_ylabel('Grid voltage (V)')
     else:
         # Subplot 1: DC-bus voltage
-        ax1.plot(mdl.t, mdl.u_dc/base.u, linewidth=LW)
+        ax1.plot(mdl.converter.data.t, mdl.converter.data.u_dc/base.u, linewidth=LW)
         ax1.plot(ctrl.t, ctrl.u_dc_ref/base.u, '--', linewidth=LW)
         ax1.legend([r'$u_{dc}$',r'$u_{dc,ref}$'],
                    prop={'size': FL}, loc= 'upper right')
         ax1.set_xlim(t_range)
         ax1.set_xticklabels([])
         #ax1.set_ylabel('DC-bus voltage (V)')
-    
+
     # Subplot 2: Converter currents
-    ax2.plot(mdl.t, i_g_abc/base.i, linewidth=LW)
-    ax2.legend([r'$i_g^a$',r'$i_g^b$',r'$i_g^c$']
+    ax2.plot(mdl.converter.data.t, i_c_abc/base.i, linewidth=LW)
+    ax2.legend([r'$i_c^a$',r'$i_c^b$',r'$i_c^c$']
                ,prop={'size': FL}, loc= 'upper right')
     ax2.set_xlim(t_range)
     ax2.set_xticklabels([])
-    
+
     if plot_w:
         # Subplot 3: Grid and converter frequencies
-        ax3.plot(mdl.t, mdl.w_g/base.w, linewidth=LW)
+        ax3.plot(mdl.grid_model.data.t, mdl.grid_model.par.w_N/base.w, linewidth=LW)
         ax3.plot(ctrl.t, ctrl.w_c/base.w, '--', linewidth=LW)
         ax3.legend([r'$\omega_{g}$',r'$\omega_{c}$']
                    ,prop={'size': FL}, loc= 'upper right')
         ax3.set_xlim(t_range)
     else:
         # Subplot 3: Phase angles
-        ax3.plot(mdl.t, mdl.theta, linewidth=LW)
+        ax3.plot(mdl.grid_model.data.t, mdl.grid_model.data.theta_g, linewidth=LW)
         ax3.plot(ctrl.t, ctrl.theta_c, '--', linewidth=LW)
         ax3.legend([r'$\theta_{g}$',r'$\theta_{c}$']
                    ,prop={'size': FL}, loc= 'upper right')
@@ -162,21 +158,21 @@ def plot_grid(
     ax3.grid()
     #plt.show()
 
-    
+
     # %%
     # Second figure
     fig, (ax1, ax2,ax3) = plt.subplots(3, 1, figsize=(10, 7))
 
     # Subplot 1: Active and reactive power
-    ax1.plot(mdl.t, p_g/base.p, linewidth=LW)
-    ax1.plot(mdl.t, q_g/base.p, linewidth=LW)
+    ax1.plot(mdl.grid_filter.data.t, p_g/base.p, linewidth=LW)
+    ax1.plot(mdl.grid_filter.data.t, q_g/base.p, linewidth=LW)
     ax1.plot(ctrl.t, (p_g_ref/base.p), '--', linewidth=LW)
     ax1.plot(ctrl.t, (q_g_ref/base.p), '--', linewidth=LW)
     ax1.legend([r'$p_{g}$',r'$q_{g}$',r'$p_{g,ref}$',r'$q_{g,ref}$'],
                prop={'size': FL}, loc= 'upper right')
     ax1.set_xlim(t_range)
     ax1.set_xticklabels([])
-    
+
     # Subplot 2: Converter currents
     ax2.plot(ctrl.t, np.real(ctrl.i_c/base.i), linewidth=LW)
     ax2.plot(ctrl.t, np.imag(ctrl.i_c/base.i), linewidth=LW)
@@ -189,14 +185,14 @@ def plot_grid(
     ax2.set_xticklabels([])
 
     # Subplot 3: Converter voltage reference and grid voltage
-    ax3.plot(ctrl.t,np.real(ctrl.u_c/base.u), 
+    ax3.plot(ctrl.t,np.real(ctrl.u_c/base.u),
             ctrl.t,np.imag(ctrl.u_c/base.u), linewidth=LW)
-    ax3.plot(mdl.t,np.real(abs_e_g/base.u),'k--', 
+    ax3.plot(mdl.grid_model.data.t, np.absolute(mdl.grid_model.data.e_gs/base.u),'k--',
              linewidth=LW)
-    ax3.legend([r'$u_{c}^d$', r'$u_{c}^q$', r'$|e_{g}|$'], 
+    ax3.legend([r'$u_{c}^d$', r'$u_{c}^q$', r'$|e_{g}|$'],
                 prop={'size': FS}, loc= 'upper right')
     ax3.set_xlim(t_range)
-    
+
     # Change font size
     for item in ([ax2.title, ax2.xaxis.label, ax2.yaxis.label] +
              ax2.get_xticklabels() + ax2.get_yticklabels()):
@@ -225,8 +221,7 @@ def plot_grid(
     plt.tight_layout()
     plt.grid()
     ax3.grid()
-    plt.show()    
-
+    plt.show()
 
 
 # %%
