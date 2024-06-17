@@ -364,6 +364,7 @@ class Model(ABC):
                     subsystem.sol_states.__dict__[attr].extend(sol.y[index])
                     index += 1
 
+
     def post_process_states(self):
         """Transform the lists to the ndarray format and post-process them."""
         self.converter.data.q_cs = np.asarray(self.converter.sol_q_cs)

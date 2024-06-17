@@ -1,7 +1,11 @@
 """Helper functions and classes."""
 
 # %%
+from abc import ABC
 from dataclasses import dataclass
+# Note: Union can be replaced by "|" in Python 3.10
+from typing import Callable, Union
+
 import numpy as np
 
 # %%

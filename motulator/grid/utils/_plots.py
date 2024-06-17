@@ -46,7 +46,7 @@ def plot_grid(
     LW = 3 # Line width in plots
     
     
-    mdl = sim.mdl.data      # Continuous-time data
+    mdl = sim.mdl      # Continuous-time data
     ctrl = sim.ctrl.data    # Discrete-time data
     
     # Check if the time span was given
@@ -62,18 +62,18 @@ def plot_grid(
         pu_vals = True
         
     # 3-phase quantities
-    i_g_abc = complex2abc(mdl.i_gs).T
-    u_g_abc = complex2abc(mdl.u_gs).T
-    e_g_abc = complex2abc(mdl.e_gs).T
+    i_g_abc = complex2abc(mdl.grid_filter.data.i_gs).T
+    #u_g_abc = complex2abc(mdl.u_gs).T
+    #e_g_abc = complex2abc(mdl.e_gs).T
     
     # grid voltage magnitude
-    abs_e_g = np.abs(mdl.e_gs)
+    #abs_e_g = np.abs(mdl.e_gs)
     
     # Calculation of active and reactive powers
-    # p_g = 1.5*np.asarray(np.real(ctrl.u_g*np.conj(ctrl.i_c)))
-    # q_g = 1.5*np.asarray(np.imag(ctrl.u_g*np.conj(ctrl.i_c)))
-    p_g = 1.5*np.asarray(np.real(mdl.u_gs*np.conj(mdl.i_gs)))
-    q_g = 1.5*np.asarray(np.imag(mdl.u_gs*np.conj(mdl.i_gs)))
+    p_g = 1.5*np.asarray(np.real(ctrl.u_g*np.conj(ctrl.i_c)))
+    q_g = 1.5*np.asarray(np.imag(ctrl.u_g*np.conj(ctrl.i_c)))
+    #p_g = 1.5*np.asarray(np.real(mdl.u_gs*np.conj(mdl.i_gs)))
+    #q_g = 1.5*np.asarray(np.imag(mdl.u_gs*np.conj(mdl.i_gs)))
     p_g_ref = np.asarray(ctrl.p_g_ref)
     q_g_ref = np.asarray(ctrl.q_g_ref)
     
@@ -90,7 +90,7 @@ def plot_grid(
             ax1.set_xticklabels([])
         else:
             # Subplot 1: PCC voltage
-            ax1.plot(mdl.t, u_g_abc/base.u, linewidth=LW)
+            ax1.plot(ctrl.t, ctrl.u_g_abc/base.u, linewidth=LW)
             ax1.legend([r'$u_g^a$',r'$u_g^b$',r'$u_g^c$'],
                        prop={'size': FL}, loc= 'upper right')
             ax1.set_xlim(t_range)

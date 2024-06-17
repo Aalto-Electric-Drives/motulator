@@ -5,8 +5,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from types import SimpleNamespace
-#from motulator._utils import Bunch
+#from types import SimpleNamespace
+from motulator.grid.utils import Bunch
 import numpy as np
 
 from motulator.common.utils._utils import abc2complex
@@ -202,7 +202,14 @@ class GridFollowingCtrl(Ctrl):
                                            self.theta_p, self.w_g)
 
         # Data logging
-        self.save(fbk=mdl.fbk, ref=mdl.ref)
+        data = Bunch(
+            w_c = w_pll, theta_c = self.theta_p, u_c_ref = u_c_ref,
+            u_c = u_c, i_c = i_c, abs_u_g = abs_u_g,
+            d_abc_ref = d_abc_ref, i_c_ref = i_c_ref, u_dc = u_dc,
+            t = self.clock.t, p_g_ref = p_g_ref, u_dc_ref = u_dc_ref,
+            q_g_ref=q_g_ref, u_g = u_g, u_g_abc=u_g_abc,
+                     )
+        self.save(data)
 
         # Update the states
         self.theta_p = theta_pll
