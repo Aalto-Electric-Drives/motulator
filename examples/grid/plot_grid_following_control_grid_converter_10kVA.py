@@ -102,15 +102,21 @@ ax1.legend([r'$u_g^a$',r'$u_g^b$',r'$u_g^c$'],
 ax1.set_xlim(t_range)
 ax1.set_xticklabels([])
 
-ax2.plot(ctrl.t, np.real(ctrl.i_c/base.i), linewidth=LW)
-ax2.plot(ctrl.t, np.imag(ctrl.i_c/base.i), linewidth=LW)
-ax2.plot(ctrl.t, np.real(ctrl.i_c_ref/base.i), '--', linewidth=LW)
-ax2.plot(ctrl.t, np.imag(ctrl.i_c_ref/base.i), '--', linewidth=LW)
-#ax2.plot(mdl.t, mdl.iL, linewidth=LW) converter-side dc current for debug
-ax2.legend([r'$i_{c}^d$',r'$i_{c}^q$',r'$i_{c,ref}^d$',r'$i_{c,ref}^q$'],
-            prop={'size': FL}, loc= 'upper right')
+ # Subplot 2: Converter currents
+ax2.plot(ctrl.t, complex2abc(ctrl.u_gs).T/base.i, linewidth=LW)
+ax2.legend([r'$i_g^a$',r'$i_g^b$',r'$i_g^c$']
+            ,prop={'size': FL}, loc= 'upper right')
 ax2.set_xlim(t_range)
 ax2.set_xticklabels([])
+# ax2.plot(ctrl.t, np.real(ctrl.i_c/base.i), linewidth=LW)
+# ax2.plot(ctrl.t, np.imag(ctrl.i_c/base.i), linewidth=LW)
+# ax2.plot(ctrl.t, np.real(ctrl.i_c_ref/base.i), '--', linewidth=LW)
+# ax2.plot(ctrl.t, np.imag(ctrl.i_c_ref/base.i), '--', linewidth=LW)
+# #ax2.plot(mdl.t, mdl.iL, linewidth=LW) converter-side dc current for debug
+# ax2.legend([r'$i_{c}^d$',r'$i_{c}^q$',r'$i_{c,ref}^d$',r'$i_{c,ref}^q$'],
+#             prop={'size': FL}, loc= 'upper right')
+# ax2.set_xlim(t_range)
+# ax2.set_xticklabels([])
 
 plt.show()
 print(mdl.grid_filter.data.e_gs)

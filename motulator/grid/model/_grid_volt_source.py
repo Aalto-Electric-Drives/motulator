@@ -7,6 +7,11 @@ frequency and a dynamic model with the electromechanical dynamics of a
 synchronous generator are considered. In this module, all space vectors are in
 stationary coordinates.
 
+The grid angle theta_g is used 
+    as state variables.
+
+        theta_g = w_N * t
+
 """
 from types import SimpleNamespace
 
@@ -34,12 +39,31 @@ class StiffSource(Subsystem):
                  e_g_abs=lambda t: 400*np.sqrt(2/3)):
         super().__init__()
         self.par = SimpleNamespace(w_N=w_N, e_g_abs=e_g_abs)
+        # states
+        self.state = SimpleNamespace(theta_g=0)
+        # Store the solutions in these lists
+        self.sol_states = SimpleNamespace(theta_g=[]) 
 
     @property
     def w_N(self):
         """Grid constant frequency (rad/s)."""
+        if callable(self.par.w_N):
+            return self.par.w_N()
         return self.par.w_N
-
+    
+    def rhs(self):
+        """
+        Compute the state derivatives.
+        
+        Returns
+        -------
+        list, length 1
+            Time derivatives of the state vector.
+            
+        """
+        dtheta_g = self.par.w_N
+        return [dtheta_g]
+        
     def voltages(self, t):
         """
         Compute the grid voltage in stationary frame.
