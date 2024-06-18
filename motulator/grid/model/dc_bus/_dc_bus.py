@@ -103,3 +103,9 @@ class DCBus(Subsystem):
     
         """
         return self.state.u_dc
+
+    def post_process_states(self):
+        """Post-process the solution."""
+        data, par = self.data, self.par
+        data.u_dc = self.state.u_dc
+        data.i_dc = par.i_ext(self.data.t) - par.G_dc*self.data.u_dc

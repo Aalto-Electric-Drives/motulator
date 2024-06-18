@@ -381,7 +381,7 @@ class ComplexPIController:
 
 
 # %%
-class ComplexFFPICtrl:
+class ComplexFFPIController:
     """
     2DOF Synchronous-frame complex-vector PI controller with feedforward.
 
