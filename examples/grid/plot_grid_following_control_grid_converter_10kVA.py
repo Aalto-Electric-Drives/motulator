@@ -66,10 +66,10 @@ ctrl.q_g_ref = lambda t: (t > .04)*(4e3)
 e_g_abs_var =  lambda t: np.sqrt(2/3)*400
 mdl.grid_model.e_g_abs = e_g_abs_var # grid voltage magnitude
 
-
 # %%
 # Create the simulation object and simulate it.
 
+#mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop = .1)
 
