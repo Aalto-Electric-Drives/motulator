@@ -32,45 +32,24 @@ class DCBus(Subsystem):
     """
     def __init__(self, C_dc=1e-3, G_dc=0, i_ext=lambda t: 0, u_dc0 = 650):
         super().__init__()
-        self.par = SimpleNamespace(C_dc=C_dc, G_dc=G_dc, i_ext=i_ext) 
+        self.par = SimpleNamespace(C_dc=C_dc, G_dc=G_dc, i_ext=i_ext)
         self.udc0 = u_dc0
+        self.i_ext = i_ext
         # Initial values
         self.state = SimpleNamespace(u_dc = u_dc0)
+        self.inp = SimpleNamespace(i_dc = 0, i_ext = i_ext(0))
         self.sol_states = SimpleNamespace(u_dc = [])
 
-    def set_outputs(self, _):
+    def set_outputs(self, t):
         """Set output variables."""
         state, out = self.state, self.out
         out.u_dc = state.u_dc
+
+    def set_inputs(self, t):
+        """Set input variables."""
+        self.inp.i_ext = self.i_ext(t)
     
-    @staticmethod
-    def dc_current(i_c_abc, q):
-        """
-        Compute the converter DC current from the switching states and phase 
-        currents.
-    
-        Parameters
-        ----------
-        i_c_abc : ndarray, shape (3,)
-            Phase currents (A).
-        q : complex ndarray, shape (3,)
-            Switching state vectors corresponding to the switching instants.
-            For example, the switching state q[1] is applied at the interval
-            t_n_sw[1].
-    
-        Returns
-        -------
-        i_dc: float
-            Converter DC current (A)
-    
-        """
-        # Duty ratio back into three-phase ratios
-        q_abc = complex2abc(q)
-        # Dot product
-        i_dc = q_abc[0]*i_c_abc[0] + q_abc[1]*i_c_abc[1] + q_abc[2]*i_c_abc[2]
-        return i_dc
-    
-    def rhs(self, t, u_dc, i_dc):
+    def rhs(self):
         """
         Compute the state derivatives.
 
@@ -89,7 +68,7 @@ class DCBus(Subsystem):
 
         """
         # State derivative
-        du_dc = (self.par.i_ext(t) - i_dc - self.par.G_dc*u_dc)/self.par.C_dc
+        du_dc = (self.inp.i_ext - self.inp.i_dc - self.par.G_dc*self.state.u_dc)/self.par.C_dc
         return du_dc
 
     def meas_dc_voltage(self):
@@ -106,6 +85,4 @@ class DCBus(Subsystem):
 
     def post_process_states(self):
         """Post-process the solution."""
-        data, par = self.data, self.par
-        data.u_dc = self.state.u_dc
-        data.i_dc = par.i_ext(self.data.t) - par.G_dc*self.data.u_dc
+        self.data.u_dc = self.state.u_dc
