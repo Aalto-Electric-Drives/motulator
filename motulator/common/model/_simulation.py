@@ -321,11 +321,18 @@ class Model(ABC):
                     setattr(subsystem.state, attr, state_list[index])
                     index += 1
 
+    # TODO: set_outputs() and set_inputs() could be combined into a single method
     def set_outputs(self, t):
         """Compute the output variables."""
         for subsystem in self.subsystems:
             if hasattr(subsystem, "set_outputs"):
                 subsystem.set_outputs(t)
+
+    def set_inputs(self, t):
+        """Compute the input variables."""
+        for subsystem in self.subsystems:
+            if hasattr(subsystem, "set_inputs"):
+                subsystem.set_inputs(t)
 
     @abstractmethod
     def interconnect(self, t):
@@ -339,6 +346,9 @@ class Model(ABC):
         # Set the outputs for the interconnections and for the rhs
         self.set_outputs(t)
 
+        # Set the inputs for the interconnections and for the rhs
+        self.set_inputs(t)
+
         # Interconnections
         self.interconnect(t)
 
@@ -347,7 +357,9 @@ class Model(ABC):
         for subsystem in self.subsystems:
             if hasattr(subsystem, "rhs"):
                 subsystem_rhs = subsystem.rhs()
-                rhs_list += subsystem_rhs
+                # Check if the state derivative exists before adding it
+                if subsystem_rhs is not None:
+                    rhs_list += subsystem_rhs
 
         # List of state derivatives
         return rhs_list
