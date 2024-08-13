@@ -2,12 +2,13 @@
 
 from types import SimpleNamespace
 
-from motulator.common.model._model import Subsystem
+from motulator.common.model._simulation import Subsystem
 from motulator.common.utils import complex2abc, FilterPars
 from motulator.grid.utils import GridPars
 
 
 # %%
+# TODO: edit drive example scripts to use this parent class instead of LCFilter
 class ACFilter(Subsystem):
     """
     Base class for converter AC-side filters.
@@ -51,48 +52,6 @@ class ACFilter(Subsystem):
         i_c_abc = complex2abc(self.state.i_cs)
 
         return i_c_abc
-
-    def meas_grid_currents(self):
-        """
-        Measure the grid phase currents.
-
-        Returns
-        -------
-        i_g_abc : 3-tuple of floats
-            Grid phase currents (A).
-
-        """
-        # Grid phase currents from the corresponding space vector
-        i_g_abc = complex2abc(self.state.i_gs)
-        return i_g_abc
-
-    def meas_cap_voltage(self):
-        """
-        Measure the capacitor phase voltages.
-
-        Returns
-        -------
-        u_f_abc : 3-tuple of floats
-            Phase voltages of the filter capacitor (V).
-
-        """
-        # Capacitor phase voltages from the corresponding space vector
-        u_f_abc = complex2abc(self.state.u_fs)
-        return u_f_abc
-
-    def meas_pcc_voltage(self):
-        """
-        Measure the phase voltages at the point of common coupling (PCC).
-
-        Returns
-        -------
-        u_g_abc : 3-tuple of floats
-            Phase voltages at the PCC (V).
-
-        """
-        # PCC phase voltages from the corresponding space vector
-        u_g_abc = complex2abc(self.out.u_gs)
-        return u_g_abc
 
 
 # %%
@@ -160,6 +119,20 @@ class LFilter(ACFilter):
         R_t = par.R_f + par.R_g
         d_i_cs = (inp.u_cs - inp.e_gs - R_t*state.i_cs)/L_t
         return [d_i_cs]
+
+    def meas_pcc_voltage(self):
+        """
+        Measure the phase voltages at the point of common coupling (PCC).
+
+        Returns
+        -------
+        u_g_abc : 3-tuple of floats
+            Phase voltages at the PCC (V).
+
+        """
+        # PCC phase voltages from the corresponding space vector
+        u_g_abc = complex2abc(self.out.u_gs)
+        return u_g_abc
 
     def post_process_states(self):
         """Post-process data."""
@@ -249,6 +222,48 @@ class LCLFilter(ACFilter):
 
         return [d_i_cs, d_u_fs, d_i_gs]
 
+    def meas_cap_voltage(self):
+        """
+        Measure the capacitor phase voltages.
+
+        Returns
+        -------
+        u_f_abc : 3-tuple of floats
+            Phase voltages of the filter capacitor (V).
+
+        """
+        # Capacitor phase voltages from the corresponding space vector
+        u_f_abc = complex2abc(self.state.u_fs)
+        return u_f_abc
+
+    def meas_pcc_voltage(self):
+        """
+        Measure the phase voltages at the point of common coupling (PCC).
+
+        Returns
+        -------
+        u_g_abc : 3-tuple of floats
+            Phase voltages at the PCC (V).
+
+        """
+        # PCC phase voltages from the corresponding space vector
+        u_g_abc = complex2abc(self.out.u_gs)
+        return u_g_abc
+
+    def meas_grid_currents(self):
+        """
+        Measure the grid phase currents.
+
+        Returns
+        -------
+        i_g_abc : 3-tuple of floats
+            Grid phase currents (A).
+
+        """
+        # Grid phase currents from the corresponding space vector
+        i_g_abc = complex2abc(self.state.i_gs)
+        return i_g_abc
+
     def post_process_with_inputs(self):
         """Post-process data with inputs."""
         data, par = self.data, self.par
@@ -302,3 +317,17 @@ class LCFilter(ACFilter):
         d_u_fs = (state.i_cs - inp.i_fs - par.G_f*state.u_fs)/par.C_f
 
         return [d_i_cs, d_u_fs]
+
+    def meas_cap_voltage(self):
+        """
+        Measure the capacitor phase voltages.
+
+        Returns
+        -------
+        u_f_abc : 3-tuple of floats
+            Phase voltages of the filter capacitor (V).
+
+        """
+        # Capacitor phase voltages from the corresponding space vector
+        u_f_abc = complex2abc(self.state.u_fs)
+        return u_f_abc

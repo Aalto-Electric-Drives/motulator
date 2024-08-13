@@ -128,7 +128,54 @@ class Inverter(Subsystem):
 
 
 # %%
-class FrequencyConverter(Inverter):
+class LegacyInverter(Subsystem):
+    """
+    Lossless three-phase inverter with constant DC-bus voltage.
+
+    This class is included for compatibility with FrequencyConverter class
+
+    Parameters
+    ----------
+    u_dc : float
+        DC-bus voltage (V).
+
+    """
+
+    def __init__(self, u_dc):
+        super().__init__()
+        self.par = SimpleNamespace(u_dc=u_dc)
+        self.sol_q_cs = []
+
+    @property
+    def u_dc(self):
+        """DC-bus voltage (V)."""
+        return self.par.u_dc
+
+    @property
+    def u_cs(self):
+        """AC-side voltage (V)."""
+        return self.inp.q_cs*self.u_dc
+
+    @property
+    def i_dc(self):
+        """DC-side current (A)."""
+        return 1.5*np.real(self.inp.q_cs*np.conj(self.inp.i_cs))
+
+    def set_outputs(self, _):
+        """Set output variables."""
+        self.out.u_cs = self.u_cs
+
+    def meas_dc_voltage(self):
+        """Measure the DC-bus voltage."""
+        return self.u_dc
+
+    def post_process_states(self):
+        """Post-process data."""
+        self.data.u_cs = self.data.q_cs*self.par.u_dc
+
+
+# %%
+class FrequencyConverter(LegacyInverter):
     """
     Frequency converter.
 
