@@ -10,8 +10,7 @@ from motulator.common.model import Model
 
 
 # %%
-# TODO: rename class to GridConverterSystem?
-class StiffSourceAndGridFilterModel(Model):
+class GridConverterSystem(Model):
     """
     Continuous-time model for a converter connected to grid via output filter.
 

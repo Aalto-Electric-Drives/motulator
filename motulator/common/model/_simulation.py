@@ -321,7 +321,6 @@ class Model(ABC):
                     setattr(subsystem.state, attr, state_list[index])
                     index += 1
 
-    # TODO: set_outputs() and set_inputs() could be combined into a single method
     def set_outputs(self, t):
         """Compute the output variables."""
         for subsystem in self.subsystems:

@@ -155,8 +155,6 @@ def wrap(theta):
 
 
 # %%
-# TODO: edit imports in drive example scripts to use these NominalValues and
-# BaseValues dataclasses, instead of ones in drive.utils
 @dataclass
 class NominalValues:
     """
@@ -207,6 +205,8 @@ class BaseValues:
         Impedance (Ω).
     L : float
         Inductance (H).
+    C : float
+        Capacitance (F).
     tau : float, optional
         Torque (Nm). Default is None.
     n_p : int, optional
@@ -220,6 +220,7 @@ class BaseValues:
     p: float
     Z: float
     L: float
+    C: float
     tau: float = None
     n_p: int = None
 
@@ -262,39 +263,10 @@ class BaseValues:
         p = 1.5*u*i
         Z = u/i
         L = Z/w
+        C = 1/(Z*w)
 
         if n_p is not None:
             tau = n_p*p/w
-            return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, tau=tau, n_p=n_p)
-        return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L)
-
-
-# %%
-@dataclass
-class FilterPars(ABC):
-    """
-    Filter parameters
-
-    Parameters
-    ----------
-    L_fc : float
-        Converter-side inductance of the filter (H).
-    L_fg : float, optional
-        Grid-side inductance of the filter (H). The default is 0.
-    C_f : float, optional
-        Filter capacitance (F). The default is 0.
-    R_fc : float, optional
-        Converter-side series resistance (Ω). The default is 0.
-    R_fg : float, optional
-        Grid-side series resistance (Ω). The default is 0.
-    G_f : float, optional
-        Conductance of a resistor in parallel with the filter capacitor (S).
-        The default is 0.
-
-    """
-    L_fc: float
-    L_fg: float = 0
-    C_f: float = 0
-    R_fc: float = 0
-    R_fg: float = 0
-    G_f: float = 0
+            return cls(
+                u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, C=C, tau=tau, n_p=n_p)
+        return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, C=C)
