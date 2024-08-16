@@ -9,7 +9,7 @@ from motulator.drive.control.im._common import Observer, ObserverCfg
 
 class FluxVectorControlCfg:
     """
-    Reference generation configuration.
+    Controller configuration.
 
     Parameters
     ----------
