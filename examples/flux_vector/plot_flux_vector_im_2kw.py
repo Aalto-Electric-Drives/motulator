@@ -1,8 +1,8 @@
 """
-2.2-kW PMSM
+2.2-kW AM
 ===========
 
-This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.
+This example simulates sensorless flux-vector control of a 2.2-kW induction machine drive.
 
 """
 # %%
