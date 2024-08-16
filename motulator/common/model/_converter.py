@@ -164,7 +164,7 @@ class DiodeBridge(StiffSource):
 
     def set_outputs(self, t):
         """Set output variables."""
-        self.out.u_gs = self.voltages(t, self.par.w_gN*t)
+        self.out.u_gs = self.voltages(t, self.par.w_g*t)
         self.out.i_L = self.state.i_L.real
 
     def rhs(self):
@@ -192,7 +192,7 @@ class DiodeBridge(StiffSource):
     def post_process_states(self):
         """Post-process data."""
         self.data.i_L = self.data.i_L.real
-        self.data.u_gs = self.voltages(self.data.t, self.par.w_gN*self.data.t)
+        self.data.u_gs = self.voltages(self.data.t, self.par.w_g*self.data.t)
 
     def post_process_with_inputs(self):
         """Post-process data with inputs."""
