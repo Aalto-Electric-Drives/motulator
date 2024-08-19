@@ -36,7 +36,8 @@
       "contributions": [
         "code",
         "ideas",
-        "example"
+        "example",
+        "mentoring"
       ]
     },
     {
@@ -65,7 +66,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/84438313?v=4",
       "profile": "https://github.com/jarno-k",
       "contributions": [
-        "ideas"
+        "ideas",
+        "review",
+        "mentoring"
       ]
     },
     {
@@ -193,7 +196,8 @@
         "code",
         "example",
         "ideas",
-        "review"
+        "review",
+        "mentoring"
       ]
     }
   ],
