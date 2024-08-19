@@ -11,10 +11,11 @@ Square-wave signal injection is used with a simple phase-locked loop.
 import numpy as np
 import matplotlib.pyplot as plt
 
+from motulator.common.model import Simulation, VoltageSourceConverter
+from motulator.common.utils import (BaseValues, NominalValues, Sequence)
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+from motulator.drive.utils import plot, SynchronousMachinePars
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -29,7 +30,7 @@ mdl_par = SynchronousMachinePars(
     n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
 machine = model.SynchronousMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=.015)
-converter = model.VoltageSourceConverter(u_dc=540)
+converter = VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
@@ -37,7 +38,11 @@ mdl = model.Drive(converter, machine, mechanics)
 
 par = mdl_par  # Assume accurate machine model parameter estimates
 cfg = control.CurrentReferenceCfg(
-    par, nom_w_m=base.w, max_i_s=2*base.i, min_psi_s=.5*base.psi)
+    par,
+    nom_w_m=base.w,
+    max_i_s=2*base.i,
+    min_psi_s=.5*base.psi,
+)
 ctrl = control.SignalInjectionControl(par, cfg, J=.015, T_s=250e-6)
 # ctrl.current_ctrl = control.sm.CurrentControl(par, 2*np.pi*100)
 # ctrl.signal_inj = control.sm.SignalInjection(par, U_inj=200)
@@ -57,7 +62,7 @@ mdl.mechanics.tau_L = Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl)
+sim = Simulation(mdl, ctrl)
 sim.simulate(t_stop=4)
 
 # %%
