@@ -16,11 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from motulator.common.model import Simulation, VoltageSourceConverter
-from motulator.common.utils import (
-    BaseValues,
-    NominalValues,
-    Sequence,
-)
+from motulator.common.utils import (BaseValues, NominalValues, Sequence)
 from motulator.drive import model
 import motulator.drive.control.sm as control
 from motulator.drive.utils import plot, SynchronousMachinePars
