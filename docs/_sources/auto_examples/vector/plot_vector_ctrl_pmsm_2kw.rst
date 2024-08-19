@@ -157,7 +157,7 @@ Create the simulation object and simulate it.
 
  .. code-block:: none
 
-    Simulation time: 4.34 s
+    Simulation time: 4.48 s
 
 
 
@@ -165,7 +165,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.406 seconds)
+   **Total running time of the script:** (0 minutes 5.596 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:
