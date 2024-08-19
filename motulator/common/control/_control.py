@@ -295,8 +295,7 @@ class ComplexPIController:
 
     This implements a discrete-time 2DOF synchronous-frame complex-vector PI
     controller, based on a disturbance observer structure. The complex-vector
-    gain selection is based on [#Bri2000]_. The addition of the feedforward
-    signal is based on [#Har2009]_. The continuous-time counterpart of
+    gain selection is based on [#Bri2000]_. The continuous-time counterpart of
     the controller is::
 
         u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i) + u_ff
