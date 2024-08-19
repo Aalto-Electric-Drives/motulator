@@ -12,11 +12,14 @@ import numpy as np
 
 from motulator.common.model import (
     CarrierComparison, FrequencyConverter, Simulation)
-from motulator.common.utils import BaseValues, NominalValues
+from motulator.common.utils import (
+    BaseValues,
+    NominalValues,
+)
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
-    InductionMachinePars, InductionMachineInvGammaPars, plot, plot_extra)
+    InductionMachineInvGammaPars, InductionMachinePars, plot, plot_extra)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
