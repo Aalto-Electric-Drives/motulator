@@ -21,10 +21,11 @@ from scipy.io import loadmat
 from scipy.optimize import minimize_scalar
 import matplotlib.pyplot as plt
 
+from motulator.common.model import Simulation, VoltageSourceConverter
+from motulator.common.utils import (BaseValues, NominalValues, Sequence)
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+from motulator.drive.utils import plot, SynchronousMachinePars
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -144,7 +145,6 @@ psi_s0 = complex(res.x)  # psi_s0 = 0.477
 
 # %%
 # Configure the system model.
-
 mdl_par = SynchronousMachinePars(n_p=2, R_s=.63)
 machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model for comparison
@@ -152,7 +152,7 @@ machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 #     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
 # machine = model.SynchronousMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=.015)
-converter = model.VoltageSourceConverter(u_dc=540)
+converter = VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
@@ -162,7 +162,11 @@ mdl = model.Drive(converter, machine, mechanics)
 par = SynchronousMachinePars(n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
 # Limit the maximum reference flux to the base value
 cfg = control.FluxTorqueReferenceCfg(
-    par, max_i_s=2*base.i, k_u=1, max_psi_s=base.psi)
+    par,
+    max_i_s=2*base.i,
+    k_u=1,
+    max_psi_s=base.psi,
+)
 ctrl = control.FluxVectorControl(par, cfg, J=.015, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
 ctrl.observer = control.Observer(
@@ -183,7 +187,7 @@ mdl.mechanics.tau_L = Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl)
+sim = Simulation(mdl, ctrl)
 sim.simulate(t_stop=4)
 
 # %%

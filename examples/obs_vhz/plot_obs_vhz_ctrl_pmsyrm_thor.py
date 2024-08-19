@@ -25,10 +25,11 @@ import numpy as np
 from scipy.optimize import minimize_scalar
 from scipy.interpolate import LinearNDInterpolator
 
+from motulator.common.model import Simulation, VoltageSourceConverter
+from motulator.common.utils import (BaseValues, NominalValues, Sequence)
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+from motulator.drive.utils import plot, SynchronousMachinePars
 from motulator.drive.utils import (
     import_syre_data, plot_flux_vs_current, plot_flux_map)
 
@@ -88,6 +89,7 @@ def i_s(psi_s):
 # Configure the system model.
 
 # Create the machine model
+
 mdl_par = SynchronousMachinePars(
     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
@@ -98,7 +100,7 @@ machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 # Quadratic load torque profile (corresponding to pumps and fans)
 k = nom.tau/(base.w/base.n_p)**2
 mechanics = model.StiffMechanicalSystem(J=.0042, B_L=lambda w_M: k*np.abs(w_M))
-converter = model.VoltageSourceConverter(u_dc=310)
+converter = VoltageSourceConverter(u_dc=310)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
@@ -122,7 +124,7 @@ mdl.mechanics.tau_L = lambda t: (t > 0)*0
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl)
+sim = Simulation(mdl, ctrl)
 sim.simulate(t_stop=8)
 
 # %%

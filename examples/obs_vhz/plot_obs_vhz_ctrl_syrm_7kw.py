@@ -3,17 +3,19 @@
 ======================
 
 This example simulates observer-based V/Hz control of a saturated 6.7-kW
-synchronous reluctance motor drive. The saturation is not taken into account in 
-the control method (only in the system model).
+synchronous reluctance motor drive. The saturation is not taken into account
+in the control method (only in the system model).
 
 """
 # %%
 
 import numpy as np
+
+from motulator.common.model import Simulation, VoltageSourceConverter
+from motulator.common.utils import (BaseValues, NominalValues, Sequence)
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+from motulator.drive.utils import plot, SynchronousMachinePars
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -83,7 +85,7 @@ machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=0)
 #     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 # machine = model.SynchronousMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=.015)
-converter = model.VoltageSourceConverter(u_dc=540)
+converter = VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
@@ -109,7 +111,7 @@ mdl.mechanics.tau_L = Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl)
+sim = Simulation(mdl, ctrl)
 sim.simulate(t_stop=8)
 
 # %%

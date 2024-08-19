@@ -10,11 +10,12 @@ drive.
 
 import numpy as np
 
+from motulator.common.model import Simulation, VoltageSourceConverter
+from motulator.common.utils import (BaseValues, NominalValues, Sequence)
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
-    BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
-    NominalValues, plot, Sequence)
+    InductionMachinePars, InductionMachineInvGammaPars, plot)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -31,7 +32,7 @@ mdl_ig_par = InductionMachineInvGammaPars(
 mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
 machine = model.InductionMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=.015)
-converter = model.VoltageSourceConverter(u_dc=540)
+converter = VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
@@ -62,7 +63,7 @@ mdl.mechanics.tau_L = Sequence(times, values)
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl)
+sim = Simulation(mdl, ctrl)
 sim.simulate(t_stop=4)
 
 # %%

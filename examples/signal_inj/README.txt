@@ -4,8 +4,8 @@ Signal Injection
 These examples demonstrate a square-wave signal injection for low-speed 
 operation based on [#Kim2012]_. A phase-locked loop is used to track the rotor 
 position. For a wider speed range, signal injection could be combined to a 
-model-based observer. The effects of magnetic saturation are not compensated 
-for in this version.
+model-based observer. The effects of magnetic saturation are not compensated for in 
+this version.
 
 .. rubric:: References
 
