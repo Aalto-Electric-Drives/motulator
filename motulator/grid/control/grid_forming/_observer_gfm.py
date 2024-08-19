@@ -22,36 +22,32 @@ class ObserverBasedGFMControlCfg:
         Grid model parameters.
     filter_par : FilterPars
         Filter model parameters.
-    C_dc : float, optional
-        DC-bus capacitance (F). Default is None.
+    max_i : float
+        Maximum current modulus (A).
+    R_a : float
+        Active resistance (Ω).
     T_s : float, optional
         Sampling period of the controller (s). Default is 1/(16e3).
-    i_max : float, optional
-        Maximum current modulus (A). Default is 20.
-    R_a : float, optional
-        Active resistance (Ω). Default is 4.6.
     k_v : float, optional
         Voltage gain. Default is 1.
     alpha_c : float, optional
-        Current control bandwidth (rad/s). Default is 2*pi*400.
+        Current control bandwidth (rad/s). The default is 2*pi*400.
     alpha_o : float, optional
-        Observer gain (rad/s). Default is 2*pi*50.
-    overmodulation : str, optional
-        Overmodulation method for the PWM. Default is Minimum Phase Error
-        "MPE".
-    
+        Observer gain (rad/s). The default is 2*pi*50.
+    C_dc : float, optional
+        DC-bus capacitance (F). Default is None.
+
     """
 
     grid_par: GridPars
     filter_par: FilterPars
-    C_dc: float = None
-    T_s: float = 1/(16e3)
-    i_max: float = 20
-    R_a: float = 4.6
+    max_i: float
+    R_a: float
+    T_s: float = 100e-6
     k_v: float = 1
     alpha_c: float = 2*np.pi*400
     alpha_o: float = 2*np.pi*50
-    overmodulation: str = "MPE"
+    C_dc: float = None
 
     def __post_init__(self):
         par = self.filter_par
@@ -77,43 +73,34 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
     Attributes
     ----------
     observer : DisturbanceObserver
-        Disturbance observer object.
+        Disturbance observer.
     
     References
     ----------
     .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional
         Grid-Forming Converter Control Based on a Disturbance Observer, "IEEE
-        Trans. Power Electron., Jul. 2024,
-        https://doi.org/10.1109/TPEL.2024.3433503
+        Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
     """
 
     def __init__(self, cfg):
-        super().__init__(
-            cfg.grid_par,
-            cfg.C_dc,
-            cfg.T_s,
-        )
+        super().__init__(cfg.grid_par, cfg.C_dc, cfg.T_s)
         self.cfg = cfg
         self.observer = DisturbanceObserver(
             w_g=cfg.grid_par.w_gN,
             L=cfg.L,
             alpha_o=cfg.alpha_o,
-            v_c0=cfg.grid_par.u_gN,
-        )
+            v_c0=cfg.grid_par.u_gN)
         self.ref.q_g = 0
 
     def get_feedback_signals(self, mdl):
         """Get the feedback signals."""
         fbk = super().get_feedback_signals(mdl)
         fbk.theta_c = self.observer.theta_c
-
         # Transform the measured values into synchronous coordinates
         fbk.i_c = np.exp(-1j*fbk.theta_c)*fbk.i_cs
-
         # Get estimates from the observer
         fbk = self.observer.output(fbk)
-
         return fbk
 
     def output(self, fbk):
@@ -140,27 +127,16 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
 
         # Current limitation
         ref.i_c = fbk.i_c + fbk.e_c/cfg.k_c
-        if np.abs(ref.i_c) > cfg.i_max:
-            ref.i_c_lim = ref.i_c/np.abs(ref.i_c)*cfg.i_max
+        if np.abs(ref.i_c) > cfg.max_i:
+            ref.i_c_lim = ref.i_c/np.abs(ref.i_c)*cfg.max_i
             fbk.e_c = cfg.k_c*(ref.i_c_lim - fbk.i_c)
 
         # Calculation of voltage reference
-        ref.u_c = fbk.e_c + fbk.v_c
-
-        # Compensation for series resistance of the inductance
-        ref.u_c += cfg.R*fbk.i_c
-
-        # Transform voltage reference into stator coordinates
+        ref.u_c = fbk.e_c + fbk.v_c + cfg.R*fbk.i_c
         ref.u_cs = np.exp(1j*fbk.theta_c)*ref.u_c
 
-        # Get duty ratios from PWM
-        ref.d_abc = self.pwm(
-            ref.T_s,
-            ref.u_cs,
-            fbk.u_dc,
-            par.w_gN,
-            cfg.overmodulation,
-        )
+        # Duty ratios for PWM
+        ref.d_abc = self.pwm(ref.T_s, ref.u_cs, fbk.u_dc, par.w_gN)
 
         # Apply a coordinate transformation to values that are plotted in
         # synchronous coordinates, as by default the coordinate system of the
@@ -182,8 +158,8 @@ class DisturbanceObserver:
     """
     Disturbance observer.
     
-    This implements a disturbance observer, which estimates the converter
-    output voltage. The observer could be implemented in any coordinates, here
+    This implements a disturbance observer, which estimates the converter 
+    output voltage. The observer could be implemented in any coordinates. Here
     coordinates rotating at the nominal grid angular frequency are used.
 
     Parameters
@@ -191,7 +167,7 @@ class DisturbanceObserver:
     w_g : float
         Estimate of grid angular frequency (rad/s).
     L : float
-        Estimate of total inductance between converter and grid (H).
+        Estimate of total inductance (H) between converter and grid.
     alpha_o : float
         Observer gain (rad/s).
     v_c0 : float
@@ -209,7 +185,7 @@ class DisturbanceObserver:
         self.theta_c = 0
 
     def output(self, fbk):
-        """Compute the signal estimates."""
+        """Compute the estimates."""
         # Quasi-static converter voltage
         fbk.v_c = self.v_cp - self.k_o*self.L*fbk.i_c
         # Grid voltage
@@ -225,5 +201,4 @@ class DisturbanceObserver:
         self.v_cp += ref.T_s*(self.k_o + 1j*self.w_c)*fbk.e_c + 1j*(
             self.w_g - self.w_c)*self.v_cp
         self.theta_c += ref.T_s*self.w_c
-        # Limit to [-pi, pi]
         self.theta_c = wrap(self.theta_c)

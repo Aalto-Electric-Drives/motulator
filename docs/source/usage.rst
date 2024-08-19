@@ -11,7 +11,7 @@ After :doc:`installation`, *motulator* can be used by creating a continuous-time
    from motulator.drive.utils import plot  # Example plotting functions
 
    # Continuous-time model for the drive system
-   converter = model.Inverter(u_dc=540)
+   converter = model.VoltageSourceConverter(u_dc=540)
    machine = model.InductionMachineInvGamma(
       R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224, n_p=2)
    mechanics = model.StiffMechanicalSystem(J=.015)

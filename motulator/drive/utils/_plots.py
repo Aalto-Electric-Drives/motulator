@@ -301,39 +301,44 @@ def plot_extra(sim, base=None, t_span=None):
     ax2.set_xlabel("Time (s)")
     fig1.align_ylabels()
 
-    # Plots the DC bus and grid-side variables if diode bridge model is used
-    if hasattr(mdl, "diode_bridge"):
+    # Plots the DC bus and grid-side variables (if exist)
+    try:
+        mdl.converter.data.i_L
+    except AttributeError:
+        mdl.converter.data.i_L = None
+
+    if mdl.converter.data.i_L is not None:
         fig2, (ax1, ax2) = plt.subplots(2, 1)
 
         # Subplot 1: voltages
         ax1.plot(
-            mdl.diode_bridge.data.t,
-            mdl.diode_bridge.data.u_di/base.u,
+            mdl.converter.data.t,
+            mdl.converter.data.u_di/base.u,
             label=r"$u_\mathrm{di}$")
         ax1.plot(
             mdl.converter.data.t,
             mdl.converter.data.u_dc/base.u,
             label=r"$u_\mathrm{dc}$")
         ax1.plot(
-            mdl.diode_bridge.data.t,
-            complex2abc(mdl.diode_bridge.data.u_gs).T/base.u,
-            label=[r"$u_\mathrm{ga}$", r"$u_\mathrm{gb}$", r"$u_\mathrm{gc}$"])
+            mdl.converter.data.t,
+            mdl.converter.data.u_g_abc.T/base.u,
+            label=r"$u_\mathrm{ga}$")
         ax1.legend()
         ax1.set_xlim(t_span)
         ax1.set_xticklabels([])
 
         # Subplot 2: currents
         ax2.plot(
-            mdl.diode_bridge.data.t,
-            mdl.diode_bridge.data.i_L/base.i,
+            mdl.converter.data.t,
+            mdl.converter.data.i_L/base.i,
             label=r"$i_\mathrm{L}$")
         ax2.plot(
             mdl.converter.data.t,
             mdl.converter.data.i_dc/base.i,
             label=r"$i_\mathrm{dc}$")
         ax2.plot(
-            mdl.diode_bridge.data.t,
-            mdl.diode_bridge.data.i_gs.real/base.i,
+            mdl.converter.data.t,
+            mdl.converter.data.i_gs.real/base.i,
             label=r"$i_\mathrm{ga}$")
         ax2.legend()
         ax2.set_xlim(t_span)

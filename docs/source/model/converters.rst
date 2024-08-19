@@ -1,19 +1,19 @@
 Converters
 ==========
 
-Inverter
---------
+Voltage-Source Converter
+------------------------
 
-The figure below shows a three-phase two-level inverter and its equivalent model, where ideal switches  are assumed. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The inverter model is provided in the class :class:`motulator.drive.model.Inverter`. 
+The figure below shows a three-phase two-level voltage-source converter and its equivalent model, where ideal switches are assumed. This converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The converter model is provided in the class :class:`motulator.drive.model.VoltageSourceConverter`. 
 
 
 .. figure:: figs/inverter.svg
    :width: 100%
    :align: center
-   :alt: Three-phase two-level inverter
+   :alt: Three-phase two-level voltage-source converter
    :target: .
 
-   Three-phase two-level inverter: (left) main circuit; (right) equivalent model. The DC-bus voltage and currents are :math:`u_\mathrm{dc}` and :math:`i_\mathrm{dc}`, respectively.
+   Three-phase two-level voltage-source converter: (left) main circuit; (right) equivalent model. The DC-bus voltage and currents are :math:`u_\mathrm{dc}` and :math:`i_\mathrm{dc}`, respectively.
 
 Six-Pulse Diode Bridge
 ----------------------
@@ -31,12 +31,12 @@ The figure below shows a six-pulse diode bridge rectifier, where the inductor :m
 Carrier Comparison
 ------------------
 
-The figure below shows an inverter equipped with a generic three-phase load. In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals :math:`q_\mathrm{a}`, :math:`q_\mathrm{b}`, and :math:`q_\mathrm{c}` from duty ratios :math:`d_\mathrm{a}`, :math:`d_\mathrm{b}`, and :math:`d_\mathrm{c}`. The duty ratios are continuous signals in the range [0, 1} while the switching states are either 0 or 1.
+The figure below shows a converter equipped with a generic three-phase load. In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals :math:`q_\mathrm{a}`, :math:`q_\mathrm{b}`, and :math:`q_\mathrm{c}` from duty ratios :math:`d_\mathrm{a}`, :math:`d_\mathrm{b}`, and :math:`d_\mathrm{c}`. The duty ratios are continuous signals in the range [0, 1} while the switching states are either 0 or 1.
 
 .. figure:: figs/pwm_inverter.svg
    :width: 100%
    :align: center
-   :alt: Inverter and carrier comparison
+   :alt: Voltage-source converter and carrier comparison
    :target: .
 
    Instantaneous switching states are defined by the carrier comparison. In this example, the switching states are :math:`q_\mathrm{a}=1`, :math:`q_\mathrm{b}=0`, and :math:`q_\mathrm{c}=0`.

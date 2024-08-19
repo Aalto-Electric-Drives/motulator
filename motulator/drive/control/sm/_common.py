@@ -94,7 +94,7 @@ class Observer:
         self.est = SimpleNamespace(
             theta_m=0, w_m=0, psi_s=self.par.psi_f, psi_f=self.par.psi_f)
         # Private work variables for the update method
-        self._work = SimpleNamespace(d_psi_s=0, d_psi_d=0, d_w_m=0)
+        self._work = SimpleNamespace(d_psi_s=0, d_psi_f=0, d_w_m=0)
 
     def output(self, fbk):
         """

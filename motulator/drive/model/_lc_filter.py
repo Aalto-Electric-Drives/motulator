@@ -53,7 +53,7 @@ class LCFilter(Subsystem):
         i_c_abc = complex2abc(self.state.i_cs)
         return i_c_abc
 
-    def meas_cap_voltage(self):
+    def meas_capacitor_voltages(self):
         """Measure the capacitor phase voltages."""
         u_f_abc = complex2abc(self.state.u_fs)
         return u_f_abc

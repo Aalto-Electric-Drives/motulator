@@ -36,7 +36,7 @@ machine = model.InductionMachine(mdl_par)
 # Mechanics with quadratic load torque coefficient
 k = .2*nom.tau/(base.w/base.n_p)**2
 mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
-converter = model.Inverter(u_dc=540)
+converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
@@ -46,7 +46,7 @@ mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
 ctrl = control.VHzControl(
     control.VHzControlCfg(
-        par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
+        par, nom_psi_s=base.psi, k_u=0, k_w=0, overmodulation="six_step"))
 
 # %%
 # Set the speed reference and the external load torque.

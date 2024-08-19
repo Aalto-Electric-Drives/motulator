@@ -7,25 +7,12 @@ drive, equipped with a diode bridge rectifier.
 
 """
 # %%
-import numpy as np
-
 from motulator.common.model import (
-    CarrierComparison,
-    DiodeBridge,
-    Inverter,
-    Simulation,
-)
-from motulator.common.utils import (
-    BaseValues,
-    NominalValues,
-)
+    CarrierComparison, FrequencyConverter, Simulation)
+from motulator.common.utils import BaseValues, NominalValues
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import (
-    plot,
-    plot_extra,
-    SynchronousMachinePars,
-)
+from motulator.drive.utils import plot, plot_extra, SynchronousMachinePars
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -38,24 +25,13 @@ base = BaseValues.from_nominal(nom, n_p=3)
 
 # Machine model and mechanical subsystem
 mdl_par = SynchronousMachinePars(
-    n_p=3,
-    R_s=3.6,
-    L_d=.036,
-    L_q=.051,
-    psi_f=.545,
-)
+    n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
 machine = model.SynchronousMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=.015)
 
 # Frequency converter with a diode bridge
-diode_bridge = DiodeBridge(L_dc=2e-3, U_g=400, f_g=50)
-converter = Inverter(u_dc=np.sqrt(2)*400, C_dc=235e-6)
-mdl = model.DriveWithDiodeBridge(
-    diode_bridge=diode_bridge,
-    converter=converter,
-    machine=machine,
-    mechanics=mechanics,
-)
+converter = FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=400, f_g=50)
+mdl = model.Drive(converter, machine, mechanics)
 
 mdl.pwm = CarrierComparison()  # Enable the PWM model
 
@@ -65,12 +41,7 @@ mdl.pwm = CarrierComparison()  # Enable the PWM model
 par = mdl_par  # Assume accurate machine model parameter estimates
 ref = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=1.5*base.i)
 ctrl = control.CurrentVectorControl(
-    par,
-    ref,
-    J=.015,
-    T_s=250e-6,
-    sensorless=True,
-)
+    par, ref, J=.015, T_s=250e-6, sensorless=True)
 
 # %%
 # Set the speed reference and the external load torque.

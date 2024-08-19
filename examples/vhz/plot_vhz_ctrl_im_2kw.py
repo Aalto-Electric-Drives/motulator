@@ -11,23 +11,12 @@ parameters in this example yield open-loop V/Hz control.
 import numpy as np
 
 from motulator.common.model import (
-    CarrierComparison,
-    DiodeBridge,
-    Inverter,
-    Simulation,
-)
-from motulator.common.utils import (
-    BaseValues,
-    NominalValues,
-)
+    CarrierComparison, FrequencyConverter, Simulation)
+from motulator.common.utils import BaseValues, NominalValues
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
-    InductionMachinePars,
-    InductionMachineInvGammaPars,
-    plot,
-    plot_extra,
-)
+    InductionMachinePars, InductionMachineInvGammaPars, plot, plot_extra)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -48,14 +37,10 @@ k = 1.1*nom.tau/(base.w/base.n_p)**2
 mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
 
 # Frequency converter with a diode bridge
-diode_bridge = DiodeBridge(L_dc=2e-3, U_g=nom.U, f_g=nom.f)
-converter = Inverter(u_dc=np.sqrt(2)*nom.U, C_dc=235e-6)
-mdl = model.DriveWithDiodeBridge(
-    diode_bridge=diode_bridge,
-    converter=converter,
-    machine=machine,
-    mechanics=mechanics,
-)
+frequency_converter = FrequencyConverter(
+    C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
+mdl = model.Drive(
+    converter=frequency_converter, machine=machine, mechanics=mechanics)
 
 mdl.pwm = CarrierComparison()  # Enable the PWM model
 
@@ -65,12 +50,7 @@ mdl.pwm = CarrierComparison()  # Enable the PWM model
 # Inverse-Γ model parameter estimates
 par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
 ctrl = control.VHzControl(
-    control.VHzControlCfg(
-        par,
-        nom_psi_s=base.psi,
-        k_u=0,
-        k_w=0,
-    ))
+    control.VHzControlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference and the external load torque.

@@ -31,7 +31,7 @@ machine = model.SynchronousMachine(mdl_par)
 # Quadratic load torque profile
 k = .05*nom.tau/(base.w/base.n_p)**2
 mechanics = model.StiffMechanicalSystem(J=.0042, B_L=lambda w_M: k*np.abs(w_M))
-converter = model.Inverter(u_dc=310)
+converter = model.VoltageSourceConverter(u_dc=310)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
