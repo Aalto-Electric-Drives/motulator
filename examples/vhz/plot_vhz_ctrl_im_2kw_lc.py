@@ -11,11 +11,15 @@ drive equipped with an LC filter.
 import numpy as np
 import matplotlib.pyplot as plt
 
+from motulator.common.model import (
+    CarrierComparison, Simulation, VoltageSourceConverter)
+from motulator.common.utils import (BaseValues, NominalValues)
+
 from motulator.drive import model
+
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
-    BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
-    NominalValues, plot)
+    InductionMachineInvGammaPars, InductionMachinePars, plot)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -33,10 +37,10 @@ machine = model.InductionMachine(mdl_par)
 # Quadratic load torque profile (corresponding to pumps and fans)
 k = 1.1*nom.tau/(base.w/base.n_p)**2
 mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
-converter = model.VoltageSourceConverter(u_dc=540)
+converter = VoltageSourceConverter(u_dc=540)
 lc_filter = model.LCFilter(L_f=8e-3, C_f=9.9e-6, R_f=.1)
 mdl = model.DriveWithLCFilter(converter, machine, mechanics, lc_filter)
-mdl.pwm = model.CarrierComparison()  # Enable the PWM model
+mdl.pwm = CarrierComparison()  # Enable the PWM model
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).
@@ -54,7 +58,7 @@ ctrl.ref.w_m = lambda t: (t > .2)*base.w
 # %%
 # Create the simulation object and simulate it.
 
-sim = model.Simulation(mdl, ctrl)
+sim = Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.5)
 
 # %%
