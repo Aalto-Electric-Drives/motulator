@@ -172,6 +172,18 @@
         "example",
         "ideas"
       ]
+    },
+    {
+      "login": "rayanmour",
+      "name": "rayanmour",
+      "avatar_url": "https://avatars.githubusercontent.com/u/111271373?v=4",
+      "profile": "https://github.com/rayanmour",
+      "contributions": [
+        "code",
+        "example",
+        "ideas",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
