@@ -26,6 +26,9 @@ class PWM:
     k_comp : float, optional
         Compensation factor for the delay effect on the voltage vector angle. 
         The default is 1.5.
+    overmodulation : str, optional
+        Overmodulation method. The default is Minimum Magnitude Error 'MME'.
+        Optionally Minimum Phase Error 'MPE' can be used.
 
     References
     ----------
@@ -39,11 +42,12 @@ class PWM:
     
     """
 
-    def __init__(self, six_step=False, k_comp=1.5):
+    def __init__(self, six_step=False, k_comp=1.5, overmodulation="MME"):
         self.six_step = six_step
         self.k_comp = k_comp
         self.realized_voltage = 0
         self._old_u_cs = 0
+        self.overmodulation = overmodulation
 
     @staticmethod
     def six_step_overmodulation(ref_u_cs, u_dc):
@@ -99,12 +103,12 @@ class PWM:
         return ref_u_cs
 
     @staticmethod
-    def duty_ratios(ref_u_cs, u_dc):
+    def duty_ratios(ref_u_cs, u_dc, overmodulation="MME"):
         """
         Compute the duty ratios for three-phase space-vector PWM.
 
         This computes the duty ratios corresponding to standard space-vector 
-        PWM and minimum-amplitude-error overmodulation [#Hav1999]_.
+        PWM [#Hav1999]_.
 
         Parameters
         ----------
@@ -112,6 +116,9 @@ class PWM:
             Converter voltage reference (V) in stationary coordinates.
         u_dc : float
             DC-bus voltage (V).
+        overmodulation : str, optional
+            Overmodulation method. The default is Minimum Magnitude Error 'MME'.
+        Optionally Minimum Phase Error 'MPE' can be used.
 
         Returns
         -------
@@ -126,21 +133,20 @@ class PWM:
         u_0 = .5*(np.amax(u_abc) + np.amin(u_abc))
         u_abc -= u_0
 
-        # Uncommenting the following lines results in minimum-phase-error
-        # overmodulation. See [#Hav1999]_ for a comparison of the methods.
-        # m = (2./u_dc)*np.amax(u_abc)
-        # if m > 1:
-        #    u_abc = u_abc/m
+        if overmodulation == "MPE":
+            m = (2./u_dc)*np.amax(u_abc)
+            if m > 1:
+                u_abc = u_abc/m
 
         # Duty ratios
-        d_abc = .5 + u_abc/u_dc
+        d_abc = u_abc/u_dc + .5
 
-        # Minimum-amplitude-error overmodulation
-        d_abc = np.clip(d_abc, 0, 1)
+        if overmodulation == "MME":
+            d_abc = np.clip(d_abc, 0, 1)
 
         return d_abc
 
-    def output(self, T_s, ref_u_cs, u_dc, w):
+    def output(self, T_s, ref_u_cs, u_dc, w, overmodulation):
         """
         Compute the duty ratios and the limited voltage reference.
 
@@ -154,6 +160,8 @@ class PWM:
             DC-bus voltage (V).
         w : float
             Angular speed of synchronous coordinates (rad/s).
+        overmodulation : str, optional
+            Overmodulation method. The default is Minimum Magnitude Error "MME".
 
         Returns
         -------
@@ -173,7 +181,7 @@ class PWM:
             ref_u_cs = self.six_step_overmodulation(ref_u_cs, u_dc)
 
         # Duty ratios
-        d_abc = self.duty_ratios(ref_u_cs, u_dc)
+        d_abc = self.duty_ratios(ref_u_cs, u_dc, overmodulation)
 
         # Limited voltage reference
         u_cs = abc2complex(d_abc)*u_dc
@@ -199,9 +207,10 @@ class PWM:
         self.realized_voltage = .5*(self._old_u_cs + u_cs)
         self._old_u_cs = u_cs
 
-    def __call__(self, T_s, ref_u_cs, u_dc, w):
-        d_abc, u_cs = self.output(T_s, ref_u_cs, u_dc, w)
+    def __call__(self, T_s, ref_u_cs, u_dc, w, overmodulation="MME"):
+        d_abc, u_cs = self.output(T_s, ref_u_cs, u_dc, w, overmodulation)
         self.update(u_cs)
+
         return d_abc
 
 
@@ -297,15 +306,18 @@ class ComplexPIController:
     2DOF synchronous-frame complex-vector PI controller.
 
     This implements a discrete-time 2DOF synchronous-frame complex-vector PI
-    controller, whose continuous-time counterpart is [#Bri2000]_::
+    controller, based on a disturbance observer structure. The complex-vector
+    gain selection is based on [#Bri2000]_. The addition of the feedforward
+    signal is based on [#Har2009]_. The continuous-time counterpart of
+    the controller is::
 
-        u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i)
+        u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i) + u_ff
 
     where `u` is the controller output, `ref_i` is the reference signal, `i` is
-    the feedback signal, `w` is the angular speed of synchronous coordinates, 
-    and `1/s` refers to integration. This algorithm is compatible with both 
-    real and complex signals. The 1DOF version is obtained by setting 
-    ``k_t = k_p``. The integrator anti-windup is implemented based on the 
+    the feedback signal, `w` is the angular speed of synchronous coordinates, u_ff
+    the filtered feedforward signal, and `1/s` refers to integration. This algorithm
+    is compatible with both real and complex signals. The 1DOF version is obtained
+    by setting ``k_t = k_p``. The integrator anti-windup is implemented based on the
     realized controller output.
 
     Parameters
@@ -319,14 +331,18 @@ class ComplexPIController:
 
     Notes
     -----
-    This controller can be used, e.g., as a current controller. In this case, 
+    This controller can be used, e.g., as a current controller. In this case,
     `i` corresponds to the stator current and `u` to the stator voltage.
-    
+
     References
     ----------
-    .. [#Bri2000] Briz, Degner, Lorenz, "Analysis and design of current 
+    .. [#Bri2000] Briz, Degner, Lorenz, "Analysis and design of current
        regulators using complex vectors," IEEE Trans. Ind. Appl., 2000,
        https://doi.org/10.1109/28.845057
+
+    .. [#Har2009] Harnefors, Bongiorno, "Current controller design
+       for passivity of the input admittance," 2009 13th European Conference
+       on Power Electronics and Applications, Barcelona, Spain, 2009.
 
     """
 
@@ -338,7 +354,7 @@ class ComplexPIController:
         # States
         self.v, self.u_i = 0, 0
 
-    def output(self, ref_i, i):
+    def output(self, ref_i, i, u_ff=0):
         """
         Compute the controller output.
 
@@ -348,6 +364,8 @@ class ComplexPIController:
             Reference signal.
         i : complex
             Feedback signal.
+        u_ff : complex, optional
+            Feedforward signal. The default is 0.
 
         Returns
         -------
@@ -356,7 +374,7 @@ class ComplexPIController:
 
         """
         # Disturbance input estimate
-        self.v = self.u_i - (self.k_p - self.k_t)*i
+        self.v = self.u_i - (self.k_p - self.k_t)*i + u_ff
 
         # Controller output
         u = self.k_t*(ref_i - i) + self.v
@@ -372,9 +390,9 @@ class ComplexPIController:
         T_s : float
             Sampling period (s).
         u : complex
-            Realized (limited) controller output. 
+            Realized (limited) controller output.
         w : float
-            Angular speed of the reference frame (rad/s). 
+            Angular speed of the reference frame (rad/s).
 
         """
         self.u_i += T_s*(self.alpha_i + 1j*w)*(u - self.v)

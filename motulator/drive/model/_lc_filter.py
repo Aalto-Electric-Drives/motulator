@@ -17,18 +17,21 @@ class LCFilter(Subsystem):
 
     Parameters
     ----------
-    L : float
-        Inductance (H).
-    C : float
-        Capacitance (F). 
-    R : float, optional
+    L_f : float
+        Filter inductance (H).
+    C_f : float
+        Filter capacitance (F).
+    R_f : float, optional
         Series resistance (Ω) of the inductor. The default is 0.
-   
     """
 
-    def __init__(self, L, C, R=0):
+    def __init__(self, L_f, C_f, R_f=0):
         super().__init__()
-        self.par = SimpleNamespace(L=L, C=C, R=R)
+        self.par = SimpleNamespace(
+            L_f=L_f,
+            C_f=C_f,
+            R_f=R_f,
+        )
         self.state = SimpleNamespace(i_cs=0, u_fs=0)
         self.sol_states = SimpleNamespace(i_cs=[], u_fs=[])
 
@@ -40,8 +43,8 @@ class LCFilter(Subsystem):
     def rhs(self):
         """Compute state derivatives."""
         state, inp, par = self.state, self.inp, self.par
-        d_i_cs = (inp.u_cs - state.u_fs - par.R*state.i_cs)/par.L
-        d_u_fs = (state.i_cs - inp.i_fs)/par.C
+        d_i_cs = (inp.u_cs - state.u_fs - par.R_f*state.i_cs)/par.L_f
+        d_u_fs = (state.i_cs - inp.i_fs)/par.C_f
 
         return [d_i_cs, d_u_fs]
 
@@ -50,7 +53,7 @@ class LCFilter(Subsystem):
         i_c_abc = complex2abc(self.state.i_cs)
         return i_c_abc
 
-    def meas_voltages(self):
+    def meas_cap_voltage(self):
         """Measure the capacitor phase voltages."""
-        u_s_abc = complex2abc(self.state.u_fs)
-        return u_s_abc
+        u_f_abc = complex2abc(self.state.u_fs)
+        return u_f_abc
