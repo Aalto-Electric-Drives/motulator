@@ -64,6 +64,7 @@ Thanks go to these wonderful people:
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/UshnishChowdhury"><img src="https://avatars.githubusercontent.com/u/35863166?v=4?s=50" width="50px;" alt="Ushnish"/><br /><sub><b>Ushnish</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/issues?q=author%3AUshnishChowdhury" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Francesco-Lelli"><img src="https://avatars.githubusercontent.com/u/127111681?v=4?s=50" width="50px;" alt="Francesco-Lelli"/><br /><sub><b>Francesco-Lelli</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=Francesco-Lelli" title="Code">💻</a> <a href="#example-Francesco-Lelli" title="Examples">💡</a> <a href="#ideas-Francesco-Lelli" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/MiSaren"><img src="https://avatars.githubusercontent.com/u/166725462?v=4?s=50" width="50px;" alt="Mikko Sarén"/><br /><sub><b>Mikko Sarén</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=MiSaren" title="Code">💻</a> <a href="#example-MiSaren" title="Examples">💡</a> <a href="#ideas-MiSaren" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
