@@ -18,9 +18,8 @@ class InductionMachine(Subsystem):
     Γ-equivalent model of an induction machine.
 
     An induction machine is modeled using the Γ-equivalent model [#Sle1989]_. 
-    The model is implemented in stator coordinates. The flux linkages are used 
-    as state variables. The stator inductance `L_s` can either be constant or
-    a function of the stator flux magnitude::
+    The stator inductance `L_s` can either be constant or a function of the 
+    stator flux magnitude::
 
         L_s = L_s(abs(psi_ss))
 
@@ -79,6 +78,7 @@ class InductionMachine(Subsystem):
 
     def rhs(self):
         """Compute state derivatives."""
+        # Flux linkages are used as state variables
         state, inp, out, par = self.state, self.inp, self.out, self.par
         d_psi_ss = inp.u_ss - par.R_s*out.i_ss
         d_psi_rs = -par.R_r*out.i_rs + 1j*par.n_p*inp.w_M*state.psi_rs
@@ -111,9 +111,6 @@ class SynchronousMachine(Subsystem):
     """
     Synchronous machine model.
 
-    This models a synchronous machine in rotor coordinates. The stator flux 
-    linkage and the electrical angle of the rotor are the state variables. 
-
     Parameters
     ----------
     par : SynchronousMachinePars
@@ -132,14 +129,9 @@ class SynchronousMachine(Subsystem):
         super().__init__()
         self.par = par
         self._i_s = i_s
-        # Initial values
-        if psi_s0 is not None:
-            self.state = SimpleNamespace(
-                psi_s=complex(psi_s0), exp_j_theta_m=complex(1))
-        else:
-            self.state = SimpleNamespace(
-                psi_s=complex(par.psi_f), exp_j_theta_m=complex(1))
-        # Store the solutions in these lists
+        psi_s_initial = psi_s0 if psi_s0 is not None else par.psi_f
+        self.state = SimpleNamespace(
+            psi_s=complex(psi_s_initial), exp_j_theta_m=complex(1))
         self.sol_states = SimpleNamespace(psi_s=[], exp_j_theta_m=[])
 
     @property
@@ -157,12 +149,13 @@ class SynchronousMachine(Subsystem):
 
     def set_outputs(self, _):
         """Set output variables."""
-        state, out = self.state, self.out
-        out.i_s, out.tau_M = self.i_s, self.tau_M
-        out.i_ss = self.i_s*state.exp_j_theta_m
+        self.out.i_s = self.i_s
+        self.out.tau_M = self.tau_M
+        self.out.i_ss = self.i_s*self.state.exp_j_theta_m
 
     def rhs(self):
         """Compute state derivatives."""
+        # Rotor coordinates are internally used
         state, inp, out, par = self.state, self.inp, self.out, self.par
         inp.u_s = inp.u_ss*np.conj(state.exp_j_theta_m)
         d_psi_s = inp.u_s - par.R_s*out.i_s - 1j*par.n_p*inp.w_M*state.psi_s

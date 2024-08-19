@@ -3,6 +3,7 @@
 # %%
 from dataclasses import dataclass, field, InitVar
 from types import SimpleNamespace
+from typing import Literal
 
 import numpy as np
 
@@ -20,7 +21,7 @@ class VHzControlCfg:
     par: InductionMachineInvGammaPars
     nom_psi_s: float = None
     T_s: float = 250e-6
-    six_step: bool = False
+    overmodulation: Literal["MME", "MPE", "six-step"] = "MME"
     rate_limit: float = 2*np.pi*120
     gain: SimpleNamespace = field(init=False)
     k_u: InitVar[float] = 1
@@ -61,7 +62,7 @@ class VHzControl(DriveControlSystem):
         super().__init__(cfg.par, cfg.T_s, sensorless=True)
         self.gain = cfg.gain
         self.nom_psi_s = cfg.nom_psi_s
-        self.pwm = PWM(six_step=cfg.six_step)
+        self.pwm = PWM(overmodulation=cfg.overmodulation)
         self.rate_limiter = RateLimiter(cfg.rate_limit)
         # Initialize the states
         self.ref.i_s, self.ref.w_r, self.theta_s = 0j, 0, 0

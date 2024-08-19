@@ -152,7 +152,7 @@ machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 #     n_p=2, R_s=.63, L_d=18e-3, L_q=110e-3, psi_f=.47)
 # machine = model.SynchronousMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=.015)
-converter = model.Inverter(u_dc=540)
+converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%

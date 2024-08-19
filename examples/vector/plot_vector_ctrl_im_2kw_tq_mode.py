@@ -31,7 +31,7 @@ mdl_par = InductionMachinePars.from_inv_gamma_model_pars(par)
 machine = model.InductionMachine(mdl_par)
 # Use externally specified actual speed w_M(t), defined subsequently below
 mechanics = model.ExternalRotorSpeed()
-converter = model.Inverter(u_dc=540)
+converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%

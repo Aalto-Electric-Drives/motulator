@@ -17,7 +17,7 @@ class Drive(Model):
 
     Parameters
     ----------
-    converter : Inverter | FrequencyConverter
+    converter : VoltageSourceConverter | FrequencyConverter
         Converter model.
     machine : InductionMachine | SynchronousMachine
         Machine model.
@@ -61,7 +61,7 @@ class DriveWithLCFilter(Model):
 
     Parameters
     ----------
-    converter : Inverter | FrequencyConverter
+    converter : VoltageSourceConverter | FrequencyConverter
         Converter model.
     machine : InductionMachine | SynchronousMachine
         Machine model.
@@ -85,10 +85,7 @@ class DriveWithLCFilter(Model):
         self.mechanics = mechanics
         self.lc_filter = lc_filter
         self.subsystems = [
-            self.converter,
-            self.machine,
-            self.mechanics,
-            self.lc_filter,
+            self.converter, self.machine, self.mechanics, self.lc_filter
         ]
 
     def interconnect(self, _):
@@ -124,7 +121,7 @@ class DriveWithDiodeBridge(Model):
     ----------
     diode_bridge : DiodeBridge
         Diode bridge model.
-    converter : Inverter
+    converter : VoltageSourceConverter
         Converter model.
     machine : InductionMachine | SynchronousMachine
         Machine model.
@@ -146,10 +143,7 @@ class DriveWithDiodeBridge(Model):
         self.machine = machine
         self.mechanics = mechanics
         self.subsystems = [
-            self.diode_bridge,
-            self.converter,
-            self.machine,
-            self.mechanics,
+            self.diode_bridge, self.converter, self.machine, self.mechanics
         ]
 
     def interconnect(self, _):

@@ -34,7 +34,7 @@ mdl_par = SynchronousMachinePars(
 machine = model.SynchronousMachine(mdl_par)
 mdl_mec_par = TwoMassMechanicalSystemPars(J_M=.005, J_L=.005, K_S=700, C_S=.01)
 mechanics = model.TwoMassMechanicalSystem(mdl_mec_par)
-converter = model.Inverter(u_dc=540)
+converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%

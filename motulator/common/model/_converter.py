@@ -1,7 +1,7 @@
 """
 Continuous-time models for converters.
 
-A three-phase voltage-source inverter with optional DC-bus dynamics is
+A three-phase voltage-source inverter with optional DC-bus dynamics is 
 modelled, along with a six-pulse diode bridge rectifier supplied from a stiff
 grid. Complex space vectors are used also for duty ratios and switching states,
 wherever applicable. 
@@ -14,51 +14,35 @@ import numpy as np
 
 from motulator.common.model._simulation import Subsystem
 from motulator.common.utils import abc2complex, complex2abc
-from motulator.grid.model import StiffSource
 
 
 # %%
-class Inverter(Subsystem):
+class VoltageSourceConverter(Subsystem):
     """
-    Lossless three-phase voltage source inverter.
-
-    Capacitive DC-bus dynamics are modeled if C_dc is given as
-    a parameter. In this case, the capacitor voltage u_dc is used as
-    a state variable. Otherwise the DC voltage is constant or a function of
-    time depending on the type of parameter u_dc.
-
+    Lossless three-phase voltage-source converter.
+    
     Parameters
     ----------
-    u_dc : float | callable
-        DC-bus voltage (V).
+    u_dc : float
+        DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is 
+        used as the initial condition.
     C_dc : float, optional
-        DC-bus capacitance (F). Default is None.
+        DC-bus capacitance (F). The default is None.
     i_ext : callable, optional
-        External DC current, seen as disturbance, `i_ext(t)`. Default is zero,
-        ``lambda t: 0``.
+        External current (A) fed to the DC bus. Needed if `C_dc` is not None.
     
     """
 
-    def __init__(self, u_dc, C_dc=None, i_ext=lambda t: 0):
+    def __init__(self, u_dc, C_dc=None, i_ext=lambda t: None):
         super().__init__()
         self.i_ext = i_ext
-        self.par = SimpleNamespace(
-            u_dc=u_dc,
-            C_dc=C_dc,
-        )
-        # Initial values
-        self.u_dc0 = self.par.u_dc(0) if callable(
-            self.par.u_dc) else self.par.u_dc
-        # Only initialize states if dynamic DC model is used
-        if self.par.C_dc is not None:
-            self.state = SimpleNamespace(u_dc=self.u_dc0)
+        self.par = SimpleNamespace(u_dc=u_dc, C_dc=C_dc)
+        self.inp = SimpleNamespace(q_cs=None, i_cs=0j)
+        # Initialize states
+        if C_dc is not None:
+            self.state = SimpleNamespace(u_dc=u_dc)
             self.sol_states = SimpleNamespace(u_dc=[])
-        self.inp = SimpleNamespace(
-            u_dc=self.u_dc0,
-            i_ext=i_ext(0),
-            q_cs=None,
-            i_cs=0j,
-        )
+            self.inp.i_ext = i_ext(0)
         self.sol_q_cs = []
 
     @property
@@ -66,7 +50,7 @@ class Inverter(Subsystem):
         """DC-bus voltage (V)."""
         if self.par.C_dc is not None:
             return self.state.u_dc.real
-        return self.inp.u_dc
+        return self.par.u_dc
 
     @property
     def u_cs(self):
@@ -85,36 +69,19 @@ class Inverter(Subsystem):
 
     def set_inputs(self, t):
         """Set input variables."""
-        self.inp.u_dc = self.par.u_dc(t) if callable(
-            self.par.u_dc) else self.par.u_dc
+        if self.par.C_dc is None:
+            pass
         self.inp.i_ext = self.i_ext(t)
 
     def rhs(self):
-        """
-        Compute the state derivatives.
-
-        Returns
-        -------
-        complex list, length 1
-            Time derivative of the complex state vector, [d_u_dc].
-
-        """
-        inp, par = self.inp, self.par
-        if par.C_dc is None:  # Check whether dynamic DC model is used
+        """Compute the state derivatives."""
+        if self.par.C_dc is None:
             return None
-        d_u_dc = (inp.i_ext - self.i_dc)/par.C_dc
+        d_u_dc = (self.inp.i_ext - self.i_dc)/self.par.C_dc
         return [d_u_dc]
 
     def meas_dc_voltage(self):
-        """
-        Measure the converter DC-bus voltage.
-
-        Returns
-        -------
-        u_dc : float
-            DC-bus voltage (V).
-
-        """
+        """Measure the converter DC-bus voltage (V)."""
         return self.u_dc
 
     def post_process_states(self):
@@ -136,67 +103,71 @@ class Inverter(Subsystem):
 
 
 # %%
-class DiodeBridge(StiffSource):
+class FrequencyConverter(VoltageSourceConverter):
     """
-    Three-phase diode bridge supplied from a stiff grid.
-
-    A three-phase diode bridge rectifier with a DC-side inductor is modeled.
-    The supply voltage is an ideal three-phase voltage source with constant
-    frequency and voltage magnitude. The inductor current i_L is used as a
-    state variable.
+    Frequency converter with a six-pulse diode bridge.
+    
+    A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The
+    diode bridge is connected to the voltage-source inverter. The inductance of 
+    the grid is omitted. 
 
     Parameters
     ----------
+    C_dc : float
+        DC-bus capacitance (F).
     L_dc : float
         DC-bus inductance (H).
     U_g : float
-        Grid voltage (V, line-line, rms).
+        Grid voltage (V, line-line, rms). 
     f_g : float
         Grid frequency (Hz).
 
     """
 
-    def __init__(self, L_dc, U_g, f_g):
-        super().__init__(w_g=2*np.pi*f_g, e_g_abs=np.sqrt(2/3)*U_g)
-        self.par.L = L_dc
-        self.state = SimpleNamespace(i_L=0)
-        self.sol_states = SimpleNamespace(i_L=[])
+    def __init__(self, C_dc, L_dc, U_g, f_g):
+        super().__init__(np.sqrt(2)*U_g, C_dc)
+        self.par = SimpleNamespace(
+            L_dc=L_dc, C_dc=C_dc, w_g=2*np.pi*f_g, u_g=np.sqrt(2/3)*U_g)
+        self.state.i_L = 0
+        self.state.exp_j_theta_g = complex(1)
+        self.sol_states.i_L, self.sol_states.exp_j_theta_g = [], []
 
     def set_outputs(self, t):
         """Set output variables."""
-        self.out.u_gs = self.voltages(t, self.par.w_g*t)
+        super().set_outputs(t)
         self.out.i_L = self.state.i_L.real
+        self.out.i_dc = self.i_dc
+
+    def set_inputs(self, t):
+        """Set output variables."""
+        self.inp.i_ext = self.out.i_L
+        self.inp.u_dc = self.out.u_dc
 
     def rhs(self):
-        """
-        Compute the state derivatives.
-
-        Returns
-        -------
-        complex list, length 1
-            Time derivative of the complex state vector, [d_i_L].
-
-        """
-        state, inp, out, par = self.state, self.inp, self.out, self.par
+        """Compute the state derivatives."""
+        # Grid voltage
+        u_gs = self.par.u_g*self.state.exp_j_theta_g
+        u_g_abc = complex2abc(u_gs)
         # Output voltage of the diode bridge
-        u_g_abc = complex2abc(out.u_gs)
         u_di = np.amax(u_g_abc, axis=0) - np.amin(u_g_abc, axis=0)
         # State derivatives
-        d_i_L = (u_di - inp.u_dc)/par.L
+        d_exp_j_theta_g = 1j*self.par.w_g*self.state.exp_j_theta_g
+        d_i_L = (u_di - self.inp.u_dc)/self.par.L_dc
         # The inductor current cannot be negative due to the diode bridge
-        if state.i_L < 0 and d_i_L < 0:
+        if self.state.i_L < 0 and d_i_L < 0:
             d_i_L = 0
-
-        return [d_i_L]
+        return super().rhs() + [d_i_L, d_exp_j_theta_g]
 
     def post_process_states(self):
         """Post-process data."""
+        super().post_process_states()
         self.data.i_L = self.data.i_L.real
-        self.data.u_gs = self.voltages(self.data.t, self.par.w_g*self.data.t)
 
     def post_process_with_inputs(self):
         """Post-process data with inputs."""
+        super().post_process_with_inputs()
         data = self.data
+        data.u_gs = self.par.u_g*data.exp_j_theta_g
         data.u_g_abc = complex2abc(data.u_gs)
         # Voltage at the output of the diode bridge
         data.u_di = (

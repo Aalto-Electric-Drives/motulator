@@ -17,28 +17,25 @@ plt.rcParams.update({"text.usetex": False})
 
 
 # %%
-# pylint: disable=too-many-branches
 def plot_grid(
         sim, base=None, plot_pcc_voltage=False, plot_w=False, t_span=None):
     """
     Plot example figures of grid converter simulations.
-
-    Plots figures in per-unit values, if the base values are given. Otherwise
-    SI units are used.
 
     Parameters
     ----------
     sim : Simulation
         Should contain the simulated data.
     base : BaseValues, optional
-        Base values for scaling the waveforms.
+        Base values for scaling the waveforms. If not given, plots the figures 
+        in SI units.
     plot_pcc_voltage : bool, optional
-        'True' if the user wants to plot the 3-phase waveform at the point of
-        common coupling (PCC). This is an optional feature and the grid voltage
-        is plotted by default.
+        If True, plot the phase voltage waveforms at the point of common 
+        coupling (PCC). Otherwise, plot the grid voltage waveforms. The default 
+        is False.        
     plot_w : bool, optional
-        'True' if the user wants to plot the grid frequency instead of the
-        phase angles (by default).
+        If True, plot the grid frequency. Otherwise, plot the phase angle. The 
+        default is False.
     t_span : 2-tuple, optional
         Time span. The default is (0, sim.ctrl.ref.t[-1]).
 
@@ -60,17 +57,17 @@ def plot_grid(
     else:
         pu_vals = True
 
-    # 3-phase quantities
+    # Three-phase quantities
     #i_c_abc = complex2abc(mdl.converter.data.i_cs).T
-    i_g_abc = complex2abc(mdl.grid_filter.data.i_gs).T
+    i_g_abc = complex2abc(mdl.ac_filter.data.i_gs).T
     e_g_abc = complex2abc(mdl.grid_model.data.e_gs).T
-    u_g_abc = complex2abc(mdl.grid_filter.data.u_gs).T
+    u_g_abc = complex2abc(mdl.ac_filter.data.u_gs).T
 
     # Calculation of active and reactive powers
     p_g = 1.5*np.asarray(
-        np.real(mdl.grid_filter.data.e_gs*np.conj(mdl.grid_filter.data.i_gs)))
+        np.real(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs)))
     q_g = 1.5*np.asarray(
-        np.imag(mdl.grid_filter.data.e_gs*np.conj(mdl.grid_filter.data.i_gs)))
+        np.imag(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs)))
     p_g_ref = np.asarray(ctrl.ref.p_g)
     q_g_ref = np.asarray(ctrl.ref.q_g)
 
@@ -84,45 +81,37 @@ def plot_grid(
                 mdl.grid_model.data.t,
                 e_g_abc/base.u,
                 label=[
-                    r"$e_\mathrm{ga}$",
-                    r"$e_\mathrm{gb}$",
-                    r"$e_\mathrm{gc}$",
-                ],
-            )
+                    r"$e_\mathrm{ga}$", r"$e_\mathrm{gb}$", r"$e_\mathrm{gc}$"
+                ])
         else:
             # Subplot 1: PCC voltage
             ax1.plot(
-                mdl.grid_filter.data.t,
+                mdl.ac_filter.data.t,
                 u_g_abc/base.u,
                 label=[
-                    r"$u_\mathrm{ga}$",
-                    r"$u_\mathrm{gb}$",
-                    r"$u_\mathrm{gc}$",
-                ],
-            )
+                    r"$u_\mathrm{ga}$", r"$u_\mathrm{gb}$", r"$u_\mathrm{gc}$"
+                ])
     else:
         # Subplot 1: DC-bus voltage
         ax1.plot(
             mdl.converter.data.t,
             mdl.converter.data.u_dc.T/base.u,
-            label=r"$u_\mathrm{dc}$",
-        )
+            label=r"$u_\mathrm{dc}$")
         ax1.plot(
             ctrl.t,
             ctrl.ref.u_dc/base.u,
             "--",
             label=r"$u_\mathrm{dc,ref}$",
-        )
+            ds="steps-post")
     ax1.legend()
     ax1.set_xlim(t_span)
     ax1.set_xticklabels([])
 
     # Subplot 2: Grid currents
     ax2.plot(
-        mdl.grid_filter.data.t,
+        mdl.ac_filter.data.t,
         i_g_abc/base.i,
-        label=[r"$i_\mathrm{ga}$", r"$i_\mathrm{gb}$", r"$i_\mathrm{gc}$"],
-    )
+        label=[r"$i_\mathrm{ga}$", r"$i_\mathrm{gb}$", r"$i_\mathrm{gc}$"])
     ax2.legend()
     ax2.set_xlim(t_span)
     ax2.set_xticklabels([])
@@ -132,14 +121,13 @@ def plot_grid(
         ax3.plot(
             mdl.grid_model.data.t,
             mdl.grid_model.data.w_g/base.w,
-            label=r"$\omega_\mathrm{g}$",
-        )
+            label=r"$\omega_\mathrm{g}$")
         ax3.plot(
             ctrl.t,
             ctrl.fbk.w_c/base.w,
             "--",
             label=r"$\omega_\mathrm{c}$",
-        )
+            ds="steps-post")
         ax3.legend()
         ax3.set_xlim(t_span)
     else:
@@ -147,14 +135,13 @@ def plot_grid(
         ax3.plot(
             mdl.grid_model.data.t,
             mdl.grid_model.data.theta_g,
-            label=r"$\theta_\mathrm{g}$",
-        )
+            label=r"$\theta_\mathrm{g}$")
         ax3.plot(
             ctrl.t,
             ctrl.fbk.theta_c,
             "--",
             label=r"$\theta_\mathrm{c}$",
-        )
+            ds="steps-post")
     ax3.legend()
     ax3.set_xlim(t_span)
 
@@ -184,28 +171,18 @@ def plot_grid(
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 7))
 
     # Subplot 1: Active and reactive power
+    ax1.plot(mdl.ac_filter.data.t, p_g/base.p, label=r"$p_\mathrm{g}$")
+    ax1.plot(mdl.ac_filter.data.t, q_g/base.p, label=r"$q_\mathrm{g}$")
     ax1.plot(
-        mdl.grid_filter.data.t,
-        p_g/base.p,
-        label=r"$p_\mathrm{g}$",
-    )
-    ax1.plot(
-        mdl.grid_filter.data.t,
-        q_g/base.p,
-        label=r"$q_\mathrm{g}$",
-    )
-    ax1.plot(
-        ctrl.t,
-        (p_g_ref/base.p),
+        ctrl.t, (p_g_ref/base.p),
         "--",
         label=r"$p_\mathrm{g,ref}$",
-    )
+        ds="steps-post")
     ax1.plot(
-        ctrl.t,
-        (q_g_ref/base.p),
+        ctrl.t, (q_g_ref/base.p),
         "--",
         label=r"$q_\mathrm{g,ref}$",
-    )
+        ds="steps-post")
     ax1.legend()
     ax1.set_xlim(t_span)
     ax1.set_xticklabels([])
@@ -215,66 +192,63 @@ def plot_grid(
         ctrl.t,
         np.real(ctrl.fbk.i_c/base.i),
         label=r"$i_\mathrm{cd}$",
-    )
+        ds="steps-post")
     ax2.plot(
         ctrl.t,
         np.imag(ctrl.fbk.i_c/base.i),
         label=r"$i_\mathrm{cq}$",
-    )
+        ds="steps-post")
     ax2.plot(
         ctrl.t,
         np.real(ctrl.ref.i_c/base.i),
         "--",
         label=r"$i_\mathrm{cd,ref}$",
-    )
+        ds="steps-post")
     ax2.plot(
         ctrl.t,
         np.imag(ctrl.ref.i_c/base.i),
         "--",
         label=r"$i_\mathrm{cq,ref}$",
-    )
-    #ax2.plot(mdl.t, mdl.iL, linewidth=LW) converter-side dc current for debug
+        ds="steps-post")
     ax2.legend()
     ax2.set_xlim(t_span)
     ax2.set_xticklabels([])
 
     if hasattr(sim.ctrl, "observer"):
-        # Subplot 3: Converter voltage reference, quasi-static converter voltage
-        # and grid voltage magnitudes
+        # Subplot 3: Converter voltage reference, quasi-static converter
+        # voltage, and grid voltage magnitudes
         ax3.plot(
             ctrl.t,
-            np.absolute(ctrl.ref.u_c/base.u),
+            np.abs(ctrl.ref.u_c/base.u),
             label=r"$u_\mathrm{c,ref}$",
-        )
+            ds="steps-post")
         ax3.plot(
             ctrl.t,
-            np.absolute(ctrl.fbk.v_c/base.u),
+            np.abs(ctrl.fbk.v_c/base.u),
             label=r"$\hat{v}_\mathrm{c}$",
-        )
+            ds="steps-post")
         ax3.plot(
             mdl.grid_model.data.t,
-            np.absolute(mdl.grid_model.data.e_gs/base.u),
+            np.abs(mdl.grid_model.data.e_gs/base.u),
             "k--",
-            label=r"$e_\mathrm{g}$",
-        )
+            label=r"$e_\mathrm{g}$")
     else:
         # Subplot 3: Converter voltage reference and grid voltage magnitude
         ax3.plot(
             ctrl.t,
             np.real(ctrl.fbk.u_c/base.u),
             label=r"$u_\mathrm{cd}$",
-        )
+            ds="steps-post")
         ax3.plot(
             ctrl.t,
             np.imag(ctrl.fbk.u_c/base.u),
             label=r"$u_\mathrm{cq}$",
-        )
+            ds="steps-post")
         ax3.plot(
             mdl.grid_model.data.t,
-            np.absolute(mdl.grid_model.data.e_gs/base.u),
+            np.abs(mdl.grid_model.data.e_gs)/base.u,
             "k--",
-            label=r"$e_\mathrm{g}$",
-        )
+            label=r"$e_\mathrm{g}$")
     ax3.legend()
     ax3.set_xlim(t_span)
 
@@ -324,18 +298,18 @@ def plot_voltage_vector(sim, base=None):
     ax.plot(
         mdl.grid_model.data.e_gs.real/base.u,
         mdl.grid_model.data.e_gs.imag/base.u,
-        label=r"$\boldsymbol{e}_\mathrm{g}^\mathrm{s}$")
+        label="Grid voltage")
     ax.axhline(0, color="k")
     ax.axvline(0, color="k")
     ticks = [-1.5, -1, -0.5, 0, 0.5, 1, 1.5]
     if pu_vals:
-        ax.set_xlabel("Real part (p.u.)")
-        ax.set_ylabel("Imaginary part (p.u.)")
+        ax.set_xlabel("Real (p.u.)")
+        ax.set_ylabel("Imaginary (p.u.)")
         ax.set_xticks(ticks)
         ax.set_yticks(ticks)
     else:
-        ax.set_xlabel("Real part (V)")
-        ax.set_ylabel("Imaginary part (V)")
+        ax.set_xlabel("Real (V)")
+        ax.set_ylabel("Imaginary (V)")
     ax.legend()
     ax.set_aspect("equal")
 
@@ -346,7 +320,7 @@ def save_plot(name):
     Save figures.
 
     This saves figures in a folder "figures" in the current directory. If the
-    folder doesn't exist, it is created.
+    folder does not exist, it is created.
 
     Parameters
     ----------

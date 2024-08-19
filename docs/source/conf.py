@@ -73,6 +73,8 @@ sphinx_gallery_conf = {
         "../../examples/obs_vhz",
         "../../examples/flux_vector",
         "../../examples/signal_inj",
+        "../../examples/grid_following",
+        "../../examples/grid_forming",
     ]),
 }
 

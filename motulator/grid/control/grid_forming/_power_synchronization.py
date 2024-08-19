@@ -12,7 +12,7 @@ from motulator.grid.utils import FilterPars, GridPars
 
 # %%
 @dataclass
-class PSCControlCfg:
+class RFPSCControlCfg:
     """
     Power synchronization control configuration.
 
@@ -22,32 +22,26 @@ class PSCControlCfg:
         Grid model parameters.
     filter_par : FilterPars
         Filter model parameters.
-    C_dc : float, optional
-        DC-bus capacitance (F). Default is None.
-    T_s : float, optional
-        Sampling period of the controller (s). Default is 1/(16e3).
-    on_rf : bool, optional
-        Enable reference-feedforward for the control. Default is False.
-    i_max : float, optional
-        Maximum current modulus (A). Default is 20.
+    max_i : float
+        Maximum current modulus (A).
     R_a : float, optional
         Damping resistance (Ω). Default is 4.6.
+    T_s : float, optional
+        Sampling period of the controller (s). The default is 100e-6.
     w_b : float, optional
-        Current low-pass filter bandwidth (rad/s). Default is 2*pi*5.
-    overmodulation : str, optional
-        Overmodulation method for the PWM. Default is Minimum Phase Error
-        "MPE".
+        Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.
+    C_dc : float, optional
+        DC-bus capacitance (F). The default is None.
+
     """
 
     grid_par: GridPars
     filter_par: FilterPars
-    C_dc: float = None
-    T_s: float = 1/(16e3)
-    on_rf: bool = False
-    i_max: float = 20
-    R_a: float = 4.6
+    max_i: float
+    R_a: float
+    T_s: float = 100e-6
     w_b: float = 2*np.pi*5
-    overmodulation: str = "MPE"
+    C_dc: float = None
 
     def __post_init__(self):
         par = self.grid_par
@@ -55,63 +49,44 @@ class PSCControlCfg:
 
 
 # %%
-class PSCControl(GridConverterControlSystem):
+class RFPSCControl(GridConverterControlSystem):
     """
-    Power synchronization control for grid converters.
+    Reference-feedforward power synchronization control for grid converters.
     
-    This implements the power synchronization control (PSC) method described in
-    [#Har2019]_. The alternative reference-feedforward PSC (RFPSC) can also be 
-    used and is based on [#Har2020]_.
+    This implements the reference-feedforward power synchronization control 
+    (RFPSC) method [#Har2020]_. 
 
     Parameters
     ----------
     cfg : PSCControlCfg
         Model and controller configuration parameters.
-
-    Attributes
-    ----------
-    current_limiter : CurrentLimiter
-        Transparent current controller used for current limitation.
     
     References
     ----------
-    .. [#Har2019] Harnefors, Hinkkanen, Riaz, Rahman, Zhang, "Robust Analytic
-        Design of Power-Synchronization Control," IEEE Trans. Ind. Electron.,
-        Aug. 2019, https://doi.org/10.1109/TIE.2018.2874584
-        
-    .. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-Feedforward
-        Power-Synchronization Control," IEEE Trans. Power Electron., Sep. 2020,
+    .. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-feedforward
+        power-synchronization control," IEEE Trans. Power Electron., 2020,
         https://doi.org/10.1109/TPEL.2020.2970991
 
     """
 
     def __init__(self, cfg):
-        super().__init__(
-            cfg.grid_par,
-            cfg.C_dc,
-            cfg.T_s,
-        )
+        super().__init__(cfg.grid_par, cfg.C_dc, cfg.T_s)
         self.cfg = cfg
-        self.current_limiter = CurrentLimiter(cfg.i_max)
+        self.current_limiter = CurrentLimiter(cfg.max_i)
         self.ref.q_g = 0
-        # Initialize the states
         self.theta_c = 0
-        self.i_c_filt = 0j
+        self.i_c_flt = 0j
 
     def get_feedback_signals(self, mdl):
         """Get the feedback signals."""
         fbk = super().get_feedback_signals(mdl)
         fbk.theta_c = self.theta_c
-        fbk.i_c_filt = self.i_c_filt
+        fbk.i_c_flt = self.i_c_flt
         # Transform the measured values into synchronous coordinates
-        fbk.u_g = np.exp(-1j*fbk.theta_c)*fbk.u_gs
         fbk.i_c = np.exp(-1j*fbk.theta_c)*fbk.i_cs
         fbk.u_c = np.exp(-1j*fbk.theta_c)*fbk.u_cs
-
-        # Calculation of active and reactive powers
-        fbk.p_g = 1.5*np.real(fbk.u_c*np.conj(fbk.i_c))
-        fbk.q_g = 1.5*np.imag(fbk.u_c*np.conj(fbk.i_c))
-
+        # Active power
+        fbk.p_c = 1.5*np.real(fbk.u_c*np.conj(fbk.i_c))
         return fbk
 
     def output(self, fbk):
@@ -121,46 +96,30 @@ class PSCControl(GridConverterControlSystem):
         # Get the reference signals
         ref = super().output(fbk)
         ref = super().get_power_reference(fbk, ref)
-        # Voltage magnitude reference
-        ref.U = self.ref.U(ref.t) if callable(self.ref.U) else self.ref.U
+        ref.v = self.ref.v(ref.t) if callable(self.ref.v) else self.ref.v
 
         # Calculation of power droop
-        fbk.w_c = par.w_gN + (cfg.k_p_psc)*(ref.p_g - fbk.p_g)
+        fbk.w_c = par.w_gN + cfg.k_p_psc*(ref.p_g - fbk.p_c)
 
         # Optionally, use of reference feedforward for d-axis current
-        if cfg.on_rf:
-            ref.i_c = ref.p_g/(ref.U*1.5) + 1j*np.imag(fbk.i_c_filt)
-        else:
-            ref.i_c = fbk.i_c_filt
+        ref.i_c = ref.p_g/(1.5*ref.v) + 1j*fbk.i_c_flt.imag
+        # ref.i_c = fbk.i_c_flt  # Conventional PSC
 
-        # Transparent current control
+        # Limit the current reference
         ref.i_c = self.current_limiter(ref.i_c)
 
         # Calculation of converter voltage output reference
-        ref.u_c = (ref.U + 0j) + cfg.R_a*(ref.i_c - fbk.i_c)
-
-        # Transform voltage reference into stator coordinates
+        ref.u_c = ref.v + cfg.R_a*(ref.i_c - fbk.i_c)
         ref.u_cs = np.exp(1j*fbk.theta_c)*ref.u_c
 
-        # Get duty ratios from PWM
-        ref.d_abc = self.pwm(
-            ref.T_s,
-            ref.u_cs,
-            fbk.u_dc,
-            par.w_gN,
-            cfg.overmodulation,
-        )
+        # Duty ratios for PWM
+        ref.d_abc = self.pwm(ref.T_s, ref.u_cs, fbk.u_dc, fbk.w_c)
 
         return ref
 
     def update(self, fbk, ref):
         """Extend the base class method."""
         super().update(fbk, ref)
-        # Estimated phase angle
-        self.theta_c = fbk.theta_c + ref.T_s*fbk.w_c
-        # Limit to [-pi, pi]
+        self.i_c_flt += ref.T_s*self.cfg.w_b*(fbk.i_c - self.i_c_flt)
+        self.theta_c += ref.T_s*fbk.w_c
         self.theta_c = wrap(self.theta_c)
-        # Low-pass filtering of converter current
-        cfg = self.cfg
-        self.i_c_filt = (1 - ref.T_s*cfg.w_b)*self.i_c_filt + (
-            ref.T_s*cfg.w_b*fbk.i_c)

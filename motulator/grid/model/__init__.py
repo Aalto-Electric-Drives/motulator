@@ -1,20 +1,19 @@
 """Continuous-time grid converter models."""
 
-from motulator.grid.model._grid_converter_system import GridConverterSystem
+from motulator.grid.model._converter_system import GridConverterSystem
 
-from motulator.grid.model._grid_filter import (
-    GridFilter,
+from motulator.grid.model._ac_filter import (
+    ACFilter,
     LCLFilter,
     LFilter,
 )
 
-from motulator.grid.model._grid_volt_source import (
-    StiffSource, )
+from motulator.grid.model._voltage_source import ThreePhaseVoltageSource
 
 __all__ = [
     "GridConverterSystem",
-    "GridFilter",
+    "ACFilter",
     "LCLFilter",
     "LFilter",
-    "StiffSource",
+    "ThreePhaseVoltageSource",
 ]
