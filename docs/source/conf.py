@@ -60,21 +60,22 @@ autoapi_add_toctree_entry = False
 from sphinx_gallery.sorting import ExplicitOrder
 
 sphinx_gallery_conf = {
-    "examples_dirs":
-    "../../examples",  # path to your example scripts
+    "examples_dirs": ["../../examples/drive",
+                      "../../examples/grid"],  # path to your example scripts
     "gallery_dirs":
-    "auto_examples",  # path to where to save gallery generated output
+    ["drive_examples",
+     "grid_examples"],  # path to where to save gallery generated output
     "nested_sections":
     True,
     "subsection_order":
     ExplicitOrder([
-        "../../examples/vector",
-        "../../examples/vhz",
-        "../../examples/obs_vhz",
-        "../../examples/flux_vector",
-        "../../examples/signal_inj",
-        "../../examples/grid_following",
-        "../../examples/grid_forming",
+        "../../examples/drive/vector",
+        "../../examples/drive/vhz",
+        "../../examples/drive/obs_vhz",
+        "../../examples/drive/flux_vector",
+        "../../examples/drive/signal_inj",
+        "../../examples/grid/grid_following",
+        "../../examples/grid/grid_forming",
     ]),
 }
 

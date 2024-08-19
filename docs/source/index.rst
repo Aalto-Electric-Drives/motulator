@@ -30,7 +30,15 @@ This open-source software includes simulation models for an induction machine, a
    :maxdepth: 1
 
    control/design_notes
-   auto_examples/index
+
+.. toctree::
+   :titlesonly:
+   :caption: Examples
+   :name: examples
+   :maxdepth: 1
+
+   drive_examples/index
+   grid_examples/index
 
 .. rubric::
    Acknowledgement
