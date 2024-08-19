@@ -24,15 +24,16 @@
 This example simulates sensorless current-vector control of a 2.2-kW PMSM 
 drive, equipped with a diode bridge rectifier. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-16
+.. GENERATED FROM PYTHON SOURCE LINES 10-17
 
 .. code-block:: Python
 
-
+    from motulator.common.model import (
+        CarrierComparison, FrequencyConverter, Simulation)
+    from motulator.common.utils import BaseValues, NominalValues
     from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import (
-        BaseValues, NominalValues, plot, plot_extra, SynchronousMachinePars)
+    from motulator.drive.utils import plot, plot_extra, SynchronousMachinePars
 
 
 
@@ -41,11 +42,11 @@ drive, equipped with a diode bridge rectifier.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-22
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: Python
 
@@ -60,22 +61,26 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-33
+.. GENERATED FROM PYTHON SOURCE LINES 25-38
 
 .. code-block:: Python
 
 
+    # Machine model and mechanical subsystem
     mdl_par = SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     machine = model.SynchronousMachine(mdl_par)
     mechanics = model.StiffMechanicalSystem(J=.015)
-    converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
+
+    # Frequency converter with a diode bridge
+    converter = FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=400, f_g=50)
     mdl = model.Drive(converter, machine, mechanics)
-    mdl.pwm = model.CarrierComparison()  # Enable the PWM model
+
+    mdl.pwm = CarrierComparison()  # Enable the PWM model
 
 
 
@@ -84,11 +89,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-41
+.. GENERATED FROM PYTHON SOURCE LINES 40-46
 
 .. code-block:: Python
 
@@ -105,11 +110,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-50
+.. GENERATED FROM PYTHON SOURCE LINES 48-55
 
 .. code-block:: Python
 
@@ -127,17 +132,17 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-60
+.. GENERATED FROM PYTHON SOURCE LINES 57-65
 
 .. code-block:: Python
 
 
     # Simulate the system
-    sim = model.Simulation(mdl, ctrl)
+    sim = Simulation(mdl, ctrl)
     sim.simulate(t_stop=1)
 
     # Plot results in per-unit values
@@ -177,7 +182,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 14.833 seconds)
+   **Total running time of the script:** (0 minutes 14.863 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py:
@@ -193,6 +198,10 @@ Create the simulation object and simulate it.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vector_ctrl_pmsm_2kw_diode.py <plot_vector_ctrl_pmsm_2kw_diode.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_vector_ctrl_pmsm_2kw_diode.zip <plot_vector_ctrl_pmsm_2kw_diode.zip>`
 
 
 .. only:: html

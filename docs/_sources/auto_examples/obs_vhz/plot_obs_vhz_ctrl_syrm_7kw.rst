@@ -22,8 +22,8 @@
 ======================
 
 This example simulates observer-based V/Hz control of a saturated 6.7-kW
-synchronous reluctance motor drive. The saturation is not taken into account
-in the control method (only in the system model).
+synchronous reluctance motor drive. The saturation is not taken into account in 
+the control method (only in the system model).
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-18
 
@@ -143,7 +143,7 @@ Configure the system model.
     #     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
     # machine = model.SynchronousMachine(mdl_par)
     mechanics = model.StiffMechanicalSystem(J=.015)
-    converter = model.Inverter(u_dc=540)
+    converter = model.VoltageSourceConverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
 
@@ -266,7 +266,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 28.243 seconds)
+   **Total running time of the script:** (0 minutes 28.436 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py:
@@ -282,6 +282,10 @@ the results in SI units.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_obs_vhz_ctrl_syrm_7kw.py <plot_obs_vhz_ctrl_syrm_7kw.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_obs_vhz_ctrl_syrm_7kw.zip <plot_obs_vhz_ctrl_syrm_7kw.zip>`
 
 
 .. only:: html

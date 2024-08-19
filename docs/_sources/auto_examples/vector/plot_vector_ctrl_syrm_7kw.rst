@@ -75,7 +75,7 @@ Configure the system model.
         n_p=2, R_s=.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
     machine = model.SynchronousMachine(mdl_par)
     mechanics = model.StiffMechanicalSystem(J=.015)
-    converter = model.Inverter(u_dc=540)
+    converter = model.VoltageSourceConverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
 
@@ -159,7 +159,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 26.036 seconds)
+   **Total running time of the script:** (0 minutes 25.946 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py:
@@ -175,6 +175,10 @@ Create the simulation object, simulate, and plot results in per-unit values.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vector_ctrl_syrm_7kw.py <plot_vector_ctrl_syrm_7kw.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_vector_ctrl_syrm_7kw.zip <plot_vector_ctrl_syrm_7kw.zip>`
 
 
 .. only:: html

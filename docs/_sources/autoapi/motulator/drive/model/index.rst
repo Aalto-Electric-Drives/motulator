@@ -33,18 +33,17 @@ Classes
 .. autoapisummary::
 
    motulator.drive.model.CarrierComparison
-   motulator.drive.model.Delay
    motulator.drive.model.Simulation
+   motulator.drive.model.VoltageSourceConverter
    motulator.drive.model.Drive
    motulator.drive.model.DriveWithLCFilter
-   motulator.drive.model.FrequencyConverter
-   motulator.drive.model.Inverter
+   motulator.drive.model.DriveWithDiodeBridge
+   motulator.drive.model.LCFilter
    motulator.drive.model.InductionMachine
    motulator.drive.model.SynchronousMachine
    motulator.drive.model.ExternalRotorSpeed
    motulator.drive.model.StiffMechanicalSystem
    motulator.drive.model.TwoMassMechanicalSystem
-   motulator.drive.model.LCFilter
 
 
 Package Contents
@@ -102,31 +101,6 @@ Package Contents
           [0, 0, 0],
           [0, 0, 0],
           [1, 1, 1]])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: Delay(length=1, elem=3)
-
-   
-   Computational delay modeled as a ring buffer.
-
-   :param length: Length of the buffer in samples. The default is 1.
-   :type length: int, optional
 
 
 
@@ -233,366 +207,21 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: Drive(converter=None, machine=None, mechanics=None)
+.. py:class:: VoltageSourceConverter(u_dc, C_dc=None, i_ext=lambda t: None)
 
-   Bases: :py:obj:`motulator.common.model.Model`
-
-
-   
-   Continuous-time model for machine drives.
-
-   This interconnects the subsystems of a machine drive and provides an
-   interface to the solver.
-
-   :param converter: Converter model.
-   :type converter: Inverter | FrequencyConverter
-   :param machine: Machine model.
-   :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanical subsystem model.
-   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: interconnect(_)
-
-      
-      Interconnect the subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: DriveWithLCFilter(converter=None, machine=None, mechanics=None, lc_filter=None)
-
-   Bases: :py:obj:`motulator.common.model.Model`
+   Bases: :py:obj:`motulator.common.model._simulation.Subsystem`
 
 
    
-   Machine drive with an output LC filter.
+   Lossless three-phase voltage-source converter.
 
-   :param converter: Converter model.
-   :type converter: Inverter | FrequencyConverter
-   :param machine: Machine model.
-   :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanical subsystem model.
-   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
-   :param lc_filter: LC-filter model.
-   :type lc_filter: LCFilter
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: interconnect(_)
-
-      
-      Interconnect the subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: FrequencyConverter(L, C, U_g, f_g)
-
-   Bases: :py:obj:`Inverter`
-
-
-   
-   Frequency converter.
-
-   This extends the Inverter class with models for a strong grid, a
-   three-phase diode-bridge rectifier, an LC filter.
-
-   :param L: DC-bus inductance (H).
-   :type L: float
-   :param C: DC-bus capacitance (F).
-   :type C: float
-   :param U_g: Grid voltage (V, line-line, rms).
-   :type U_g: float
-   :param f_g: Grid frequency (Hz).
-   :type f_g: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:property:: u_dc
-      
-      DC-bus voltage.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: grid_voltages(t)
-
-      
-      Compute three-phase grid voltages.
-
-      :param t: Time (s).
-      :type t: float
-
-      :returns: **u_g_abc** -- Phase voltages (V).
-      :rtype: ndarray of floats, shape (3,)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_outputs(t)
-
-      
-      Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
-
-      
-      Compute state derivatives.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_states()
-
-      
-      Post-process data.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_with_inputs()
-
-      
-      Post-process data with inputs.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: Inverter(u_dc)
-
-   Bases: :py:obj:`motulator.common.model.Subsystem`
-
-
-   
-   Lossless three-phase inverter with constant DC-bus voltage.
-
-   :param u_dc: DC-bus voltage (V).
+   :param u_dc: DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
+                used as the initial condition.
    :type u_dc: float
+   :param C_dc: DC-bus capacitance (F). The default is None.
+   :type C_dc: float, optional
+   :param i_ext: External current (A) fed to the DC bus. Needed if `C_dc` is not None.
+   :type i_ext: callable, optional
 
 
 
@@ -704,10 +333,58 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: set_inputs(t)
+
+      
+      Set input variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute the state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: meas_dc_voltage()
 
       
-      Measure the DC-bus voltage.
+      Measure the converter DC-bus voltage (V).
 
 
 
@@ -752,6 +429,405 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process data with inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Drive(converter=None, machine=None, mechanics=None)
+
+   Bases: :py:obj:`motulator.common.model.Model`
+
+
+   
+   Continuous-time model for machine drives.
+
+   This interconnects the subsystems of a machine drive and provides an
+   interface to the solver.
+
+   :param converter: Converter model.
+   :type converter: VoltageSourceConverter | FrequencyConverter
+   :param machine: Machine model.
+   :type machine: InductionMachine | SynchronousMachine
+   :param mechanics: Mechanical subsystem model.
+   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: interconnect(_)
+
+      
+      Interconnect the subsystems.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process()
+
+      
+      Post-process the solution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveWithLCFilter(converter=None, machine=None, mechanics=None, lc_filter=None)
+
+   Bases: :py:obj:`motulator.common.model.Model`
+
+
+   
+   Machine drive with an output LC filter.
+
+   :param converter: Converter model.
+   :type converter: VoltageSourceConverter | FrequencyConverter
+   :param machine: Machine model.
+   :type machine: InductionMachine | SynchronousMachine
+   :param mechanics: Mechanical subsystem model.
+   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
+   :param lc_filter: LC-filter model.
+   :type lc_filter: LCFilter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: interconnect(_)
+
+      
+      Interconnect the subsystems.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process()
+
+      
+      Post-process the solution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveWithDiodeBridge(diode_bridge=None, converter=None, machine=None, mechanics=None)
+
+   Bases: :py:obj:`motulator.common.model.Model`
+
+
+   
+   Machine drive with a diode bridge rectifier.
+
+   :param diode_bridge: Diode bridge model.
+   :type diode_bridge: DiodeBridge
+   :param converter: Converter model.
+   :type converter: VoltageSourceConverter
+   :param machine: Machine model.
+   :type machine: InductionMachine | SynchronousMachine
+   :param mechanics: Mechanical subsystem model.
+   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: interconnect(_)
+
+      
+      Interconnect the subsystems.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process()
+
+      
+      Post-process the solution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: LCFilter(L_f, C_f, R_f=0)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   LC-filter model.
+
+   :param L_f: Filter inductance (H).
+   :type L_f: float
+   :param C_f: Filter capacitance (F).
+   :type C_f: float
+   :param R_f: Series resistance (Ω) of the inductor. The default is 0.
+   :type R_f: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: set_outputs(_)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_currents()
+
+      
+      Measure the converter phase currents.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_capacitor_voltages()
+
+      
+      Measure the capacitor phase voltages.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: InductionMachine(par)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
@@ -761,9 +837,8 @@ Package Contents
    Γ-equivalent model of an induction machine.
 
    An induction machine is modeled using the Γ-equivalent model [#Sle1989]_.
-   The model is implemented in stator coordinates. The flux linkages are used
-   as state variables. The stator inductance `L_s` can either be constant or
-   a function of the stator flux magnitude::
+   The stator inductance `L_s` can either be constant or a function of the
+   stator flux magnitude::
 
        L_s = L_s(abs(psi_ss))
 
@@ -1018,9 +1093,6 @@ Package Contents
 
    
    Synchronous machine model.
-
-   This models a synchronous machine in rotor coordinates. The stator flux
-   linkage and the electrical angle of the rotor are the state variables.
 
    :param par: Machine parameters.
    :type par: SynchronousMachinePars
@@ -1753,134 +1825,6 @@ Package Contents
 
       
       Post-process data with inputs.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: LCFilter(L, C, R=0)
-
-   Bases: :py:obj:`motulator.common.model.Subsystem`
-
-
-   
-   LC-filter model.
-
-   :param L: Inductance (H).
-   :type L: float
-   :param C: Capacitance (F).
-   :type C: float
-   :param R: Series resistance (Ω) of the inductor. The default is 0.
-   :type R: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: set_outputs(_)
-
-      
-      Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
-
-      
-      Compute state derivatives.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_currents()
-
-      
-      Measure the converter phase currents.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_voltages()
-
-      
-      Measure the capacitor phase voltages.
 
 
 

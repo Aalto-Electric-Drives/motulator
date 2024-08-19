@@ -74,7 +74,7 @@ Configure the system model.
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     machine = model.SynchronousMachine(mdl_par)
     mechanics = model.StiffMechanicalSystem(J=.015)
-    converter = model.Inverter(u_dc=540)
+    converter = model.VoltageSourceConverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
 
@@ -175,7 +175,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 24.357 seconds)
+   **Total running time of the script:** (0 minutes 24.322 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py:
@@ -191,6 +191,10 @@ the results in SI units.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_obs_vhz_ctrl_pmsm_2kw.py <plot_obs_vhz_ctrl_pmsm_2kw.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_obs_vhz_ctrl_pmsm_2kw.zip <plot_obs_vhz_ctrl_pmsm_2kw.zip>`
 
 
 .. only:: html

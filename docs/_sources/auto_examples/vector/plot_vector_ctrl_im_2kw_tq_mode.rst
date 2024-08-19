@@ -78,7 +78,7 @@ Configure the system model.
     machine = model.InductionMachine(mdl_par)
     # Use externally specified actual speed w_M(t), defined subsequently below
     mechanics = model.ExternalRotorSpeed()
-    converter = model.Inverter(u_dc=540)
+    converter = model.VoltageSourceConverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
 
@@ -179,7 +179,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.616 seconds)
+   **Total running time of the script:** (0 minutes 4.666 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_im_2kw_tq_mode.py:
@@ -195,6 +195,10 @@ the results in SI units.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vector_ctrl_im_2kw_tq_mode.py <plot_vector_ctrl_im_2kw_tq_mode.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_vector_ctrl_im_2kw_tq_mode.zip <plot_vector_ctrl_im_2kw_tq_mode.zip>`
 
 
 .. only:: html

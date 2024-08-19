@@ -38,5 +38,6 @@ Subpackages
 
    /autoapi/motulator/common/index
    /autoapi/motulator/drive/index
+   /autoapi/motulator/grid/index
 
 

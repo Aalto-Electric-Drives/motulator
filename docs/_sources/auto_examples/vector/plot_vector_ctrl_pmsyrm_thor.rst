@@ -78,7 +78,7 @@ Configure the system model.
     # Quadratic load torque profile
     k = .05*nom.tau/(base.w/base.n_p)**2
     mechanics = model.StiffMechanicalSystem(J=.0042, B_L=lambda w_M: k*np.abs(w_M))
-    converter = model.Inverter(u_dc=310)
+    converter = model.VoltageSourceConverter(u_dc=310)
     mdl = model.Drive(converter, machine, mechanics)
 
 
@@ -207,7 +207,7 @@ Create the simulation object, simulate, and plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.891 seconds)
+   **Total running time of the script:** (0 minutes 4.987 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py:
@@ -223,6 +223,10 @@ Create the simulation object, simulate, and plot results in per-unit values.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vector_ctrl_pmsyrm_thor.py <plot_vector_ctrl_pmsyrm_thor.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_vector_ctrl_pmsyrm_thor.zip <plot_vector_ctrl_pmsyrm_thor.zip>`
 
 
 .. only:: html

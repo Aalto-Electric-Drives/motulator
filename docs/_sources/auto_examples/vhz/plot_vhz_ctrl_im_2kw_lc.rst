@@ -80,8 +80,8 @@ Create the system model. The filter parameters correspond to [#Sal2006]_.
     # Quadratic load torque profile (corresponding to pumps and fans)
     k = 1.1*nom.tau/(base.w/base.n_p)**2
     mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
-    converter = model.Inverter(u_dc=540)
-    lc_filter = model.LCFilter(L=8e-3, C=9.9e-6, R=.1)
+    converter = model.VoltageSourceConverter(u_dc=540)
+    lc_filter = model.LCFilter(L_f=8e-3, C_f=9.9e-6, R_f=.1)
     mdl = model.DriveWithLCFilter(converter, machine, mechanics, lc_filter)
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
@@ -239,7 +239,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.758 seconds)
+   **Total running time of the script:** (0 minutes 9.929 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py:
@@ -255,6 +255,10 @@ Plot additional waveforms.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vhz_ctrl_im_2kw_lc.py <plot_vhz_ctrl_im_2kw_lc.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_vhz_ctrl_im_2kw_lc.zip <plot_vhz_ctrl_im_2kw_lc.zip>`
 
 
 .. only:: html

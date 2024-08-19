@@ -33,23 +33,6 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive, equipped with...">
-
-.. only:: html
-
-  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_diode_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM  drive.">
 
 .. only:: html
@@ -67,7 +50,24 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-contr...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive, equipped with a diode bridge rectifier. ">
+
+.. only:: html
+
+  .. image:: /auto_examples/vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_diode_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode. ">
 
 .. only:: html
 
@@ -84,7 +84,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 5-kW permanent- magnet synchronou...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 5-kW permanent- magnet synchronous reluctance motor. Control look-up tables are also plotted.">
 
 .. only:: html
 
@@ -101,7 +101,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction  motor drive. Th...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction  motor drive. The magnetic saturation of the machine is also included in the  system model, while the control system assumes constant parameters. ">
 
 .. only:: html
 
@@ -127,8 +127,8 @@ These examples are for current-vector control of induction machines and synchron
    :hidden:
 
    /auto_examples/vector/plot_vector_ctrl_pmsm_2kw
-   /auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode
    /auto_examples/vector/plot_vector_ctrl_syrm_7kw
+   /auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode
    /auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode
    /auto_examples/vector/plot_vector_ctrl_pmsyrm_thor
    /auto_examples/vector/plot_vector_ctrl_im_2kw

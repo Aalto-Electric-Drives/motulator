@@ -37,6 +37,16 @@ Classes
    motulator.common.model.Model
    motulator.common.model.Simulation
    motulator.common.model.Subsystem
+   motulator.common.model.FrequencyConverter
+   motulator.common.model.VoltageSourceConverter
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   motulator.common.model.zoh
 
 
 Package Contents
@@ -223,6 +233,30 @@ Package Contents
 
       
       Compute the output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_inputs(t)
+
+      
+      Compute the input variables.
 
 
 
@@ -478,4 +512,438 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+.. py:function:: zoh(T_s, d_c_abc)
+
+   
+   Zero-order hold of the duty ratios over the sampling period.
+
+   :param T_s: Sampling period.
+   :type T_s: float
+   :param d_c_abc: Duty ratios in the range [0, 1].
+   :type d_c_abc: array_like of floats, shape (3,)
+
+   :returns: * **t_steps** (*ndarray, shape (1,)*) -- Sampling period as an array compatible with the solver.
+             * **q_cs** (*complex ndarray, shape (1,)*) -- Duty ratio vector as an array compatible with the solver.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: FrequencyConverter(C_dc, L_dc, U_g, f_g)
+
+   Bases: :py:obj:`VoltageSourceConverter`
+
+
+   
+   Frequency converter with a six-pulse diode bridge.
+
+   A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The
+   diode bridge is connected to the voltage-source inverter. The inductance of
+   the grid is omitted.
+
+   :param C_dc: DC-bus capacitance (F).
+   :type C_dc: float
+   :param L_dc: DC-bus inductance (H).
+   :type L_dc: float
+   :param U_g: Grid voltage (V, line-line, rms).
+   :type U_g: float
+   :param f_g: Grid frequency (Hz).
+   :type f_g: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_inputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute the state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_states()
+
+      
+      Post-process data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process data with inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: VoltageSourceConverter(u_dc, C_dc=None, i_ext=lambda t: None)
+
+   Bases: :py:obj:`motulator.common.model._simulation.Subsystem`
+
+
+   
+   Lossless three-phase voltage-source converter.
+
+   :param u_dc: DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
+                used as the initial condition.
+   :type u_dc: float
+   :param C_dc: DC-bus capacitance (F). The default is None.
+   :type C_dc: float, optional
+   :param i_ext: External current (A) fed to the DC bus. Needed if `C_dc` is not None.
+   :type i_ext: callable, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: u_dc
+      
+      DC-bus voltage (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: u_cs
+      
+      AC-side voltage (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: i_dc
+      
+      DC-side current (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(_)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_inputs(t)
+
+      
+      Set input variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute the state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_dc_voltage()
+
+      
+      Measure the converter DC-bus voltage (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_states()
+
+      
+      Post-process data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process data with inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 

@@ -75,7 +75,7 @@ Configure the system model.
         n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
     machine = model.SynchronousMachine(mdl_par)
     mechanics = model.StiffMechanicalSystem(J=.015)
-    converter = model.Inverter(u_dc=540)
+    converter = model.VoltageSourceConverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
 
@@ -157,7 +157,7 @@ Create the simulation object and simulate it.
 
  .. code-block:: none
 
-    Simulation time: 4.26 s
+    Simulation time: 4.34 s
 
 
 
@@ -165,7 +165,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.358 seconds)
+   **Total running time of the script:** (0 minutes 5.388 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py:
@@ -181,6 +181,10 @@ Create the simulation object and simulate it.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vector_ctrl_pmsm_2kw.py <plot_vector_ctrl_pmsm_2kw.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_vector_ctrl_pmsm_2kw.zip <plot_vector_ctrl_pmsm_2kw.zip>`
 
 
 .. only:: html

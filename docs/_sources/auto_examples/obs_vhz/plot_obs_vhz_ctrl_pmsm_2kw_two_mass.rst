@@ -81,7 +81,7 @@ Configure the system model.
     machine = model.SynchronousMachine(mdl_par)
     mdl_mec_par = TwoMassMechanicalSystemPars(J_M=.005, J_L=.005, K_S=700, C_S=.01)
     mechanics = model.TwoMassMechanicalSystem(mdl_mec_par)
-    converter = model.Inverter(u_dc=540)
+    converter = model.VoltageSourceConverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
 
 
@@ -265,7 +265,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.819 seconds)
+   **Total running time of the script:** (0 minutes 4.843 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py:
@@ -281,6 +281,10 @@ rotor speed w_M.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py <plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_obs_vhz_ctrl_pmsm_2kw_two_mass.zip <plot_obs_vhz_ctrl_pmsm_2kw_two_mass.zip>`
 
 
 .. only:: html

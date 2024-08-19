@@ -24,18 +24,20 @@
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
 parameters in this example yield open-loop V/Hz control. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-19
+.. GENERATED FROM PYTHON SOURCE LINES 10-21
 
 .. code-block:: Python
 
 
     import numpy as np
 
+    from motulator.common.model import (
+        CarrierComparison, FrequencyConverter, Simulation)
+    from motulator.common.utils import BaseValues, NominalValues
     from motulator.drive import model
     import motulator.drive.control.im as control
     from motulator.drive.utils import (
-        BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
-        NominalValues, plot, plot_extra)
+        InductionMachinePars, InductionMachineInvGammaPars, plot, plot_extra)
 
 
 
@@ -44,11 +46,11 @@ parameters in this example yield open-loop V/Hz control.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-25
+.. GENERATED FROM PYTHON SOURCE LINES 23-27
 
 .. code-block:: Python
 
@@ -63,11 +65,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 28-29
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-41
+.. GENERATED FROM PYTHON SOURCE LINES 29-47
 
 .. code-block:: Python
 
@@ -80,10 +82,14 @@ Create the system model.
     # Mechanical subsystem with the quadratic load torque profile
     k = 1.1*nom.tau/(base.w/base.n_p)**2
     mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
+
     # Frequency converter with a diode bridge
-    converter = model.FrequencyConverter(L=2e-3, C=235e-6, U_g=400, f_g=50)
-    mdl = model.Drive(converter, machine, mechanics)
-    mdl.pwm = model.CarrierComparison()  # Enable the PWM model
+    frequency_converter = FrequencyConverter(
+        C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
+    mdl = model.Drive(
+        converter=frequency_converter, machine=machine, mechanics=mechanics)
+
+    mdl.pwm = CarrierComparison()  # Enable the PWM model
 
 
 
@@ -92,11 +98,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-49
+.. GENERATED FROM PYTHON SOURCE LINES 49-55
 
 .. code-block:: Python
 
@@ -113,11 +119,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-57
+.. GENERATED FROM PYTHON SOURCE LINES 57-63
 
 .. code-block:: Python
 
@@ -134,16 +140,16 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-63
+.. GENERATED FROM PYTHON SOURCE LINES 65-69
 
 .. code-block:: Python
 
 
-    sim = model.Simulation(mdl, ctrl)
+    sim = Simulation(mdl, ctrl)
     sim.simulate(t_stop=1.5)
 
 
@@ -153,7 +159,7 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-71
+.. GENERATED FROM PYTHON SOURCE LINES 70-77
 
 Plot results in per-unit values.
 
@@ -163,7 +169,7 @@ Plot results in per-unit values.
    resistance to the DC link. You can notice this instability if simulating a
    longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-76
+.. GENERATED FROM PYTHON SOURCE LINES 77-82
 
 .. code-block:: Python
 
@@ -203,7 +209,7 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-82
+.. GENERATED FROM PYTHON SOURCE LINES 83-88
 
 .. rubric:: References
 
@@ -214,7 +220,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.377 seconds)
+   **Total running time of the script:** (0 minutes 18.459 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py:
@@ -230,6 +236,10 @@ Plot results in per-unit values.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vhz_ctrl_im_2kw.py <plot_vhz_ctrl_im_2kw.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_vhz_ctrl_im_2kw.zip <plot_vhz_ctrl_im_2kw.zip>`
 
 
 .. only:: html

@@ -83,7 +83,7 @@ Create the system model.
     # Mechanics with quadratic load torque coefficient
     k = .2*nom.tau/(base.w/base.n_p)**2
     mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
-    converter = model.Inverter(u_dc=540)
+    converter = model.VoltageSourceConverter(u_dc=540)
     mdl = model.Drive(converter, machine, mechanics)
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
@@ -106,7 +106,7 @@ Control system (parametrized as open-loop V/Hz control).
     par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
     ctrl = control.VHzControl(
         control.VHzControlCfg(
-            par, nom_psi_s=base.psi, k_u=0, k_w=0, six_step=True))
+            par, nom_psi_s=base.psi, k_u=0, k_w=0, overmodulation="six_step"))
 
 
 
@@ -197,7 +197,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.623 seconds)
+   **Total running time of the script:** (0 minutes 9.002 seconds)
 
 
 .. _sphx_glr_download_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py:
@@ -213,6 +213,10 @@ Plot results in per-unit values.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_vhz_ctrl_6step_im_2kw.py <plot_vhz_ctrl_6step_im_2kw.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_vhz_ctrl_6step_im_2kw.zip <plot_vhz_ctrl_6step_im_2kw.zip>`
 
 
 .. only:: html

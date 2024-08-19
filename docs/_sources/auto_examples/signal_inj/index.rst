@@ -8,8 +8,8 @@ Signal Injection
 These examples demonstrate a square-wave signal injection for low-speed 
 operation based on [#Kim2012]_. A phase-locked loop is used to track the rotor 
 position. For a wider speed range, signal injection could be combined to a 
-model-based observer. The effects of magnetic saturation are not compensated for in 
-this version.
+model-based observer. The effects of magnetic saturation are not compensated 
+for in this version.
 
 .. rubric:: References
 
@@ -27,7 +27,7 @@ this version.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive. Square-wave signal inj...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive. Square-wave signal injection is used with a simple phase-locked loop.">
 
 .. only:: html
 
@@ -44,7 +44,7 @@ this version.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 6.7-kW SyRM drive. Square-wave signal inj...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 6.7-kW SyRM drive. Square-wave signal injection is used with a simple phase-locked loop.">
 
 .. only:: html
 

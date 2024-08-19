@@ -410,6 +410,8 @@ Package Contents
       :type ref_i: complex
       :param i: Feedback signal.
       :type i: complex
+      :param u_ff: Feedforward signal. The default is 0.
+      :type u_ff: complex, optional
 
       :returns: **u** -- Controller output.
       :rtype: complex

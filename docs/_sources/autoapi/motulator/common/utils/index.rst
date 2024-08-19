@@ -32,6 +32,8 @@ Classes
 
 .. autoapisummary::
 
+   motulator.common.utils.BaseValues
+   motulator.common.utils.NominalValues
    motulator.common.utils.Sequence
    motulator.common.utils.Step
 
@@ -84,6 +86,96 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+.. py:class:: BaseValues
+
+   
+   Base values.
+
+   :param u: Voltage (V, peak, line-neutral).
+   :type u: float
+   :param i: Current (A, peak).
+   :type i: float
+   :param w: Angular frequency (rad/s).
+   :type w: float
+   :param psi: Flux linkage (Vs).
+   :type psi: float
+   :param p: Power (W).
+   :type p: float
+   :param Z: Impedance (Ω).
+   :type Z: float
+   :param L: Inductance (H).
+   :type L: float
+   :param C: Capacitance (F).
+   :type C: float
+   :param tau: Torque (Nm). Default is None.
+   :type tau: float, optional
+   :param n_p: Number of pole pairs. Default is None.
+   :type n_p: int, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: from_nominal(nom, n_p=None)
+      :classmethod:
+
+
+      
+      Compute base values from nominal values.
+
+      :param nom:
+                  Nominal values containing the following fields:
+
+                      U : float
+                          Voltage (V, rms, line-line).
+                      I : float
+                          Current (A, rms).
+                      f : float
+                          Frequency (Hz).
+      :type nom: NominalValues
+      :param n_p: Number of pole pairs. If not given it is assumed that base values
+                  for a grid converter are calculated. Default is None.
+      :type n_p: int, optional
+
+      :returns: Base values.
+      :rtype: BaseValues
+
+      .. rubric:: Notes
+
+      Notice that the nominal torque is larger than the base torque due to
+      the power factor and efficiency being less than unity.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:function:: complex2abc(u)
 
    
@@ -101,6 +193,39 @@ Package Contents
    >>> y = complex2abc(1-.5j)
    >>> y
    array([ 1.       , -0.9330127, -0.0669873])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: NominalValues
+
+   
+   Nominal values.
+
+   :param U: Voltage (V, rms, line-line).
+   :type U: float
+   :param I: Current (A, rms).
+   :type I: float
+   :param f: Frequency (Hz).
+   :type f: float
+   :param P: Power (W).
+   :type P: float
+   :param tau: Torque (Nm). Default value is None.
+   :type tau: float, optional
 
 
 

@@ -188,7 +188,7 @@ Configure the system model.
     # Quadratic load torque profile (corresponding to pumps and fans)
     k = nom.tau/(base.w/base.n_p)**2
     mechanics = model.StiffMechanicalSystem(J=.0042, B_L=lambda w_M: k*np.abs(w_M))
-    converter = model.Inverter(u_dc=310)
+    converter = model.VoltageSourceConverter(u_dc=310)
     mdl = model.Drive(converter, machine, mechanics)
 
 
@@ -287,7 +287,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 52.385 seconds)
+   **Total running time of the script:** (0 minutes 52.443 seconds)
 
 
 .. _sphx_glr_download_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:
@@ -303,6 +303,10 @@ the results in SI units.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_obs_vhz_ctrl_pmsyrm_thor.py <plot_obs_vhz_ctrl_pmsyrm_thor.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_obs_vhz_ctrl_pmsyrm_thor.zip <plot_obs_vhz_ctrl_pmsyrm_thor.zip>`
 
 
 .. only:: html

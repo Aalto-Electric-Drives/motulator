@@ -32,8 +32,9 @@ Classes
 
 .. autoapisummary::
 
-   motulator.common.control.ControlSystem
+   motulator.common.control.Clock
    motulator.common.control.ComplexPIController
+   motulator.common.control.ControlSystem
    motulator.common.control.PIController
    motulator.common.control.PWM
    motulator.common.control.RateLimiter
@@ -41,6 +42,172 @@ Classes
 
 Package Contents
 ----------------
+
+.. py:class:: Clock
+
+   
+   Digital clock.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: update(T_s)
+
+      
+      Update the digital clock.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ComplexPIController(k_p, k_i, k_t=None)
+
+   
+   2DOF synchronous-frame complex-vector PI controller.
+
+   This implements a discrete-time 2DOF synchronous-frame complex-vector PI
+   controller, based on a disturbance observer structure. The complex-vector
+   gain selection is based on [#Bri2000]_. The addition of the feedforward
+   signal is based on [#Har2009]_. The continuous-time counterpart of
+   the controller is::
+
+       u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i) + u_ff
+
+   where `u` is the controller output, `ref_i` is the reference signal, `i` is
+   the feedback signal, `w` is the angular speed of synchronous coordinates,
+   `u_ff` is the feedforward signal, and `1/s` refers to integration. The 1DOF
+   version is obtained by setting ``k_t = k_p``. The integrator anti-windup is
+   implemented based on the realized controller output.
+
+   :param k_p: Proportional gain.
+   :type k_p: float
+   :param k_i: Integral gain.
+   :type k_i: float
+   :param k_t: Reference-feedforward gain. The default is `k_p`.
+   :type k_t: float, optional
+
+   .. rubric:: Notes
+
+   This controller can be used, e.g., as a current controller. In this case,
+   `i` corresponds to the stator current and `u` to the stator voltage.
+
+   .. rubric:: References
+
+   .. [#Bri2000] Briz, Degner, Lorenz, "Analysis and design of current
+      regulators using complex vectors," IEEE Trans. Ind. Appl., 2000,
+      https://doi.org/10.1109/28.845057
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(ref_i, i, u_ff=0)
+
+      
+      Compute the controller output.
+
+      :param ref_i: Reference signal.
+      :type ref_i: complex
+      :param i: Feedback signal.
+      :type i: complex
+      :param u_ff: Feedforward signal. The default is 0.
+      :type u_ff: complex, optional
+
+      :returns: **u** -- Controller output.
+      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, u, w)
+
+      
+      Update the integral state.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param u: Realized (limited) controller output.
+      :type u: complex
+      :param w: Angular speed of the reference frame (rad/s).
+      :type w: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: ControlSystem(T_s)
 
@@ -288,119 +455,6 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ComplexPIController(k_p, k_i, k_t=None)
-
-   
-   2DOF synchronous-frame complex-vector PI controller.
-
-   This implements a discrete-time 2DOF synchronous-frame complex-vector PI
-   controller, whose continuous-time counterpart is [#Bri2000]_::
-
-       u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i)
-
-   where `u` is the controller output, `ref_i` is the reference signal, `i` is
-   the feedback signal, `w` is the angular speed of synchronous coordinates,
-   and `1/s` refers to integration. This algorithm is compatible with both
-   real and complex signals. The 1DOF version is obtained by setting
-   ``k_t = k_p``. The integrator anti-windup is implemented based on the
-   realized controller output.
-
-   :param k_p: Proportional gain.
-   :type k_p: float
-   :param k_i: Integral gain.
-   :type k_i: float
-   :param k_t: Reference-feedforward gain. The default is `k_p`.
-   :type k_t: float, optional
-
-   .. rubric:: Notes
-
-   This controller can be used, e.g., as a current controller. In this case,
-   `i` corresponds to the stator current and `u` to the stator voltage.
-
-   .. rubric:: References
-
-   .. [#Bri2000] Briz, Degner, Lorenz, "Analysis and design of current
-      regulators using complex vectors," IEEE Trans. Ind. Appl., 2000,
-      https://doi.org/10.1109/28.845057
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: output(ref_i, i)
-
-      
-      Compute the controller output.
-
-      :param ref_i: Reference signal.
-      :type ref_i: complex
-      :param i: Feedback signal.
-      :type i: complex
-
-      :returns: **u** -- Controller output.
-      :rtype: complex
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update(T_s, u, w)
-
-      
-      Update the integral state.
-
-      :param T_s: Sampling period (s).
-      :type T_s: float
-      :param u: Realized (limited) controller output.
-      :type u: complex
-      :param w: Angular speed of the reference frame (rad/s).
-      :type w: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: PIController(k_p, k_i, k_t=None, max_u=np.inf)
 
    
@@ -507,22 +561,23 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(six_step=False, k_comp=1.5)
+.. py:class:: PWM(k_comp=1.5, overmodulation='MME')
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
 
    This computes the duty ratios corresponding to standard space-vector PWM
-   and minimum-amplitude-error overmodulation [#Hav1999]_. The realized
-   voltage is computed based on the measured DC-bus voltage and the duty
-   ratios. The digital delay effects are taken into account in the realized
-   voltage [#Bae2003]_.
+   and overmodulation [#Hav1999]_. The realized voltage is computed based on
+   the measured DC-bus voltage and the duty ratios. The digital delay effects
+   are taken into account in the realized voltage [#Bae2003]_.
 
-   :param six_step: Enable six-step operation in overmodulation. The default is False.
-   :type six_step: bool, optional
    :param k_comp: Compensation factor for the delay effect on the voltage vector angle.
                   The default is 1.5.
    :type k_comp: float, optional
+   :param overmodulation: Select one of the following overmodulation methods: minimum-magnitude-
+                          error ("MME"); minimum-phase-error ("MPE"); six-step ("six_step"). The
+                          default is "MME".
+   :type overmodulation: str, optional
 
    .. rubric:: References
 
@@ -595,14 +650,9 @@ Package Contents
 
 
    .. py:method:: duty_ratios(ref_u_cs, u_dc)
-      :staticmethod:
-
 
       
       Compute the duty ratios for three-phase space-vector PWM.
-
-      This computes the duty ratios corresponding to standard space-vector
-      PWM and minimum-amplitude-error overmodulation [#Hav1999]_.
 
       :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
       :type ref_u_cs: complex
