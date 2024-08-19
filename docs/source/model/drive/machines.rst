@@ -3,31 +3,12 @@ Electric Machines
 
 This document describes continuous-time electric machine models. 
 
-Space Vectors
--------------
-
-The machine models apply peak-valued complex space vectors, marked with boldface in the following equations. As an example, the space vector of the stator current is
-
-.. math::
-	\boldsymbol{i}^\mathrm{s}_\mathrm{s} = \frac{2}{3}\left(i_\mathrm{a} + i_\mathrm{b}\mathrm{e}^{\mathrm{j}2\pi/3} + i_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) 
-   :label: space_vector
-
-where :math:`i_\mathrm{a}`, :math:`i_\mathrm{b}`, and :math:`i_\mathrm{c}` are the phase currents, which may vary freely in time. In our notation, the subscript s refers to the stator winding and the superscript s refers to the stationary coordinates. The space vector does not include the zero-sequence component, which is defined as
-
-.. math::
-	i_\mathrm{s0} = \frac{1}{3}\left(i_\mathrm{a} + i_\mathrm{b} + i_\mathrm{c}\right) 
-   :label: zero_sequence
-
-Even though the zero-sequence voltage exists at the ouput of typical converters (see :doc:`/model/converters`), there is no path for the zero-sequence current to flow if the stator winding is either delta-connected or the star point is not connected, i.e., :math:`i_\mathrm{s0} = 0`. Consequently, the zero-sequence voltage cannot produce neither power nor torque. 
-
-The space vector transformation in :eq:`space_vector` is implemented in the function :func:`motulator.common.utils.abc2complex` and its inverse transformation in the function :func:`motulator.common.utils.complex2abc`. 
-
 Induction Machine
 -----------------
 
 The induction machine models are provided in the package :mod:`motulator.drive.model`. The models are implemented in stator coordinates. A Γ-equivalent model is used as a base model since it can be extended with the magnetic saturation model in a straightforward manner [#Sle1989]_.
 
-.. figure:: figs/im_gamma.svg
+.. figure:: ../figs/im_gamma.svg
    :width: 100%
    :align: center
    :alt: Gamma-model of an induction machine
@@ -35,7 +16,7 @@ The induction machine models are provided in the package :mod:`motulator.drive.m
 
    Γ model.
 
-.. figure:: figs/im_block.svg
+.. figure:: ../figs/im_block.svg
    :width: 100%
    :align: center
    :alt: Block diagram of an induction machine model
@@ -73,7 +54,7 @@ The same class can also be used with the main-flux saturation models, such as :m
        R_\mathrm{R} &= \left(\frac{L_\mathrm{s}}{L_\mathrm{s} + L_\ell}\right)^2 R_\mathrm{r} \\
        L_\mathrm{M} &=  L_\mathrm{s} - L_\sigma 
 
-   .. figure:: figs/im_inv_gamma.svg
+   .. figure:: ../figs/im_inv_gamma.svg
       :width: 100%
       :align: center
       :alt: Inverse-Gamma model of an induction machine
@@ -88,7 +69,7 @@ Synchronous Machine
 
 Synchronous machine models are provided in the package :mod:`motulator.drive.model`. The models can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs). 
 
-.. figure:: figs/sm_block_rot.svg
+.. figure:: ../figs/sm_block_rot.svg
    :width: 100%
    :align: center
    :alt: Synchronous machine model
@@ -116,9 +97,9 @@ The electromagnetic torque is
     \tau_\mathrm{M} = \frac{3 n_\mathrm{p}}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s} \boldsymbol{\psi}_\mathrm{s}^* \right\}
     :label: sm_torque
 
-Since the machine is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from :math:`\tau_\mathrm{M}` to :math:`\omega_\mathrm{M}`, see  :doc:`/model/mechanics`.
+Since the machine is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in the figure below. The mechanical subsystem closes the loop from :math:`\tau_\mathrm{M}` to :math:`\omega_\mathrm{M}`, see  :doc:`mechanics`.
 
-.. figure:: figs/sm_block_stat.svg
+.. figure:: ../figs/sm_block_stat.svg
    :width: 100%
    :align: center
    :alt: Synchronous machine model seen from stator coordinates

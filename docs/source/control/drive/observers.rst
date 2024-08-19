@@ -11,7 +11,7 @@ In the following, reduced-order observer designs for the induction machine are c
 Machine Model
 ^^^^^^^^^^^^^
 
-The inverse-Γ model of an induction machine is considered (see :doc:`/model/machines`). In a coordinate system rotating at the angular speed :math:`\omega_\mathrm{s}`, the rotor flux dynamics can be expressed using the stator and rotor quantities, respectively, as
+The inverse-Γ model of an induction machine is considered (see :doc:`/model/drive/machines`). In a coordinate system rotating at the angular speed :math:`\omega_\mathrm{s}`, the rotor flux dynamics can be expressed using the stator and rotor quantities, respectively, as
 
 .. math::
 	\frac{\mathrm{d} \boldsymbol{\psi}_\mathrm{R}}{\mathrm{d} t} + \mathrm{j}\omega_\mathrm{s}\boldsymbol{\psi}_\mathrm{R} &= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} - \mathrm{j} \omega_\mathrm{s}L_\sigma\boldsymbol{i}_\mathrm{s} \\
@@ -154,7 +154,7 @@ In sensorless control of synchronous machine drives, the rotor position and spee
 Machine Model in General Coordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In :doc:`/model/machines`, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at :math:`\vartheta_\mathrm{s}` and rotating at :math:`\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t` with respect to stator coordinates. Furthermore, the rotor is aligned at :math:`\vartheta_\mathrm{m}` and rotates at :math:`\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t` with respect to stator coordinates. This coordinate transformation results in 
+In :doc:`/model/drive/machines`, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at :math:`\vartheta_\mathrm{s}` and rotating at :math:`\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t` with respect to stator coordinates. Furthermore, the rotor is aligned at :math:`\vartheta_\mathrm{m}` and rotates at :math:`\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t` with respect to stator coordinates. This coordinate transformation results in 
 
 .. math::
     \frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{s}\boldsymbol{\psi}_\mathrm{s} \\

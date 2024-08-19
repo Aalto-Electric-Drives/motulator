@@ -19,7 +19,7 @@ where :math:`\omega_\mathrm{M}` is the mechanical angular speed of the rotor, :m
 
 A constant friction coefficient :math:`B_\mathrm{L}` models viscous friction that appears, e.g., due to laminar fluid flow in bearings. The friction coefficient is allowed to depend on the rotor speed, :math:`B_\mathrm{L} = B_\mathrm{L}(\omega_\mathrm{M})`. As an example, the quadratic load torque profile is achieved choosing :math:`B_\mathrm{L} = k|\omega_\mathrm{M}|`, where :math:`k` is a constant. The quadratic load torque appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance. The model of a stiff mechanical system is provided in the class :class:`motulator.drive.model.StiffMechanicalSystem`. 
 
-.. figure:: figs/mech_block.svg
+.. figure:: ../figs/mech_block.svg
    :width: 100%
    :align: center
    :alt: Block diagram of a stiff mechanical system.
@@ -46,7 +46,7 @@ where :math:`\omega_\mathrm{L}` is the angular speed of the load, :math:`\varthe
 
 where :math:`K_\mathrm{S}` is the torsional stiffness of the shaft, and :math:`C_\mathrm{S}` is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanical system. A two-mass mechanical system is modeled in the class :class:`motulator.drive.model.TwoMassMechanicalSystem`. See also the example in :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass`.
 
-.. figure:: figs/two_mass_block.svg
+.. figure:: ../figs/two_mass_block.svg
    :width: 100%
    :align: center
    :alt: Block diagram of a two-mass mechanical system.

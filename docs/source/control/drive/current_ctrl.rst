@@ -11,7 +11,7 @@ Induction Machines
 System Model
 ^^^^^^^^^^^^
 
-The inverse-Γ model of an induction machine is considered (see :doc:`/model/machines`). Using the stator current :math:`\boldsymbol{i}_\mathrm{s}` and the rotor flux linkage :math:`\boldsymbol{\psi}_\mathrm{R}` as state variables, the model in synchronous coordinates rotating at :math:`\omega_\mathrm{s}` can be written as
+The inverse-Γ model of an induction machine is considered (see :doc:`/model/drive/machines`). Using the stator current :math:`\boldsymbol{i}_\mathrm{s}` and the rotor flux linkage :math:`\boldsymbol{\psi}_\mathrm{R}` as state variables, the model in synchronous coordinates rotating at :math:`\omega_\mathrm{s}` can be written as
 
 .. math::
     L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \underbrace{\left(\mathrm{j}\omega_\mathrm{m} - \frac{R_\mathrm{R}}{L_\mathrm{M}}\right)\boldsymbol{\psi}_\mathrm{R}}_{\text{back-emf } \boldsymbol{e}_\mathrm{s}} \\

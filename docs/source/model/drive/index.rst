@@ -1,8 +1,13 @@
+************
+Drive System
+************
+
+Drive-specific models
+
 .. toctree::
    :maxdepth: 2
 
    system
    machines
    mechanics
-   converters
    ac_filter
