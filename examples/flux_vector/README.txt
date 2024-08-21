@@ -1,7 +1,7 @@
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control of electric machine drives [#Pel2009]_. In the implemented controller, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementation of sensorless mode corresponds to [Tii2024_].
+These examples demonstrate flux-vector control of electric machine drives [#Pel2009]_. In the implemented controller, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementation of sensorless mode corresponds to [Tii2024]_.
 
 .. rubric:: References
 
