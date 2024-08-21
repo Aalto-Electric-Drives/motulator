@@ -55,15 +55,14 @@ coordinates as
 
 .. math::
    \frac{\mathrm{d}\boldsymbol{i}_\mathrm{c}^\mathrm{s}}{\mathrm{d} t} 
-   = \frac{1}{L_\mathrm{fc}}(\boldsymbol{u}_\mathrm{c}^\mathrm{s} 
+   &= \frac{1}{L_\mathrm{fc}}(\boldsymbol{u}_\mathrm{c}^\mathrm{s} 
    - \boldsymbol{u}_\mathrm{f}^\mathrm{s} 
    - R_\mathrm{fc}\boldsymbol{i}_\mathrm{c}^\mathrm{s})\\
    \frac{\mathrm{d}\boldsymbol{u}_\mathrm{f}^\mathrm{s}}{\mathrm{d} t} 
-   = \frac{1}{C_\mathrm{f}}(\boldsymbol{i}_\mathrm{c}^\mathrm{s} 
-   - \boldsymbol{i}_\mathrm{g}^\mathrm{s} 
-   - G_\mathrm{f}\boldsymbol{u}_\mathrm{f}^\mathrm{s})\\
+   &= \frac{1}{C_\mathrm{f}}(\boldsymbol{i}_\mathrm{c}^\mathrm{s} 
+   - \boldsymbol{i}_\mathrm{g}^\mathrm{s})\\
    \frac{\mathrm{d}\boldsymbol{i}_\mathrm{g}^\mathrm{s}}{\mathrm{d} t} 
-   = \frac{1}{L_\mathrm{t}}(\boldsymbol{u}_\mathrm{f}^\mathrm{s} 
+   &= \frac{1}{L_\mathrm{t}}(\boldsymbol{u}_\mathrm{f}^\mathrm{s} 
    - \boldsymbol{e}_\mathrm{g}^\mathrm{s} 
    - R_\mathrm{t}\boldsymbol{i}_\mathrm{g}^\mathrm{s})
    :label: LCL_filt_model
@@ -75,8 +74,7 @@ of the LCL filter (i.e., converter and grid current, respectively), and
 The converter-side and grid-side inductances of the LCL filter are 
 :math:`L_\mathrm{fc}` and :math:`L_\mathrm{fg}`, and their series resistances 
 are :math:`R_\mathrm{fc}` and :math:`R_\mathrm{fg}`, respectively. The filter 
-capactance is :math:`C_\mathrm{f}` and in parallel with it there is a 
-conductance :math:`G_\mathrm{f}`. In the LCL filter model, the total grid-side 
+capacitance is :math:`C_\mathrm{f}`. In the LCL filter model, the total grid-side 
 indutance and resistance are :math:`L_\mathrm{t} = L_\mathrm{fg} + L_\mathrm{g}` 
 and :math:`R_\mathrm{t} = R_\mathrm{fg} + R_\mathrm{g}`, respectively.
 
