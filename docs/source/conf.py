@@ -60,10 +60,8 @@ autoapi_add_toctree_entry = False
 from sphinx_gallery.sorting import ExplicitOrder
 
 sphinx_gallery_conf = {
-    "examples_dirs":
-    "../../examples",  # path to your example scripts
-    "gallery_dirs":
-    "auto_examples",  # path to where to save gallery generated output
+    "examples_dirs": ["../../examples/drive", "../../examples/grid"],
+    "gallery_dirs": ["drive_examples", "grid_examples"],
     "nested_sections":
     True,
     "subsection_order":
