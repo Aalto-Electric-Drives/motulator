@@ -34,7 +34,7 @@ PI-type current controller.
     from motulator.common.utils import BaseValues, NominalValues
     from motulator.grid import model
     import motulator.grid.control.grid_following as control
-    from motulator.grid.utils import FilterPars, GridPars, plot_grid
+    from motulator.grid.utils import FilterPars, GridPars, plot
 
 
 
@@ -66,7 +66,7 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-51
+.. GENERATED FROM PYTHON SOURCE LINES 27-44
 
 .. code-block:: Python
 
@@ -78,12 +78,8 @@ Configure the system model.
     # DC-bus parameters
     ac_filter = model.ACFilter(filter_par, grid_par)
 
-    # AC-voltage magnitude (to simulate voltage dips or short-circuits)
-    abs_e_g_var = lambda t: grid_par.u_gN
-
     # AC grid model with constant voltage magnitude and frequency
-    grid_model = model.ThreePhaseVoltageSource(
-        w_g=grid_par.w_gN, abs_e_g=abs_e_g_var)
+    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
     # Inverter model with constant DC voltage
     converter = VoltageSourceConverter(u_dc=650)
@@ -91,8 +87,6 @@ Configure the system model.
     # Create system model
     mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
 
-    # Uncomment line below to enable the PWM model
-    #mdl.pwm = CarrierComparison()
 
 
 
@@ -100,19 +94,17 @@ Configure the system model.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-61
+.. GENERATED FROM PYTHON SOURCE LINES 46-53
 
 .. code-block:: Python
 
 
     # Control parameters
-    cfg = control.GFLControlCfg(
-        grid_par=grid_par, filter_par=filter_par, max_i=1.5*base.i)
+    cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i)
 
     # Create the control system
     ctrl = control.GFLControl(cfg)
@@ -124,11 +116,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-68
+.. GENERATED FROM PYTHON SOURCE LINES 55-60
 
 .. code-block:: Python
 
@@ -144,11 +136,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-74
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
@@ -163,19 +155,16 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-76
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-81
+.. GENERATED FROM PYTHON SOURCE LINES 68-70
 
 .. code-block:: Python
 
 
-    # By default results are plotted in per-unit values. By omitting the argument
-    # `base` you can plot the results in SI units.
-
-    plot_grid(sim, base=base, plot_pcc_voltage=True)
+    plot(sim, base)
 
 
 
@@ -203,7 +192,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.384 seconds)
+   **Total running time of the script:** (0 minutes 1.254 seconds)
 
 
 .. _sphx_glr_download_auto_examples_grid_following_plot_gfl_lcl_10kva.py:

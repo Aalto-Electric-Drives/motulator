@@ -47,25 +47,25 @@ Package Contents
 
 
    
-   Disturbance observer-based grid-forming control for grid converters.
+   Disturbance-observer-based grid-forming control for grid converters.
 
-   This implements the disturbance observer-based control method described in
-   [#Nur2024]_. More specifically, the grid-forming mode using RFPSC-type
-   gains is implemented, with transparent current control.
+   This implements the RFPSC-type grid-forming mode of the control method
+   described in [#Nur2024]_. Transparent current control is also implemented.
 
-   :param cfg: Model and controller configuration parameters.
+   :param cfg: Controller configuration parameters.
    :type cfg: ObserverBasedGFMControlCfg
 
-   .. attribute:: observer
+   .. rubric:: Notes
 
-      Disturbance observer.
-
-      :type: DisturbanceObserver
+   In this implementation, the control system operates in synchronous
+   coordinates rotating at the nominal grid angular frequency, which is worth
+   noticing when plotting the results. For other implementation options, see
+   [#Nur2024]_.
 
    .. rubric:: References
 
    .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional
-       Grid-Forming Converter Control Based on a Disturbance Observer, "IEEE
+       grid-forming converter control based on a disturbance observer, "IEEE
        Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 
@@ -160,7 +160,7 @@ Package Contents
 .. py:class:: ObserverBasedGFMControlCfg
 
    
-   Observer GFM control configuration.
+   Disturbance-observer-based grid-forming control configuration.
 
    :param grid_par: Grid model parameters.
    :type grid_par: GridPars
@@ -170,15 +170,15 @@ Package Contents
    :type max_i: float
    :param R_a: Active resistance (Ω).
    :type R_a: float
-   :param T_s: Sampling period of the controller (s). Default is 1/(16e3).
+   :param T_s: Sampling period of the controller (s). Default is 100e-6.
    :type T_s: float, optional
-   :param k_v: Voltage gain. Default is 1.
+   :param k_v: Voltage gain. The default is 1.
    :type k_v: float, optional
    :param alpha_c: Current control bandwidth (rad/s). The default is 2*pi*400.
    :type alpha_c: float, optional
    :param alpha_o: Observer gain (rad/s). The default is 2*pi*50.
    :type alpha_o: float, optional
-   :param C_dc: DC-bus capacitance (F). Default is None.
+   :param C_dc: DC-bus capacitance (F). The default is None.
    :type C_dc: float, optional
 
 
@@ -318,8 +318,8 @@ Package Contents
    :type filter_par: FilterPars
    :param max_i: Maximum current modulus (A).
    :type max_i: float
-   :param R_a: Damping resistance (Ω). Default is 4.6.
-   :type R_a: float, optional
+   :param R_a: Damping resistance (Ω).
+   :type R_a: float
    :param T_s: Sampling period of the controller (s). The default is 100e-6.
    :type T_s: float, optional
    :param w_b: Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.

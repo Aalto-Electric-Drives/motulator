@@ -416,7 +416,7 @@ to download the full example code.</p>
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span>
 <span class="kn">from</span> <span class="nn">motulator.grid</span> <span class="kn">import</span> <span class="n">model</span>
 <span class="kn">import</span> <span class="nn">motulator.grid.control.grid_forming</span> <span class="k">as</span> <span class="nn">control</span>
-<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span><span class="p">,</span> <span class="n">plot_grid</span>
+<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span><span class="p">,</span> <span class="n">plot</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values.</p>
@@ -437,8 +437,7 @@ to download the full example code.</p>
 <span class="n">ac_filter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ACFilter</span><span class="p">(</span><span class="n">filter_par</span><span class="p">,</span> <span class="n">grid_par</span><span class="p">)</span>
 
 <span class="c1"># Grid voltage source with constant frequency and voltage magnitude</span>
-<span class="n">grid_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseVoltageSource</span><span class="p">(</span>
-    <span class="n">w_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">w_gN</span><span class="p">,</span> <span class="n">abs_e_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span><span class="p">)</span>
+<span class="n">grid_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseVoltageSource</span><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">abs_e_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
 
 <span class="c1"># Inverter with constant DC voltage</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">VoltageSourceConverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">650</span><span class="p">)</span>
@@ -450,11 +449,7 @@ to download the full example code.</p>
 <p>Configure the control system.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Control configuration parameters</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">RFPSCControlCfg</span><span class="p">(</span>
-    <span class="n">grid_par</span><span class="o">=</span><span class="n">grid_par</span><span class="p">,</span>
-    <span class="n">filter_par</span><span class="o">=</span><span class="n">filter_par</span><span class="p">,</span>
-    <span class="n">T_s</span><span class="o">=</span><span class="mf">100e-6</span><span class="p">,</span>
-    <span class="n">max_i</span><span class="o">=</span><span class="mf">1.3</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-    <span class="n">R_a</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
+    <span class="n">grid_par</span><span class="p">,</span> <span class="n">filter_par</span><span class="p">,</span> <span class="n">max_i</span><span class="o">=</span><span class="mf">1.3</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">100e-6</span><span class="p">,</span> <span class="n">R_a</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
 
 <span class="c1"># Create the control system</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">RFPSCControl</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
@@ -462,10 +457,10 @@ to download the full example code.</p>
 </div>
 <p>Set the references for converter output voltage magnitude and active power.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Converter output voltage magnitude reference</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span>
 
 <span class="c1"># Active power reference</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.5</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.8</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.5</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.8</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">-</span>
                           <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.2</span><span class="p">))</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">P</span>
 </pre></div>
 </div>
@@ -475,17 +470,14 @@ to download the full example code.</p>
 </pre></div>
 </div>
 <p>Plot the results.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># By default results are plotted in per-unit values. By omitting the argument</span>
-<span class="c1"># `base` you can plot the results in SI units.</span>
-
-<span class="n">plot_grid</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">,</span> <span class="n">plot_pcc_voltage</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
 <li><img src="../../_images/sphx_glr_plot_gfm_rfpsc_13kva_001.png" srcset="../../_images/sphx_glr_plot_gfm_rfpsc_13kva_001.png" alt="plot gfm rfpsc 13kva" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_gfm_rfpsc_13kva_002.png" srcset="../../_images/sphx_glr_plot_gfm_rfpsc_13kva_002.png" alt="plot gfm rfpsc 13kva" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.433 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.076 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-grid-forming-plot-gfm-rfpsc-13kva-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/ba171f21030a7fe2417bd4a2ee62ac43/plot_gfm_rfpsc_13kva.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gfm_rfpsc_13kva.ipynb</span></code></a></p>

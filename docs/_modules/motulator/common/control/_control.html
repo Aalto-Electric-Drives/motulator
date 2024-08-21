@@ -649,10 +649,8 @@ document.write(`
 <span class="sd">    2DOF synchronous-frame complex-vector PI controller.</span>
 
 <span class="sd">    This implements a discrete-time 2DOF synchronous-frame complex-vector PI</span>
-<span class="sd">    controller, based on a disturbance observer structure. The complex-vector</span>
-<span class="sd">    gain selection is based on [#Bri2000]_. The addition of the feedforward</span>
-<span class="sd">    signal is based on [#Har2009]_. The continuous-time counterpart of</span>
-<span class="sd">    the controller is::</span>
+<span class="sd">    controller [#Bri2000]_. The continuous-time counterpart of the controller </span>
+<span class="sd">    is::</span>
 
 <span class="sd">        u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i) + u_ff</span>
 
@@ -685,11 +683,9 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k_p</span><span class="p">,</span> <span class="n">k_i</span><span class="p">,</span> <span class="n">k_t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># Gains</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="n">k_p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_t</span> <span class="o">=</span> <span class="n">k_t</span> <span class="k">if</span> <span class="n">k_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_i</span> <span class="o">=</span> <span class="n">k_i</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">k_t</span>  <span class="c1"># Inverse of the integration time T_i</span>
-        <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="ComplexPIController.output"><a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">u_ff</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>

@@ -418,7 +418,7 @@ current controller.</p>
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span>
 <span class="kn">from</span> <span class="nn">motulator.grid</span> <span class="kn">import</span> <span class="n">model</span>
 <span class="kn">import</span> <span class="nn">motulator.grid.control.grid_following</span> <span class="k">as</span> <span class="nn">control</span>
-<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span><span class="p">,</span> <span class="n">plot_grid</span>
+<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span><span class="p">,</span> <span class="n">plot</span>
 <span class="c1"># from motulator.grid.utils import plot_voltage_vector</span>
 <span class="c1"># from motulator.common.model import CarrierComparison</span>
 <span class="c1"># import numpy as np</span>
@@ -440,8 +440,7 @@ current controller.</p>
 <span class="n">ac_filter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ACFilter</span><span class="p">(</span><span class="n">filter_par</span><span class="p">,</span> <span class="n">grid_par</span><span class="p">)</span>
 
 <span class="c1"># AC grid model with constant voltage magnitude and frequency</span>
-<span class="n">grid_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseVoltageSource</span><span class="p">(</span>
-    <span class="n">w_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">w_gN</span><span class="p">,</span> <span class="n">abs_e_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span><span class="p">)</span>
+<span class="n">grid_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseVoltageSource</span><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">abs_e_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
 
 <span class="c1"># Inverter with constant DC voltage</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">VoltageSourceConverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">650</span><span class="p">)</span>
@@ -455,8 +454,7 @@ current controller.</p>
 </div>
 <p>Configure the control system.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Control configuration parameters</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">GFLControlCfg</span><span class="p">(</span>
-    <span class="n">grid_par</span><span class="o">=</span><span class="n">grid_par</span><span class="p">,</span> <span class="n">filter_par</span><span class="o">=</span><span class="n">filter_par</span><span class="p">,</span> <span class="n">max_i</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">GFLControlCfg</span><span class="p">(</span><span class="n">grid_par</span><span class="p">,</span> <span class="n">filter_par</span><span class="p">,</span> <span class="n">max_i</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
 
 <span class="c1"># Create the control system</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">GFLControl</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
@@ -468,8 +466,8 @@ current controller.</p>
 <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.04</span><span class="p">)</span><span class="o">*</span><span class="mf">4e3</span>
 
 <span class="c1"># Uncomment lines below to simulate a unbalanced fault (add negative sequence)</span>
-<span class="c1"># mdl.grid_model.par.abs_e_g = 0.75*base.u</span>
-<span class="c1"># mdl.grid_model.par.abs_e_g_neg = 0.25*base.u</span>
+<span class="c1"># mdl.grid_model.par.abs_e_g = .75*base.u</span>
+<span class="c1"># mdl.grid_model.par.abs_e_g_neg = .25*base.u</span>
 <span class="c1"># mdl.grid_model.par.phi_neg = -np.pi/3</span>
 </pre></div>
 </div>
@@ -484,14 +482,14 @@ current controller.</p>
 
 <span class="c1"># Uncomment line below to plot locus of the grid voltage space vector</span>
 <span class="c1"># plot_voltage_vector(sim, base)</span>
-<span class="n">plot_grid</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">plot_pcc_voltage</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">plot_pcc_voltage</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
 <li><img src="../../_images/sphx_glr_plot_gfl_10kva_001.png" srcset="../../_images/sphx_glr_plot_gfl_10kva_001.png" alt="plot gfl 10kva" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_gfl_10kva_002.png" srcset="../../_images/sphx_glr_plot_gfl_10kva_002.png" alt="plot gfl 10kva" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.343 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.250 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-grid-following-plot-gfl-10kva-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/853cf9a46792a60be6b8d737663a879f/plot_gfl_10kva.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gfl_10kva.ipynb</span></code></a></p>

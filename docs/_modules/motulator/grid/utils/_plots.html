@@ -363,6 +363,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">cycler</span> <span class="kn">import</span> <span class="n">cycler</span>
 
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">complex2abc</span>
+<span class="c1">#import motulator.grid.control.grid_forming as control  # To check instance type</span>
 
 <span class="c1"># Plotting parameters</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;axes.prop_cycle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cycler</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;brgcmyk&quot;</span><span class="p">)</span>
@@ -372,8 +373,7 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="plot_grid"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.grid.utils.plot_grid">[docs]</a><span class="k">def</span> <span class="nf">plot_grid</span><span class="p">(</span>
-        <span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_pcc_voltage</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot_w</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.grid.utils.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_pcc_voltage</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_w</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot example figures of grid converter simulations.</span>
 
@@ -385,9 +385,9 @@ document.write(`
 <span class="sd">        Base values for scaling the waveforms. If not given, plots the figures </span>
 <span class="sd">        in SI units.</span>
 <span class="sd">    plot_pcc_voltage : bool, optional</span>
-<span class="sd">        If True, plot the phase voltage waveforms at the point of common </span>
-<span class="sd">        coupling (PCC). Otherwise, plot the grid voltage waveforms. The default </span>
-<span class="sd">        is False.        </span>
+<span class="sd">        If True, the phase voltage waveforms are plotted at the point of common </span>
+<span class="sd">        coupling (PCC). Otherwise, the grid voltage waveforms are plotted. The </span>
+<span class="sd">        default is True.        </span>
 <span class="sd">    plot_w : bool, optional</span>
 <span class="sd">        If True, plot the grid frequency. Otherwise, plot the phase angle. The </span>
 <span class="sd">        default is False.</span>
@@ -413,7 +413,6 @@ document.write(`
         <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1"># Three-phase quantities</span>
-    <span class="c1">#i_c_abc = complex2abc(mdl.converter.data.i_cs).T</span>
     <span class="n">i_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_gs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
     <span class="n">e_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
     <span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_gs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
@@ -423,8 +422,16 @@ document.write(`
         <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_gs</span><span class="p">)))</span>
     <span class="n">q_g</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
         <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_gs</span><span class="p">)))</span>
-    <span class="n">p_g_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span>
-    <span class="n">q_g_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="p">)</span>
+
+    <span class="c1"># Coordinate transformation in the case of observer-based GFM control</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="s2">&quot;observer&quot;</span><span class="p">):</span>
+        <span class="c1"># Convert quantities to converter-output-voltage coordinates</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span><span class="o">*</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span><span class="o">*</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span><span class="o">*</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span>
 
     <span class="c1"># %%</span>
     <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
@@ -450,7 +457,7 @@ document.write(`
         <span class="c1"># Subplot 1: DC-bus voltage</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_dc</span><span class="o">.</span><span class="n">T</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_dc</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{dc}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
@@ -529,12 +536,14 @@ document.write(`
     <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">p_g</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">q_g</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$q_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">p_g_ref</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">),</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
         <span class="s2">&quot;--&quot;</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p_\mathrm{g,ref}$&quot;</span><span class="p">,</span>
         <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">q_g_ref</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">),</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
         <span class="s2">&quot;--&quot;</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$q_\mathrm{g,ref}$&quot;</span><span class="p">,</span>
         <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>

@@ -404,7 +404,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.observer"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.observer</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.get_feedback_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.update()</span></code></a></li>
@@ -439,10 +438,10 @@ document.write(`
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl" title="motulator.grid.control.grid_forming.ObserverBasedGFMControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGFMControl</span></code></a></p></td>
-<td><p>Disturbance observer-based grid-forming control for grid converters.</p></td>
+<td><p>Disturbance-observer-based grid-forming control for grid converters.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControlCfg" title="motulator.grid.control.grid_forming.ObserverBasedGFMControlCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGFMControlCfg</span></code></a></p></td>
-<td><p>Observer GFM control configuration.</p></td>
+<td><p>Disturbance-observer-based grid-forming control configuration.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.grid_forming.RFPSCControl" title="motulator.grid.control.grid_forming.RFPSCControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RFPSCControl</span></code></a></p></td>
 <td><p>Reference-feedforward power synchronization control for grid converters.</p></td>
@@ -459,32 +458,26 @@ document.write(`
 <dt class="sig sig-object py" id="motulator.grid.control.grid_forming.ObserverBasedGFMControl">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.grid_forming.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGFMControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/grid/control/grid_forming/_observer_gfm.html#ObserverBasedGFMControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../index.html#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control.GridConverterControlSystem</span></code></a></p>
-<p>Disturbance observer-based grid-forming control for grid converters.</p>
-<p>This implements the disturbance observer-based control method described in
-<a class="footnote-reference brackets" href="#nur2024" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. More specifically, the grid-forming mode using RFPSC-type
-gains is implemented, with transparent current control.</p>
+<p>Disturbance-observer-based grid-forming control for grid converters.</p>
+<p>This implements the RFPSC-type grid-forming mode of the control method
+described in <a class="footnote-reference brackets" href="#nur2024" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Transparent current control is also implemented.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControlCfg" title="motulator.grid.control.grid_forming.ObserverBasedGFMControlCfg"><em>ObserverBasedGFMControlCfg</em></a>) – Model and controller configuration parameters.</p>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControlCfg" title="motulator.grid.control.grid_forming.ObserverBasedGFMControlCfg"><em>ObserverBasedGFMControlCfg</em></a>) – Controller configuration parameters.</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.grid.control.grid_forming.ObserverBasedGFMControl.observer">
-<span class="sig-name descname"><span class="pre">observer</span></span><a class="headerlink" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.observer" title="Permalink to this definition">#</a></dt>
-<dd><p>Disturbance observer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DisturbanceObserver</p>
-</dd>
-</dl>
-</dd></dl>
-
+<p class="rubric">Notes</p>
+<p>In this implementation, the control system operates in synchronous
+coordinates rotating at the nominal grid angular frequency, which is worth
+noticing when plotting the results. For other implementation options, see
+<a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="nur2024" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
 <p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional
-Grid-Forming Converter Control Based on a Disturbance Observer, “IEEE
+grid-forming converter control based on a disturbance observer, “IEEE
 Trans. Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
 </aside>
 </aside>
@@ -511,7 +504,7 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.grid_forming.ObserverBasedGFMControlCfg">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.grid_forming.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGFMControlCfg</span></span><a class="reference internal" href="../../../../../_modules/motulator/grid/control/grid_forming/_observer_gfm.html#ObserverBasedGFMControlCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControlCfg" title="Permalink to this definition">#</a></dt>
-<dd><p>Observer GFM control configuration.</p>
+<dd><p>Disturbance-observer-based grid-forming control configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -519,11 +512,11 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 <li><p><strong>filter_par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter model parameters.</p></li>
 <li><p><strong>max_i</strong> (<em>float</em>) – Maximum current modulus (A).</p></li>
 <li><p><strong>R_a</strong> (<em>float</em>) – Active resistance (Ω).</p></li>
-<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). Default is 1/(16e3).</p></li>
-<li><p><strong>k_v</strong> (<em>float</em><em>, </em><em>optional</em>) – Voltage gain. Default is 1.</p></li>
+<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). Default is 100e-6.</p></li>
+<li><p><strong>k_v</strong> (<em>float</em><em>, </em><em>optional</em>) – Voltage gain. The default is 1.</p></li>
 <li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current control bandwidth (rad/s). The default is 2*pi*400.</p></li>
 <li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer gain (rad/s). The default is 2*pi*50.</p></li>
-<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). Default is None.</p></li>
+<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -535,7 +528,7 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 <dd><p>Bases: <a class="reference internal" href="../index.html#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control.GridConverterControlSystem</span></code></a></p>
 <p>Reference-feedforward power synchronization control for grid converters.</p>
 <p>This implements the reference-feedforward power synchronization control
-(RFPSC) method <a class="footnote-reference brackets" href="#har2020" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+(RFPSC) method <a class="footnote-reference brackets" href="#har2020" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>cfg</strong> (<em>PSCControlCfg</em>) – Model and controller configuration parameters.</p>
@@ -544,7 +537,7 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har2020" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
 <p>Harnefors, Rahman, Hinkkanen, Routimo, “Reference-feedforward
 power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <a class="reference external" href="https://doi.org/10.1109/TPEL.2020.2970991">https://doi.org/10.1109/TPEL.2020.2970991</a></p>
@@ -580,7 +573,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <li><p><strong>grid_par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
 <li><p><strong>filter_par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter model parameters.</p></li>
 <li><p><strong>max_i</strong> (<em>float</em>) – Maximum current modulus (A).</p></li>
-<li><p><strong>R_a</strong> (<em>float</em><em>, </em><em>optional</em>) – Damping resistance (Ω). Default is 4.6.</p></li>
+<li><p><strong>R_a</strong> (<em>float</em>) – Damping resistance (Ω).</p></li>
 <li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). The default is 100e-6.</p></li>
 <li><p><strong>w_b</strong> (<em>float</em><em>, </em><em>optional</em>) – Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.</p></li>
 <li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
@@ -639,7 +632,6 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.observer"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.observer</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.get_feedback_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.grid_forming.ObserverBasedGFMControl.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.update()</span></code></a></li>

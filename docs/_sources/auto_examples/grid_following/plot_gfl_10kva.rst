@@ -34,7 +34,7 @@ current controller.
     from motulator.common.utils import BaseValues, NominalValues
     from motulator.grid import model
     import motulator.grid.control.grid_following as control
-    from motulator.grid.utils import FilterPars, GridPars, plot_grid
+    from motulator.grid.utils import FilterPars, GridPars, plot
     # from motulator.grid.utils import plot_voltage_vector
     # from motulator.common.model import CarrierComparison
     # import numpy as np
@@ -69,7 +69,7 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-53
+.. GENERATED FROM PYTHON SOURCE LINES 30-52
 
 .. code-block:: Python
 
@@ -84,8 +84,7 @@ Configure the system model.
     ac_filter = model.ACFilter(filter_par, grid_par)
 
     # AC grid model with constant voltage magnitude and frequency
-    grid_model = model.ThreePhaseVoltageSource(
-        w_g=grid_par.w_gN, abs_e_g=grid_par.u_gN)
+    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
     # Inverter with constant DC voltage
     converter = VoltageSourceConverter(u_dc=650)
@@ -103,18 +102,17 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-63
+.. GENERATED FROM PYTHON SOURCE LINES 54-61
 
 .. code-block:: Python
 
 
     # Control configuration parameters
-    cfg = control.GFLControlCfg(
-        grid_par=grid_par, filter_par=filter_par, max_i=1.5*base.i)
+    cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i)
 
     # Create the control system
     ctrl = control.GFLControl(cfg)
@@ -126,11 +124,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-65
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-75
+.. GENERATED FROM PYTHON SOURCE LINES 63-73
 
 .. code-block:: Python
 
@@ -140,8 +138,8 @@ Set the time-dependent reference and disturbance signals.
     ctrl.ref.q_g = lambda t: (t > .04)*4e3
 
     # Uncomment lines below to simulate a unbalanced fault (add negative sequence)
-    # mdl.grid_model.par.abs_e_g = 0.75*base.u
-    # mdl.grid_model.par.abs_e_g_neg = 0.25*base.u
+    # mdl.grid_model.par.abs_e_g = .75*base.u
+    # mdl.grid_model.par.abs_e_g_neg = .25*base.u
     # mdl.grid_model.par.phi_neg = -np.pi/3
 
 
@@ -151,11 +149,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 74-75
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-81
+.. GENERATED FROM PYTHON SOURCE LINES 75-79
 
 .. code-block:: Python
 
@@ -170,11 +168,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-83
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-90
+.. GENERATED FROM PYTHON SOURCE LINES 81-88
 
 .. code-block:: Python
 
@@ -184,7 +182,7 @@ Plot the results.
 
     # Uncomment line below to plot locus of the grid voltage space vector
     # plot_voltage_vector(sim, base)
-    plot_grid(sim, base, plot_pcc_voltage=True)
+    plot(sim, base, plot_pcc_voltage=False)
 
 
 
@@ -212,7 +210,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.343 seconds)
+   **Total running time of the script:** (0 minutes 1.250 seconds)
 
 
 .. _sphx_glr_download_auto_examples_grid_following_plot_gfl_10kva.py:

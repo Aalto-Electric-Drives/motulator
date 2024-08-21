@@ -34,7 +34,7 @@ observer. A transparent current controller is included for current limitation.
     from motulator.common.utils import BaseValues, NominalValues
     from motulator.grid import model
     import motulator.grid.control.grid_forming as control
-    from motulator.grid.utils import FilterPars, GridPars, plot_grid
+    from motulator.grid.utils import FilterPars, GridPars, plot
     # from motulator.common.model import CarrierComparison
 
 
@@ -67,7 +67,7 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-53
+.. GENERATED FROM PYTHON SOURCE LINES 28-49
 
 .. code-block:: Python
 
@@ -84,8 +84,7 @@ Configure the system model.
     ac_filter = model.ACFilter(filter_par, grid_par)
 
     # Grid voltage source with constant frequency and voltage magnitude
-    grid_model = model.ThreePhaseVoltageSource(
-        w_g=grid_par.w_gN, abs_e_g=grid_par.u_gN)
+    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
     # Inverter with constant DC voltage
     converter = VoltageSourceConverter(u_dc=650)
@@ -93,8 +92,6 @@ Configure the system model.
     # Create system model
     mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
 
-    # Uncomment the lines below to enable the PWM model
-    # mdl.pwm = CarrierComparison()
 
 
 
@@ -102,12 +99,11 @@ Configure the system model.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-70
+.. GENERATED FROM PYTHON SOURCE LINES 51-62
 
 .. code-block:: Python
 
@@ -117,11 +113,7 @@ Configure the control system.
 
     # Set the configuration parameters
     cfg = control.ObserverBasedGFMControlCfg(
-        grid_par=grid_par_est,
-        filter_par=filter_par,
-        T_s=100e-6,
-        max_i=1.3*base.i,
-        R_a=.2*base.Z)
+        grid_par_est, filter_par, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
 
     # Create the control system
     ctrl = control.ObserverBasedGFMControl(cfg)
@@ -133,29 +125,28 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-88
+.. GENERATED FROM PYTHON SOURCE LINES 64-79
 
 .. code-block:: Python
 
 
     # Converter output voltage magnitude reference
-    ctrl.ref.v_c = lambda t: grid_par.u_gN
+    ctrl.ref.v_c = lambda t: base.u
 
     # Active power reference
-    ctrl.ref.p_g = lambda t: ((t > .2)*(4.15e3) + (t > .5)*(4.15e3) + (t > .8)*
-                              (4.2e3) - (t > 1.2)*(12.5e3))
+    ctrl.ref.p_g = lambda t: ((t > .2)/3 + (t > .5)/3 + (t > .8)/3 -
+                              (t > 1.2))*nom.P
 
     # Uncomment line below to simulate operation in rectifier mode
-    # ctrl.ref.p_g = lambda t: ((t > .2) - (t > .7)*2 + (t > 1.2))*12.5e3
+    # ctrl.ref.p_g = lambda t: ((t > .2) - (t > .7)*2 + (t > 1.2))*nom.P
 
     # Uncomment lines below to simulate a grid voltage sag with constant ref.p_g
-    # mdl.grid_model.par.e_g_abs = lambda t: (
-    #    1 - (t > .2)*(0.8) + (t > 1)*(0.8))*grid_par.u_gN
-    # ctrl.ref.p_g = lambda t: 12.5e3
+    # mdl.grid_model.par.abs_e_g = lambda t: (1 - (t > .2)*.8 + (t > 1)*.8)*base.u
+    # ctrl.ref.p_g = lambda t: nom.P
 
 
 
@@ -164,11 +155,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-90
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-94
+.. GENERATED FROM PYTHON SOURCE LINES 81-85
 
 .. code-block:: Python
 
@@ -183,19 +174,16 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-96
+.. GENERATED FROM PYTHON SOURCE LINES 86-87
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-101
+.. GENERATED FROM PYTHON SOURCE LINES 87-89
 
 .. code-block:: Python
 
 
-    # By default results are plotted in per-unit values. By omitting the argument
-    # `base` you can plot the results in SI units.
-
-    plot_grid(sim=sim, base=base, plot_pcc_voltage=False)
+    plot(sim, base)
 
 
 
@@ -223,7 +211,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.808 seconds)
+   **Total running time of the script:** (0 minutes 8.454 seconds)
 
 
 .. _sphx_glr_download_auto_examples_grid_forming_plot_gfm_obs_13kva.py:

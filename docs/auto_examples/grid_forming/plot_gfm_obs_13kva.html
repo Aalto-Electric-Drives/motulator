@@ -417,7 +417,7 @@ observer. A transparent current controller is included for current limitation.</
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">NominalValues</span>
 <span class="kn">from</span> <span class="nn">motulator.grid</span> <span class="kn">import</span> <span class="n">model</span>
 <span class="kn">import</span> <span class="nn">motulator.grid.control.grid_forming</span> <span class="k">as</span> <span class="nn">control</span>
-<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span><span class="p">,</span> <span class="n">plot_grid</span>
+<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span><span class="p">,</span> <span class="n">plot</span>
 <span class="c1"># from motulator.common.model import CarrierComparison</span>
 </pre></div>
 </div>
@@ -439,17 +439,13 @@ observer. A transparent current controller is included for current limitation.</
 <span class="n">ac_filter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ACFilter</span><span class="p">(</span><span class="n">filter_par</span><span class="p">,</span> <span class="n">grid_par</span><span class="p">)</span>
 
 <span class="c1"># Grid voltage source with constant frequency and voltage magnitude</span>
-<span class="n">grid_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseVoltageSource</span><span class="p">(</span>
-    <span class="n">w_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">w_gN</span><span class="p">,</span> <span class="n">abs_e_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span><span class="p">)</span>
+<span class="n">grid_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseVoltageSource</span><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">abs_e_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
 
 <span class="c1"># Inverter with constant DC voltage</span>
 <span class="n">converter</span> <span class="o">=</span> <span class="n">VoltageSourceConverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">650</span><span class="p">)</span>
 
 <span class="c1"># Create system model</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">GridConverterSystem</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">grid_model</span><span class="p">)</span>
-
-<span class="c1"># Uncomment the lines below to enable the PWM model</span>
-<span class="c1"># mdl.pwm = CarrierComparison()</span>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
@@ -458,11 +454,7 @@ observer. A transparent current controller is included for current limitation.</
 
 <span class="c1"># Set the configuration parameters</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ObserverBasedGFMControlCfg</span><span class="p">(</span>
-    <span class="n">grid_par</span><span class="o">=</span><span class="n">grid_par_est</span><span class="p">,</span>
-    <span class="n">filter_par</span><span class="o">=</span><span class="n">filter_par</span><span class="p">,</span>
-    <span class="n">T_s</span><span class="o">=</span><span class="mf">100e-6</span><span class="p">,</span>
-    <span class="n">max_i</span><span class="o">=</span><span class="mf">1.3</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-    <span class="n">R_a</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
+    <span class="n">grid_par_est</span><span class="p">,</span> <span class="n">filter_par</span><span class="p">,</span> <span class="n">max_i</span><span class="o">=</span><span class="mf">1.3</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">100e-6</span><span class="p">,</span> <span class="n">R_a</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
 
 <span class="c1"># Create the control system</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ObserverBasedGFMControl</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
@@ -470,19 +462,18 @@ observer. A transparent current controller is included for current limitation.</
 </div>
 <p>Set the references for converter output voltage magnitude and active power.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Converter output voltage magnitude reference</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span>
 
 <span class="c1"># Active power reference</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">4.15e3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.5</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">4.15e3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.8</span><span class="p">)</span><span class="o">*</span>
-                          <span class="p">(</span><span class="mf">4.2e3</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">12.5e3</span><span class="p">))</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.5</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.8</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">-</span>
+                          <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.2</span><span class="p">))</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">P</span>
 
 <span class="c1"># Uncomment line below to simulate operation in rectifier mode</span>
-<span class="c1"># ctrl.ref.p_g = lambda t: ((t &gt; .2) - (t &gt; .7)*2 + (t &gt; 1.2))*12.5e3</span>
+<span class="c1"># ctrl.ref.p_g = lambda t: ((t &gt; .2) - (t &gt; .7)*2 + (t &gt; 1.2))*nom.P</span>
 
 <span class="c1"># Uncomment lines below to simulate a grid voltage sag with constant ref.p_g</span>
-<span class="c1"># mdl.grid_model.par.e_g_abs = lambda t: (</span>
-<span class="c1">#    1 - (t &gt; .2)*(0.8) + (t &gt; 1)*(0.8))*grid_par.u_gN</span>
-<span class="c1"># ctrl.ref.p_g = lambda t: 12.5e3</span>
+<span class="c1"># mdl.grid_model.par.abs_e_g = lambda t: (1 - (t &gt; .2)*.8 + (t &gt; 1)*.8)*base.u</span>
+<span class="c1"># ctrl.ref.p_g = lambda t: nom.P</span>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
@@ -491,17 +482,14 @@ observer. A transparent current controller is included for current limitation.</
 </pre></div>
 </div>
 <p>Plot the results.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># By default results are plotted in per-unit values. By omitting the argument</span>
-<span class="c1"># `base` you can plot the results in SI units.</span>
-
-<span class="n">plot_grid</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">,</span> <span class="n">plot_pcc_voltage</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
 <li><img src="../../_images/sphx_glr_plot_gfm_obs_13kva_001.png" srcset="../../_images/sphx_glr_plot_gfm_obs_13kva_001.png" alt="plot gfm obs 13kva" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_gfm_obs_13kva_002.png" srcset="../../_images/sphx_glr_plot_gfm_obs_13kva_002.png" alt="plot gfm obs 13kva" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.808 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.454 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-grid-forming-plot-gfm-obs-13kva-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/79870349d5f704386e44333e44f9dd44/plot_gfm_obs_13kva.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gfm_obs_13kva.ipynb</span></code></a></p>

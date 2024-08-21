@@ -503,10 +503,8 @@ document.write(`
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ComplexPIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ComplexPIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPIController" title="Permalink to this definition">#</a></dt>
 <dd><p>2DOF synchronous-frame complex-vector PI controller.</p>
 <p>This implements a discrete-time 2DOF synchronous-frame complex-vector PI
-controller, based on a disturbance observer structure. The complex-vector
-gain selection is based on <a class="footnote-reference brackets" href="#bri2000" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The addition of the feedforward
-signal is based on <a href="#id7"><span class="problematic" id="id2">[#Har2009]_</span></a>. The continuous-time counterpart of
-the controller is:</p>
+controller <a class="footnote-reference brackets" href="#bri2000" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The continuous-time counterpart of the controller
+is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">k_t</span><span class="o">*</span><span class="n">ref_i</span> <span class="o">-</span> <span class="n">k_p</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">k_i</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w</span><span class="o">*</span><span class="n">k_t</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="o">*</span><span class="p">(</span><span class="n">ref_i</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">u_ff</span>
 </pre></div>
 </div>
@@ -800,9 +798,9 @@ reference <cite>ref_tau_M</cite>.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MME'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM" title="Permalink to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
 <p>This computes the duty ratios corresponding to standard space-vector PWM
-and overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The realized voltage is computed based on
+and overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The realized voltage is computed based on
 the measured DC-bus voltage and the duty ratios. The digital delay effects
-are taken into account in the realized voltage <a class="footnote-reference brackets" href="#bae2003" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+are taken into account in the realized voltage <a class="footnote-reference brackets" href="#bae2003" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -817,13 +815,13 @@ default is “MME”.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hav1999" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Hava, Sul, Kerkman, Lipo, “Dynamic overmodulation
 characteristics of triangle intersection PWM methods,” IEEE Trans. Ind.
 Appl., 1999, <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
 </aside>
 <aside class="footnote brackets" id="bae2003" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>Bae, Sul, “A compensation method for time delay of
 full-digital synchronous frame current regulator of PWM AC drives,” IEEE
 Trans. Ind. Appl., 2003, <a class="reference external" href="https://doi.org/10.1109/TIA.2003.810660">https://doi.org/10.1109/TIA.2003.810660</a></p>
@@ -835,7 +833,7 @@ Trans. Ind. Appl., 2003, <a class="reference external" href="https://doi.org/10.
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
 overmodulation region such that the six-step operation is reached
-<a class="footnote-reference brackets" href="#bol1997" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+<a class="footnote-reference brackets" href="#bol1997" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -853,7 +851,7 @@ overmodulation region such that the six-step operation is reached
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control
 of SVM inverters in the overmodulation range,” IEEE Trans. Ind.
 Appl., 1997, <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>

@@ -41,14 +41,14 @@ Functions
 
 .. autoapisummary::
 
-   motulator.grid.utils.plot_grid
+   motulator.grid.utils.plot
    motulator.grid.utils.plot_voltage_vector
 
 
 Package Contents
 ----------------
 
-.. py:function:: plot_grid(sim, base=None, plot_pcc_voltage=False, plot_w=False, t_span=None)
+.. py:function:: plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None)
 
    
    Plot example figures of grid converter simulations.
@@ -58,9 +58,9 @@ Package Contents
    :param base: Base values for scaling the waveforms. If not given, plots the figures
                 in SI units.
    :type base: BaseValues, optional
-   :param plot_pcc_voltage: If True, plot the phase voltage waveforms at the point of common
-                            coupling (PCC). Otherwise, plot the grid voltage waveforms. The default
-                            is False.
+   :param plot_pcc_voltage: If True, the phase voltage waveforms are plotted at the point of common
+                            coupling (PCC). Otherwise, the grid voltage waveforms are plotted. The
+                            default is True.
    :type plot_pcc_voltage: bool, optional
    :param plot_w: If True, plot the grid frequency. Otherwise, plot the phase angle. The
                   default is False.

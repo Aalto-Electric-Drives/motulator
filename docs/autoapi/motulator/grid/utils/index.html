@@ -404,7 +404,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_grid"><code class="docutils literal notranslate"><span class="pre">plot_grid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_voltage_vector"><code class="docutils literal notranslate"><span class="pre">plot_voltage_vector()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.FilterPars"><code class="docutils literal notranslate"><span class="pre">FilterPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.GridPars"><code class="docutils literal notranslate"><span class="pre">GridPars</span></code></a></li>
@@ -441,7 +441,7 @@ document.write(`
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_grid" title="motulator.grid.utils.plot_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_grid</span></code></a>(sim[, base, plot_pcc_voltage, plot_w, t_span])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.plot" title="motulator.grid.utils.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(sim[, base, plot_pcc_voltage, plot_w, t_span])</p></td>
 <td><p>Plot example figures of grid converter simulations.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_voltage_vector" title="motulator.grid.utils.plot_voltage_vector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_voltage_vector</span></code></a>(sim[, base])</p></td>
@@ -453,8 +453,8 @@ document.write(`
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading">#</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="motulator.grid.utils.plot_grid">
-<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_pcc_voltage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_plots.html#plot_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot_grid" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.utils.plot">
+<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_pcc_voltage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_plots.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot" title="Permalink to this definition">#</a></dt>
 <dd><p>Plot example figures of grid converter simulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -462,9 +462,9 @@ document.write(`
 <li><p><strong>sim</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><em>Simulation</em></a>) – Should contain the simulated data.</p></li>
 <li><p><strong>base</strong> (<a class="reference internal" href="../../common/utils/index.html#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms. If not given, plots the figures
 in SI units.</p></li>
-<li><p><strong>plot_pcc_voltage</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, plot the phase voltage waveforms at the point of common
-coupling (PCC). Otherwise, plot the grid voltage waveforms. The default
-is False.</p></li>
+<li><p><strong>plot_pcc_voltage</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the phase voltage waveforms are plotted at the point of common
+coupling (PCC). Otherwise, the grid voltage waveforms are plotted. The
+default is True.</p></li>
 <li><p><strong>plot_w</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, plot the grid frequency. Otherwise, plot the phase angle. The
 default is False.</p></li>
 <li><p><strong>t_span</strong> (<em>2-tuple</em><em>, </em><em>optional</em>) – Time span. The default is (0, sim.ctrl.ref.t[-1]).</p></li>
@@ -572,7 +572,7 @@ default is False.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_grid"><code class="docutils literal notranslate"><span class="pre">plot_grid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_voltage_vector"><code class="docutils literal notranslate"><span class="pre">plot_voltage_vector()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.FilterPars"><code class="docutils literal notranslate"><span class="pre">FilterPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.GridPars"><code class="docutils literal notranslate"><span class="pre">GridPars</span></code></a></li>

@@ -32,7 +32,7 @@ This example simulates reference-feedforward power-synchronization control
     from motulator.common.utils import BaseValues, NominalValues
     from motulator.grid import model
     import motulator.grid.control.grid_forming as control
-    from motulator.grid.utils import FilterPars, GridPars, plot_grid
+    from motulator.grid.utils import FilterPars, GridPars, plot
 
 
 
@@ -64,7 +64,7 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-47
+.. GENERATED FROM PYTHON SOURCE LINES 25-46
 
 .. code-block:: Python
 
@@ -81,8 +81,7 @@ Configure the system model.
     ac_filter = model.ACFilter(filter_par, grid_par)
 
     # Grid voltage source with constant frequency and voltage magnitude
-    grid_model = model.ThreePhaseVoltageSource(
-        w_g=grid_par.w_gN, abs_e_g=grid_par.u_gN)
+    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
     # Inverter with constant DC voltage
     converter = VoltageSourceConverter(u_dc=650)
@@ -97,22 +96,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-61
+.. GENERATED FROM PYTHON SOURCE LINES 48-56
 
 .. code-block:: Python
 
 
     # Control configuration parameters
     cfg = control.RFPSCControlCfg(
-        grid_par=grid_par,
-        filter_par=filter_par,
-        T_s=100e-6,
-        max_i=1.3*base.i,
-        R_a=.2*base.Z)
+        grid_par, filter_par, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
 
     # Create the control system
     ctrl = control.RFPSCControl(cfg)
@@ -124,20 +119,20 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-71
+.. GENERATED FROM PYTHON SOURCE LINES 58-66
 
 .. code-block:: Python
 
 
     # Converter output voltage magnitude reference
-    ctrl.ref.v = lambda t: grid_par.u_gN
+    ctrl.ref.v_c = lambda t: base.u
 
     # Active power reference
-    ctrl.ref.p_g = lambda t: ((t > .2)*(1/3) + (t > .5)*(1/3) + (t > .8)*(1/3) -
+    ctrl.ref.p_g = lambda t: ((t > .2)/3 + (t > .5)/3 + (t > .8)/3 -
                               (t > 1.2))*nom.P
 
 
@@ -147,11 +142,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-73
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-77
+.. GENERATED FROM PYTHON SOURCE LINES 68-72
 
 .. code-block:: Python
 
@@ -166,19 +161,16 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-79
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-84
+.. GENERATED FROM PYTHON SOURCE LINES 74-76
 
 .. code-block:: Python
 
 
-    # By default results are plotted in per-unit values. By omitting the argument
-    # `base` you can plot the results in SI units.
-
-    plot_grid(sim, base=base, plot_pcc_voltage=True)
+    plot(sim, base)
 
 
 
@@ -206,7 +198,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.433 seconds)
+   **Total running time of the script:** (0 minutes 8.076 seconds)
 
 
 .. _sphx_glr_download_auto_examples_grid_forming_plot_gfm_rfpsc_13kva.py:

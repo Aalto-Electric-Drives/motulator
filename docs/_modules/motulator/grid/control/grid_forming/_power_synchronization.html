@@ -379,8 +379,8 @@ document.write(`
 <span class="sd">        Filter model parameters.</span>
 <span class="sd">    max_i : float</span>
 <span class="sd">        Maximum current modulus (A).</span>
-<span class="sd">    R_a : float, optional</span>
-<span class="sd">        Damping resistance (Ω). Default is 4.6.</span>
+<span class="sd">    R_a : float</span>
+<span class="sd">        Damping resistance (Ω).</span>
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period of the controller (s). The default is 100e-6.</span>
 <span class="sd">    w_b : float, optional</span>
@@ -451,20 +451,21 @@ document.write(`
         <span class="c1"># Get the reference signals</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_power_reference</span><span class="p">(</span><span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">t</span><span class="p">)</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">t</span><span class="p">)</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span>
 
         <span class="c1"># Calculation of power droop</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">w_gN</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_p_psc</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">p_c</span><span class="p">)</span>
 
         <span class="c1"># Optionally, use of reference feedforward for d-axis current</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c_flt</span><span class="o">.</span><span class="n">imag</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c_flt</span><span class="o">.</span><span class="n">imag</span>
         <span class="c1"># ref.i_c = fbk.i_c_flt  # Conventional PSC</span>
 
         <span class="c1"># Limit the current reference</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
 
         <span class="c1"># Calculation of converter voltage output reference</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">v</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
 
         <span class="c1"># Duty ratios for PWM</span>
