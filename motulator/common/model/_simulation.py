@@ -66,7 +66,7 @@ class CarrierComparison:
 
     Examples
     --------
-    >>> from motulator.model import CarrierComparison
+    >>> from motulator.common.model import CarrierComparison
     >>> carrier_cmp = CarrierComparison(return_complex=False)
     >>> # First call gives rising edges
     >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.4, .2, .8])
