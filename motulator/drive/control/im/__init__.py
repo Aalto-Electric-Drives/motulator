@@ -8,7 +8,8 @@ from motulator.drive.control.im._obs_vhz import (
     ObserverBasedVHzControl, ObserverBasedVHzControlCfg)
 from motulator.drive.control.im._vhz import VHzControl, VHzControlCfg
 from motulator.drive.control._common import SpeedController
-from motulator.drive.control.im._flux_vector import FluxVectorControl, FluxVectorControlCfg
+from motulator.drive.control.im._flux_vector import (
+    FluxVectorControl, FluxVectorControlCfg)
 
 __all__ = [
     "FullOrderObserver",
@@ -25,5 +26,5 @@ __all__ = [
     "VHzControlCfg",
     "SpeedController",
     "FluxVectorControl",
-    "FluxVectorControlCfg"
+    "FluxVectorControlCfg",
 ]

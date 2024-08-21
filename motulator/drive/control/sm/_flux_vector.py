@@ -19,8 +19,9 @@ class FluxVectorControl(DriveControlSystem):
     coordinates as well as decoupling between the stator flux and torque 
     channels are used according to [#Awa2019b]_. Here, the stator flux 
     magnitude and the electromagnetic torque are selected as controllable 
-    variables. Proportional controllers are used for simplicity. The magnetic 
-    saturation is not considered in this implementation.
+    variables, and proportional controllers are used for simplicity 
+    [#Tii2024]_. The magnetic saturation is not considered in this
+    implementation.
 
     Parameters
     ----------
@@ -29,9 +30,9 @@ class FluxVectorControl(DriveControlSystem):
     cfg : FluxTorqueReferenceCfg
         Reference generation configuration.
     alpha_psi : float, optional
-        Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
+        Flux-control bandwidth (rad/s). The default is 2*pi*100.
     alpha_tau : float, optional
-        Bandwidth of the torque controller (rad/s). The default is 2*pi*200.
+        Torque-control bandwidth (rad/s). The default is 2*pi*200.
     alpha_o : float, optional
         Observer bandwidth (rad/s). The default is 2*pi*100.
     J : float, optional
@@ -52,6 +53,10 @@ class FluxVectorControl(DriveControlSystem):
        control of synchronous motors: A systematic design procedure," IEEE 
        Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
+    .. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for 
+       sensorless control of synchronous machine drives," IEEE Trans. Ind. 
+       Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 
+
     """
 
     def __init__(
@@ -65,7 +70,6 @@ class FluxVectorControl(DriveControlSystem):
             T_s=250e-6,
             sensorless=True):
         super().__init__(par, T_s, sensorless)
-        # Subsystems
         self.flux_torque_reference = FluxTorqueReference(cfg)
         if J is not None:
             self.speed_ctrl = SpeedController(J, 2*np.pi*4)
@@ -73,7 +77,6 @@ class FluxVectorControl(DriveControlSystem):
             self.speed_ctrl = None
         self.observer = Observer(
             ObserverCfg(par, alpha_o=alpha_o, sensorless=sensorless))
-        # Bandwidths
         self.alpha_psi = alpha_psi
         self.alpha_tau = alpha_tau
 
@@ -96,19 +99,18 @@ class FluxVectorControl(DriveControlSystem):
         c_tau = 1.5*par.n_p*np.real(i_a*np.conj(fbk.psi_s))
 
         # References for the flux and torque controllers
-        v_psi = self.alpha_psi*(ref.psi_s - np.abs(fbk.psi_s))
-        v_tau = self.alpha_tau*(ref.tau_M - tau_M)
+        e_psi = self.alpha_psi*(ref.psi_s - np.abs(fbk.psi_s))
+        e_tau = self.alpha_tau*(ref.tau_M - tau_M)
         if c_tau > 0:
-            v = (
-                1.5*par.n_p*np.abs(fbk.psi_s)*i_a*v_psi +
-                1j*fbk.psi_s*v_tau)/c_tau
+            e_s = (
+                1.5*par.n_p*np.abs(fbk.psi_s)*i_a*e_psi +
+                1j*fbk.psi_s*e_tau)/c_tau
         else:
-            v = v_psi
+            e_s = e_psi
 
         # Stator voltage reference
-        ref.u_s = par.R_s*fbk.i_s + 1j*fbk.w_m*fbk.psi_s + v
+        ref.u_s = par.R_s*fbk.i_s + 1j*fbk.w_m*fbk.psi_s + e_s
         u_ss = ref.u_s*np.exp(1j*fbk.theta_m)
-
         ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
 
         return ref
