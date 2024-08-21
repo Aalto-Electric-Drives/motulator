@@ -66,13 +66,13 @@ sphinx_gallery_conf = {
     True,
     "subsection_order":
     ExplicitOrder([
-        "../../examples/vector",
-        "../../examples/vhz",
-        "../../examples/obs_vhz",
-        "../../examples/flux_vector",
-        "../../examples/signal_inj",
-        "../../examples/grid_following",
-        "../../examples/grid_forming",
+        "../../examples/drive/vector",
+        "../../examples/drive/vhz",
+        "../../examples/drive/obs_vhz",
+        "../../examples/drive/flux_vector",
+        "../../examples/drive/signal_inj",
+        "../../examples/grid/grid_following",
+        "../../examples/grid/grid_forming",
     ]),
 }
 

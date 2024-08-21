@@ -19,7 +19,15 @@ A number of control methods are provided as examples. The example methods aim to
 
    installation
    usage
-   API Reference <autoapi/motulator/index>
+
+.. toctree:: 
+   :titlesonly:
+   :caption: Examples
+   :name: examples
+   :maxdepth: 1
+
+   drive_examples/index
+   grid_examples/index
 
 .. toctree::
    :titlesonly:
@@ -40,7 +48,14 @@ A number of control methods are provided as examples. The example methods aim to
 
    control/drive/index
    control/grid/index
-   auto_examples/index
+
+.. toctree::
+   :titlesonly:
+   :caption: Class references
+   :name: api
+   :maxdepth: 1
+
+   API Reference <autoapi/motulator/index>
 
 .. rubric::
    Acknowledgement
