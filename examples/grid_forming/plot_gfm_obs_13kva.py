@@ -14,7 +14,7 @@ from motulator.common.model import VoltageSourceConverter, Simulation
 from motulator.common.utils import BaseValues, NominalValues
 from motulator.grid import model
 import motulator.grid.control.grid_forming as control
-from motulator.grid.utils import FilterPars, GridPars, plot_grid
+from motulator.grid.utils import FilterPars, GridPars, plot
 # from motulator.common.model import CarrierComparison
 
 # %%
@@ -38,17 +38,13 @@ filter_par = FilterPars(L_fc=.15*base.L, R_fc=.05*base.Z)
 ac_filter = model.ACFilter(filter_par, grid_par)
 
 # Grid voltage source with constant frequency and voltage magnitude
-grid_model = model.ThreePhaseVoltageSource(
-    w_g=grid_par.w_gN, abs_e_g=grid_par.u_gN)
+grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
 # Inverter with constant DC voltage
 converter = VoltageSourceConverter(u_dc=650)
 
 # Create system model
 mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
-
-# Uncomment the lines below to enable the PWM model
-# mdl.pwm = CarrierComparison()
 
 # %%
 # Configure the control system.
@@ -58,11 +54,7 @@ grid_par_est = GridPars(u_gN=base.u, w_gN=base.w, L_g=.2*base.L)
 
 # Set the configuration parameters
 cfg = control.ObserverBasedGFMControlCfg(
-    grid_par=grid_par_est,
-    filter_par=filter_par,
-    T_s=100e-6,
-    max_i=1.3*base.i,
-    R_a=.2*base.Z)
+    grid_par_est, filter_par, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
 
 # Create the control system
 ctrl = control.ObserverBasedGFMControl(cfg)
@@ -71,19 +63,18 @@ ctrl = control.ObserverBasedGFMControl(cfg)
 # Set the references for converter output voltage magnitude and active power.
 
 # Converter output voltage magnitude reference
-ctrl.ref.v_c = lambda t: grid_par.u_gN
+ctrl.ref.v_c = lambda t: base.u
 
 # Active power reference
-ctrl.ref.p_g = lambda t: ((t > .2)*(4.15e3) + (t > .5)*(4.15e3) + (t > .8)*
-                          (4.2e3) - (t > 1.2)*(12.5e3))
+ctrl.ref.p_g = lambda t: ((t > .2)/3 + (t > .5)/3 + (t > .8)/3 -
+                          (t > 1.2))*nom.P
 
 # Uncomment line below to simulate operation in rectifier mode
-# ctrl.ref.p_g = lambda t: ((t > .2) - (t > .7)*2 + (t > 1.2))*12.5e3
+# ctrl.ref.p_g = lambda t: ((t > .2) - (t > .7)*2 + (t > 1.2))*nom.P
 
 # Uncomment lines below to simulate a grid voltage sag with constant ref.p_g
-# mdl.grid_model.par.e_g_abs = lambda t: (
-#    1 - (t > .2)*(0.8) + (t > 1)*(0.8))*grid_par.u_gN
-# ctrl.ref.p_g = lambda t: 12.5e3
+# mdl.grid_model.par.abs_e_g = lambda t: (1 - (t > .2)*.8 + (t > 1)*.8)*base.u
+# ctrl.ref.p_g = lambda t: nom.P
 
 # %%
 # Create the simulation object and simulate it.
@@ -94,7 +85,4 @@ sim.simulate(t_stop=1.5)
 # %%
 # Plot the results.
 
-# By default results are plotted in per-unit values. By omitting the argument
-# `base` you can plot the results in SI units.
-
-plot_grid(sim=sim, base=base, plot_pcc_voltage=False)
+plot(sim, base)
