@@ -1,17 +1,20 @@
 """
-2.2-kW AM
-===========
+2.2-kW induction motor
+======================
 
-This example simulates sensorless flux-vector control of a 2.2-kW induction machine drive.
+This example simulates sensorless flux-vector control of a 2.2-kW induction
+machine drive.
 
 """
 # %%
 import numpy as np
+
 from motulator.common.utils import Sequence
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, InductionMachineInvGammaPars, InductionMachinePars)
+    BaseValues, NominalValues, InductionMachineInvGammaPars,
+    InductionMachinePars, plot)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -28,13 +31,14 @@ par = InductionMachineInvGammaPars(
 mdl_par = InductionMachinePars.from_inv_gamma_model_pars(par)
 machine = model.InductionMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=.015)
-converter = model.Inverter(u_dc=540)
+converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
+
 # Set nominal values and limits for reference generation
-cfg = control.FluxVectorControlCfg(base.u, base.w, base.tau)
+cfg = control.FluxVectorControlCfg(.95*base.psi, 1.5*base.i, 1.5*nom.tau)
 ctrl = control.FluxVectorControl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
 
 # %%
@@ -48,6 +52,11 @@ ctrl.ref.w_m = Sequence(times, values)
 times = np.array([0, .125, .125, .875, .875, 1])*4
 values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L = Sequence(times, values)
+
+# No load, field-weakening (uncomment to try)
+# ctrl.ref.w_m = lambda t: (t > .2)*2*base.w
+# mdl.mechanics.tau_L = lambda t: 0
+
 # %%
 # Create the simulation object and simulate it.
 
@@ -56,4 +65,5 @@ sim.simulate(t_stop=4)
 
 # %%
 # Plot results in per-unit values.
+
 plot(sim, base)
