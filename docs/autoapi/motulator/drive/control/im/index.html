@@ -216,6 +216,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
 </ul>
@@ -445,6 +446,12 @@ document.write(`
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlCfg"><code class="docutils literal notranslate"><span class="pre">VHzControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedController"><code class="docutils literal notranslate"><span class="pre">SpeedController</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControl"><code class="docutils literal notranslate"><span class="pre">FluxVectorControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControl.get_flux_reference"><code class="docutils literal notranslate"><span class="pre">FluxVectorControl.get_flux_reference()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControl.output"><code class="docutils literal notranslate"><span class="pre">FluxVectorControl.output()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControlCfg"><code class="docutils literal notranslate"><span class="pre">FluxVectorControlCfg</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -503,6 +510,12 @@ document.write(`
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.SpeedController" title="motulator.drive.control.im.SpeedController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedController</span></code></a></p></td>
 <td><p>2DOF PI speed controller.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.FluxVectorControl" title="motulator.drive.control.im.FluxVectorControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorControl</span></code></a></p></td>
+<td><p>Flux-vector control of asynchronous machine drives.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.FluxVectorControlCfg" title="motulator.drive.control.im.FluxVectorControlCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorControlCfg</span></code></a></p></td>
+<td><p>Flux-vector control configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -979,6 +992,56 @@ based on the desired closed-loop bandwidth and the rotor inertia estimate.</p>
 </dl>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.control.im.FluxVectorControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">FluxVectorControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_psi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/im/_flux_vector.html#FluxVectorControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorControl" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../index.html#motulator.drive.control.DriveControlSystem" title="motulator.drive.control.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.control.DriveControlSystem</span></code></a></p>
+<p>Flux-vector control of asynchronous machine drives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>alpha_psi</strong> (<em>float</em><em>, </em><em>optional</em>) – Flux-control bandwidth (rad/s). The default is 2*pi*100.</p></li>
+<li><p><strong>alpha_tau</strong> (<em>float</em><em>, </em><em>optional</em>) – Torque-control bandwidth (rad/s). The default is 2*pi*200.</p></li>
+<li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Internal current-control bandwidth (rad/s). The default is 2*pi*200.</p></li>
+<li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer bandwidth (rad/s). The default is 2*pi*40.</p></li>
+<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kgm²). Needed only for the speed controller.</p></li>
+<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s). The default is 250e-6.</p></li>
+<li><p><strong>sensorless</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, sensorless control is used. The default is True.</p></li>
+<li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.im.FluxVectorControlCfg" title="motulator.drive.control.im.FluxVectorControlCfg"><em>FluxVectorControlCfg</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.FluxVectorControl.get_flux_reference">
+<span class="sig-name descname"><span class="pre">get_flux_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/im/_flux_vector.html#FluxVectorControl.get_flux_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorControl.get_flux_reference" title="Permalink to this definition">#</a></dt>
+<dd><p>Simple field-weakening strategy.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.FluxVectorControl.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/im/_flux_vector.html#FluxVectorControl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorControl.output" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate references.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.control.im.FluxVectorControlCfg">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">FluxVectorControlCfg</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/im/_flux_vector.html#FluxVectorControlCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorControlCfg" title="Permalink to this definition">#</a></dt>
+<dd><p>Flux-vector control configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nom_psi_s</strong> (<em>float</em>) – Nominal stator flux linkage (Vs).</p></li>
+<li><p><strong>max_i_s</strong> (<em>float</em>) – Maximum stator current (A).</p></li>
+<li><p><strong>max_tau_M</strong> (<em>float</em>) – Maximum torque reference (Nm).</p></li>
+<li><p><strong>k_u</strong> (<em>float</em><em>, </em><em>optional</em>) – Voltage utilization factor. The default is 0.95.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -1070,6 +1133,12 @@ based on the desired closed-loop bandwidth and the rotor inertia estimate.</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlCfg"><code class="docutils literal notranslate"><span class="pre">VHzControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedController"><code class="docutils literal notranslate"><span class="pre">SpeedController</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControl"><code class="docutils literal notranslate"><span class="pre">FluxVectorControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControl.get_flux_reference"><code class="docutils literal notranslate"><span class="pre">FluxVectorControl.get_flux_reference()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControl.output"><code class="docutils literal notranslate"><span class="pre">FluxVectorControl.output()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControlCfg"><code class="docutils literal notranslate"><span class="pre">FluxVectorControlCfg</span></code></a></li>
 </ul>
 </li>
 </ul>

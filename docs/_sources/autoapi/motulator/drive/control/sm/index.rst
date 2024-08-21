@@ -289,16 +289,17 @@ Package Contents
    coordinates as well as decoupling between the stator flux and torque
    channels are used according to [#Awa2019b]_. Here, the stator flux
    magnitude and the electromagnetic torque are selected as controllable
-   variables. Proportional controllers are used for simplicity. The magnetic
-   saturation is not considered in this implementation.
+   variables, and proportional controllers are used for simplicity
+   [#Tii2024]_. The magnetic saturation is not considered in this
+   implementation.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars
    :param cfg: Reference generation configuration.
    :type cfg: FluxTorqueReferenceCfg
-   :param alpha_psi: Bandwidth of the flux controller (rad/s). The default is 2*pi*100.
+   :param alpha_psi: Flux-control bandwidth (rad/s). The default is 2*pi*100.
    :type alpha_psi: float, optional
-   :param alpha_tau: Bandwidth of the torque controller (rad/s). The default is 2*pi*200.
+   :param alpha_tau: Torque-control bandwidth (rad/s). The default is 2*pi*200.
    :type alpha_tau: float, optional
    :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*100.
    :type alpha_o: float, optional
@@ -319,6 +320,10 @@ Package Contents
    .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented
       control of synchronous motors: A systematic design procedure," IEEE
       Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+
+   .. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for
+      sensorless control of synchronous machine drives," IEEE Trans. Ind.
+      Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650
 
 
 

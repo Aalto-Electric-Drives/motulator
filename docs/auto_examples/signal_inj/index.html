@@ -216,6 +216,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
 </ul>
@@ -405,18 +406,12 @@ document.write(`
                   
   <section id="signal-injection">
 <span id="sphx-glr-auto-examples-signal-inj"></span><h1>Signal Injection<a class="headerlink" href="#signal-injection" title="Permalink to this heading">#</a></h1>
-<p>These examples demonstrate a square-wave signal injection for low-speed
-operation based on <a class="footnote-reference brackets" href="#kim2012" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. A phase-locked loop is used to track the rotor
-position. For a wider speed range, signal injection could be combined to a
-model-based observer. The effects of magnetic saturation are not compensated
-for in this version.</p>
+<p>These examples demonstrate a square-wave signal injection for low-speed operation based on <a class="footnote-reference brackets" href="#kim2012" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. A phase-locked loop is used to track the rotor position. For a wider speed range, signal injection could be combined to a model-based observer. The effects of magnetic saturation are not compensated for in this version.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="kim2012" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Kim, Ha, Sul, “PWM switching frequency signal injection
-sensorless method in IPMSM,” IEEE Trans. Ind. Appl., 2012,
-<a class="reference external" href="https://doi.org/10.1109/TIA.2012.2210175">https://doi.org/10.1109/TIA.2012.2210175</a></p>
+<p>Kim, Ha, Sul, “PWM switching frequency signal injection sensorless method in IPMSM,” IEEE Trans. Ind. Appl., 2012, <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2210175">https://doi.org/10.1109/TIA.2012.2210175</a></p>
 </aside>
 </aside>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive. Square-wave signal injection is used with a simple phase-locked loop."><img alt="" src="../../_images/sphx_glr_plot_signal_inj_pmsm_2kw_thumb.png" />

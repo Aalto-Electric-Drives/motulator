@@ -217,7 +217,6 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
 
 .. [#Tii2022a] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-based V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9948057
 
-
 .. [#Tii2022b] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, "Stable and passive observer-based V/Hz control for synchronous Motors," Proc. IEEE ECCE, Detroit, MI, Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9947858
 
 
@@ -322,22 +321,15 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control of synchronous machine drives 
-[#Pel2009]_. In the implemented controller, rotor coordinates as well as 
-decoupling between the stator flux and torque channels are used according to 
-[#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic 
-torque are selected as controllable variables. 
+These examples demonstrate flux-vector control of electric machine drives [#Pel2009]_. In the implemented controller, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementation of sensorless mode corresponds to [Tii2024_].
 
 .. rubric:: References
 
-.. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented 
-   control of IPM drives with variable DC link in the field-weakening 
-   region,” IEEE Trans.Ind. Appl., 2009, 
-   https://doi.org/10.1109/TIA.2009.2027167
+.. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region,” IEEE Trans.Ind. Appl., 2009, https://doi.org/10.1109/TIA.2009.2027167
 
-.. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented 
-   control of synchronous motors: A systematic design procedure," IEEE Trans. 
-   Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+.. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+
+.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 
 
 
 
@@ -361,6 +353,23 @@ torque are selected as controllable variables.
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a 2.2-kW induction machine drive.">
+
+.. only:: html
+
+  .. image:: /auto_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_im_2kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_im_2kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor</div>
     </div>
 
 
@@ -407,17 +416,11 @@ torque are selected as controllable variables.
 Signal Injection
 ----------------
 
-These examples demonstrate a square-wave signal injection for low-speed 
-operation based on [#Kim2012]_. A phase-locked loop is used to track the rotor 
-position. For a wider speed range, signal injection could be combined to a 
-model-based observer. The effects of magnetic saturation are not compensated 
-for in this version.
+These examples demonstrate a square-wave signal injection for low-speed operation based on [#Kim2012]_. A phase-locked loop is used to track the rotor position. For a wider speed range, signal injection could be combined to a model-based observer. The effects of magnetic saturation are not compensated for in this version.
 
 .. rubric:: References
 
-.. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
-   sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
-   https://doi.org/10.1109/TIA.2012.2210175
+.. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012, https://doi.org/10.1109/TIA.2012.2210175
 
 
 
@@ -539,21 +542,13 @@ These examples demonstrate grid-following control for grid-connected converters.
 Grid-Forming Control
 --------------------
 
-These examples demonstrate grid-forming control for grid-connected converters. 
-The example :doc:`/auto_examples/grid_forming/plot_gfm_rfpsc_13kva` uses a 
-power-synchronization loop for synchronizing with the grid [#Har2020]_. In 
-:doc:`/auto_examples/grid_forming/plot_gfm_obs_13kva`, disturbance-observer-
-based control is used [#Nur2024]_.
+These examples demonstrate grid-forming control for grid-connected converters. The example :doc:`/auto_examples/grid_forming/plot_gfm_rfpsc_13kva` uses a power-synchronization loop for synchronizing with the grid [#Har2020]_. In :doc:`/auto_examples/grid_forming/plot_gfm_obs_13kva`, disturbance-observer-based control is used [#Nur2024]_.
 
 .. rubric:: References
 
-.. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-feedforward
-   power-synchronization control," IEEE Trans. Power Electron., 2020,
-   https://doi.org/10.1109/TPEL.2020.2970991
+.. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-feedforward power-synchronization control," IEEE Trans. Power Electron., 2020, https://doi.org/10.1109/TPEL.2020.2970991
 
-.. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional
-   grid-forming converter control based on a disturbance observer, "IEEE
-   Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
+.. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer, "IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 
 .. raw:: html

@@ -45,6 +45,8 @@ Classes
    motulator.drive.control.im.VHzControl
    motulator.drive.control.im.VHzControlCfg
    motulator.drive.control.im.SpeedController
+   motulator.drive.control.im.FluxVectorControl
+   motulator.drive.control.im.FluxVectorControlCfg
 
 
 Package Contents
@@ -898,6 +900,127 @@ Package Contents
    :type alpha_s: float
    :param max_tau_M: Maximum motor torque (Nm). The default is `inf`.
    :type max_tau_M: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: FluxVectorControl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_c=2 * np.pi * 200, alpha_o=2 * np.pi * 40, J=None, T_s=0.00025, sensorless=True)
+
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
+
+
+   
+   Flux-vector control of asynchronous machine drives.
+
+   :param par: Machine model parameters.
+   :type par: InductionMachineInvGammaPars
+   :param alpha_psi: Flux-control bandwidth (rad/s). The default is 2*pi*100.
+   :type alpha_psi: float, optional
+   :param alpha_tau: Torque-control bandwidth (rad/s). The default is 2*pi*200.
+   :type alpha_tau: float, optional
+   :param alpha_c: Internal current-control bandwidth (rad/s). The default is 2*pi*200.
+   :type alpha_c: float, optional
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
+   :type alpha_o: float, optional
+   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
+   :type J: float, optional
+   :param T_s: Sampling period (s). The default is 250e-6.
+   :type T_s: float
+   :param sensorless: If True, sensorless control is used. The default is True.
+   :type sensorless: bool, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_flux_reference(fbk)
+
+      
+      Simple field-weakening strategy.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: output(fbk)
+
+      
+      Calculate references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: FluxVectorControlCfg
+
+   
+   Flux-vector control configuration.
+
+   :param nom_psi_s: Nominal stator flux linkage (Vs).
+   :type nom_psi_s: float
+   :param max_i_s: Maximum stator current (A).
+   :type max_i_s: float
+   :param max_tau_M: Maximum torque reference (Nm).
+   :type max_tau_M: float
+   :param k_u: Voltage utilization factor. The default is 0.95.
+   :type k_u: float, optional
 
 
 

@@ -5,22 +5,15 @@
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control of synchronous machine drives 
-[#Pel2009]_. In the implemented controller, rotor coordinates as well as 
-decoupling between the stator flux and torque channels are used according to 
-[#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic 
-torque are selected as controllable variables. 
+These examples demonstrate flux-vector control of electric machine drives [#Pel2009]_. In the implemented controller, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementation of sensorless mode corresponds to [Tii2024_].
 
 .. rubric:: References
 
-.. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented 
-   control of IPM drives with variable DC link in the field-weakening 
-   region,” IEEE Trans.Ind. Appl., 2009, 
-   https://doi.org/10.1109/TIA.2009.2027167
+.. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region,” IEEE Trans.Ind. Appl., 2009, https://doi.org/10.1109/TIA.2009.2027167
 
-.. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented 
-   control of synchronous motors: A systematic design procedure," IEEE Trans. 
-   Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+.. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+
+.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 
 
 
 
@@ -44,6 +37,23 @@ torque are selected as controllable variables.
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a 2.2-kW induction machine drive.">
+
+.. only:: html
+
+  .. image:: /auto_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_im_2kw_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_im_2kw.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor</div>
     </div>
 
 
@@ -92,6 +102,7 @@ torque are selected as controllable variables.
    :hidden:
 
    /auto_examples/flux_vector/plot_flux_vector_pmsm_2kw
+   /auto_examples/flux_vector/plot_flux_vector_im_2kw
    /auto_examples/flux_vector/plot_flux_vector_syrm_7kw
    /auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw
 

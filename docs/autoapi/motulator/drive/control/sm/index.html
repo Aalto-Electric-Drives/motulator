@@ -216,6 +216,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
 </ul>
@@ -700,15 +701,16 @@ parameters.</p>
 coordinates as well as decoupling between the stator flux and torque
 channels are used according to <a class="footnote-reference brackets" href="#awa2019b" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. Here, the stator flux
 magnitude and the electromagnetic torque are selected as controllable
-variables. Proportional controllers are used for simplicity. The magnetic
-saturation is not considered in this implementation.</p>
+variables, and proportional controllers are used for simplicity
+<a class="footnote-reference brackets" href="#tii2024" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. The magnetic saturation is not considered in this
+implementation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.SynchronousMachinePars" title="motulator.drive.utils.SynchronousMachinePars"><em>SynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.FluxTorqueReferenceCfg" title="motulator.drive.control.sm.FluxTorqueReferenceCfg"><em>FluxTorqueReferenceCfg</em></a>) – Reference generation configuration.</p></li>
-<li><p><strong>alpha_psi</strong> (<em>float</em><em>, </em><em>optional</em>) – Bandwidth of the flux controller (rad/s). The default is 2*pi*100.</p></li>
-<li><p><strong>alpha_tau</strong> (<em>float</em><em>, </em><em>optional</em>) – Bandwidth of the torque controller (rad/s). The default is 2*pi*200.</p></li>
+<li><p><strong>alpha_psi</strong> (<em>float</em><em>, </em><em>optional</em>) – Flux-control bandwidth (rad/s). The default is 2*pi*100.</p></li>
+<li><p><strong>alpha_tau</strong> (<em>float</em><em>, </em><em>optional</em>) – Torque-control bandwidth (rad/s). The default is 2*pi*200.</p></li>
 <li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer bandwidth (rad/s). The default is 2*pi*100.</p></li>
 <li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kgm²). Needed only for the speed controller.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s). The default is 250e-6.</p></li>
@@ -731,6 +733,12 @@ region,” IEEE Trans.Ind. Appl., 2009,
 control of synchronous motors: A systematic design procedure,” IEEE
 Trans. Ind. Appl., 2019, <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2927316">https://doi.org/10.1109/TIA.2019.2927316</a></p>
 </aside>
+<aside class="footnote brackets" id="tii2024" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>Tiitinen, Hinkkanen, Harnefors, “Design framework for
+sensorless control of synchronous machine drives,” IEEE Trans. Ind.
+Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TIE.2024.3429650">https://doi.org/10.1109/TIE.2024.3429650</a></p>
+</aside>
 </aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.FluxVectorControl.output">
@@ -746,7 +754,7 @@ Trans. Ind. Appl., 2019, <a class="reference external" href="https://doi.org/10.
 <dd><p>Bases: <a class="reference internal" href="../../../common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a></p>
 <p>Current controller for synchronous machines.</p>
 <p>This provides an interface of a current controller for synchronous machines
-<a class="footnote-reference brackets" href="#awa2019a" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. The gains are initialized based on the desired closed-loop
+<a class="footnote-reference brackets" href="#awa2019a" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>. The gains are initialized based on the desired closed-loop
 bandwidth and the inductances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -759,7 +767,7 @@ bandwidth and the inductances.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="awa2019a" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">6</a><span class="fn-bracket">]</span></span>
 <p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current
 control of saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
@@ -794,7 +802,7 @@ control of saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 <dd><p>Current reference calculation.</p>
 <p>This method includes the MTPA locus and field-weakening operation based on
 the unlimited voltage reference feedback. The MTPV and current limits are
-taken into account. This resembles the method presented <a class="footnote-reference brackets" href="#bed2020" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
+taken into account. This resembles the method presented <a class="footnote-reference brackets" href="#bed2020" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -804,16 +812,16 @@ taken into account. This resembles the method presented <a class="footnote-refer
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Instead of the PI controller used in <a class="footnote-reference brackets" href="#bed2020" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>, we use a simpler integral
+<p>Instead of the PI controller used in <a class="footnote-reference brackets" href="#bed2020" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>, we use a simpler integral
 controller with a constant gain. The resulting operating-point-dependent
 closed-loop pole could be derived using (12) of the paper. Unlike in
-<a class="footnote-reference brackets" href="#bed2020" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>, the MTPV limit is also included here by means of limiting the
+<a class="footnote-reference brackets" href="#bed2020" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>, the MTPV limit is also included here by means of limiting the
 reference torque and the d-axis current reference.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bed2020" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id7">2</a>,<a role="doc-backlink" href="#id8">3</a>)</span>
+<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id8">2</a>,<a role="doc-backlink" href="#id9">3</a>)</span>
 <p>Bedetti, Calligaro, Petrella, “Analytical design and
 autotuning of adaptive flux-weakening voltage regulation loop in IPMSM
 drives with accurate torque regulation,” IEEE Trans. Ind. Appl., 2020,
@@ -978,7 +986,7 @@ the interface to the solver.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedVHzControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/sm/_obs_vhz.html#ObserverBasedVHzControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ObserverBasedVHzControl" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../index.html#motulator.drive.control.DriveControlSystem" title="motulator.drive.control.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.control.DriveControlSystem</span></code></a></p>
 <p>Observer-based V/Hz control for synchronous motors.</p>
-<p>This observer-based V/Hz control control method is based on <a class="footnote-reference brackets" href="#tii2022" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>.</p>
+<p>This observer-based V/Hz control control method is based on <a class="footnote-reference brackets" href="#tii2022" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -991,7 +999,7 @@ the interface to the solver.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="tii2022" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">7</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">8</a><span class="fn-bracket">]</span></span>
 <p>Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
 “Stable and passive observer-based V/Hz control for synchronous Motors,”
 Proc. IEEE ECCE, 2022, <a class="reference external" href="https://doi.org/10.1109/ECCE50734.2022.9947858">https://doi.org/10.1109/ECCE50734.2022.9947858</a></p>
@@ -1099,7 +1107,7 @@ operation.</p>
 <dd><p>Bases: <a class="reference internal" href="../index.html#motulator.drive.control.DriveControlSystem" title="motulator.drive.control.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.control.DriveControlSystem</span></code></a></p>
 <p>Sensorless control with signal injection for synchronous machine drives.</p>
 <p>This class implements a square-wave signal injection for low-speed
-operation according to <a class="footnote-reference brackets" href="#kim2012" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>. A phase-locked loop is used to track
+operation according to <a class="footnote-reference brackets" href="#kim2012" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>. A phase-locked loop is used to track
 the rotor position.</p>
 <p class="rubric">Notes</p>
 <p>For a wider speed range, signal injection could be combined to a
@@ -1108,7 +1116,7 @@ compensated for in this version.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="kim2012" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">8</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">9</a><span class="fn-bracket">]</span></span>
 <p>Kim, Ha, Sul, “PWM switching frequency signal injection
 sensorless method in IPMSM,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2210175">https://doi.org/10.1109/TIA.2012.2210175</a></p>
