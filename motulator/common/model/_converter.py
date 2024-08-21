@@ -12,7 +12,7 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from motulator.common.model._simulation import Subsystem
+from motulator.common.model import Subsystem
 from motulator.common.utils import abc2complex, complex2abc
 
 
