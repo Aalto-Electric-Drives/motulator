@@ -8,11 +8,10 @@ This example simulates reference-feedforward power-synchronization control
 """
 
 # %%
-from motulator.common.model import VoltageSourceConverter, Simulation
-from motulator.common.utils import BaseValues, NominalValues
 from motulator.grid import model
 import motulator.grid.control.grid_forming as control
-from motulator.grid.utils import FilterPars, GridPars, plot
+from motulator.grid.utils import (
+    BaseValues, FilterPars, GridPars, NominalValues, plot)
 
 # %%
 # Compute base values based on the nominal values.
@@ -38,7 +37,7 @@ ac_filter = model.ACFilter(filter_par, grid_par)
 grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
 # Inverter with constant DC voltage
-converter = VoltageSourceConverter(u_dc=650)
+converter = model.VoltageSourceConverter(u_dc=650)
 
 # Create system model
 mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
@@ -66,7 +65,7 @@ ctrl.ref.p_g = lambda t: ((t > .2)/3 + (t > .5)/3 + (t > .8)/3 -
 # %%
 # Create the simulation object and simulate it.
 
-sim = Simulation(mdl, ctrl)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.5)
 
 # %%

@@ -10,13 +10,11 @@ current controller.
 """
 
 # %%
-from motulator.common.model import VoltageSourceConverter, Simulation
-from motulator.common.utils import BaseValues, NominalValues
 from motulator.grid import model
 import motulator.grid.control.grid_following as control
-from motulator.grid.utils import FilterPars, GridPars, plot
+from motulator.grid.utils import (
+    BaseValues, FilterPars, GridPars, NominalValues, plot)
 # from motulator.grid.utils import plot_voltage_vector
-# from motulator.common.model import CarrierComparison
 # import numpy as np
 
 # %%
@@ -41,7 +39,7 @@ ac_filter = model.ACFilter(filter_par, grid_par)
 grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
 # Inverter with constant DC voltage
-converter = VoltageSourceConverter(u_dc=650)
+converter = model.VoltageSourceConverter(u_dc=650)
 
 # Create system model
 mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
@@ -65,7 +63,7 @@ ctrl = control.GFLControl(cfg)
 ctrl.ref.p_g = lambda t: (t > .02)*5e3
 ctrl.ref.q_g = lambda t: (t > .04)*4e3
 
-# Uncomment lines below to simulate a unbalanced fault (add negative sequence)
+# Uncomment lines below to simulate an unbalanced fault (add negative sequence)
 # mdl.grid_model.par.abs_e_g = .75*base.u
 # mdl.grid_model.par.abs_e_g_neg = .25*base.u
 # mdl.grid_model.par.phi_neg = -np.pi/3
@@ -73,7 +71,7 @@ ctrl.ref.q_g = lambda t: (t > .04)*4e3
 # %%
 # Create the simulation object and simulate it.
 
-sim = Simulation(mdl, ctrl)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=.1)
 
 # %%

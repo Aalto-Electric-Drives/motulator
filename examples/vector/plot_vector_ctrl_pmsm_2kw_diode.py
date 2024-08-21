@@ -7,12 +7,10 @@ drive, equipped with a diode bridge rectifier.
 
 """
 # %%
-from motulator.common.model import (
-    CarrierComparison, FrequencyConverter, Simulation)
-from motulator.common.utils import BaseValues, NominalValues
 from motulator.drive import model
 import motulator.drive.control.sm as control
-from motulator.drive.utils import plot, plot_extra, SynchronousMachinePars
+from motulator.drive.utils import (
+    BaseValues, NominalValues, plot, plot_extra, SynchronousMachinePars)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -30,10 +28,10 @@ machine = model.SynchronousMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=.015)
 
 # Frequency converter with a diode bridge
-converter = FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=400, f_g=50)
+converter = model.FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=400, f_g=50)
 mdl = model.Drive(converter, machine, mechanics)
 
-mdl.pwm = CarrierComparison()  # Enable the PWM model
+mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
 # Configure the control system.
@@ -56,7 +54,7 @@ mdl.mechanics.tau_L = lambda t: (t > .6)*nom.tau
 # Create the simulation object and simulate it.
 
 # Simulate the system
-sim = Simulation(mdl, ctrl)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1)
 
 # Plot results in per-unit values

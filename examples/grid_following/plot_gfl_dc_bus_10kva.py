@@ -10,12 +10,10 @@ grid, a current reference generator, and a PI-type current controller.
 """
 
 # %%
-from motulator.common.model import VoltageSourceConverter, Simulation
-from motulator.common.utils import BaseValues, NominalValues
 from motulator.grid import model
 import motulator.grid.control.grid_following as control
-from motulator.grid.control import DCBusVoltageController
-from motulator.grid.utils import FilterPars, GridPars, plot
+from motulator.grid.utils import (
+    BaseValues, FilterPars, GridPars, NominalValues, plot)
 
 # %%
 # Compute base values based on the nominal values.
@@ -39,7 +37,7 @@ ac_filter = model.ACFilter(filter_par, grid_par)
 grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
 # Inverter model with DC-bus dynamics included
-converter = VoltageSourceConverter(u_dc=600, C_dc=1e-3)
+converter = model.VoltageSourceConverter(u_dc=600, C_dc=1e-3)
 
 # Create system model
 mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
@@ -52,7 +50,7 @@ cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i, C_dc=1e-3)
 ctrl = control.GFLControl(cfg)
 
 # Add the DC-bus voltage controller to the control system
-ctrl.dc_bus_volt_ctrl = DCBusVoltageController(p_max=base.p)
+ctrl.dc_bus_volt_ctrl = control.DCBusVoltageController(p_max=base.p)
 
 # %%
 # Set the time-dependent reference and disturbance signals.
@@ -67,7 +65,7 @@ mdl.converter.i_ext = lambda t: (t > .06)*10
 # %%
 # Create the simulation object and simulate it.
 
-sim = Simulation(mdl, ctrl)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=.1)
 
 # %%
