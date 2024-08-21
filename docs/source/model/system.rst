@@ -17,7 +17,7 @@ system. The same architecture is used in *motulator*.
 
    Block diagram of a sampled-data system. Discrete signals and systems are shown in blue, and continuous signals and systems are shown in red. 
 
-The continuous-time system (named `mdl` in :doc:`/auto_examples/index`) is the
+The continuous-time system (named `mdl` in the provided example scripts) is the
 model of a physical machine drive or grid converter system. The system comprises
 a power converter along with other subsystem models depending on the application. The continuous-time system may have
 external inputs, such as a load torque or power fed to a DC-bus of the converter.

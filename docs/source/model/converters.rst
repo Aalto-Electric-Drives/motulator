@@ -47,8 +47,7 @@ the conductance of the parallel resistor. The converter DC current is calculated
 Six-Pulse Diode Bridge
 ----------------------
 
-The figure below shows a six-pulse diode bridge rectifier, where the inductor :math:`L` is placed in the DC link.
-This model is implemented in the class :class:`motulator.common.model.DiodeBridge`.
+The figure below shows a six-pulse diode bridge rectifier, where the inductor :math:`L` is placed in the DC link. The voltage-source converter described above is extended with a diode bridge and stiff grid in the class :class:`motulator.drive.model.FrequencyConverter`.
 
 .. figure:: figs/diode_bridge.svg
    :width: 100%
