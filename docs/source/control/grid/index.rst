@@ -1,6 +1,6 @@
-*****************************
-Design Notes: Grid Converters
-*****************************
+***************
+Grid Converters
+***************
 
 Design notes for selected control methods for grid-connected converters are provided in this section. The aim 
 of these notes is to link the implemented methods to the theory and to provide 

@@ -42,7 +42,7 @@ A number of control methods are provided as examples. The example methods aim to
 
 .. toctree::
    :titlesonly:
-   :caption: Control Methods
+   :caption: Design Notes on Control Methods
    :name: controllers
    :maxdepth: 1
 
