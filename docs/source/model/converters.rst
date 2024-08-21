@@ -66,8 +66,8 @@ The model is implemented as
 
 where :math:`i_\mathrm{L}` is the DC-bus current, :math:`u_\mathrm{di}` is the diode bridges output DC voltage, :math:`u_\mathrm{dc}` is the dc bus voltage, and :math:`L_{\mathrm{dc}}` is the inductance of the DC link.
    
-The use case example of six-pulse diode bridge can be found in :doc:`/auto_examples/vhz/plot_vhz_ctrl_im_2kw` and 
-:doc:`/auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode`
+The use case example of six-pulse diode bridge can be found in :doc:`/drive_examples/vhz/plot_vhz_ctrl_im_2kw` and 
+:doc:`/drive_examples/vector/plot_vector_ctrl_pmsm_2kw_diode`
 
 Carrier Comparison
 ------------------
@@ -128,7 +128,7 @@ In this case, the output voltage vector is
 	\boldsymbol{u}_\mathrm{c}^\mathrm{s} = \underbrace{\frac{2}{3}\left(d_\mathrm{a} + d_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + d_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{d}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}
    :label: switching_cycle_averaging
 
-where :math:`\boldsymbol{d}_\mathrm{c}^\mathrm{s}` is the duty ratio space vector. This ZOH is the default option in most of :doc:`/auto_examples/index`.
+where :math:`\boldsymbol{d}_\mathrm{c}^\mathrm{s}` is the duty ratio space vector. This ZOH is the default option in most of :doc:`/drive_examples/index` and :doc:`/grid_examples/index`.
 
 .. rubric:: References
 

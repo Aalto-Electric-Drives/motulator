@@ -44,7 +44,7 @@ where :math:`L_\mathrm{s}` is the stator inductance and :math:`L_\ell` is the le
     \tau_\mathrm{M} = \frac{3 n_\mathrm{p}}{2}\mathrm{Im} \left\{\boldsymbol{i}_\mathrm{s}^\mathrm{s} (\boldsymbol{\psi}_\mathrm{s}^\mathrm{s})^* \right\}
     :label: im_torque
 
-The same class can also be used with the main-flux saturation models, such as :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [#Qu2012]_. See also the example :doc:`/auto_examples/vector/plot_vector_ctrl_im_2kw`.
+The same class can also be used with the main-flux saturation models, such as :math:`L_\mathrm{s} = L_\mathrm{s}(\psi_\mathrm{s})` [#Qu2012]_. See also the example :doc:`/drive_examples/vector/plot_vector_ctrl_im_2kw`.
 
 .. note::
    If the magnetic saturation is omitted, the Γ model is mathematically identical to the inverse-Γ and T models. For example, the parameters of the Γ model can be transformed to those of the inverse-Γ model parameters as follows:
@@ -107,7 +107,7 @@ Since the machine is fed and observed from stator coordinates, the quantities ar
 
    Synchronous machine model seen from stator coordinates.
 
-The linear magnetic model in :eq:`sm_flux` can be replaced with nonlinear saturation characteristics :math:`\boldsymbol{\psi}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}(\boldsymbol{i}_\mathrm{s})`, either in a form of flux maps or explicit functions [#Hin2017]_. See the examples :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor`, :doc:`/auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw`, and :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw`. Methods for importing and plotting the flux map data are also provided. 
+The linear magnetic model in :eq:`sm_flux` can be replaced with nonlinear saturation characteristics :math:`\boldsymbol{\psi}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s}(\boldsymbol{i}_\mathrm{s})`, either in a form of flux maps or explicit functions [#Hin2017]_. See the examples :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor`, :doc:`/drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw`, and :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw`. Methods for importing and plotting the flux map data are also provided. 
 
 .. rubric:: References
 

@@ -28,7 +28,7 @@ base = BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Create a saturation model, see the example
-# :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` for further details.
+# :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` for further details.
 
 
 def i_s(psi_s):

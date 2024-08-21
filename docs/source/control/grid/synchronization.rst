@@ -4,7 +4,7 @@ Synchronization Methods
 Phase-Locked Loop
 -----------------
 
-The :doc:`/auto_examples/grid_following/index` examples use a Phase-Locked Loop (PLL) to synchronize with the grid.
+The :doc:`/grid_examples/grid_following/index` examples use a Phase-Locked Loop (PLL) to synchronize with the grid.
 The block diagram of the PLL is shown in the figure below.
 
 .. figure:: ../figs/pll.svg
@@ -36,7 +36,7 @@ This controller is implemented in the class :class:`motulator.grid.control.PLL`.
 Power Synchronization
 ---------------------
 
-The :doc:`/auto_examples/grid_forming/index` examples use active power synchronization as a means of
+The :doc:`/grid_examples/grid_forming/index` examples use active power synchronization as a means of
 synchronizing with the grid. The dynamics of a synchronous machine are emulated,
 as the converter output active power is tied to the angle of the converter output voltage.
 This allows for synchronization of a converter with the grid without the use of a PLL.

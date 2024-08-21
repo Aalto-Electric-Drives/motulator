@@ -1,11 +1,7 @@
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control of synchronous machine drives 
-[#Pel2009]_. In the implemented controller, rotor coordinates as well as 
-decoupling between the stator flux and torque channels are used according to 
-[#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic 
-torque are selected as controllable variables. 
+These examples demonstrate flux-vector control of synchronous machine drives [#Pel2009]_. In the implemented controller, rotor coordinates as well as decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. 
 
 .. rubric:: References
 
