@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 from cycler import cycler
 
 from motulator.common.utils import complex2abc
-#import motulator.grid.control.grid_forming as control  # To check instance type
 
 # Plotting parameters
 plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")
