@@ -10,11 +10,10 @@ PI-type current controller.
 """
 
 # %%
-from motulator.common.model import VoltageSourceConverter, Simulation
-from motulator.common.utils import BaseValues, NominalValues
 from motulator.grid import model
 import motulator.grid.control.grid_following as control
-from motulator.grid.utils import FilterPars, GridPars, plot_grid
+from motulator.grid.utils import (
+    BaseValues, FilterPars, GridPars, NominalValues, plot)
 
 # %%
 # Compute base values based on the nominal values.
@@ -32,28 +31,20 @@ filter_par = FilterPars(L_fc=.073*base.L, L_fg=.073*base.L, C_f=.043*base.C)
 # DC-bus parameters
 ac_filter = model.ACFilter(filter_par, grid_par)
 
-# AC-voltage magnitude (to simulate voltage dips or short-circuits)
-abs_e_g_var = lambda t: grid_par.u_gN
-
 # AC grid model with constant voltage magnitude and frequency
-grid_model = model.ThreePhaseVoltageSource(
-    w_g=grid_par.w_gN, abs_e_g=abs_e_g_var)
+grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
 # Inverter model with constant DC voltage
-converter = VoltageSourceConverter(u_dc=650)
+converter = model.VoltageSourceConverter(u_dc=650)
 
 # Create system model
 mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
-
-# Uncomment line below to enable the PWM model
-#mdl.pwm = CarrierComparison()
 
 # %%
 # Configure the control system.
 
 # Control parameters
-cfg = control.GFLControlCfg(
-    grid_par=grid_par, filter_par=filter_par, max_i=1.5*base.i)
+cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i)
 
 # Create the control system
 ctrl = control.GFLControl(cfg)
@@ -68,13 +59,10 @@ ctrl.ref.q_g = lambda t: (t > .04)*4e3
 # %%
 # Create the simulation object and simulate it.
 
-sim = Simulation(mdl, ctrl)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=.1)
 
 # %%
 # Plot the results.
 
-# By default results are plotted in per-unit values. By omitting the argument
-# `base` you can plot the results in SI units.
-
-plot_grid(sim, base=base, plot_pcc_voltage=True)
+plot(sim, base)

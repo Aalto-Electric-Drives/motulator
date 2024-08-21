@@ -10,13 +10,11 @@ parameters in this example yield open-loop V/Hz control.
 
 import numpy as np
 
-from motulator.common.model import (
-    CarrierComparison, FrequencyConverter, Simulation)
-from motulator.common.utils import BaseValues, NominalValues
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
-    InductionMachinePars, InductionMachineInvGammaPars, plot, plot_extra)
+    BaseValues, InductionMachineInvGammaPars, InductionMachinePars,
+    NominalValues, plot, plot_extra)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -37,12 +35,12 @@ k = 1.1*nom.tau/(base.w/base.n_p)**2
 mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
 
 # Frequency converter with a diode bridge
-frequency_converter = FrequencyConverter(
+frequency_converter = model.FrequencyConverter(
     C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
 mdl = model.Drive(
     converter=frequency_converter, machine=machine, mechanics=mechanics)
 
-mdl.pwm = CarrierComparison()  # Enable the PWM model
+mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).
@@ -63,7 +61,7 @@ mdl.mechanics.tau_L = lambda t: (t > 1.)*.2*nom.tau
 # %%
 # Create the simulation object and simulate it.
 
-sim = Simulation(mdl, ctrl)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=1.5)
 
 # %%

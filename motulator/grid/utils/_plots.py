@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from cycler import cycler
 
 from motulator.common.utils import complex2abc
+#import motulator.grid.control.grid_forming as control  # To check instance type
 
 # Plotting parameters
 plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")
@@ -17,8 +18,7 @@ plt.rcParams.update({"text.usetex": False})
 
 
 # %%
-def plot_grid(
-        sim, base=None, plot_pcc_voltage=False, plot_w=False, t_span=None):
+def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
     """
     Plot example figures of grid converter simulations.
 
@@ -30,9 +30,9 @@ def plot_grid(
         Base values for scaling the waveforms. If not given, plots the figures 
         in SI units.
     plot_pcc_voltage : bool, optional
-        If True, plot the phase voltage waveforms at the point of common 
-        coupling (PCC). Otherwise, plot the grid voltage waveforms. The default 
-        is False.        
+        If True, the phase voltage waveforms are plotted at the point of common 
+        coupling (PCC). Otherwise, the grid voltage waveforms are plotted. The 
+        default is True.        
     plot_w : bool, optional
         If True, plot the grid frequency. Otherwise, plot the phase angle. The 
         default is False.
@@ -58,7 +58,6 @@ def plot_grid(
         pu_vals = True
 
     # Three-phase quantities
-    #i_c_abc = complex2abc(mdl.converter.data.i_cs).T
     i_g_abc = complex2abc(mdl.ac_filter.data.i_gs).T
     e_g_abc = complex2abc(mdl.grid_model.data.e_gs).T
     u_g_abc = complex2abc(mdl.ac_filter.data.u_gs).T
@@ -68,8 +67,16 @@ def plot_grid(
         np.real(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs)))
     q_g = 1.5*np.asarray(
         np.imag(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs)))
-    p_g_ref = np.asarray(ctrl.ref.p_g)
-    q_g_ref = np.asarray(ctrl.ref.q_g)
+
+    # Coordinate transformation in the case of observer-based GFM control
+    if hasattr(sim.ctrl, "observer"):
+        # Convert quantities to converter-output-voltage coordinates
+        T = np.where(
+            np.abs(ctrl.fbk.v_c) > 0,
+            np.conj(ctrl.fbk.v_c)/np.abs(ctrl.fbk.v_c), 1)
+        ctrl.ref.u_c = T*ctrl.ref.u_c
+        ctrl.fbk.i_c = T*ctrl.fbk.i_c
+        ctrl.ref.i_c = T*ctrl.ref.i_c
 
     # %%
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 7))
@@ -95,7 +102,7 @@ def plot_grid(
         # Subplot 1: DC-bus voltage
         ax1.plot(
             mdl.converter.data.t,
-            mdl.converter.data.u_dc.T/base.u,
+            mdl.converter.data.u_dc/base.u,
             label=r"$u_\mathrm{dc}$")
         ax1.plot(
             ctrl.t,
@@ -174,12 +181,14 @@ def plot_grid(
     ax1.plot(mdl.ac_filter.data.t, p_g/base.p, label=r"$p_\mathrm{g}$")
     ax1.plot(mdl.ac_filter.data.t, q_g/base.p, label=r"$q_\mathrm{g}$")
     ax1.plot(
-        ctrl.t, (p_g_ref/base.p),
+        ctrl.t,
+        ctrl.ref.p_g/base.p,
         "--",
         label=r"$p_\mathrm{g,ref}$",
         ds="steps-post")
     ax1.plot(
-        ctrl.t, (q_g_ref/base.p),
+        ctrl.t,
+        ctrl.ref.q_g/base.p,
         "--",
         label=r"$q_\mathrm{g,ref}$",
         ds="steps-post")

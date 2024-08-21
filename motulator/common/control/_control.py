@@ -294,10 +294,8 @@ class ComplexPIController:
     2DOF synchronous-frame complex-vector PI controller.
 
     This implements a discrete-time 2DOF synchronous-frame complex-vector PI
-    controller, based on a disturbance observer structure. The complex-vector
-    gain selection is based on [#Bri2000]_. The addition of the feedforward
-    signal is based on [#Har2009]_. The continuous-time counterpart of
-    the controller is::
+    controller [#Bri2000]_. The continuous-time counterpart of the controller 
+    is::
 
         u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i) + u_ff
 
@@ -330,11 +328,9 @@ class ComplexPIController:
     """
 
     def __init__(self, k_p, k_i, k_t=None):
-        # Gains
         self.k_p = k_p
         self.k_t = k_t if k_t is not None else k_p
         self.alpha_i = k_i/self.k_t  # Inverse of the integration time T_i
-        # States
         self.v, self.u_i = 0, 0
 
     def output(self, ref_i, i, u_ff=0):

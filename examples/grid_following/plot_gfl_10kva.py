@@ -10,13 +10,11 @@ current controller.
 """
 
 # %%
-from motulator.common.model import VoltageSourceConverter, Simulation
-from motulator.common.utils import BaseValues, NominalValues
 from motulator.grid import model
 import motulator.grid.control.grid_following as control
-from motulator.grid.utils import FilterPars, GridPars, plot_grid
+from motulator.grid.utils import (
+    BaseValues, FilterPars, GridPars, NominalValues, plot)
 # from motulator.grid.utils import plot_voltage_vector
-# from motulator.common.model import CarrierComparison
 # import numpy as np
 
 # %%
@@ -38,11 +36,10 @@ filter_par = FilterPars(L_fc=.2*base.L)
 ac_filter = model.ACFilter(filter_par, grid_par)
 
 # AC grid model with constant voltage magnitude and frequency
-grid_model = model.ThreePhaseVoltageSource(
-    w_g=grid_par.w_gN, abs_e_g=grid_par.u_gN)
+grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 
 # Inverter with constant DC voltage
-converter = VoltageSourceConverter(u_dc=650)
+converter = model.VoltageSourceConverter(u_dc=650)
 
 # Create system model
 mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
@@ -54,8 +51,7 @@ mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
 # Configure the control system.
 
 # Control configuration parameters
-cfg = control.GFLControlCfg(
-    grid_par=grid_par, filter_par=filter_par, max_i=1.5*base.i)
+cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i)
 
 # Create the control system
 ctrl = control.GFLControl(cfg)
@@ -67,15 +63,15 @@ ctrl = control.GFLControl(cfg)
 ctrl.ref.p_g = lambda t: (t > .02)*5e3
 ctrl.ref.q_g = lambda t: (t > .04)*4e3
 
-# Uncomment lines below to simulate a unbalanced fault (add negative sequence)
-# mdl.grid_model.par.abs_e_g = 0.75*base.u
-# mdl.grid_model.par.abs_e_g_neg = 0.25*base.u
+# Uncomment lines below to simulate an unbalanced fault (add negative sequence)
+# mdl.grid_model.par.abs_e_g = .75*base.u
+# mdl.grid_model.par.abs_e_g_neg = .25*base.u
 # mdl.grid_model.par.phi_neg = -np.pi/3
 
 # %%
 # Create the simulation object and simulate it.
 
-sim = Simulation(mdl, ctrl)
+sim = model.Simulation(mdl, ctrl)
 sim.simulate(t_stop=.1)
 
 # %%
@@ -86,4 +82,4 @@ sim.simulate(t_stop=.1)
 
 # Uncomment line below to plot locus of the grid voltage space vector
 # plot_voltage_vector(sim, base)
-plot_grid(sim, base, plot_pcc_voltage=True)
+plot(sim, base, plot_pcc_voltage=False)

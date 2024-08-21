@@ -1,6 +1,13 @@
 """Continuous-time machine drive models."""
-from motulator.common.model._simulation import CarrierComparison, Simulation
-from motulator.common.model._converter import VoltageSourceConverter
+
+from motulator.common.model._converter import (
+    FrequencyConverter,
+    VoltageSourceConverter,
+)
+from motulator.common.model._simulation import (
+    CarrierComparison,
+    Simulation,
+)
 from motulator.drive.model._drive import (
     Drive,
     DriveWithLCFilter,
@@ -24,6 +31,7 @@ __all__ = [
     "DriveWithLCFilter",
     "DriveWithDiodeBridge",
     "ExternalRotorSpeed",
+    "FrequencyConverter",
     "InductionMachine",
     "VoltageSourceConverter",
     "LCFilter",

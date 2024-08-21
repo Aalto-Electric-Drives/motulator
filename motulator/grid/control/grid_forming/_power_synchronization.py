@@ -24,8 +24,8 @@ class RFPSCControlCfg:
         Filter model parameters.
     max_i : float
         Maximum current modulus (A).
-    R_a : float, optional
-        Damping resistance (Ω). Default is 4.6.
+    R_a : float
+        Damping resistance (Ω).
     T_s : float, optional
         Sampling period of the controller (s). The default is 100e-6.
     w_b : float, optional
@@ -96,20 +96,21 @@ class RFPSCControl(GridConverterControlSystem):
         # Get the reference signals
         ref = super().output(fbk)
         ref = super().get_power_reference(fbk, ref)
-        ref.v = self.ref.v(ref.t) if callable(self.ref.v) else self.ref.v
+        ref.v_c = self.ref.v_c(ref.t) if callable(
+            self.ref.v_c) else self.ref.v_c
 
         # Calculation of power droop
         fbk.w_c = par.w_gN + cfg.k_p_psc*(ref.p_g - fbk.p_c)
 
         # Optionally, use of reference feedforward for d-axis current
-        ref.i_c = ref.p_g/(1.5*ref.v) + 1j*fbk.i_c_flt.imag
+        ref.i_c = ref.p_g/(1.5*ref.v_c) + 1j*fbk.i_c_flt.imag
         # ref.i_c = fbk.i_c_flt  # Conventional PSC
 
         # Limit the current reference
         ref.i_c = self.current_limiter(ref.i_c)
 
         # Calculation of converter voltage output reference
-        ref.u_c = ref.v + cfg.R_a*(ref.i_c - fbk.i_c)
+        ref.u_c = ref.v_c + cfg.R_a*(ref.i_c - fbk.i_c)
         ref.u_cs = np.exp(1j*fbk.theta_c)*ref.u_c
 
         # Duty ratios for PWM
