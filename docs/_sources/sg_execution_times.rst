@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**05:08.714** total execution time for 25 files **from all galleries**:
+**05:10.967** total execution time for 25 files **from all galleries**:
 
 .. container::
 
@@ -33,77 +33,77 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py` (``../../examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.py``)
-     - 00:51.931
+     - 00:52.322
      - 0.0
    * - :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py` (``../../examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.py``)
-     - 00:28.398
+     - 00:28.809
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_syrm_7kw.py` (``../../examples/vector/plot_vector_ctrl_syrm_7kw.py``)
-     - 00:25.968
+     - 00:26.524
      - 0.0
    * - :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py` (``../../examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.py``)
-     - 00:24.573
+     - 00:24.500
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_im_2kw.py` (``../../examples/vhz/plot_vhz_ctrl_im_2kw.py``)
-     - 00:18.603
+     - 00:18.453
      - 0.0
    * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsyrm_5kw.py` (``../../examples/flux_vector/plot_flux_vector_pmsyrm_5kw.py``)
-     - 00:15.615
+     - 00:15.939
      - 0.0
    * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_syrm_7kw.py` (``../../examples/flux_vector/plot_flux_vector_syrm_7kw.py``)
-     - 00:15.100
+     - 00:15.386
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py` (``../../examples/vector/plot_vector_ctrl_pmsm_2kw_diode.py``)
-     - 00:14.717
+     - 00:15.024
      - 0.0
    * - :ref:`sphx_glr_auto_examples_signal_inj_plot_signal_inj_pmsm_2kw.py` (``../../examples/signal_inj/plot_signal_inj_pmsm_2kw.py``)
-     - 00:12.775
+     - 00:13.024
      - 0.0
    * - :ref:`sphx_glr_auto_examples_signal_inj_plot_signal_inj_syrm_7kw.py` (``../../examples/signal_inj/plot_signal_inj_syrm_7kw.py``)
-     - 00:12.661
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_im_2kw.py` (``../../examples/flux_vector/plot_flux_vector_im_2kw.py``)
-     - 00:10.095
+     - 00:12.966
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py` (``../../examples/vhz/plot_vhz_ctrl_im_2kw_lc.py``)
-     - 00:09.988
+     - 00:09.934
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py` (``../../examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.py``)
-     - 00:09.263
+   * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_im_2kw.py` (``../../examples/flux_vector/plot_flux_vector_im_2kw.py``)
+     - 00:09.912
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vhz_plot_vhz_ctrl_6step_im_2kw.py` (``../../examples/vhz/plot_vhz_ctrl_6step_im_2kw.py``)
-     - 00:09.222
+     - 00:09.077
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py` (``../../examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.py``)
+     - 00:09.062
      - 0.0
    * - :ref:`sphx_glr_auto_examples_grid_forming_plot_gfm_obs_13kva.py` (``../../examples/grid_forming/plot_gfm_obs_13kva.py``)
-     - 00:08.404
+     - 00:08.510
      - 0.0
    * - :ref:`sphx_glr_auto_examples_grid_forming_plot_gfm_rfpsc_13kva.py` (``../../examples/grid_forming/plot_gfm_rfpsc_13kva.py``)
-     - 00:08.159
+     - 00:08.216
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsm_2kw.py` (``../../examples/vector/plot_vector_ctrl_pmsm_2kw.py``)
-     - 00:05.372
+     - 00:05.434
      - 0.0
    * - :ref:`sphx_glr_auto_examples_flux_vector_plot_flux_vector_pmsm_2kw.py` (``../../examples/flux_vector/plot_flux_vector_pmsm_2kw.py``)
-     - 00:05.225
+     - 00:05.304
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_pmsyrm_thor.py` (``../../examples/vector/plot_vector_ctrl_pmsyrm_thor.py``)
-     - 00:04.987
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_im_2kw_tq_mode.py` (``../../examples/vector/plot_vector_ctrl_im_2kw_tq_mode.py``)
-     - 00:04.802
+     - 00:05.047
      - 0.0
    * - :ref:`sphx_glr_auto_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py` (``../../examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py``)
-     - 00:04.681
+     - 00:04.781
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_im_2kw_tq_mode.py` (``../../examples/vector/plot_vector_ctrl_im_2kw_tq_mode.py``)
+     - 00:04.710
      - 0.0
    * - :ref:`sphx_glr_auto_examples_vector_plot_vector_ctrl_im_2kw.py` (``../../examples/vector/plot_vector_ctrl_im_2kw.py``)
-     - 00:04.184
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_grid_following_plot_gfl_lcl_10kva.py` (``../../examples/grid_following/plot_gfl_lcl_10kva.py``)
-     - 00:01.343
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_grid_following_plot_gfl_10kva.py` (``../../examples/grid_following/plot_gfl_10kva.py``)
-     - 00:01.337
+     - 00:04.122
      - 0.0
    * - :ref:`sphx_glr_auto_examples_grid_following_plot_gfl_dc_bus_10kva.py` (``../../examples/grid_following/plot_gfl_dc_bus_10kva.py``)
-     - 00:01.311
+     - 00:01.361
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_grid_following_plot_gfl_10kva.py` (``../../examples/grid_following/plot_gfl_10kva.py``)
+     - 00:01.296
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_grid_following_plot_gfl_lcl_10kva.py` (``../../examples/grid_following/plot_gfl_lcl_10kva.py``)
+     - 00:01.256
      - 0.0
