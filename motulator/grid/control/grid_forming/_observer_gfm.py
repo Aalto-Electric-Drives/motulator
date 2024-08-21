@@ -1,4 +1,4 @@
-"""Disturbance observer-based grid-forming control for grid converters."""
+"""Disturbance-observer-based grid-forming control for grid converters."""
 
 # %%
 from dataclasses import dataclass
@@ -14,7 +14,7 @@ from motulator.grid.utils import FilterPars, GridPars
 @dataclass
 class ObserverBasedGFMControlCfg:
     """
-    Observer GFM control configuration.
+    Disturbance-observer-based grid-forming control configuration.
 
     Parameters
     ----------
@@ -27,15 +27,15 @@ class ObserverBasedGFMControlCfg:
     R_a : float
         Active resistance (Ω).
     T_s : float, optional
-        Sampling period of the controller (s). Default is 1/(16e3).
+        Sampling period of the controller (s). Default is 100e-6.
     k_v : float, optional
-        Voltage gain. Default is 1.
+        Voltage gain. The default is 1.
     alpha_c : float, optional
         Current control bandwidth (rad/s). The default is 2*pi*400.
     alpha_o : float, optional
         Observer gain (rad/s). The default is 2*pi*50.
     C_dc : float, optional
-        DC-bus capacitance (F). Default is None.
+        DC-bus capacitance (F). The default is None.
 
     """
 
@@ -59,26 +59,27 @@ class ObserverBasedGFMControlCfg:
 # %%
 class ObserverBasedGFMControl(GridConverterControlSystem):
     """
-    Disturbance observer-based grid-forming control for grid converters.
+    Disturbance-observer-based grid-forming control for grid converters.
     
-    This implements the disturbance observer-based control method described in
-    [#Nur2024]_. More specifically, the grid-forming mode using RFPSC-type
-    gains is implemented, with transparent current control.
+    This implements the RFPSC-type grid-forming mode of the control method 
+    described in [#Nur2024]_. Transparent current control is also implemented.
 
     Parameters
     ----------
     cfg : ObserverBasedGFMControlCfg
-        Model and controller configuration parameters.
+        Controller configuration parameters.
 
-    Attributes
-    ----------
-    observer : DisturbanceObserver
-        Disturbance observer.
+    Notes
+    -----
+    In this implementation, the control system operates in synchronous 
+    coordinates rotating at the nominal grid angular frequency, which is worth
+    noticing when plotting the results. For other implementation options, see
+    [#Nur2024]_. 
     
     References
     ----------
     .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional
-        Grid-Forming Converter Control Based on a Disturbance Observer, "IEEE
+        grid-forming converter control based on a disturbance observer, "IEEE
         Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
     """
@@ -109,20 +110,17 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
 
         # Get the reference signals
         ref = super().output(fbk)
-        if self.dc_bus_volt_ctrl:
-            ref.u_dc = self.ref.u_dc(ref.t)
         ref = super().get_power_reference(fbk, ref)
-        # Converter voltage magnitude reference
         ref.v_c = self.ref.v_c(ref.t) if callable(
             self.ref.v_c) else self.ref.v_c
 
-        # Calculation of complex gains (grid-forming)
+        # Complex gains for grid-forming mode
         abs_k_p = cfg.R_a/(1.5*ref.v_c)
         abs_v_c = np.abs(fbk.v_c)
         k_p = abs_k_p*fbk.v_c/abs_v_c if abs_v_c > 0 else 0
         k_v = (1 - cfg.k_v*1j)*fbk.v_c/abs_v_c if abs_v_c > 0 else 0
 
-        # Calculation of feedback correction term (grid-forming)
+        # Feedback correction term for grid-forming mode
         fbk.e_c = k_p*(ref.p_g - fbk.p_g) + k_v*(ref.v_c - abs_v_c)
 
         # Current limitation
@@ -131,20 +129,12 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
             ref.i_c_lim = ref.i_c/np.abs(ref.i_c)*cfg.max_i
             fbk.e_c = cfg.k_c*(ref.i_c_lim - fbk.i_c)
 
-        # Calculation of voltage reference
+        # Voltage reference
         ref.u_c = fbk.e_c + fbk.v_c + cfg.R*fbk.i_c
         ref.u_cs = np.exp(1j*fbk.theta_c)*ref.u_c
 
         # Duty ratios for PWM
         ref.d_abc = self.pwm(ref.T_s, ref.u_cs, fbk.u_dc, par.w_gN)
-
-        # Apply a coordinate transformation to values that are plotted in
-        # synchronous coordinates, as by default the coordinate system of the
-        # observer is not fixed to the converter voltage vector.
-        T = np.conj(fbk.v_c)/np.abs(fbk.v_c) if np.abs(fbk.v_c) > 0 else 0
-        ref.u_c = T*ref.u_c
-        fbk.i_c = T*fbk.i_c
-        ref.i_c = T*ref.i_c
 
         return ref
 
@@ -158,14 +148,14 @@ class DisturbanceObserver:
     """
     Disturbance observer.
     
-    This implements a disturbance observer, which estimates the converter 
-    output voltage. The observer could be implemented in any coordinates. Here
-    coordinates rotating at the nominal grid angular frequency are used.
+    This implements a disturbance observer, which estimates the quasi-static
+    converter output voltage. Coordinates rotating at the nominal grid angular 
+    frequency are used.
 
     Parameters
     ----------
     w_g : float
-        Estimate of grid angular frequency (rad/s).
+        Nominal grid angular frequency (rad/s).
     L : float
         Estimate of total inductance (H) between converter and grid.
     alpha_o : float
@@ -193,11 +183,10 @@ class DisturbanceObserver:
         # Active and reactive power
         fbk.p_g = 1.5*np.real(fbk.v_c*np.conj(fbk.i_c))
         fbk.q_g = 1.5*np.imag(fbk.u_g*np.conj(fbk.i_c))
-
         return fbk
 
     def update(self, fbk, ref):
-        """Update the observer integral states."""
+        """Update the observer states."""
         self.v_cp += ref.T_s*(self.k_o + 1j*self.w_c)*fbk.e_c + 1j*(
             self.w_g - self.w_c)*self.v_cp
         self.theta_c += ref.T_s*self.w_c
