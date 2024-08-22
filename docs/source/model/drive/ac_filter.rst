@@ -21,11 +21,10 @@ A dynamic model of the filter is
    - R_\mathrm{fc} \boldsymbol{i}_\mathrm{c}^\mathrm{s} \\
    C_\mathrm{f} \frac{\mathrm{d}\boldsymbol{u}_\mathrm{s}^\mathrm{s}}{\mathrm{d} t} 
    &= \boldsymbol{i}_\mathrm{c}^\mathrm{s} - \boldsymbol{i}_\mathrm{s}^\mathrm{s}
-   - G_\mathrm{f}\boldsymbol{u}_\mathrm{s}^\mathrm{s}
    :label: LC_filter_model
 
 where :math:`L_\mathrm{fc}` and :math:`R_\mathrm{fc}` are the inductance and the series resistance of the inductor, respectively.
-Also, :math:`C_\mathrm{f}` and :math:`G_\mathrm{f}` are the capacitance and parallel conductance of the capacitor, respectively.
+Also, :math:`C_\mathrm{f}`, respectively.
 Furthermore, :math:`\boldsymbol{i}_\mathrm{c}^\mathrm{s}` is the converter current,
 :math:`\boldsymbol{i}_\mathrm{s}^\mathrm{s}` is the stator current, :math:`\boldsymbol{u}_\mathrm{c}^\mathrm{s}` is the converter voltage,
 and :math:`\boldsymbol{u}_\mathrm{s}^\mathrm{s}` is the capacitor voltage (corresponding to the stator voltage). 
