@@ -34,7 +34,9 @@ class ACFilter(Subsystem):
 
     def __new__(cls, filter_par: FilterPars, _):
         if filter_par.C_f > 0:
-            return super().__new__(LCLFilter)
+            if filter_par.L_fg > 0:
+                return super().__new__(LCLFilter)
+            raise ValueError("L_fg must be specified for LCL filter.")
         return super().__new__(LFilter)
 
     def meas_currents(self):
