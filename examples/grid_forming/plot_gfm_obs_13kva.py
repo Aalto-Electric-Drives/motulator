@@ -1,10 +1,10 @@
 """
 12.5-kVA converter, disturbance observer
 ========================================
-    
+
 This example simulates a converter using disturbance-observer-based control in
-grid-forming mode. The converter output voltage and the active power are 
-directly controlled, and grid synchronization is provided by the disturbance 
+grid-forming mode. The converter output voltage and the active power are
+directly controlled, and grid synchronization is provided by the disturbance
 observer. A transparent current controller is included for current limitation.
 
 """
@@ -15,6 +15,7 @@ from motulator.common.utils import BaseValues, NominalValues
 from motulator.grid import model
 import motulator.grid.control.grid_forming as control
 from motulator.grid.utils import FilterPars, GridPars, plot
+
 # from motulator.common.model import CarrierComparison
 
 # %%
@@ -27,12 +28,12 @@ base = BaseValues.from_nominal(nom)
 # Configure the system model.
 
 # Grid parameters
-grid_par = GridPars(u_gN=base.u, w_gN=base.w, L_g=.74*base.L)
+grid_par = GridPars(u_gN=base.u, w_gN=base.w, L_g=0.74 * base.L)
 # Uncomment the line below to simulate a strong grid
 # grid_par.L_g = 0
 
 # Filter parameters
-filter_par = FilterPars(L_fc=.15*base.L, R_fc=.05*base.Z)
+filter_par = FilterPars(L_fc=0.15 * base.L, R_fc=0.05 * base.Z)
 
 # Create AC filter with given parameters
 ac_filter = model.ACFilter(filter_par, grid_par)
@@ -50,11 +51,12 @@ mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
 # Configure the control system.
 
 # Estimates for the grid parameters, grid inductance estimate is left at 0
-grid_par_est = GridPars(u_gN=base.u, w_gN=base.w, L_g=.2*base.L)
+grid_par_est = GridPars(u_gN=base.u, w_gN=base.w, L_g=0.2 * base.L)
 
 # Set the configuration parameters
 cfg = control.ObserverBasedGFMControlCfg(
-    grid_par_est, filter_par, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
+    grid_par_est, filter_par, max_i=1.3 * base.i, T_s=100e-6, R_a=0.2 * base.Z
+)
 
 # Create the control system
 ctrl = control.ObserverBasedGFMControl(cfg)
@@ -66,8 +68,9 @@ ctrl = control.ObserverBasedGFMControl(cfg)
 ctrl.ref.v_c = lambda t: base.u
 
 # Active power reference
-ctrl.ref.p_g = lambda t: ((t > .2)/3 + (t > .5)/3 + (t > .8)/3 -
-                          (t > 1.2))*nom.P
+ctrl.ref.p_g = (
+    lambda t: ((t > 0.2) / 3 + (t > 0.5) / 3 + (t > 0.8) / 3 - (t > 1.2)) * nom.P
+)
 
 # Uncomment line below to simulate operation in rectifier mode
 # ctrl.ref.p_g = lambda t: ((t > .2) - (t > .7)*2 + (t > 1.2))*nom.P

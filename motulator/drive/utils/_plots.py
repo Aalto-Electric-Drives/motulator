@@ -11,7 +11,7 @@ from motulator.common.utils import complex2abc
 
 # Plotting parameters
 plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")
-plt.rcParams["lines.linewidth"] = 1.
+plt.rcParams["lines.linewidth"] = 1.0
 plt.rcParams["axes.grid"] = True
 plt.rcParams.update({"text.usetex": False})
 
@@ -36,7 +36,7 @@ def plot(sim, base=None, t_span=None):
 
     """
     # pylint: disable=too-many-statements
-    #mdl = sim.mdl.data  # Continuous-time data
+    # mdl = sim.mdl.data  # Continuous-time data
     mdl = sim.mdl  # Continuous-time data
     ctrl = sim.ctrl.data  # Discrete-time data
     ctrl.t = ctrl.ref.t  # Discrete time
@@ -65,22 +65,23 @@ def plot(sim, base=None, t_span=None):
     try:
         ax1.plot(
             ctrl.t,
-            ctrl.ref.w_m/base.w,
+            ctrl.ref.w_m / base.w,
             "--",
             ds="steps-post",
-            label=r"$\omega_\mathrm{m,ref}$")
+            label=r"$\omega_\mathrm{m,ref}$",
+        )
     except (AttributeError, TypeError):
         pass
     ax1.plot(
-        mdl.machine.data.t,
-        mdl.machine.data.w_m/base.w,
-        label=r"$\omega_\mathrm{m}$")
+        mdl.machine.data.t, mdl.machine.data.w_m / base.w, label=r"$\omega_\mathrm{m}$"
+    )
     try:
         ax1.plot(
             ctrl.t,
-            ctrl.fbk.w_m/base.w,
+            ctrl.fbk.w_m / base.w,
             label=r"$\hat \omega_\mathrm{m}$",
-            ds="steps-post")
+            ds="steps-post",
+        )
     except AttributeError:
         pass
     ax1.legend()
@@ -91,22 +92,25 @@ def plot(sim, base=None, t_span=None):
     try:
         ax2.plot(
             mdl.mechanics.data.t,
-            mdl.mechanics.data.tau_L_tot/base.tau,
+            mdl.mechanics.data.tau_L_tot / base.tau,
             ":",
-            label=r"$\tau_\mathrm{L,tot}$")
+            label=r"$\tau_\mathrm{L,tot}$",
+        )
     except AttributeError:
         pass
     ax2.plot(
         mdl.machine.data.t,
-        mdl.machine.data.tau_M/base.tau,
-        label=r"$\tau_\mathrm{M}$")
+        mdl.machine.data.tau_M / base.tau,
+        label=r"$\tau_\mathrm{M}$",
+    )
     try:
         ax2.plot(
             ctrl.t,
-            ctrl.ref.tau_M/base.tau,
+            ctrl.ref.tau_M / base.tau,
             "--",
             label=r"$\tau_\mathrm{M,ref}$",
-            ds="steps-post")
+            ds="steps-post",
+        )
     except AttributeError:
         pass
     ax2.legend()
@@ -115,28 +119,26 @@ def plot(sim, base=None, t_span=None):
 
     # Subplot 3: currents
     ax3.plot(
-        ctrl.t,
-        ctrl.fbk.i_s.real/base.i,
-        label=r"$i_\mathrm{sd}$",
-        ds="steps-post")
+        ctrl.t, ctrl.fbk.i_s.real / base.i, label=r"$i_\mathrm{sd}$", ds="steps-post"
+    )
     ax3.plot(
-        ctrl.t,
-        ctrl.fbk.i_s.imag/base.i,
-        label=r"$i_\mathrm{sq}$",
-        ds="steps-post")
+        ctrl.t, ctrl.fbk.i_s.imag / base.i, label=r"$i_\mathrm{sq}$", ds="steps-post"
+    )
     try:
         ax3.plot(
             ctrl.t,
-            ctrl.ref.i_s.real/base.i,
+            ctrl.ref.i_s.real / base.i,
             "--",
             label=r"$i_\mathrm{sd,ref}$",
-            ds="steps-post")
+            ds="steps-post",
+        )
         ax3.plot(
             ctrl.t,
-            ctrl.ref.i_s.imag/base.i,
+            ctrl.ref.i_s.imag / base.i,
             "--",
             label=r"$i_\mathrm{sq,ref}$",
-            ds="steps-post")
+            ds="steps-post",
+        )
     except (AttributeError, TypeError):
         pass
     ax3.legend()
@@ -145,16 +147,15 @@ def plot(sim, base=None, t_span=None):
 
     # Subplot 4: voltages
     ax4.plot(
-        ctrl.t,
-        np.abs(ctrl.fbk.u_s)/base.u,
-        label=r"$u_\mathrm{s}$",
-        ds="steps-post")
+        ctrl.t, np.abs(ctrl.fbk.u_s) / base.u, label=r"$u_\mathrm{s}$", ds="steps-post"
+    )
     ax4.plot(
         ctrl.t,
-        ctrl.fbk.u_dc/np.sqrt(3)/base.u,
+        ctrl.fbk.u_dc / np.sqrt(3) / base.u,
         "--",
         label=r"$u_\mathrm{dc}/\sqrt{3}$",
-        ds="steps-post")
+        ds="steps-post",
+    )
     ax4.legend()
     ax4.set_xlim(t_span)
     ax4.set_xticklabels([])
@@ -163,39 +164,43 @@ def plot(sim, base=None, t_span=None):
     if motor_type == "sm":
         ax5.plot(
             mdl.machine.data.t,
-            np.abs(mdl.machine.data.psi_ss)/base.psi,
-            label=r"$\psi_\mathrm{s}$")
+            np.abs(mdl.machine.data.psi_ss) / base.psi,
+            label=r"$\psi_\mathrm{s}$",
+        )
         try:
             ax5.plot(
                 ctrl.t,
-                np.abs(ctrl.fbk.psi_s)/base.psi,
+                np.abs(ctrl.fbk.psi_s) / base.psi,
                 label=r"$\hat\psi_\mathrm{s}$",
-                ds="steps-post")
+                ds="steps-post",
+            )
         except (AttributeError, TypeError):
             pass
         try:
             ax5.plot(
                 ctrl.t,
-                np.abs(ctrl.ref.psi_s)/base.psi,
+                np.abs(ctrl.ref.psi_s) / base.psi,
                 "--",
                 label=r"$\psi_\mathrm{s,ref}$",
-                ds="steps-post")
+                ds="steps-post",
+            )
         except (AttributeError, TypeError):
             pass
 
     else:
         ax5.plot(
             mdl.machine.data.t,
-            np.abs(mdl.machine.data.psi_ss)/base.psi,
-            label=r"$\psi_\mathrm{s}$")
-        ax5.plot(
-            mdl.t, np.abs(mdl.psi_Rs)/base.psi, label=r"$\psi_\mathrm{R}$")
+            np.abs(mdl.machine.data.psi_ss) / base.psi,
+            label=r"$\psi_\mathrm{s}$",
+        )
+        ax5.plot(mdl.t, np.abs(mdl.psi_Rs) / base.psi, label=r"$\psi_\mathrm{R}$")
         try:
             ax5.plot(
                 ctrl.t,
-                np.abs(ctrl.fbk.psi_s)/base.psi,
+                np.abs(ctrl.fbk.psi_s) / base.psi,
                 label=r"$\hat\psi_\mathrm{s}$",
-                ds="steps-post")
+                ds="steps-post",
+            )
         except AttributeError:
             pass
     ax5.legend()
@@ -259,21 +264,23 @@ def plot_extra(sim, base=None, t_span=None):
         theta = ctrl.fbk.theta_m  # Synchronous machine
 
     # Quantities in stator coordinates
-    ctrl.fbk.u_ss = np.exp(1j*theta)*ctrl.fbk.u_s
-    ctrl.fbk.i_ss = np.exp(1j*theta)*ctrl.fbk.i_s
+    ctrl.fbk.u_ss = np.exp(1j * theta) * ctrl.fbk.u_s
+    ctrl.fbk.i_ss = np.exp(1j * theta) * ctrl.fbk.i_s
 
     fig1, (ax1, ax2) = plt.subplots(2, 1)
 
     # Subplot 1: voltages
     ax1.plot(
         mdl.converter.data.t,
-        mdl.converter.data.u_cs.real/base.u,
-        label=r"$u_\mathrm{sa}$")
+        mdl.converter.data.u_cs.real / base.u,
+        label=r"$u_\mathrm{sa}$",
+    )
     ax1.plot(
         ctrl.t,
-        ctrl.fbk.u_ss.real/base.u,
+        ctrl.fbk.u_ss.real / base.u,
         label=r"$\hat u_\mathrm{sa}$",
-        ds="steps-post")
+        ds="steps-post",
+    )
     ax1.set_xlim(t_span)
     ax1.legend()
     ax1.set_xticklabels([])
@@ -281,13 +288,15 @@ def plot_extra(sim, base=None, t_span=None):
     # Subplot 2: currents
     ax2.plot(
         mdl.machine.data.t,
-        complex2abc(mdl.machine.data.i_ss).T/base.i,
-        label=[r"$i_\mathrm{sa}$", r"$i_\mathrm{sb}$", r"$i_\mathrm{sc}$"])
+        complex2abc(mdl.machine.data.i_ss).T / base.i,
+        label=[r"$i_\mathrm{sa}$", r"$i_\mathrm{sb}$", r"$i_\mathrm{sc}$"],
+    )
     ax2.plot(
         ctrl.t,
-        ctrl.fbk.i_ss.real/base.i,
+        ctrl.fbk.i_ss.real / base.i,
         label=r"$\hat i_\mathrm{sa}$",
-        ds="steps-post")
+        ds="steps-post",
+    )
     ax2.set_xlim(t_span)
     ax2.legend()
 
@@ -313,16 +322,19 @@ def plot_extra(sim, base=None, t_span=None):
         # Subplot 1: voltages
         ax1.plot(
             mdl.converter.data.t,
-            mdl.converter.data.u_di/base.u,
-            label=r"$u_\mathrm{di}$")
+            mdl.converter.data.u_di / base.u,
+            label=r"$u_\mathrm{di}$",
+        )
         ax1.plot(
             mdl.converter.data.t,
-            mdl.converter.data.u_dc/base.u,
-            label=r"$u_\mathrm{dc}$")
+            mdl.converter.data.u_dc / base.u,
+            label=r"$u_\mathrm{dc}$",
+        )
         ax1.plot(
             mdl.converter.data.t,
-            mdl.converter.data.u_g_abc.T/base.u,
-            label=r"$u_\mathrm{ga}$")
+            mdl.converter.data.u_g_abc.T / base.u,
+            label=r"$u_\mathrm{ga}$",
+        )
         ax1.legend()
         ax1.set_xlim(t_span)
         ax1.set_xticklabels([])
@@ -330,16 +342,19 @@ def plot_extra(sim, base=None, t_span=None):
         # Subplot 2: currents
         ax2.plot(
             mdl.converter.data.t,
-            mdl.converter.data.i_L/base.i,
-            label=r"$i_\mathrm{L}$")
+            mdl.converter.data.i_L / base.i,
+            label=r"$i_\mathrm{L}$",
+        )
         ax2.plot(
             mdl.converter.data.t,
-            mdl.converter.data.i_dc/base.i,
-            label=r"$i_\mathrm{dc}$")
+            mdl.converter.data.i_dc / base.i,
+            label=r"$i_\mathrm{dc}$",
+        )
         ax2.plot(
             mdl.converter.data.t,
-            mdl.converter.data.i_gs.real/base.i,
-            label=r"$i_\mathrm{ga}$")
+            mdl.converter.data.i_gs.real / base.i,
+            label=r"$i_\mathrm{ga}$",
+        )
         ax2.legend()
         ax2.set_xlim(t_span)
 

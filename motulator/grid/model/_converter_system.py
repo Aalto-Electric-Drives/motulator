@@ -6,6 +6,7 @@ an interface to the solver. More complicated systems could be modeled using
 a similar template. Peak-valued complex space vectors are used.
 
 """
+
 from motulator.common.model import Model
 
 

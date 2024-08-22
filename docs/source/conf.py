@@ -15,6 +15,8 @@
 import os
 import sys
 
+from sphinx_gallery.sorting import ExplicitOrder
+
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("../../motulator"))
 
@@ -38,8 +40,12 @@ autodoc_mock_imports = ["numpy", "matplotlib", "scipy", "cycler"]
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom ones.
 extensions = [
-    "sphinx.ext.napoleon", "sphinx.ext.viewcode", "numpydoc",
-    "sphinx_copybutton", "sphinx.ext.mathjax", "sphinx_gallery.gen_gallery"
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "numpydoc",
+    "sphinx_copybutton",
+    "sphinx.ext.mathjax",
+    "sphinx_gallery.gen_gallery",
 ]
 
 extensions.append("autoapi.extension")
@@ -57,25 +63,21 @@ autoapi_python_class_content = "class"  # "both"
 autoapi_keep_files = True
 autoapi_add_toctree_entry = False
 
-from sphinx_gallery.sorting import ExplicitOrder
-
 sphinx_gallery_conf = {
-    "examples_dirs":
-    "../../examples",  # path to your example scripts
-    "gallery_dirs":
-    "auto_examples",  # path to where to save gallery generated output
-    "nested_sections":
-    True,
-    "subsection_order":
-    ExplicitOrder([
-        "../../examples/vector",
-        "../../examples/vhz",
-        "../../examples/obs_vhz",
-        "../../examples/flux_vector",
-        "../../examples/signal_inj",
-        "../../examples/grid_following",
-        "../../examples/grid_forming",
-    ]),
+    "examples_dirs": "../../examples",  # path to your example scripts
+    "gallery_dirs": "auto_examples",  # path to where to save gallery generated output
+    "nested_sections": True,
+    "subsection_order": ExplicitOrder(
+        [
+            "../../examples/vector",
+            "../../examples/vhz",
+            "../../examples/obs_vhz",
+            "../../examples/flux_vector",
+            "../../examples/signal_inj",
+            "../../examples/grid_following",
+            "../../examples/grid_forming",
+        ]
+    ),
 }
 
 # List of patterns, relative to source directory, that match files and

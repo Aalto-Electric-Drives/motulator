@@ -1,11 +1,12 @@
 """
 Grid and AC filter impedance models.
 
-This module contains continuous-time models for subsystems comprising an AC 
-filter and a grid impedance between the converter and grid voltage sources. The 
+This module contains continuous-time models for subsystems comprising an AC
+filter and a grid impedance between the converter and grid voltage sources. The
 models are implemented with space vectors in stationary coordinates.
 
 """
+
 from types import SimpleNamespace
 
 from motulator.common.model import Subsystem
@@ -29,7 +30,7 @@ class ACFilter(Subsystem):
         Filter model parameters.
     grid_par : GridPars
         Grid model parameters.
-        
+
     """
 
     def __new__(cls, filter_par: FilterPars, _):
@@ -70,9 +71,9 @@ class LFilter(ACFilter):
     """
     Model of an L filter and an inductive-resistive grid.
 
-    An L filter and an inductive-resistive grid, between the converter and grid 
-    voltage sources, are modeled combining their inductances and series 
-    resistances. The point-of-common-coupling (PCC) voltage between the L 
+    An L filter and an inductive-resistive grid, between the converter and grid
+    voltage sources, are modeled combining their inductances and series
+    resistances. The point-of-common-coupling (PCC) voltage between the L
     filter and the grid impedance is separately calculated.
 
     Parameters
@@ -98,10 +99,8 @@ class LFilter(ACFilter):
     def __init__(self, filter_par, grid_par):
         super().__init__()
         self.par = SimpleNamespace(
-            L_f=filter_par.L_fc,
-            R_f=filter_par.R_fc,
-            L_g=grid_par.L_g,
-            R_g=grid_par.R_g)
+            L_f=filter_par.L_fc, R_f=filter_par.R_fc, L_g=grid_par.L_g, R_g=grid_par.R_g
+        )
         self.inp = SimpleNamespace(u_cs=0j, e_gs=grid_par.u_gN + 0j)
         # For direct feedthrough
         self.out = SimpleNamespace(u_gs=grid_par.u_gN + 0j)
@@ -112,9 +111,10 @@ class LFilter(ACFilter):
         """Set output variables."""
         state, par, inp, out = self.state, self.par, self.inp, self.out
         u_gs = (
-            par.L_g*inp.u_cs + par.L_f*inp.e_gs +
-            (par.R_g*par.L_f - par.R_f*par.L_g)*state.i_cs)/(
-                par.L_g + par.L_f)
+            par.L_g * inp.u_cs
+            + par.L_f * inp.e_gs
+            + (par.R_g * par.L_f - par.R_f * par.L_g) * state.i_cs
+        ) / (par.L_g + par.L_f)
         out.i_cs, out.i_gs, out.u_gs = state.i_cs, state.i_cs, u_gs
 
     def rhs(self):
@@ -122,7 +122,7 @@ class LFilter(ACFilter):
         state, inp, par = self.state, self.inp, self.par
         L_t = par.L_f + par.L_g
         R_t = par.R_f + par.R_g
-        d_i_cs = (inp.u_cs - inp.e_gs - R_t*state.i_cs)/L_t
+        d_i_cs = (inp.u_cs - inp.e_gs - R_t * state.i_cs) / L_t
         return [d_i_cs]
 
     def post_process_states(self):
@@ -133,9 +133,10 @@ class LFilter(ACFilter):
         """Post-process data with inputs."""
         data = self.data
         data.u_gs = (
-            self.par.L_g*data.u_cs + self.par.L_f*data.e_gs +
-            (self.par.R_g*self.par.L_f - self.par.R_f*self.par.L_g)*
-            data.i_cs)/(self.par.L_g + self.par.L_f)
+            self.par.L_g * data.u_cs
+            + self.par.L_f * data.e_gs
+            + (self.par.R_g * self.par.L_f - self.par.R_f * self.par.L_g) * data.i_cs
+        ) / (self.par.L_g + self.par.L_f)
 
 
 # %%
@@ -143,15 +144,15 @@ class LCLFilter(ACFilter):
     """
     Model of an LCL filter and an inductive-resistive grid.
 
-    An LCL filter and an inductive-resistive grid impedance, between the 
+    An LCL filter and an inductive-resistive grid impedance, between the
     converter and grid voltage sources, are modeled. The point-of-common-
-    coupling (PCC) voltage between the LCL filter and the grid impedance is 
+    coupling (PCC) voltage between the LCL filter and the grid impedance is
     also calculated.
 
     Parameters
     ----------
     grid_par : GridPars
-        Grid model parameters. 
+        Grid model parameters.
     filter_par : FilterPars
         Filter model parameters.
 
@@ -181,11 +182,16 @@ class LCLFilter(ACFilter):
         """Set output variables."""
         state, par, inp, out = self.state, self.par, self.inp, self.out
         u_gs = (
-            par.L_fg*inp.e_gs + par.L_g*state.u_fs +
-            (par.R_g*par.L_fg - par.R_fg*par.L_g)*state.i_gs)/(
-                par.L_g + par.L_fg)
+            par.L_fg * inp.e_gs
+            + par.L_g * state.u_fs
+            + (par.R_g * par.L_fg - par.R_fg * par.L_g) * state.i_gs
+        ) / (par.L_g + par.L_fg)
         out.i_cs, out.u_fs, out.i_gs, out.u_gs = (
-            state.i_cs, state.u_fs, state.i_gs, u_gs)
+            state.i_cs,
+            state.u_fs,
+            state.i_gs,
+            u_gs,
+        )
 
     def rhs(self):
         """Compute the state derivatives."""
@@ -194,9 +200,9 @@ class LCLFilter(ACFilter):
         L_t = par.L_fg + par.L_g
         R_t = par.R_fg + par.R_g
         # State equations
-        d_i_cs = (inp.u_cs - state.u_fs - par.R_fc*state.i_cs)/par.L_fc
-        d_u_fs = (state.i_cs - state.i_gs)/par.C_f
-        d_i_gs = (state.u_fs - inp.e_gs - R_t*state.i_gs)/L_t
+        d_i_cs = (inp.u_cs - state.u_fs - par.R_fc * state.i_cs) / par.L_fc
+        d_u_fs = (state.i_cs - state.i_gs) / par.C_f
+        d_i_gs = (state.u_fs - inp.e_gs - R_t * state.i_gs) / L_t
 
         return [d_i_cs, d_u_fs, d_i_gs]
 
@@ -230,6 +236,7 @@ class LCLFilter(ACFilter):
         """Post-process data with inputs."""
         data, par = self.data, self.par
         data.u_gs = (
-            par.L_fg*data.e_gs + par.L_g*data.u_fs +
-            (par.R_g*par.L_fg - par.R_fg*par.L_g)*data.i_gs)/(
-                par.L_g + par.L_fg)
+            par.L_fg * data.e_gs
+            + par.L_g * data.u_fs
+            + (par.R_g * par.L_fg - par.R_fg * par.L_g) * data.i_gs
+        ) / (par.L_g + par.L_fg)

@@ -3,17 +3,23 @@
 ======================
 
 This example simulates observer-based V/Hz control of a saturated 6.7-kW
-synchronous reluctance motor drive. The saturation is not taken into account in 
+synchronous reluctance motor drive. The saturation is not taken into account in
 the control method (only in the system model).
 
 """
+
 # %%
 
 import numpy as np
 from motulator.drive import model
 import motulator.drive.control.sm as control
 from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+    BaseValues,
+    NominalValues,
+    plot,
+    Sequence,
+    SynchronousMachinePars,
+)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -49,7 +55,7 @@ def i_s(psi_s):
 
     Notes
     -----
-    For nonzero `i_f`, the initial value of the stator flux linkage `psi_s0` 
+    For nonzero `i_f`, the initial value of the stator flux linkage `psi_s0`
     needs to be solved, e.g., as follows::
 
     from scipy.optimize import minimize_scalar
@@ -60,50 +66,57 @@ def i_s(psi_s):
 
     """
     # Parameters
-    a_d0, a_dd, S = 17.4, 373., 5  # d-axis self-saturation
-    a_q0, a_qq, T = 52.1, 658., 1  # q-axis self-saturation
-    a_dq, U, V = 1120., 1, 0  # Cross-saturation
+    a_d0, a_dd, S = 17.4, 373.0, 5  # d-axis self-saturation
+    a_q0, a_qq, T = 52.1, 658.0, 1  # q-axis self-saturation
+    a_dq, U, V = 1120.0, 1, 0  # Cross-saturation
     i_f = 0  # MMF of PMs
     # Inverse inductance functions
-    G_d = a_d0 + a_dd*np.abs(psi_s.real)**S + (
-        a_dq/(V + 2)*np.abs(psi_s.real)**U*np.abs(psi_s.imag)**(V + 2))
-    G_q = a_q0 + a_qq*np.abs(psi_s.imag)**T + (
-        a_dq/(U + 2)*np.abs(psi_s.real)**(U + 2)*np.abs(psi_s.imag)**V)
+    G_d = (
+        a_d0
+        + a_dd * np.abs(psi_s.real) ** S
+        + (a_dq / (V + 2) * np.abs(psi_s.real) ** U * np.abs(psi_s.imag) ** (V + 2))
+    )
+    G_q = (
+        a_q0
+        + a_qq * np.abs(psi_s.imag) ** T
+        + (a_dq / (U + 2) * np.abs(psi_s.real) ** (U + 2) * np.abs(psi_s.imag) ** V)
+    )
     # Stator current
-    return G_d*psi_s.real - i_f + 1j*G_q*psi_s.imag
+    return G_d * psi_s.real - i_f + 1j * G_q * psi_s.imag
 
 
 # %%
 # Configure the system model.
 
-mdl_par = SynchronousMachinePars(n_p=2, R_s=.54)
+mdl_par = SynchronousMachinePars(n_p=2, R_s=0.54)
 machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=0)
 # Magnetically linear SyRM model for comparison
 # mdl_par = SynchronousMachinePars(
 #     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 # machine = model.SynchronousMachine(mdl_par)
-mechanics = model.StiffMechanicalSystem(J=.015)
+mechanics = model.StiffMechanicalSystem(J=0.015)
 converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
 # %%
 # Configure the control system.
 
-par = SynchronousMachinePars(n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
+par = SynchronousMachinePars(n_p=2, R_s=0.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 cfg = control.ObserverBasedVHzControlCfg(
-    par, max_i_s=2*base.i, min_psi_s=base.psi, max_psi_s=base.psi)
+    par, max_i_s=2 * base.i, min_psi_s=base.psi, max_psi_s=base.psi
+)
 ctrl = control.ObserverBasedVHzControl(par, cfg)
 
 # %%
 # Set the speed reference and the external load torque.
 
 # Speed reference
-times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*8
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
+times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]) * 8
+values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0]) * base.w
 ctrl.ref.w_m = Sequence(times, values)
 # External load torque
-times = np.array([0, .125, .125, .875, .875, 1])*8
-values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
+times = np.array([0, 0.125, 0.125, 0.875, 0.875, 1]) * 8
+values = np.array([0, 0, 1, 1, 0, 0]) * nom.tau
 mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%

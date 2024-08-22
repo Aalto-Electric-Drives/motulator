@@ -9,4 +9,4 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
-.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 
+.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650

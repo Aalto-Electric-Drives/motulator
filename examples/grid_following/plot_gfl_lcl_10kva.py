@@ -1,7 +1,7 @@
 """
 10-kVA converter, LCL filter
 ============================
-    
+
 This example simulates a grid-following-controlled converter connected to a
 strong grid through an LCL filter. The control system includes a phase-locked
 loop (PLL) to synchronize with the grid, a current reference generator, and a
@@ -27,7 +27,7 @@ base = BaseValues.from_nominal(nom)
 
 # Grid and filter parameters
 grid_par = GridPars(u_gN=base.u, w_gN=base.w)
-filter_par = FilterPars(L_fc=.073*base.L, L_fg=.073*base.L, C_f=.043*base.C)
+filter_par = FilterPars(L_fc=0.073 * base.L, L_fg=0.073 * base.L, C_f=0.043 * base.C)
 
 # DC-bus parameters
 ac_filter = model.ACFilter(filter_par, grid_par)
@@ -45,7 +45,7 @@ mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
 # Configure the control system.
 
 # Control parameters
-cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i)
+cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5 * base.i)
 
 # Create the control system
 ctrl = control.GFLControl(cfg)
@@ -54,14 +54,14 @@ ctrl = control.GFLControl(cfg)
 # Set the time-dependent reference and disturbance signals.
 
 # Set the active and reactive power references
-ctrl.ref.p_g = lambda t: (t > .02)*5e3
-ctrl.ref.q_g = lambda t: (t > .04)*4e3
+ctrl.ref.p_g = lambda t: (t > 0.02) * 5e3
+ctrl.ref.q_g = lambda t: (t > 0.04) * 4e3
 
 # %%
 # Create the simulation object and simulate it.
 
 sim = Simulation(mdl, ctrl)
-sim.simulate(t_stop=.1)
+sim.simulate(t_stop=0.1)
 
 # %%
 # Plot the results.

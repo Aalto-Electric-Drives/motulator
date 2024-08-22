@@ -4,7 +4,7 @@ Converters
 Voltage-Source Converter
 ------------------------
 
-The figure below shows a three-phase two-level voltage-source converter and its equivalent model, where ideal switches are assumed. This converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The converter model is provided in the class :class:`motulator.drive.model.VoltageSourceConverter`. 
+The figure below shows a three-phase two-level voltage-source converter and its equivalent model, where ideal switches are assumed. This converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The converter model is provided in the class :class:`motulator.drive.model.VoltageSourceConverter`.
 
 
 .. figure:: figs/inverter.svg
@@ -58,13 +58,13 @@ The zero-sequence voltage does not affect the phase currents if the neutral of t
 	&= \frac{2}{3}\left(u_\mathrm{aN} + u_\mathrm{bN}\mathrm{e}^{\mathrm{j} 2\pi/3} + u_\mathrm{cN}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
    &= \underbrace{\frac{2}{3}\left(q_\mathrm{a} + q_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + q_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{q}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}
    :label: carrier_comparison
-    
+
 where :math:`\boldsymbol{q}_\mathrm{c}^\mathrm{s}` is the switching-state space vector.
 
 .. note::
    The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see :class:`motulator.common.control.PWM`) and discontinuous PWM methods [#Hol1994]_, [#Hav1999]_.
 
-   The sampling period :math:`T_\mathrm{s}` is returned by the control method, and it does not need to be constant. 
+   The sampling period :math:`T_\mathrm{s}` is returned by the control method, and it does not need to be constant.
 
    If the zero sequence is of interest, it could be easily added to the inverter model.
 

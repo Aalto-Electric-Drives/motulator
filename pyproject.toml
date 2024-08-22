@@ -18,12 +18,12 @@ description = "Motor Drive Simulator in Python"
 readme = "README.md"
 license = "MIT"
 keywords = [
-    "control", 
-    "electric", 
-    "inverter", 
-    "machine", 
-    "motor", 
-    "power", 
+    "control",
+    "electric",
+    "inverter",
+    "machine",
+    "motor",
+    "power",
     "simulation",
 ]
 classifiers = [

@@ -23,7 +23,7 @@ class Delay:
     """
 
     def __init__(self, length=1, elem=3):
-        self.data = length*[elem*[0]]  # Creates a zero list
+        self.data = length * [elem * [0]]  # Creates a zero list
 
     def __call__(self, u):
         """
@@ -134,7 +134,7 @@ class CarrierComparison:
 
         """
         # Quantize the duty ratios to N levels
-        d_c_abc = np.round(self.N*np.asarray(d_c_abc))/self.N
+        d_c_abc = np.round(self.N * np.asarray(d_c_abc)) / self.N
 
         # Assume falling edge and compute the normalized switching instants:
         t_n = np.append(0, np.sort(d_c_abc))
@@ -142,7 +142,7 @@ class CarrierComparison:
         q_c_abc = (t_n[:, np.newaxis] < d_c_abc).astype(int)
 
         # Durations of switching states
-        t_steps = T_s*np.diff(t_n, append=1)
+        t_steps = T_s * np.diff(t_n, append=1)
 
         # Flip the sequence if rising edge
         if self._rising_edge:
@@ -152,8 +152,11 @@ class CarrierComparison:
         # Change the carrier direction for the next call
         self._rising_edge = not self._rising_edge
 
-        return ((t_steps, abc2complex(q_c_abc.T)) if self.return_complex else
-                (t_steps, q_c_abc))
+        return (
+            (t_steps, abc2complex(q_c_abc.T))
+            if self.return_complex
+            else (t_steps, q_c_abc)
+        )
 
 
 # %%
@@ -191,7 +194,7 @@ class Simulation:
 
     Parameters
     ----------
-    mdl : Model 
+    mdl : Model
         Continuous-time system model.
     ctrl : ControlSystem
         Discrete-time controller.
@@ -253,14 +256,13 @@ class Simulation:
 
                     # Integrate over t_span
                     t_span = (self.mdl.t0, self.mdl.t0 + t_step)
-                    sol = solve_ivp(
-                        self.mdl.rhs, t_span, state0, max_step=max_step)
+                    sol = solve_ivp(self.mdl.rhs, t_span, state0, max_step=max_step)
 
                     # Set the new initial time
                     self.mdl.t0 = t_span[-1]
 
                     # Save the solution
-                    sol.q_cs = len(sol.t)*[q_cs[i]]
+                    sol.q_cs = len(sol.t) * [q_cs[i]]
                     self.mdl.save(sol)
 
     def save_mat(self, name="sim"):
@@ -282,13 +284,13 @@ class Model(ABC):
     """
     Base class for continuous-time system models.
 
-    This base class is a template for a system model that interconnects the 
-    subsystems and provides an interface to the solver. 
+    This base class is a template for a system model that interconnects the
+    subsystems and provides an interface to the solver.
 
     Parameters
     ----------
     pwm : zoh | CarrierComparison, optional
-        Zero-order hold of duty ratios or carrier comparison. If None, the 
+        Zero-order hold of duty ratios or carrier comparison. If None, the
         default is `zoh`.
     delay : int, optional
         Amount of computational delays. The default is 1.

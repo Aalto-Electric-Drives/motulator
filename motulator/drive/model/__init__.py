@@ -1,4 +1,5 @@
 """Continuous-time machine drive models."""
+
 from motulator.common.model._simulation import CarrierComparison, Simulation
 from motulator.common.model._converter import VoltageSourceConverter
 from motulator.drive.model._drive import (

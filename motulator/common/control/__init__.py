@@ -1,4 +1,5 @@
 """Common control functions and classes."""
+
 from motulator.common.control._control import (
     Clock,
     ComplexPIController,

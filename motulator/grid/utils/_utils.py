@@ -22,6 +22,7 @@ class GridPars(ABC):
         Grid resistance (Ω). The default is 0.
 
     """
+
     u_gN: float = None
     w_gN: float = None
     L_g: float = 0
@@ -48,6 +49,7 @@ class FilterPars(ABC):
         Grid-side series resistance (Ω). The default is 0.
 
     """
+
     L_fc: float
     L_fg: float = 0
     C_f: float = 0

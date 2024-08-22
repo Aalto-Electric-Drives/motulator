@@ -17,17 +17,17 @@ class StiffMechanicalSystem(Subsystem):
     J : float
         Total moment of inertia (kgm²).
     B_L : float | callable
-        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding 
-        to viscous friction, or an arbitrary function of the rotor speed. For 
-        example, choosing ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic 
+        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
+        to viscous friction, or an arbitrary function of the rotor speed. For
+        example, choosing ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic
         load torque ``k*w_M**2``. The default is ``B_L = 0``.
     tau_L : callable
-        External load torque (Nm) as a function of time, `tau_L_t(t)`. The 
+        External load torque (Nm) as a function of time, `tau_L_t(t)`. The
         default is zero, ``lambda t: 0*t``.
 
     """
 
-    def __init__(self, J, B_L=0, tau_L=lambda t: 0*t):
+    def __init__(self, J, B_L=0, tau_L=lambda t: 0 * t):
         super().__init__()
         self.par = SimpleNamespace(J=J, B_L=B_L)
         self.tau_L = tau_L
@@ -47,13 +47,13 @@ class StiffMechanicalSystem(Subsystem):
         """Set output variables."""
         state, out = self.state, self.out
         out.w_M = state.w_M
-        out.tau_L_tot = self.B_L*out.w_M + self.tau_L(t)
+        out.tau_L_tot = self.B_L * out.w_M + self.tau_L(t)
 
     def rhs(self):
         """Compute state derivatives."""
         state, inp, out = self.state, self.inp, self.out
-        d_w_M = (inp.tau_M - out.tau_L_tot)/self.par.J
-        d_exp_j_theta_M = 1j*state.w_M*state.exp_j_theta_M
+        d_w_M = (inp.tau_M - out.tau_L_tot) / self.par.J
+        d_exp_j_theta_M = 1j * state.w_M * state.exp_j_theta_M
 
         return [d_w_M, d_exp_j_theta_M]
 
@@ -89,9 +89,8 @@ class StiffMechanicalSystem(Subsystem):
     def post_process_with_inputs(self):
         """Post-process data with inputs."""
         data = self.data
-        B_L = self.par.B_L(np.abs(data.w_M)) if callable(
-            self.par.B_L) else self.par.B_L
-        data.tau_L_tot = self.tau_L(data.t) + B_L*data.w_M
+        B_L = self.par.B_L(np.abs(data.w_M)) if callable(self.par.B_L) else self.par.B_L
+        data.tau_L_tot = self.tau_L(data.t) + B_L * data.w_M
 
 
 # %%
@@ -109,12 +108,11 @@ class TwoMassMechanicalSystem(StiffMechanicalSystem):
 
     """
 
-    def __init__(self, par, tau_L=lambda t: 0*t):
+    def __init__(self, par, tau_L=lambda t: 0 * t):
         super().__init__(J=None, B_L=None, tau_L=tau_L)
         self.par = par
         self.state = SimpleNamespace(w_M=0, exp_j_theta_M=0, w_L=0, theta_ML=0)
-        self.sol_states = SimpleNamespace(
-            w_M=[], exp_j_theta_M=[], w_L=[], theta_ML=[])
+        self.sol_states = SimpleNamespace(w_M=[], exp_j_theta_M=[], w_L=[], theta_ML=[])
 
     @property
     def B_L(self):
@@ -129,16 +127,15 @@ class TwoMassMechanicalSystem(StiffMechanicalSystem):
         super().set_outputs(t)
         state, out = self.state, self.out
         out.w_L, out.theta_ML = state.w_L, state.theta_ML
-        out.tau_L_tot = self.B_L*out.w_L + self.tau_L(t)
-        out.tau_S = self.par.K_S*out.theta_ML + self.par.C_S*(
-            out.w_M - out.w_L)
+        out.tau_L_tot = self.B_L * out.w_L + self.tau_L(t)
+        out.tau_S = self.par.K_S * out.theta_ML + self.par.C_S * (out.w_M - out.w_L)
 
     def rhs(self):
         """Compute state derivatives."""
         state, inp, out = self.state, self.inp, self.out
-        d_w_M = (inp.tau_M - out.tau_S)/self.par.J_M
-        d_exp_j_theta_M = 1j*state.w_M*state.exp_j_theta_M
-        d_w_L = (out.tau_S - out.tau_L_tot)/self.par.J_L
+        d_w_M = (inp.tau_M - out.tau_S) / self.par.J_M
+        d_exp_j_theta_M = 1j * state.w_M * state.exp_j_theta_M
+        d_w_L = (out.tau_S - out.tau_L_tot) / self.par.J_L
         d_theta_ML = state.w_M - state.w_L
 
         return [d_w_M, d_exp_j_theta_M, d_w_L, d_theta_ML]
@@ -161,9 +158,8 @@ class TwoMassMechanicalSystem(StiffMechanicalSystem):
     def post_process_with_inputs(self):
         """Post-process data with inputs."""
         data = self.data
-        B_L = self.par.B_L(np.abs(data.w_L)) if callable(
-            self.par.B_L) else self.par.B_L
-        data.tau_L_tot = self.tau_L(data.t) + B_L*data.w_L
+        B_L = self.par.B_L(np.abs(data.w_L)) if callable(self.par.B_L) else self.par.B_L
+        data.tau_L_tot = self.tau_L(data.t) + B_L * data.w_L
 
 
 # %%
@@ -174,12 +170,12 @@ class ExternalRotorSpeed(Subsystem):
     Parameters
     ----------
     w_M : callable
-        Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is 
+        Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is
         zero, ``lambda t: 0*t``.
 
     """
 
-    def __init__(self, w_M=lambda t: 0*t):
+    def __init__(self, w_M=lambda t: 0 * t):
         super().__init__()
         self.w_M = w_M
         self.state = SimpleNamespace(exp_j_theta_M=complex(1))
@@ -192,7 +188,7 @@ class ExternalRotorSpeed(Subsystem):
 
     def rhs(self):
         """Compute state derivatives."""
-        d_exp_j_theta_M = 1j*self.out.w_M*self.state.exp_j_theta_M
+        d_exp_j_theta_M = 1j * self.out.w_M * self.state.exp_j_theta_M
         return [d_exp_j_theta_M]
 
     def meas_speed(self):

@@ -1,7 +1,7 @@
 *motulator:* Motor Drive Simulator in Python
 ============================================
 
-This open-source software includes simulation models for an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. The machine models are simulated in the continuous-time domain while the control methods run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from `scipy.integrate.solve_ivp`_. A number of control methods are provided as examples. The example methods aim to be simple yet feasible. 
+This open-source software includes simulation models for an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. The machine models are simulated in the continuous-time domain while the control methods run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from `scipy.integrate.solve_ivp`_. A number of control methods are provided as examples. The example methods aim to be simple yet feasible.
 
 .. _scipy.integrate.solve_ivp: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html
 

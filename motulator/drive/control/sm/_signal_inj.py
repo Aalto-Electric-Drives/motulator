@@ -5,7 +5,9 @@ import numpy as np
 
 from motulator.drive.control import DriveControlSystem, SpeedController
 from motulator.drive.control.sm._current_vector import (
-    CurrentController, CurrentReference)
+    CurrentController,
+    CurrentReference,
+)
 from motulator.common.utils import wrap
 
 
@@ -14,19 +16,19 @@ class SignalInjectionControl(DriveControlSystem):
     """
     Sensorless control with signal injection for synchronous machine drives.
 
-    This class implements a square-wave signal injection for low-speed 
-    operation according to [#Kim2012]_. A phase-locked loop is used to track 
-    the rotor position. 
-    
+    This class implements a square-wave signal injection for low-speed
+    operation according to [#Kim2012]_. A phase-locked loop is used to track
+    the rotor position.
+
     Notes
     -----
-    For a wider speed range, signal injection could be combined to a 
+    For a wider speed range, signal injection could be combined to a
     model-based observer. The effects of magnetic saturation are not
     compensated for in this version.
 
     References
     ----------
-    .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
+    .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection
        sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
        https://doi.org/10.1109/TIA.2012.2210175
 
@@ -46,11 +48,11 @@ class SignalInjectionControl(DriveControlSystem):
     def __init__(self, par, cfg, J=None, T_s=250e-6):
         super().__init__(par, T_s, sensorless=True)
         self.current_ref = CurrentReference(par, cfg)
-        self.current_ctrl = CurrentController(par, 2*np.pi*200)
-        self.pll = PhaseLockedLoop(w_o=2*np.pi*40)
+        self.current_ctrl = CurrentController(par, 2 * np.pi * 200)
+        self.pll = PhaseLockedLoop(w_o=2 * np.pi * 40)
         self.signal_inj = SignalInjection(par, U_inj=250)
         if J is not None:
-            self.speed_ctrl = SpeedController(J, 2*np.pi*4)
+            self.speed_ctrl = SpeedController(J, 2 * np.pi * 4)
         else:
             self.speed_ctrl = None
         self.observer = None
@@ -63,8 +65,8 @@ class SignalInjectionControl(DriveControlSystem):
         fbk.theta_m = self.pll.state.theta_m
 
         # Current vector in (estimated) rotor coordinates
-        fbk.i_s = np.exp(-1j*fbk.theta_m)*fbk.i_ss
-        fbk.u_s = np.exp(-1j*fbk.theta_m)*fbk.u_ss
+        fbk.i_s = np.exp(-1j * fbk.theta_m) * fbk.i_ss
+        fbk.u_s = np.exp(-1j * fbk.theta_m) * fbk.u_ss
 
         # Filter the current measurement for the current controller
         fbk.i_s_flt = self.signal_inj.filter_current(fbk.i_s)
@@ -79,10 +81,11 @@ class SignalInjectionControl(DriveControlSystem):
         ref = self.current_ref.output(fbk, ref)
 
         # Superimpose the excitation voltage on the d-axis
-        ref.u_s = self.current_ctrl.output(
-            ref.i_s, fbk.i_s_flt) + self.signal_inj.u_sd_inj
+        ref.u_s = (
+            self.current_ctrl.output(ref.i_s, fbk.i_s_flt) + self.signal_inj.u_sd_inj
+        )
 
-        ref.u_ss = ref.u_s*np.exp(1j*fbk.theta_m)
+        ref.u_ss = ref.u_s * np.exp(1j * fbk.theta_m)
         ref.d_abc = self.pwm(ref.T_s, ref.u_ss, fbk.u_dc, fbk.w_m)
 
         return ref
@@ -103,8 +106,8 @@ class SignalInjection:
     Estimate the rotor position error based on signal injection.
 
     This signal-injection method estimates the rotor position error based on
-    the injected switching frequency signal. The estimate can be used in a 
-    phase-locked loop or in a state observer to robustify low-speed sensorless 
+    the injected switching frequency signal. The estimate can be used in a
+    phase-locked loop or in a state observer to robustify low-speed sensorless
     operation.
 
     Parameters
@@ -117,7 +120,7 @@ class SignalInjection:
     """
 
     def __init__(self, par, U_inj):
-        self.k = .5*par.L_d*par.L_q/((par.L_q - par.L_d))  # Error gain
+        self.k = 0.5 * par.L_d * par.L_q / ((par.L_q - par.L_d))  # Error gain
         self._old_i_s, self._older_i_s = 0, 0
         self.u_sd_inj = U_inj
 
@@ -138,9 +141,8 @@ class SignalInjection:
             Rotor position estimation error (electrical rad).
 
         """
-        di_sq = i_sq - 2*self._old_i_s.imag + self._older_i_s.imag
-        err = (self.k/T_s)*di_sq/self.u_sd_inj if np.abs(
-            self.u_sd_inj) > 0 else 0
+        di_sq = i_sq - 2 * self._old_i_s.imag + self._older_i_s.imag
+        err = (self.k / T_s) * di_sq / self.u_sd_inj if np.abs(self.u_sd_inj) > 0 else 0
 
         return err
 
@@ -160,7 +162,7 @@ class SignalInjection:
 
         """
         # Filter currents
-        i_s_flt = .5*(i_s + self._old_i_s)
+        i_s_flt = 0.5 * (i_s + self._old_i_s)
 
         return i_s_flt
 
@@ -210,8 +212,8 @@ class PhaseLockedLoop:
 
         """
         # Speed estimation
-        w_m = self.gain.k_p*err + self.state.w_m
+        w_m = self.gain.k_p * err + self.state.w_m
 
         # Update the states
-        self.state.w_m += T_s*self.gain.k_i*err
-        self.state.theta_m = wrap(self.state.theta_m + T_s*w_m)
+        self.state.w_m += T_s * self.gain.k_i * err
+        self.state.theta_m = wrap(self.state.theta_m + T_s * w_m)

@@ -1,10 +1,10 @@
 """
 Continuous-time models for converters.
 
-A three-phase voltage-source inverter with optional DC-bus dynamics is 
+A three-phase voltage-source inverter with optional DC-bus dynamics is
 modelled, along with a six-pulse diode bridge rectifier supplied from a stiff
 grid. Complex space vectors are used also for duty ratios and switching states,
-wherever applicable. 
+wherever applicable.
 
 """
 
@@ -20,17 +20,17 @@ from motulator.common.utils import abc2complex, complex2abc
 class VoltageSourceConverter(Subsystem):
     """
     Lossless three-phase voltage-source converter.
-    
+
     Parameters
     ----------
     u_dc : float
-        DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is 
+        DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
         used as the initial condition.
     C_dc : float, optional
         DC-bus capacitance (F). The default is None.
     i_ext : callable, optional
         External current (A) fed to the DC bus. Needed if `C_dc` is not None.
-    
+
     """
 
     def __init__(self, u_dc, C_dc=None, i_ext=lambda t: None):
@@ -55,12 +55,12 @@ class VoltageSourceConverter(Subsystem):
     @property
     def u_cs(self):
         """AC-side voltage (V)."""
-        return self.inp.q_cs*self.u_dc
+        return self.inp.q_cs * self.u_dc
 
     @property
     def i_dc(self):
         """DC-side current (A)."""
-        return 1.5*np.real(self.inp.q_cs*np.conj(self.inp.i_cs))
+        return 1.5 * np.real(self.inp.q_cs * np.conj(self.inp.i_cs))
 
     def set_outputs(self, _):
         """Set output variables."""
@@ -77,7 +77,7 @@ class VoltageSourceConverter(Subsystem):
         """Compute the state derivatives."""
         if self.par.C_dc is None:
             return None
-        d_u_dc = (self.inp.i_ext - self.i_dc)/self.par.C_dc
+        d_u_dc = (self.inp.i_ext - self.i_dc) / self.par.C_dc
         return [d_u_dc]
 
     def meas_dc_voltage(self):
@@ -94,22 +94,22 @@ class VoltageSourceConverter(Subsystem):
                 self.data.u_dc = np.full(np.size(self.data.t), self.u_dc)
         else:
             data.u_dc = data.u_dc.real
-        data.u_cs = data.q_cs*data.u_dc
+        data.u_cs = data.q_cs * data.u_dc
 
     def post_process_with_inputs(self):
         """Post-process data with inputs."""
         data = self.data
-        data.i_dc = 1.5*np.real(data.q_cs*np.conj(data.i_cs))
+        data.i_dc = 1.5 * np.real(data.q_cs * np.conj(data.i_cs))
 
 
 # %%
 class FrequencyConverter(VoltageSourceConverter):
     """
     Frequency converter with a six-pulse diode bridge.
-    
+
     A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The
-    diode bridge is connected to the voltage-source inverter. The inductance of 
-    the grid is omitted. 
+    diode bridge is connected to the voltage-source inverter. The inductance of
+    the grid is omitted.
 
     Parameters
     ----------
@@ -118,16 +118,17 @@ class FrequencyConverter(VoltageSourceConverter):
     L_dc : float
         DC-bus inductance (H).
     U_g : float
-        Grid voltage (V, line-line, rms). 
+        Grid voltage (V, line-line, rms).
     f_g : float
         Grid frequency (Hz).
 
     """
 
     def __init__(self, C_dc, L_dc, U_g, f_g):
-        super().__init__(np.sqrt(2)*U_g, C_dc)
+        super().__init__(np.sqrt(2) * U_g, C_dc)
         self.par = SimpleNamespace(
-            L_dc=L_dc, C_dc=C_dc, w_g=2*np.pi*f_g, u_g=np.sqrt(2/3)*U_g)
+            L_dc=L_dc, C_dc=C_dc, w_g=2 * np.pi * f_g, u_g=np.sqrt(2 / 3) * U_g
+        )
         self.state.i_L = 0
         self.state.exp_j_theta_g = complex(1)
         self.sol_states.i_L, self.sol_states.exp_j_theta_g = [], []
@@ -146,13 +147,13 @@ class FrequencyConverter(VoltageSourceConverter):
     def rhs(self):
         """Compute the state derivatives."""
         # Grid voltage
-        u_gs = self.par.u_g*self.state.exp_j_theta_g
+        u_gs = self.par.u_g * self.state.exp_j_theta_g
         u_g_abc = complex2abc(u_gs)
         # Output voltage of the diode bridge
         u_di = np.amax(u_g_abc, axis=0) - np.amin(u_g_abc, axis=0)
         # State derivatives
-        d_exp_j_theta_g = 1j*self.par.w_g*self.state.exp_j_theta_g
-        d_i_L = (u_di - self.inp.u_dc)/self.par.L_dc
+        d_exp_j_theta_g = 1j * self.par.w_g * self.state.exp_j_theta_g
+        d_i_L = (u_di - self.inp.u_dc) / self.par.L_dc
         # The inductor current cannot be negative due to the diode bridge
         if self.state.i_L < 0 and d_i_L < 0:
             d_i_L = 0
@@ -167,14 +168,13 @@ class FrequencyConverter(VoltageSourceConverter):
         """Post-process data with inputs."""
         super().post_process_with_inputs()
         data = self.data
-        data.u_gs = self.par.u_g*data.exp_j_theta_g
+        data.u_gs = self.par.u_g * data.exp_j_theta_g
         data.u_g_abc = complex2abc(data.u_gs)
         # Voltage at the output of the diode bridge
-        data.u_di = (
-            np.amax(data.u_g_abc, axis=0) - np.amin(data.u_g_abc, axis=0))
+        data.u_di = np.amax(data.u_g_abc, axis=0) - np.amin(data.u_g_abc, axis=0)
         # Diode bridge switching states (-1, 0, 1)
-        data.q_g_abc = (
-            (np.amax(data.u_g_abc, axis=0) == data.u_g_abc).astype(int) -
-            (np.amin(data.u_g_abc, axis=0) == data.u_g_abc).astype(int))
+        data.q_g_abc = (np.amax(data.u_g_abc, axis=0) == data.u_g_abc).astype(int) - (
+            np.amin(data.u_g_abc, axis=0) == data.u_g_abc
+        ).astype(int)
         # Grid current space vector
-        data.i_gs = abc2complex(data.q_g_abc)*data.i_L
+        data.i_gs = abc2complex(data.q_g_abc) * data.i_L

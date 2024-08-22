@@ -3,20 +3,24 @@
 ====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters in this example yield open-loop V/Hz control. 
+parameters in this example yield open-loop V/Hz control.
 
 """
+
 # %%
 
 import numpy as np
 
-from motulator.common.model import (
-    CarrierComparison, FrequencyConverter, Simulation)
+from motulator.common.model import CarrierComparison, FrequencyConverter, Simulation
 from motulator.common.utils import BaseValues, NominalValues
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
-    InductionMachinePars, InductionMachineInvGammaPars, plot, plot_extra)
+    InductionMachinePars,
+    InductionMachineInvGammaPars,
+    plot,
+    plot_extra,
+)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -29,18 +33,17 @@ base = BaseValues.from_nominal(nom, n_p=2)
 
 # Machine model, using its inverse-Γ parameters
 mdl_ig_par = InductionMachineInvGammaPars(
-    n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
+    n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
+)
 mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
 machine = model.InductionMachine(mdl_par)
 # Mechanical subsystem with the quadratic load torque profile
-k = 1.1*nom.tau/(base.w/base.n_p)**2
-mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
+k = 1.1 * nom.tau / (base.w / base.n_p) ** 2
+mechanics = model.StiffMechanicalSystem(J=0.015, B_L=lambda w_M: k * np.abs(w_M))
 
 # Frequency converter with a diode bridge
-frequency_converter = FrequencyConverter(
-    C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
-mdl = model.Drive(
-    converter=frequency_converter, machine=machine, mechanics=mechanics)
+frequency_converter = FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
+mdl = model.Drive(converter=frequency_converter, machine=machine, mechanics=mechanics)
 
 mdl.pwm = CarrierComparison()  # Enable the PWM model
 
@@ -48,17 +51,16 @@ mdl.pwm = CarrierComparison()  # Enable the PWM model
 # Control system (parametrized as open-loop V/Hz control).
 
 # Inverse-Γ model parameter estimates
-par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-ctrl = control.VHzControl(
-    control.VHzControlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
+par = InductionMachineInvGammaPars(R_s=0 * 3.7, R_R=0 * 2.1, L_sgm=0.021, L_M=0.224)
+ctrl = control.VHzControl(control.VHzControlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
 
 # %%
 # Set the speed reference and the external load torque.
 
-ctrl.ref.w_m = lambda t: (t > .2)*base.w
+ctrl.ref.w_m = lambda t: (t > 0.2) * base.w
 
 # Stepwise load torque at t = 1 s, 20% of the rated torque
-mdl.mechanics.tau_L = lambda t: (t > 1.)*.2*nom.tau
+mdl.mechanics.tau_L = lambda t: (t > 1.0) * 0.2 * nom.tau
 
 # %%
 # Create the simulation object and simulate it.

@@ -13,7 +13,7 @@ https://aalto-electric-drives.github.io/motulator/
 
 Installation
 ------------
-This software can be installed using pip: 
+This software can be installed using pip:
 
 ```bash
 pip install motulator

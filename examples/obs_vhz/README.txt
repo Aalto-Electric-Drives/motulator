@@ -1,7 +1,7 @@
 Observer-Based V/Hz Control
 ---------------------------
 
-These examples demonstrate observer-based V/Hz control for induction machines [#Tii2022a]_ and synchronous machines [#Tii2022b]_. The examples :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` and :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor` also present the use of saturation models. The example :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model. 
+These examples demonstrate observer-based V/Hz control for induction machines [#Tii2022a]_ and synchronous machines [#Tii2022b]_. The examples :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` and :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor` also present the use of saturation models. The example :doc:`/auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model.
 
 .. rubric:: References
 

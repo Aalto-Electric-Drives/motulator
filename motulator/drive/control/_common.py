@@ -14,7 +14,7 @@ class SpeedController(PIController):
     """
     2DOF PI speed controller.
 
-    This is an interface for a speed controller. The gains are initialized 
+    This is an interface for a speed controller. The gains are initialized
     based on the desired closed-loop bandwidth and the rotor inertia estimate.
 
     Parameters
@@ -22,16 +22,16 @@ class SpeedController(PIController):
     J : float
         Total inertia of the rotor (kgm²).
     alpha_s : float
-        Closed-loop bandwidth (rad/s). 
+        Closed-loop bandwidth (rad/s).
     max_tau_M : float, optional
         Maximum motor torque (Nm). The default is `inf`.
 
     """
 
     def __init__(self, J, alpha_s, max_tau_M=np.inf):
-        k_p = 2*alpha_s*J
-        k_i = alpha_s**2*J
-        k_t = alpha_s*J
+        k_p = 2 * alpha_s * J
+        k_i = alpha_s**2 * J
+        k_t = alpha_s * J
         super().__init__(k_p, k_i, k_t, max_tau_M)
 
 
@@ -41,8 +41,8 @@ class DriveControlSystem(ControlSystem, ABC):
     Base class for drive control systems.
 
     This base class provides typical functionalities for control of electric
-    machine drives. This can be used both in speed-control and torque-control 
-    modes. 
+    machine drives. This can be used both in speed-control and torque-control
+    modes.
 
     Parameters
     ----------
@@ -60,7 +60,7 @@ class DriveControlSystem(ControlSystem, ABC):
         References, possibly containing either of the following fields:
 
             w_m : callable
-                Speed reference (electrical rad/s) as a function of time (s). 
+                Speed reference (electrical rad/s) as a function of time (s).
                 This signal is needed in speed-control mode.
             tau_M : callable
                 Torque reference (Nm) as a function of time (s). This signal
@@ -68,9 +68,9 @@ class DriveControlSystem(ControlSystem, ABC):
 
     observer : motulator.drive.control.im.Observer | \
                motulator.drive.control.sm.Observer | None
-        State observer can be None or an instance of either 
-        `motulator.drive.control.im.Observer` or 
-        `motulator.drive.control.sm.Observer` 
+        State observer can be None or an instance of either
+        `motulator.drive.control.im.Observer` or
+        `motulator.drive.control.sm.Observer`
         depending on the machine type. The default is None.
     speed_ctrl : SpeedController | None
         Speed controller. The default is None.
@@ -88,7 +88,7 @@ class DriveControlSystem(ControlSystem, ABC):
     def get_electrical_measurements(self, fbk, mdl):
         """
         Measure the currents and voltages.
-        
+
         Parameters
         ----------
         fbk : SimpleNamespace
@@ -119,7 +119,7 @@ class DriveControlSystem(ControlSystem, ABC):
     def get_mechanical_measurements(self, fbk, mdl):
         """
         Measure the speed and position.
-        
+
         Parameters
         ----------
         fbk : SimpleNamespace
@@ -136,10 +136,10 @@ class DriveControlSystem(ControlSystem, ABC):
                     Rotor speed (electrical rad/s).
                 theta_m : float
                     Rotor position (electrical rad).
-    
+
         """
-        fbk.w_m = self.par.n_p*mdl.mechanics.meas_speed()
-        fbk.theta_m = wrap(self.par.n_p*mdl.mechanics.meas_position())
+        fbk.w_m = self.par.n_p * mdl.mechanics.meas_speed()
+        fbk.theta_m = wrap(self.par.n_p * mdl.mechanics.meas_position())
 
         return fbk
 
@@ -158,8 +158,8 @@ class DriveControlSystem(ControlSystem, ABC):
         """
         Get the torque reference in vector control.
 
-        This method can be used in vector control to get the torque reference 
-        from the speed controller. If the speed controller method `speed_ctrl` 
+        This method can be used in vector control to get the torque reference
+        from the speed controller. If the speed controller method `speed_ctrl`
         is None, the torque reference is obtained directly from the reference.
 
         Parameters
@@ -168,25 +168,25 @@ class DriveControlSystem(ControlSystem, ABC):
             Feedback signals. In speed-control mode, the measured or estimated
             rotor speed `w_m` is used to compute the torque reference.
         ref : SimpleNamespace
-            Reference signals, containing the digital time `t`. The speed and 
+            Reference signals, containing the digital time `t`. The speed and
             torque references are added to this object.
 
         Returns
         -------
         ref : SimpleNamespace
             Reference signals, containing the following fields:
-                
+
                 w_m : float
                     Speed reference (electrical rad/s).
                 tau_M : float
-                    Torque reference (Nm).  
+                    Torque reference (Nm).
 
         """
         if self.speed_ctrl:
             # Speed-control mode
             ref.w_m = self.ref.w_m(ref.t)
-            ref_w_M = ref.w_m/self.par.n_p
-            w_M = fbk.w_m/self.par.n_p
+            ref_w_M = ref.w_m / self.par.n_p
+            w_M = fbk.w_m / self.par.n_p
             ref.tau_M = self.speed_ctrl.output(ref_w_M, w_M)
         else:
             # Torque-control mode

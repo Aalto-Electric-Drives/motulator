@@ -1,4 +1,5 @@
 """Common control functions and classes."""
+
 from abc import ABC
 from types import SimpleNamespace
 
@@ -21,7 +22,7 @@ class PLL:
         Integral gain.
     w_g0 : float
         Initial value for the grid angular frequency estimate.
-        
+
     """
 
     def __init__(self, k_p, k_i, w_g0, theta_g0=0):
@@ -31,15 +32,15 @@ class PLL:
     def output(self, fbk):
         """Compute the frequency and phase angle estimates."""
         # Measured voltage in control coordinates
-        fbk.u_g = fbk.u_gs*np.exp(-1j*fbk.theta_c)
+        fbk.u_g = fbk.u_gs * np.exp(-1j * fbk.theta_c)
         # Grid frequency estimate for the angle calculation
-        fbk.w_g = self.gain.k_p*fbk.u_g.imag + self.est.w_g
+        fbk.w_g = self.gain.k_p * fbk.u_g.imag + self.est.w_g
         return fbk
 
     def update(self, T_s, fbk):
         """Update the integral states."""
-        self.est.w_g += T_s*self.gain.k_i*fbk.u_g.imag
-        self.est.theta_g += T_s*fbk.w_g
+        self.est.w_g += T_s * self.gain.k_i * fbk.u_g.imag
+        self.est.theta_g += T_s * fbk.w_g
         self.est.theta_g = wrap(self.est.theta_g)
 
 
@@ -50,7 +51,7 @@ class DCBusVoltageController(PIController):
 
     This provides an interface for a DC-bus voltage controller. The gains are
     initialized based on the desired closed-loop bandwidth and the DC-bus
-    capacitance estimate. The controller regulates the square of the DC-bus 
+    capacitance estimate. The controller regulates the square of the DC-bus
     voltage in order to have a linear closed-loop system [#Hur2001]_.
 
     Parameters
@@ -61,7 +62,7 @@ class DCBusVoltageController(PIController):
         Closed-loop bandwidth (rad/s). The default is 2*np.pi*30.
     p_max : float, optional
         Maximum converter power (W). The default is `inf`.
-        
+
     References
     ----------
     .. [#Hur2001] Hur, Jung, Nam, "A fast dynamic DC-link power-balancing
@@ -70,9 +71,9 @@ class DCBusVoltageController(PIController):
 
     """
 
-    def __init__(self, zeta=1, alpha_dc=2*np.pi*30, p_max=np.inf):
-        k_p = -2*zeta*alpha_dc
-        k_i = -alpha_dc**2
+    def __init__(self, zeta=1, alpha_dc=2 * np.pi * 30, p_max=np.inf):
+        k_p = -2 * zeta * alpha_dc
+        k_i = -(alpha_dc**2)
         k_t = k_p
         super().__init__(k_p, k_i, k_t, p_max)
 
@@ -81,10 +82,10 @@ class DCBusVoltageController(PIController):
 class GridConverterControlSystem(ControlSystem, ABC):
     """
     Base class for control of grid-connected converters.
-    
+
     This base class provides typical functionalities for control of
     grid-connected converters. This can be used both in power control and
-    DC-bus voltage control modes. 
+    DC-bus voltage control modes.
 
     Parameters
     ----------
@@ -102,7 +103,7 @@ class GridConverterControlSystem(ControlSystem, ABC):
 
             v : float | callable
                 Converter output voltage reference (V). Can be given either as
-                a constant or a function of time (s). 
+                a constant or a function of time (s).
             p_g : callable
                 Active power reference (W) as a function of time (s). This
                 signal is needed in power control mode.
@@ -129,7 +130,7 @@ class GridConverterControlSystem(ControlSystem, ABC):
     def get_electrical_measurements(self, fbk, mdl):
         """
         Measure the currents and voltages.
-        
+
         Parameters
         ----------
         fbk : SimpleNamespace
@@ -183,20 +184,20 @@ class GridConverterControlSystem(ControlSystem, ABC):
         -------
         ref : SimpleNamespace
             Reference signals, containing the following fields:
-                
+
                 u_dc : float
                     DC-bus voltage reference (V).
                 p_g : float
                     Active power reference (W).
                 q_g : float
-                    Reactive power reference (VAr).  
+                    Reactive power reference (VAr).
 
         """
         if self.dc_bus_volt_ctrl:
             # DC-bus voltage control mode
             ref.u_dc = self.ref.u_dc(ref.t)
-            ref_W_dc = .5*self.C_dc*ref.u_dc**2
-            W_dc = .5*self.C_dc*fbk.u_dc**2
+            ref_W_dc = 0.5 * self.C_dc * ref.u_dc**2
+            W_dc = 0.5 * self.C_dc * fbk.u_dc**2
             ref.p_g = self.dc_bus_volt_ctrl.output(ref_W_dc, W_dc)
         else:
             # Power control mode
@@ -204,8 +205,7 @@ class GridConverterControlSystem(ControlSystem, ABC):
             ref.p_g = self.ref.p_g(ref.t)
 
         # Reactive power reference
-        ref.q_g = self.ref.q_g(ref.t) if callable(
-            self.ref.q_g) else self.ref.q_g
+        ref.q_g = self.ref.q_g(ref.t) if callable(self.ref.q_g) else self.ref.q_g
 
         return ref
 
@@ -239,5 +239,5 @@ class CurrentLimiter:
     def __call__(self, i):
         abs_i = np.abs(i)
         if abs_i > self.max_i:
-            i = (self.max_i/abs_i)*i
+            i = (self.max_i / abs_i) * i
         return i

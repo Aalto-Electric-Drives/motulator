@@ -1,9 +1,9 @@
 """
 12.5-kVA converter, RFPSC
 =========================
-    
-This example simulates reference-feedforward power-synchronization control 
-(RFPSC) of a converter connected to a weak grid. 
+
+This example simulates reference-feedforward power-synchronization control
+(RFPSC) of a converter connected to a weak grid.
 
 """
 
@@ -24,12 +24,12 @@ base = BaseValues.from_nominal(nom)
 # Configure the system model.
 
 # Grid parameters
-grid_par = GridPars(u_gN=base.u, w_gN=base.w, L_g=.74*base.L)
+grid_par = GridPars(u_gN=base.u, w_gN=base.w, L_g=0.74 * base.L)
 # Uncomment line below to simulate a strong grid
 # grid_par.L_g = 0
 
 # Filter parameters
-filter_par = FilterPars(L_fc=.15*base.L)
+filter_par = FilterPars(L_fc=0.15 * base.L)
 
 # Create AC filter with given parameters
 ac_filter = model.ACFilter(filter_par, grid_par)
@@ -48,7 +48,8 @@ mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
 
 # Control configuration parameters
 cfg = control.RFPSCControlCfg(
-    grid_par, filter_par, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
+    grid_par, filter_par, max_i=1.3 * base.i, T_s=100e-6, R_a=0.2 * base.Z
+)
 
 # Create the control system
 ctrl = control.RFPSCControl(cfg)
@@ -60,8 +61,9 @@ ctrl = control.RFPSCControl(cfg)
 ctrl.ref.v_c = lambda t: base.u
 
 # Active power reference
-ctrl.ref.p_g = lambda t: ((t > .2)/3 + (t > .5)/3 + (t > .8)/3 -
-                          (t > 1.2))*nom.P
+ctrl.ref.p_g = (
+    lambda t: ((t > 0.2) / 3 + (t > 0.5) / 3 + (t > 0.8) / 3 - (t > 1.2)) * nom.P
+)
 
 # %%
 # Create the simulation object and simulate it.
