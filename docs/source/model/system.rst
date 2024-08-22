@@ -4,10 +4,7 @@ Generic System Model
 Sampled-Data Systems
 --------------------
 
-Machine drives and grid-connected converters are sampled-data systems, consisting
-of continuous-time systems and discrete-time systems as well as the interfaces
-between them [#Fra1997]_, [#Bus2015]_. The figure below shows a generic example
-system. The same architecture is used in *motulator*.
+Machine drives and grid-connected converters are sampled-data systems, consisting of continuous-time systems and discrete-time systems as well as the interfaces between them [#Fra1997]_, [#Bus2015]_. The figure below shows a generic example system. The same architecture is used in *motulator*.
 
 .. figure:: figs/system.svg
    :width: 100%
@@ -17,15 +14,9 @@ system. The same architecture is used in *motulator*.
 
    Block diagram of a sampled-data system. Discrete signals and systems are shown in blue, and continuous signals and systems are shown in red. 
 
-The continuous-time system (named `mdl` in the provided example scripts) is the
-model of a physical machine drive or grid converter system. The system comprises
-a power converter along with other subsystem models depending on the application. The continuous-time system may have
-external inputs, such as a load torque or power fed to a DC-bus of the converter.
+The continuous-time system (named `mdl` in the provided example scripts) is the model of a physical machine drive or grid converter system. The system comprises a power converter along with other subsystem models depending on the application. The continuous-time system may have external inputs, such as a load torque or power fed to a DC-bus of the converter.
 
-The discrete-time controller (named `ctrl`) contains control algorithms, such as
-the speed control and current control. The reference signals could be, e.g., the
-speed and flux or voltage and power references. The feedback signal :math:`\boldsymbol{y}(k)`
-typically contains the measured DC-bus voltage and stator/converter currents. 
+The discrete-time controller (named `ctrl`) contains control algorithms, such as speed control and current control. The reference signals could be, e.g., the speed and flux or voltage and power references. The feedback signal :math:`\boldsymbol{y}(k)` typically contains the measured DC-bus voltage and stator/converter currents. 
 
 The discrete-time controllers have the following scheme in the main control loop:
 
@@ -35,44 +26,28 @@ The discrete-time controllers have the following scheme in the main control loop
    4. Save the feedback signals and the reference signals.
    5. Return the sampling period `T_s` and the duty ratios `d_abc` for the carrier comparison.
 
-The main control loop is implemented in the :class:`motulator.common.control.ControlSystem`.
+The main control loop is implemented in the class :class:`motulator.common.control.ControlSystem`.
 
-Digital control systems typically have a computational delay of one sampling period,
-:math:`N=1`. The PWM block shown in the figure models the carrier comparison,
-see more details in :doc:`converters`. The carrier comparison is implemented in
-the class :class:`motulator.common.model.CarrierComparison`. If the switching ripple
-is not of interest in simulations, the carrier comparison can be replaced with zero-order hold (ZOH).
+Digital control systems typically have a computational delay of one sampling period, :math:`N=1`. The PWM block shown in the figure models the carrier comparison, see more details in :doc:`converters`. The carrier comparison is implemented in the class :class:`motulator.common.model.CarrierComparison`. If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with a zero-order hold (ZOH).
 
 Space Vectors
 -------------
 
-The system models in *motulator* apply peak-valued complex space vectors, marked
-with boldface in the following equations. As an example, the space vector of the
-converter current is
+The system models in *motulator* apply peak-valued complex space vectors, marked with boldface in the following equations. As an example, the space vector of the converter current is
 
 .. math::
 	\boldsymbol{i}^\mathrm{s}_\mathrm{c} = \frac{2}{3}\left(i_\mathrm{a} + i_\mathrm{b}\mathrm{e}^{\mathrm{j}2\pi/3} + i_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) 
    :label: space_vector
 
-where :math:`i_\mathrm{a}`, :math:`i_\mathrm{b}`, and :math:`i_\mathrm{c}` are
-the phase currents, which may vary freely in time. In our notation, the subscript
-c refers to the converter-side AC quantities and the superscript s refers to the
-stationary coordinates. The space vector does not include the zero-sequence
-component, which is defined as
+where :math:`i_\mathrm{a}`, :math:`i_\mathrm{b}`, and :math:`i_\mathrm{c}` are the phase currents, which may vary freely in time. In our notation, the subscript c refers to the converter-side AC quantities and the superscript s refers to the stationary coordinates. The space vector does not include the zero-sequence component, which is defined as
 
 .. math::
 	i_\mathrm{c0} = \frac{1}{3}\left(i_\mathrm{a} + i_\mathrm{b} + i_\mathrm{c}\right) 
    :label: zero_sequence
 
-Even though the zero-sequence voltage exists at the ouput of typical converters
-(see :doc:`/model/converters`), there is no path for the zero-sequence current
-to flow if the stator winding of a machine is delta-connected, or the star point
-of the three-phase system is not connected, i.e., :math:`i_\mathrm{c0} = 0`.
-Consequently, the zero-sequence voltage cannot produce neither power nor torque.
+Even though the zero-sequence voltage exists at the ouput of typical converters (see :doc:`/model/converters`), there is no path for the zero-sequence current to flow if the stator winding of a machine is delta-connected, or the star point of the three-phase system is not connected, i.e., :math:`i_\mathrm{c0} = 0`. Consequently, the zero-sequence voltage cannot produce power or torque.
 
-The space vector transformation in :eq:`space_vector` is implemented in the
-function :func:`motulator.common.utils.abc2complex` and its inverse transformation
-in the function :func:`motulator.common.utils.complex2abc`. 
+The space vector transformation in :eq:`space_vector` is implemented in the function :func:`motulator.common.utils.abc2complex` and its inverse transformation in the function :func:`motulator.common.utils.complex2abc`. 
 
 .. rubric:: References
 

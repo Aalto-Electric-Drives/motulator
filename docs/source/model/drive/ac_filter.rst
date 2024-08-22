@@ -1,9 +1,7 @@
 Output LC Filter
 ================
 
-This document describes a continuous-time model of an LC filter, which may be used between the converter and the electric machine in some applications [#Sal2006]_.
-Space vectors are used to represent the three-phase quantities. The subscript c and s refer to the converter-side and the stator-side quantities, respectively.
-The superscript s refers to the stationary coordinates. 
+This document describes a continuous-time model of an LC filter, which may be used between the converter and the electric machine in some applications [#Sal2006]_. Space vectors are used to represent the three-phase quantities. The subscript c and s refer to the converter-side and the stator-side quantities, respectively. The superscript s refers to the stationary coordinates. 
 
 .. figure:: ../figs/lc_filter.svg
    :width: 100%
