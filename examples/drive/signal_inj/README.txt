@@ -5,6 +5,4 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 
 .. rubric:: References
 
-.. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
-   sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
-   https://doi.org/10.1109/TIA.2012.2210175
+.. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012, https://doi.org/10.1109/TIA.2012.2210175
