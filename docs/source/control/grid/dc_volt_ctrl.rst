@@ -1,8 +1,6 @@
 DC-Bus Voltage Control
 ======================
-The DC-bus voltage control uses a two-degrees-of-freedom (2DOF) proportional-integral (PI) controller. 
-The PI controller is designed to control the energy of the DC-bus capacitance 
-and not the DC-bus voltage in order to have a linear closed-loop system [#Hur2001]_.
+The DC-bus voltage control uses a two-degrees-of-freedom (2DOF) proportional-integral (PI) controller. The PI controller is designed to control the energy of the DC-bus capacitance and not the DC-bus voltage in order to have a linear closed-loop system [#Hur2001]_.
 
 .. figure:: ../figs/DC_bus_dynamics.svg
    :width: 100%
@@ -31,9 +29,7 @@ where
    W_\mathrm{{dc}} = \frac{1}{2}C u_{\mathrm{dc}}^2 \qquad
    W_\mathrm{f} = \frac{3}{4}L_\mathrm{f} i_{\mathrm{dc}}^2 
 
-In ideal power control :math:`p_{\mathrm{g}} = p_{\mathrm{g,ref}}`. 
-Also, :math:`\frac{\mathrm{d}W}{\mathrm{d} t}=0` since the filter inductor energy is assumed to be constant. 
-The power :math:`u_{\mathrm{dc}}i_{\mathrm{dc}}` act as a load disturbance.
+In ideal power control :math:`p_{\mathrm{g}} = p_{\mathrm{g,ref}}`. Also, :math:`\frac{\mathrm{d}W}{\mathrm{d} t}=0` since the filter inductor energy is assumed to be constant. The power :math:`u_{\mathrm{dc}}i_{\mathrm{dc}}` act as a load disturbance.
     
 The DC-bus voltage control is implemented in the class :class:`motulator.grid.control.DCBusVoltageController`.
 
