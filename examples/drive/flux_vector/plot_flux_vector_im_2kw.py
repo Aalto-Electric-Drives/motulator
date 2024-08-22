@@ -9,12 +9,11 @@ machine drive.
 # %%
 import numpy as np
 
-from motulator.common.utils import Sequence
 from motulator.drive import model
 import motulator.drive.control.im as control
 from motulator.drive.utils import (
     BaseValues, NominalValues, InductionMachineInvGammaPars,
-    InductionMachinePars, plot)
+    InductionMachinePars, plot, Sequence)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
