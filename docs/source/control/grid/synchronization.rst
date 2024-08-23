@@ -19,10 +19,10 @@ The PLL drives the signal :math:`\hat{u}_\mathrm{gq}` to zero, leading to :math:
 The gain selection:
 
 .. math:: 
-    k_\mathrm{p} = \frac{2 \zeta \omega_\mathrm{0,PLL}}{U_\mathrm{gN}} \qquad
-    k_\mathrm{i} = \frac{\omega_\mathrm{0,PLL}^2}{U_\mathrm{gN}}
+    k_\mathrm{p} = \frac{2 \zeta \omega_\mathrm{0,PLL}}{u_\mathrm{gN}} \qquad
+    k_\mathrm{i} = \frac{\omega_\mathrm{0,PLL}^2}{u_\mathrm{gN}}
 
-where :math:`\zeta` is the damping factor, :math:`\omega_\mathrm{0,PLL}` is the natural frequency of the PLL, and :math:`U_\mathrm{gN}` is the nominal grid voltage amplitude.
+where :math:`\zeta` is the damping factor, :math:`\omega_\mathrm{0,PLL}` is the natural frequency of the PLL, and :math:`u_\mathrm{gN}` is the nominal grid voltage amplitude.
 
 More details on the control methods used can be found in [#Kau1997]_.
 
