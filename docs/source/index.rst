@@ -42,6 +42,7 @@ The system models are simulated in the continuous-time domain while the control 
    :name: controllers
    :maxdepth: 1
 
+   control/control_system
    control/drive/index
    control/grid/index
 

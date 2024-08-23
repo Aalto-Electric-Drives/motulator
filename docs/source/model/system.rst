@@ -1,5 +1,5 @@
-Generic System Model
-====================
+Introduction
+============
 
 Sampled-Data Systems
 --------------------
@@ -16,17 +16,7 @@ Machine drives and grid-connected converters are sampled-data systems, consistin
 
 The continuous-time system (named `mdl` in the provided example scripts) is the model of a physical machine drive or grid converter system. The system comprises a power converter along with other subsystem models depending on the application. The continuous-time system may have external inputs, such as a load torque or power fed to a DC-bus of the converter.
 
-The discrete-time controller (named `ctrl`) contains control algorithms, such as speed control and current control. The reference signals could be, e.g., the speed and flux or voltage and power references. The feedback signal :math:`\boldsymbol{y}(k)` typically contains the measured DC-bus voltage and stator/converter currents. 
-
-The discrete-time controllers have the following scheme in the main control loop:
-
-   1. Get the feedback signals. This step may contain first getting the measurements and then optionally computing the observer outputs.
-   2. Compute the reference signals (controller outputs) based on the feedback signals.
-   3. Update the control system states for the next sampling instant.
-   4. Save the feedback signals and the reference signals.
-   5. Return the sampling period `T_s` and the duty ratios `d_abc` for the carrier comparison.
-
-The main control loop is implemented in the class :class:`motulator.common.control.ControlSystem`.
+The discrete-time controller (named `ctrl`) contains control algorithms, such as speed control and current control. The reference signals could be, e.g., the speed and flux or voltage and power references. The feedback signal :math:`\boldsymbol{y}(k)` typically contains the measured DC-bus voltage and stator/converter currents.
 
 Digital control systems typically have a computational delay of one sampling period, :math:`N=1`. The PWM block shown in the figure models the carrier comparison, see more details in :doc:`converters`. The carrier comparison is implemented in the class :class:`motulator.common.model.CarrierComparison`. If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with a zero-order hold (ZOH).
 

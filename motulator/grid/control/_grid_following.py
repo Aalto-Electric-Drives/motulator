@@ -6,7 +6,7 @@ from dataclasses import dataclass, InitVar
 import numpy as np
 
 from motulator.common.control import ComplexPIController
-from motulator.grid.control import (
+from motulator.grid.control._common import (
     CurrentLimiter, GridConverterControlSystem, PLL)
 from motulator.grid.utils import FilterPars, GridPars
 
