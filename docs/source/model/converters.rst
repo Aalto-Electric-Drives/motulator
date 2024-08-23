@@ -4,7 +4,7 @@ Converters
 Voltage-Source Converter
 ------------------------
 
-The figure below shows a three-phase two-level voltage-source converter, where :math:`u_\mathrm{dc}` is the DC-bus voltage, :math:`i_\mathrm{ext}` is the external DC current, :math:`i_\mathrm{dc}` is the converter DC current and :math:`C_\mathrm{dc}` is the DC-bus capacitance. This converter can operate both as an inverter and a rectifier, depending on the direction of the power flow.
+The figure below shows a three-phase two-level voltage-source converter, where :math:`u_\mathrm{dc}` is the DC-bus voltage, :math:`i_\mathrm{dc}` is the external DC current, :math:`i'_\mathrm{dc}` is the converter DC current and :math:`C_\mathrm{dc}` is the DC-bus capacitance. This converter can operate both as an inverter and a rectifier, depending on the direction of the power flow.
 
 .. figure:: figs/inverter.svg
    :width: 100%
@@ -27,16 +27,16 @@ The figure below then shows the equivalent model for the three-phase voltage-sou
 By default, the DC-bus voltage is stiff, i.e. the capacitor is replaced by an ideal voltage source. Alternatively, the capacitive dynamics of the DC-bus can be simulated. The model is implemented as
 
 .. math::
-   \frac{\mathrm{d}u_\mathrm{dc}}{\mathrm{d} t} 
-   = \frac{1}{C_\mathrm{dc}}(i_\mathrm{ext} 
-   - i_\mathrm{dc})
+   C_{dc}\frac{\mathrm{d}u_\mathrm{dc}}{\mathrm{d} t} 
+   = i_\mathrm{dc} 
+   - i'_\mathrm{dc}
    :label: DC_bus_model
 
 where the converter DC current is calculated from the converter phase currents and switching states as 
 
 .. math::
-   i_\mathrm{dc} = q_\mathrm{a} i_\mathrm{a} + q_\mathrm{b} i_\mathrm{b}
-   + q_\mathrm{c} i_\mathrm{c}
+   i'_\mathrm{dc} 
+   = q_\mathrm{a} i_\mathrm{a} + q_\mathrm{b} i_\mathrm{b} + q_\mathrm{c} i_\mathrm{c}
    :label: DC_current
 
 Six-Pulse Diode Bridge
@@ -55,7 +55,8 @@ The figure below shows a six-pulse diode bridge rectifier, where the inductor :m
 The model is implemented as 
 
 .. math:: 
-   \frac{\mathrm{d}i_{L}}{\mathrm{d}t} = \frac{1}{L_{\mathrm{dc}}}(u_\mathrm{di} - u_\mathrm{dc})
+   L_{\mathrm{dc}} \frac{\mathrm{d}i_{L}}{\mathrm{d}t}
+   = u_{\mathrm{di}} - u_\mathrm{dc} 
    :label: diode_bridge
 
 where :math:`i_\mathrm{L}` is the DC-bus current, :math:`u_\mathrm{di}` is the voltage over the diode bridge, :math:`u_\mathrm{dc}` is the DC-bus voltage, and :math:`L_{\mathrm{dc}}` is the DC link inductance.
