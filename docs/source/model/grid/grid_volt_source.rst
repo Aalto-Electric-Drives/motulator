@@ -1,7 +1,7 @@
 Grid Voltage Source
 ===================
 
-This document describes continuous-time models for three-phase AC voltage sources. This section will be extended in the future.
+This document describes continuous-time models for three-phase AC voltage sources.
 
 Ideal three-phase voltage source
 --------------------------------
