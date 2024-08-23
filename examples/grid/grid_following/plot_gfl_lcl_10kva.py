@@ -10,8 +10,7 @@ PI-type current controller.
 """
 
 # %%
-from motulator.grid import model
-import motulator.grid.control.grid_following as control
+from motulator.grid import model, control
 from motulator.grid.utils import (
     BaseValues, FilterPars, GridPars, NominalValues, plot)
 

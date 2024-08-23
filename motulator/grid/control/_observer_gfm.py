@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from motulator.common.utils import wrap
-from motulator.grid.control import GridConverterControlSystem
+from motulator.grid.control._common import GridConverterControlSystem
 from motulator.grid.utils import FilterPars, GridPars
 
 

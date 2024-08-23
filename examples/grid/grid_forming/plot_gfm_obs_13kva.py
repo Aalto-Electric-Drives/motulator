@@ -10,8 +10,7 @@ observer. A transparent current controller is included for current limitation.
 """
 
 # %%
-from motulator.grid import model
-import motulator.grid.control.grid_forming as control
+from motulator.grid import model, control
 from motulator.grid.utils import (
     BaseValues, FilterPars, GridPars, NominalValues, plot)
 
