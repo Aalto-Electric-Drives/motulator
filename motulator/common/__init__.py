@@ -1,2 +1,1 @@
 """Common functions and classes."""
-

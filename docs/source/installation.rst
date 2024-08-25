@@ -40,10 +40,12 @@ Several powerful open-source IDEs are available for Python. The following instru
 4) Create a virtual environment in the workspace using the instructions provided here: https://code.visualstudio.com/docs/python/environments.
 5) Enable installation of optional dependencies from ``pyproject.toml`` (selecting at least ``dev`` is recommended). Alternatively, for installing the project with its core dependencies, you may run the command ``pip install .`` in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run ``pip install .[dev,doc]``).
 
-After completing the above steps, the virtual environment can be found in the ``.venv`` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it.
+After completing the above steps, the virtual environment can be found in the ``.venv`` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the ``dev`` dependencies, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code). 
 
-If you installed the ``dev`` dependencies, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code). If you aim to work with the documentation, install also the ``doc`` dependencies. For previewing the documentation in VS Code, you can install the Esbonio extension: https://docs.esbon.io/en/latest/lsp/editors/vscode.html.
+If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for *Terminal: Select Default Profile*). We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.
 
-If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for *Terminal: Select Default Profile*). 
+Notes for Developers
+^^^^^^^^^^^^^^^^^^^^
+We recommend to install the ``dev`` dependencies. In this project, we use the YAPF Python code formatter (https://github.com/google/yapf), configured based on the PEP8 coding conventions (https://peps.python.org/pep-0008/). To enable YAPF in VS Code, you need to install the YAPF extension (https://marketplace.visualstudio.com/items?itemName=eeyore.yapf). 
 
-We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.
+If you aim to work with the documentation, install also the ``doc`` dependencies. For previewing the documentation in VS Code, you can install the Esbonio extension (https://marketplace.visualstudio.com/items?itemName=swyddfa.esbonio). Alternatively, you can build the documentation locally using the command ``make html`` in the ``docs`` directory. The documentation will be built in the ``docs/build`` directory.

@@ -1,8 +1,6 @@
-************
-Drive System
-************
-
-Drive-specific models
+******
+Drives
+******
 
 .. toctree::
    :maxdepth: 2
@@ -10,3 +8,4 @@ Drive-specific models
    machines
    mechanics
    ac_filter
+   diode_bridge

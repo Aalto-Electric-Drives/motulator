@@ -2,7 +2,6 @@
 
 # %%
 from dataclasses import dataclass
-from abc import ABC
 
 import numpy as np
 
@@ -171,7 +170,7 @@ class NominalValues:
     P : float
         Power (W).
     tau : float, optional
-        Torque (Nm). Default value is None.
+        Torque (Nm). The default value is None.
 
     """
 
@@ -208,9 +207,9 @@ class BaseValues:
     C : float
         Capacitance (F).
     tau : float, optional
-        Torque (Nm). Default is None.
+        Torque (Nm). The default is None.
     n_p : int, optional
-        Number of pole pairs. Default is None.
+        Number of pole pairs. The default is None.
 
     """
     u: float
@@ -243,7 +242,7 @@ class BaseValues:
 
         n_p : int, optional
             Number of pole pairs. If not given it is assumed that base values
-            for a grid converter are calculated. Default is None.
+            for a grid converter are calculated. The default is None.
 
         Returns
         -------

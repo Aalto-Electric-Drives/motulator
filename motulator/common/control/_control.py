@@ -23,6 +23,9 @@ class PWM:
     k_comp : float, optional
         Compensation factor for the delay effect on the voltage vector angle. 
         The default is 1.5.
+    u_cs0 : float, optional
+        Initial voltage (V) in stationary coordinates. This is used to compute 
+        the realized voltage. The default is 0.
     overmodulation : str, optional
         Select one of the following overmodulation methods: minimum-magnitude-
         error ("MME"); minimum-phase-error ("MPE"); six-step ("six_step"). The 
@@ -40,11 +43,11 @@ class PWM:
     
     """
 
-    def __init__(self, k_comp=1.5, overmodulation="MME"):
+    def __init__(self, k_comp=1.5, u_cs0=0, overmodulation="MME"):
         self.k_comp = k_comp
         self.overmodulation = overmodulation
-        self.realized_voltage = 0
-        self._old_u_cs = 0
+        self.realized_voltage = u_cs0
+        self._old_u_cs = u_cs0
 
     @staticmethod
     def six_step_overmodulation(ref_u_cs, u_dc):
@@ -191,7 +194,6 @@ class PWM:
 
     def update(self, u_cs):
         """Update the realized voltage."""
-        # Update the voltage estimate for the next sampling instant
         self.realized_voltage = .5*(self._old_u_cs + u_cs)
         self._old_u_cs = u_cs
 

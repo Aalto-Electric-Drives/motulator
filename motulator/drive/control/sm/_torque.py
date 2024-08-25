@@ -14,7 +14,6 @@ References
    https://doi.org/10.1109/28.60058
 
 """
-
 from sys import float_info
 from types import SimpleNamespace
 

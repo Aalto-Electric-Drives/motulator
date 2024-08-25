@@ -1,6 +1,5 @@
 """Common dataclasses usable in models and control of grid converters."""
 
-# %%
 from abc import ABC
 from dataclasses import dataclass
 

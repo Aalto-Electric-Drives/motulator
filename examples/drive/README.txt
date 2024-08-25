@@ -1,4 +1,4 @@
 Drives
 ======
 
-A collection of example scripts for motor drives.
+A collection of example scripts for machine drives.

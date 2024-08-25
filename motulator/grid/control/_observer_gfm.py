@@ -1,6 +1,5 @@
 """Disturbance-observer-based grid-forming control for grid converters."""
 
-# %%
 from dataclasses import dataclass
 
 import numpy as np
