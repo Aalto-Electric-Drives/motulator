@@ -4,7 +4,7 @@ Common
 Main Control Loop
 -----------------
 
-By default, discrete-time control systems in *motulator* run the following scheme in their main control loop:
+By default, discrete-time control systems in *motulator* run the following scheme in their main control loops:
 
    1. Get the feedback signals for the controllers. This step may contain first getting the measurements and then optionally computing the observer outputs. These measured and estimated signals are collected to the SimpleNamespace object named `fbk`. 
    2. Get the reference signals and compute the controller outputs based on the feedback signals `fbk`. These reference signals are collected to the SimpleNamespace object named `ref`. 

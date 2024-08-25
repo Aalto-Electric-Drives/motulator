@@ -180,7 +180,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.967 seconds)
+   **Total running time of the script:** (0 minutes 10.090 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_flux_vector_im_2kw.py:
