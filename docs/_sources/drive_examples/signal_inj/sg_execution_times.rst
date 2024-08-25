@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:25.582** total execution time for 2 files **from drive_examples/signal_inj**:
+**00:25.471** total execution time for 2 files **from drive_examples/signal_inj**:
 
 .. container::
 
@@ -33,8 +33,8 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_signal_inj_plot_signal_inj_pmsm_2kw.py` (``plot_signal_inj_pmsm_2kw.py``)
-     - 00:12.793
+     - 00:12.743
      - 0.0
    * - :ref:`sphx_glr_drive_examples_signal_inj_plot_signal_inj_syrm_7kw.py` (``plot_signal_inj_syrm_7kw.py``)
-     - 00:12.789
+     - 00:12.728
      - 0.0
