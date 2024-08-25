@@ -75,7 +75,7 @@ class LFilter(ACFilter):
     An L filter and an inductive-resistive grid, between the converter and grid 
     voltage sources, are modeled combining their inductances and series 
     resistances. The point-of-common-coupling (PCC) voltage between the L 
-    filter and the grid impedance is separately calculated.
+    filter and the grid impedance is calculated.
 
     Parameters
     ----------

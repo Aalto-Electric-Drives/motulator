@@ -1,8 +1,6 @@
-*********************
-Grid Converter System
-*********************
-
-Grid converter-specific models
+***************
+Grid Converters
+***************
 
 .. toctree::
    :maxdepth: 2

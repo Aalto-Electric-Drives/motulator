@@ -1,4 +1,5 @@
 """Controls for induction machines."""
+
 from motulator.drive.control.im._common import (
     FullOrderObserver, FullOrderObserverCfg, Observer, ObserverCfg)
 from motulator.drive.control.im._current_vector import (

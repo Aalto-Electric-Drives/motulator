@@ -1,6 +1,5 @@
 """Example plotting scripts for grid converters."""
 
-# %%
 from types import SimpleNamespace
 
 import numpy as np
@@ -62,10 +61,8 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
     u_g_abc = complex2abc(mdl.ac_filter.data.u_gs).T
 
     # Calculation of active and reactive powers
-    p_g = 1.5*np.asarray(
-        np.real(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs)))
-    q_g = 1.5*np.asarray(
-        np.imag(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs)))
+    p_g = 1.5*np.real(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs))
+    q_g = 1.5*np.imag(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs))
 
     # Coordinate transformation in the case of observer-based GFM control
     if hasattr(sim.ctrl, "observer"):

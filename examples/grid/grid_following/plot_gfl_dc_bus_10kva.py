@@ -58,8 +58,8 @@ ctrl.dc_bus_volt_ctrl = control.DCBusVoltageController(p_max=base.p)
 ctrl.ref.u_dc = lambda t: 600 + (t > .02)*50
 ctrl.ref.q_g = lambda t: (t > .04)*4e3
 
-# Set the external DC-bus current
-mdl.converter.i_ext = lambda t: (t > .06)*10
+# Set the external current fed to the DC bus
+mdl.converter.i_dc = lambda t: (t > .06)*10
 
 # %%
 # Create the simulation object and simulate it.

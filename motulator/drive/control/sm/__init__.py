@@ -1,4 +1,5 @@
 """Controls for synchronous machines."""
+
 from motulator.drive.control.sm._common import Observer, ObserverCfg
 from motulator.drive.control.sm._flux_vector import (
     FluxTorqueReference, FluxTorqueReferenceCfg, FluxVectorControl)

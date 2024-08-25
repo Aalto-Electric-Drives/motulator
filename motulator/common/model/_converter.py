@@ -7,7 +7,6 @@ grid. Complex space vectors are used also for duty ratios and switching states,
 wherever applicable. 
 
 """
-
 from types import SimpleNamespace
 
 import numpy as np
@@ -28,21 +27,20 @@ class VoltageSourceConverter(Subsystem):
         used as the initial condition.
     C_dc : float, optional
         DC-bus capacitance (F). The default is None.
-    i_ext : callable, optional
+    i_dc : callable, optional
         External current (A) fed to the DC bus. Needed if `C_dc` is not None.
     
     """
 
-    def __init__(self, u_dc, C_dc=None, i_ext=lambda t: None):
+    def __init__(self, u_dc, C_dc=None, i_dc=lambda t: None):
         super().__init__()
-        self.i_ext = i_ext
         self.par = SimpleNamespace(u_dc=u_dc, C_dc=C_dc)
         self.inp = SimpleNamespace(q_cs=None, i_cs=0j)
-        # Initialize states
         if C_dc is not None:
             self.state = SimpleNamespace(u_dc=u_dc)
             self.sol_states = SimpleNamespace(u_dc=[])
-            self.inp.i_ext = i_ext(0)
+            self.i_dc = i_dc
+            self.inp.i_dc = i_dc(0)
         self.sol_q_cs = []
 
     @property
@@ -58,8 +56,8 @@ class VoltageSourceConverter(Subsystem):
         return self.inp.q_cs*self.u_dc
 
     @property
-    def i_dc(self):
-        """DC-side current (A)."""
+    def i_dc_int(self):
+        """Converter-side DC current (A)."""
         return 1.5*np.real(self.inp.q_cs*np.conj(self.inp.i_cs))
 
     def set_outputs(self, _):
@@ -69,16 +67,15 @@ class VoltageSourceConverter(Subsystem):
 
     def set_inputs(self, t):
         """Set input variables."""
-        if self.par.C_dc is None:
-            pass
-        self.inp.i_ext = self.i_ext(t)
+        if self.par.C_dc is not None:
+            self.inp.i_dc = self.i_dc(t)
 
     def rhs(self):
         """Compute the state derivatives."""
-        if self.par.C_dc is None:
-            return None
-        d_u_dc = (self.inp.i_ext - self.i_dc)/self.par.C_dc
-        return [d_u_dc]
+        if self.par.C_dc is not None:
+            d_u_dc = (self.inp.i_dc - self.i_dc_int)/self.par.C_dc
+            return [d_u_dc]
+        return []
 
     def meas_dc_voltage(self):
         """Measure the converter DC-bus voltage (V)."""
@@ -87,19 +84,19 @@ class VoltageSourceConverter(Subsystem):
     def post_process_states(self):
         """Post-process data."""
         data = self.data
-        if self.par.C_dc is None:
+        if self.par.C_dc is not None:
+            data.u_dc = data.u_dc.real
+        else:
             if callable(self.u_dc):
                 self.data.u_dc = self.u_dc(self.data.t)
             else:
                 self.data.u_dc = np.full(np.size(self.data.t), self.u_dc)
-        else:
-            data.u_dc = data.u_dc.real
         data.u_cs = data.q_cs*data.u_dc
 
     def post_process_with_inputs(self):
         """Post-process data with inputs."""
         data = self.data
-        data.i_dc = 1.5*np.real(data.q_cs*np.conj(data.i_cs))
+        data.i_dc_int = 1.5*np.real(data.q_cs*np.conj(data.i_cs))
 
 
 # %%
@@ -136,11 +133,10 @@ class FrequencyConverter(VoltageSourceConverter):
         """Set output variables."""
         super().set_outputs(t)
         self.out.i_L = self.state.i_L.real
-        self.out.i_dc = self.i_dc
 
     def set_inputs(self, t):
         """Set output variables."""
-        self.inp.i_ext = self.out.i_L
+        self.inp.i_dc = self.out.i_L
         self.inp.u_dc = self.out.u_dc
 
     def rhs(self):

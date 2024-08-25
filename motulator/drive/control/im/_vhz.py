@@ -1,6 +1,5 @@
 """V/Hz control for induction motor drives."""
 
-# %%
 from dataclasses import dataclass, field, InitVar
 from types import SimpleNamespace
 from typing import Literal

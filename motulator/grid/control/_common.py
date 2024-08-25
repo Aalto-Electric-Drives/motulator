@@ -1,4 +1,5 @@
 """Common control functions and classes."""
+
 from abc import ABC
 from types import SimpleNamespace
 
@@ -11,36 +12,49 @@ from motulator.common.utils import abc2complex, wrap
 # %%
 class PLL:
     """
-    Phase-locked loop.
+    Phase-locked loop including the voltage-magnitude filtering.
+
+    This class provides a simple frequency-tracking phase-locked loop. The 
+    magnitude of the measured PCC voltage is also filtered. 
 
     Parameters
     ----------
-    k_p : float
-        Proportional gain.
-    k_i : float
-        Integral gain.
+    alpha_pll : float
+        Frequency-tracking bandwidth.
+    abs_u_g0 : float
+        Initial value for the grid voltage estimate. 
     w_g0 : float
-        Initial value for the grid angular frequency estimate.
+        Initial value for the grid angular frequency estimate. 
         
     """
 
-    def __init__(self, k_p, k_i, w_g0, theta_g0=0):
-        self.est = SimpleNamespace(w_g=w_g0, theta_g=theta_g0)
-        self.gain = SimpleNamespace(k_p=k_p, k_i=k_i)
+    def __init__(self, alpha_pll, abs_u_g0, w_g0, theta_c0=0):
+        self.est = SimpleNamespace(
+            w_g=w_g0, theta_c=theta_c0, abs_u_g=abs_u_g0)
+        self.gain = SimpleNamespace(alpha_g=2*alpha_pll, k_w=alpha_pll**2)
 
     def output(self, fbk):
-        """Compute the frequency and phase angle estimates."""
-        # Measured voltage in control coordinates
-        fbk.u_g = fbk.u_gs*np.exp(-1j*fbk.theta_c)
-        # Grid frequency estimate for the angle calculation
-        fbk.w_g = self.gain.k_p*fbk.u_g.imag + self.est.w_g
+        """Output the estimates and coordinate transformed quantities."""
+        # Observer states
+        fbk.theta_c = self.est.theta_c
+        fbk.w_g = self.est.w_g
+        # Coordinate transformations
+        fbk.u_g = np.exp(-1j*fbk.theta_c)*fbk.u_gs
+        fbk.i_c = np.exp(-1j*fbk.theta_c)*fbk.i_cs
+        fbk.u_c = np.exp(-1j*fbk.theta_c)*fbk.u_cs
+        # Error signal
+        fbk.eps = fbk.u_g.imag/self.est.abs_u_g if self.est.abs_u_g > 0 else 0
+        # Angular speed of the coordinate system
+        fbk.w_c = fbk.w_g + self.gain.alpha_g*fbk.eps
         return fbk
 
     def update(self, T_s, fbk):
         """Update the integral states."""
-        self.est.w_g += T_s*self.gain.k_i*fbk.u_g.imag
-        self.est.theta_g += T_s*fbk.w_g
-        self.est.theta_g = wrap(self.est.theta_g)
+        self.est.theta_c += T_s*fbk.w_c
+        self.est.theta_c = wrap(self.est.theta_c)
+        self.est.w_g += T_s*self.gain.k_w*fbk.eps
+        self.est.abs_u_g += T_s*self.gain.alpha_g*(
+            fbk.u_g.real - self.est.abs_u_g)
 
 
 # %%
