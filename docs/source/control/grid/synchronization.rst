@@ -23,7 +23,7 @@ Based on :eq:`disturbance`, the disturbance observer containing the regular PLL 
     \frac{\mathrm{d}\hat{\boldsymbol{u}}_\mathrm{g}}{\mathrm{d}t} = \mathrm{j}(\hat{\omega}_\mathrm{g} - \omega_\mathrm{c})\hat{\boldsymbol{u}}_\mathrm{g} + \alpha_\mathrm{g} (\boldsymbol{u}_\mathrm{g} - \hat{\boldsymbol{u}}_\mathrm{g} ) 
     :label: pll
 
-where :math:`\hat{\boldsymbol{u}}_\mathrm{g} = \hat{u}_\mathrm{g} \mathrm{e}^{\mathrm{j}\hat{\vartheta}_\mathrm{g}}` is the estimated PCC voltage, :math:`\hat{\omega}_\mathrm{g}` is the grid angular frequency estimate (either constant corresponding to the nominal value or dynamic from grid-frequency tracking), and :math:`\alpha_\mathrm{g}` is the bandwidth. If needed, the disturbance observer can be extended with the frequency tracking as
+where :math:`\hat{\boldsymbol{u}}_\mathrm{g}` is the estimated PCC voltage, :math:`\hat{\omega}_\mathrm{g}` is the grid angular frequency estimate (either constant corresponding to the nominal value or dynamic from grid-frequency tracking), and :math:`\alpha_\mathrm{g}` is the bandwidth. If needed, the disturbance observer can be extended with the frequency tracking as
 
 .. math::
     \frac{\mathrm{d}\hat{\omega}_\mathrm{g}}{\mathrm{d}t} = k_\omega\mathrm{Im}\left\{ \frac{\boldsymbol{u}_\mathrm{g} - \hat{\boldsymbol{u}}_\mathrm{g}}{\hat{\boldsymbol{u}}_\mathrm{g}} \right\} 
@@ -78,7 +78,7 @@ Next, the frequency-tracking dynamics are also considered. From :eq:`linearized_
 
 Choosing :math:`k_\omega = \alpha_\mathrm{pll}^2` and :math:`\alpha_\mathrm{g} = 2\alpha_\mathrm{pll}` yields the double pole at :math:`s = -\alpha_\mathrm{pll}`, where :math:`\alpha_\mathrm{pll}` is the frequency-tracking bandwidth.
 
-This PLL is implemented in the class :class:`motulator.grid.control.PLL`. The :doc:`/grid_examples/grid_following/index` examples use the PLL to synchronize with the grid. 
+This PLL in estimated PCC coordinates is implemented in the class :class:`motulator.grid.control.PLL`. The :doc:`/grid_examples/grid_following/index` examples use the PLL to synchronize with the grid. 
 
 .. rubric:: References
 
