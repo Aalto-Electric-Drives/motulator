@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:00.670** total execution time for 6 files **from drive_examples/vector**:
+**01:01.195** total execution time for 6 files **from drive_examples/vector**:
 
 .. container::
 
@@ -33,20 +33,20 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_vector_plot_vector_ctrl_syrm_7kw.py` (``plot_vector_ctrl_syrm_7kw.py``)
-     - 00:26.455
+     - 00:26.793
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py` (``plot_vector_ctrl_pmsm_2kw_diode.py``)
-     - 00:14.664
+     - 00:14.853
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vector_plot_vector_ctrl_pmsm_2kw.py` (``plot_vector_ctrl_pmsm_2kw.py``)
-     - 00:05.496
+     - 00:05.536
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vector_plot_vector_ctrl_pmsyrm_thor.py` (``plot_vector_ctrl_pmsyrm_thor.py``)
-     - 00:05.062
+     - 00:05.116
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vector_plot_vector_ctrl_im_2kw_tq_mode.py` (``plot_vector_ctrl_im_2kw_tq_mode.py``)
-     - 00:04.777
+     - 00:04.782
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vector_plot_vector_ctrl_im_2kw.py` (``plot_vector_ctrl_im_2kw.py``)
-     - 00:04.216
+     - 00:04.115
      - 0.0
