@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Control Systems &#8212; motulator 0.4.0 documentation</title>
+    <title>Common &#8212; motulator 0.4.0 documentation</title>
   
   
   
@@ -52,7 +52,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Drives" href="drive/index.html" />
-    <link rel="prev" title="Grid Voltage Source" href="../model/grid/grid_volt_source.html" />
+    <link rel="prev" title="Three-Phase Voltage Source" href="../model/grid/grid_volt_source.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -202,23 +202,23 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../model/system.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../model/converters.html">Converters</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../model/drive/index.html">Drive System</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../model/common.html">Common</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../model/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../model/drive/machines.html">Electric Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model/drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model/drive/ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../model/grid/index.html">Grid Converter System</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../model/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../model/grid/grid_volt_source.html">Grid Voltage Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model/grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
 </ul>
 </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design Notes on Control Methods</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Control Systems</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Common</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="drive/current_ctrl.html">Current Control</a></li>
@@ -226,11 +226,11 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="grid/synchronization.html">Synchronization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
 </ul>
 </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class references</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/motulator/common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -410,7 +410,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Control Systems</h1>
+    <h1>Common</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -432,21 +432,21 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="control-systems">
-<h1>Control Systems<a class="headerlink" href="#control-systems" title="Permalink to this heading">#</a></h1>
+  <section id="common">
+<h1>Common<a class="headerlink" href="#common" title="Permalink to this heading">#</a></h1>
 <section id="main-control-loop">
 <h2>Main Control Loop<a class="headerlink" href="#main-control-loop" title="Permalink to this heading">#</a></h2>
-<p>By default, the discrete-time controllers in <em>motulator</em> run the following scheme in a main control loop:</p>
+<p>By default, discrete-time control systems in <em>motulator</em> run the following scheme in their main control loop:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>Get the feedback signals. This step may contain first getting the measurements and then optionally computing the observer outputs.</p></li>
-<li><p>Compute the reference signals (controller outputs) based on the feedback signals.</p></li>
-<li><p>Update the control system states for the next sampling instant.</p></li>
-<li><p>Save the feedback signals and the reference signals.</p></li>
+<li><p>Get the feedback signals for the controllers. This step may contain first getting the measurements and then optionally computing the observer outputs. These measured and estimated signals are collected to the SimpleNamespace object named <cite>fbk</cite>.</p></li>
+<li><p>Get the reference signals and compute the controller outputs based on the feedback signals <cite>fbk</cite>. These reference signals are collected to the SimpleNamespace object named <cite>ref</cite>.</p></li>
+<li><p>Update the states of the control system for the next sampling instant.</p></li>
+<li><p>Save the feedback signals <cite>fbk</cite> and the reference signals <cite>ref</cite> so they can be accessed after the simulation.</p></li>
 <li><p>Return the sampling period <cite>T_s</cite> and the duty ratios <cite>d_abc</cite> for the carrier comparison.</p></li>
 </ol>
 </div></blockquote>
-<p>The main control loop is implemented in the base class for control systems in <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>.</p>
+<p>A template of this main control loop is available in the base class for control systems in <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>. Using this template is not necessary, but it may simplify the implementation of new control systems.</p>
 </section>
 </section>
 
@@ -467,7 +467,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Grid Voltage Source</p>
+        <p class="prev-next-title">Three-Phase Voltage Source</p>
       </div>
     </a>
     <a class="right-next"

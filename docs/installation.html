@@ -202,23 +202,23 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="model/system.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model/converters.html">Converters</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="model/drive/index.html">Drive System</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="model/common.html">Common</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="model/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="model/drive/machines.html">Electric Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model/drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model/drive/ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="model/grid/index.html">Grid Converter System</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="model/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model/grid/grid_volt_source.html">Grid Voltage Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model/grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
 </ul>
 </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design Notes on Control Methods</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="control/control_system.html">Control Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="control/control_system.html">Common</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="control/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="control/drive/current_ctrl.html">Current Control</a></li>
@@ -226,11 +226,11 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="control/grid/synchronization.html">Synchronization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
 </ul>
 </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class references</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/motulator/common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -421,7 +421,10 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-use-pip">Option 1: Use pip</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-clone-the-repository">Option 2: Clone the Repository</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-clone-the-repository">Option 2: Clone the Repository</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes-for-developers">Notes for Developers</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -473,10 +476,13 @@ document.write(`
 <li><p>Create a virtual environment in the workspace using the instructions provided here: <a class="reference external" href="https://code.visualstudio.com/docs/python/environments">https://code.visualstudio.com/docs/python/environments</a>.</p></li>
 <li><p>Enable installation of optional dependencies from <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (selecting at least <code class="docutils literal notranslate"><span class="pre">dev</span></code> is recommended). Alternatively, for installing the project with its core dependencies, you may run the command <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.[dev,doc]</span></code>).</p></li>
 </ol>
-<p>After completing the above steps, the virtual environment can be found in the <code class="docutils literal notranslate"><span class="pre">.venv</span></code> directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it.</p>
-<p>If you installed the <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies, you can also use the interactive IPython console (click on the <em>Play</em> button dropdown menu in VS Code). If you aim to work with the documentation, install also the <code class="docutils literal notranslate"><span class="pre">doc</span></code> dependencies. For previewing the documentation in VS Code, you can install the Esbonio extension: <a class="reference external" href="https://docs.esbon.io/en/latest/lsp/editors/vscode.html">https://docs.esbon.io/en/latest/lsp/editors/vscode.html</a>.</p>
-<p>If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for <em>Terminal: Select Default Profile</em>).</p>
-<p>We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.</p>
+<p>After completing the above steps, the virtual environment can be found in the <code class="docutils literal notranslate"><span class="pre">.venv</span></code> directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies, you can also use the interactive IPython console (click on the <em>Play</em> button dropdown menu in VS Code).</p>
+<p>If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for <em>Terminal: Select Default Profile</em>). We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.</p>
+<section id="notes-for-developers">
+<h3>Notes for Developers<a class="headerlink" href="#notes-for-developers" title="Permalink to this heading">#</a></h3>
+<p>We recommend to install the <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies. In this project, we use the YAPF Python code formatter (<a class="github reference external" href="https://github.com/google/yapf">google/yapf</a>), configured based on the PEP8 coding conventions (<a class="reference external" href="https://peps.python.org/pep-0008/">https://peps.python.org/pep-0008/</a>). To enable YAPF in VS Code, you need to install the YAPF extension (<a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=eeyore.yapf">https://marketplace.visualstudio.com/items?itemName=eeyore.yapf</a>).</p>
+<p>If you aim to work with the documentation, install also the <code class="docutils literal notranslate"><span class="pre">doc</span></code> dependencies. For previewing the documentation in VS Code, you can install the Esbonio extension (<a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=swyddfa.esbonio">https://marketplace.visualstudio.com/items?itemName=swyddfa.esbonio</a>). Alternatively, you can build the documentation locally using the command <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory. The documentation will be built in the <code class="docutils literal notranslate"><span class="pre">docs/build</span></code> directory.</p>
+</section>
 </section>
 </section>
 
@@ -525,7 +531,10 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-use-pip">Option 1: Use pip</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-clone-the-repository">Option 2: Clone the Repository</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-clone-the-repository">Option 2: Clone the Repository</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes-for-developers">Notes for Developers</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

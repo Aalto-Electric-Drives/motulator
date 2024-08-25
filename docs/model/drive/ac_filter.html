@@ -52,7 +52,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'model/drive/ac_filter';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Grid Converter System" href="../grid/index.html" />
+    <link rel="next" title="Six-Pulse Diode Bridge" href="diode_bridge.html" />
     <link rel="prev" title="Mechanics" href="mechanics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -203,23 +203,23 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../system.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../converters.html">Converters</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Drive System</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../common.html">Common</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Drives</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="machines.html">Electric Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mechanics.html">Mechanics</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diode_bridge.html">Six-Pulse Diode Bridge</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../grid/index.html">Grid Converter System</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../grid/grid_volt_source.html">Grid Voltage Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
 </ul>
 </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design Notes on Control Methods</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../control/control_system.html">Control Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../control/control_system.html">Common</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../control/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../control/drive/current_ctrl.html">Current Control</a></li>
@@ -227,11 +227,11 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../control/grid/synchronization.html">Synchronization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
 </ul>
 </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class references</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -425,7 +425,7 @@ document.write(`
                   
   <section id="output-lc-filter">
 <h1>Output LC Filter<a class="headerlink" href="#output-lc-filter" title="Permalink to this heading">#</a></h1>
-<p>This document describes a continuous-time model of an LC filter, which may be used between the converter and the electric machine in some applications <a class="footnote-reference brackets" href="#sal2006" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Space vectors are used to represent the three-phase quantities. The subscript c and s refer to the converter-side and the stator-side quantities, respectively. The superscript s refers to the stationary coordinates.</p>
+<p>An LC filter may be used between the voltage-source converter and the electric machine in some applications <a class="footnote-reference brackets" href="#sal2006" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The subscripts c and s refer to the converter-side and stator-side quantities, respectively. The superscript s refers to the stationary coordinates.</p>
 <figure class="align-center" id="id2">
 <a class="reference external image-reference" href="."><img alt="LC filter" src="../../_images/lc_filter.svg" width="100%" /></a>
 <figcaption>
@@ -434,12 +434,12 @@ document.write(`
 </figure>
 <p>A dynamic model of the filter is</p>
 <div class="math notranslate nohighlight" id="equation-lc-filter-model">
-<span class="eqno">(1)<a class="headerlink" href="#equation-lc-filter-model" title="Permalink to this equation">#</a></span>\[\begin{split}L_\mathrm{fc} \frac{\mathrm{d}\boldsymbol{i}_\mathrm{c}^\mathrm{s}}{\mathrm{d} t}
+<span class="eqno">(1)<a class="headerlink" href="#equation-lc-filter-model" title="Permalink to this equation">#</a></span>\[\begin{split}L_\mathrm{f} \frac{\mathrm{d}\boldsymbol{i}_\mathrm{c}^\mathrm{s}}{\mathrm{d} t}
 &amp;= \boldsymbol{u}_\mathrm{c}^\mathrm{s} - \boldsymbol{u}_\mathrm{s}^\mathrm{s}
-- R_\mathrm{fc} \boldsymbol{i}_\mathrm{c}^\mathrm{s} \\
+- R_\mathrm{f} \boldsymbol{i}_\mathrm{c}^\mathrm{s} \\
 C_\mathrm{f} \frac{\mathrm{d}\boldsymbol{u}_\mathrm{s}^\mathrm{s}}{\mathrm{d} t}
 &amp;= \boldsymbol{i}_\mathrm{c}^\mathrm{s} - \boldsymbol{i}_\mathrm{s}^\mathrm{s}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(L_\mathrm{fc}\)</span> is the filter inductance, <span class="math notranslate nohighlight">\(R_\mathrm{fc}\)</span> is the series resistance of the filter inductor and <span class="math notranslate nohighlight">\(C_\mathrm{f}\)</span> the filter capacitance. Furthermore, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{c}^\mathrm{s}\)</span> is the converter current, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}^\mathrm{s}\)</span> is the stator current, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{c}^\mathrm{s}\)</span> is the converter voltage,and <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s}^\mathrm{s}\)</span> is the capacitor voltage (corresponding to the stator voltage).</p>
+<p>where <span class="math notranslate nohighlight">\(L_\mathrm{f}\)</span> is the filter inductance, <span class="math notranslate nohighlight">\(R_\mathrm{f}\)</span> is the series resistance of the filter inductor, and <span class="math notranslate nohighlight">\(C_\mathrm{f}\)</span> the filter capacitance. Furthermore, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{c}^\mathrm{s}\)</span> is the converter current, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}^\mathrm{s}\)</span> is the stator current, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{c}^\mathrm{s}\)</span> is the converter voltage, and <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s}^\mathrm{s}\)</span> is the capacitor voltage (corresponding to the stator voltage).</p>
 <p>The filter model is implemented in the class <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter" title="motulator.drive.model.LCFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.LCFilter</span></code></a>. For its usage, see the example <a class="reference internal" href="../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html"><span class="doc">2.2-kW induction motor, LC filter</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
@@ -471,11 +471,11 @@ C_\mathrm{f} \frac{\mathrm{d}\boldsymbol{u}_\mathrm{s}^\mathrm{s}}{\mathrm{d} t}
       </div>
     </a>
     <a class="right-next"
-       href="../grid/index.html"
+       href="diode_bridge.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Grid Converter System</p>
+        <p class="prev-next-title">Six-Pulse Diode Bridge</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

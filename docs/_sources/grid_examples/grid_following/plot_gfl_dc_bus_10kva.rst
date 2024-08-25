@@ -130,8 +130,8 @@ Set the time-dependent reference and disturbance signals.
     ctrl.ref.u_dc = lambda t: 600 + (t > .02)*50
     ctrl.ref.q_g = lambda t: (t > .04)*4e3
 
-    # Set the external DC-bus current
-    mdl.converter.i_ext = lambda t: (t > .06)*10
+    # Set the external current fed to the DC bus
+    mdl.converter.i_dc = lambda t: (t > .06)*10
 
 
 
@@ -199,7 +199,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.328 seconds)
+   **Total running time of the script:** (0 minutes 1.250 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_dc_bus_10kva.py:

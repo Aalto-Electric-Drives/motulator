@@ -79,9 +79,9 @@ Package Contents
    :type L: float
    :param C: Capacitance (F).
    :type C: float
-   :param tau: Torque (Nm). Default is None.
+   :param tau: Torque (Nm). The default is None.
    :type tau: float, optional
-   :param n_p: Number of pole pairs. Default is None.
+   :param n_p: Number of pole pairs. The default is None.
    :type n_p: int, optional
 
 
@@ -119,7 +119,7 @@ Package Contents
                           Frequency (Hz).
       :type nom: NominalValues
       :param n_p: Number of pole pairs. If not given it is assumed that base values
-                  for a grid converter are calculated. Default is None.
+                  for a grid converter are calculated. The default is None.
       :type n_p: int, optional
 
       :returns: Base values.
@@ -299,7 +299,7 @@ Package Contents
    :type f: float
    :param P: Power (W).
    :type P: float
-   :param tau: Torque (Nm). Default value is None.
+   :param tau: Torque (Nm). The default value is None.
    :type tau: float, optional
 
 

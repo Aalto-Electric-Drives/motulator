@@ -341,13 +341,8 @@ Package Contents
    :type T_s: float, optional
    :param alpha_c: Current-control bandwidth (rad/s). The default is 2*pi*400.
    :type alpha_c: float, optional
-   :param alpha_ff: Low-pass-filtering bandwidth (rad/s) for the voltage-feedforward term.
-                    The default is 2*pi*200.
-   :type alpha_ff: float, optional
-   :param w0_pll: Undamped natural frequency of the PLL. The default is 2*pi*20.
-   :type w0_pll: float, optional
-   :param zeta_pll: Damping ratio of the PLL. The default is 1.
-   :type zeta_pll: float, optional
+   :param alpha_pll: PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.
+   :type alpha_pll: float, optional
    :param C_dc: DC-bus capacitance (F). The default is None.
    :type C_dc: float, optional
 
@@ -717,15 +712,18 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: PLL(k_p, k_i, w_g0, theta_g0=0)
+.. py:class:: PLL(alpha_pll, abs_u_g0, w_g0, theta_c0=0)
 
    
-   Phase-locked loop.
+   Phase-locked loop including the voltage-magnitude filtering.
 
-   :param k_p: Proportional gain.
-   :type k_p: float
-   :param k_i: Integral gain.
-   :type k_i: float
+   This class provides a simple frequency-tracking phase-locked loop. The
+   magnitude of the measured PCC voltage is also filtered.
+
+   :param alpha_pll: Frequency-tracking bandwidth.
+   :type alpha_pll: float
+   :param abs_u_g0: Initial value for the grid voltage estimate.
+   :type abs_u_g0: float
    :param w_g0: Initial value for the grid angular frequency estimate.
    :type w_g0: float
 
@@ -749,7 +747,7 @@ Package Contents
    .. py:method:: output(fbk)
 
       
-      Compute the frequency and phase angle estimates.
+      Output the estimates and coordinate transformed quantities.
 
 
 

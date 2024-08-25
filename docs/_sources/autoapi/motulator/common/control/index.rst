@@ -559,7 +559,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp=1.5, overmodulation='MME')
+.. py:class:: PWM(k_comp=1.5, u_cs0=0, overmodulation='MME')
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -572,6 +572,9 @@ Package Contents
    :param k_comp: Compensation factor for the delay effect on the voltage vector angle.
                   The default is 1.5.
    :type k_comp: float, optional
+   :param u_cs0: Initial voltage (V) in stationary coordinates. This is used to compute
+                 the realized voltage. The default is 0.
+   :type u_cs0: float, optional
    :param overmodulation: Select one of the following overmodulation methods: minimum-magnitude-
                           error ("MME"); minimum-phase-error ("MPE"); six-step ("six_step"). The
                           default is "MME".

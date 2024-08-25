@@ -1,65 +1,91 @@
-Synchronization Methods
-=======================
+Disturbance-Observer-Based PLL
+==============================
 
-Phase-Locked Loop
+A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid [#Kau1997]_. Here, we represent the PLL using the disturbance observer structure [#Fra1997]_, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see [#Nur2024]_. 
+
+Disturbance Model
 -----------------
 
-The :doc:`/grid_examples/grid_following/index` examples use a Phase-Locked Loop (PLL) to synchronize with the grid. The block diagram of the PLL is shown in the figure below.
-
-.. figure:: ../figs/pll.svg
-   :width: 100%
-   :align: center
-   :alt: Block diagram of the phase-locked loop for grid synchronization
-   :target: .
-
-   Block diagram of the phase-locked loop.
-
-The PLL drives the signal :math:`\hat{u}_\mathrm{gq}` to zero, leading to :math:`\hat{\vartheta}_\mathrm{g}=\vartheta_\mathrm{g}` and :math:`\hat{u}_\mathrm{gd}=u_\mathrm{gd}` in ideal conditions. The grid voltage-vector :math:`\boldsymbol{u}_\mathrm{g}^\mathrm{s}=u_\mathrm{g} \mathrm{e}^{\mathrm{j} \vartheta_\mathrm{g}}` is measured. The angle :math:`\vartheta_\mathrm{g}` can be noisy and it is not directly used in the control. Instead, the PLL tracks :math:`\vartheta_{g}` and filters its noise and harmonics above the PLL bandwidth.
-
-The gain selection:
-
-.. math:: 
-    k_\mathrm{p} = \frac{2 \zeta \omega_\mathrm{0,PLL}}{u_\mathrm{gN}} \qquad
-    k_\mathrm{i} = \frac{\omega_\mathrm{0,PLL}^2}{u_\mathrm{gN}}
-
-where :math:`\zeta` is the damping factor, :math:`\omega_\mathrm{0,PLL}` is the natural frequency of the PLL, and :math:`u_\mathrm{gN}` is the nominal grid voltage amplitude.
-
-More details on the control methods used can be found in [#Kau1997]_.
-
-This controller is implemented in the class :class:`motulator.grid.control.PLL`.
-
-Power Synchronization
----------------------
-
-In :doc:`/grid_examples/grid_forming/plot_gfm_rfpsc_13kva` a power synchronization loop (PSL) is used as a means of synchronizing with the grid. The dynamics of a synchronous machine are emulated, as the converter output active power is tied to the angle of the converter output voltage. This allows for synchronization of a converter with the grid without the use of a PLL. More details on the control method used can be found in [#Har2020]_.
-
-The PSL is implemented as
+Consider the positive-sequence voltage at the point of common coupling (PCC) in general coordinates, rotating at the angular speed :math:`\omega_\mathrm{c}`. The dynamics of the PCC voltage :math:`\boldsymbol{u}_\mathrm{g}` can be modeled using a disturbance model as
 
 .. math::
-    \frac{\mathrm{d}\vartheta_\mathrm{c}}{\mathrm{d}t} = \omega_\mathrm{g} + k_\mathrm{p} (p_\mathrm{g,ref} - p_\mathrm{g})
-    :label: psl
+    \frac{\mathrm{d}\boldsymbol{u}_\mathrm{g}}{\mathrm{d}t} = \mathrm{j}(\omega_\mathrm{g} - \omega_\mathrm{c})\boldsymbol{u}_\mathrm{g} 
+    :label: disturbance
 
-where :math:`\vartheta_\mathrm{c}` is the converter output voltage angle, :math:`\omega_\mathrm{g}` the nominal grid angular frequency and :math:`k_\mathrm{p}` the active power control gain. Furthermore, :math:`p_\mathrm{g,ref}` and :math:`p_\mathrm{g}` are the reference and realized value for the converter active power output, respectively. The active power output is calculated from the measured converter current and the realized converter output voltage obtained from the PWM.
+where :math:`\omega_\mathrm{g}` is the grid angular frequency. If needed, this disturbance model could be extended, e.g., with a negative-sequence component, allowing to design the PLL for unbalanced grids. 
 
-Disturbance Observer
---------------------
+PLL in General Coordinates
+--------------------------
 
-In :doc:`/grid_examples/grid_forming/plot_gfm_obs_13kva`, a disturbance observer-based control method is used, where the disturbance observer provides grid synchronization [#Nur2024]_. The observer is implemented in coordinates rotating at angular frequency :math:`\omega_\mathrm{c}` as
+Based on :eq:`disturbance`, the disturbance observer containing the regular PLL functionality can be formulated as  
 
 .. math::
-    \frac{\mathrm{d}\hat{\boldsymbol{v}}_\mathrm{c}'}{\mathrm{d}t} &= (\boldsymbol{k}_\mathrm{o}
-    + \mathrm{j}\hat{\omega}_\mathrm{g})\boldsymbol{e}_\mathrm{c} + \mathrm{j}(\hat{\omega}_\mathrm{g}
-    - \omega_\mathrm{c})\hat{\boldsymbol{v}}_\mathrm{c}'\\
-    \hat{\boldsymbol{v}}_\mathrm{c} &= \hat{\boldsymbol{v}}_\mathrm{c}'
-    - \boldsymbol{k}_\mathrm{o}\hat{L}\boldsymbol{i}_\mathrm{c}
-    :label: gfm_obs_eqs
+    \frac{\mathrm{d}\hat{\boldsymbol{u}}_\mathrm{g}}{\mathrm{d}t} = \mathrm{j}(\hat{\omega}_\mathrm{g} - \omega_\mathrm{c})\hat{\boldsymbol{u}}_\mathrm{g} + \alpha_\mathrm{g} (\boldsymbol{u}_\mathrm{g} - \hat{\boldsymbol{u}}_\mathrm{g} ) 
+    :label: pll
 
-where :math:`\hat{\boldsymbol{v}}_\mathrm{c}` is the quasi-static converter output voltage estimate, :math:`\boldsymbol{k}_\mathrm{o}` the observer gain, :math:`\hat{\omega}_\mathrm{g}` the grid angular frequency estimate, :math:`\boldsymbol{e}_\mathrm{c}` the feedback correction term, :math:`\hat{L}` the total inductance estimate, and :math:`\boldsymbol{i}_\mathrm{c}` the measured converter current.
+where :math:`\hat{\boldsymbol{u}}_\mathrm{g} = \hat{u}_\mathrm{g} \mathrm{e}^{\mathrm{j}\hat{\vartheta}_\mathrm{g}}` is the estimated PCC voltage, :math:`\hat{\omega}_\mathrm{g}` is the grid angular frequency estimate (either constant corresponding to the nominal value or dynamic from grid-frequency tracking), and :math:`\alpha_\mathrm{g}` is the bandwidth. If needed, the disturbance observer can be extended with the frequency tracking as
+
+.. math::
+    \frac{\mathrm{d}\hat{\omega}_\mathrm{g}}{\mathrm{d}t} = k_\omega\mathrm{Im}\left\{ \frac{\boldsymbol{u}_\mathrm{g} - \hat{\boldsymbol{u}}_\mathrm{g}}{\hat{\boldsymbol{u}}_\mathrm{g}} \right\} 
+    :label: frequency_tracking
+
+where :math:`k_\omega` is the frequency-tracking gain. Notice that :eq:`pll` and :eq:`frequency_tracking` are both driven by the estimation error :math:`\boldsymbol{u}_\mathrm{g} - \hat{\boldsymbol{u}}_\mathrm{g}` of the PCC voltage.
+
+PLL in Estimated PCC Voltage Coordinates
+----------------------------------------
+
+The disturbance observer :eq:`pll` can be equivalently expressed in estimated PCC voltage coordinates, where :math:`\hat{\boldsymbol{u}}_\mathrm{g} = \hat{u}_\mathrm{g}` and :math:`\omega_\mathrm{c} = \mathrm{d} \hat{\vartheta}_\mathrm{g}/ \mathrm{d} t`, resulting in
+
+.. math::
+    \frac{\mathrm{d}\hat{u}_\mathrm{g}}{\mathrm{d}t} &= \alpha_\mathrm{g} \left(\mathrm{Re}\{\boldsymbol{u}_\mathrm{g}\} - \hat{u}_\mathrm{g} \right) \\
+    \frac{\mathrm{d} \hat{\vartheta}_\mathrm{g}}{\mathrm{d} t} &= \hat{\omega}_\mathrm{g} + \frac{\alpha_\mathrm{g}}{\hat{u}_\mathrm{g}}\mathrm{Im}\{ \boldsymbol{u}_\mathrm{g} \} = \omega_\mathrm{c}
+    :label: pll_polar
+
+It can be seen that the first equation in :eq:`pll_polar` is low-pass filtering of the measured PCC voltage magnitude and the second equation is the conventional angle-tracking PLL. In these coordinates, the frequency tracking :eq:`frequency_tracking` reduces to
+
+.. math::
+    \frac{\mathrm{d} \hat{\omega}_\mathrm{g}}{\mathrm{d} t} = \frac{k_\omega}{\hat{u}_\mathrm{g} } \mathrm{Im}\{ \boldsymbol{u}_\mathrm{g} \}
+    :label: frequency_tracking_polar
+
+It can be noticed that the disturbance observer with the frequency tracking equals the conventional frequency-adaptive PLL [#Kau1997]_, with the additional feature of low-pass filtering the PCC voltage magnitude. The low-pass filtered PCC voltage can be used as a feedforward term in current control [#Har2009]_. 
+
+Linearized Closed-Loop System
+-----------------------------
+
+The estimation-error dynamics are analyzed by means of linearization. Using the PCC voltage as an example, the small-signal deviation about the operating point is denoted by :math:`\Delta \boldsymbol{u}_\mathrm{g} = \boldsymbol{u}_\mathrm{g} - \boldsymbol{u}_\mathrm{g0}`, where :math:`\boldsymbol{u}_\mathrm{g0}` is the operating-point quantity. From :eq:`disturbance`--:eq:`frequency_tracking`, the linearized model for the estimation-error dynamics is obtained as
+
+.. math::
+    \frac{\mathrm{d}\Delta \tilde{\boldsymbol{u}}_\mathrm{g}}{\mathrm{d}t} &= -\alpha_\mathrm{g}\Delta \tilde{\boldsymbol{u}}_\mathrm{g} + \mathrm{j}\boldsymbol{u}_\mathrm{g0} (\Delta \omega_\mathrm{g} - \Delta \hat{\omega}_\mathrm{g}) \\
+    \frac{\mathrm{d}\Delta \hat{\omega}_\mathrm{g}}{\mathrm{d}t} &= k_\omega\mathrm{Im}\left\{ \frac{\Delta \tilde{\boldsymbol{u}}_\mathrm{g}}{\boldsymbol{u}_\mathrm{g0}} \right\} 
+    :label: linearized_model
+
+where :math:`\Delta \tilde{\boldsymbol{u}}_\mathrm{g} = \Delta\boldsymbol{u}_\mathrm{g} - \Delta \hat{\boldsymbol{u}}_\mathrm{g}` is the estimation error. 
+
+First, assume that the grid frequency :math:`\omega_\mathrm{g}` is constant and the frequency tracking is disabled. From :eq:`linearized_model`, the closed-loop transfer function from the PCC voltage to its estimate becomes
+
+.. math::
+    \frac{\Delta\hat{\boldsymbol{u}}_\mathrm{g}(s)}{\Delta\boldsymbol{u}_\mathrm{g}(s)} = \frac{\alpha_\mathrm{g}}{s + \alpha_\mathrm{g}} 
+    :label: closed_loop_pll
+
+It can be realized that both the angle and magnitude of the PCC voltage estimate converge with the bandwidth :math:`\alpha_\mathrm{g}`. 
+
+Next, the frequency-tracking dynamics are also considered. From :eq:`linearized_model`, the closed-loop transfer function from the grid angular frequency to its estimate becomes 
+
+.. math::
+    \frac{\Delta\hat{\omega}_\mathrm{g}(s)}{\Delta\omega_\mathrm{g}(s)} 
+    = \frac{k_\omega}{s^2 + \alpha_\mathrm{g}s + k_\omega}
+    :label: closed_loop_pll_frequency_tracking
+
+Choosing :math:`k_\omega = \alpha_\mathrm{pll}^2` and :math:`\alpha_\mathrm{g} = 2\alpha_\mathrm{pll}` yields the double pole at :math:`s = -\alpha_\mathrm{pll}`, where :math:`\alpha_\mathrm{pll}` is the frequency-tracking bandwidth.
+
+This PLL is implemented in the class :class:`motulator.grid.control.PLL`. The :doc:`/grid_examples/grid_following/index` examples use the PLL to synchronize with the grid. 
 
 .. rubric:: References
 
-.. [#Kau1997] Kaura and Blasko, "Operation of a phase locked loop system under distorted utility conditions," in IEEE Trans. Ind. Appl., vol. 33, no. 1, pp. 58-63, Jan.-Feb. 1997, https://doi.org/10.1109/28.567077
+.. [#Kau1997] Kaura and Blasko, "Operation of a phase locked loop system under distorted utility conditions," in IEEE Trans. Ind. Appl., 1997, https://doi.org/10.1109/28.567077
 
-.. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-Feedforward Power-Synchronization Control," IEEE Trans. Power Electron., Sep. 2020, https://doi.org/10.1109/TPEL.2020.2970991
+.. [#Fra1997] Franklin, Powell, Workman, "Digital Control of Dynamic Systems," 3rd ed., Menlo Park, CA: Addison-Wesley, 1997
 
 .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer, "IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
+
+.. [#Har2009] Harnefors, Bongiorno, "Current controller design for passivity of the input admittance," in Proc. EPE, 2009

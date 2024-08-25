@@ -22,7 +22,7 @@ After :doc:`installation`, *motulator* can be used by creating a continuous-time
    mdl = model.Drive(converter, machine, mechanics)
 
    # Discrete-time controller
-   par = InductionMachineInvGammaPars( # Machine model parameter estimates
+   par = InductionMachineInvGammaPars(  # Machine model parameter estimates
       n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
    cfg = control.CurrentReferenceCfg(par, max_i_s=1.5*np.sqrt(2)*5)
    ctrl = control.CurrentVectorControl(par, cfg, J=.015)

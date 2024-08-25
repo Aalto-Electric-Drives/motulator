@@ -202,23 +202,23 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/system.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/converters.html">Converters</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drive System</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/common.html">Common</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/machines.html">Electric Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converter System</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Grid Voltage Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
 </ul>
 </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design Notes on Control Methods</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../control/control_system.html">Control Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../control/control_system.html">Common</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
@@ -226,11 +226,11 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/synchronization.html">Synchronization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
 </ul>
 </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class references</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -515,7 +515,7 @@ document.write(`
 <td><p>Disturbance-observer-based grid-forming control configuration.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
-<td><p>Phase-locked loop.</p></td>
+<td><p>Phase-locked loop including the voltage-magnitude filtering.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.RFPSCControl" title="motulator.grid.control.RFPSCControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RFPSCControl</span></code></a></p></td>
 <td><p>Reference-feedforward power synchronization control for grid converters.</p></td>
@@ -688,10 +688,7 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 <li><p><strong>max_i</strong> (<em>float</em>) – Maximum current (A).</p></li>
 <li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
 <li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current-control bandwidth (rad/s). The default is 2*pi*400.</p></li>
-<li><p><strong>alpha_ff</strong> (<em>float</em><em>, </em><em>optional</em>) – Low-pass-filtering bandwidth (rad/s) for the voltage-feedforward term.
-The default is 2*pi*200.</p></li>
-<li><p><strong>w0_pll</strong> (<em>float</em><em>, </em><em>optional</em>) – Undamped natural frequency of the PLL. The default is 2*pi*20.</p></li>
-<li><p><strong>zeta_pll</strong> (<em>float</em><em>, </em><em>optional</em>) – Damping ratio of the PLL. The default is 1.</p></li>
+<li><p><strong>alpha_pll</strong> (<em>float</em><em>, </em><em>optional</em>) – PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.</p></li>
 <li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
 </ul>
 </dd>
@@ -904,13 +901,15 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.PLL">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_g0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_g0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#PLL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL" title="Permalink to this definition">#</a></dt>
-<dd><p>Phase-locked loop.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_pll</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abs_u_g0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_g0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_c0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#PLL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL" title="Permalink to this definition">#</a></dt>
+<dd><p>Phase-locked loop including the voltage-magnitude filtering.</p>
+<p>This class provides a simple frequency-tracking phase-locked loop. The
+magnitude of the measured PCC voltage is also filtered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k_p</strong> (<em>float</em>) – Proportional gain.</p></li>
-<li><p><strong>k_i</strong> (<em>float</em>) – Integral gain.</p></li>
+<li><p><strong>alpha_pll</strong> (<em>float</em>) – Frequency-tracking bandwidth.</p></li>
+<li><p><strong>abs_u_g0</strong> (<em>float</em>) – Initial value for the grid voltage estimate.</p></li>
 <li><p><strong>w_g0</strong> (<em>float</em>) – Initial value for the grid angular frequency estimate.</p></li>
 </ul>
 </dd>
@@ -918,7 +917,7 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.control.PLL.output">
 <span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#PLL.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL.output" title="Permalink to this definition">#</a></dt>
-<dd><p>Compute the frequency and phase angle estimates.</p>
+<dd><p>Output the estimates and coordinate transformed quantities.</p>
 </dd></dl>
 
 <dl class="py method">

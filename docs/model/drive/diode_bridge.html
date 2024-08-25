@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>12.5-kVA converter, disturbance observer &#8212; motulator 0.4.0 documentation</title>
+    <title>Six-Pulse Diode Bridge &#8212; motulator 0.4.0 documentation</title>
   
   
   
@@ -48,11 +48,12 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'grid_examples/grid_forming/plot_gfm_obs_13kva';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'model/drive/diode_bridge';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Common" href="../../model/common.html" />
-    <link rel="prev" title="12.5-kVA converter, RFPSC" href="plot_gfm_rfpsc_13kva.html" />
+    <link rel="next" title="Grid Converters" href="../grid/index.html" />
+    <link rel="prev" title="Output LC Filter" href="ac_filter.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -146,7 +147,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../drive_examples/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
@@ -185,34 +186,34 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Grid Converters</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="../grid_following/index.html">Grid-Following Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_following/index.html">Grid-Following Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Grid-Forming Control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">12.5-kVA converter, disturbance observer</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../model/common.html">Common</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../model/drive/machines.html">Electric Machines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../model/drive/mechanics.html">Mechanics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../model/drive/ac_filter.html">Output LC Filter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../common.html">Common</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Drives</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="machines.html">Electric Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mechanics.html">Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Six-Pulse Diode Bridge</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../model/grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
 </ul>
 </li>
 </ul>
@@ -326,7 +327,7 @@
       
       
       
-      <li><a href="../../_sources/grid_examples/grid_forming/plot_gfm_obs_13kva.rst" target="_blank"
+      <li><a href="../../_sources/model/drive/diode_bridge.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -408,7 +409,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>12.5-kVA converter, disturbance observer</h1>
+    <h1>Six-Pulse Diode Bridge</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -422,103 +423,20 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-grid-examples-grid-forming-plot-gfm-obs-13kva-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code.</p>
-</div>
-<section class="sphx-glr-example-title" id="kva-converter-disturbance-observer">
-<span id="sphx-glr-grid-examples-grid-forming-plot-gfm-obs-13kva-py"></span><h1>12.5-kVA converter, disturbance observer<a class="headerlink" href="#kva-converter-disturbance-observer" title="Permalink to this heading">#</a></h1>
-<p>This example simulates a converter using disturbance-observer-based control in
-grid-forming mode. The converter output voltage and the active power are
-directly controlled, and grid synchronization is provided by the disturbance
-observer. A transparent current controller is included for current limitation.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">motulator.grid</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
-<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BaseValues</span><span class="p">,</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Compute base values based on the nominal values.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nom</span> <span class="o">=</span> <span class="n">NominalValues</span><span class="p">(</span><span class="n">U</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mf">12.5e3</span><span class="p">)</span>
-<span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">from_nominal</span><span class="p">(</span><span class="n">nom</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Configure the system model.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Grid parameters</span>
-<span class="n">grid_par</span> <span class="o">=</span> <span class="n">GridPars</span><span class="p">(</span><span class="n">u_gN</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">w_gN</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">L_g</span><span class="o">=</span><span class="mf">.74</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
-<span class="c1"># Uncomment the line below to simulate a strong grid</span>
-<span class="c1"># grid_par.L_g = 0</span>
-
-<span class="c1"># Filter parameters</span>
-<span class="n">filter_par</span> <span class="o">=</span> <span class="n">FilterPars</span><span class="p">(</span><span class="n">L_fc</span><span class="o">=</span><span class="mf">.15</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">R_fc</span><span class="o">=</span><span class="mf">.05</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
-
-<span class="c1"># Create AC filter with given parameters</span>
-<span class="n">ac_filter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ACFilter</span><span class="p">(</span><span class="n">filter_par</span><span class="p">,</span> <span class="n">grid_par</span><span class="p">)</span>
-
-<span class="c1"># Grid voltage source with constant frequency and voltage magnitude</span>
-<span class="n">grid_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseVoltageSource</span><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">abs_e_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
-
-<span class="c1"># Inverter with constant DC voltage</span>
-<span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">VoltageSourceConverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">650</span><span class="p">)</span>
-
-<span class="c1"># Create system model</span>
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">GridConverterSystem</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">grid_model</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Configure the control system.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Estimates for the grid parameters, grid inductance estimate is left at 0</span>
-<span class="n">grid_par_est</span> <span class="o">=</span> <span class="n">GridPars</span><span class="p">(</span><span class="n">u_gN</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">w_gN</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">L_g</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
-
-<span class="c1"># Set the configuration parameters</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ObserverBasedGFMControlCfg</span><span class="p">(</span>
-    <span class="n">grid_par_est</span><span class="p">,</span> <span class="n">filter_par</span><span class="p">,</span> <span class="n">max_i</span><span class="o">=</span><span class="mf">1.3</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">100e-6</span><span class="p">,</span> <span class="n">R_a</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
-
-<span class="c1"># Create the control system</span>
-<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ObserverBasedGFMControl</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Set the references for converter output voltage magnitude and active power.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Converter output voltage magnitude reference</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span>
-
-<span class="c1"># Active power reference</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">((</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.5</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.8</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span> <span class="o">-</span>
-                          <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.2</span><span class="p">))</span><span class="o">*</span><span class="n">nom</span><span class="o">.</span><span class="n">P</span>
-
-<span class="c1"># Uncomment line below to simulate operation in rectifier mode</span>
-<span class="c1"># ctrl.ref.p_g = lambda t: ((t &gt; .2) - (t &gt; .7)*2 + (t &gt; 1.2))*nom.P</span>
-
-<span class="c1"># Uncomment lines below to simulate a grid voltage sag with constant ref.p_g</span>
-<span class="c1"># mdl.grid_model.par.abs_e_g = lambda t: (1 - (t &gt; .2)*.8 + (t &gt; 1)*.8)*base.u</span>
-<span class="c1"># ctrl.ref.p_g = lambda t: nom.P</span>
-</pre></div>
-</div>
-<p>Create the simulation object and simulate it.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
-<span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Plot the results.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-</pre></div>
-</div>
-<ul class="sphx-glr-horizontal">
-<li><img src="../../_images/sphx_glr_plot_gfm_obs_13kva_001.png" srcset="../../_images/sphx_glr_plot_gfm_obs_13kva_001.png" alt="plot gfm obs 13kva" class = "sphx-glr-multi-img"/></li>
-<li><img src="../../_images/sphx_glr_plot_gfm_obs_13kva_002.png" srcset="../../_images/sphx_glr_plot_gfm_obs_13kva_002.png" alt="plot gfm obs 13kva" class = "sphx-glr-multi-img"/></li>
-</ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.421 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-grid-forming-plot-gfm-obs-13kva-py">
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/762c2b856ecc40f03ec81b867a35152d/plot_gfm_obs_13kva.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gfm_obs_13kva.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/4d070dbeed56e687e8fd0f06f72a1494/plot_gfm_obs_13kva.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_gfm_obs_13kva.py</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-zip docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/2c26aa2b4c9f8800160332fdb6991957/plot_gfm_obs_13kva.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_gfm_obs_13kva.zip</span></code></a></p>
-</div>
-</div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+  <section id="six-pulse-diode-bridge">
+<h1>Six-Pulse Diode Bridge<a class="headerlink" href="#six-pulse-diode-bridge" title="Permalink to this heading">#</a></h1>
+<p>The figure below shows a six-pulse diode bridge rectifier, where the inductor <span class="math notranslate nohighlight">\(L_\mathrm{dc}\)</span> is placed in the DC link. For simplicity, a three-phase supply voltage is assumed to be stiff. The DC current dynamics are</p>
+<div class="math notranslate nohighlight" id="equation-diode-bridge">
+<span class="eqno">(1)<a class="headerlink" href="#equation-diode-bridge" title="Permalink to this equation">#</a></span>\[L_\mathrm{dc} \frac{\mathrm{d}i_\mathrm{L}}{\mathrm{d}t}
+= u_\mathrm{di} - u_\mathrm{dc}\]</div>
+<p>where <span class="math notranslate nohighlight">\(i_\mathrm{L}\)</span> is the DC-bus current, <span class="math notranslate nohighlight">\(u_\mathrm{di}\)</span> is the voltage over the diode bridge, <span class="math notranslate nohighlight">\(u_\mathrm{dc}\)</span> is the DC-bus voltage, and <span class="math notranslate nohighlight">\(L_{\mathrm{dc}}\)</span> is the DC-bus inductance.</p>
+<figure class="align-center" id="id1">
+<a class="reference external image-reference" href="."><img alt="Six-pulse diode bridge rectifier an three-phase supply voltage" src="../../_images/diode_bridge.svg" width="100%" /></a>
+<figcaption>
+<p><span class="caption-text">Six-pulse diode bridge rectifier.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The voltage-source converter described in <a class="reference internal" href="../common.html"><span class="doc">Common</span></a> is extended with this diode bridge model in the class <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter" title="motulator.drive.model.FrequencyConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.FrequencyConverter</span></code></a>. Examples using the six-pulse diode bridge can be found in <a class="reference internal" href="../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html"><span class="doc">2.2-kW induction motor, diode bridge</span></a> and <a class="reference internal" href="../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html"><span class="doc">2.2-kW PMSM, diode bridge</span></a>.</p>
 </section>
 
 
@@ -533,20 +451,20 @@ observer. A transparent current controller is included for current limitation.</
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="plot_gfm_rfpsc_13kva.html"
+       href="ac_filter.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">12.5-kVA converter, RFPSC</p>
+        <p class="prev-next-title">Output LC Filter</p>
       </div>
     </a>
     <a class="right-next"
-       href="../../model/common.html"
+       href="../grid/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Common</p>
+        <p class="prev-next-title">Grid Converters</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

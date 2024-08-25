@@ -1758,7 +1758,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc, C_dc=None, i_ext=lambda t: None)
+.. py:class:: VoltageSourceConverter(u_dc, C_dc=None, i_dc=lambda t: None)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -1771,8 +1771,8 @@ Package Contents
    :type u_dc: float
    :param C_dc: DC-bus capacitance (F). The default is None.
    :type C_dc: float, optional
-   :param i_ext: External current (A) fed to the DC bus. Needed if `C_dc` is not None.
-   :type i_ext: callable, optional
+   :param i_dc: External current (A) fed to the DC bus. Needed if `C_dc` is not None.
+   :type i_dc: callable, optional
 
 
 
@@ -1791,9 +1791,9 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:property:: i_dc
+   .. py:property:: i_dc_int
       
-      DC-side current (A).
+      Converter-side DC current (A).
 
 
 
