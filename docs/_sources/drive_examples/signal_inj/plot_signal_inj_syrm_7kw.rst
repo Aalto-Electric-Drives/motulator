@@ -211,7 +211,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.283 seconds)
+   **Total running time of the script:** (0 minutes 12.682 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_signal_inj_syrm_7kw.py:
