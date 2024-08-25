@@ -14,11 +14,13 @@ requires-python = ">=3.8"
 authors = [
     {name = "Marko Hinkkanen", email = "marko.hinkkanen@aalto.fi"}
 ]
-description = "Motor Drive Simulator in Python"
+description = "Motor Drive and Grid Converter Simulator in Python"
 readme = "README.md"
 license = "MIT"
 keywords = [
     "control", 
+    "converter",
+    "grid",
     "electric", 
     "inverter", 
     "machine", 
