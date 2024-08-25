@@ -154,25 +154,11 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_mechanical_measurements(fbk, mdl)
+   .. py:method:: get_feedback_signals(mdl)
 
       
-      Measure the speed and position.
+      Get the feedback signals.
 
-      :param fbk: Measured signals are added to this object.
-      :type fbk: SimpleNamespace
-      :param mdl: Continuous-time system model.
-      :type mdl: Model
-
-      :returns: **fbk** --
-
-                Measured signals, containing the following fields:
-
-                    w_m : float
-                        Rotor speed (electrical rad/s).
-                    theta_m : float
-                        Rotor position (electrical rad).
-      :rtype: SimpleNamespace
 
 
 
@@ -192,11 +178,25 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback_signals(mdl)
+   .. py:method:: get_mechanical_measurements(fbk, mdl)
 
       
-      Get the feedback signals.
+      Measure the speed and position.
 
+      :param fbk: Measured signals are added to this object.
+      :type fbk: SimpleNamespace
+      :param mdl: Continuous-time system model.
+      :type mdl: Model
+
+      :returns: **fbk** --
+
+                Measured signals, containing the following fields:
+
+                    w_m : float
+                        Rotor speed (electrical rad/s).
+                    theta_m : float
+                        Rotor position (electrical rad).
+      :rtype: SimpleNamespace
 
 
 

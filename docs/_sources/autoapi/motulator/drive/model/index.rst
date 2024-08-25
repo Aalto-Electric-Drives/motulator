@@ -33,17 +33,18 @@ Classes
 .. autoapisummary::
 
    motulator.drive.model.CarrierComparison
-   motulator.drive.model.Simulation
-   motulator.drive.model.VoltageSourceConverter
    motulator.drive.model.Drive
-   motulator.drive.model.DriveWithLCFilter
    motulator.drive.model.DriveWithDiodeBridge
-   motulator.drive.model.LCFilter
-   motulator.drive.model.InductionMachine
-   motulator.drive.model.SynchronousMachine
+   motulator.drive.model.DriveWithLCFilter
    motulator.drive.model.ExternalRotorSpeed
+   motulator.drive.model.FrequencyConverter
+   motulator.drive.model.InductionMachine
+   motulator.drive.model.LCFilter
+   motulator.drive.model.Simulation
    motulator.drive.model.StiffMechanicalSystem
+   motulator.drive.model.SynchronousMachine
    motulator.drive.model.TwoMassMechanicalSystem
+   motulator.drive.model.VoltageSourceConverter
 
 
 Package Contents
@@ -67,7 +68,7 @@ Package Contents
 
    .. rubric:: Examples
 
-   >>> from motulator.model import CarrierComparison
+   >>> from motulator.common.model import CarrierComparison
    >>> carrier_cmp = CarrierComparison(return_complex=False)
    >>> # First call gives rising edges
    >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.4, .2, .8])
@@ -119,340 +120,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Simulation(mdl=None, ctrl=None)
-
-   
-   Simulation environment.
-
-   Each simulation object has a system model object and a controller object.
-
-   :param mdl: Continuous-time system model.
-   :type mdl: Model
-   :param ctrl: Discrete-time controller.
-   :type ctrl: ControlSystem
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: simulate(t_stop=1, max_step=np.inf)
-
-      
-      Solve the continuous-time model and call the discrete-time controller.
-
-      :param t_stop: Simulation stop time. The default is 1.
-      :type t_stop: float, optional
-      :param max_step: Max step size of the solver. The default is inf.
-      :type max_step: float, optional
-
-      .. rubric:: Notes
-
-      Other options of `solve_ivp` could be easily used if needed, but, for
-      simplicity, only `max_step` is included as an option of this method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: save_mat(name='sim')
-
-      
-      Save the simulation data into MATLAB .mat files.
-
-      :param name: Name for the simulation instance. The default is `sim`.
-      :type name: str, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: VoltageSourceConverter(u_dc, C_dc=None, i_ext=lambda t: None)
-
-   Bases: :py:obj:`motulator.common.model._simulation.Subsystem`
-
-
-   
-   Lossless three-phase voltage-source converter.
-
-   :param u_dc: DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
-                used as the initial condition.
-   :type u_dc: float
-   :param C_dc: DC-bus capacitance (F). The default is None.
-   :type C_dc: float, optional
-   :param i_ext: External current (A) fed to the DC bus. Needed if `C_dc` is not None.
-   :type i_ext: callable, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:property:: u_dc
-      
-      DC-bus voltage (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: u_cs
-      
-      AC-side voltage (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: i_dc
-      
-      DC-side current (A).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_outputs(_)
-
-      
-      Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_inputs(t)
-
-      
-      Set input variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
-
-      
-      Compute the state derivatives.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_dc_voltage()
-
-      
-      Measure the converter DC-bus voltage (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_states()
-
-      
-      Post-process data.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_with_inputs()
-
-      
-      Post-process data with inputs.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: Drive(converter=None, machine=None, mechanics=None)
 
    Bases: :py:obj:`motulator.common.model.Model`
@@ -466,6 +133,88 @@ Package Contents
 
    :param converter: Converter model.
    :type converter: VoltageSourceConverter | FrequencyConverter
+   :param machine: Machine model.
+   :type machine: InductionMachine | SynchronousMachine
+   :param mechanics: Mechanical subsystem model.
+   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: interconnect(_)
+
+      
+      Interconnect the subsystems.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process()
+
+      
+      Post-process the solution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveWithDiodeBridge(diode_bridge=None, converter=None, machine=None, mechanics=None)
+
+   Bases: :py:obj:`motulator.common.model.Model`
+
+
+   
+   Machine drive with a diode bridge rectifier.
+
+   :param diode_bridge: Diode bridge model.
+   :type diode_bridge: DiodeBridge
+   :param converter: Converter model.
+   :type converter: VoltageSourceConverter
    :param machine: Machine model.
    :type machine: InductionMachine | SynchronousMachine
    :param mechanics: Mechanical subsystem model.
@@ -618,102 +367,17 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: DriveWithDiodeBridge(diode_bridge=None, converter=None, machine=None, mechanics=None)
-
-   Bases: :py:obj:`motulator.common.model.Model`
-
-
-   
-   Machine drive with a diode bridge rectifier.
-
-   :param diode_bridge: Diode bridge model.
-   :type diode_bridge: DiodeBridge
-   :param converter: Converter model.
-   :type converter: VoltageSourceConverter
-   :param machine: Machine model.
-   :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanical subsystem model.
-   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: interconnect(_)
-
-      
-      Interconnect the subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: LCFilter(L_f, C_f, R_f=0)
+.. py:class:: ExternalRotorSpeed(w_M=lambda t: 0 * t)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
 
    
-   LC-filter model.
+   Integrate the rotor angle from the externally given rotor speed.
 
-   :param L_f: Filter inductance (H).
-   :type L_f: float
-   :param C_f: Filter capacitance (F).
-   :type C_f: float
-   :param R_f: Series resistance (Ω) of the inductor. The default is 0.
-   :type R_f: float, optional
+   :param w_M: Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is
+               zero, ``lambda t: 0*t``.
+   :type w_M: callable
 
 
 
@@ -732,10 +396,62 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: set_outputs(_)
+   .. py:method:: meas_position()
 
       
-      Set output variables.
+      Measure the rotor angle.
+
+      :returns: **theta_M** -- Rotor angle (mechanical rad).
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_speed()
+
+      
+      Measure the rotor speed.
+
+      :returns: **w_M** -- Rotor angular speed (mechanical rad/s).
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_states()
+
+      
+      Post-process data.
 
 
 
@@ -780,10 +496,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: meas_currents()
+   .. py:method:: set_outputs(t)
 
       
-      Measure the converter phase currents.
+      Set output variables.
 
 
 
@@ -804,10 +520,144 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: meas_capacitor_voltages()
+.. py:class:: FrequencyConverter(C_dc, L_dc, U_g, f_g)
+
+   Bases: :py:obj:`VoltageSourceConverter`
+
+
+   
+   Frequency converter with a six-pulse diode bridge.
+
+   A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The
+   diode bridge is connected to the voltage-source inverter. The inductance of
+   the grid is omitted.
+
+   :param C_dc: DC-bus capacitance (F).
+   :type C_dc: float
+   :param L_dc: DC-bus inductance (H).
+   :type L_dc: float
+   :param U_g: Grid voltage (V, line-line, rms).
+   :type U_g: float
+   :param f_g: Grid frequency (Hz).
+   :type f_g: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: post_process_states()
 
       
-      Measure the capacitor phase voltages.
+      Post-process data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process data with inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute the state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_inputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
 
 
 
@@ -943,77 +793,6 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:property:: tau_M
-      
-      Electromagnetic torque (Nm).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_outputs(_)
-
-      
-      Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
-
-      
-      Compute state derivatives.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: meas_currents()
 
       
@@ -1086,67 +865,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SynchronousMachine(par, i_s=None, psi_s0=None)
+   .. py:method:: rhs()
 
-   Bases: :py:obj:`motulator.common.model.Subsystem`
-
-
-   
-   Synchronous machine model.
-
-   :param par: Machine parameters.
-   :type par: SynchronousMachinePars
-   :param i_s: Stator current (A) as a function of the stator flux linkage (A) in
-               order to model the magnetic saturation. If this function is given, the
-               stator current is computed using this function instead of constants
-               `par.L_d`, `par.L_q`, and `par.psi_f`.
-   :type i_s: callable, optional
-   :param psi_s0: Initial stator flux linkage (Vs). If not given, `par.psi_f` is used.
-   :type psi_s0: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:property:: i_s
       
-      Stator current (A).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: tau_M
-      
-      Electromagnetic torque (Nm).
+      Compute state derivatives.
 
 
 
@@ -1191,10 +913,65 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: rhs()
+   .. py:property:: tau_M
+      
+      Electromagnetic torque (Nm).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: LCFilter(L_f, C_f, R_f=0)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   LC-filter model.
+
+   :param L_f: Filter inductance (H).
+   :type L_f: float
+   :param C_f: Filter capacitance (F).
+   :type C_f: float
+   :param R_f: Series resistance (Ω) of the inductor. The default is 0.
+   :type R_f: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: meas_capacitor_voltages()
 
       
-      Compute state derivatives.
+      Measure the capacitor phase voltages.
 
 
 
@@ -1218,108 +995,7 @@ Package Contents
    .. py:method:: meas_currents()
 
       
-      Measure the phase currents.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_states()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_with_inputs()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: ExternalRotorSpeed(w_M=lambda t: 0 * t)
-
-   Bases: :py:obj:`motulator.common.model.Subsystem`
-
-
-   
-   Integrate the rotor angle from the externally given rotor speed.
-
-   :param w_M: Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is
-               zero, ``lambda t: 0*t``.
-   :type w_M: callable
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: set_outputs(t)
-
-      
-      Set output variables.
+      Measure the converter phase currents.
 
 
 
@@ -1364,13 +1040,11 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: meas_speed()
+   .. py:method:: set_outputs(_)
 
       
-      Measure the rotor speed.
+      Set output variables.
 
-      :returns: **w_M** -- Rotor angular speed (mechanical rad/s).
-      :rtype: float
 
 
 
@@ -1390,13 +1064,42 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: meas_position()
+.. py:class:: Simulation(mdl=None, ctrl=None)
+
+   
+   Simulation environment.
+
+   Each simulation object has a system model object and a controller object.
+
+   :param mdl: Continuous-time system model.
+   :type mdl: Model
+   :param ctrl: Discrete-time controller.
+   :type ctrl: ControlSystem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: save_mat(name='sim')
 
       
-      Measure the rotor angle.
+      Save the simulation data into MATLAB .mat files.
 
-      :returns: **theta_M** -- Rotor angle (mechanical rad).
-      :rtype: float
+      :param name: Name for the simulation instance. The default is `sim`.
+      :type name: str, optional
 
 
 
@@ -1416,11 +1119,20 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_states()
+   .. py:method:: simulate(t_stop=1, max_step=np.inf)
 
       
-      Post-process data.
+      Solve the continuous-time model and call the discrete-time controller.
 
+      :param t_stop: Simulation stop time. The default is 1.
+      :type t_stop: float, optional
+      :param max_step: Max step size of the solver. The default is inf.
+      :type max_step: float, optional
+
+      .. rubric:: Notes
+
+      Other options of `solve_ivp` could be easily used if needed, but, for
+      simplicity, only `max_step` is included as an option of this method.
 
 
 
@@ -1499,35 +1211,13 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_outputs(t)
+   .. py:method:: meas_position()
 
       
-      Set output variables.
+      Measure the rotor angle.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
-
-      
-      Compute state derivatives.
-
+      :returns: **theta_M** -- Rotor angle (mechanical rad).
+      :rtype: float
 
 
 
@@ -1553,32 +1243,6 @@ Package Contents
       Measure the rotor speed.
 
       :returns: **w_M** -- Rotor angular speed (mechanical rad/s).
-      :rtype: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_position()
-
-      
-      Measure the rotor angle.
-
-      :returns: **theta_M** -- Rotor angle (mechanical rad).
       :rtype: float
 
 
@@ -1627,6 +1291,255 @@ Package Contents
 
       
       Post-process data with inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SynchronousMachine(par, i_s=None, psi_s0=None)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   Synchronous machine model.
+
+   :param par: Machine parameters.
+   :type par: SynchronousMachinePars
+   :param i_s: Stator current (A) as a function of the stator flux linkage (A) in
+               order to model the magnetic saturation. If this function is given, the
+               stator current is computed using this function instead of constants
+               `par.L_d`, `par.L_q`, and `par.psi_f`.
+   :type i_s: callable, optional
+   :param psi_s0: Initial stator flux linkage (Vs). If not given, `par.psi_f` is used.
+   :type psi_s0: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: i_s
+      
+      Stator current (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_currents()
+
+      
+      Measure the phase currents.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_states()
+
+      
+      Post-process the solution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process the solution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(_)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: tau_M
+      
+      Electromagnetic torque (Nm).
 
 
 
@@ -1701,34 +1614,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_outputs(t)
+   .. py:method:: meas_load_position()
 
       
-      Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
-
-      
-      Compute state derivatives.
+      Measure the load angle.
 
 
 
@@ -1753,30 +1642,6 @@ Package Contents
 
       
       Measure the load speed.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_load_position()
-
-      
-      Measure the load angle.
 
 
 
@@ -1825,6 +1690,300 @@ Package Contents
 
       
       Post-process data with inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: VoltageSourceConverter(u_dc, C_dc=None, i_ext=lambda t: None)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   Lossless three-phase voltage-source converter.
+
+   :param u_dc: DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
+                used as the initial condition.
+   :type u_dc: float
+   :param C_dc: DC-bus capacitance (F). The default is None.
+   :type C_dc: float, optional
+   :param i_ext: External current (A) fed to the DC bus. Needed if `C_dc` is not None.
+   :type i_ext: callable, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: i_dc
+      
+      DC-side current (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_dc_voltage()
+
+      
+      Measure the converter DC-bus voltage (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_states()
+
+      
+      Post-process data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process data with inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute the state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_inputs(t)
+
+      
+      Set input variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(_)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: u_cs
+      
+      AC-side voltage (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: u_dc
+      
+      DC-bus voltage (V).
 
 
 

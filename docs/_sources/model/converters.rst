@@ -4,8 +4,7 @@ Converters
 Voltage-Source Converter
 ------------------------
 
-The figure below shows a three-phase two-level voltage-source converter and its equivalent model, where ideal switches are assumed. This converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus. The switching phenomena are assumed to be infinitely fast. The converter model is provided in the class :class:`motulator.drive.model.VoltageSourceConverter`. 
-
+The figure below shows a three-phase two-level voltage-source converter, where :math:`u_\mathrm{dc}` is the DC-bus voltage, :math:`i_\mathrm{dc}` is the external DC current, :math:`i'_\mathrm{dc}` is the converter DC current and :math:`C_\mathrm{dc}` is the DC-bus capacitance. This converter can operate both as an inverter and a rectifier, depending on the direction of the power flow.
 
 .. figure:: figs/inverter.svg
    :width: 100%
@@ -13,20 +12,57 @@ The figure below shows a three-phase two-level voltage-source converter and its 
    :alt: Three-phase two-level voltage-source converter
    :target: .
 
-   Three-phase two-level voltage-source converter: (left) main circuit; (right) equivalent model. The DC-bus voltage and currents are :math:`u_\mathrm{dc}` and :math:`i_\mathrm{dc}`, respectively.
+   Three-phase two-level voltage-source converter.
+
+The figure below then shows the equivalent model for the three-phase voltage-source converter, where ideal switches are assumed. In the equivalent model, each changeover switch is connected to either negative or positive potential of the DC bus and the switching phenomena are assumed to be infinitely fast. This converter model is provided in the class :class:`motulator.drive.model.VoltageSourceConverter`.
+
+.. figure:: figs/inverter_eq.svg
+   :width: 100%
+   :align: center
+   :alt: Equivalent model of three-phase voltage-source converter
+   :target: .
+   
+   Equivalent model of a three-phase voltage-source converter.
+
+By default, the DC-bus voltage is stiff, i.e. the capacitor is replaced by an ideal voltage source. Alternatively, the capacitive dynamics of the DC-bus can be simulated. The model is implemented as
+
+.. math::
+   C_{dc}\frac{\mathrm{d}u_\mathrm{dc}}{\mathrm{d} t} 
+   = i_\mathrm{dc} 
+   - i'_\mathrm{dc}
+   :label: DC_bus_model
+
+where the converter DC current is calculated from the converter phase currents and switching states as 
+
+.. math::
+   i'_\mathrm{dc} 
+   = q_\mathrm{a} i_\mathrm{a} + q_\mathrm{b} i_\mathrm{b} + q_\mathrm{c} i_\mathrm{c}
+   :label: DC_current
 
 Six-Pulse Diode Bridge
 ----------------------
 
-The figure below shows a six-pulse diode bridge rectifier, where the inductor :math:`L` and the capacitor :math:`C` are placed in the DC link. For simplicity, a three-phase supply voltage is assumed to be stiff. The class :class:`motulator.drive.model.FrequencyConverter` applies this model as a part of a frequency converter model.
+The figure below shows a six-pulse diode bridge rectifier, where the inductor :math:`L_\mathrm{dc}` is placed in the DC link. For simplicity, a three-phase supply voltage is assumed to be stiff. The voltage-source converter described above is extended with this diode bridge model in the class :class:`motulator.drive.model.FrequencyConverter`.
 
 .. figure:: figs/diode_bridge.svg
    :width: 100%
    :align: center
-   :alt: Diode bridge
+   :alt: Six-pulse diode bridge rectifier an three-phase supply voltage
    :target: .
 
    Six-pulse diode bridge rectifier.
+
+The model is implemented as 
+
+.. math:: 
+   L_{\mathrm{dc}} \frac{\mathrm{d}i_{L}}{\mathrm{d}t}
+   = u_{\mathrm{di}} - u_\mathrm{dc} 
+   :label: diode_bridge
+
+where :math:`i_\mathrm{L}` is the DC-bus current, :math:`u_\mathrm{di}` is the voltage over the diode bridge, :math:`u_\mathrm{dc}` is the DC-bus voltage, and :math:`L_{\mathrm{dc}}` is the DC link inductance.
+   
+Examples using the six-pulse diode bridge can be found in :doc:`/drive_examples/vhz/plot_vhz_ctrl_im_2kw` and 
+:doc:`/drive_examples/vector/plot_vector_ctrl_pmsm_2kw_diode`
 
 Carrier Comparison
 ------------------
@@ -41,7 +77,7 @@ The figure below shows a converter equipped with a generic three-phase load. In 
 
    Instantaneous switching states are defined by the carrier comparison. In this example, the switching states are :math:`q_\mathrm{a}=1`, :math:`q_\mathrm{b}=0`, and :math:`q_\mathrm{c}=0`.
 
-The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class :class:`motulator.drive.model.CarrierComparison`, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations.
+The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class :class:`motulator.common.model.CarrierComparison`, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations.
 
 .. figure:: figs/carrier_comparison.svg
    :width: 100%
@@ -66,7 +102,7 @@ where :math:`\boldsymbol{q}_\mathrm{c}^\mathrm{s}` is the switching-state space 
 
    The sampling period :math:`T_\mathrm{s}` is returned by the control method, and it does not need to be constant. 
 
-   If the zero sequence is of interest, it could be easily added to the inverter model.
+   If the zero sequence is of interest, it could be easily added to the converter model.
 
 Switching-Cycle Averaging
 -------------------------
@@ -77,7 +113,7 @@ If the switching ripple is not of interest in simulations, the carrier compariso
 	\boldsymbol{u}_\mathrm{c}^\mathrm{s} = \underbrace{\frac{2}{3}\left(d_\mathrm{a} + d_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + d_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{d}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}
    :label: switching_cycle_averaging
 
-where :math:`\boldsymbol{d}_\mathrm{c}^\mathrm{s}` is the duty ratio space vector. This ZOH is the default option in most of :doc:`/auto_examples/index`.
+where :math:`\boldsymbol{d}_\mathrm{c}^\mathrm{s}` is the duty ratio space vector. This ZOH is the default option in most of :doc:`/drive_examples/index` and :doc:`/grid_examples/index`.
 
 .. rubric:: References
 

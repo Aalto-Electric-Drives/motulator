@@ -32,95 +32,18 @@ Classes
 
 .. autoapisummary::
 
-   motulator.grid.model.GridConverterSystem
    motulator.grid.model.ACFilter
+   motulator.grid.model.CarrierComparison
+   motulator.grid.model.GridConverterSystem
    motulator.grid.model.LCLFilter
    motulator.grid.model.LFilter
+   motulator.grid.model.Simulation
    motulator.grid.model.ThreePhaseVoltageSource
+   motulator.grid.model.VoltageSourceConverter
 
 
 Package Contents
 ----------------
-
-.. py:class:: GridConverterSystem(converter=None, ac_filter=None, grid_model=None)
-
-   Bases: :py:obj:`motulator.common.model.Model`
-
-
-   
-   Continuous-time model for a grid converter system.
-
-   :param converter: Converter model.
-   :type converter: VoltageSourceConverter
-   :param ac_filter: Dynamic model for converter output filter and grid impedance.
-   :type ac_filter: LFilter | LCLFilter
-   :param grid_model: Three-phase grid voltage source model.
-   :type grid_model: ThreePhaseVoltageSource
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: interconnect(_)
-
-      
-      Interconnect the subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
 .. py:class:: ACFilter
 
@@ -209,6 +132,156 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: CarrierComparison(N=2**12, return_complex=True)
+
+   
+   Carrier comparison.
+
+   This computes the the switching states and their durations based on the
+   duty ratios. Instead of searching for zero crossings, the switching
+   instants are explicitly computed in the beginning of each sampling period,
+   allowing faster simulations.
+
+   :param N: Amount of the counter quantization levels. The default is 2**12.
+   :type N: int, optional
+   :param return_complex: Complex switching state space vectors are returned if True. Otherwise
+                          phase switching states are returned. The default is True.
+   :type return_complex: bool, optional
+
+   .. rubric:: Examples
+
+   >>> from motulator.common.model import CarrierComparison
+   >>> carrier_cmp = CarrierComparison(return_complex=False)
+   >>> # First call gives rising edges
+   >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.4, .2, .8])
+   >>> # Durations of the switching states
+   >>> t_steps
+   array([0.00019995, 0.00040015, 0.00019995, 0.00019995])
+   >>> # Switching states
+   >>> q_c_abc
+   array([[0, 0, 0],
+          [0, 0, 1],
+          [1, 0, 1],
+          [1, 1, 1]])
+   >>> # Second call gives falling edges
+   >>> t_steps, q_c_abc = carrier_cmp(.001, [.4, .2, .8])
+   >>> t_steps
+   array([0.00019995, 0.00019995, 0.00040015, 0.00019995])
+   >>> q_c_abc
+   array([[1, 1, 1],
+          [1, 0, 1],
+          [0, 0, 1],
+          [0, 0, 0]])
+   >>> # Sum of the step times equals T_s
+   >>> np.sum(t_steps)
+   0.001
+   >>> # 50% duty ratios in all phases
+   >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.5, .5, .5])
+   >>> t_steps
+   array([0.0005, 0.    , 0.    , 0.0005])
+   >>> q_c_abc
+   array([[0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0],
+          [1, 1, 1]])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: GridConverterSystem(converter=None, ac_filter=None, grid_model=None)
+
+   Bases: :py:obj:`motulator.common.model.Model`
+
+
+   
+   Continuous-time model for a grid converter system.
+
+   :param converter: Converter model.
+   :type converter: VoltageSourceConverter
+   :param ac_filter: Dynamic model for converter output filter and grid impedance.
+   :type ac_filter: LFilter | LCLFilter
+   :param grid_model: Three-phase grid voltage source model.
+   :type grid_model: ThreePhaseVoltageSource
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: interconnect(_)
+
+      
+      Interconnect the subsystems.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process()
+
+      
+      Post-process the solution.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: LCLFilter(filter_par, grid_par)
 
    Bases: :py:obj:`ACFilter`
@@ -244,35 +317,13 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: set_outputs(_)
+   .. py:method:: meas_capacitor_voltages()
 
       
-      Set output variables.
+      Measure the capacitor phase voltages.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
-
-      
-      Compute the state derivatives.
-
+      :returns: **u_f_abc** -- Phase voltages of the filter capacitor (V).
+      :rtype: 3-tuple of floats
 
 
 
@@ -318,13 +369,11 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: meas_capacitor_voltages()
+   .. py:method:: post_process_with_inputs()
 
       
-      Measure the capacitor phase voltages.
+      Post-process data with inputs.
 
-      :returns: **u_f_abc** -- Phase voltages of the filter capacitor (V).
-      :rtype: 3-tuple of floats
 
 
 
@@ -344,10 +393,34 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_with_inputs()
+   .. py:method:: rhs()
 
       
-      Post-process data with inputs.
+      Compute the state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(_)
+
+      
+      Set output variables.
 
 
 
@@ -415,10 +488,34 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: set_outputs(_)
+   .. py:method:: post_process_states()
 
       
-      Set output variables.
+      Post-process data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process data with inputs.
 
 
 
@@ -463,10 +560,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_states()
+   .. py:method:: set_outputs(_)
 
       
-      Post-process data.
+      Set output variables.
 
 
 
@@ -487,11 +584,75 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_with_inputs()
+.. py:class:: Simulation(mdl=None, ctrl=None)
+
+   
+   Simulation environment.
+
+   Each simulation object has a system model object and a controller object.
+
+   :param mdl: Continuous-time system model.
+   :type mdl: Model
+   :param ctrl: Discrete-time controller.
+   :type ctrl: ControlSystem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: save_mat(name='sim')
 
       
-      Post-process data with inputs.
+      Save the simulation data into MATLAB .mat files.
 
+      :param name: Name for the simulation instance. The default is `sim`.
+      :type name: str, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: simulate(t_stop=1, max_step=np.inf)
+
+      
+      Solve the continuous-time model and call the discrete-time controller.
+
+      :param t_stop: Simulation stop time. The default is 1.
+      :type t_stop: float, optional
+      :param max_step: Max step size of the solver. The default is inf.
+      :type max_step: float, optional
+
+      .. rubric:: Notes
+
+      Other options of `solve_ivp` could be easily used if needed, but, for
+      simplicity, only `max_step` is included as an option of this method.
 
 
 
@@ -582,34 +743,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_outputs(t)
+   .. py:method:: post_process_states()
 
       
-      Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_inputs(t)
-
-      
-      Set input variables.
+      Post-process the solution.
 
 
 
@@ -654,10 +791,280 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: set_inputs(t)
+
+      
+      Set input variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: VoltageSourceConverter(u_dc, C_dc=None, i_ext=lambda t: None)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   Lossless three-phase voltage-source converter.
+
+   :param u_dc: DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
+                used as the initial condition.
+   :type u_dc: float
+   :param C_dc: DC-bus capacitance (F). The default is None.
+   :type C_dc: float, optional
+   :param i_ext: External current (A) fed to the DC bus. Needed if `C_dc` is not None.
+   :type i_ext: callable, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: i_dc
+      
+      DC-side current (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_dc_voltage()
+
+      
+      Measure the converter DC-bus voltage (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: post_process_states()
 
       
-      Post-process the solution.
+      Post-process data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process_with_inputs()
+
+      
+      Post-process data with inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs()
+
+      
+      Compute the state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_inputs(t)
+
+      
+      Set input variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(_)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: u_cs
+      
+      AC-side voltage (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: u_dc
+      
+      DC-bus voltage (V).
 
 
 

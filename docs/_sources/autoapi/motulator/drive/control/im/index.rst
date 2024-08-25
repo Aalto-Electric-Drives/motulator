@@ -32,294 +32,25 @@ Classes
 
 .. autoapisummary::
 
-   motulator.drive.control.im.FullOrderObserver
-   motulator.drive.control.im.FullOrderObserverCfg
-   motulator.drive.control.im.Observer
-   motulator.drive.control.im.ObserverCfg
    motulator.drive.control.im.CurrentController
    motulator.drive.control.im.CurrentReference
    motulator.drive.control.im.CurrentReferenceCfg
    motulator.drive.control.im.CurrentVectorControl
-   motulator.drive.control.im.ObserverBasedVHzControl
-   motulator.drive.control.im.ObserverBasedVHzControlCfg
-   motulator.drive.control.im.VHzControl
-   motulator.drive.control.im.VHzControlCfg
-   motulator.drive.control.im.SpeedController
    motulator.drive.control.im.FluxVectorControl
    motulator.drive.control.im.FluxVectorControlCfg
+   motulator.drive.control.im.FullOrderObserver
+   motulator.drive.control.im.FullOrderObserverCfg
+   motulator.drive.control.im.Observer
+   motulator.drive.control.im.ObserverBasedVHzControl
+   motulator.drive.control.im.ObserverBasedVHzControlCfg
+   motulator.drive.control.im.ObserverCfg
+   motulator.drive.control.im.SpeedController
+   motulator.drive.control.im.VHzControl
+   motulator.drive.control.im.VHzControlCfg
 
 
 Package Contents
 ----------------
-
-.. py:class:: FullOrderObserver(cfg)
-
-   
-   Full-order flux observer operating in estimated rotor flux coordinates.
-
-   This class implements a full-order flux observer for induction machines.
-   The observer structure is similar to [#Tii2023]_. The observer operates in
-   estimated rotor flux coordinates.
-
-   :param cfg: Observer parameters.
-   :type cfg: ObserverCfg
-
-   .. rubric:: References
-
-   .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, "Speed-adaptive full-order
-      observer revisited: Closed-form design for induction motor drives,"
-      Proc. IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: output(fbk)
-
-      
-      Output.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update(T_s, fbk)
-
-      
-      Update the state estimates.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: FullOrderObserverCfg
-
-   Bases: :py:obj:`ObserverCfg`
-
-
-   
-   Full-order observer configuration.
-
-   :param alpha_i: Current estimation bandwidth (rad/s). The default is 2*pi*400.
-   :type alpha_i: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: Observer(cfg)
-
-   
-   Reduced-order flux observer operating in estimated rotor flux coordinates.
-
-   This class implements a reduced-order flux observer for induction machines.
-   Both sensored and sensorless operation are supported. The observer
-   structure is similar to [#Hin2010]_. The observer operates in estimated
-   rotor flux coordinates.
-
-   :param cfg: Observer configuration.
-   :type cfg: ObserverCfg
-
-   .. rubric:: References
-
-   .. [#Hin2010] Hinkkanen, Harnefors, Luomi, "Reduced-order flux observers
-      with stator-resistance adaptation for speed-sensorless induction motor
-      drives," IEEE Trans. Power Electron., 2010,
-      https://doi.org/10.1109/TPEL.2009.2039650
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: output(fbk)
-
-      
-      Compute the feedback signals for the control system.
-
-      :param fbk:
-                  Measured signals, which should contain the following fields:
-
-                      u_ss : complex
-                          Stator voltage (V) in stator coordinates.
-                      i_ss : complex
-                          Stator current (A) in stator coordinates.
-                      w_m : float, optional
-                          Rotor angular speed (electrical rad/s). This signal is only
-                          needed in the sensored mode.
-      :type fbk: SimpleNamespace
-
-      :returns: **fbk** -- Measured and estimated feedback signals for the control system,
-                containing at least the following fields:
-
-                    u_s : complex
-                        Stator voltage (V) in estimated rotor flux coordinates.
-                    i_s : complex
-                        Stator current (A) in estimated rotor flux coordinates.
-                    psi_R : float
-                        Rotor flux magnitude estimate (Vs).
-                    theta_s : float
-                        Rotor flux angle estimate (rad).
-                    w_s : float
-                        Angular frequency (rad/s) of the coordinate system.
-                    w_m : float
-                        Rotor speed estimate (electrical rad/s).
-                    w_r : float
-                        Slip angular frequency (rad/s).
-                    psi_s : complex
-                        Stator flux estimate (Vs).
-      :rtype: SimpleNamespace
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update(T_s, fbk)
-
-      
-      Update the state estimates.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: ObserverCfg
-
-   
-   Reduced-order flux observer configuration.
-
-   :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
-   :param T_s: Sampling period (s).
-   :type T_s: float
-   :param sensorless: If True, sensorless mode is used.
-   :type sensorless: bool
-   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
-   :type alpha_o: float, optional
-   :param k_o: Observer gain as a function of the rotor angular speed. The default is
-               ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
-               `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
-   :type k_o: callable, optional
-
-   .. rubric:: Notes
-
-   The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in
-   the marginally stable estimation-error dynamics. The current model is
-   obtained by setting ``k_o = lambda w_m: 1``.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 
 .. py:class:: CurrentController(par, alpha_c)
 
@@ -622,6 +353,355 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: FluxVectorControl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_c=2 * np.pi * 200, alpha_o=2 * np.pi * 40, J=None, T_s=0.00025, sensorless=True)
+
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
+
+
+   
+   Flux-vector control of asynchronous machine drives.
+
+   :param par: Machine model parameters.
+   :type par: InductionMachineInvGammaPars
+   :param alpha_psi: Flux-control bandwidth (rad/s). The default is 2*pi*100.
+   :type alpha_psi: float, optional
+   :param alpha_tau: Torque-control bandwidth (rad/s). The default is 2*pi*200.
+   :type alpha_tau: float, optional
+   :param alpha_c: Internal current-control bandwidth (rad/s). The default is 2*pi*200.
+   :type alpha_c: float, optional
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
+   :type alpha_o: float, optional
+   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
+   :type J: float, optional
+   :param T_s: Sampling period (s). The default is 250e-6.
+   :type T_s: float
+   :param sensorless: If True, sensorless control is used. The default is True.
+   :type sensorless: bool, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_flux_reference(fbk)
+
+      
+      Simple field-weakening strategy.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: output(fbk)
+
+      
+      Calculate references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: FluxVectorControlCfg
+
+   
+   Flux-vector control configuration.
+
+   :param nom_psi_s: Nominal stator flux linkage (Vs).
+   :type nom_psi_s: float
+   :param max_i_s: Maximum stator current (A).
+   :type max_i_s: float
+   :param max_tau_M: Maximum torque reference (Nm).
+   :type max_tau_M: float
+   :param k_u: Voltage utilization factor. The default is 0.95.
+   :type k_u: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: FullOrderObserver(cfg)
+
+   
+   Full-order flux observer operating in estimated rotor flux coordinates.
+
+   This class implements a full-order flux observer for induction machines.
+   The observer structure is similar to [#Tii2023]_. The observer operates in
+   estimated rotor flux coordinates.
+
+   :param cfg: Observer parameters.
+   :type cfg: ObserverCfg
+
+   .. rubric:: References
+
+   .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, "Speed-adaptive full-order
+      observer revisited: Closed-form design for induction motor drives,"
+      Proc. IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(fbk)
+
+      
+      Output.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, fbk)
+
+      
+      Update the state estimates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: FullOrderObserverCfg
+
+   Bases: :py:obj:`ObserverCfg`
+
+
+   
+   Full-order observer configuration.
+
+   :param alpha_i: Current estimation bandwidth (rad/s). The default is 2*pi*400.
+   :type alpha_i: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Observer(cfg)
+
+   
+   Reduced-order flux observer operating in estimated rotor flux coordinates.
+
+   This class implements a reduced-order flux observer for induction machines.
+   Both sensored and sensorless operation are supported. The observer
+   structure is similar to [#Hin2010]_. The observer operates in estimated
+   rotor flux coordinates.
+
+   :param cfg: Observer configuration.
+   :type cfg: ObserverCfg
+
+   .. rubric:: References
+
+   .. [#Hin2010] Hinkkanen, Harnefors, Luomi, "Reduced-order flux observers
+      with stator-resistance adaptation for speed-sensorless induction motor
+      drives," IEEE Trans. Power Electron., 2010,
+      https://doi.org/10.1109/TPEL.2009.2039650
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(fbk)
+
+      
+      Compute the feedback signals for the control system.
+
+      :param fbk:
+                  Measured signals, which should contain the following fields:
+
+                      u_ss : complex
+                          Stator voltage (V) in stator coordinates.
+                      i_ss : complex
+                          Stator current (A) in stator coordinates.
+                      w_m : float, optional
+                          Rotor angular speed (electrical rad/s). This signal is only
+                          needed in the sensored mode.
+      :type fbk: SimpleNamespace
+
+      :returns: **fbk** -- Measured and estimated feedback signals for the control system,
+                containing at least the following fields:
+
+                    u_s : complex
+                        Stator voltage (V) in estimated rotor flux coordinates.
+                    i_s : complex
+                        Stator current (A) in estimated rotor flux coordinates.
+                    psi_R : float
+                        Rotor flux magnitude estimate (Vs).
+                    theta_s : float
+                        Rotor flux angle estimate (rad).
+                    w_s : float
+                        Angular frequency (rad/s) of the coordinate system.
+                    w_m : float
+                        Rotor speed estimate (electrical rad/s).
+                    w_r : float
+                        Slip angular frequency (rad/s).
+                    psi_s : complex
+                        Stator flux estimate (Vs).
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, fbk)
+
+      
+      Update the state estimates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: ObserverBasedVHzControl(par, cfg, T_s=0.00025)
 
    Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
@@ -732,6 +812,82 @@ Package Contents
    :type alpha_r: float, optional
    :param slip_compensation: Enable slip compensation. The default is False.
    :type slip_compensation: bool, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: ObserverCfg
+
+   
+   Reduced-order flux observer configuration.
+
+   :param par: Machine model parameters.
+   :type par: InductionMachineInvGammaPars
+   :param T_s: Sampling period (s).
+   :type T_s: float
+   :param sensorless: If True, sensorless mode is used.
+   :type sensorless: bool
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
+   :type alpha_o: float, optional
+   :param k_o: Observer gain as a function of the rotor angular speed. The default is
+               ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
+               `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
+   :type k_o: callable, optional
+
+   .. rubric:: Notes
+
+   The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in
+   the marginally stable estimation-error dynamics. The current model is
+   obtained by setting ``k_o = lambda w_m: 1``.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: SpeedController(J, alpha_s, max_tau_M=np.inf)
+
+   Bases: :py:obj:`motulator.common.control.PIController`
+
+
+   
+   2DOF PI speed controller.
+
+   This is an interface for a speed controller. The gains are initialized
+   based on the desired closed-loop bandwidth and the rotor inertia estimate.
+
+   :param J: Total inertia of the rotor (kgm²).
+   :type J: float
+   :param alpha_s: Closed-loop bandwidth (rad/s).
+   :type alpha_s: float
+   :param max_tau_M: Maximum motor torque (Nm). The default is `inf`.
+   :type max_tau_M: float, optional
 
 
 
@@ -865,162 +1021,6 @@ Package Contents
    
    V/Hz control configuration.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: SpeedController(J, alpha_s, max_tau_M=np.inf)
-
-   Bases: :py:obj:`motulator.common.control.PIController`
-
-
-   
-   2DOF PI speed controller.
-
-   This is an interface for a speed controller. The gains are initialized
-   based on the desired closed-loop bandwidth and the rotor inertia estimate.
-
-   :param J: Total inertia of the rotor (kgm²).
-   :type J: float
-   :param alpha_s: Closed-loop bandwidth (rad/s).
-   :type alpha_s: float
-   :param max_tau_M: Maximum motor torque (Nm). The default is `inf`.
-   :type max_tau_M: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: FluxVectorControl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_c=2 * np.pi * 200, alpha_o=2 * np.pi * 40, J=None, T_s=0.00025, sensorless=True)
-
-   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
-
-
-   
-   Flux-vector control of asynchronous machine drives.
-
-   :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
-   :param alpha_psi: Flux-control bandwidth (rad/s). The default is 2*pi*100.
-   :type alpha_psi: float, optional
-   :param alpha_tau: Torque-control bandwidth (rad/s). The default is 2*pi*200.
-   :type alpha_tau: float, optional
-   :param alpha_c: Internal current-control bandwidth (rad/s). The default is 2*pi*200.
-   :type alpha_c: float, optional
-   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
-   :type alpha_o: float, optional
-   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
-   :type J: float, optional
-   :param T_s: Sampling period (s). The default is 250e-6.
-   :type T_s: float
-   :param sensorless: If True, sensorless control is used. The default is True.
-   :type sensorless: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: get_flux_reference(fbk)
-
-      
-      Simple field-weakening strategy.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: output(fbk)
-
-      
-      Calculate references.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: FluxVectorControlCfg
-
-   
-   Flux-vector control configuration.
-
-   :param nom_psi_s: Nominal stator flux linkage (Vs).
-   :type nom_psi_s: float
-   :param max_i_s: Maximum stator current (A).
-   :type max_i_s: float
-   :param max_tau_M: Maximum torque reference (Nm).
-   :type max_tau_M: float
-   :param k_u: Voltage utilization factor. The default is 0.95.
-   :type k_u: float, optional
 
 
 

@@ -32,339 +32,25 @@ Classes
 
 .. autoapisummary::
 
-   motulator.drive.control.sm.Observer
-   motulator.drive.control.sm.ObserverCfg
-   motulator.drive.control.sm.FluxTorqueReference
-   motulator.drive.control.sm.FluxTorqueReferenceCfg
-   motulator.drive.control.sm.FluxVectorControl
    motulator.drive.control.sm.CurrentController
    motulator.drive.control.sm.CurrentReference
    motulator.drive.control.sm.CurrentReferenceCfg
    motulator.drive.control.sm.CurrentVectorControl
+   motulator.drive.control.sm.FluxTorqueReference
+   motulator.drive.control.sm.FluxTorqueReferenceCfg
+   motulator.drive.control.sm.FluxVectorControl
+   motulator.drive.control.sm.Observer
    motulator.drive.control.sm.ObserverBasedVHzControl
    motulator.drive.control.sm.ObserverBasedVHzControlCfg
+   motulator.drive.control.sm.ObserverCfg
    motulator.drive.control.sm.SignalInjection
    motulator.drive.control.sm.SignalInjectionControl
-   motulator.drive.control.sm.TorqueCharacteristics
    motulator.drive.control.sm.SpeedController
+   motulator.drive.control.sm.TorqueCharacteristics
 
 
 Package Contents
 ----------------
-
-.. py:class:: Observer(cfg)
-
-   
-   Observer for synchronous machines in estimated rotor coordinates.
-
-   This observer estimates the stator flux linkage, the rotor angle, the rotor
-   speed, and (optionally) the PM-flux linkage. The design is based on
-   [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and
-   mechanical dynamics and allows placing the poles of the corresponding
-   linearized estimation error dynamics. The PM-flux linkage can also be
-   estimated [#Tuo2018]_. The observer can also be used in the sensored mode,
-   in which case the control system is fixed to the measured rotor angle.
-
-   :param cfg: Observer configuration.
-   :type cfg: ObserverCfg
-
-   .. rubric:: References
-
-   .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
-      sensorless synchronous motor drives: Framework for design and analysis,"
-      IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
-
-   .. [#Tuo2018] Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, "Permanent-
-      magnet flux adaptation for sensorless synchronous motor drives," Proc.
-      IEEE SLED, 2018, https://doi.org/10.1109/SLED.2018.8485899
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: output(fbk)
-
-      
-      Compute the feedback signals for the control system.
-
-      :param fbk:
-                  Measured signals, which should contain the following fields:
-
-                      u_ss : complex
-                          Stator voltage (V) in stator coordinates.
-                      i_ss : complex
-                          Stator current (A) in stator coordinates.
-                      w_m : float, optional
-                          Rotor angular speed (electrical rad/s). This is only needed
-                          in the sensored mode.
-                      theta_m : float, optional
-                          Rotor angle (electrical rad). This is only needed in the
-                          sensored mode.
-      :type fbk: SimpleNamespace
-
-      :returns: **fbk** -- Measured and estimated feedback signals for the control system,
-                containing at least the following fields:
-
-                    u_s : complex
-                        Stator voltage (V) in estimated rotor coordinates.
-                    i_s : complex
-                        Stator current (A) in estimated rotor coordinates.
-                    psi_f : float
-                        PM-flux magnitude estimate (Vs).
-                    theta_m : float
-                        Rotor angle estimate (electrical rad).
-                    w_s : float
-                        Angular frequency (rad/s) of the coordinate system.
-                    w_m : float
-                        Rotor speed estimate (electrical rad/s).
-                    psi_s : complex
-                        Stator flux estimate (Vs).
-      :rtype: SimpleNamespace
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update(T_s, fbk)
-
-      
-      Update the state estimates.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: ObserverCfg
-
-   
-   Observer configuration.
-
-   :param par: Machine model parameters.
-   :type par: SynchronousMachinePars
-   :param sensorless: If True, sensorless mode is used.
-   :type sensorless: bool
-   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
-   :type alpha_o: float, optional
-   :param k_o: Observer gain as a function of the rotor angular speed. The default is
-               ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
-               `sensorless` else ``lambda w_m: 2*pi*15``.
-   :type k_o: callable, optional
-   :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
-               The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of
-               the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below
-               the speed `w_min` (rad/s) and linearly increasing above that with the
-               slope `k` (Vs).
-   :type k_f: callable, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: FluxTorqueReference(cfg)
-
-   
-   Flux and torque references.
-
-   The current and MTPV limits as well as the MTPA locus are implemented as
-   look-up tables, which are generated based on the constant machine model
-   parameters.
-
-   :param cfg: Reference generation configuration.
-   :type cfg: FluxTorqueReferenceCfg
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: FluxTorqueReferenceCfg
-
-   
-   Reference generation configuration.
-
-   :param par: Machine model parameters.
-   :type par: SynchronousMachinePars
-   :param max_i_s: Maximum stator current (A).
-   :type max_i_s: float
-   :param min_psi_s: Minimum stator flux (Vs). The default is `par.psi_f`.
-   :type min_psi_s: float, optional
-   :param max_psi_s: Maximum stator flux (Vs). The default is inf.
-   :type max_psi_s: float, optional
-   :param k_u: Voltage utilization factor. The default is 0.95.
-   :type k_u: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: FluxVectorControl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_o=2 * np.pi * 100, J=None, T_s=0.00025, sensorless=True)
-
-   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
-
-
-   
-   Flux-vector control of synchronous machine drives.
-
-   This class implements a variant of flux-vector control [#Pel2009]_. Rotor
-   coordinates as well as decoupling between the stator flux and torque
-   channels are used according to [#Awa2019b]_. Here, the stator flux
-   magnitude and the electromagnetic torque are selected as controllable
-   variables, and proportional controllers are used for simplicity
-   [#Tii2024]_. The magnetic saturation is not considered in this
-   implementation.
-
-   :param par: Machine model parameters.
-   :type par: SynchronousMachinePars
-   :param cfg: Reference generation configuration.
-   :type cfg: FluxTorqueReferenceCfg
-   :param alpha_psi: Flux-control bandwidth (rad/s). The default is 2*pi*100.
-   :type alpha_psi: float, optional
-   :param alpha_tau: Torque-control bandwidth (rad/s). The default is 2*pi*200.
-   :type alpha_tau: float, optional
-   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*100.
-   :type alpha_o: float, optional
-   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
-   :type J: float, optional
-   :param T_s: Sampling period (s). The default is 250e-6.
-   :type T_s: float
-   :param sensorless: If True, sensorless control is used. The default is True.
-   :type sensorless: bool, optional
-
-   .. rubric:: References
-
-   .. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented
-      control of IPM drives with variable DC link in the field-weakening
-      region,” IEEE Trans.Ind. Appl., 2009,
-      https://doi.org/10.1109/TIA.2009.2027167
-
-   .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented
-      control of synchronous motors: A systematic design procedure," IEEE
-      Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
-
-   .. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for
-      sensorless control of synchronous machine drives," IEEE Trans. Ind.
-      Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: output(fbk)
-
-      
-      Calculate references.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
 .. py:class:: CurrentController(par, alpha_c)
 
@@ -730,6 +416,281 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: FluxTorqueReference(cfg)
+
+   
+   Flux and torque references.
+
+   The current and MTPV limits as well as the MTPA locus are implemented as
+   look-up tables, which are generated based on the constant machine model
+   parameters.
+
+   :param cfg: Reference generation configuration.
+   :type cfg: FluxTorqueReferenceCfg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: FluxTorqueReferenceCfg
+
+   
+   Reference generation configuration.
+
+   :param par: Machine model parameters.
+   :type par: SynchronousMachinePars
+   :param max_i_s: Maximum stator current (A).
+   :type max_i_s: float
+   :param min_psi_s: Minimum stator flux (Vs). The default is `par.psi_f`.
+   :type min_psi_s: float, optional
+   :param max_psi_s: Maximum stator flux (Vs). The default is inf.
+   :type max_psi_s: float, optional
+   :param k_u: Voltage utilization factor. The default is 0.95.
+   :type k_u: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: FluxVectorControl(par, cfg, alpha_psi=2 * np.pi * 100, alpha_tau=2 * np.pi * 200, alpha_o=2 * np.pi * 100, J=None, T_s=0.00025, sensorless=True)
+
+   Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
+
+
+   
+   Flux-vector control of synchronous machine drives.
+
+   This class implements a variant of flux-vector control [#Pel2009]_. Rotor
+   coordinates as well as decoupling between the stator flux and torque
+   channels are used according to [#Awa2019b]_. Here, the stator flux
+   magnitude and the electromagnetic torque are selected as controllable
+   variables, and proportional controllers are used for simplicity
+   [#Tii2024]_. The magnetic saturation is not considered in this
+   implementation.
+
+   :param par: Machine model parameters.
+   :type par: SynchronousMachinePars
+   :param cfg: Reference generation configuration.
+   :type cfg: FluxTorqueReferenceCfg
+   :param alpha_psi: Flux-control bandwidth (rad/s). The default is 2*pi*100.
+   :type alpha_psi: float, optional
+   :param alpha_tau: Torque-control bandwidth (rad/s). The default is 2*pi*200.
+   :type alpha_tau: float, optional
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*100.
+   :type alpha_o: float, optional
+   :param J: Moment of inertia (kgm²). Needed only for the speed controller.
+   :type J: float, optional
+   :param T_s: Sampling period (s). The default is 250e-6.
+   :type T_s: float
+   :param sensorless: If True, sensorless control is used. The default is True.
+   :type sensorless: bool, optional
+
+   .. rubric:: References
+
+   .. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented
+      control of IPM drives with variable DC link in the field-weakening
+      region,” IEEE Trans.Ind. Appl., 2009,
+      https://doi.org/10.1109/TIA.2009.2027167
+
+   .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented
+      control of synchronous motors: A systematic design procedure," IEEE
+      Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+
+   .. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for
+      sensorless control of synchronous machine drives," IEEE Trans. Ind.
+      Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(fbk)
+
+      
+      Calculate references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Observer(cfg)
+
+   
+   Observer for synchronous machines in estimated rotor coordinates.
+
+   This observer estimates the stator flux linkage, the rotor angle, the rotor
+   speed, and (optionally) the PM-flux linkage. The design is based on
+   [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and
+   mechanical dynamics and allows placing the poles of the corresponding
+   linearized estimation error dynamics. The PM-flux linkage can also be
+   estimated [#Tuo2018]_. The observer can also be used in the sensored mode,
+   in which case the control system is fixed to the measured rotor angle.
+
+   :param cfg: Observer configuration.
+   :type cfg: ObserverCfg
+
+   .. rubric:: References
+
+   .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
+      sensorless synchronous motor drives: Framework for design and analysis,"
+      IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
+
+   .. [#Tuo2018] Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, "Permanent-
+      magnet flux adaptation for sensorless synchronous motor drives," Proc.
+      IEEE SLED, 2018, https://doi.org/10.1109/SLED.2018.8485899
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: output(fbk)
+
+      
+      Compute the feedback signals for the control system.
+
+      :param fbk:
+                  Measured signals, which should contain the following fields:
+
+                      u_ss : complex
+                          Stator voltage (V) in stator coordinates.
+                      i_ss : complex
+                          Stator current (A) in stator coordinates.
+                      w_m : float, optional
+                          Rotor angular speed (electrical rad/s). This is only needed
+                          in the sensored mode.
+                      theta_m : float, optional
+                          Rotor angle (electrical rad). This is only needed in the
+                          sensored mode.
+      :type fbk: SimpleNamespace
+
+      :returns: **fbk** -- Measured and estimated feedback signals for the control system,
+                containing at least the following fields:
+
+                    u_s : complex
+                        Stator voltage (V) in estimated rotor coordinates.
+                    i_s : complex
+                        Stator current (A) in estimated rotor coordinates.
+                    psi_f : float
+                        PM-flux magnitude estimate (Vs).
+                    theta_m : float
+                        Rotor angle estimate (electrical rad).
+                    w_s : float
+                        Angular frequency (rad/s) of the coordinate system.
+                    w_m : float
+                        Rotor speed estimate (electrical rad/s).
+                    psi_s : complex
+                        Stator flux estimate (Vs).
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, fbk)
+
+      
+      Update the state estimates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: ObserverBasedVHzControl(par, cfg, T_s=0.00025)
 
    Bases: :py:obj:`motulator.drive.control.DriveControlSystem`
@@ -850,6 +811,45 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+.. py:class:: ObserverCfg
+
+   
+   Observer configuration.
+
+   :param par: Machine model parameters.
+   :type par: SynchronousMachinePars
+   :param sensorless: If True, sensorless mode is used.
+   :type sensorless: bool
+   :param alpha_o: Observer bandwidth (rad/s). The default is 2*pi*40.
+   :type alpha_o: float, optional
+   :param k_o: Observer gain as a function of the rotor angular speed. The default is
+               ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
+               `sensorless` else ``lambda w_m: 2*pi*15``.
+   :type k_o: callable, optional
+   :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
+               The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of
+               the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below
+               the speed `w_min` (rad/s) and linearly increasing above that with the
+               slope `k` (Vs).
+   :type k_f: callable, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: SignalInjection(par, U_inj)
 
    
@@ -882,18 +882,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(T_s, i_sq)
+   .. py:method:: filter_current(i_s)
 
       
-      Compute the rotor position estimation error.
+      Filter the stator current using the previously measured value.
 
-      :param T_s: Sampling period (s).
-      :type T_s: float
-      :param i_sq: q-axis stator current (A) in estimated rotor coordinates.
-      :type i_sq: float
+      :param i_s: Unfiltered stator current (A) in estimated rotor coordinates.
+      :type i_s: complex
 
-      :returns: **err** -- Rotor position estimation error (electrical rad).
-      :rtype: float
+      :returns: **i_s_flt** -- Filtered stator current (A) in estimated rotor coordinates.
+      :rtype: complex
 
 
 
@@ -913,16 +911,18 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: filter_current(i_s)
+   .. py:method:: output(T_s, i_sq)
 
       
-      Filter the stator current using the previously measured value.
+      Compute the rotor position estimation error.
 
-      :param i_s: Unfiltered stator current (A) in estimated rotor coordinates.
-      :type i_s: complex
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param i_sq: q-axis stator current (A) in estimated rotor coordinates.
+      :type i_sq: float
 
-      :returns: **i_s_flt** -- Filtered stator current (A) in estimated rotor coordinates.
-      :rtype: complex
+      :returns: **err** -- Rotor position estimation error (electrical rad).
+      :rtype: float
 
 
 
@@ -1090,6 +1090,41 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: SpeedController(J, alpha_s, max_tau_M=np.inf)
+
+   Bases: :py:obj:`motulator.common.control.PIController`
+
+
+   
+   2DOF PI speed controller.
+
+   This is an interface for a speed controller. The gains are initialized
+   based on the desired closed-loop bandwidth and the rotor inertia estimate.
+
+   :param J: Total inertia of the rotor (kgm²).
+   :type J: float
+   :param alpha_s: Closed-loop bandwidth (rad/s).
+   :type alpha_s: float
+   :param max_tau_M: Maximum motor torque (Nm). The default is `inf`.
+   :type max_tau_M: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: TorqueCharacteristics(par)
 
    
@@ -1115,16 +1150,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: torque(psi_s)
+   .. py:method:: current(psi_s)
 
       
-      Compute the torque as a function of the stator flux linkage.
+      Compute the stator current as a function of the stator flux linkage.
 
-      :param psi_s: Stator flux (Vs).
+      :param psi_s: Stator flux linkage (Vs).
       :type psi_s: complex
 
-      :returns: **tau_M** -- Electromagnetic torque (Nm).
-      :rtype: float
+      :returns: **i_s** -- Stator current (A).
+      :rtype: complex
 
 
 
@@ -1144,16 +1179,31 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: current(psi_s)
+   .. py:method:: current_limit(max_i_s, gamma1=np.pi, gamma2=0, N=20)
 
       
-      Compute the stator current as a function of the stator flux linkage.
+      Compute the current limit.
 
-      :param psi_s: Stator flux linkage (Vs).
-      :type psi_s: complex
+      :param max_i_s: Current limit (A).
+      :type max_i_s: float
+      :param gamma1: Starting angle (electrical rad). The default is 0.
+      :type gamma1: float, optional
+      :param gamma2: End angle (electrical rad). The default is pi.
+      :type gamma2: float, optional
+      :param N: Amount of points. The default is 20.
+      :type N: int, optional
 
-      :returns: **i_s** -- Stator current (A).
-      :rtype: complex
+      :returns: **Object with the following fields defined** --
+
+                psi_s : complex
+                    Stator flux (Vs).
+                i_s : complex
+                    Stator current (A).
+                tau_M : float
+                    Electromagnetic torque (Nm).
+                tau_M_vs_abs_psi_s : interp1d object
+                    Torque (Nm) as a function of the flux magnitude (Vs).
+      :rtype: SimpleNamespace
 
 
 
@@ -1231,6 +1281,51 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: mtpa_locus(max_i_s, min_psi_s=None, N=20)
+
+      
+      Compute the MTPA locus.
+
+      :param max_i_s: Maximum stator current magnitude (A) at which the locus is
+                      computed.
+      :type max_i_s: float
+      :param min_psi_s: Minimum stator flux magnitude (Vs) at which the locus is computed.
+      :type min_psi_s: float, optional
+      :param N: Amount of points. The default is 20.
+      :type N: int, optional
+
+      :returns: **Object with the following fields defined** --
+
+                psi_s : complex
+                    Stator flux (Vs).
+                i_s : complex
+                    Stator current (A).
+                tau_M : float
+                    Electromagnetic torque (Nm).
+                abs_psi_s_vs_tau_M : callable
+                    Stator flux magnitude (Vs) as a function of the torque (Nm).
+                i_sd_vs_tau_M : callable
+                    d-axis current (A) as a function of the torque (Nm).
+      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: mtpv(abs_psi_s)
 
       
@@ -1241,6 +1336,42 @@ Package Contents
 
       :returns: **delta** -- MTPV angle of the stator flux vector (electrical rad).
       :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: mtpv_and_current_limits(max_i_s, N=20)
+
+      
+      Merge the MTPV and current limits into a single interpolant.
+
+      :param max_i_s: Current limit (A).
+      :type max_i_s: float
+      :param N: Amount of points. The default is 20.
+      :type N: int, optional
+
+      :returns: **Object with the following fields defined** --
+
+                tau_M_vs_abs_psi_s : interp1d object
+                    Torque (Nm) as a function of the flux magnitude (Vs).
+                i_sd_vs_tau_M : interp1d object
+                    d-axis current (A) as a function of the torque (Nm).
+      :rtype: SimpleNamespace
 
 
 
@@ -1277,51 +1408,6 @@ Package Contents
 
       :returns: **i_s** -- MTPV stator current (A).
       :rtype: complex
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: mtpa_locus(max_i_s, min_psi_s=None, N=20)
-
-      
-      Compute the MTPA locus.
-
-      :param max_i_s: Maximum stator current magnitude (A) at which the locus is
-                      computed.
-      :type max_i_s: float
-      :param min_psi_s: Minimum stator flux magnitude (Vs) at which the locus is computed.
-      :type min_psi_s: float, optional
-      :param N: Amount of points. The default is 20.
-      :type N: int, optional
-
-      :returns: **Object with the following fields defined** --
-
-                psi_s : complex
-                    Stator flux (Vs).
-                i_s : complex
-                    Stator current (A).
-                tau_M : float
-                    Electromagnetic torque (Nm).
-                abs_psi_s_vs_tau_M : callable
-                    Stator flux magnitude (Vs) as a function of the torque (Nm).
-                i_sd_vs_tau_M : callable
-                    d-axis current (A) as a function of the torque (Nm).
-      :rtype: SimpleNamespace
 
 
 
@@ -1385,90 +1471,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: current_limit(max_i_s, gamma1=np.pi, gamma2=0, N=20)
+   .. py:method:: plot_current_loci(max_i_s, base, N=20)
 
       
-      Compute the current limit.
-
-      :param max_i_s: Current limit (A).
-      :type max_i_s: float
-      :param gamma1: Starting angle (electrical rad). The default is 0.
-      :type gamma1: float, optional
-      :param gamma2: End angle (electrical rad). The default is pi.
-      :type gamma2: float, optional
-      :param N: Amount of points. The default is 20.
-      :type N: int, optional
-
-      :returns: **Object with the following fields defined** --
-
-                psi_s : complex
-                    Stator flux (Vs).
-                i_s : complex
-                    Stator current (A).
-                tau_M : float
-                    Electromagnetic torque (Nm).
-                tau_M_vs_abs_psi_s : interp1d object
-                    Torque (Nm) as a function of the flux magnitude (Vs).
-      :rtype: SimpleNamespace
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: mtpv_and_current_limits(max_i_s, N=20)
-
-      
-      Merge the MTPV and current limits into a single interpolant.
-
-      :param max_i_s: Current limit (A).
-      :type max_i_s: float
-      :param N: Amount of points. The default is 20.
-      :type N: int, optional
-
-      :returns: **Object with the following fields defined** --
-
-                tau_M_vs_abs_psi_s : interp1d object
-                    Torque (Nm) as a function of the flux magnitude (Vs).
-                i_sd_vs_tau_M : interp1d object
-                    d-axis current (A) as a function of the torque (Nm).
-      :rtype: SimpleNamespace
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: plot_flux_loci(max_i_s, base, N=20)
-
-      
-      Plot the stator flux linkage loci.
+      Plot the current loci.
 
       :param max_i_s: Maximum current (A) at which the loci are evaluated.
       :type max_i_s: float
@@ -1495,10 +1501,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: plot_current_loci(max_i_s, base, N=20)
+   .. py:method:: plot_flux_loci(max_i_s, base, N=20)
 
       
-      Plot the current loci.
+      Plot the stator flux linkage loci.
 
       :param max_i_s: Maximum current (A) at which the loci are evaluated.
       :type max_i_s: float
@@ -1585,23 +1591,16 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SpeedController(J, alpha_s, max_tau_M=np.inf)
+   .. py:method:: torque(psi_s)
 
-   Bases: :py:obj:`motulator.common.control.PIController`
+      
+      Compute the torque as a function of the stator flux linkage.
 
+      :param psi_s: Stator flux (Vs).
+      :type psi_s: complex
 
-   
-   2DOF PI speed controller.
-
-   This is an interface for a speed controller. The gains are initialized
-   based on the desired closed-loop bandwidth and the rotor inertia estimate.
-
-   :param J: Total inertia of the rotor (kgm²).
-   :type J: float
-   :param alpha_s: Closed-loop bandwidth (rad/s).
-   :type alpha_s: float
-   :param max_tau_M: Maximum motor torque (Nm). The default is `inf`.
-   :type max_tau_M: float, optional
+      :returns: **tau_M** -- Electromagnetic torque (Nm).
+      :rtype: float
 
 
 
@@ -1617,6 +1616,7 @@ Package Contents
 
 
 
-   ..
-       !! processed by numpydoc !!
+      ..
+          !! processed by numpydoc !!
+
 

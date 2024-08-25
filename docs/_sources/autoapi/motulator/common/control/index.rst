@@ -289,6 +289,46 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: main(mdl)
+
+      
+      Main control loop.
+
+      This method runs the main control loop, having the following structure:
+
+      1. Get the feedback signals. This step may contain first getting the
+         measurements and then optionally computing the observer outputs.
+      2. Compute the reference signals (controller outputs) based on the
+         feedback signals.
+      3. Update the control system states for the next sampling instant.
+      4. Save the feedback signals and the reference signals.
+      5. Return the sampling period `T_s` and the duty ratios `d_abc` for the
+         carrier comparison.
+
+      :param mdl: Continuous-time system model.
+      :type mdl: Model
+
+      :returns: * **T_s** (*float*) -- Sampling period (s).
+                * **d_abc** (*ndarray, shape (3,)*) -- Duty ratios.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: output(fbk)
       :abstractmethod:
 
@@ -327,17 +367,13 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(fbk, ref)
-      :abstractmethod:
-
+   .. py:method:: post_process()
 
       
-      Update the states.
+      Transform the lists to the ndarray format.
 
-      :param fbk: Feedback signals.
-      :type fbk: SimpleNamespace
-      :param ref: Reference signals.
-      :type ref: SimpleNamespace
+      This method can be run after the simulation has been completed in order
+      to simplify plotting and analysis of the stored data.
 
 
 
@@ -387,53 +423,17 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process()
+   .. py:method:: update(fbk, ref)
+      :abstractmethod:
+
 
       
-      Transform the lists to the ndarray format.
+      Update the states.
 
-      This method can be run after the simulation has been completed in order
-      to simplify plotting and analysis of the stored data.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: main(mdl)
-
-      
-      Main control loop.
-
-      This method runs the main control loop, having the following structure:
-
-      1. Get the feedback signals. This step may contain first getting the
-         measurements and then optionally computing the observer outputs.
-      2. Compute the reference signals (controller outputs) based on the
-         feedback signals.
-      3. Update the control system states for the next sampling instant.
-      4. Save the feedback signals and the reference signals.
-      5. Return the sampling period `T_s` and the duty ratios `d_abc` for the
-         carrier comparison.
-
-      :param mdl: Continuous-time system model.
-      :type mdl: Model
-
-      :returns: * **T_s** (*float*) -- Sampling period (s).
-                * **d_abc** (*ndarray, shape (3,)*) -- Duty ratios.
+      :param fbk: Feedback signals.
+      :type fbk: SimpleNamespace
+      :param ref: Reference signals.
+      :type ref: SimpleNamespace
 
 
 
@@ -604,30 +604,18 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: six_step_overmodulation(ref_u_cs, u_dc)
-      :staticmethod:
-
+   .. py:method:: duty_ratios(ref_u_cs, u_dc)
 
       
-      Overmodulation up to six-step operation.
-
-      This method modifies the angle of the voltage reference vector in the
-      overmodulation region such that the six-step operation is reached
-      [#Bol1997]_.
+      Compute the duty ratios for three-phase space-vector PWM.
 
       :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
       :type ref_u_cs: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: **ref_u_cs** -- Modified converter voltage reference (V) in stationary coordinates.
-      :rtype: complex
-
-      .. rubric:: References
-
-      .. [#Bol1997] Bolognani, Zigliotto, "Novel digital continuous control
-         of SVM inverters in the overmodulation range," IEEE Trans. Ind.
-         Appl., 1997, https://doi.org/10.1109/28.568019
+      :returns: **d_abc** -- Duty ratios.
+      :rtype: ndarray, shape (3,)
 
 
 
@@ -647,18 +635,14 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: duty_ratios(ref_u_cs, u_dc)
+   .. py:method:: get_realized_voltage()
 
       
-      Compute the duty ratios for three-phase space-vector PWM.
+      Get the realized voltage.
 
-      :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
-      :type ref_u_cs: complex
-      :param u_dc: DC-bus voltage (V).
-      :type u_dc: float
-
-      :returns: **d_abc** -- Duty ratios.
-      :rtype: ndarray, shape (3,)
+      :returns: **realized_voltage** -- Realized converter voltage (V) in stationary coordinates. The
+                effect of the digital delays on the angle are compensated for.
+      :rtype: complex
 
 
 
@@ -713,14 +697,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_realized_voltage()
+   .. py:method:: six_step_overmodulation(ref_u_cs, u_dc)
+      :staticmethod:
+
 
       
-      Get the realized voltage.
+      Overmodulation up to six-step operation.
 
-      :returns: **realized_voltage** -- Realized converter voltage (V) in stationary coordinates. The
-                effect of the digital delays on the angle are compensated for.
+      This method modifies the angle of the voltage reference vector in the
+      overmodulation region such that the six-step operation is reached
+      [#Bol1997]_.
+
+      :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
+      :type ref_u_cs: complex
+      :param u_dc: DC-bus voltage (V).
+      :type u_dc: float
+
+      :returns: **ref_u_cs** -- Modified converter voltage reference (V) in stationary coordinates.
       :rtype: complex
+
+      .. rubric:: References
+
+      .. [#Bol1997] Bolognani, Zigliotto, "Novel digital continuous control
+         of SVM inverters in the overmodulation range," IEEE Trans. Ind.
+         Appl., 1997, https://doi.org/10.1109/28.568019
 
 
 

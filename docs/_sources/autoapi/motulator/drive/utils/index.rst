@@ -33,13 +33,13 @@ Classes
 .. autoapisummary::
 
    motulator.drive.utils.BaseValues
-   motulator.drive.utils.NominalValues
    motulator.drive.utils.InductionMachineInvGammaPars
    motulator.drive.utils.InductionMachinePars
-   motulator.drive.utils.SynchronousMachinePars
-   motulator.drive.utils.TwoMassMechanicalSystemPars
+   motulator.drive.utils.NominalValues
    motulator.drive.utils.Sequence
    motulator.drive.utils.Step
+   motulator.drive.utils.SynchronousMachinePars
+   motulator.drive.utils.TwoMassMechanicalSystemPars
 
 
 Functions
@@ -47,9 +47,9 @@ Functions
 
 .. autoapisummary::
 
+   motulator.drive.utils.import_syre_data
    motulator.drive.utils.plot
    motulator.drive.utils.plot_extra
-   motulator.drive.utils.import_syre_data
    motulator.drive.utils.plot_flux_map
    motulator.drive.utils.plot_flux_vs_current
    motulator.drive.utils.plot_torque_map
@@ -77,10 +77,12 @@ Package Contents
    :type Z: float
    :param L: Inductance (H).
    :type L: float
-   :param tau: Torque (Nm).
-   :type tau: float
-   :param n_p: Number of pole pairs.
-   :type n_p: int
+   :param C: Capacitance (F).
+   :type C: float
+   :param tau: Torque (Nm). Default is None.
+   :type tau: float, optional
+   :param n_p: Number of pole pairs. Default is None.
+   :type n_p: int, optional
 
 
 
@@ -99,7 +101,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: from_nominal(nom, n_p)
+   .. py:method:: from_nominal(nom, n_p=None)
       :classmethod:
 
 
@@ -116,8 +118,9 @@ Package Contents
                       f : float
                           Frequency (Hz).
       :type nom: NominalValues
-      :param n_p: Number of pole pairs.
-      :type n_p: int
+      :param n_p: Number of pole pairs. If not given it is assumed that base values
+                  for a grid converter are calculated. Default is None.
+      :type n_p: int, optional
 
       :returns: Base values.
       :rtype: BaseValues
@@ -144,39 +147,6 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
-
-.. py:class:: NominalValues
-
-   
-   Nominal values.
-
-   :param U: Voltage (V, rms, line-line).
-   :type U: float
-   :param I: Current (A, rms).
-   :type I: float
-   :param f: Frequency (Hz).
-   :type f: float
-   :param P: Power (W).
-   :type P: float
-   :param tau: Torque (Nm).
-   :type tau: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 
 .. py:class:: InductionMachineInvGammaPars
 
@@ -316,6 +286,94 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: NominalValues
+
+   
+   Nominal values.
+
+   :param U: Voltage (V, rms, line-line).
+   :type U: float
+   :param I: Current (A, rms).
+   :type I: float
+   :param f: Frequency (Hz).
+   :type f: float
+   :param P: Power (W).
+   :type P: float
+   :param tau: Torque (Nm). Default value is None.
+   :type tau: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Sequence(times, values, periodic=False)
+
+   
+   Sequence generator.
+
+   The time array must be increasing. The output values are interpolated
+   between the data points.
+
+   :param times: Time values.
+   :type times: ndarray
+   :param values: Output values.
+   :type values: ndarray
+   :param periodic: Enables periodicity. The default is False.
+   :type periodic: bool, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Step(step_time, step_value, initial_value=0)
+
+   
+   Step function.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: SynchronousMachinePars
 
    Bases: :py:obj:`MachinePars`
@@ -370,6 +428,51 @@ Package Contents
                example, choosing ``B_L = lambda w_L: k*abs(w_M)`` leads to the
                quadratic load torque ``k*w_L**2``. The default is ``B_L = 0``.
    :type B_L: float | callable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: import_syre_data(fname, add_negative_q_axis=True)
+
+   
+   Import a flux map from the MATLAB data file in the SyR-e format.
+
+   For more information on the SyR-e project and the MATLAB file format,
+   please visit:
+
+       https://github.com/SyR-e/syre_public
+
+   The imported data is converted to the PMSM coordinate convention, in which
+   the PM flux is along the d axis.
+
+   :param fname: MATLAB file name.
+   :type fname: str
+   :param add_negative_q_axis: Adds the negative q-axis data based on the symmetry.
+   :type add_negative_q_axis: bool, optional
+
+   :returns: * *SimpleNamespace object with the following fields defined*
+             * **i_s** (*complex ndarray*) -- Stator current data (A).
+             * **psi_s** (*complex ndarray*) -- Stator flux linkage data (Vs).
+             * **tau_M** (*ndarray*) -- Torque data (Nm).
+
+   .. rubric:: Notes
+
+   Some example data files (including THOR.mat) are available in the SyR-e
+   repository, licensed under the Apache License, Version 2.0.
 
 
 
@@ -449,51 +552,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: import_syre_data(fname, add_negative_q_axis=True)
-
-   
-   Import a flux map from the MATLAB data file in the SyR-e format.
-
-   For more information on the SyR-e project and the MATLAB file format,
-   please visit:
-
-       https://github.com/SyR-e/syre_public
-
-   The imported data is converted to the PMSM coordinate convention, in which
-   the PM flux is along the d axis.
-
-   :param fname: MATLAB file name.
-   :type fname: str
-   :param add_negative_q_axis: Adds the negative q-axis data based on the symmetry.
-   :type add_negative_q_axis: bool, optional
-
-   :returns: * *SimpleNamespace object with the following fields defined*
-             * **i_s** (*complex ndarray*) -- Stator current data (A).
-             * **psi_s** (*complex ndarray*) -- Stator flux linkage data (Vs).
-             * **tau_M** (*ndarray*) -- Torque data (Nm).
-
-   .. rubric:: Notes
-
-   Some example data files (including THOR.mat) are available in the SyR-e
-   repository, licensed under the Apache License, Version 2.0.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
 .. py:function:: plot_flux_map(data)
 
    
@@ -551,61 +609,6 @@ Package Contents
 
    :param data: Flux map data.
    :type data: SimpleNamespace
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: Sequence(times, values, periodic=False)
-
-   
-   Sequence generator.
-
-   The time array must be increasing. The output values are interpolated
-   between the data points.
-
-   :param times: Time values.
-   :type times: ndarray
-   :param values: Output values.
-   :type values: ndarray
-   :param periodic: Enables periodicity. The default is False.
-   :type periodic: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: Step(step_time, step_value, initial_value=0)
-
-   
-   Step function.
-
 
 
 

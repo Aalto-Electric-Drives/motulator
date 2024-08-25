@@ -51,7 +51,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/motulator/grid/control/index';</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="motulator.grid.control.grid_following" href="grid_following/index.html" />
+    <link rel="next" title="motulator.grid.model" href="../model/index.html" />
     <link rel="prev" title="motulator.grid" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -141,18 +141,106 @@
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_following/index.html">Grid-Following Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/system.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/converters.html">Converters</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drive System</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/machines.html">Electric Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/mechanics.html">Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/ac_filter.html">Output LC Filter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converter System</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Grid Voltage Source</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design Notes on Control Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../control/control_system.html">Control Systems</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/synchronization.html">Synchronization Methods</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class references</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../common/control/index.html">motulator.common.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../common/model/index.html">motulator.common.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../common/utils/index.html">motulator.common.utils</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive/index.html">motulator.drive</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../drive/control/index.html">motulator.drive.control</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive/index.html">motulator.drive</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../drive/control/index.html">motulator.drive.control</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../drive/control/im/index.html">motulator.drive.control.im</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
@@ -161,80 +249,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../../drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">motulator.grid</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3 current active has-children"><a class="current reference internal" href="#">motulator.grid.control</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="grid_following/index.html">motulator.grid.control.grid_following</a></li>
-<li class="toctree-l4"><a class="reference internal" href="grid_forming/index.html">motulator.grid.control.grid_forming</a></li>
-</ul>
-</li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">motulator.grid</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">motulator.grid.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../model/index.html">motulator.grid.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utils/index.html">motulator.grid.utils</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/system.html">Drive System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/machines.html">Electric Machines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/mechanics.html">Mechanics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/converters.html">Converters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/ac_filter.html">Output LC Filter</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/design_notes.html">Design Notes</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/speed_ctrl.html">Speed Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/observers.html">Observers</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../auto_examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/grid_following/index.html">Grid-Following Control</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../auto_examples/grid_forming/index.html">Grid-Forming Control</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../auto_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
 </ul>
 </li>
 </ul>
@@ -402,11 +420,25 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentController"><code class="docutils literal notranslate"><span class="pre">CurrentController</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentLimiter"><code class="docutils literal notranslate"><span class="pre">CurrentLimiter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentRefCalc"><code class="docutils literal notranslate"><span class="pre">CurrentRefCalc</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentRefCalc.get_current_reference"><code class="docutils literal notranslate"><span class="pre">CurrentRefCalc.get_current_reference()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl"><code class="docutils literal notranslate"><span class="pre">GFLControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.current_ctrl"><code class="docutils literal notranslate"><span class="pre">GFLControl.current_ctrl</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.pll"><code class="docutils literal notranslate"><span class="pre">GFLControl.pll</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.current_reference"><code class="docutils literal notranslate"><span class="pre">GFLControl.current_reference</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">GFLControl.get_feedback_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.output"><code class="docutils literal notranslate"><span class="pre">GFLControl.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.update"><code class="docutils literal notranslate"><span class="pre">GFLControl.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControlCfg"><code class="docutils literal notranslate"><span class="pre">GFLControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.ref</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_volt_ctrl"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.dc_bus_volt_ctrl</span></code></a></li>
@@ -416,11 +448,25 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.update"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControl"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.get_feedback_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControl.output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControl.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControlCfg"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL"><code class="docutils literal notranslate"><span class="pre">PLL</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.output"><code class="docutils literal notranslate"><span class="pre">PLL.output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.update"><code class="docutils literal notranslate"><span class="pre">PLL.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControl"><code class="docutils literal notranslate"><span class="pre">RFPSCControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">RFPSCControl.get_feedback_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControl.output"><code class="docutils literal notranslate"><span class="pre">RFPSCControl.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControl.update"><code class="docutils literal notranslate"><span class="pre">RFPSCControl.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControlCfg"><code class="docutils literal notranslate"><span class="pre">RFPSCControlCfg</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -437,36 +483,75 @@ document.write(`
   <section id="module-motulator.grid.control">
 <span id="motulator-grid-control"></span><h1>motulator.grid.control<a class="headerlink" href="#module-motulator.grid.control" title="Permalink to this heading">#</a></h1>
 <p>Controllers for grid-connected converters.</p>
-<section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">#</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="grid_following/index.html">motulator.grid.control.grid_following</a></li>
-<li class="toctree-l1"><a class="reference internal" href="grid_forming/index.html">motulator.grid.control.grid_forming</a></li>
-</ul>
-</div>
-</section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.CurrentLimiter" title="motulator.grid.control.CurrentLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentLimiter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.CurrentController" title="motulator.grid.control.CurrentController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentController</span></code></a></p></td>
+<td><p>2DOF PI current controller for grid converters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.CurrentLimiter" title="motulator.grid.control.CurrentLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentLimiter</span></code></a></p></td>
 <td><p>Limit the amplitude of the input signal.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.CurrentRefCalc" title="motulator.grid.control.CurrentRefCalc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentRefCalc</span></code></a></p></td>
+<td><p>Current controller reference generator</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a></p></td>
 <td><p>DC-bus voltage controller.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.GFLControl" title="motulator.grid.control.GFLControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GFLControl</span></code></a></p></td>
+<td><p>Grid-following control for power converters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.GFLControlCfg" title="motulator.grid.control.GFLControlCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GFLControlCfg</span></code></a></p></td>
+<td><p>Grid-following control configuration</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p></td>
 <td><p>Base class for control of grid-connected converters.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGFMControl" title="motulator.grid.control.ObserverBasedGFMControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGFMControl</span></code></a></p></td>
+<td><p>Disturbance-observer-based grid-forming control for grid converters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGFMControlCfg" title="motulator.grid.control.ObserverBasedGFMControlCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGFMControlCfg</span></code></a></p></td>
+<td><p>Disturbance-observer-based grid-forming control configuration.</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
 <td><p>Phase-locked loop.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.RFPSCControl" title="motulator.grid.control.RFPSCControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RFPSCControl</span></code></a></p></td>
+<td><p>Reference-feedforward power synchronization control for grid converters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.RFPSCControlCfg" title="motulator.grid.control.RFPSCControlCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RFPSCControlCfg</span></code></a></p></td>
+<td><p>Power synchronization control configuration.</p></td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.CurrentController">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#CurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentController" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a></p>
+<p>2DOF PI current controller for grid converters.</p>
+<p>This class provides an interface for a current controller for grid
+converters. The gains are initialized based on the desired closed-loop
+bandwidth and the filter inductance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.GFLControlCfg" title="motulator.grid.control.GFLControlCfg"><em>GFLControlCfg</em></a>) – <p>Control configuration parameters:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>filter_par.L_fc<span class="classifier">float</span></dt><dd><p>Converter-side filter inductance (H).</p>
+</dd>
+<dt>alpha_c<span class="classifier">float</span></dt><dd><p>Closed-loop bandwidth (rad/s) of the current controller.</p>
+</dd>
+</dl>
+</div></blockquote>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.CurrentLimiter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentLimiter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#CurrentLimiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentLimiter" title="Permalink to this definition">#</a></dt>
@@ -482,6 +567,21 @@ document.write(`
 <dd class="field-odd"><p>complex</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.CurrentRefCalc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentRefCalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#CurrentRefCalc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentRefCalc" title="Permalink to this definition">#</a></dt>
+<dd><p>Current controller reference generator</p>
+<p>This class is used to generate the current references for the current
+controllers based on the active and reactive power references. The current
+limiting algorithm is used to limit the current references.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.CurrentRefCalc.get_current_reference">
+<span class="sig-name descname"><span class="pre">get_current_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#CurrentRefCalc.get_current_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentRefCalc.get_current_reference" title="Permalink to this definition">#</a></dt>
+<dd><p>Current reference generator.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -511,6 +611,91 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 2001, <a class="reference external" href="https://doi.org/10.1109/41.937412">https://doi.org/10.1109/41.937412</a></p>
 </aside>
 </aside>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.GFLControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GFLControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GFLControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GFLControl" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control._common.GridConverterControlSystem</span></code></p>
+<p>Grid-following control for power converters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.GFLControlCfg" title="motulator.grid.control.GFLControlCfg"><em>GFLControlCfg</em></a>) – Control configuration.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.grid.control.GFLControl.current_ctrl">
+<span class="sig-name descname"><span class="pre">current_ctrl</span></span><a class="headerlink" href="#motulator.grid.control.GFLControl.current_ctrl" title="Permalink to this definition">#</a></dt>
+<dd><p>Current controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.control.CurrentController" title="motulator.grid.control.CurrentController">CurrentController</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.grid.control.GFLControl.pll">
+<span class="sig-name descname"><span class="pre">pll</span></span><a class="headerlink" href="#motulator.grid.control.GFLControl.pll" title="Permalink to this definition">#</a></dt>
+<dd><p>Phase locked loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL">PLL</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.grid.control.GFLControl.current_reference">
+<span class="sig-name descname"><span class="pre">current_reference</span></span><a class="headerlink" href="#motulator.grid.control.GFLControl.current_reference" title="Permalink to this definition">#</a></dt>
+<dd><p>Current reference calculator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.control.CurrentRefCalc" title="motulator.grid.control.CurrentRefCalc">CurrentRefCalc</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GFLControl.get_feedback_signals">
+<span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GFLControl.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GFLControl.get_feedback_signals" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the feedback signals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GFLControl.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GFLControl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GFLControl.output" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GFLControl.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GFLControl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GFLControl.update" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.GFLControlCfg">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GFLControlCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GFLControlCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GFLControlCfg" title="Permalink to this definition">#</a></dt>
+<dd><p>Grid-following control configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
+<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter parameters.</p></li>
+<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current (A).</p></li>
+<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
+<li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current-control bandwidth (rad/s). The default is 2*pi*400.</p></li>
+<li><p><strong>alpha_ff</strong> (<em>float</em><em>, </em><em>optional</em>) – Low-pass-filtering bandwidth (rad/s) for the voltage-feedforward term.
+The default is 2*pi*200.</p></li>
+<li><p><strong>w0_pll</strong> (<em>float</em><em>, </em><em>optional</em>) – Undamped natural frequency of the PLL. The default is 2*pi*20.</p></li>
+<li><p><strong>zeta_pll</strong> (<em>float</em><em>, </em><em>optional</em>) – Damping ratio of the PLL. The default is 1.</p></li>
+<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -650,6 +835,74 @@ coordinates. This signal is obtained from the PWM.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGFMControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGFMControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGFMControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGFMControl" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control._common.GridConverterControlSystem</span></code></p>
+<p>Disturbance-observer-based grid-forming control for grid converters.</p>
+<p>This implements the RFPSC-type grid-forming mode of the control method
+described in <a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Transparent current control is also implemented.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverBasedGFMControlCfg" title="motulator.grid.control.ObserverBasedGFMControlCfg"><em>ObserverBasedGFMControlCfg</em></a>) – Controller configuration parameters.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In this implementation, the control system operates in synchronous
+coordinates rotating at the nominal grid angular frequency, which is worth
+noticing when plotting the results. For other implementation options, see
+<a class="footnote-reference brackets" href="#nur2024" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="nur2024" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id3">2</a>)</span>
+<p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional
+grid-forming converter control based on a disturbance observer, “IEEE
+Trans. Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
+</aside>
+</aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGFMControl.get_feedback_signals">
+<span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGFMControl.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGFMControl.get_feedback_signals" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the feedback signals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGFMControl.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGFMControl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGFMControl.output" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGFMControl.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGFMControl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGFMControl.update" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGFMControlCfg">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGFMControlCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGFMControlCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGFMControlCfg" title="Permalink to this definition">#</a></dt>
+<dd><p>Disturbance-observer-based grid-forming control configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
+<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter model parameters.</p></li>
+<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current modulus (A).</p></li>
+<li><p><strong>R_a</strong> (<em>float</em>) – Active resistance (Ω).</p></li>
+<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). Default is 100e-6.</p></li>
+<li><p><strong>k_v</strong> (<em>float</em><em>, </em><em>optional</em>) – Voltage gain. The default is 1.</p></li>
+<li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current control bandwidth (rad/s). The default is 2*pi*400.</p></li>
+<li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer gain (rad/s). The default is 2*pi*50.</p></li>
+<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.PLL">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_g0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_g0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#PLL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL" title="Permalink to this definition">#</a></dt>
 <dd><p>Phase-locked loop.</p>
@@ -676,6 +929,66 @@ coordinates. This signal is obtained from the PWM.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.RFPSCControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">RFPSCControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#RFPSCControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.RFPSCControl" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control._common.GridConverterControlSystem</span></code></p>
+<p>Reference-feedforward power synchronization control for grid converters.</p>
+<p>This implements the reference-feedforward power synchronization control
+(RFPSC) method <a class="footnote-reference brackets" href="#har2020" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<em>PSCControlCfg</em>) – Model and controller configuration parameters.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="har2020" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p>Harnefors, Rahman, Hinkkanen, Routimo, “Reference-feedforward
+power-synchronization control,” IEEE Trans. Power Electron., 2020,
+<a class="reference external" href="https://doi.org/10.1109/TPEL.2020.2970991">https://doi.org/10.1109/TPEL.2020.2970991</a></p>
+</aside>
+</aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.RFPSCControl.get_feedback_signals">
+<span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#RFPSCControl.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.RFPSCControl.get_feedback_signals" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the feedback signals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.RFPSCControl.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#RFPSCControl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.RFPSCControl.output" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.RFPSCControl.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#RFPSCControl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.RFPSCControl.update" title="Permalink to this definition">#</a></dt>
+<dd><p>Extend the base class method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.RFPSCControlCfg">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">RFPSCControlCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#RFPSCControlCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.RFPSCControlCfg" title="Permalink to this definition">#</a></dt>
+<dd><p>Power synchronization control configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
+<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter model parameters.</p></li>
+<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current modulus (A).</p></li>
+<li><p><strong>R_a</strong> (<em>float</em>) – Damping resistance (Ω).</p></li>
+<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). The default is 100e-6.</p></li>
+<li><p><strong>w_b</strong> (<em>float</em><em>, </em><em>optional</em>) – Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.</p></li>
+<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -700,11 +1013,11 @@ coordinates. This signal is obtained from the PWM.</p>
       </div>
     </a>
     <a class="right-next"
-       href="grid_following/index.html"
+       href="../model/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">motulator.grid.control.grid_following</p>
+        <p class="prev-next-title">motulator.grid.model</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -723,11 +1036,25 @@ coordinates. This signal is obtained from the PWM.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentController"><code class="docutils literal notranslate"><span class="pre">CurrentController</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentLimiter"><code class="docutils literal notranslate"><span class="pre">CurrentLimiter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentRefCalc"><code class="docutils literal notranslate"><span class="pre">CurrentRefCalc</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentRefCalc.get_current_reference"><code class="docutils literal notranslate"><span class="pre">CurrentRefCalc.get_current_reference()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl"><code class="docutils literal notranslate"><span class="pre">GFLControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.current_ctrl"><code class="docutils literal notranslate"><span class="pre">GFLControl.current_ctrl</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.pll"><code class="docutils literal notranslate"><span class="pre">GFLControl.pll</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.current_reference"><code class="docutils literal notranslate"><span class="pre">GFLControl.current_reference</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">GFLControl.get_feedback_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.output"><code class="docutils literal notranslate"><span class="pre">GFLControl.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.update"><code class="docutils literal notranslate"><span class="pre">GFLControl.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControlCfg"><code class="docutils literal notranslate"><span class="pre">GFLControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.ref</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_volt_ctrl"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.dc_bus_volt_ctrl</span></code></a></li>
@@ -737,11 +1064,25 @@ coordinates. This signal is obtained from the PWM.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.update"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControl"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.get_feedback_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControl.output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControl.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControl.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGFMControlCfg"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGFMControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL"><code class="docutils literal notranslate"><span class="pre">PLL</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.output"><code class="docutils literal notranslate"><span class="pre">PLL.output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.update"><code class="docutils literal notranslate"><span class="pre">PLL.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControl"><code class="docutils literal notranslate"><span class="pre">RFPSCControl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">RFPSCControl.get_feedback_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControl.output"><code class="docutils literal notranslate"><span class="pre">RFPSCControl.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControl.update"><code class="docutils literal notranslate"><span class="pre">RFPSCControl.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.RFPSCControlCfg"><code class="docutils literal notranslate"><span class="pre">RFPSCControlCfg</span></code></a></li>
 </ul>
 </li>
 </ul>
