@@ -1,4 +1,4 @@
-# *motulator:* Motor Drive Simulator in Python
+# *motulator:* Motor Drive and Grid Converter Simulator in Python
 [![DOI](https://zenodo.org/badge/377399301.svg)](https://zenodo.org/doi/10.5281/zenodo.10223090)
 [![Build Status](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml/badge.svg)](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml)
 [![License](https://img.shields.io/github/license/mashape/apistatus)](https://github.com/Aalto-Electric-Drives/motulator/blob/main/LICENSE)
@@ -7,7 +7,7 @@
 
 Introduction
 ------------
-This open-source software includes simulation models for an induction motor, a synchronous reluctance motor, and a permanent-magnet synchronous motor. The motor models are simulated in the continuous-time domain while the control algorithms run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from scipy.integrate.solve_ivp. Various control algorithms are provided as examples. The documentation is available here:
+This open-source software includes simulation models and controllers for electric machine drives and grid converter systems. The machine models include an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. Various subsystem models are provided for modeling grid converter systems, such as an LCL filter connected to an inductive-resistive grid. The system models are simulated in the continuous-time domain while the control algorithms run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from scipy.integrate.solve_ivp. Various control algorithms are provided as examples. The documentation is available here:
 
 https://aalto-electric-drives.github.io/motulator/
 
@@ -24,7 +24,7 @@ https://aalto-electric-drives.github.io/motulator/installation.html
 
 Usage
 -----
-The drive system, controller, reference sequences etc. are easy to configure. As a starting point, example scripts and Jupyter notebooks can be downloaded here:
+The system models, controllers, reference sequences etc. are easy to configure. As a starting point, example scripts and Jupyter notebooks can be downloaded here:
 
 https://aalto-electric-drives.github.io/motulator/auto_examples/index.html
 
