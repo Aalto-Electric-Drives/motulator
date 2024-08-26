@@ -1,5 +1,5 @@
 """
-Grid and AC filter impedance models.
+AC filter and grid impedance models.
 
 This module contains continuous-time models for subsystems comprising an AC 
 filter and a grid impedance between the converter and grid voltage sources. The 
@@ -10,7 +10,6 @@ from types import SimpleNamespace
 
 from motulator.common.model import Subsystem
 from motulator.common.utils import complex2abc
-from motulator.grid.utils import FilterPars
 
 
 # %%
@@ -25,18 +24,18 @@ class ACFilter(Subsystem):
 
     Parameters
     ----------
-    filter_par : FilterPars
+    par : ACFilterPars
         Filter model parameters.
-    grid_par : GridPars
-        Grid model parameters.
-        
+    e_gs0 : complex
+        Initial grid voltage (V) in stationary coordinates. 
+
     """
 
-    def __new__(cls, filter_par: FilterPars, _):
-        if filter_par.C_f > 0:
-            if filter_par.L_fg > 0:
+    def __new__(cls, par, e_gs0):
+        if par.C_f > 0:
+            if par.L_fg > 0:
                 return super().__new__(LCLFilter)
-            raise ValueError("L_fg must be specified for LCL filter.")
+            raise ValueError("L_fg must be specified for the LCL filter.")
         return super().__new__(LFilter)
 
     def meas_currents(self):
@@ -79,34 +78,29 @@ class LFilter(ACFilter):
 
     Parameters
     ----------
-    grid_par : GridPars
-        Grid model parameters. The following parameters are needed:
-
-            L_g : float
-                Grid inductance (H).
-            R_g : float, optional
-                Series resistance (Ω). The default is 0.
-
-    filter_par : FilterPars
+    par : ACFilterPars
         Filter model parameters. The following parameters are needed:
 
             L_fc : float
                 Filter inductance (H).
             R_fc : float, optional
-                Series resistance (Ω). The default is 0.
+                Series resistance (Ω).
+            L_g : float
+                Grid inductance (H).
+            R_g : float, optional
+                Series resistance (Ω). 
+            e_gs0 : complex
+                Initial PCC voltage (V) in stationary coordinates. 
 
     """
 
-    def __init__(self, filter_par, grid_par):
+    def __init__(self, par, e_gs0):
         super().__init__()
         self.par = SimpleNamespace(
-            L_f=filter_par.L_fc,
-            R_f=filter_par.R_fc,
-            L_g=grid_par.L_g,
-            R_g=grid_par.R_g)
-        self.inp = SimpleNamespace(u_cs=0j, e_gs=grid_par.u_gN + 0j)
-        # For direct feedthrough
-        self.out = SimpleNamespace(u_gs=grid_par.u_gN + 0j)
+            L_f=par.L_fc, R_f=par.R_fc, L_g=par.L_g, R_g=par.R_g)
+        # For direct feedthrough through u_gs
+        self.inp = SimpleNamespace(u_cs=complex(e_gs0), e_gs=complex(e_gs0))
+        self.out = SimpleNamespace(u_gs=complex(e_gs0))
         self.state = SimpleNamespace(i_cs=0j)
         self.sol_states = SimpleNamespace(i_cs=[])
 
@@ -114,9 +108,8 @@ class LFilter(ACFilter):
         """Set output variables."""
         state, par, inp, out = self.state, self.par, self.inp, self.out
         u_gs = (
-            par.L_g*inp.u_cs + par.L_f*inp.e_gs +
-            (par.R_g*par.L_f - par.R_f*par.L_g)*state.i_cs)/(
-                par.L_g + par.L_f)
+            par.L_g*(inp.u_cs - par.R_f*state.i_cs) + par.L_f*
+            (inp.e_gs + par.R_g*state.i_cs))/(par.L_g + par.L_f)
         out.i_cs, out.i_gs, out.u_gs = state.i_cs, state.i_cs, u_gs
 
     def rhs(self):
@@ -133,11 +126,10 @@ class LFilter(ACFilter):
 
     def post_process_with_inputs(self):
         """Post-process data with inputs."""
-        data = self.data
+        data, par = self.data, self.par
         data.u_gs = (
-            self.par.L_g*data.u_cs + self.par.L_f*data.e_gs +
-            (self.par.R_g*self.par.L_f - self.par.R_f*self.par.L_g)*
-            data.i_cs)/(self.par.L_g + self.par.L_f)
+            par.L_g*(data.u_cs - par.R_f*data.i_cs) + par.L_f*
+            (data.e_gs + par.R_g*data.i_cs))/(par.L_g + par.L_f)
 
 
 # %%
@@ -152,31 +144,24 @@ class LCLFilter(ACFilter):
 
     Parameters
     ----------
-    grid_par : GridPars
-        Grid model parameters. 
-    filter_par : FilterPars
+    par : ACFilterPars
         Filter model parameters.
 
     """
 
-    def __init__(self, filter_par, grid_par):
+    def __init__(self, par, e_gs0):
         super().__init__()
         self.par = SimpleNamespace(
-            L_fc=filter_par.L_fc,
-            R_fc=filter_par.R_fc,
-            L_fg=filter_par.L_fg,
-            R_fg=filter_par.R_fg,
-            C_f=filter_par.C_f,
-            L_g=grid_par.L_g,
-            R_g=grid_par.R_g,
-        )
-        self.inp = SimpleNamespace(u_cs=0 + 0j, e_gs=grid_par.u_gN + 0j)
-        self.out = SimpleNamespace(u_gs=grid_par.u_gN + 0j)
-        self.state = SimpleNamespace(
-            i_cs=0j,
-            u_fs=grid_par.u_gN + 0j,
-            i_gs=0j,
-        )
+            L_fc=par.L_fc,
+            R_fc=par.R_fc,
+            L_fg=par.L_fg,
+            R_fg=par.R_fg,
+            C_f=par.C_f,
+            L_g=par.L_g,
+            R_g=par.R_g)
+        self.inp = SimpleNamespace(u_cs=complex(e_gs0), e_gs=complex(e_gs0))
+        self.out = SimpleNamespace(u_gs=complex(e_gs0))
+        self.state = SimpleNamespace(i_cs=0j, u_fs=complex(e_gs0), i_gs=0j)
         self.sol_states = SimpleNamespace(i_cs=[], u_fs=[], i_gs=[])
 
     def set_outputs(self, _):

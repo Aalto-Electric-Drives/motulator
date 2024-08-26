@@ -7,7 +7,6 @@ import numpy as np
 from motulator.common.control import ComplexPIController
 from motulator.grid.control._common import (
     CurrentLimiter, GridConverterControlSystem, PLL)
-from motulator.grid.utils import FilterPars, GridPars
 
 
 # %%
@@ -18,12 +17,14 @@ class GFLControlCfg:
     
     Parameters
     ----------
-    grid_par : GridPars
-        Grid model parameters.
-    filter_par : FilterPars
-        Filter parameters.
+    L : float
+        Inductance (H).
+    nom_u : float
+        Nominal grid voltage (V), line-to-neutral peak value.
+    nom_w : float
+        Nominal grid frequency (rad/s).
     max_i : float
-        Maximum current (A). 
+        Maximum current (A), peak value. 
     T_s : float, optional
         Sampling period (s). The default is 100e-6.
     alpha_c : float, optional
@@ -34,8 +35,9 @@ class GFLControlCfg:
         DC-bus capacitance (F). The default is None.
 
     """
-    grid_par: GridPars
-    filter_par: FilterPars
+    L: float
+    nom_u: float
+    nom_w: float
     max_i: float
     T_s: float = 100e-6
     alpha_c: float = 2*np.pi*400
@@ -64,10 +66,10 @@ class GFLControl(GridConverterControlSystem):
     """
 
     def __init__(self, cfg):
-        super().__init__(cfg.grid_par, cfg.C_dc, cfg.T_s)
+        super().__init__(cfg.C_dc, cfg.T_s)
         self.cfg = cfg
         self.current_ctrl = CurrentController(cfg)
-        self.pll = PLL(cfg.alpha_pll, cfg.grid_par.u_gN, cfg.grid_par.w_gN)
+        self.pll = PLL(cfg.alpha_pll, cfg.nom_u, cfg.nom_w)
         self.current_reference = CurrentRefCalc(cfg)
 
     def get_feedback_signals(self, mdl):
@@ -111,18 +113,12 @@ class CurrentController(ComplexPIController):
     Parameters
     ----------
     cfg : GFLControlCfg
-        Control configuration parameters:
-
-            filter_par.L_fc : float
-                Converter-side filter inductance (H).
-            alpha_c : float
-                Closed-loop bandwidth (rad/s) of the current controller.
+        Control configuration parameters.
 
     """
 
-    # TODO: should the total inductance be used here?
     def __init__(self, cfg):
-        k_t = cfg.alpha_c*cfg.filter_par.L_fc
+        k_t = cfg.alpha_c*cfg.L
         k_i = cfg.alpha_c*k_t
         k_p = 2*k_t
         super().__init__(k_p, k_i, k_t)
@@ -137,23 +133,20 @@ class CurrentRefCalc:
     controllers based on the active and reactive power references. The current
     limiting algorithm is used to limit the current references.
     
+    Parameters
+    ----------
+    cfg : GFLControlCfg
+        Control configuration parameters.
+
     """
 
     def __init__(self, cfg):
-        """
-        Parameters
-        ----------
-        cfg : GFLControlCfg
-            Model and controller configuration parameters.
-    
-        """
-        self.u_gN = cfg.grid_par.u_gN
+        self.nom_u_g = cfg.nom_u
         self.current_limiter = CurrentLimiter(cfg.max_i)
 
     def get_current_reference(self, ref):
         """Current reference generator."""
-        # Calculation of the current references in the stationary frame:
-        ref.i_c = 2*ref.p_g/(3*self.u_gN) - 2j*ref.q_g/(3*self.u_gN)
+        ref.i_c = 2*ref.p_g/(3*self.nom_u_g) - 2j*ref.q_g/(3*self.nom_u_g)
         ref.i_c = self.current_limiter(ref.i_c)
 
         return ref
