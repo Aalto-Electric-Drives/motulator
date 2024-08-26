@@ -12,7 +12,7 @@ grid, a current reference generator, and a PI-type current controller.
 # %%
 from motulator.grid import model, control
 from motulator.grid.utils import (
-    BaseValues, FilterPars, GridPars, NominalValues, plot)
+    BaseValues, ACFilterPars, NominalValues, plot)
 
 # %%
 # Compute base values based on the nominal values.
@@ -23,29 +23,22 @@ base = BaseValues.from_nominal(nom)
 # %%
 # Configure the system model.
 
-# Grid parameters
-grid_par = GridPars(u_gN=base.u, w_gN=base.w)
-
-# Filter parameters
-filter_par = FilterPars(L_fc=.2*base.L)
-
-# Create AC filter with given parameters
-ac_filter = model.ACFilter(filter_par, grid_par)
-
-# AC grid model with constant voltage magnitude and frequency
-grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
-# Inverter model with DC-bus dynamics included
+# Filter and grid
+par = ACFilterPars(L_fc=.2*base.L)
+ac_filter = model.ACFilter(par)
+ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
+# Converter model with the DC-bus dynamics
 converter = model.VoltageSourceConverter(u_dc=600, C_dc=1e-3)
 
 # Create system model
-mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
+mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 # %%
 # Configure the control system.
 
 # Create the control system
-cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i, C_dc=1e-3)
+cfg = control.GFLControlCfg(
+    L=.2*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i, C_dc=1e-3)
 ctrl = control.GFLControl(cfg)
 
 # Add the DC-bus voltage controller to the control system

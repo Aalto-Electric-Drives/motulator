@@ -5,14 +5,15 @@
 This example simulates a grid-following-controlled converter connected to a
 strong grid through an LCL filter. The control system includes a phase-locked
 loop (PLL) to synchronize with the grid, a current reference generator, and a
-PI-type current controller.
+PI-type current controller. The dynamics of the LCL filter are not taken into
+account in the control system.
 
 """
 
 # %%
 from motulator.grid import model, control
 from motulator.grid.utils import (
-    BaseValues, FilterPars, GridPars, NominalValues, plot)
+    BaseValues, ACFilterPars, NominalValues, plot)
 
 # %%
 # Compute base values based on the nominal values.
@@ -23,29 +24,22 @@ base = BaseValues.from_nominal(nom)
 # %%
 # Configure the system model.
 
-# Grid and filter parameters
-grid_par = GridPars(u_gN=base.u, w_gN=base.w)
-filter_par = FilterPars(L_fc=.073*base.L, L_fg=.073*base.L, C_f=.043*base.C)
-
-# DC-bus parameters
-ac_filter = model.ACFilter(filter_par, grid_par)
-
-# AC grid model with constant voltage magnitude and frequency
-grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
+# Grid and filter
+par = ACFilterPars(
+    L_fc=.073*base.L, L_fg=.073*base.L, C_f=.043*base.C, u_fs0=base.u)
+ac_filter = model.ACFilter(par)
+ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 # Inverter model with constant DC voltage
 converter = model.VoltageSourceConverter(u_dc=650)
 
 # Create system model
-mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
+mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 # %%
 # Configure the control system.
 
-# Control parameters
-cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i)
-
-# Create the control system
+cfg = control.GFLControlCfg(
+    L=.073*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i)
 ctrl = control.GFLControl(cfg)
 
 # %%
