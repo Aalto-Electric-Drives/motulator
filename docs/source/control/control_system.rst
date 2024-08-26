@@ -13,3 +13,45 @@ By default, discrete-time control systems in *motulator* run the following schem
    5. Return the sampling period `T_s` and the duty ratios `d_abc` for the carrier comparison.
 
 A template of this main control loop is available in the base class for control systems in :class:`motulator.common.control.ControlSystem`. Using this template is not necessary, but it may simplify the implementation of new control systems.
+
+PI Controller
+-------------
+
+The figure below shows a two-degree-of-freedom PI controller, where :math:`k_\mathrm{p}` and :math:`k_\mathrm{i}` are the proportional and integral gains, respectively. Furthermore :math:`u(s)` is the controller output, :math:`r(s)` is the reference signal, :math:`y(s)` is the feedback signal, and :math:`1/s` refers to integration. The controllers continous-time counterpart is:  
+
+.. math:: 
+   u(s) = k_{\mathrm{t}}\,r(s) - k_{\mathrm{p}}\,y(s) + \frac{k_{\mathrm{i}}}{s}\bigg(r(s) - y(s)\bigg)
+   :label: 2DOFPI
+
+.. figure:: figs/2DOF_PI.svg
+   :width: 100%
+   :align: center
+   :alt: Two-degree-of-freedom PI controller.
+
+The standard PI 1DOF controller is obtained by choosing :math:`k_\mathrm{t} = k_\mathrm{p}`. The integrator anti-windup is implemented based on the realized controller output.
+
+The PI controller is implemented in the class :class:`motulator.common.control.PIController`.
+
+Complex-vector PI controller
+----------------------------
+
+The figure below shows a 2DOF synchronous-frame complex-vector PI controller which continuous-time counterpart of the controller is [#Bri2000]_:
+
+.. math::
+   \boldsymbol{u}(s) = \boldsymbol{k}_{\mathrm{t}}\,\boldsymbol{r}(s) 
+   - \boldsymbol{k}_{\mathrm{p}}\, \boldsymbol{y}(s) + \frac{\boldsymbol{k}_{\mathrm{i}} + \mathrm{j}\omega \boldsymbol{k}_{\mathrm{t}}}{s}\bigg(\boldsymbol{r}(s) 
+   - \boldsymbol{y}(s)\bigg) + \boldsymbol{u}_{\mathrm{ff}}(s)
+   :label: complexFFPI
+
+where :math:`\boldsymbol{u}(s)` is the controller output, :math:`\boldsymbol{r}(s)` is the reference signal, :math:`\boldsymbol{y}(s)` is the feedback signal, :math:`\boldsymbol{k}_{\mathrm{t}}` is the feedforward gain, :math:`\boldsymbol{k}_{\mathrm{p}}` and :math:`\boldsymbol{k}_{\mathrm{i}}` are the proportional and integral gains, respectively, and :math:`\boldsymbol{u}_{\mathrm{ff}}(s)` is the optional feedforward signal. 
+
+.. figure:: figs/Complex_vector_2DOF_PI.svg
+   :width: 100%
+   :align: center
+   :alt: Two-degree-of-freedom complex-vector PI controller, with feedforward.
+
+The complex-vector PI controller with feedforward is implemented in the class :class:`motulator.common.control.ComplexPIController`.
+
+.. rubric:: References
+
+.. [#Bri2000] Briz, Degner, Lorenz, "Analysis and design of current regulators using complex vectors," IEEE Trans. Ind. Appl., 2000, https://doi.org/10.1109/28.845057
