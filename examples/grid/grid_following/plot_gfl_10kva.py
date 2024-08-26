@@ -27,7 +27,7 @@ base = BaseValues.from_nominal(nom)
 
 # Filter and grid
 par = ACFilterPars(L_fc=.2*base.L)
-ac_filter = model.ACFilter(par, e_gs0=base.u)
+ac_filter = model.ACFilter(par)
 ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 # Inverter with constant DC voltage
 converter = model.VoltageSourceConverter(u_dc=650)

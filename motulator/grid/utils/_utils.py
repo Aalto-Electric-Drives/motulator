@@ -25,6 +25,9 @@ class ACFilterPars:
         Grid inductance (H). The default is 0.
     R_g : float, optional
         Grid resistance (Ω). The default is 0.
+    u_fs0 : float, optional
+        Initial value of the filter capacitor voltage (V). Needed in the case 
+        of an LCL filter.
 
     """
     L_fc: float
@@ -34,3 +37,4 @@ class ACFilterPars:
     R_fg: float = 0
     L_g: float = 0
     R_g: float = 0
+    u_fs0: float = None

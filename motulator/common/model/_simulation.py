@@ -187,14 +187,15 @@ class Simulation:
     """
     Simulation environment.
 
-    Each simulation object has a system model object and a controller object.
+    Each simulation object has a system model object and a control system 
+    object.
 
     Parameters
     ----------
     mdl : Model 
         Continuous-time system model.
     ctrl : ControlSystem
-        Discrete-time controller.
+        Discrete-time control system.
 
     """
 
@@ -204,7 +205,7 @@ class Simulation:
 
     def simulate(self, t_stop=1, max_step=np.inf):
         """
-        Solve the continuous-time model and call the discrete-time controller.
+        Solve the continuous-time system model and call the control system.
 
         Parameters
         ----------
@@ -359,6 +360,9 @@ class Model(ABC):
                 # Check if the state derivative exists before adding it
                 if subsystem_rhs is not None:
                     rhs_list += subsystem_rhs
+
+        ################## Set the outputs for the interconnections and for the rhs
+        #self.post_set_outputs(t)
 
         # List of state derivatives
         return rhs_list

@@ -21,17 +21,12 @@ base = BaseValues.from_nominal(nom)
 # %%
 # Configure the system model.
 
-# Filter and grid parameters
+# Filter and grid
 par = ACFilterPars(L_fc=.15*base.L, L_g=.74*base.L)
-# Uncomment line below to simulate a strong grid
-# par.L_g = 0
-
-# Create AC filter with given parameters
-ac_filter = model.ACFilter(par, e_gs0=base.u)
-
+# par.L_g = 0  # Uncomment this line to simulate a strong grid
+ac_filter = model.ACFilter(par)
 # Grid voltage source with constant frequency and voltage magnitude
 ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
 # Inverter with constant DC voltage
 converter = model.VoltageSourceConverter(u_dc=650)
 
