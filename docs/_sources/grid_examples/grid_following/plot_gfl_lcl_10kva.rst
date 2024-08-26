@@ -24,15 +24,16 @@
 This example simulates a grid-following-controlled converter connected to a
 strong grid through an LCL filter. The control system includes a phase-locked
 loop (PLL) to synchronize with the grid, a current reference generator, and a
-PI-type current controller.
+PI-type current controller. The dynamics of the LCL filter are not taken into
+account in the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-17
+.. GENERATED FROM PYTHON SOURCE LINES 14-18
 
 .. code-block:: Python
 
     from motulator.grid import model, control
     from motulator.grid.utils import (
-        BaseValues, FilterPars, GridPars, NominalValues, plot)
+        BaseValues, ACFilterPars, NominalValues, plot)
 
 
 
@@ -41,11 +42,11 @@ PI-type current controller.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
@@ -60,30 +61,25 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-42
+.. GENERATED FROM PYTHON SOURCE LINES 26-38
 
 .. code-block:: Python
 
 
-    # Grid and filter parameters
-    grid_par = GridPars(u_gN=base.u, w_gN=base.w)
-    filter_par = FilterPars(L_fc=.073*base.L, L_fg=.073*base.L, C_f=.043*base.C)
-
-    # DC-bus parameters
-    ac_filter = model.ACFilter(filter_par, grid_par)
-
-    # AC grid model with constant voltage magnitude and frequency
-    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
+    # Grid and filter
+    par = ACFilterPars(
+        L_fc=.073*base.L, L_fg=.073*base.L, C_f=.043*base.C, u_fs0=base.u)
+    ac_filter = model.ACFilter(par)
+    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
     # Inverter model with constant DC voltage
     converter = model.VoltageSourceConverter(u_dc=650)
 
     # Create system model
-    mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
+    mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 
 
@@ -92,19 +88,17 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-51
+.. GENERATED FROM PYTHON SOURCE LINES 40-45
 
 .. code-block:: Python
 
 
-    # Control parameters
-    cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i)
-
-    # Create the control system
+    cfg = control.GFLControlCfg(
+        L=.073*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i)
     ctrl = control.GFLControl(cfg)
 
 
@@ -114,11 +108,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-58
+.. GENERATED FROM PYTHON SOURCE LINES 47-52
 
 .. code-block:: Python
 
@@ -134,11 +128,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-64
+.. GENERATED FROM PYTHON SOURCE LINES 54-58
 
 .. code-block:: Python
 
@@ -153,11 +147,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-68
+.. GENERATED FROM PYTHON SOURCE LINES 60-62
 
 .. code-block:: Python
 
@@ -190,7 +184,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.244 seconds)
+   **Total running time of the script:** (0 minutes 1.249 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_lcl_10kva.py:

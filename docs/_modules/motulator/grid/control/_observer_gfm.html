@@ -380,7 +380,6 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">wrap</span>
 <span class="kn">from</span> <span class="nn">motulator.grid.control._common</span> <span class="kn">import</span> <span class="n">GridConverterControlSystem</span>
-<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span>
 
 
 <span class="c1"># %%</span>
@@ -391,18 +390,20 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    grid_par : GridPars</span>
-<span class="sd">        Grid model parameters.</span>
-<span class="sd">    filter_par : FilterPars</span>
-<span class="sd">        Filter model parameters.</span>
+<span class="sd">    L : float</span>
+<span class="sd">        Total inductance.</span>
+<span class="sd">    nom_u : float</span>
+<span class="sd">        Nominal grid voltage (V), line-to-neutral peak value.</span>
+<span class="sd">    nom_w : float</span>
+<span class="sd">        Nominal grid frequency (rad/s).</span>
 <span class="sd">    max_i : float</span>
-<span class="sd">        Maximum current modulus (A).</span>
-<span class="sd">    R_a : float</span>
-<span class="sd">        Active resistance (Ω).</span>
+<span class="sd">        Maximum current (A), peak value.</span>
+<span class="sd">    R : float, optional</span>
+<span class="sd">        Total series resistance (Ω). The default is 0.</span>
+<span class="sd">    R_a : float, optional</span>
+<span class="sd">        Active resistance (Ω). The default is 0.25*num_u/max_i.</span>
 <span class="sd">    T_s : float, optional</span>
-<span class="sd">        Sampling period of the controller (s). Default is 100e-6.</span>
-<span class="sd">    k_v : float, optional</span>
-<span class="sd">        Voltage gain. The default is 1.</span>
+<span class="sd">        Sampling period of the controller (s). The default is 100e-6.</span>
 <span class="sd">    alpha_c : float, optional</span>
 <span class="sd">        Current control bandwidth (rad/s). The default is 2*pi*400.</span>
 <span class="sd">    alpha_o : float, optional</span>
@@ -411,21 +412,20 @@ document.write(`
 <span class="sd">        DC-bus capacitance (F). The default is None.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">grid_par</span><span class="p">:</span> <span class="n">GridPars</span>
-    <span class="n">filter_par</span><span class="p">:</span> <span class="n">FilterPars</span>
+    <span class="n">L</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">nom_u</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">nom_w</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">max_i</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">R_a</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">R_a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100e-6</span>
-    <span class="n">k_v</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">400</span>
     <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span>
     <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_par</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_fc</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_par</span><span class="o">.</span><span class="n">L_g</span>  <span class="c1"># Total inductance</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_fc</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_fg</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_par</span><span class="o">.</span><span class="n">R_g</span>  <span class="c1"># Series resistance</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="mf">.25</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_u</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">max_i</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># Current control gain</span></div>
 
 
@@ -458,13 +458,10 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">grid_par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">C_dc</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">C_dc</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">DisturbanceObserver</span><span class="p">(</span>
-            <span class="n">w_g</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">grid_par</span><span class="o">.</span><span class="n">w_gN</span><span class="p">,</span>
-            <span class="n">L</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span>
-            <span class="n">alpha_o</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span>
-            <span class="n">v_c0</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span><span class="p">)</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="ObserverBasedGFMControl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
@@ -479,7 +476,7 @@ document.write(`
 
 <div class="viewcode-block" id="ObserverBasedGFMControl.output"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
-        <span class="n">par</span><span class="p">,</span> <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span>
 
         <span class="c1"># Get the reference signals</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
@@ -491,9 +488,9 @@ document.write(`
         <span class="n">abs_k_p</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span>
         <span class="n">abs_v_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span>
         <span class="n">k_p</span> <span class="o">=</span> <span class="n">abs_k_p</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="o">/</span><span class="n">abs_v_c</span> <span class="k">if</span> <span class="n">abs_v_c</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">k_v</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">)</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="o">/</span><span class="n">abs_v_c</span> <span class="k">if</span> <span class="n">abs_v_c</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">k_v</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="o">/</span><span class="n">abs_v_c</span> <span class="k">if</span> <span class="n">abs_v_c</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
 
-        <span class="c1"># Feedback correction term for grid-forming mode</span>
+        <span class="c1"># Feedback correction for grid-forming mode</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span> <span class="o">=</span> <span class="n">k_p</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span> <span class="o">+</span> <span class="n">k_v</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">-</span> <span class="n">abs_v_c</span><span class="p">)</span>
 
         <span class="c1"># Current limitation</span>
@@ -507,7 +504,7 @@ document.write(`
         <span class="n">ref</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
 
         <span class="c1"># Duty ratios for PWM</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_cs</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">w_gN</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_cs</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ref</span></div>
 

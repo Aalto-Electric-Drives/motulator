@@ -374,58 +374,44 @@ document.write(`
   <h1>Source code for motulator.grid.utils._utils</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Common dataclasses usable in models and control of grid converters.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
 
-<div class="viewcode-block" id="GridPars"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.grid.utils.GridPars">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GridPars</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class for grid parameters</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    u_gN : float</span>
-<span class="sd">        Nominal grid voltage, phase-to-ground peak value (V).</span>
-<span class="sd">    w_gN : float</span>
-<span class="sd">        Nominal grid angular frequency (rad/s).</span>
-<span class="sd">    L_g : float, optional</span>
-<span class="sd">        Grid inductance (H). The default is 0.</span>
-<span class="sd">    R_g : float, optional</span>
-<span class="sd">        Grid resistance (Ω). The default is 0.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">u_gN</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">w_gN</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">L_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">R_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span></div>
-
-
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="FilterPars"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.grid.utils.FilterPars">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">FilterPars</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="ACFilterPars"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.grid.utils.ACFilterPars">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ACFilterPars</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Filter parameters</span>
+<span class="sd">    AC filter and grid impedance parameters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    L_fc : float</span>
-<span class="sd">        Converter-side inductance of the filter (H).</span>
+<span class="sd">        Converter-side filter inductance (H).</span>
 <span class="sd">    L_fg : float, optional</span>
-<span class="sd">        Grid-side inductance of the filter (H). The default is 0.</span>
+<span class="sd">        Grid-side filter inductance (H). The default is 0.</span>
 <span class="sd">    C_f : float, optional</span>
 <span class="sd">        Filter capacitance (F). The default is 0.</span>
 <span class="sd">    R_fc : float, optional</span>
-<span class="sd">        Converter-side series resistance (Ω). The default is 0.</span>
+<span class="sd">        Series resistance (Ω) of the converter-side inductor. The default is 0.</span>
 <span class="sd">    R_fg : float, optional</span>
-<span class="sd">        Grid-side series resistance (Ω). The default is 0.</span>
+<span class="sd">        Series resistance (Ω) of the grid-side inductor. The default is 0.</span>
+<span class="sd">    L_g : float, optional</span>
+<span class="sd">        Grid inductance (H). The default is 0.</span>
+<span class="sd">    R_g : float, optional</span>
+<span class="sd">        Grid resistance (Ω). The default is 0.</span>
+<span class="sd">    u_fs0 : float, optional</span>
+<span class="sd">        Initial value of the filter capacitor voltage (V). Needed in the case </span>
+<span class="sd">        of an LCL filter.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">L_fc</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_fg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">C_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">R_fc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">R_fg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span></div>
+    <span class="n">R_fg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">L_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">R_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">u_fs0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span></div>
 </pre></div>
 
                 </article>

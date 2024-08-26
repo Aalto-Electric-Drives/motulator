@@ -21,9 +21,9 @@
 10-kVA converter
 ================
     
-This example simulates a grid-following-controlled converter connected to a
-strong grid. The control system includes a phase-locked loop (PLL) to
-synchronize with the grid, a current reference generator, and a PI-based
+This example simulates a grid-following-controlled converter connected to an L
+filter and a strong grid. The control system includes a phase-locked loop (PLL) 
+to synchronize with the grid, a current reference generator, and a PI-based
 current controller.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-19
@@ -32,7 +32,7 @@ current controller.
 
     from motulator.grid import model, control
     from motulator.grid.utils import (
-        BaseValues, FilterPars, GridPars, NominalValues, plot)
+        BaseValues, ACFilterPars, NominalValues, plot)
     # from motulator.grid.utils import plot_voltage_vector
     # import numpy as np
 
@@ -66,31 +66,23 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-49
+.. GENERATED FROM PYTHON SOURCE LINES 27-41
 
 .. code-block:: Python
 
 
-    # Grid parameters
-    grid_par = GridPars(u_gN=base.u, w_gN=base.w)
-
-    # Filter parameters
-    filter_par = FilterPars(L_fc=.2*base.L)
-
-    # Create AC filter with given parameters
-    ac_filter = model.ACFilter(filter_par, grid_par)
-
-    # AC grid model with constant voltage magnitude and frequency
-    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
+    # Filter and grid
+    par = ACFilterPars(L_fc=.2*base.L)
+    ac_filter = model.ACFilter(par)
+    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
     # Inverter with constant DC voltage
     converter = model.VoltageSourceConverter(u_dc=650)
 
     # Create system model
-    mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
+    mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
     # Uncomment line below to enable the PWM model
-    # mdl.pwm = CarrierComparison()
+    # mdl.pwm = model.CarrierComparison()
 
 
 
@@ -99,19 +91,17 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-58
+.. GENERATED FROM PYTHON SOURCE LINES 43-48
 
 .. code-block:: Python
 
 
-    # Control configuration parameters
-    cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i)
-
-    # Create the control system
+    cfg = control.GFLControlCfg(
+        L=.2*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i)
     ctrl = control.GFLControl(cfg)
 
 
@@ -121,11 +111,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-70
+.. GENERATED FROM PYTHON SOURCE LINES 50-60
 
 .. code-block:: Python
 
@@ -135,9 +125,9 @@ Set the time-dependent reference and disturbance signals.
     ctrl.ref.q_g = lambda t: (t > .04)*4e3
 
     # Uncomment lines below to simulate an unbalanced fault (add negative sequence)
-    # mdl.grid_model.par.abs_e_g = .75*base.u
-    # mdl.grid_model.par.abs_e_g_neg = .25*base.u
-    # mdl.grid_model.par.phi_neg = -np.pi/3
+    # mdl.ac_source.par.abs_e_g = .75*base.u
+    # mdl.ac_source.par.abs_e_g_neg = .25*base.u
+    # mdl.ac_source.par.phi_neg = -np.pi/3
 
 
 
@@ -146,11 +136,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
@@ -165,11 +155,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-85
+.. GENERATED FROM PYTHON SOURCE LINES 68-75
 
 .. code-block:: Python
 
@@ -207,7 +197,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.200 seconds)
+   **Total running time of the script:** (0 minutes 1.156 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_10kva.py:

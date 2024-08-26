@@ -1069,11 +1069,12 @@ Package Contents
    
    Simulation environment.
 
-   Each simulation object has a system model object and a controller object.
+   Each simulation object has a system model object and a control system
+   object.
 
    :param mdl: Continuous-time system model.
    :type mdl: Model
-   :param ctrl: Discrete-time controller.
+   :param ctrl: Discrete-time control system.
    :type ctrl: ControlSystem
 
 
@@ -1122,7 +1123,7 @@ Package Contents
    .. py:method:: simulate(t_stop=1, max_step=np.inf)
 
       
-      Solve the continuous-time model and call the discrete-time controller.
+      Solve the continuous-time system model and call the control system.
 
       :param t_stop: Simulation stop time. The default is 1.
       :type t_stop: float, optional

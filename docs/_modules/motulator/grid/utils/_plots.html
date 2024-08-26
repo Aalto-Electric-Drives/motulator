@@ -431,7 +431,7 @@ document.write(`
 
     <span class="c1"># Three-phase quantities</span>
     <span class="n">i_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_gs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-    <span class="n">e_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">e_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
     <span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_gs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
     <span class="c1"># Calculation of active and reactive powers</span>
@@ -455,7 +455,7 @@ document.write(`
         <span class="k">if</span> <span class="ow">not</span> <span class="n">plot_pcc_voltage</span><span class="p">:</span>
             <span class="c1"># Subplot 1: Grid voltage</span>
             <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+                <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
                 <span class="n">e_g_abc</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
                 <span class="n">label</span><span class="o">=</span><span class="p">[</span>
                     <span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{gb}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{gc}</span><span class="s2">$&quot;</span>
@@ -496,8 +496,8 @@ document.write(`
     <span class="k">if</span> <span class="n">plot_w</span><span class="p">:</span>
         <span class="c1"># Subplot 3: Grid and converter frequencies</span>
         <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_g</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_g</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\omega_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
@@ -510,8 +510,8 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Subplot 3: Phase angles</span>
         <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_g</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">theta_g</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\theta_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
@@ -607,8 +607,8 @@ document.write(`
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat</span><span class="si">{v}</span><span class="s2">_\mathrm</span><span class="si">{c}</span><span class="s2">$&quot;</span><span class="p">,</span>
             <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>
         <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">),</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">),</span>
             <span class="s2">&quot;k--&quot;</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -624,8 +624,8 @@ document.write(`
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{cq}</span><span class="s2">$&quot;</span><span class="p">,</span>
             <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>
         <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="p">)</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="p">)</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
             <span class="s2">&quot;k--&quot;</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
     <span class="n">ax3</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
@@ -675,8 +675,8 @@ document.write(`
     <span class="c1"># Plot the grid voltage vector in the complex plane</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">grid_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="o">.</span><span class="n">real</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span><span class="o">.</span><span class="n">imag</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Grid voltage&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>

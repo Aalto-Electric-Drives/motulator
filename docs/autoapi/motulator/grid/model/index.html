@@ -424,7 +424,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ACFilter"><code class="docutils literal notranslate"><span class="pre">ACFilter</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ACFilter.meas_currents"><code class="docutils literal notranslate"><span class="pre">ACFilter.meas_currents()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ACFilter.meas_pcc_voltages"><code class="docutils literal notranslate"><span class="pre">ACFilter.meas_pcc_voltages()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></li>
@@ -436,12 +435,14 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter"><code class="docutils literal notranslate"><span class="pre">LCLFilter</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.meas_capacitor_voltages"><code class="docutils literal notranslate"><span class="pre">LCLFilter.meas_capacitor_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.meas_grid_currents"><code class="docutils literal notranslate"><span class="pre">LCLFilter.meas_grid_currents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.meas_pcc_voltages"><code class="docutils literal notranslate"><span class="pre">LCLFilter.meas_pcc_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">LCLFilter.post_process_with_inputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.rhs"><code class="docutils literal notranslate"><span class="pre">LCLFilter.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.set_outputs"><code class="docutils literal notranslate"><span class="pre">LCLFilter.set_outputs()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter"><code class="docutils literal notranslate"><span class="pre">LFilter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter.meas_pcc_voltages"><code class="docutils literal notranslate"><span class="pre">LFilter.meas_pcc_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter.post_process_states"><code class="docutils literal notranslate"><span class="pre">LFilter.post_process_states()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">LFilter.post_process_with_inputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter.rhs"><code class="docutils literal notranslate"><span class="pre">LFilter.rhs()</span></code></a></li>
@@ -533,10 +534,7 @@ corresponding filter object depending on if a value for the filter
 capacitance <cite>C_f</cite> is given.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter model parameters.</p></li>
-<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.ACFilterPars" title="motulator.grid.utils.ACFilterPars"><em>ACFilterPars</em></a>) – Filter model parameters.</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -546,20 +544,6 @@ capacitance <cite>C_f</cite> is given.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>i_c_abc</strong> – Converter phase currents (A).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>3-tuple of floats</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.model.ACFilter.meas_pcc_voltages">
-<span class="sig-name descname"><span class="pre">meas_pcc_voltages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#ACFilter.meas_pcc_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ACFilter.meas_pcc_voltages" title="Permalink to this definition">#</a></dt>
-<dd><p>Measure the phase voltages at the point of common coupling (PCC).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>u_g_abc</strong> – Phase voltages at the PCC (V).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>3-tuple of floats</p>
@@ -627,7 +611,7 @@ phase switching states are returned. The default is True.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.model.GridConverterSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">GridConverterSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_converter_system.html#GridConverterSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.GridConverterSystem" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">GridConverterSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_converter_system.html#GridConverterSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.GridConverterSystem" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Model</span></code></a></p>
 <p>Continuous-time model for a grid converter system.</p>
 <dl class="field-list simple">
@@ -635,7 +619,7 @@ phase switching states are returned. The default is True.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.grid.model.VoltageSourceConverter" title="motulator.grid.model.VoltageSourceConverter"><em>VoltageSourceConverter</em></a>) – Converter model.</p></li>
 <li><p><strong>ac_filter</strong> (<a class="reference internal" href="#motulator.grid.model.LFilter" title="motulator.grid.model.LFilter"><em>LFilter</em></a><em> | </em><a class="reference internal" href="#motulator.grid.model.LCLFilter" title="motulator.grid.model.LCLFilter"><em>LCLFilter</em></a>) – Dynamic model for converter output filter and grid impedance.</p></li>
-<li><p><strong>grid_model</strong> (<a class="reference internal" href="#motulator.grid.model.ThreePhaseVoltageSource" title="motulator.grid.model.ThreePhaseVoltageSource"><em>ThreePhaseVoltageSource</em></a>) – Three-phase grid voltage source model.</p></li>
+<li><p><strong>ac_source</strong> (<a class="reference internal" href="#motulator.grid.model.ThreePhaseVoltageSource" title="motulator.grid.model.ThreePhaseVoltageSource"><em>ThreePhaseVoltageSource</em></a>) – Three-phase grid voltage source model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -655,7 +639,7 @@ phase switching states are returned. The default is True.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.model.LCLFilter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">LCLFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#LCLFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.LCLFilter" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">LCLFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#LCLFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.LCLFilter" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.grid.model.ACFilter" title="motulator.grid.model.ACFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACFilter</span></code></a></p>
 <p>Model of an LCL filter and an inductive-resistive grid.</p>
 <p>An LCL filter and an inductive-resistive grid impedance, between the
@@ -664,10 +648,7 @@ coupling (PCC) voltage between the LCL filter and the grid impedance is
 also calculated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
-<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter model parameters.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.ACFilterPars" title="motulator.grid.utils.ACFilterPars"><em>ACFilterPars</em></a>) – Filter model parameters.</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -699,6 +680,20 @@ also calculated.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.model.LCLFilter.meas_pcc_voltages">
+<span class="sig-name descname"><span class="pre">meas_pcc_voltages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#LCLFilter.meas_pcc_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.LCLFilter.meas_pcc_voltages" title="Permalink to this definition">#</a></dt>
+<dd><p>Measure the phase voltages at the point of common coupling (PCC).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u_g_abc</strong> – PCC phase voltages (V).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>3-tuple of floats</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.LCLFilter.post_process_with_inputs">
 <span class="sig-name descname"><span class="pre">post_process_with_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#LCLFilter.post_process_with_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.LCLFilter.post_process_with_inputs" title="Permalink to this definition">#</a></dt>
 <dd><p>Post-process data with inputs.</p>
@@ -720,7 +715,7 @@ also calculated.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.model.LFilter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">LFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#LFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.LFilter" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">LFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#LFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.LFilter" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.grid.model.ACFilter" title="motulator.grid.model.ACFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACFilter</span></code></a></p>
 <p>Model of an L filter and an inductive-resistive grid.</p>
 <p>An L filter and an inductive-resistive grid, between the converter and grid
@@ -729,30 +724,36 @@ resistances. The point-of-common-coupling (PCC) voltage between the L
 filter and the grid impedance is calculated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – <p>Grid model parameters. The following parameters are needed:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>L_g<span class="classifier">float</span></dt><dd><p>Grid inductance (H).</p>
-</dd>
-<dt>R_g<span class="classifier">float, optional</span></dt><dd><p>Series resistance (Ω). The default is 0.</p>
-</dd>
-</dl>
-</div></blockquote>
-</p></li>
-<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – <p>Filter model parameters. The following parameters are needed:</p>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.ACFilterPars" title="motulator.grid.utils.ACFilterPars"><em>ACFilterPars</em></a>) – <p>Filter model parameters. The following parameters are needed:</p>
 <blockquote>
 <div><dl class="simple">
 <dt>L_fc<span class="classifier">float</span></dt><dd><p>Filter inductance (H).</p>
 </dd>
-<dt>R_fc<span class="classifier">float, optional</span></dt><dd><p>Series resistance (Ω). The default is 0.</p>
+<dt>R_fc<span class="classifier">float, optional</span></dt><dd><p>Series resistance (Ω).</p>
+</dd>
+<dt>L_g<span class="classifier">float</span></dt><dd><p>Grid inductance (H).</p>
+</dd>
+<dt>R_g<span class="classifier">float, optional</span></dt><dd><p>Series resistance (Ω).</p>
 </dd>
 </dl>
 </div></blockquote>
-</p></li>
-</ul>
+</p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.model.LFilter.meas_pcc_voltages">
+<span class="sig-name descname"><span class="pre">meas_pcc_voltages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#LFilter.meas_pcc_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.LFilter.meas_pcc_voltages" title="Permalink to this definition">#</a></dt>
+<dd><p>Measure the phase voltages at the point of common coupling (PCC).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u_g_abc</strong> – PCC phase voltages (V).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>3-tuple of floats</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.LFilter.post_process_states">
 <span class="sig-name descname"><span class="pre">post_process_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_filter.html#LFilter.post_process_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.LFilter.post_process_states" title="Permalink to this definition">#</a></dt>
@@ -783,12 +784,13 @@ filter and the grid impedance is calculated.</p>
 <dt class="sig sig-object py" id="motulator.grid.model.Simulation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.Simulation" title="Permalink to this definition">#</a></dt>
 <dd><p>Simulation environment.</p>
-<p>Each simulation object has a system model object and a controller object.</p>
+<p>Each simulation object has a system model object and a control system
+object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mdl</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a>) – Continuous-time system model.</p></li>
-<li><p><strong>ctrl</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><em>ControlSystem</em></a>) – Discrete-time controller.</p></li>
+<li><p><strong>ctrl</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><em>ControlSystem</em></a>) – Discrete-time control system.</p></li>
 </ul>
 </dd>
 </dl>
@@ -806,7 +808,7 @@ filter and the grid impedance is calculated.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.Simulation.simulate">
 <span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Simulation.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.Simulation.simulate" title="Permalink to this definition">#</a></dt>
-<dd><p>Solve the continuous-time model and call the discrete-time controller.</p>
+<dd><p>Solve the continuous-time system model and call the control system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1000,7 +1002,6 @@ used as the initial condition.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ACFilter"><code class="docutils literal notranslate"><span class="pre">ACFilter</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ACFilter.meas_currents"><code class="docutils literal notranslate"><span class="pre">ACFilter.meas_currents()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ACFilter.meas_pcc_voltages"><code class="docutils literal notranslate"><span class="pre">ACFilter.meas_pcc_voltages()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></li>
@@ -1012,12 +1013,14 @@ used as the initial condition.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter"><code class="docutils literal notranslate"><span class="pre">LCLFilter</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.meas_capacitor_voltages"><code class="docutils literal notranslate"><span class="pre">LCLFilter.meas_capacitor_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.meas_grid_currents"><code class="docutils literal notranslate"><span class="pre">LCLFilter.meas_grid_currents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.meas_pcc_voltages"><code class="docutils literal notranslate"><span class="pre">LCLFilter.meas_pcc_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">LCLFilter.post_process_with_inputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.rhs"><code class="docutils literal notranslate"><span class="pre">LCLFilter.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LCLFilter.set_outputs"><code class="docutils literal notranslate"><span class="pre">LCLFilter.set_outputs()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter"><code class="docutils literal notranslate"><span class="pre">LFilter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter.meas_pcc_voltages"><code class="docutils literal notranslate"><span class="pre">LFilter.meas_pcc_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter.post_process_states"><code class="docutils literal notranslate"><span class="pre">LFilter.post_process_states()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter.post_process_with_inputs"><code class="docutils literal notranslate"><span class="pre">LFilter.post_process_with_inputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.LFilter.rhs"><code class="docutils literal notranslate"><span class="pre">LFilter.rhs()</span></code></a></li>

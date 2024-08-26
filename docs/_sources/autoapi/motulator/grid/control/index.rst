@@ -61,13 +61,7 @@ Package Contents
    converters. The gains are initialized based on the desired closed-loop
    bandwidth and the filter inductance.
 
-   :param cfg:
-               Control configuration parameters:
-
-                   filter_par.L_fc : float
-                       Converter-side filter inductance (H).
-                   alpha_c : float
-                       Closed-loop bandwidth (rad/s) of the current controller.
+   :param cfg: Control configuration parameters.
    :type cfg: GFLControlCfg
 
 
@@ -123,6 +117,9 @@ Package Contents
    This class is used to generate the current references for the current
    controllers based on the active and reactive power references. The current
    limiting algorithm is used to limit the current references.
+
+   :param cfg: Control configuration parameters.
+   :type cfg: GFLControlCfg
 
 
 
@@ -331,11 +328,13 @@ Package Contents
    
    Grid-following control configuration
 
-   :param grid_par: Grid model parameters.
-   :type grid_par: GridPars
-   :param filter_par: Filter parameters.
-   :type filter_par: FilterPars
-   :param max_i: Maximum current (A).
+   :param L: Inductance (H).
+   :type L: float
+   :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
+   :type nom_u: float
+   :param nom_w: Nominal grid frequency (rad/s).
+   :type nom_w: float
+   :param max_i: Maximum current (A), peak value.
    :type max_i: float
    :param T_s: Sampling period (s). The default is 100e-6.
    :type T_s: float, optional
@@ -363,7 +362,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: GridConverterControlSystem(grid_par, C_dc, T_s)
+.. py:class:: GridConverterControlSystem(C_dc, T_s)
 
    Bases: :py:obj:`motulator.common.control.ControlSystem`, :py:obj:`abc.ABC`
 
@@ -375,8 +374,6 @@ Package Contents
    grid-connected converters. This can be used both in power control and
    DC-bus voltage control modes.
 
-   :param grid_par: Grid model parameters.
-   :type grid_par: GridPars
    :param C_dc: DC-bus capacitance (F). The default is None.
    :type C_dc: float, optional
    :param T_s: Sampling period (s).
@@ -676,18 +673,20 @@ Package Contents
    
    Disturbance-observer-based grid-forming control configuration.
 
-   :param grid_par: Grid model parameters.
-   :type grid_par: GridPars
-   :param filter_par: Filter model parameters.
-   :type filter_par: FilterPars
-   :param max_i: Maximum current modulus (A).
+   :param L: Total inductance.
+   :type L: float
+   :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
+   :type nom_u: float
+   :param nom_w: Nominal grid frequency (rad/s).
+   :type nom_w: float
+   :param max_i: Maximum current (A), peak value.
    :type max_i: float
-   :param R_a: Active resistance (Ω).
-   :type R_a: float
-   :param T_s: Sampling period of the controller (s). Default is 100e-6.
+   :param R: Total series resistance (Ω). The default is 0.
+   :type R: float, optional
+   :param R_a: Active resistance (Ω). The default is 0.25*num_u/max_i.
+   :type R_a: float, optional
+   :param T_s: Sampling period of the controller (s). The default is 100e-6.
    :type T_s: float, optional
-   :param k_v: Voltage gain. The default is 1.
-   :type k_v: float, optional
    :param alpha_c: Current control bandwidth (rad/s). The default is 2*pi*400.
    :type alpha_c: float, optional
    :param alpha_o: Observer gain (rad/s). The default is 2*pi*50.
@@ -906,14 +905,14 @@ Package Contents
    
    Power synchronization control configuration.
 
-   :param grid_par: Grid model parameters.
-   :type grid_par: GridPars
-   :param filter_par: Filter model parameters.
-   :type filter_par: FilterPars
-   :param max_i: Maximum current modulus (A).
+   :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
+   :type nom_u: float
+   :param nom_w: Nominal grid frequency (rad/s).
+   :type nom_w: float
+   :param max_i: Maximum current (A), peak value.
    :type max_i: float
-   :param R_a: Damping resistance (Ω).
-   :type R_a: float
+   :param R_a: Active resistance (Ω). The default is 0.25*num_u/max_i.
+   :type R_a: float, optional
    :param T_s: Sampling period of the controller (s). The default is 100e-6.
    :type T_s: float, optional
    :param w_b: Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.

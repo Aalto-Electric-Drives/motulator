@@ -30,7 +30,7 @@ This example simulates reference-feedforward power-synchronization control
 
     from motulator.grid import model, control
     from motulator.grid.utils import (
-        BaseValues, FilterPars, GridPars, NominalValues, plot)
+        BaseValues, ACFilterPars, NominalValues, plot)
 
 
 
@@ -62,30 +62,22 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-44
+.. GENERATED FROM PYTHON SOURCE LINES 23-36
 
 .. code-block:: Python
 
 
-    # Grid parameters
-    grid_par = GridPars(u_gN=base.u, w_gN=base.w, L_g=.74*base.L)
-    # Uncomment line below to simulate a strong grid
-    # grid_par.L_g = 0
-
-    # Filter parameters
-    filter_par = FilterPars(L_fc=.15*base.L)
-
-    # Create AC filter with given parameters
-    ac_filter = model.ACFilter(filter_par, grid_par)
-
+    # Filter and grid
+    par = ACFilterPars(L_fc=.15*base.L, L_g=.74*base.L)
+    # par.L_g = 0  # Uncomment this line to simulate a strong grid
+    ac_filter = model.ACFilter(par)
     # Grid voltage source with constant frequency and voltage magnitude
-    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
+    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
     # Inverter with constant DC voltage
     converter = model.VoltageSourceConverter(u_dc=650)
 
     # Create system model
-    mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
+    mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 
 
@@ -94,18 +86,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-54
+.. GENERATED FROM PYTHON SOURCE LINES 38-46
 
 .. code-block:: Python
 
 
     # Control configuration parameters
     cfg = control.RFPSCControlCfg(
-        grid_par, filter_par, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
+        nom_u=base.u, nom_w=base.w, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
 
     # Create the control system
     ctrl = control.RFPSCControl(cfg)
@@ -117,11 +109,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-64
+.. GENERATED FROM PYTHON SOURCE LINES 48-56
 
 .. code-block:: Python
 
@@ -140,11 +132,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-70
+.. GENERATED FROM PYTHON SOURCE LINES 58-62
 
 .. code-block:: Python
 
@@ -159,11 +151,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-74
+.. GENERATED FROM PYTHON SOURCE LINES 64-66
 
 .. code-block:: Python
 
@@ -196,7 +188,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.235 seconds)
+   **Total running time of the script:** (0 minutes 7.819 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_rfpsc_13kva.py:

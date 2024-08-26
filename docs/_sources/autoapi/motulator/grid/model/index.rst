@@ -58,10 +58,8 @@ Package Contents
    corresponding filter object depending on if a value for the filter
    capacitance `C_f` is given.
 
-   :param filter_par: Filter model parameters.
-   :type filter_par: FilterPars
-   :param grid_par: Grid model parameters.
-   :type grid_par: GridPars
+   :param par: Filter model parameters.
+   :type par: ACFilterPars
 
 
 
@@ -86,32 +84,6 @@ Package Contents
       Measure the converter phase currents.
 
       :returns: **i_c_abc** -- Converter phase currents (A).
-      :rtype: 3-tuple of floats
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_pcc_voltages()
-
-      
-      Measure the phase voltages at the point of common coupling (PCC).
-
-      :returns: **u_g_abc** -- Phase voltages at the PCC (V).
       :rtype: 3-tuple of floats
 
 
@@ -202,7 +174,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: GridConverterSystem(converter=None, ac_filter=None, grid_model=None)
+.. py:class:: GridConverterSystem(converter=None, ac_filter=None, ac_source=None)
 
    Bases: :py:obj:`motulator.common.model.Model`
 
@@ -214,8 +186,8 @@ Package Contents
    :type converter: VoltageSourceConverter
    :param ac_filter: Dynamic model for converter output filter and grid impedance.
    :type ac_filter: LFilter | LCLFilter
-   :param grid_model: Three-phase grid voltage source model.
-   :type grid_model: ThreePhaseVoltageSource
+   :param ac_source: Three-phase grid voltage source model.
+   :type ac_source: ThreePhaseVoltageSource
 
 
 
@@ -282,7 +254,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: LCLFilter(filter_par, grid_par)
+.. py:class:: LCLFilter(par)
 
    Bases: :py:obj:`ACFilter`
 
@@ -295,10 +267,8 @@ Package Contents
    coupling (PCC) voltage between the LCL filter and the grid impedance is
    also calculated.
 
-   :param grid_par: Grid model parameters.
-   :type grid_par: GridPars
-   :param filter_par: Filter model parameters.
-   :type filter_par: FilterPars
+   :param par: Filter model parameters.
+   :type par: ACFilterPars
 
 
 
@@ -349,6 +319,32 @@ Package Contents
       Measure the grid phase currents.
 
       :returns: **i_g_abc** -- Grid phase currents (A).
+      :rtype: 3-tuple of floats
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_pcc_voltages()
+
+      
+      Measure the phase voltages at the point of common coupling (PCC).
+
+      :returns: **u_g_abc** -- PCC phase voltages (V).
       :rtype: 3-tuple of floats
 
 
@@ -441,7 +437,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: LFilter(filter_par, grid_par)
+.. py:class:: LFilter(par)
 
    Bases: :py:obj:`ACFilter`
 
@@ -454,22 +450,18 @@ Package Contents
    resistances. The point-of-common-coupling (PCC) voltage between the L
    filter and the grid impedance is calculated.
 
-   :param grid_par:
-                    Grid model parameters. The following parameters are needed:
+   :param par:
+               Filter model parameters. The following parameters are needed:
 
-                        L_g : float
-                            Grid inductance (H).
-                        R_g : float, optional
-                            Series resistance (Ω). The default is 0.
-   :type grid_par: GridPars
-   :param filter_par:
-                      Filter model parameters. The following parameters are needed:
-
-                          L_fc : float
-                              Filter inductance (H).
-                          R_fc : float, optional
-                              Series resistance (Ω). The default is 0.
-   :type filter_par: FilterPars
+                   L_fc : float
+                       Filter inductance (H).
+                   R_fc : float, optional
+                       Series resistance (Ω).
+                   L_g : float
+                       Grid inductance (H).
+                   R_g : float, optional
+                       Series resistance (Ω).
+   :type par: ACFilterPars
 
 
 
@@ -487,6 +479,32 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: meas_pcc_voltages()
+
+      
+      Measure the phase voltages at the point of common coupling (PCC).
+
+      :returns: **u_g_abc** -- PCC phase voltages (V).
+      :rtype: 3-tuple of floats
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
    .. py:method:: post_process_states()
 
@@ -589,11 +607,12 @@ Package Contents
    
    Simulation environment.
 
-   Each simulation object has a system model object and a controller object.
+   Each simulation object has a system model object and a control system
+   object.
 
    :param mdl: Continuous-time system model.
    :type mdl: Model
-   :param ctrl: Discrete-time controller.
+   :param ctrl: Discrete-time control system.
    :type ctrl: ControlSystem
 
 
@@ -642,7 +661,7 @@ Package Contents
    .. py:method:: simulate(t_stop=1, max_step=np.inf)
 
       
-      Solve the continuous-time model and call the discrete-time controller.
+      Solve the continuous-time system model and call the control system.
 
       :param t_stop: Simulation stop time. The default is 1.
       :type t_stop: float, optional

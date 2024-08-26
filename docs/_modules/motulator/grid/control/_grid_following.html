@@ -381,7 +381,6 @@ document.write(`
 <span class="kn">from</span> <span class="nn">motulator.common.control</span> <span class="kn">import</span> <span class="n">ComplexPIController</span>
 <span class="kn">from</span> <span class="nn">motulator.grid.control._common</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">CurrentLimiter</span><span class="p">,</span> <span class="n">GridConverterControlSystem</span><span class="p">,</span> <span class="n">PLL</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">GridPars</span>
 
 
 <span class="c1"># %%</span>
@@ -392,12 +391,14 @@ document.write(`
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    grid_par : GridPars</span>
-<span class="sd">        Grid model parameters.</span>
-<span class="sd">    filter_par : FilterPars</span>
-<span class="sd">        Filter parameters.</span>
+<span class="sd">    L : float</span>
+<span class="sd">        Inductance (H).</span>
+<span class="sd">    nom_u : float</span>
+<span class="sd">        Nominal grid voltage (V), line-to-neutral peak value.</span>
+<span class="sd">    nom_w : float</span>
+<span class="sd">        Nominal grid frequency (rad/s).</span>
 <span class="sd">    max_i : float</span>
-<span class="sd">        Maximum current (A). </span>
+<span class="sd">        Maximum current (A), peak value. </span>
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s). The default is 100e-6.</span>
 <span class="sd">    alpha_c : float, optional</span>
@@ -408,8 +409,9 @@ document.write(`
 <span class="sd">        DC-bus capacitance (F). The default is None.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">grid_par</span><span class="p">:</span> <span class="n">GridPars</span>
-    <span class="n">filter_par</span><span class="p">:</span> <span class="n">FilterPars</span>
+    <span class="n">L</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">nom_u</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">nom_w</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">max_i</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100e-6</span>
     <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">400</span>
@@ -438,10 +440,10 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">grid_par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">C_dc</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">C_dc</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span> <span class="o">=</span> <span class="n">CurrentController</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pll</span> <span class="o">=</span> <span class="n">PLL</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_pll</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">grid_par</span><span class="o">.</span><span class="n">w_gN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pll</span> <span class="o">=</span> <span class="n">PLL</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_pll</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_reference</span> <span class="o">=</span> <span class="n">CurrentRefCalc</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GFLControl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
@@ -485,18 +487,12 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cfg : GFLControlCfg</span>
-<span class="sd">        Control configuration parameters:</span>
-
-<span class="sd">            filter_par.L_fc : float</span>
-<span class="sd">                Converter-side filter inductance (H).</span>
-<span class="sd">            alpha_c : float</span>
-<span class="sd">                Closed-loop bandwidth (rad/s) of the current controller.</span>
+<span class="sd">        Control configuration parameters.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># TODO: should the total inductance be used here?</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
-        <span class="n">k_t</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">filter_par</span><span class="o">.</span><span class="n">L_fc</span>
+        <span class="n">k_t</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">L</span>
         <span class="n">k_i</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span><span class="o">*</span><span class="n">k_t</span>
         <span class="n">k_p</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">k_t</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k_p</span><span class="p">,</span> <span class="n">k_i</span><span class="p">,</span> <span class="n">k_t</span><span class="p">)</span></div>
@@ -511,23 +507,20 @@ document.write(`
 <span class="sd">    controllers based on the active and reactive power references. The current</span>
 <span class="sd">    limiting algorithm is used to limit the current references.</span>
 <span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : GFLControlCfg</span>
+<span class="sd">        Control configuration parameters.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        cfg : GFLControlCfg</span>
-<span class="sd">            Model and controller configuration parameters.</span>
-<span class="sd">    </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u_gN</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nom_u_g</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">CurrentLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_i</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CurrentRefCalc.get_current_reference"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentRefCalc.get_current_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Current reference generator.&quot;&quot;&quot;</span>
-        <span class="c1"># Calculation of the current references in the stationary frame:</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">u_gN</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="n">j</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">u_gN</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_u_g</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="n">j</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_u_g</span><span class="p">)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ref</span></div></div>

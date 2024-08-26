@@ -476,8 +476,6 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    grid_par : GridPars</span>
-<span class="sd">        Grid model parameters.</span>
 <span class="sd">    C_dc : float, optional</span>
 <span class="sd">        DC-bus capacitance (F). The default is None.</span>
 <span class="sd">    T_s : float</span>
@@ -506,9 +504,8 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_par</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">,</span> <span class="n">T_s</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">,</span> <span class="n">T_s</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">T_s</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid_par</span> <span class="o">=</span> <span class="n">grid_par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_volt_ctrl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">(</span><span class="n">overmodulation</span><span class="o">=</span><span class="s2">&quot;MPE&quot;</span><span class="p">)</span>

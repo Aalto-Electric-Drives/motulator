@@ -32,7 +32,7 @@ grid, a current reference generator, and a PI-type current controller.
 
     from motulator.grid import model, control
     from motulator.grid.utils import (
-        BaseValues, FilterPars, GridPars, NominalValues, plot)
+        BaseValues, ACFilterPars, NominalValues, plot)
 
 
 
@@ -64,28 +64,20 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-44
+.. GENERATED FROM PYTHON SOURCE LINES 25-36
 
 .. code-block:: Python
 
 
-    # Grid parameters
-    grid_par = GridPars(u_gN=base.u, w_gN=base.w)
-
-    # Filter parameters
-    filter_par = FilterPars(L_fc=.2*base.L)
-
-    # Create AC filter with given parameters
-    ac_filter = model.ACFilter(filter_par, grid_par)
-
-    # AC grid model with constant voltage magnitude and frequency
-    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
-    # Inverter model with DC-bus dynamics included
+    # Filter and grid
+    par = ACFilterPars(L_fc=.2*base.L)
+    ac_filter = model.ACFilter(par)
+    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
+    # Converter model with the DC-bus dynamics
     converter = model.VoltageSourceConverter(u_dc=600, C_dc=1e-3)
 
     # Create system model
-    mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
+    mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 
 
@@ -94,17 +86,18 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-54
+.. GENERATED FROM PYTHON SOURCE LINES 38-47
 
 .. code-block:: Python
 
 
     # Create the control system
-    cfg = control.GFLControlCfg(grid_par, filter_par, max_i=1.5*base.i, C_dc=1e-3)
+    cfg = control.GFLControlCfg(
+        L=.2*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i, C_dc=1e-3)
     ctrl = control.GFLControl(cfg)
 
     # Add the DC-bus voltage controller to the control system
@@ -117,11 +110,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-64
+.. GENERATED FROM PYTHON SOURCE LINES 49-57
 
 .. code-block:: Python
 
@@ -140,11 +133,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-70
+.. GENERATED FROM PYTHON SOURCE LINES 59-63
 
 .. code-block:: Python
 
@@ -159,11 +152,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-77
+.. GENERATED FROM PYTHON SOURCE LINES 65-70
 
 .. code-block:: Python
 
@@ -199,7 +192,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.243 seconds)
+   **Total running time of the script:** (0 minutes 1.201 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_dc_bus_10kva.py:

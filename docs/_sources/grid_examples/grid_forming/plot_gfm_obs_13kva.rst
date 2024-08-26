@@ -32,7 +32,7 @@ observer. A transparent current controller is included for current limitation.
 
     from motulator.grid import model, control
     from motulator.grid.utils import (
-        BaseValues, FilterPars, GridPars, NominalValues, plot)
+        BaseValues, ACFilterPars, NominalValues, plot)
 
 
 
@@ -64,30 +64,21 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-46
+.. GENERATED FROM PYTHON SOURCE LINES 25-37
 
 .. code-block:: Python
 
 
-    # Grid parameters
-    grid_par = GridPars(u_gN=base.u, w_gN=base.w, L_g=.74*base.L)
-    # Uncomment the line below to simulate a strong grid
-    # grid_par.L_g = 0
-
-    # Filter parameters
-    filter_par = FilterPars(L_fc=.15*base.L, R_fc=.05*base.Z)
-
-    # Create AC filter with given parameters
-    ac_filter = model.ACFilter(filter_par, grid_par)
-
-    # Grid voltage source with constant frequency and voltage magnitude
-    grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
+    # Filter and grid parameters
+    par = ACFilterPars(L_fc=.15*base.L, R_fc=.05*base.Z, L_g=.74*base.L)
+    # par.L_g = 0 # Uncomment this line to simulate a strong grid
+    ac_filter = model.ACFilter(par)
+    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
     # Inverter with constant DC voltage
     converter = model.VoltageSourceConverter(u_dc=650)
 
     # Create system model
-    mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
+    mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 
 
@@ -96,21 +87,24 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-59
+.. GENERATED FROM PYTHON SOURCE LINES 39-53
 
 .. code-block:: Python
 
 
-    # Estimates for the grid parameters, grid inductance estimate is left at 0
-    grid_par_est = GridPars(u_gN=base.u, w_gN=base.w, L_g=.2*base.L)
-
     # Set the configuration parameters
     cfg = control.ObserverBasedGFMControlCfg(
-        grid_par_est, filter_par, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
+        L=.35*base.L,
+        R=.05*base.Z,
+        nom_u=base.u,
+        nom_w=base.w,
+        max_i=1.3*base.i,
+        T_s=100e-6,
+        R_a=.2*base.Z)
 
     # Create the control system
     ctrl = control.ObserverBasedGFMControl(cfg)
@@ -122,11 +116,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-76
+.. GENERATED FROM PYTHON SOURCE LINES 55-70
 
 .. code-block:: Python
 
@@ -142,7 +136,7 @@ Set the references for converter output voltage magnitude and active power.
     # ctrl.ref.p_g = lambda t: ((t > .2) - (t > .7)*2 + (t > 1.2))*nom.P
 
     # Uncomment lines below to simulate a grid voltage sag with constant ref.p_g
-    # mdl.grid_model.par.abs_e_g = lambda t: (1 - (t > .2)*.8 + (t > 1)*.8)*base.u
+    # mdl.ac_source.par.abs_e_g = lambda t: (1 - (t > .2)*.8 + (t > 1)*.8)*base.u
     # ctrl.ref.p_g = lambda t: nom.P
 
 
@@ -152,11 +146,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-82
+.. GENERATED FROM PYTHON SOURCE LINES 72-76
 
 .. code-block:: Python
 
@@ -171,11 +165,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-86
+.. GENERATED FROM PYTHON SOURCE LINES 78-80
 
 .. code-block:: Python
 
@@ -208,7 +202,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.470 seconds)
+   **Total running time of the script:** (0 minutes 8.064 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_obs_13kva.py:

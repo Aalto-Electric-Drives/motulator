@@ -538,16 +538,7 @@ converters. The gains are initialized based on the desired closed-loop
 bandwidth and the filter inductance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.GFLControlCfg" title="motulator.grid.control.GFLControlCfg"><em>GFLControlCfg</em></a>) – <p>Control configuration parameters:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>filter_par.L_fc<span class="classifier">float</span></dt><dd><p>Converter-side filter inductance (H).</p>
-</dd>
-<dt>alpha_c<span class="classifier">float</span></dt><dd><p>Closed-loop bandwidth (rad/s) of the current controller.</p>
-</dd>
-</dl>
-</div></blockquote>
-</p>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.GFLControlCfg" title="motulator.grid.control.GFLControlCfg"><em>GFLControlCfg</em></a>) – Control configuration parameters.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -576,6 +567,11 @@ bandwidth and the filter inductance.</p>
 <p>This class is used to generate the current references for the current
 controllers based on the active and reactive power references. The current
 limiting algorithm is used to limit the current references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.GFLControlCfg" title="motulator.grid.control.GFLControlCfg"><em>GFLControlCfg</em></a>) – Control configuration parameters.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.control.CurrentRefCalc.get_current_reference">
 <span class="sig-name descname"><span class="pre">get_current_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#CurrentRefCalc.get_current_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentRefCalc.get_current_reference" title="Permalink to this definition">#</a></dt>
@@ -683,9 +679,10 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
-<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter parameters.</p></li>
-<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current (A).</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – Inductance (H).</p></li>
+<li><p><strong>nom_u</strong> (<em>float</em>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
+<li><p><strong>nom_w</strong> (<em>float</em>) – Nominal grid frequency (rad/s).</p></li>
+<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current (A), peak value.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
 <li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current-control bandwidth (rad/s). The default is 2*pi*400.</p></li>
 <li><p><strong>alpha_pll</strong> (<em>float</em><em>, </em><em>optional</em>) – PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.</p></li>
@@ -697,7 +694,7 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Base class for control of grid-connected converters.</p>
 <p>This base class provides typical functionalities for control of
@@ -706,7 +703,6 @@ DC-bus voltage control modes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
 <li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
 </ul>
@@ -885,12 +881,13 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
-<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter model parameters.</p></li>
-<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current modulus (A).</p></li>
-<li><p><strong>R_a</strong> (<em>float</em>) – Active resistance (Ω).</p></li>
-<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). Default is 100e-6.</p></li>
-<li><p><strong>k_v</strong> (<em>float</em><em>, </em><em>optional</em>) – Voltage gain. The default is 1.</p></li>
+<li><p><strong>L</strong> (<em>float</em>) – Total inductance.</p></li>
+<li><p><strong>nom_u</strong> (<em>float</em>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
+<li><p><strong>nom_w</strong> (<em>float</em>) – Nominal grid frequency (rad/s).</p></li>
+<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current (A), peak value.</p></li>
+<li><p><strong>R</strong> (<em>float</em><em>, </em><em>optional</em>) – Total series resistance (Ω). The default is 0.</p></li>
+<li><p><strong>R_a</strong> (<em>float</em><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*num_u/max_i.</p></li>
+<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). The default is 100e-6.</p></li>
 <li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current control bandwidth (rad/s). The default is 2*pi*400.</p></li>
 <li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer gain (rad/s). The default is 2*pi*50.</p></li>
 <li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
@@ -976,10 +973,10 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>grid_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><em>GridPars</em></a>) – Grid model parameters.</p></li>
-<li><p><strong>filter_par</strong> (<a class="reference internal" href="../utils/index.html#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><em>FilterPars</em></a>) – Filter model parameters.</p></li>
-<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current modulus (A).</p></li>
-<li><p><strong>R_a</strong> (<em>float</em>) – Damping resistance (Ω).</p></li>
+<li><p><strong>nom_u</strong> (<em>float</em>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
+<li><p><strong>nom_w</strong> (<em>float</em>) – Nominal grid frequency (rad/s).</p></li>
+<li><p><strong>max_i</strong> (<em>float</em>) – Maximum current (A), peak value.</p></li>
+<li><p><strong>R_a</strong> (<em>float</em><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*num_u/max_i.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). The default is 100e-6.</p></li>
 <li><p><strong>w_b</strong> (<em>float</em><em>, </em><em>optional</em>) – Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.</p></li>
 <li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>

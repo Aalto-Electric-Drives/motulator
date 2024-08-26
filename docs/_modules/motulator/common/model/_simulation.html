@@ -561,14 +561,15 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simulation environment.</span>
 
-<span class="sd">    Each simulation object has a system model object and a controller object.</span>
+<span class="sd">    Each simulation object has a system model object and a control system </span>
+<span class="sd">    object.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mdl : Model </span>
 <span class="sd">        Continuous-time system model.</span>
 <span class="sd">    ctrl : ControlSystem</span>
-<span class="sd">        Discrete-time controller.</span>
+<span class="sd">        Discrete-time control system.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -578,7 +579,7 @@ document.write(`
 
 <div class="viewcode-block" id="Simulation.simulate"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.Simulation.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_stop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_step</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Solve the continuous-time model and call the discrete-time controller.</span>
+<span class="sd">        Solve the continuous-time system model and call the control system.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -733,6 +734,9 @@ document.write(`
                 <span class="c1"># Check if the state derivative exists before adding it</span>
                 <span class="k">if</span> <span class="n">subsystem_rhs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">rhs_list</span> <span class="o">+=</span> <span class="n">subsystem_rhs</span>
+
+        <span class="c1">################## Set the outputs for the interconnections and for the rhs</span>
+        <span class="c1">#self.post_set_outputs(t)</span>
 
         <span class="c1"># List of state derivatives</span>
         <span class="k">return</span> <span class="n">rhs_list</span></div>

@@ -373,7 +373,7 @@ document.write(`
                   
   <h1>Source code for motulator.grid.model._ac_filter</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Grid and AC filter impedance models.</span>
+<span class="sd">AC filter and grid impedance models.</span>
 
 <span class="sd">This module contains continuous-time models for subsystems comprising an AC </span>
 <span class="sd">filter and a grid impedance between the converter and grid voltage sources. The </span>
@@ -384,7 +384,6 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">motulator.common.model</span> <span class="kn">import</span> <span class="n">Subsystem</span>
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">complex2abc</span>
-<span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="n">FilterPars</span>
 
 
 <span class="c1"># %%</span>
@@ -399,18 +398,16 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    filter_par : FilterPars</span>
+<span class="sd">    par : ACFilterPars</span>
 <span class="sd">        Filter model parameters.</span>
-<span class="sd">    grid_par : GridPars</span>
-<span class="sd">        Grid model parameters.</span>
-<span class="sd">        </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filter_par</span><span class="p">:</span> <span class="n">FilterPars</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">filter_par</span><span class="o">.</span><span class="n">C_f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">filter_par</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">C_f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">LCLFilter</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;L_fg must be specified for LCL filter.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;L_fg must be specified for the LCL filter.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">LFilter</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ACFilter.meas_currents"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.ACFilter.meas_currents">[docs]</a>    <span class="k">def</span> <span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -425,20 +422,7 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_c_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">i_c_abc</span></div>
-
-<div class="viewcode-block" id="ACFilter.meas_pcc_voltages"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.ACFilter.meas_pcc_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Measure the phase voltages at the point of common coupling (PCC).</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        u_g_abc : 3-tuple of floats</span>
-<span class="sd">            Phase voltages at the PCC (V).</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_gs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">u_g_abc</span></div></div>
+        <span class="k">return</span> <span class="n">i_c_abc</span></div></div>
 
 
 <span class="c1"># %%</span>
@@ -453,45 +437,37 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    grid_par : GridPars</span>
-<span class="sd">        Grid model parameters. The following parameters are needed:</span>
-
-<span class="sd">            L_g : float</span>
-<span class="sd">                Grid inductance (H).</span>
-<span class="sd">            R_g : float, optional</span>
-<span class="sd">                Series resistance (Ω). The default is 0.</span>
-
-<span class="sd">    filter_par : FilterPars</span>
+<span class="sd">    par : ACFilterPars</span>
 <span class="sd">        Filter model parameters. The following parameters are needed:</span>
 
 <span class="sd">            L_fc : float</span>
 <span class="sd">                Filter inductance (H).</span>
 <span class="sd">            R_fc : float, optional</span>
-<span class="sd">                Series resistance (Ω). The default is 0.</span>
+<span class="sd">                Series resistance (Ω).</span>
+<span class="sd">            L_g : float</span>
+<span class="sd">                Grid inductance (H).</span>
+<span class="sd">            R_g : float, optional</span>
+<span class="sd">                Series resistance (Ω). </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_par</span><span class="p">,</span> <span class="n">grid_par</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
-            <span class="n">L_f</span><span class="o">=</span><span class="n">filter_par</span><span class="o">.</span><span class="n">L_fc</span><span class="p">,</span>
-            <span class="n">R_f</span><span class="o">=</span><span class="n">filter_par</span><span class="o">.</span><span class="n">R_fc</span><span class="p">,</span>
-            <span class="n">L_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">L_g</span><span class="p">,</span>
-            <span class="n">R_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">R_g</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">u_cs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">e_gs</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">)</span>
-        <span class="c1"># For direct feedthrough</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">u_gs</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">L_f</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">L_fc</span><span class="p">,</span> <span class="n">R_f</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_fc</span><span class="p">,</span> <span class="n">L_g</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="p">,</span> <span class="n">R_g</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_g</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">i_cs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sol_states</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">i_cs</span><span class="o">=</span><span class="p">[])</span>
+        <span class="c1"># The following initial conditions are needed for computing the PCC</span>
+        <span class="c1"># voltage, which has direct feedthrough. The PCC voltage is used only</span>
+        <span class="c1"># as a feedback signal for the control system (but not coupled to the</span>
+        <span class="c1"># solution of the continuous-time system). If the transients during the</span>
+        <span class="c1"># very first time steps are important, these initial conditions can be</span>
+        <span class="c1"># set to appropriate values.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">u_cs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">e_gs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LFilter.set_outputs"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.set_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
-        <span class="n">state</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
-        <span class="n">u_gs</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="o">*</span><span class="n">inp</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_f</span><span class="o">*</span><span class="n">inp</span><span class="o">.</span><span class="n">e_gs</span> <span class="o">+</span>
-            <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R_g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_f</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">R_f</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="p">)</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">)</span><span class="o">/</span><span class="p">(</span>
-                <span class="n">par</span><span class="o">.</span><span class="n">L_g</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_f</span><span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">i_gs</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="n">u_gs</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_gs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span></div>
 
 <div class="viewcode-block" id="LFilter.rhs"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.rhs">[docs]</a>    <span class="k">def</span> <span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the state derivatives.&quot;&quot;&quot;</span>
@@ -501,17 +477,33 @@ document.write(`
         <span class="n">d_i_cs</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">-</span> <span class="n">inp</span><span class="o">.</span><span class="n">e_gs</span> <span class="o">-</span> <span class="n">R_t</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">)</span><span class="o">/</span><span class="n">L_t</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">d_i_cs</span><span class="p">]</span></div>
 
+<div class="viewcode-block" id="LFilter.meas_pcc_voltages"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_pcc_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measure the phase voltages at the point of common coupling (PCC).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u_g_abc : 3-tuple of floats</span>
+<span class="sd">            PCC phase voltages (V).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">inp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span>
+        <span class="n">u_gs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="o">*</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">R_f</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">)</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_f</span><span class="o">*</span>
+            <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">e_gs</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_g</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_f</span><span class="p">)</span>
+        <span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_gs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">u_g_abc</span></div>
+
 <div class="viewcode-block" id="LFilter.post_process_states"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.post_process_states">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process data.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_gs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_cs</span></div>
 
 <div class="viewcode-block" id="LFilter.post_process_with_inputs"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.post_process_with_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">post_process_with_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process data with inputs.&quot;&quot;&quot;</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
         <span class="n">data</span><span class="o">.</span><span class="n">u_gs</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="o">*</span><span class="n">data</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_f</span><span class="o">*</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span> <span class="o">+</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">R_g</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_f</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">R_f</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="p">)</span><span class="o">*</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">i_cs</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">L_f</span><span class="p">)</span></div></div>
+            <span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">R_f</span><span class="o">*</span><span class="n">data</span><span class="o">.</span><span class="n">i_cs</span><span class="p">)</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_f</span><span class="o">*</span>
+            <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">e_gs</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_g</span><span class="o">*</span><span class="n">data</span><span class="o">.</span><span class="n">i_cs</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_f</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># %%</span>
@@ -526,42 +518,33 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    grid_par : GridPars</span>
-<span class="sd">        Grid model parameters. </span>
-<span class="sd">    filter_par : FilterPars</span>
+<span class="sd">    par : ACFilterPars</span>
 <span class="sd">        Filter model parameters.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_par</span><span class="p">,</span> <span class="n">grid_par</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
-            <span class="n">L_fc</span><span class="o">=</span><span class="n">filter_par</span><span class="o">.</span><span class="n">L_fc</span><span class="p">,</span>
-            <span class="n">R_fc</span><span class="o">=</span><span class="n">filter_par</span><span class="o">.</span><span class="n">R_fc</span><span class="p">,</span>
-            <span class="n">L_fg</span><span class="o">=</span><span class="n">filter_par</span><span class="o">.</span><span class="n">L_fg</span><span class="p">,</span>
-            <span class="n">R_fg</span><span class="o">=</span><span class="n">filter_par</span><span class="o">.</span><span class="n">R_fg</span><span class="p">,</span>
-            <span class="n">C_f</span><span class="o">=</span><span class="n">filter_par</span><span class="o">.</span><span class="n">C_f</span><span class="p">,</span>
-            <span class="n">L_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">L_g</span><span class="p">,</span>
-            <span class="n">R_g</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">R_g</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">u_cs</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">e_gs</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">u_gs</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
-            <span class="n">i_cs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span>
-            <span class="n">u_fs</span><span class="o">=</span><span class="n">grid_par</span><span class="o">.</span><span class="n">u_gN</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span>
-            <span class="n">i_gs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="n">L_fc</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">L_fc</span><span class="p">,</span>
+            <span class="n">R_fc</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_fc</span><span class="p">,</span>
+            <span class="n">L_fg</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">L_fg</span><span class="p">,</span>
+            <span class="n">R_fg</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_fg</span><span class="p">,</span>
+            <span class="n">C_f</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">C_f</span><span class="p">,</span>
+            <span class="n">L_g</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="p">,</span>
+            <span class="n">R_g</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_g</span><span class="p">)</span>
+        <span class="n">u_fs0</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">u_fs0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">i_cs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_fs</span><span class="o">=</span><span class="n">u_fs0</span><span class="p">,</span> <span class="n">i_gs</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sol_states</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">i_cs</span><span class="o">=</span><span class="p">[],</span> <span class="n">u_fs</span><span class="o">=</span><span class="p">[],</span> <span class="n">i_gs</span><span class="o">=</span><span class="p">[])</span>
+        <span class="c1"># The following initial conditions are needed for computing the PCC</span>
+        <span class="c1"># voltage, which has direct feedthrough. The PCC voltage is used only</span>
+        <span class="c1"># as a feedback signal for the control system.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">u_cs</span><span class="o">=</span><span class="n">u_fs0</span><span class="p">,</span> <span class="n">e_gs</span><span class="o">=</span><span class="n">u_fs0</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LCLFilter.set_outputs"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.set_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
-        <span class="n">state</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
-        <span class="n">u_gs</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">L_fg</span><span class="o">*</span><span class="n">inp</span><span class="o">.</span><span class="n">e_gs</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">u_fs</span> <span class="o">+</span>
-            <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R_g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">R_fg</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="p">)</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">i_gs</span><span class="p">)</span><span class="o">/</span><span class="p">(</span>
-                <span class="n">par</span><span class="o">.</span><span class="n">L_g</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_fg</span><span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">u_fs</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">i_gs</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gs</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">u_fs</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">i_gs</span><span class="p">,</span> <span class="n">u_gs</span><span class="p">)</span></div>
+        <span class="n">state</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">u_fs</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">i_gs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">u_fs</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">i_gs</span></div>
 
 <div class="viewcode-block" id="LCLFilter.rhs"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.rhs">[docs]</a>    <span class="k">def</span> <span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the state derivatives.&quot;&quot;&quot;</span>
@@ -573,8 +556,25 @@ document.write(`
         <span class="n">d_i_cs</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">-</span> <span class="n">state</span><span class="o">.</span><span class="n">u_fs</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">R_fc</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span><span class="p">)</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">L_fc</span>
         <span class="n">d_u_fs</span> <span class="o">=</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">i_cs</span> <span class="o">-</span> <span class="n">state</span><span class="o">.</span><span class="n">i_gs</span><span class="p">)</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">C_f</span>
         <span class="n">d_i_gs</span> <span class="o">=</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">u_fs</span> <span class="o">-</span> <span class="n">inp</span><span class="o">.</span><span class="n">e_gs</span> <span class="o">-</span> <span class="n">R_t</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">i_gs</span><span class="p">)</span><span class="o">/</span><span class="n">L_t</span>
-
         <span class="k">return</span> <span class="p">[</span><span class="n">d_i_cs</span><span class="p">,</span> <span class="n">d_u_fs</span><span class="p">,</span> <span class="n">d_i_gs</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="LCLFilter.meas_pcc_voltages"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_pcc_voltages">[docs]</a>    <span class="k">def</span> <span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Measure the phase voltages at the point of common coupling (PCC).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u_g_abc : 3-tuple of floats</span>
+<span class="sd">            PCC phase voltages (V).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">inp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span>
+        <span class="n">u_gs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">L_fg</span><span class="o">*</span><span class="n">inp</span><span class="o">.</span><span class="n">e_gs</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">u_fs</span> <span class="o">+</span>
+            <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R_g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">R_fg</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_g</span><span class="p">)</span><span class="o">*</span><span class="n">state</span><span class="o">.</span><span class="n">i_gs</span><span class="p">)</span><span class="o">/</span><span class="p">(</span>
+                <span class="n">par</span><span class="o">.</span><span class="n">L_g</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_fg</span><span class="p">)</span>
+        <span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_gs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">u_g_abc</span></div>
 
 <div class="viewcode-block" id="LCLFilter.meas_grid_currents"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_grid_currents">[docs]</a>    <span class="k">def</span> <span class="nf">meas_grid_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

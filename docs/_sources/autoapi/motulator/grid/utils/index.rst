@@ -32,9 +32,8 @@ Classes
 
 .. autoapisummary::
 
+   motulator.grid.utils.ACFilterPars
    motulator.grid.utils.BaseValues
-   motulator.grid.utils.FilterPars
-   motulator.grid.utils.GridPars
    motulator.grid.utils.NominalValues
    motulator.grid.utils.Step
 
@@ -50,6 +49,46 @@ Functions
 
 Package Contents
 ----------------
+
+.. py:class:: ACFilterPars
+
+   
+   AC filter and grid impedance parameters.
+
+   :param L_fc: Converter-side filter inductance (H).
+   :type L_fc: float
+   :param L_fg: Grid-side filter inductance (H). The default is 0.
+   :type L_fg: float, optional
+   :param C_f: Filter capacitance (F). The default is 0.
+   :type C_f: float, optional
+   :param R_fc: Series resistance (Ω) of the converter-side inductor. The default is 0.
+   :type R_fc: float, optional
+   :param R_fg: Series resistance (Ω) of the grid-side inductor. The default is 0.
+   :type R_fg: float, optional
+   :param L_g: Grid inductance (H). The default is 0.
+   :type L_g: float, optional
+   :param R_g: Grid resistance (Ω). The default is 0.
+   :type R_g: float, optional
+   :param u_fs0: Initial value of the filter capacitor voltage (V). Needed in the case
+                 of an LCL filter.
+   :type u_fs0: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: BaseValues
 
@@ -140,76 +179,6 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
-
-.. py:class:: FilterPars
-
-   Bases: :py:obj:`abc.ABC`
-
-
-   
-   Filter parameters
-
-   :param L_fc: Converter-side inductance of the filter (H).
-   :type L_fc: float
-   :param L_fg: Grid-side inductance of the filter (H). The default is 0.
-   :type L_fg: float, optional
-   :param C_f: Filter capacitance (F). The default is 0.
-   :type C_f: float, optional
-   :param R_fc: Converter-side series resistance (Ω). The default is 0.
-   :type R_fc: float, optional
-   :param R_fg: Grid-side series resistance (Ω). The default is 0.
-   :type R_fg: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: GridPars
-
-   Bases: :py:obj:`abc.ABC`
-
-
-   
-   Class for grid parameters
-
-   :param u_gN: Nominal grid voltage, phase-to-ground peak value (V).
-   :type u_gN: float
-   :param w_gN: Nominal grid angular frequency (rad/s).
-   :type w_gN: float
-   :param L_g: Grid inductance (H). The default is 0.
-   :type L_g: float, optional
-   :param R_g: Grid resistance (Ω). The default is 0.
-   :type R_g: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 
 .. py:class:: NominalValues
 

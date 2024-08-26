@@ -422,12 +422,11 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.ACFilterPars"><code class="docutils literal notranslate"><span class="pre">ACFilterPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.BaseValues"><code class="docutils literal notranslate"><span class="pre">BaseValues</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.BaseValues.from_nominal"><code class="docutils literal notranslate"><span class="pre">BaseValues.from_nominal()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.FilterPars"><code class="docutils literal notranslate"><span class="pre">FilterPars</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.GridPars"><code class="docutils literal notranslate"><span class="pre">GridPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
@@ -452,19 +451,16 @@ document.write(`
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.ACFilterPars" title="motulator.grid.utils.ACFilterPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACFilterPars</span></code></a></p></td>
+<td><p>AC filter and grid impedance parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
 <td><p>Base values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.FilterPars" title="motulator.grid.utils.FilterPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FilterPars</span></code></a></p></td>
-<td><p>Filter parameters</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.GridPars" title="motulator.grid.utils.GridPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridPars</span></code></a></p></td>
-<td><p>Class for grid parameters</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.NominalValues" title="motulator.grid.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.NominalValues" title="motulator.grid.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
 <td><p>Nominal values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.Step" title="motulator.grid.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.Step" title="motulator.grid.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
 <td><p>Step function.</p></td>
 </tr>
 </tbody>
@@ -485,6 +481,27 @@ document.write(`
 </section>
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.utils.ACFilterPars">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">ACFilterPars</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_utils.html#ACFilterPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.ACFilterPars" title="Permalink to this definition">#</a></dt>
+<dd><p>AC filter and grid impedance parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_fc</strong> (<em>float</em>) – Converter-side filter inductance (H).</p></li>
+<li><p><strong>L_fg</strong> (<em>float</em><em>, </em><em>optional</em>) – Grid-side filter inductance (H). The default is 0.</p></li>
+<li><p><strong>C_f</strong> (<em>float</em><em>, </em><em>optional</em>) – Filter capacitance (F). The default is 0.</p></li>
+<li><p><strong>R_fc</strong> (<em>float</em><em>, </em><em>optional</em>) – Series resistance (Ω) of the converter-side inductor. The default is 0.</p></li>
+<li><p><strong>R_fg</strong> (<em>float</em><em>, </em><em>optional</em>) – Series resistance (Ω) of the grid-side inductor. The default is 0.</p></li>
+<li><p><strong>L_g</strong> (<em>float</em><em>, </em><em>optional</em>) – Grid inductance (H). The default is 0.</p></li>
+<li><p><strong>R_g</strong> (<em>float</em><em>, </em><em>optional</em>) – Grid resistance (Ω). The default is 0.</p></li>
+<li><p><strong>u_fs0</strong> (<em>float</em><em>, </em><em>optional</em>) – Initial value of the filter capacitor voltage (V). Needed in the case
+of an LCL filter.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.utils.BaseValues">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.BaseValues" title="Permalink to this definition">#</a></dt>
@@ -540,41 +557,6 @@ for a grid converter are calculated. The default is None.</p></li>
 the power factor and efficiency being less than unity.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.utils.FilterPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">FilterPars</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_utils.html#FilterPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.FilterPars" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
-<p>Filter parameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>L_fc</strong> (<em>float</em>) – Converter-side inductance of the filter (H).</p></li>
-<li><p><strong>L_fg</strong> (<em>float</em><em>, </em><em>optional</em>) – Grid-side inductance of the filter (H). The default is 0.</p></li>
-<li><p><strong>C_f</strong> (<em>float</em><em>, </em><em>optional</em>) – Filter capacitance (F). The default is 0.</p></li>
-<li><p><strong>R_fc</strong> (<em>float</em><em>, </em><em>optional</em>) – Converter-side series resistance (Ω). The default is 0.</p></li>
-<li><p><strong>R_fg</strong> (<em>float</em><em>, </em><em>optional</em>) – Grid-side series resistance (Ω). The default is 0.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.utils.GridPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">GridPars</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_utils.html#GridPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.GridPars" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
-<p>Class for grid parameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u_gN</strong> (<em>float</em>) – Nominal grid voltage, phase-to-ground peak value (V).</p></li>
-<li><p><strong>w_gN</strong> (<em>float</em>) – Nominal grid angular frequency (rad/s).</p></li>
-<li><p><strong>L_g</strong> (<em>float</em><em>, </em><em>optional</em>) – Grid inductance (H). The default is 0.</p></li>
-<li><p><strong>R_g</strong> (<em>float</em><em>, </em><em>optional</em>) – Grid resistance (Ω). The default is 0.</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -676,12 +658,11 @@ default is False.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.ACFilterPars"><code class="docutils literal notranslate"><span class="pre">ACFilterPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.BaseValues"><code class="docutils literal notranslate"><span class="pre">BaseValues</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.BaseValues.from_nominal"><code class="docutils literal notranslate"><span class="pre">BaseValues.from_nominal()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.FilterPars"><code class="docutils literal notranslate"><span class="pre">FilterPars</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.GridPars"><code class="docutils literal notranslate"><span class="pre">GridPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>

@@ -967,12 +967,13 @@ drives,” IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="htt
 <dt class="sig sig-object py" id="motulator.drive.model.Simulation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Simulation" title="Permalink to this definition">#</a></dt>
 <dd><p>Simulation environment.</p>
-<p>Each simulation object has a system model object and a controller object.</p>
+<p>Each simulation object has a system model object and a control system
+object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mdl</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a>) – Continuous-time system model.</p></li>
-<li><p><strong>ctrl</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><em>ControlSystem</em></a>) – Discrete-time controller.</p></li>
+<li><p><strong>ctrl</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><em>ControlSystem</em></a>) – Discrete-time control system.</p></li>
 </ul>
 </dd>
 </dl>
@@ -990,7 +991,7 @@ drives,” IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="htt
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.Simulation.simulate">
 <span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Simulation.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Simulation.simulate" title="Permalink to this definition">#</a></dt>
-<dd><p>Solve the continuous-time model and call the discrete-time controller.</p>
+<dd><p>Solve the continuous-time system model and call the control system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
