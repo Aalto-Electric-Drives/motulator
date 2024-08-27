@@ -27,9 +27,9 @@
      showguides="true"
      inkscape:lockguides="false"
      showgrid="true"
-     inkscape:zoom="1.371659"
-     inkscape:cx="292.71124"
-     inkscape:cy="99.514529"
+     inkscape:zoom="1.2478589"
+     inkscape:cx="189.52463"
+     inkscape:cy="-11.619903"
      inkscape:window-width="1496"
      inkscape:window-height="820"
      inkscape:window-x="0"
@@ -417,7 +417,7 @@
        d="m 6.5713261,15.864419 17.0074809,3e-6"
        id="path3" />
     <g
-       transform="matrix(0.52071214,0,0,0.35277662,21.953885,13.76227)"
+       transform="matrix(0.52071214,0,0,0.35277662,21.999805,18.999812)"
        ns3:version="1.10.2"
        ns3:texconverter="pdflatex"
        ns3:pdfconverter="inkscape"
@@ -529,7 +529,7 @@
          fill="#000000"
          fill-opacity="1"
          id="id-6b7ebd68-bccc-4258-be45-c27af80f223c"
-         transform="translate(-149.275,-128.952)"
+         transform="translate(-153.43559,-147.47506)"
          style="stroke-width:0.754994;stroke-dasharray:none">
         <g
            transform="translate(148.712,134.765)"
