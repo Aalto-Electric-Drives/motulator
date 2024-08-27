@@ -1,10 +1,19 @@
 Common
 ======
 
-Main Control Loop
------------------
+Control System
+--------------
 
-By default, discrete-time control systems in *motulator* run the following scheme in their main control loops:
+The figure below shows the structure and data flow of the default control systems used in *motulator*.
+
+.. figure:: figs/control_system.svg
+   :width: 100%
+   :align: center
+   :alt: Block diagram of the control system.
+   
+   Block diagram of the control system. The continuous-time plant model is also shown in red.
+
+In the figure, :math:`\texttt{monospace}` font is used to denote actual symbol names used in the program. The shaded background represents what is executed during the simulation, while the post-processing is done only after simulation. By default, discrete-time control systems run the following scheme in their main control loops:
 
    1. Get the feedback signals for the controllers. This step may contain first getting the measurements and then optionally computing the observer outputs. These measured and estimated signals are collected to the SimpleNamespace object named `fbk`. 
    2. Get the reference signals and compute the controller outputs based on the feedback signals `fbk`. These reference signals are collected to the SimpleNamespace object named `ref`. 
