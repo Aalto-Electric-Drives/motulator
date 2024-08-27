@@ -6,7 +6,6 @@ import numpy as np
 
 from motulator.common.utils import wrap
 from motulator.grid.control._common import GridConverterControlSystem
-from motulator.grid.utils import FilterPars, GridPars
 
 
 # %%
@@ -17,18 +16,20 @@ class ObserverBasedGFMControlCfg:
 
     Parameters
     ----------
-    grid_par : GridPars
-        Grid model parameters.
-    filter_par : FilterPars
-        Filter model parameters.
+    L : float
+        Total inductance.
+    nom_u : float
+        Nominal grid voltage (V), line-to-neutral peak value.
+    nom_w : float
+        Nominal grid frequency (rad/s).
     max_i : float
-        Maximum current modulus (A).
-    R_a : float
-        Active resistance (Ω).
+        Maximum current (A), peak value.
+    R : float, optional
+        Total series resistance (Ω). The default is 0.
+    R_a : float, optional
+        Active resistance (Ω). The default is 0.25*num_u/max_i.
     T_s : float, optional
-        Sampling period of the controller (s). Default is 100e-6.
-    k_v : float, optional
-        Voltage gain. The default is 1.
+        Sampling period of the controller (s). The default is 100e-6.
     alpha_c : float, optional
         Current control bandwidth (rad/s). The default is 2*pi*400.
     alpha_o : float, optional
@@ -37,21 +38,20 @@ class ObserverBasedGFMControlCfg:
         DC-bus capacitance (F). The default is None.
 
     """
-
-    grid_par: GridPars
-    filter_par: FilterPars
+    L: float
+    nom_u: float
+    nom_w: float
     max_i: float
-    R_a: float
+    R: float = 0
+    R_a: float = None
     T_s: float = 100e-6
-    k_v: float = 1
     alpha_c: float = 2*np.pi*400
     alpha_o: float = 2*np.pi*50
     C_dc: float = None
 
     def __post_init__(self):
-        par = self.filter_par
-        self.L = par.L_fc + par.L_fg + self.grid_par.L_g  # Total inductance
-        self.R = par.R_fc + par.R_fg + self.grid_par.R_g  # Series resistance
+        if self.R_a is None:
+            self.R_a = .25*self.nom_u/self.max_i
         self.k_c = self.alpha_c*self.L  # Current control gain
 
 
@@ -84,13 +84,10 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
     """
 
     def __init__(self, cfg):
-        super().__init__(cfg.grid_par, cfg.C_dc, cfg.T_s)
+        super().__init__(cfg.C_dc, cfg.T_s)
         self.cfg = cfg
         self.observer = DisturbanceObserver(
-            w_g=cfg.grid_par.w_gN,
-            L=cfg.L,
-            alpha_o=cfg.alpha_o,
-            v_c0=cfg.grid_par.u_gN)
+            cfg.nom_w, cfg.L, cfg.alpha_o, cfg.nom_u)
         self.ref.q_g = 0
 
     def get_feedback_signals(self, mdl):
@@ -105,7 +102,7 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
 
     def output(self, fbk):
         """Extend the base class method."""
-        par, cfg = self.grid_par, self.cfg
+        cfg = self.cfg
 
         # Get the reference signals
         ref = super().output(fbk)
@@ -117,9 +114,9 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
         abs_k_p = cfg.R_a/(1.5*ref.v_c)
         abs_v_c = np.abs(fbk.v_c)
         k_p = abs_k_p*fbk.v_c/abs_v_c if abs_v_c > 0 else 0
-        k_v = (1 - cfg.k_v*1j)*fbk.v_c/abs_v_c if abs_v_c > 0 else 0
+        k_v = (1 - 1j)*fbk.v_c/abs_v_c if abs_v_c > 0 else 0
 
-        # Feedback correction term for grid-forming mode
+        # Feedback correction for grid-forming mode
         fbk.e_c = k_p*(ref.p_g - fbk.p_g) + k_v*(ref.v_c - abs_v_c)
 
         # Current limitation
@@ -133,7 +130,7 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
         ref.u_cs = np.exp(1j*fbk.theta_c)*ref.u_c
 
         # Duty ratios for PWM
-        ref.d_abc = self.pwm(ref.T_s, ref.u_cs, fbk.u_dc, par.w_gN)
+        ref.d_abc = self.pwm(ref.T_s, ref.u_cs, fbk.u_dc, cfg.nom_w)
 
         return ref
 

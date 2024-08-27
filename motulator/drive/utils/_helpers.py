@@ -28,7 +28,6 @@ class NominalValues:
         Torque (Nm).
 
     """
-
     U: float
     I: float
     f: float

@@ -10,7 +10,7 @@ This example simulates reference-feedforward power-synchronization control
 # %%
 from motulator.grid import model, control
 from motulator.grid.utils import (
-    BaseValues, FilterPars, GridPars, NominalValues, plot)
+    BaseValues, ACFilterPars, NominalValues, plot)
 
 # %%
 # Compute base values based on the nominal values.
@@ -21,32 +21,24 @@ base = BaseValues.from_nominal(nom)
 # %%
 # Configure the system model.
 
-# Grid parameters
-grid_par = GridPars(u_gN=base.u, w_gN=base.w, L_g=.74*base.L)
-# Uncomment line below to simulate a strong grid
-# grid_par.L_g = 0
-
-# Filter parameters
-filter_par = FilterPars(L_fc=.15*base.L)
-
-# Create AC filter with given parameters
-ac_filter = model.ACFilter(filter_par, grid_par)
-
+# Filter and grid
+par = ACFilterPars(L_fc=.15*base.L, L_g=.74*base.L)
+# par.L_g = 0  # Uncomment this line to simulate a strong grid
+ac_filter = model.ACFilter(par)
 # Grid voltage source with constant frequency and voltage magnitude
-grid_model = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-
+ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
 # Inverter with constant DC voltage
 converter = model.VoltageSourceConverter(u_dc=650)
 
 # Create system model
-mdl = model.GridConverterSystem(converter, ac_filter, grid_model)
+mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 # %%
 # Configure the control system.
 
 # Control configuration parameters
 cfg = control.RFPSCControlCfg(
-    grid_par, filter_par, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
+    nom_u=base.u, nom_w=base.w, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
 
 # Create the control system
 ctrl = control.RFPSCControl(cfg)

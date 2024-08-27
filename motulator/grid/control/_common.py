@@ -102,8 +102,6 @@ class GridConverterControlSystem(ControlSystem, ABC):
 
     Parameters
     ----------
-    grid_par : GridPars
-        Grid model parameters.
     C_dc : float, optional
         DC-bus capacitance (F). The default is None.
     T_s : float
@@ -132,9 +130,8 @@ class GridConverterControlSystem(ControlSystem, ABC):
 
     """
 
-    def __init__(self, grid_par, C_dc, T_s):
+    def __init__(self, C_dc, T_s):
         super().__init__(T_s)
-        self.grid_par = grid_par
         self.C_dc = C_dc
         self.dc_bus_volt_ctrl = None
         self.pwm = PWM(overmodulation="MPE")
