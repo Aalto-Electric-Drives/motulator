@@ -10,7 +10,7 @@ The current controller in the grid following converters uses 2DOF synchronous-fr
    :align: center
    :alt: Two-degree-of-freedom complex-vector PI controller, with feedforward.
 
-   The complex-vector gain selection is based on[#Bri2000]_. More details about the gain selection can be found in the :doc:`/control/drive/current_ctrl` section.
+   The complex-vector gain selection is based on [#Bri2000]_. More details about the gain selection can be found in the :doc:`/control/drive/current_ctrl` section.
 
 .. rubric:: References
 
