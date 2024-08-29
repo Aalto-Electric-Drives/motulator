@@ -5,7 +5,7 @@ These examples demonstrate grid-following control.
 
 The current controller in the grid following converters uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term. The structure of the controller is shown in the figure below:
 
-.. figure:: /control/figs/ComplexFFPI.svg
+.. figure:: /control/figs/complexffpi.svg
    :width: 60%
    :align: center
    :alt: Two-degree-of-freedom complex-vector PI controller, with feedforward.

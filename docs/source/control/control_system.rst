@@ -11,7 +11,7 @@ The figure below shows the structure and data flow of the default control system
    :align: center
    :alt: Block diagram of the control system.
    
-   Block diagram of the control system. The continuous-time plant model is also shown in red.
+   Block diagram of the control system. The continuous-time plant model is also shown in red. Please notice that the observer might not be present in all control systems.
 
 In the figure, :math:`\texttt{monospace}` font is used to denote actual symbol names used in the program. The shaded background represents what is executed during the simulation, while the post-processing is done only after simulation. By default, discrete-time control systems run the following scheme in their main control loops:
 
@@ -32,7 +32,7 @@ The figure below shows a two-degree-of-freedom PI controller, where :math:`k_\ma
    u(s) = k_{\mathrm{t}}\,r(s) - k_{\mathrm{p}}\,y(s) + \frac{k_{\mathrm{i}}}{s}\bigg(r(s) - y(s)\bigg)
    :label: 2DOFPI
 
-.. figure:: figs/2DOF_PI.svg
+.. figure:: figs/2dof_pi.svg
    :width: 100%
    :align: center
    :alt: Two-degree-of-freedom PI controller.
@@ -54,7 +54,7 @@ The figure below shows a 2DOF synchronous-frame complex-vector PI controller whi
 
 where :math:`\boldsymbol{u}(s)` is the controller output, :math:`\boldsymbol{r}(s)` is the reference signal, :math:`\boldsymbol{y}(s)` is the feedback signal, :math:`\boldsymbol{k}_{\mathrm{t}}` is the feedforward gain, :math:`\boldsymbol{k}_{\mathrm{p}}` and :math:`\boldsymbol{k}_{\mathrm{i}}` are the proportional and integral gains, respectively, and :math:`\boldsymbol{u}_{\mathrm{ff}}(s)` is the optional feedforward signal. 
 
-.. figure:: figs/Complex_vector_2DOF_PI.svg
+.. figure:: figs/complex_vector_2dof_pi.svg
    :width: 100%
    :align: center
    :alt: Two-degree-of-freedom complex-vector PI controller, with feedforward.
