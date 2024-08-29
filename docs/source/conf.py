@@ -53,6 +53,9 @@ autoapi_options = [
     "imported-members",
 ]  # "private-members", "imported-members", "undoc-members", "special-members",
 
+# Point AutoAPI to a custom template directory
+autoapi_template_dir = "../_templates/autoapi"
+
 autoapi_python_class_content = "class"  # "both"
 autoapi_keep_files = True
 autoapi_add_toctree_entry = False
