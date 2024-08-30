@@ -439,6 +439,20 @@ document.write(`
 <div class="sphx-glr-thumbnails"></div><section id="grid-following-control">
 <h2>Grid-Following Control<a class="headerlink" href="#grid-following-control" title="Permalink to this heading">#</a></h2>
 <p>These examples demonstrate grid-following control.</p>
+<p>The current controller in the grid following converters uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term. The structure of the controller is shown in the figure below:</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="../_images/complexffpi.svg"><img alt="Two-degree-of-freedom complex-vector PI controller, with feedforward." src="../_images/complexffpi.svg" width="60%" /></a>
+<figcaption>
+<p><span class="caption-text">The complex-vector gain selection is based on <a class="footnote-reference brackets" href="#bri2000" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. More details about the gain selection can be found in the <a class="reference internal" href="../control/drive/current_ctrl.html"><span class="doc">Current Control</span></a> section.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="bri2000" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Briz, Degner, Lorenz, “Analysis and design of current regulators using complex vectors,” IEEE Trans. Ind. Appl., 2000,https://doi.org/10.1109/28.845057</p>
+</aside>
+</aside>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="10-kVA converter, LCL filter"><img alt="" src="../_images/sphx_glr_plot_gfl_lcl_10kva_thumb.png" />
 <p><a class="reference internal" href="grid_following/plot_gfl_lcl_10kva.html#sphx-glr-grid-examples-grid-following-plot-gfl-lcl-10kva-py"><span class="std std-ref">10-kVA converter, LCL filter</span></a></p>
   <div class="sphx-glr-thumbnail-title">10-kVA converter, LCL filter</div>
@@ -451,15 +465,15 @@ document.write(`
 </div></div></section>
 <section id="grid-forming-control">
 <h2>Grid-Forming Control<a class="headerlink" href="#grid-forming-control" title="Permalink to this heading">#</a></h2>
-<p>These examples demonstrate grid-forming control. The example <a class="reference internal" href="grid_forming/plot_gfm_rfpsc_13kva.html"><span class="doc">12.5-kVA converter, RFPSC</span></a> uses a power-synchronization loop for synchronizing with the grid <a class="footnote-reference brackets" href="#har2020" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. In <a class="reference internal" href="grid_forming/plot_gfm_obs_13kva.html"><span class="doc">12.5-kVA converter, disturbance observer</span></a>, disturbance-observer-based control is used <a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>These examples demonstrate grid-forming control. The example <a class="reference internal" href="grid_forming/plot_gfm_rfpsc_13kva.html"><span class="doc">12.5-kVA converter, RFPSC</span></a> uses a power-synchronization loop for synchronizing with the grid <a class="footnote-reference brackets" href="#har2020" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. In <a class="reference internal" href="grid_forming/plot_gfm_obs_13kva.html"><span class="doc">12.5-kVA converter, disturbance observer</span></a>, disturbance-observer-based control is used <a class="footnote-reference brackets" href="#nur2024" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har2020" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Harnefors, Rahman, Hinkkanen, Routimo, “Reference-feedforward power-synchronization control,” IEEE Trans. Power Electron., 2020, <a class="reference external" href="https://doi.org/10.1109/TPEL.2020.2970991">https://doi.org/10.1109/TPEL.2020.2970991</a></p>
 </aside>
 <aside class="footnote brackets" id="nur2024" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming converter control based on a disturbance observer, “IEEE Trans. Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
 </aside>
 </aside>

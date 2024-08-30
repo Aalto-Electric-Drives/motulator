@@ -207,7 +207,7 @@ Package Contents
 
 .. py:class:: GFLControl(cfg)
 
-   Bases: :py:obj:`motulator.grid.control._common.GridConverterControlSystem`
+   Bases: :class:`GridConverterControlSystem`
 
 
    
@@ -554,7 +554,7 @@ Package Contents
 
 .. py:class:: ObserverBasedGFMControl(cfg)
 
-   Bases: :py:obj:`motulator.grid.control._common.GridConverterControlSystem`
+   Bases: :class:`GridConverterControlSystem`
 
 
    
@@ -793,7 +793,7 @@ Package Contents
 
 .. py:class:: RFPSCControl(cfg)
 
-   Bases: :py:obj:`motulator.grid.control._common.GridConverterControlSystem`
+   Bases: :class:`GridConverterControlSystem`
 
 
    

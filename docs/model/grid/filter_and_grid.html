@@ -436,7 +436,7 @@ document.write(`
                   
   <section id="ac-filter-and-grid-impedance">
 <h1>AC Filter and Grid Impedance<a class="headerlink" href="#ac-filter-and-grid-impedance" title="Permalink to this heading">#</a></h1>
-<p>This document describes continuous-time models of an AC filter and grid impedance.</p>
+<p>This document describes continuous-time models of an AC filter and grid impedance. The dynamics of the AC filters and grid impedance are modeled in the class <a class="reference internal" href="../../autoapi/motulator/grid/model/index.html#motulator.grid.model.ACFilter" title="motulator.grid.model.ACFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.model.ACFilter</span></code></a>. Based on the filter parameters the ACFilter class initializes either an L- or LCL filter. The parameters of the AC filter and grid impedance are defined in the data class <a class="reference internal" href="../../autoapi/motulator/grid/utils/index.html#motulator.grid.utils.ACFilterPars" title="motulator.grid.utils.ACFilterPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.utils.ACFilterPars</span></code></a>.</p>
 <section id="l-filter">
 <h2>L Filter<a class="headerlink" href="#l-filter" title="Permalink to this heading">#</a></h2>
 <p>A dynamic model of an L filter and inductive-resistive grid impedance is implemented in the class <a class="reference internal" href="../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter" title="motulator.grid.model.LFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.model.LFilter</span></code></a>. The model in stationary coordinates is</p>

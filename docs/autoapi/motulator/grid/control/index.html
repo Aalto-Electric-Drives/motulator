@@ -612,7 +612,7 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.GFLControl">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GFLControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GFLControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GFLControl" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control._common.GridConverterControlSystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p>
 <p>Grid-following control for power converters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -830,7 +830,7 @@ coordinates. This signal is obtained from the PWM.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGFMControl">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGFMControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGFMControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGFMControl" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control._common.GridConverterControlSystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p>
 <p>Disturbance-observer-based grid-forming control for grid converters.</p>
 <p>This implements the RFPSC-type grid-forming mode of the control method
 described in <a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Transparent current control is also implemented.</p>
@@ -928,7 +928,7 @@ magnitude of the measured PCC voltage is also filtered.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.RFPSCControl">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">RFPSCControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#RFPSCControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.RFPSCControl" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control._common.GridConverterControlSystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p>
 <p>Reference-feedforward power synchronization control for grid converters.</p>
 <p>This implements the reference-feedforward power synchronization control
 (RFPSC) method <a class="footnote-reference brackets" href="#har2020" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>

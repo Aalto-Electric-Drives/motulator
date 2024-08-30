@@ -48,6 +48,7 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'control/control_system';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -420,7 +421,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-control-loop">Main Control Loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-system">Control System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pi-controller">PI Controller</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complex-vector-pi-controller">Complex-vector PI controller</a></li>
 </ul>
             </nav>
         </div>
@@ -434,9 +437,16 @@ document.write(`
                   
   <section id="common">
 <h1>Common<a class="headerlink" href="#common" title="Permalink to this heading">#</a></h1>
-<section id="main-control-loop">
-<h2>Main Control Loop<a class="headerlink" href="#main-control-loop" title="Permalink to this heading">#</a></h2>
-<p>By default, discrete-time control systems in <em>motulator</em> run the following scheme in their main control loops:</p>
+<section id="control-system">
+<h2>Control System<a class="headerlink" href="#control-system" title="Permalink to this heading">#</a></h2>
+<p>The figure below shows the structure and data flow of the default control systems used in <em>motulator</em>.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/control_system.svg"><img alt="Block diagram of the control system." src="../_images/control_system.svg" width="100%" /></a>
+<figcaption>
+<p><span class="caption-text">Block diagram of the control system. The continuous-time plant model is also shown in red. Please notice that the observer might not be present in all control systems.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In the figure, <span class="math notranslate nohighlight">\(\texttt{monospace}\)</span> font is used to denote actual symbol names used in the program. The shaded background represents what is executed during the simulation, while the post-processing is done only after simulation. By default, discrete-time control systems run the following scheme in their main control loops:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>Get the feedback signals for the controllers. This step may contain first getting the measurements and then optionally computing the observer outputs. These measured and estimated signals are collected to the SimpleNamespace object named <cite>fbk</cite>.</p></li>
@@ -447,6 +457,37 @@ document.write(`
 </ol>
 </div></blockquote>
 <p>A template of this main control loop is available in the base class for control systems in <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>. Using this template is not necessary, but it may simplify the implementation of new control systems.</p>
+</section>
+<section id="pi-controller">
+<h2>PI Controller<a class="headerlink" href="#pi-controller" title="Permalink to this heading">#</a></h2>
+<p>The figure below shows a two-degree-of-freedom PI controller, where <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> are the proportional and integral gains, respectively. Furthermore <span class="math notranslate nohighlight">\(u(s)\)</span> is the controller output, <span class="math notranslate nohighlight">\(r(s)\)</span> is the reference signal, <span class="math notranslate nohighlight">\(y(s)\)</span> is the feedback signal, and <span class="math notranslate nohighlight">\(1/s\)</span> refers to integration. The controllers continous-time counterpart is:</p>
+<div class="math notranslate nohighlight" id="equation-2dofpi">
+<span class="eqno">(1)<a class="headerlink" href="#equation-2dofpi" title="Permalink to this equation">#</a></span>\[u(s) = k_{\mathrm{t}}\,r(s) - k_{\mathrm{p}}\,y(s) + \frac{k_{\mathrm{i}}}{s}\bigg(r(s) - y(s)\bigg)\]</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/2dof_pi.svg"><img alt="Two-degree-of-freedom PI controller." src="../_images/2dof_pi.svg" width="100%" /></a>
+</figure>
+<p>The standard PI 1DOF controller is obtained by choosing <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span>. The integrator anti-windup is implemented based on the realized controller output.</p>
+<p>The PI controller is implemented in the class <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.PIController</span></code></a>.</p>
+</section>
+<section id="complex-vector-pi-controller">
+<h2>Complex-vector PI controller<a class="headerlink" href="#complex-vector-pi-controller" title="Permalink to this heading">#</a></h2>
+<p>The figure below shows a 2DOF synchronous-frame complex-vector PI controller which continuous-time counterpart of the controller is <a class="footnote-reference brackets" href="#bri2000" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
+<div class="math notranslate nohighlight" id="equation-complexffpi">
+<span class="eqno">(2)<a class="headerlink" href="#equation-complexffpi" title="Permalink to this equation">#</a></span>\[\boldsymbol{u}(s) = \boldsymbol{k}_{\mathrm{t}}\,\boldsymbol{r}(s)
+- \boldsymbol{k}_{\mathrm{p}}\, \boldsymbol{y}(s) + \frac{\boldsymbol{k}_{\mathrm{i}} + \mathrm{j}\omega \boldsymbol{k}_{\mathrm{t}}}{s}\bigg(\boldsymbol{r}(s)
+- \boldsymbol{y}(s)\bigg) + \boldsymbol{u}_{\mathrm{ff}}(s)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}(s)\)</span> is the controller output, <span class="math notranslate nohighlight">\(\boldsymbol{r}(s)\)</span> is the reference signal, <span class="math notranslate nohighlight">\(\boldsymbol{y}(s)\)</span> is the feedback signal, <span class="math notranslate nohighlight">\(\boldsymbol{k}_{\mathrm{t}}\)</span> is the feedforward gain, <span class="math notranslate nohighlight">\(\boldsymbol{k}_{\mathrm{p}}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{k}_{\mathrm{i}}\)</span> are the proportional and integral gains, respectively, and <span class="math notranslate nohighlight">\(\boldsymbol{u}_{\mathrm{ff}}(s)\)</span> is the optional feedforward signal.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/complex_vector_2dof_pi.svg"><img alt="Two-degree-of-freedom complex-vector PI controller, with feedforward." src="../_images/complex_vector_2dof_pi.svg" width="100%" /></a>
+</figure>
+<p>The complex-vector PI controller with feedforward is implemented in the class <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a>.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="bri2000" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Briz, Degner, Lorenz, “Analysis and design of current regulators using complex vectors,” IEEE Trans. Ind. Appl., 2000, <a class="reference external" href="https://doi.org/10.1109/28.845057">https://doi.org/10.1109/28.845057</a></p>
+</aside>
+</aside>
 </section>
 </section>
 
@@ -494,7 +535,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-control-loop">Main Control Loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-system">Control System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pi-controller">PI Controller</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complex-vector-pi-controller">Complex-vector PI controller</a></li>
 </ul>
   </nav></div>
 
