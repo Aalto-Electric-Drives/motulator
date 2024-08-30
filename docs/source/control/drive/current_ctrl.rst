@@ -95,14 +95,14 @@ Synchronous Machines
 System Model
 ^^^^^^^^^^^^
 
-Consider the synchronous machine model (see :doc:`/model/drive/machines`) 
+Consider the synchronous machine model in rotor coordinates, rotating at :math:`\omega_\mathrm{m}` and aligned along the d-axis of the rotor, 
 
 .. math::
     \frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s} \\
  	\boldsymbol{\psi}_\mathrm{s} &= L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\} + \psi_\mathrm{f} 
     :label: sm_model
  
-where linear magnetics are assumed for simplicity.
+where linear magnetics are assumed for simplicity. For further details, see :doc:`/model/drive/machines`.
 
 2DOF PI Controller
 ^^^^^^^^^^^^^^^^^^
@@ -123,7 +123,7 @@ Here, the complex vector design is considered. Hence, the controller :eq:`cc` ca
     \boldsymbol{u}_\mathrm{s,ref} &= \boldsymbol{k}_\mathrm{t}\boldsymbol{\psi}_\mathrm{s,ref} - \boldsymbol{k}_\mathrm{p}\hat{\boldsymbol{\psi}}_\mathrm{s} + \boldsymbol{u}_\mathrm{i} 
     :label: cc_flux
 
-If the magnetic saturation is not considered, this flux-linkage-based current controller is equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate). Notice that :math:`\boldsymbol{i}_\mathrm{s,ref} = \boldsymbol{i}_\mathrm{s}` holds in the steady state even with inductance estimate inaccuracies, since the same inductances are used to map both the reference current and the actual current to the corresponding flux linkages. 
+where the angular speed of the coordinate system equals typically the measured rotor speed, :math:`\omega_\mathrm{s} = \omega_\mathrm{m}`, or the estimated rotor speed :math:`\omega_\mathrm{s} = \hat{\omega}_\mathrm{m}`. If the magnetic saturation is not considered, this flux-linkage-based current controller is equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate). Notice that :math:`\boldsymbol{i}_\mathrm{s,ref} = \boldsymbol{i}_\mathrm{s}` holds in the steady state even with inductance estimate inaccuracies, since the same inductances are used to map both the reference current and the actual current to the corresponding flux linkages. 
 
 The gain design analogous to :eq:`complex_vector_gains` becomes
 
@@ -132,7 +132,7 @@ The gain design analogous to :eq:`complex_vector_gains` becomes
     \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2 \qquad \qquad
     \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c} 
 
-where :math:`\hat R_\mathrm{s} = 0` can be used in practice. Using :eq:`sm_model`, :eq:`flux_mapping_sm`, and :eq:`cc_flux`, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class. 
+where :math:`\hat R_\mathrm{s} = 0` can be used in practice. Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using :eq:`sm_model`, :eq:`flux_mapping_sm`, and :eq:`cc_flux`, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class. 
 
 .. rubric:: References
 
