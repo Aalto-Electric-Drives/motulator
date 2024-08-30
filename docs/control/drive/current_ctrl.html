@@ -509,11 +509,11 @@ document.write(`
 <h2>Synchronous Machines<a class="headerlink" href="#synchronous-machines" title="Permalink to this heading">#</a></h2>
 <section id="id8">
 <h3>System Model<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
-<p>Consider the synchronous machine model (see <a class="reference internal" href="../../model/drive/machines.html"><span class="doc">Electric Machines</span></a>)</p>
+<p>Consider the synchronous machine model in rotor coordinates, rotating at <span class="math notranslate nohighlight">\(\omega_\mathrm{m}\)</span> and aligned along the d-axis of the rotor,</p>
 <div class="math notranslate nohighlight" id="equation-sm-model">
 <span class="eqno">(6)<a class="headerlink" href="#equation-sm-model" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s} \\
     \boldsymbol{\psi}_\mathrm{s} &amp;= L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\} + \psi_\mathrm{f}\end{split}\]</div>
-<p>where linear magnetics are assumed for simplicity.</p>
+<p>where linear magnetics are assumed for simplicity. For further details, see <a class="reference internal" href="../../model/drive/machines.html"><span class="doc">Electric Machines</span></a>.</p>
 </section>
 <section id="id9">
 <h3>2DOF PI Controller<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
@@ -526,13 +526,13 @@ document.write(`
 <div class="math notranslate nohighlight" id="equation-cc-flux">
 <span class="eqno">(8)<a class="headerlink" href="#equation-cc-flux" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= (\boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s}\boldsymbol{k}_\mathrm{t} )\left(\boldsymbol{\psi}_\mathrm{s,ref} - \hat{\boldsymbol{\psi}}_\mathrm{s}\right) \\
 \boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}_\mathrm{t}\boldsymbol{\psi}_\mathrm{s,ref} - \boldsymbol{k}_\mathrm{p}\hat{\boldsymbol{\psi}}_\mathrm{s} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>
-<p>If the magnetic saturation is not considered, this flux-linkage-based current controller is equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate). Notice that <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s,ref} = \boldsymbol{i}_\mathrm{s}\)</span> holds in the steady state even with inductance estimate inaccuracies, since the same inductances are used to map both the reference current and the actual current to the corresponding flux linkages.</p>
+<p>where the angular speed of the coordinate system equals typically the measured rotor speed, <span class="math notranslate nohighlight">\(\omega_\mathrm{s} = \omega_\mathrm{m}\)</span>, or the estimated rotor speed <span class="math notranslate nohighlight">\(\omega_\mathrm{s} = \hat{\omega}_\mathrm{m}\)</span>. If the magnetic saturation is not considered, this flux-linkage-based current controller is equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate). Notice that <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s,ref} = \boldsymbol{i}_\mathrm{s}\)</span> holds in the steady state even with inductance estimate inaccuracies, since the same inductances are used to map both the reference current and the actual current to the corresponding flux linkages.</p>
 <p>The gain design analogous to <a class="reference internal" href="#equation-complex-vector-gains">(5)</a> becomes</p>
 <div class="math notranslate nohighlight">
 \[\boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} - \hat R_\mathrm{s} \qquad\qquad
 \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2 \qquad \qquad
 \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat R_\mathrm{s} = 0\)</span> can be used in practice. Using <a class="reference internal" href="#equation-sm-model">(6)</a>, <a class="reference internal" href="#equation-flux-mapping-sm">(7)</a>, and <a class="reference internal" href="#equation-cc-flux">(8)</a>, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class.</p>
+<p>where <span class="math notranslate nohighlight">\(\hat R_\mathrm{s} = 0\)</span> can be used in practice. Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using <a class="reference internal" href="#equation-sm-model">(6)</a>, <a class="reference internal" href="#equation-flux-mapping-sm">(7)</a>, and <a class="reference internal" href="#equation-cc-flux">(8)</a>, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har1998" role="doc-footnote">
