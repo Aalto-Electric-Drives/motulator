@@ -361,9 +361,6 @@ class Model(ABC):
                 if subsystem_rhs is not None:
                     rhs_list += subsystem_rhs
 
-        ################## Set the outputs for the interconnections and for the rhs
-        #self.post_set_outputs(t)
-
         # List of state derivatives
         return rhs_list
 

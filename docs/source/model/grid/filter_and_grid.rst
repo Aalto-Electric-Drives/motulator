@@ -1,7 +1,7 @@
 AC Filter and Grid Impedance
 ============================
 
-This document describes continuous-time models of an AC filter and grid impedance. 
+This document describes continuous-time models of an AC filter and grid impedance. The dynamics of the AC filters and grid impedance are modeled in the class :class:`motulator.grid.model.ACFilter`. Based on the filter parameters the ACFilter class initializes either an L- or LCL filter. The parameters of the AC filter and grid impedance are defined in the data class :class:`motulator.grid.utils.ACFilterPars`.
 
 L Filter 
 --------
