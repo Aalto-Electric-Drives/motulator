@@ -423,19 +423,16 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machines">Induction Machines</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-model">System Model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-control-structure">2DOF PI Control Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-controller">2DOF PI Controller</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#imc-design">IMC Design</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#complex-vector-design">Complex-Vector Design</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-linkage-as-an-internal-state">Flux Linkage as an Internal State</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-observer-structure">Disturbance-Observer Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-machines">Synchronous Machines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">System Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">2DOF PI Controller</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-machines">Synchronous Machines</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-algorithm">Discrete-Time Algorithm</a></li>
 </ul>
             </nav>
         </div>
@@ -449,8 +446,8 @@ document.write(`
                   
   <section id="current-control">
 <h1>Current Control<a class="headerlink" href="#current-control" title="Permalink to this heading">#</a></h1>
-<p>Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control is commonly used in three-phase AC machine drives <a class="footnote-reference brackets" href="#har1998" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#bri1999" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#awa2019" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. This control structure allows to compensate for the cross-coupling originating from rotating coordinates as well as to improve disturbance rejection. The structure and design principles are essentially the same as those of 2DOF PI speed control (see <a class="reference internal" href="speed_ctrl.html"><span class="doc">Speed Control</span></a>).</p>
-<p>In the following, current control of an induction machine is first considered in detail. Then, the same control structure is applied to synchronous machines. Finally, the discrete-time implementation is described. Complex space vectors are used to represent three-phase quantities.</p>
+<p>Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control is commonly used in three-phase AC machine drives <a class="footnote-reference brackets" href="#har1998" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#bri1999" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#awa2019" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#hin2024" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. This control structure allows to compensate for the cross-coupling originating from rotating coordinates as well as to improve disturbance rejection.</p>
+<p>The current controller for an induction machine is available in the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentController" title="motulator.drive.control.im.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.CurrentController</span></code></a> class and for a synchronous machine in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class, both of which inherit from the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> class. In the following, current control of an induction machine is first considered in detail. Then, the same principles are applied to synchronous machines. Complex space vectors are used to represent three-phase quantities.</p>
 <section id="induction-machines">
 <h2>Induction Machines<a class="headerlink" href="#induction-machines" title="Permalink to this heading">#</a></h2>
 <section id="system-model">
@@ -463,115 +460,79 @@ document.write(`
 <p>Consequently, the back-emf <span class="math notranslate nohighlight">\(\boldsymbol{e}_\mathrm{s}\)</span> can be considered as a quasi-constant input (load) disturbance for the current controller, and it suffices to consider the stator current dynamics</p>
 <div class="math notranslate nohighlight" id="equation-im-current">
 <span class="eqno">(1)<a class="headerlink" href="#equation-im-current" title="Permalink to this equation">#</a></span>\[L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \boldsymbol{e}_\mathrm{s}\]</div>
-<p>Equivalently, the stator current dynamics in <a class="reference internal" href="#equation-im-current">(1)</a> can be expressed as</p>
-<div class="math notranslate nohighlight" id="equation-im-leakage-flux">
-<span class="eqno">(2)<a class="headerlink" href="#equation-im-leakage-flux" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{\psi}_\sigma}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - \left(\frac{R_\sigma}{L_\sigma} + \mathrm{j} \omega_\mathrm{s}\right)\boldsymbol{\psi}_\sigma - \boldsymbol{e}_\mathrm{s} \\
- &amp;= \boldsymbol{u}_\mathrm{s} - \mathrm{j} \omega_\mathrm{s}\boldsymbol{\psi}_\sigma - \boldsymbol{v}_\mathrm{s}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\psi}_\sigma = L_\sigma \boldsymbol{i}_\mathrm{s}\)</span> is the leakage flux linkage and <span class="math notranslate nohighlight">\(\boldsymbol{v} = \boldsymbol{e}_\mathrm{s} + R_\sigma \boldsymbol{i}_\mathrm{s}\)</span> is the input disturbance.</p>
 </section>
-<section id="dof-pi-control-structure">
-<h3>2DOF PI Control Structure<a class="headerlink" href="#dof-pi-control-structure" title="Permalink to this heading">#</a></h3>
-<p>First, synchronous-frame 2DOF PI current control is designed and analyzed in the continuous-time domain. The controller can be expressed in a state-space form as <a class="footnote-reference brackets" href="#awa2019" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
+<section id="dof-pi-controller">
+<h3>2DOF PI Controller<a class="headerlink" href="#dof-pi-controller" title="Permalink to this heading">#</a></h3>
+<p>The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design <a class="footnote-reference brackets" href="#har1998" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and the complex-vector design <a class="footnote-reference brackets" href="#bri1999" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Here, only the complex-vector design is considered, see <a class="reference internal" href="../control_system.html#complex-vector-2dof-pi-controller"><span class="std std-ref">Complex-Vector 2DOF PI Controller</span></a>, which is compatible with the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> base class. The controller can be expressed in a state-space form as</p>
 <div class="math notranslate nohighlight" id="equation-cc">
-<span class="eqno">(3)<a class="headerlink" href="#equation-cc" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= \boldsymbol{k}'_\mathrm{i}\left(\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{i}_\mathrm{s}\right) \\
-\boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}'_\mathrm{t}\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{k}'_\mathrm{p}\boldsymbol{i}_\mathrm{s} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s,ref}\)</span> is the output of the controller, i.e., the stator voltage reference, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s,ref}\)</span> is the stator current reference, and <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{i}\)</span> is the the integral state. Furthermore, <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{t}\)</span> is the reference-feedforward gain, <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{t} = \boldsymbol{k}'_\mathrm{p}\)</span> results in the standard PI controller.</p>
+<span class="eqno">(2)<a class="headerlink" href="#equation-cc" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= (\boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s}\boldsymbol{k}_\mathrm{t} )\left(\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{i}_\mathrm{s}\right) \\
+\boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}_\mathrm{t}\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{k}_\mathrm{p}\boldsymbol{i}_\mathrm{s} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s,ref}\)</span> is the output of the controller, i.e., the stator voltage reference, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s,ref}\)</span> is the stator current reference, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{i}\)</span> is the the integral state, and <span class="math notranslate nohighlight">\(\omega_\mathrm{s}\)</span> is the angular speed of the coordinate system. Furthermore, <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t}\)</span> is the reference-feedforward gain, <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{i}\)</span> is the integral gain.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The gain definitions used in <a class="reference internal" href="#equation-cc">(2)</a> differ from <a class="footnote-reference brackets" href="#hin2024" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, where a more general controller structure is considered.</p>
+</div>
 </section>
 <section id="closed-loop-system">
 <h3>Closed-Loop System<a class="headerlink" href="#closed-loop-system" title="Permalink to this heading">#</a></h3>
-<p>Here, ideal voltage production is assumed, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s} = \boldsymbol{u}_\mathrm{s,ref}\)</span>. Using <a class="reference internal" href="#equation-im-current">(1)</a> and <a class="reference internal" href="#equation-cc">(3)</a>, the closed-loop system in the Laplace domain becomes</p>
+<p>Here, ideal voltage production is assumed, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s} = \boldsymbol{u}_\mathrm{s,ref}\)</span>. Using <a class="reference internal" href="#equation-im-current">(1)</a> and <a class="reference internal" href="#equation-cc">(2)</a>, the closed-loop system in the Laplace domain becomes</p>
 <div class="math notranslate nohighlight">
 \[\boldsymbol{i}_\mathrm{s} = \boldsymbol{G}_\mathrm{c}(s)\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{Y}_\mathrm{c}(s)\boldsymbol{e}_\mathrm{s}\]</div>
 <p>The disturbance rejection depends on the closed-loop admittance</p>
 <div class="math notranslate nohighlight" id="equation-yc">
-<span class="eqno">(4)<a class="headerlink" href="#equation-yc" title="Permalink to this equation">#</a></span>\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}'_\mathrm{p}) s + \boldsymbol{k}'_\mathrm{i}}\]</div>
-<p>The closed-loop poles can be arbitrarily placed by means of <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{p}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{i}\)</span>. The reference-tracking transfer function is</p>
+<span class="eqno">(3)<a class="headerlink" href="#equation-yc" title="Permalink to this equation">#</a></span>\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}\]</div>
+<p>The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is</p>
 <div class="math notranslate nohighlight" id="equation-gc">
-<span class="eqno">(5)<a class="headerlink" href="#equation-gc" title="Permalink to this equation">#</a></span>\[\boldsymbol{G}_\mathrm{c}(s) = \frac{s \boldsymbol{k}'_\mathrm{t} + \boldsymbol{k}'_\mathrm{i}}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}'_\mathrm{p}) s + \boldsymbol{k}'_\mathrm{i}}\]</div>
-<p>whose zero can be placed by means of the reference-feedforward gain <span class="math notranslate nohighlight">\(\boldsymbol{k}'_\mathrm{t}\)</span>.</p>
+<span class="eqno">(4)<a class="headerlink" href="#equation-gc" title="Permalink to this equation">#</a></span>\[\boldsymbol{G}_\mathrm{c}(s) = \frac{(s + \mathrm{j}\omega_\mathrm{s}) \boldsymbol{k}_\mathrm{t} + \boldsymbol{k}_\mathrm{i} }{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}\]</div>
+<p>whose zero can be placed by means of the reference-feedforward gain <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t}\)</span>.</p>
 </section>
 <section id="gain-selection">
 <h3>Gain Selection<a class="headerlink" href="#gain-selection" title="Permalink to this heading">#</a></h3>
-<p>Two typical gain selections, known as the internal-model-control (IMC) design <a class="footnote-reference brackets" href="#har1998" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and the complex-vector design <a class="footnote-reference brackets" href="#bri1999" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, are described in the following.</p>
-<section id="imc-design">
-<h4>IMC Design<a class="headerlink" href="#imc-design" title="Permalink to this heading">#</a></h4>
 <p>Consider the gains</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{k}'_\mathrm{p} = (2\alpha_\mathrm{c} - \mathrm{j}\omega_\mathrm{s}) \hat L_\sigma - \hat R_\sigma \qquad\qquad
-\boldsymbol{k}'_\mathrm{i} = \alpha_\mathrm{c}^2 \hat L_\sigma \qquad \qquad
-\boldsymbol{k}'_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma\]</div>
-<p>where the hat indicates the parameter estimates. Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(4)</a> and <a class="reference internal" href="#equation-gc">(5)</a> reduce to</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma(s + \alpha_\mathrm{c})^2}
-\qquad\qquad
-\boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\alpha_\mathrm{c}\)</span> is the closed-loop bandwidth for reference tracking. The effect of the resistance is negligible, i.e., <span class="math notranslate nohighlight">\(\hat R_\sigma = 0\)</span> can be chosen.</p>
-</section>
-<section id="complex-vector-design">
-<h4>Complex-Vector Design<a class="headerlink" href="#complex-vector-design" title="Permalink to this heading">#</a></h4>
-<p>Consider the gains</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{k}'_\mathrm{p} = 2\alpha_\mathrm{c} \hat L_\sigma - \hat R_\sigma \qquad\qquad
-\boldsymbol{k}'_\mathrm{i} = \alpha_\mathrm{c}(\alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s}) \hat L_\sigma \qquad \qquad
-\boldsymbol{k}'_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma\]</div>
-<p>Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(4)</a> and <a class="reference internal" href="#equation-gc">(5)</a> reduce to</p>
+<div class="math notranslate nohighlight" id="equation-complex-vector-gains">
+<span class="eqno">(5)<a class="headerlink" href="#equation-complex-vector-gains" title="Permalink to this equation">#</a></span>\[\boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \hat L_\sigma - \hat R_\sigma \qquad\qquad
+\boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2\hat L_\sigma  \qquad \qquad
+\boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat R_\sigma = 0\)</span> can be used in practice due to its minor effect and integral action. Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(3)</a> and <a class="reference internal" href="#equation-gc">(4)</a> reduce to</p>
 <div class="math notranslate nohighlight">
 \[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s})}
 \qquad\qquad
 \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}\]</div>
-<p>It can be seen that both gain designs result in the first-order reference-tracking dynamics. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole.</p>
-</section>
-</section>
-<section id="flux-linkage-as-an-internal-state">
-<h3>Flux Linkage as an Internal State<a class="headerlink" href="#flux-linkage-as-an-internal-state" title="Permalink to this heading">#</a></h3>
-<p>Based on <a class="reference internal" href="#equation-im-leakage-flux">(2)</a>, both the reference current and the measured current can be scaled by the leakage inductance estimate,</p>
-<div class="math notranslate nohighlight" id="equation-flux-mapping-im">
-<span class="eqno">(6)<a class="headerlink" href="#equation-flux-mapping-im" title="Permalink to this equation">#</a></span>\[\begin{split}\boldsymbol{\psi}_{\mathrm{ref}} &amp;= \hat L_\sigma \boldsymbol{i}_\mathrm{s,ref} \\
-\hat{\boldsymbol{\psi}} &amp;= \hat L_\sigma \boldsymbol{i}_\mathrm{s}\end{split}\]</div>
-<p>where the notation of the leakage flux has been simplified by dropping the subscript <span class="math notranslate nohighlight">\(\sigma\)</span> (in order to be able to reuse some of the following equations for synchronous machines). Now the 2DOF PI controller <a class="reference internal" href="#equation-cc">(3)</a> can be rewritten as</p>
-<div class="math notranslate nohighlight" id="equation-cc-flux">
-<span class="eqno">(7)<a class="headerlink" href="#equation-cc-flux" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= \boldsymbol{k}_\mathrm{i}\left(\boldsymbol{\psi}_{\mathrm{ref}} - \hat{\boldsymbol{\psi}}\right) \\
-\boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}_\mathrm{t}\boldsymbol{\psi}_{\mathrm{ref}} - \boldsymbol{k}_\mathrm{p}\hat{\boldsymbol{\psi}} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>
-<p>It can be easily seen that the controllers <a class="reference internal" href="#equation-cc">(3)</a> and <a class="reference internal" href="#equation-cc-flux">(7)</a> are equivalent if <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{p} = \boldsymbol{k}'_\mathrm{p}/\hat L_\sigma\)</span>, <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{i} = \boldsymbol{k}'_\mathrm{i}/\hat L_\sigma\)</span>, and <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t} = \boldsymbol{k}'_\mathrm{t}/\hat L_\sigma\)</span>. As an example, gains for the complex-vector design reduce to</p>
-<div class="math notranslate nohighlight" id="equation-complex-vector-gains-flux">
-<span class="eqno">(8)<a class="headerlink" href="#equation-complex-vector-gains-flux" title="Permalink to this equation">#</a></span>\[\boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \qquad\qquad
-\boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}(\alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s})  \qquad \qquad
-\boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat R_\sigma = 0\)</span> is assumed. This choice of using the leakage flux linkage as the internal state has some advantages: the gain expressions become simpler; the magnetic saturation would be more convenient to take into account; and the same control structure can be extended to synchronous machines <a class="footnote-reference brackets" href="#awa2019" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
-</section>
-<section id="disturbance-observer-structure">
-<h3>Disturbance-Observer Structure<a class="headerlink" href="#disturbance-observer-structure" title="Permalink to this heading">#</a></h3>
-<p>The controller <a class="reference internal" href="#equation-cc-flux">(7)</a> can be equally represented using the disturbance-observer structure,</p>
-<div class="math notranslate nohighlight" id="equation-cc-disturbance">
-<span class="eqno">(9)<a class="headerlink" href="#equation-cc-disturbance" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= \boldsymbol{\alpha}_\mathrm{i}\left(\boldsymbol{u}_{\mathrm{s,ref}} - \hat{\boldsymbol{v}}_\mathrm{s}\right) \\
-\hat{\boldsymbol{v}}_\mathrm{s} &amp;= \boldsymbol{u}_\mathrm{i} - (\boldsymbol{k}_\mathrm{p} - \boldsymbol{k}_\mathrm{t})\hat{\boldsymbol{\psi}} \\
-\boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}_\mathrm{t}\left(\boldsymbol{\psi}_{\mathrm{ref}} - \hat{\boldsymbol{\psi}}\right) + \hat{\boldsymbol{v}}_\mathrm{s}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_\mathrm{i} = \boldsymbol{k}_\mathrm{i}/\boldsymbol{k}_\mathrm{t}\)</span> is the redefined integral gain and <span class="math notranslate nohighlight">\(\hat{\boldsymbol{v}}_\mathrm{s}\)</span> is the estimated input disturbance. This structure is convenient to prevent the integral windup that originates from the actuator saturation <a class="footnote-reference brackets" href="#fra1997" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. The stator voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is</p>
+<p>It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at <span class="math notranslate nohighlight">\(s=-\alpha_\mathrm{c}\)</span>, while another pole moves with the angular frequency of the coordinate system, <span class="math notranslate nohighlight">\(s= -\alpha_\mathrm{c} - \mathrm{j}\omega_\mathrm{s}\)</span>. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole.</p>
+<p>This gain selection is used in the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentController" title="motulator.drive.control.im.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.CurrentController</span></code></a> class. The stator voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is</p>
 <div class="math notranslate nohighlight">
 \[\bar{\boldsymbol{u}}_\mathrm{s,ref} = \mathrm{sat}(\boldsymbol{u}_\mathrm{s,ref})\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathrm{sat}(\cdot)\)</span> is the saturation function. The limited voltage can be obtained from a pulse-width modulation (PWM) algorithm. The anti-windup of the integrator can be implemented simply as</p>
-<div class="math notranslate nohighlight">
-\[\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} = \boldsymbol{\alpha}_\mathrm{i}\left(\bar{\boldsymbol{u}}_\mathrm{s,ref} - \hat{\boldsymbol{v}}_\mathrm{s}\right)\]</div>
-<p>The other parts of the above controller are not affected by the saturation. The implementation in the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> class is based on this disturbance-observer form.</p>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{sat}(\cdot)\)</span> is the saturation function. The limited voltage can be obtained from a pulse-width modulation (PWM) algorithm. The anti-windup of the integrator is included in the implementation of the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> base class.</p>
 </section>
 </section>
 <section id="synchronous-machines">
 <h2>Synchronous Machines<a class="headerlink" href="#synchronous-machines" title="Permalink to this heading">#</a></h2>
-<p>The flux-based control algorithms <a class="reference internal" href="#equation-cc-flux">(7)</a> and <a class="reference internal" href="#equation-cc-disturbance">(9)</a> can be directly used for both non-salient and salient synchronous machines by mapping the stator current to the flux linkage, <a class="footnote-reference brackets" href="#awa2019" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
-<div class="math notranslate nohighlight" id="equation-flux-mapping-sm">
-<span class="eqno">(10)<a class="headerlink" href="#equation-flux-mapping-sm" title="Permalink to this equation">#</a></span>\[\begin{split}\boldsymbol{\psi}_\mathrm{ref} &amp;= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s,ref}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s,ref}\} \\
-\hat{\boldsymbol{\psi}} &amp;= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\}\end{split}\]</div>
-<p>It is important to notice that <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s,ref} = \boldsymbol{i}_\mathrm{s}\)</span> holds in the steady state even with inductance estimate inaccuracies, since the same inductances are used to map both the reference current and the actual current to the corresponding flux linkages.</p>
+<section id="id8">
+<h3>System Model<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
+<p>Consider the synchronous machine model (see <a class="reference internal" href="../../model/drive/machines.html"><span class="doc">Electric Machines</span></a>)</p>
+<div class="math notranslate nohighlight" id="equation-sm-model">
+<span class="eqno">(6)<a class="headerlink" href="#equation-sm-model" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s} \\
+    \boldsymbol{\psi}_\mathrm{s} &amp;= L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\} + \psi_\mathrm{f}\end{split}\]</div>
+<p>where linear magnetics are assumed for simplicity.</p>
 </section>
-<section id="discrete-time-algorithm">
-<h2>Discrete-Time Algorithm<a class="headerlink" href="#discrete-time-algorithm" title="Permalink to this heading">#</a></h2>
-<p>The discrete-time variant of the disturbance-observer form <a class="reference internal" href="#equation-cc-disturbance">(9)</a> is given by</p>
+<section id="id9">
+<h3>2DOF PI Controller<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
+<p>An internal change of the state variable from the stator current to the stator flux linkage simplifies the control design for synchronous machines, allowing the same algorithm to be used for both non-salient and salient synchronous machines <a class="footnote-reference brackets" href="#awa2019" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Both the reference current and the actual current are scaled by the inductance estimates,</p>
+<div class="math notranslate nohighlight" id="equation-flux-mapping-sm">
+<span class="eqno">(7)<a class="headerlink" href="#equation-flux-mapping-sm" title="Permalink to this equation">#</a></span>\[\begin{split}\boldsymbol{\psi}_\mathrm{s,ref} &amp;= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s,ref}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s,ref}\} \\
+\hat{\boldsymbol{\psi}_\mathrm{s}} &amp;= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\}\end{split}\]</div>
+<p>This choice of using the flux linkage as the internal state has some advantages: the gain expressions become simpler; the magnetic saturation would be more convenient to take into account; and the same control structure can be used for salient and nonsalient machines.</p>
+<p>Here, the complex vector design is considered. Hence, the controller <a class="reference internal" href="#equation-cc">(2)</a> can be rewritten as</p>
+<div class="math notranslate nohighlight" id="equation-cc-flux">
+<span class="eqno">(8)<a class="headerlink" href="#equation-cc-flux" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= (\boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s}\boldsymbol{k}_\mathrm{t} )\left(\boldsymbol{\psi}_\mathrm{s,ref} - \hat{\boldsymbol{\psi}}_\mathrm{s}\right) \\
+\boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}_\mathrm{t}\boldsymbol{\psi}_\mathrm{s,ref} - \boldsymbol{k}_\mathrm{p}\hat{\boldsymbol{\psi}}_\mathrm{s} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>
+<p>If the magnetic saturation is not considered, this flux-linkage-based current controller is equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate). Notice that <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s,ref} = \boldsymbol{i}_\mathrm{s}\)</span> holds in the steady state even with inductance estimate inaccuracies, since the same inductances are used to map both the reference current and the actual current to the corresponding flux linkages.</p>
+<p>The gain design analogous to <a class="reference internal" href="#equation-complex-vector-gains">(5)</a> becomes</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\boldsymbol{u}_\mathrm{i}(k+1) &amp;= \boldsymbol{u}_\mathrm{i}(k) + T_\mathrm{s} \boldsymbol{\alpha}_\mathrm{i} \left[\bar{\boldsymbol{u}}_\mathrm{s,ref}(k) - \hat{\boldsymbol{v}}_\mathrm{s}(k) \right] \\
-\hat{\boldsymbol{v}}_\mathrm{s}(k) &amp;= \boldsymbol{u}_\mathrm{i}(k) - (\boldsymbol{k}_\mathrm{p} - \boldsymbol{k}_\mathrm{t})\hat{\boldsymbol{\psi}}(k) \\
-\boldsymbol{u}_\mathrm{s,ref}(k) &amp;= \boldsymbol{k}_\mathrm{t}\left[\boldsymbol{\psi}_{\mathrm{ref}}(k) - \hat{\boldsymbol{\psi}}(k)\right] + \hat{\boldsymbol{v}}_\mathrm{s} \\
- \bar{\boldsymbol{u}}_\mathrm{s,ref}(k) &amp;= \mathrm{sat}\left[\boldsymbol{u}_\mathrm{s,ref}(k)\right]\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> is the sampling period and <span class="math notranslate nohighlight">\(k\)</span> is the discrete-time index. Depending on the machine type, either <a class="reference internal" href="#equation-flux-mapping-im">(6)</a> or <a class="reference internal" href="#equation-flux-mapping-sm">(10)</a> is used to map the stator current to the flux linkage. This discrete-time algorithm corresponds to the implementation in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class. The default gain selection corresponds to the complex-vector gains in <a class="reference internal" href="#equation-complex-vector-gains-flux">(8)</a>.</p>
+\[\boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} - \hat R_\mathrm{s} \qquad\qquad
+\boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2 \qquad \qquad
+\boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat R_\mathrm{s} = 0\)</span> can be used in practice. Using <a class="reference internal" href="#equation-sm-model">(6)</a>, <a class="reference internal" href="#equation-flux-mapping-sm">(7)</a>, and <a class="reference internal" href="#equation-cc-flux">(8)</a>, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har1998" role="doc-footnote">
@@ -586,14 +547,16 @@ document.write(`
 </aside>
 <aside class="footnote brackets" id="awa2019" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id4">2</a>,<a role="doc-backlink" href="#id7">3</a>,<a role="doc-backlink" href="#id9">4</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id10">2</a>)</span>
 <p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019, <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
 </aside>
-<aside class="footnote brackets" id="fra1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">4</a><span class="fn-bracket">]</span></span>
-<p>Franklin, Powell, Workman, “Digital Control of Dynamic Systems,” 3rd ed., Menlo Park, CA: Addison-Wesley, 1997</p>
+<aside class="footnote brackets" id="hin2024" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<p>Hinkkanen,  Harnefors, Kukkola, “Fundamentals of Electric Machine Drives,” lecture notes, 2024, <a class="reference external" href="https://doi.org/10.5281/zenodo.10609166">https://doi.org/10.5281/zenodo.10609166</a></p>
 </aside>
 </aside>
+</section>
 </section>
 </section>
 
@@ -643,19 +606,16 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machines">Induction Machines</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-model">System Model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-control-structure">2DOF PI Control Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-controller">2DOF PI Controller</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#imc-design">IMC Design</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#complex-vector-design">Complex-Vector Design</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-linkage-as-an-internal-state">Flux Linkage as an Internal State</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-observer-structure">Disturbance-Observer Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-machines">Synchronous Machines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">System Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">2DOF PI Controller</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-machines">Synchronous Machines</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-algorithm">Discrete-Time Algorithm</a></li>
 </ul>
   </nav></div>
 

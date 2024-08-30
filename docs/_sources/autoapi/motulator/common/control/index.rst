@@ -461,12 +461,13 @@ Package Contents
    This implements a discrete-time 2DOF PI controller, whose continuous-time
    counterpart is::
 
-       u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y)
+       u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y) + u_ff
 
    where `u` is the controller output, `y_ref` is the reference signal, `y` is
-   the feedback signal, and `1/s` refers to integration. The standard PI
-   controller is obtained by choosing ``k_t = k_p``. The integrator
-   anti-windup is implemented based on the realized controller output.
+   the feedback signal, `u_ff` is the feedforward signal, and `1/s` refers to
+   integration. The standard PI controller is obtained by choosing
+   ``k_t = k_p``. The integrator anti-windup is implemented based on the
+   realized controller output.
 
    .. rubric:: Notes
 
@@ -500,7 +501,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(ref_y, y)
+   .. py:method:: output(ref_y, y, u_ff=0)
 
       
       Compute the controller output.
@@ -509,6 +510,8 @@ Package Contents
       :type ref_y: float
       :param y: Feedback signal.
       :type y: float
+      :param u_ff: Feedforward signal. The default is 0.
+      :type u_ff: float, optional
 
       :returns: **u** -- Controller output.
       :rtype: float

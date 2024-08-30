@@ -421,13 +421,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-design">Continuous-Time Design</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-structure">Typical Structure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-observer-structure">Disturbance-Observer Structure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection-example">Gain Selection Example</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-algorithm">Discrete-Time Algorithm</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-controller">2DOF PI Controller</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
 </ul>
             </nav>
         </div>
@@ -441,43 +437,28 @@ document.write(`
                   
   <section id="speed-control">
 <h1>Speed Control<a class="headerlink" href="#speed-control" title="Permalink to this heading">#</a></h1>
-<p>Proportional-integral (PI) control is widely used in machine drives. A standard one-degree-of-freedom (1DOF) PI controller manipulates only the control error, i.e., it has single input and single output. Its two-degrees-of-freedom (2DOF) variants have two inputs (reference signal and feedback signal), which allows to design disturbance rejection and reference tracking separately <a class="footnote-reference brackets" href="#sko1996" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. In the following, we will use a speed controller as an example, cf. the <a class="reference internal" href="../../autoapi/motulator/drive/control/index.html#motulator.drive.control.SpeedController" title="motulator.drive.control.SpeedController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.SpeedController</span></code></a> class. The presented control design can be extended to many other control tasks as well.</p>
-<section id="continuous-time-design">
-<h2>Continuous-Time Design<a class="headerlink" href="#continuous-time-design" title="Permalink to this heading">#</a></h2>
-<p>Even if controllers operate in the discrete-time domain, they are often designed and analyzed in the continuous-time domain.</p>
-<section id="typical-structure">
-<h3>Typical Structure<a class="headerlink" href="#typical-structure" title="Permalink to this heading">#</a></h3>
-<p>The state-space form of a simple 2DOF PI speed controller is given by</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &amp;= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
-\tau_\mathrm{M,ref} &amp;= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i}\end{split}\]</div>
+<p>A speed controller is implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/control/index.html#motulator.drive.control.SpeedController" title="motulator.drive.control.SpeedController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.SpeedController</span></code></a> class, whose base class is <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.PIController</span></code></a>. In the following, the tuning of the speed controller is discussed. The presented approach can be extended to many other control tasks as well.</p>
+<section id="dof-pi-controller">
+<h2>2DOF PI Controller<a class="headerlink" href="#dof-pi-controller" title="Permalink to this heading">#</a></h2>
+<p>Even if controllers operate in the discrete-time domain, they are often designed and analyzed in the continuous-time domain. The state-space form of a simple 2DOF PI speed controller is given by <a class="footnote-reference brackets" href="#hin2024" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+<div class="math notranslate nohighlight" id="equation-speed-ctrl">
+<span class="eqno">(1)<a class="headerlink" href="#equation-speed-ctrl" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &amp;= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
+    \tau_\mathrm{M,ref} &amp;= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{M}\)</span> is the measured (or estimated) mechanical angular speed of the rotor, <span class="math notranslate nohighlight">\(\omega_\mathrm{M,ref}\)</span> is the reference angular speed, and <span class="math notranslate nohighlight">\(\tau_\mathrm{i}\)</span> is the the integral state. Furthermore, <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> is the reference feedforward gain, <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span> results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward <a class="footnote-reference brackets" href="#fra1997" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 </section>
-<section id="disturbance-observer-structure">
-<h3>Disturbance-Observer Structure<a class="headerlink" href="#disturbance-observer-structure" title="Permalink to this heading">#</a></h3>
-<p>The above 2DOF PI controller can be equally represented using the disturbance-observer structure,</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &amp;= \alpha_\mathrm{i}\left(\tau_\mathrm{M,ref} - \hat \tau_\mathrm{L}\right) \\
-\hat \tau_\mathrm{L} &amp;= \tau_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M} \\
-\tau_\mathrm{M,ref} &amp;= k_\mathrm{t}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) + \hat \tau_\mathrm{L}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\alpha_\mathrm{i} = k_\mathrm{i}/k_\mathrm{t}\)</span> is the redefined integral gain and <span class="math notranslate nohighlight">\(\hat \tau_\mathrm{L}\)</span> is the input-equivalent disturbance estimate (i.e., the load torque estimate). This structure is convenient to prevent the integral windup that originates from the actuator saturation <a class="footnote-reference brackets" href="#fra1997" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The electromagnetic torque is limited in practice due to the maximum current of the inverter (and possibly due to other constraints as well). Consequently, the realized (limited) torque reference is</p>
-<div class="math notranslate nohighlight">
-\[\bar{\tau}_\mathrm{M,ref} = \mathrm{sat}(\tau_\mathrm{M,ref})\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathrm{sat}(\cdot)\)</span> is the saturation function. If this saturation function is known, the anti-windup of the integrator can be implemented simply as</p>
-<div class="math notranslate nohighlight">
-\[\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} = \alpha_\mathrm{i}\left(\bar{\tau}_\mathrm{M,ref} - \hat \tau_\mathrm{L}\right)\]</div>
-<p>The other parts of the above controller are not affected by the saturation. The implementation in the <a class="reference internal" href="../../autoapi/motulator/drive/control/index.html#motulator.drive.control.SpeedController" title="motulator.drive.control.SpeedController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.SpeedController</span></code></a> class is based on this disturbance-observer form.</p>
-</section>
-<section id="gain-selection-example">
-<h3>Gain Selection Example<a class="headerlink" href="#gain-selection-example" title="Permalink to this heading">#</a></h3>
-<p>For simplicity, let us assume ideal torque control (<span class="math notranslate nohighlight">\(\tau_\mathrm{M} = \tau_\mathrm{M,ref}\)</span>) and a stiff mechanical system <a class="footnote-reference brackets" href="#har2013" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
-<div class="math notranslate nohighlight">
-\[J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} = \tau_\mathrm{M} - \tau_\mathrm{L}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> is the electromagnetic torque, <span class="math notranslate nohighlight">\(\tau_\mathrm{L}\)</span> is the load torque, and <span class="math notranslate nohighlight">\(J\)</span> is the total moment of inertia. In the Laplace domain, the resulting closed-loop system is given by</p>
+<section id="closed-loop-system">
+<h2>Closed-Loop System<a class="headerlink" href="#closed-loop-system" title="Permalink to this heading">#</a></h2>
+<p>For simplicity, let us assume ideal torque control (<span class="math notranslate nohighlight">\(\tau_\mathrm{M} = \tau_\mathrm{M,ref}\)</span>) and a stiff mechanical system</p>
+<div class="math notranslate nohighlight" id="equation-stiff-mech">
+<span class="eqno">(2)<a class="headerlink" href="#equation-stiff-mech" title="Permalink to this equation">#</a></span>\[J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} = \tau_\mathrm{M} - \tau_\mathrm{L}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tau_\mathrm{M}\)</span> is the electromagnetic torque, <span class="math notranslate nohighlight">\(\tau_\mathrm{L}\)</span> is the load torque, and <span class="math notranslate nohighlight">\(J\)</span> is the total moment of inertia. In the Laplace domain, the closed-loop system resulting from <a class="reference internal" href="#equation-speed-ctrl">(1)</a> and <a class="reference internal" href="#equation-stiff-mech">(2)</a> is given by</p>
 <div class="math notranslate nohighlight">
 \[\omega_\mathrm{M}(s) = \frac{k_\mathrm{t} s + k_\mathrm{i}}{J s^2 + k_\mathrm{p} s + k_\mathrm{i}} \omega_\mathrm{M,ref}(s) - \frac{s}{J s^2 + k_\mathrm{p} s + k_\mathrm{i}} \tau_\mathrm{L}(s)\]</div>
 <p>where it can be seen that the gain <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> allows to place the reference-tracking zero.</p>
-<p>The gain selection</p>
+</section>
+<section id="gain-selection">
+<h2>Gain Selection<a class="headerlink" href="#gain-selection" title="Permalink to this heading">#</a></h2>
+<p>The gain selection <a class="footnote-reference brackets" href="#har2013" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
 <div class="math notranslate nohighlight">
 \[k_\mathrm{t} = \alpha_\mathrm{s} \hat{J} \qquad
 k_\mathrm{p} = 2\alpha_\mathrm{s} \hat{J} \qquad
@@ -486,30 +467,18 @@ k_\mathrm{i} = \alpha_\mathrm{s}^2 \hat{J}\]</div>
 <div class="math notranslate nohighlight">
 \[\omega_\mathrm{M}(s) = \frac{\alpha_\mathrm{s}}{s + \alpha_\mathrm{s}} \omega_\mathrm{M,ref}(s) - \frac{s}{J (s + \alpha_\mathrm{s})^2} \tau_\mathrm{L}(s)\]</div>
 <p>where <span class="math notranslate nohighlight">\(\alpha_\mathrm{s}\)</span> is the closed-loop bandwidth of reference tracking and <span class="math notranslate nohighlight">\(\hat{J} = J\)</span> is assumed.</p>
-</section>
-</section>
-<section id="discrete-time-algorithm">
-<h2>Discrete-Time Algorithm<a class="headerlink" href="#discrete-time-algorithm" title="Permalink to this heading">#</a></h2>
-<p>The discrete-time variant of the controller is given by</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\tau_\mathrm{i}(k+1) &amp;= \tau_\mathrm{i}(k) + T_\mathrm{s} \alpha_\mathrm{i} \left[\bar{\tau}_\mathrm{M,ref}(k) - \hat \tau_\mathrm{L}(k) \right] \\
-\hat \tau_\mathrm{L}(k) &amp;= \tau_\mathrm{i}(k) - (k_\mathrm{p} - k_\mathrm{t})\omega_\mathrm{M}(k) \\
-\tau_\mathrm{M,ref}(k) &amp;= k_\mathrm{t}\left[\omega_\mathrm{M,ref}(k) - \omega_\mathrm{M}(k)\right] + \hat \tau_\mathrm{L}(k) \\
-\bar{\tau}_\mathrm{M,ref}(k) &amp;= \mathrm{sat}[\tau_\mathrm{M,ref}(k)]\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> is the sampling period and <span class="math notranslate nohighlight">\(k\)</span> is the discrete-time index. This corresponds to the implementation in the <a class="reference internal" href="../../autoapi/motulator/drive/control/index.html#motulator.drive.control.SpeedController" title="motulator.drive.control.SpeedController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.SpeedController</span></code></a> class.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="sko1996" role="doc-footnote">
+<aside class="footnote brackets" id="hin2024" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Skogestad, Postlethwaite, “Multivariable Feedback Control: Analysis and Design,” West Sussex, England: John Wiley and Sons, 1996</p>
+<p>Hinkkanen,  Harnefors, Kukkola, “Fundamentals of Electric Machine Drives,” lecture notes, 2024, <a class="reference external" href="https://doi.org/10.5281/zenodo.10609166">https://doi.org/10.5281/zenodo.10609166</a></p>
 </aside>
 <aside class="footnote brackets" id="fra1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id3">2</a>)</span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Franklin, Powell, Workman, “Digital Control of Dynamic Systems,” 3rd ed., Menlo Park, CA: Addison-Wesley, 1997</p>
 </aside>
 <aside class="footnote brackets" id="har2013" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>Harnefors, Saarakkala, Hinkkanen, “Speed control of electrical drives using classical control methods,” IEEE Trans. Ind. Appl., 2013, <a class="reference external" href="https://doi.org/10.1109/TIA.2013.2244194">https://doi.org/10.1109/TIA.2013.2244194</a></p>
 </aside>
 </aside>
@@ -560,13 +529,9 @@ k_\mathrm{i} = \alpha_\mathrm{s}^2 \hat{J}\]</div>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-design">Continuous-Time Design</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-structure">Typical Structure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-observer-structure">Disturbance-Observer Structure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection-example">Gain Selection Example</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-algorithm">Discrete-Time Algorithm</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-controller">2DOF PI Controller</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
 </ul>
   </nav></div>
 

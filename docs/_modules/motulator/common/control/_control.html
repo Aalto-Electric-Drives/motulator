@@ -586,12 +586,13 @@ document.write(`
 <span class="sd">    This implements a discrete-time 2DOF PI controller, whose continuous-time</span>
 <span class="sd">    counterpart is::</span>
 
-<span class="sd">        u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y)</span>
+<span class="sd">        u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y) + u_ff</span>
 
 <span class="sd">    where `u` is the controller output, `y_ref` is the reference signal, `y` is</span>
-<span class="sd">    the feedback signal, and `1/s` refers to integration. The standard PI</span>
-<span class="sd">    controller is obtained by choosing ``k_t = k_p``. The integrator </span>
-<span class="sd">    anti-windup is implemented based on the realized controller output.</span>
+<span class="sd">    the feedback signal, `u_ff` is the feedforward signal, and `1/s` refers to </span>
+<span class="sd">    integration. The standard PI controller is obtained by choosing </span>
+<span class="sd">    ``k_t = k_p``. The integrator anti-windup is implemented based on the </span>
+<span class="sd">    realized controller output.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -621,7 +622,7 @@ document.write(`
         <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="PIController.output"><a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.PIController.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="PIController.output"><a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.PIController.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u_ff</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the controller output.</span>
 
@@ -631,6 +632,8 @@ document.write(`
 <span class="sd">            Reference signal.</span>
 <span class="sd">        y : float</span>
 <span class="sd">            Feedback signal.</span>
+<span class="sd">        u_ff : float, optional</span>
+<span class="sd">            Feedforward signal. The default is 0.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -639,7 +642,7 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Estimate of a disturbance input</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_t</span><span class="p">)</span><span class="o">*</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_t</span><span class="p">)</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">u_ff</span>
 
         <span class="c1"># Controller output</span>
         <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_t</span><span class="o">*</span><span class="p">(</span><span class="n">ref_y</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span>

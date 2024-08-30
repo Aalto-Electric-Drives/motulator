@@ -755,13 +755,14 @@ value is a SimpleNamespace containing the data to be saved.</p>
 <dd><p>2DOF PI controller.</p>
 <p>This implements a discrete-time 2DOF PI controller, whose continuous-time
 counterpart is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">k_t</span><span class="o">*</span><span class="n">ref_y</span> <span class="o">-</span> <span class="n">k_p</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">k_i</span><span class="o">/</span><span class="n">s</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ref_y</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">k_t</span><span class="o">*</span><span class="n">ref_y</span> <span class="o">-</span> <span class="n">k_p</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">k_i</span><span class="o">/</span><span class="n">s</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ref_y</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">u_ff</span>
 </pre></div>
 </div>
 <p>where <cite>u</cite> is the controller output, <cite>y_ref</cite> is the reference signal, <cite>y</cite> is
-the feedback signal, and <cite>1/s</cite> refers to integration. The standard PI
-controller is obtained by choosing <code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator
-anti-windup is implemented based on the realized controller output.</p>
+the feedback signal, <cite>u_ff</cite> is the feedforward signal, and <cite>1/s</cite> refers to
+integration. The standard PI controller is obtained by choosing
+<code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator anti-windup is implemented based on the
+realized controller output.</p>
 <p class="rubric">Notes</p>
 <p>This controller can be used, e.g., as a speed controller. In this case, <cite>y</cite>
 corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to the torque
@@ -778,13 +779,14 @@ reference <cite>ref_tau_M</cite>.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.PIController.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PIController.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PIController.output" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#PIController.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PIController.output" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute the controller output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref_y</strong> (<em>float</em>) – Reference signal.</p></li>
 <li><p><strong>y</strong> (<em>float</em>) – Feedback signal.</p></li>
+<li><p><strong>u_ff</strong> (<em>float</em><em>, </em><em>optional</em>) – Feedforward signal. The default is 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
