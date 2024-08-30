@@ -212,12 +212,13 @@ class PIController:
     This implements a discrete-time 2DOF PI controller, whose continuous-time
     counterpart is::
 
-        u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y)
+        u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y) + u_ff
 
     where `u` is the controller output, `y_ref` is the reference signal, `y` is
-    the feedback signal, and `1/s` refers to integration. The standard PI
-    controller is obtained by choosing ``k_t = k_p``. The integrator 
-    anti-windup is implemented based on the realized controller output.
+    the feedback signal, `u_ff` is the feedforward signal, and `1/s` refers to 
+    integration. The standard PI controller is obtained by choosing 
+    ``k_t = k_p``. The integrator anti-windup is implemented based on the 
+    realized controller output.
 
     Notes
     -----
@@ -247,7 +248,7 @@ class PIController:
         # States
         self.v, self.u_i = 0, 0
 
-    def output(self, ref_y, y):
+    def output(self, ref_y, y, u_ff=0):
         """
         Compute the controller output.
 
@@ -257,6 +258,8 @@ class PIController:
             Reference signal.
         y : float
             Feedback signal.
+        u_ff : float, optional
+            Feedforward signal. The default is 0.
 
         Returns
         -------
@@ -265,7 +268,7 @@ class PIController:
 
         """
         # Estimate of a disturbance input
-        self.v = self.u_i - (self.k_p - self.k_t)*y
+        self.v = self.u_i - (self.k_p - self.k_t)*y + u_ff
 
         # Controller output
         u = self.k_t*(ref_y - y) + self.v
