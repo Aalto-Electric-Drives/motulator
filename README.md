@@ -29,6 +29,7 @@ Usage
 The system models, controllers, reference sequences etc. are easy to configure. As a starting point, example scripts and Jupyter notebooks can be downloaded here:
 
 https://aalto-electric-drives.github.io/motulator/drive_examples/index.html
+
 https://aalto-electric-drives.github.io/motulator/grid_examples/index.html
 
 New system models and controllers can be developed using the existing ones as templates.
