@@ -1,17 +1,19 @@
 Installation
 ============
-First, install Python on your computer. On Windows and Mac systems, you can install Python from the official website (https://www.python.org/). On Linux systems, Python is typically preinstalled. 
+
+First, install Python on your computer. On Windows and Mac systems, you can install it from the `Python official website <https://www.python.org/>`_. On Linux systems, Python is typically preinstalled. 
 
 For plotting figures in Python, a graphical user interface (GUI) library is required. The *Tkinter* GUI library comes by default with Python on Windows and Mac systems. On some Linux systems, you may need to install it separately. On Ubuntu, you can install it with the command::
 
    sudo apt install python3-tk
 
-Alternatively, you can use another GUI library such as *PyQt6* (https://pypi.org/project/PyQt6/). 
+Alternatively, you can use another GUI library such as `PyQt6 <https://pypi.org/project/PyQt6/>`_. 
 
 Install *motulator* using one of the following options. 
 
 Option 1: Use pip
 -----------------
+
 The simplest way to install *motulator* is to use ``pip``. Ensure that you have the latest ``pip``, which can be updated with the command::
 
    pip install --upgrade pip
@@ -21,31 +23,25 @@ Then, install *motulator*::
    pip install motulator
 
 .. note::
-   Instead of global installation described above, using a virtual environment is generally recommended. For more information, see https://packaging.python.org/guides/installing-using-pip-and-virtual-environments. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.
+   Instead of global installation described above, using a `virtual environment <https://packaging.python.org/guides/installing-using-pip-and-virtual-environments>`_ is generally recommended. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.
 
 Option 2: Clone the Repository
 ------------------------------
-For developers and advanced users, we recommended cloning the repository from GitHub. This option allows you to get the most recent version of the repository. Furthermore, you can then modify the system models and example controllers. It is also advisable to use a virtual environment to avoid conflicts with other Python packages. 
 
-Several powerful open-source IDEs are available for Python. The following instructions are for VS Code (https://code.visualstudio.com):
+For developers and advanced users, we recommend cloning the repository from GitHub. This option allows you to get the most recent version of the repository. Furthermore, you can then modify the system models and example controllers. It is also advisable to use a virtual environment to avoid conflicts with other Python packages. 
+
+Several powerful open-source IDEs are available for Python. The following instructions are for `VS Code <https://code.visualstudio.com>`_:
 
 1)	Install VS Code, Python, and ``git`` on your computer. Install also the recommended Python extensions in VS Code.
-2) Clone the project::
+2) Clone the project (or fork it first and then clone your fork) using the command::
     
       git clone https://github.com/Aalto-Electric-Drives/motulator
 
-   This will create a folder called *motulator* in your current directory. 
-
+   This will create a folder called *motulator* in your current directory.
 3) Launch VS Code from the cloned project's root directory on the command line (or choose the proper directory after launching VS Code).
-4) Create a virtual environment in the workspace using the instructions provided here: https://code.visualstudio.com/docs/python/environments.
+4) `Create a virtual environment <https://code.visualstudio.com/docs/python/environments>`_ in the workspace.
 5) Enable installation of optional dependencies from ``pyproject.toml`` (selecting at least ``dev`` is recommended). Alternatively, for installing the project with its core dependencies, you may run the command ``pip install .`` in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run ``pip install .[dev,doc]``).
 
 After completing the above steps, the virtual environment can be found in the ``.venv`` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the ``dev`` dependencies, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code). 
 
 If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for *Terminal: Select Default Profile*). We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.
-
-Notes for Developers
-^^^^^^^^^^^^^^^^^^^^
-We recommend to install the ``dev`` dependencies. In this project, we use the YAPF Python code formatter (https://github.com/google/yapf), configured based on the PEP8 coding conventions (https://peps.python.org/pep-0008/). To enable YAPF in VS Code, you need to install the YAPF extension (https://marketplace.visualstudio.com/items?itemName=eeyore.yapf). 
-
-If you aim to work with the documentation, install also the ``doc`` dependencies. For previewing the documentation in VS Code, you can install the Esbonio extension (https://marketplace.visualstudio.com/items?itemName=swyddfa.esbonio). Alternatively, you can build the documentation locally using the command ``make html`` in the ``docs`` directory. The documentation will be built in the ``docs/build`` directory.
