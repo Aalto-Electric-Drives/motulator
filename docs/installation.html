@@ -144,6 +144,7 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -421,10 +422,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-use-pip">Option 1: Use pip</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-clone-the-repository">Option 2: Clone the Repository</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes-for-developers">Notes for Developers</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-clone-the-repository">Option 2: Clone the Repository</a></li>
 </ul>
             </nav>
         </div>
@@ -438,12 +436,12 @@ document.write(`
                   
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h1>
-<p>First, install Python on your computer. On Windows and Mac systems, you can install Python from the official website (<a class="reference external" href="https://www.python.org/">https://www.python.org/</a>). On Linux systems, Python is typically preinstalled.</p>
+<p>First, install Python on your computer. On Windows and Mac systems, you can install it from the <a class="reference external" href="https://www.python.org/">Python official website</a>. On Linux systems, Python is typically preinstalled.</p>
 <p>For plotting figures in Python, a graphical user interface (GUI) library is required. The <em>Tkinter</em> GUI library comes by default with Python on Windows and Mac systems. On some Linux systems, you may need to install it separately. On Ubuntu, you can install it with the command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">tk</span>
 </pre></div>
 </div>
-<p>Alternatively, you can use another GUI library such as <em>PyQt6</em> (<a class="reference external" href="https://pypi.org/project/PyQt6/">https://pypi.org/project/PyQt6/</a>).</p>
+<p>Alternatively, you can use another GUI library such as <a class="reference external" href="https://pypi.org/project/PyQt6/">PyQt6</a>.</p>
 <p>Install <em>motulator</em> using one of the following options.</p>
 <section id="option-1-use-pip">
 <h2>Option 1: Use pip<a class="headerlink" href="#option-1-use-pip" title="Permalink to this heading">#</a></h2>
@@ -457,32 +455,27 @@ document.write(`
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Instead of global installation described above, using a virtual environment is generally recommended. For more information, see <a class="reference external" href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments">https://packaging.python.org/guides/installing-using-pip-and-virtual-environments</a>. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.</p>
+<p>Instead of global installation described above, using a <a class="reference external" href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments">virtual environment</a> is generally recommended. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.</p>
 </div>
 </section>
 <section id="option-2-clone-the-repository">
 <h2>Option 2: Clone the Repository<a class="headerlink" href="#option-2-clone-the-repository" title="Permalink to this heading">#</a></h2>
-<p>For developers and advanced users, we recommended cloning the repository from GitHub. This option allows you to get the most recent version of the repository. Furthermore, you can then modify the system models and example controllers. It is also advisable to use a virtual environment to avoid conflicts with other Python packages.</p>
-<p>Several powerful open-source IDEs are available for Python. The following instructions are for VS Code (<a class="reference external" href="https://code.visualstudio.com">https://code.visualstudio.com</a>):</p>
+<p>For developers and advanced users, we recommend cloning the repository from GitHub. This option allows you to get the most recent version of the repository. Furthermore, you can then modify the system models and example controllers. It is also advisable to use a virtual environment to avoid conflicts with other Python packages.</p>
+<p>Several powerful open-source IDEs are available for Python. The following instructions are for <a class="reference external" href="https://code.visualstudio.com">VS Code</a>:</p>
 <ol class="arabic">
 <li><p>Install VS Code, Python, and <code class="docutils literal notranslate"><span class="pre">git</span></code> on your computer. Install also the recommended Python extensions in VS Code.</p></li>
-<li><p>Clone the project:</p>
+<li><p>Clone the project (or fork it first and then clone your fork) using the command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Aalto</span><span class="o">-</span><span class="n">Electric</span><span class="o">-</span><span class="n">Drives</span><span class="o">/</span><span class="n">motulator</span>
 </pre></div>
 </div>
 <p>This will create a folder called <em>motulator</em> in your current directory.</p>
 </li>
 <li><p>Launch VS Code from the cloned project’s root directory on the command line (or choose the proper directory after launching VS Code).</p></li>
-<li><p>Create a virtual environment in the workspace using the instructions provided here: <a class="reference external" href="https://code.visualstudio.com/docs/python/environments">https://code.visualstudio.com/docs/python/environments</a>.</p></li>
+<li><p><a class="reference external" href="https://code.visualstudio.com/docs/python/environments">Create a virtual environment</a> in the workspace.</p></li>
 <li><p>Enable installation of optional dependencies from <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (selecting at least <code class="docutils literal notranslate"><span class="pre">dev</span></code> is recommended). Alternatively, for installing the project with its core dependencies, you may run the command <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.[dev,doc]</span></code>).</p></li>
 </ol>
 <p>After completing the above steps, the virtual environment can be found in the <code class="docutils literal notranslate"><span class="pre">.venv</span></code> directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies, you can also use the interactive IPython console (click on the <em>Play</em> button dropdown menu in VS Code).</p>
 <p>If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for <em>Terminal: Select Default Profile</em>). We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.</p>
-<section id="notes-for-developers">
-<h3>Notes for Developers<a class="headerlink" href="#notes-for-developers" title="Permalink to this heading">#</a></h3>
-<p>We recommend to install the <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies. In this project, we use the YAPF Python code formatter (<a class="github reference external" href="https://github.com/google/yapf">google/yapf</a>), configured based on the PEP8 coding conventions (<a class="reference external" href="https://peps.python.org/pep-0008/">https://peps.python.org/pep-0008/</a>). To enable YAPF in VS Code, you need to install the YAPF extension (<a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=eeyore.yapf">https://marketplace.visualstudio.com/items?itemName=eeyore.yapf</a>).</p>
-<p>If you aim to work with the documentation, install also the <code class="docutils literal notranslate"><span class="pre">doc</span></code> dependencies. For previewing the documentation in VS Code, you can install the Esbonio extension (<a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=swyddfa.esbonio">https://marketplace.visualstudio.com/items?itemName=swyddfa.esbonio</a>). Alternatively, you can build the documentation locally using the command <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory. The documentation will be built in the <code class="docutils literal notranslate"><span class="pre">docs/build</span></code> directory.</p>
-</section>
 </section>
 </section>
 
@@ -531,10 +524,7 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-use-pip">Option 1: Use pip</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-clone-the-repository">Option 2: Clone the Repository</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes-for-developers">Notes for Developers</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-clone-the-repository">Option 2: Clone the Repository</a></li>
 </ul>
   </nav></div>
 

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Usage &#8212; motulator 0.4.0 documentation</title>
+    <title>Contributing &#8212; motulator 0.4.0 documentation</title>
   
   
   
@@ -48,11 +48,11 @@
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'contributing';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contributing" href="contributing.html" />
-    <link rel="prev" title="Installation" href="installation.html" />
+    <link rel="next" title="Drives" href="drive_examples/index.html" />
+    <link rel="prev" title="Usage" href="usage.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -143,8 +143,8 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Contributing</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -327,7 +327,7 @@
       
       
       
-      <li><a href="_sources/usage.rst" target="_blank"
+      <li><a href="_sources/contributing.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -398,7 +398,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -409,11 +411,22 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Usage</h1>
+    <h1>Contributing</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#style-guide">Style Guide</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-optional-dependencies">Install Optional Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submitting-a-bug-report-or-a-feature-request">Submitting a Bug Report or a Feature Request</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-for-contributing">Workflow for Contributing</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -423,43 +436,41 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h1>
-<p>After <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>, <em>motulator</em> can be used by creating a continuous-time system model, a discrete-time controller, and a simulation object, as shown below. A 2.2-kW induction motor drive with a sensorless vector controller is used as an example.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import packages</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">motulator.drive</span> <span class="kn">import</span> <span class="n">model</span>  <span class="c1"># Drive system models</span>
-<span class="kn">import</span> <span class="nn">motulator.drive.control.im</span> <span class="k">as</span> <span class="nn">control</span>  <span class="c1"># Controllers for IMs</span>
-<span class="kn">from</span> <span class="nn">motulator.drive.utils</span> <span class="kn">import</span> <span class="p">(</span>
-   <span class="n">plot</span><span class="p">,</span>  <span class="c1"># Example plotting functions</span>
-   <span class="n">InductionMachinePars</span><span class="p">,</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">)</span>  <span class="c1"># Helper classes</span>
-
-<span class="c1"># Continuous-time model for the drive system</span>
-<span class="n">par</span> <span class="o">=</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">(</span>
-   <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
-<span class="n">mdl_par</span> <span class="o">=</span> <span class="n">InductionMachinePars</span><span class="o">.</span><span class="n">from_inv_gamma_model_pars</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
-<span class="n">machine</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InductionMachine</span><span class="p">(</span><span class="n">mdl_par</span><span class="p">)</span>
-<span class="n">mechanics</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">StiffMechanicalSystem</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
-<span class="n">converter</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">VoltageSourceConverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="p">)</span>
-
-<span class="c1"># Discrete-time controller</span>
-<span class="n">par</span> <span class="o">=</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">(</span>  <span class="c1"># Machine model parameter estimates</span>
-   <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">.224</span><span class="p">)</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentReferenceCfg</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">max_i_s</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorControl</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">.015</span><span class="p">)</span>
-
-<span class="c1"># Acceleration at t = 0.2 s and load torque step of 14 Nm at t = 0.75 s</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.75</span><span class="p">)</span><span class="o">*</span><span class="mi">14</span>
-
-<span class="c1"># Create a simulation object, simulate, and plot example figures</span>
-<span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
-<span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
-<span class="n">plot</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The Examples section includes a variety of different example scripts to run the simulation. System model and controller configurations can be changed as shown in the examples. Furthermore, new features can be added by modifying the source code.</p>
+  <section id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">#</a></h1>
+<section id="style-guide">
+<h2>Style Guide<a class="headerlink" href="#style-guide" title="Permalink to this heading">#</a></h2>
+<p>We follow the <a class="reference external" href="https://peps.python.org/pep-0008/">Style Guide for Python Code PEP8</a>. Furthermore, we use the <a class="reference external" href="https://github.com/google/yapf">YAPF Python code formatter</a>, configured based on the PEP8 conventions in the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file. Public methods and classes should have proper <a class="reference external" href="https://peps.python.org/pep-0257/">docstrings</a>, formatted according to the <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html">NumPy docstring guide</a>.</p>
+<p><a class="reference external" href="https://www.sphinx-doc.org">Sphinx</a> is used to auto-generate documentation. We use <a class="reference external" href="https://sphinx-gallery.github.io/stable/index.html">Sphinx-Gallery</a> to automatically generate the <a class="reference external" href="https://aalto-electric-drives.github.io/motulator/drive_examples/index.html">examples</a> from the scripts in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder. The format of the example scripts is essential for their proper rendering in the documentation (see the existing example scripts).</p>
+</section>
+<section id="install-optional-dependencies">
+<h2>Install Optional Dependencies<a class="headerlink" href="#install-optional-dependencies" title="Permalink to this heading">#</a></h2>
+<p>We recommend to install the <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies (see also <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>). To enable YAPF in VS Code, you can install the <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=eeyore.yapf">YAPF extension</a>. This extension will automatically format the code according when you save the file.</p>
+<p>If you aim to work with the documentation, install also the <code class="docutils literal notranslate"><span class="pre">doc</span></code> dependencies. For previewing the documentation in VS Code, you can install the <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=swyddfa.esbonio">Esbonio extension</a>. Alternatively, you can build the documentation locally using the command <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory. The documentation will be built in the <code class="docutils literal notranslate"><span class="pre">docs/build</span></code> directory.</p>
+</section>
+<section id="submitting-a-bug-report-or-a-feature-request">
+<h2>Submitting a Bug Report or a Feature Request<a class="headerlink" href="#submitting-a-bug-report-or-a-feature-request" title="Permalink to this heading">#</a></h2>
+<p>If you have found bugs or have feature requests, please submit them to the <a class="reference external" href="https://github.com/Aalto-Electric-Drives/motulator/issues">issue tracker</a>. If you are reporting a bug, please include the following in your report:</p>
+<ul class="simple">
+<li><p>Name and version of your operating system.</p></li>
+<li><p>Any relevant details about your local setup, such as the Python interpreter version and installed libraries.</p></li>
+<li><p>A short reproducible code snippet, so that anyone can reproduce the bug easily.</p></li>
+<li><p>Try to be specific about what functions are involved and the shape of the data, especially when including a code snippet is not feasible.</p></li>
+<li><p>Provide the full traceback to any exceptions that were raised.</p></li>
+</ul>
+</section>
+<section id="workflow-for-contributing">
+<h2>Workflow for Contributing<a class="headerlink" href="#workflow-for-contributing" title="Permalink to this heading">#</a></h2>
+<p>When contributing code, please follow this workflow:</p>
+<ol class="arabic simple">
+<li><p>Create a new <a class="reference external" href="https://guides.github.com/features/issues/">issue</a> to discuss your proposal before starting.</p></li>
+<li><p>Create your own fork and clone the repository to your local machine.</p></li>
+<li><p>Commit and push your changes to your fork.</p></li>
+<li><p>When your code is finished, create a pull request.</p></li>
+</ol>
+<p>Once a pull request has been created, it will be reviewed, and changes might be suggested, which you can make by simply adding new commits to your branch. After the successful review, we will merge your changes into the main repository.</p>
+<p>We aim to keep the codebase clean and maintainable. Therefore, we may not be able to accept all contributions (even if they are well-written and feasible). For this reason, it is advisable to discuss possible contributions beforehand in an issue.</p>
+</section>
 </section>
 
 
@@ -474,20 +485,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="installation.html"
+       href="usage.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Installation</p>
+        <p class="prev-next-title">Usage</p>
       </div>
     </a>
     <a class="right-next"
-       href="contributing.html"
+       href="drive_examples/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Contributing</p>
+        <p class="prev-next-title">Drives</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -497,6 +508,23 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#style-guide">Style Guide</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-optional-dependencies">Install Optional Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submitting-a-bug-report-or-a-feature-request">Submitting a Bug Report or a Feature Request</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-for-contributing">Workflow for Contributing</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
