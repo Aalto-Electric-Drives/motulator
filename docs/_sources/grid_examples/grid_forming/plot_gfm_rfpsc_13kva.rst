@@ -188,7 +188,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.791 seconds)
+   **Total running time of the script:** (0 minutes 7.880 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_rfpsc_13kva.py:
