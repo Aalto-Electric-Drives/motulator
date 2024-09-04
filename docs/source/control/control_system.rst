@@ -4,7 +4,7 @@ Common
 Data Flow
 ---------
 
-The two figures below shows the structure and data flow in a typical simulation model as well as an example of the internal structure of the discrete-time control system. The text in italics refers to the default object names used in the software. In the discrete-time control system, the signals are collected into the following SimpleNamespace objects: 
+The two figures below show the structure and data flow in a typical simulation model as well as an example of the internal structure of a discrete-time control system. The text in italics refers to the default object names used in the software. In discrete-time control systems, the signals are collected into the following :class:`types.SimpleNamespace` objects: 
 
 - The object `fbk` contains feedback signals for the controllers. These signals can be measured quantities (such as the measured DC-bus voltage `fbk.u_dc`) as well as estimated quantities (such as the estimated stator flux linkage `fbk.psi_s`). 
 
@@ -24,12 +24,12 @@ These objects `fbk` and `ref` may propagate through several blocks (implemented 
    :align: center
    :alt: Block diagram of the control system.
    
-   Block diagram exemplifying the internal structure of a typical cascade control system. The object `ref` at the controller output should contain the sampling period `T_s` and the converter duty ratios `d_c_abc` for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop). 
+   Block diagram exemplifying the internal structure of a typical cascade control system. The object `ref` at the control system output should contain the sampling period `T_s` and the converter duty ratios `d_c_abc` for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop). 
 
 Main Control Loop
 -----------------
 
-By default, discrete-time control systems run the following scheme in their main control loops:
+A template for the main control loop is available in the base class for discrete-time control systems in :class:`motulator.common.control.ControlSystem`. The main control loop in this template has the following steps:
 
 1. Get the feedback signals `fbk` for the controllers from the outputs of the continuous-time system model `mdl`. This step may contain first getting the measurements and then optionally computing the observer outputs (or otherwise manipulating the measured signals).  
 2. Get the reference signals `ref` and compute the controller outputs based on the feedback signals `fbk`. Cascade control systems may contain multiple controllers, where the output of the outer controller is the reference signal for the inner controller.
@@ -37,7 +37,7 @@ By default, discrete-time control systems run the following scheme in their main
 4. Save the feedback signals `fbk` and the reference signals `ref` so they can be accessed after the simulation.
 5. Return the sampling period `T_s` and the duty ratios `d_c_abc` for the carrier comparison.
 
-A template of this main control loop is available in the base class for control systems in :class:`motulator.common.control.ControlSystem`. Using this template is not necessary, but it may simplify the implementation of new control systems.
+Using this template is not compulsory, but it may simplify the implementation of new control systems.
 
 2DOF PI Controller
 ------------------
@@ -54,7 +54,7 @@ The figure below shows a 2DOF PI controller with an optional feedforward term. I
    u &= k_\mathrm{t}r - k_\mathrm{p}y + u_\mathrm{i} + u_\mathrm{ff}
    :label: 2dof_pi
 
-where :math:`r` is the reference signal, :math:`y` is the measured (or estimated) feedback signal, :math:`u_\mathrm{i}` is the the integral state, and :math:`u_\mathrm{ff}` is the optional feedforward signal. Furthermore, :math:`k_\mathrm{t}` is the reference-feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` and :math:`u_\mathrm{ff} = 0` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward [#Fra1997]_. 
+where :math:`r` is the reference signal, :math:`y` is the measured (or estimated) feedback signal, :math:`u_\mathrm{i}` is the the integral state, and :math:`u_\mathrm{ff}` is the optional feedforward signal. Furthermore, :math:`k_\mathrm{t}` is the reference-feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` and :math:`u_\mathrm{ff} = 0` results in the standard PI controller. This 2DOF PI controller can also be understood as a state-feedback controller with integral action and reference feedforward [#Fra1997]_. 
 
 .. figure:: figs/2dof_pi.svg
    :width: 100%

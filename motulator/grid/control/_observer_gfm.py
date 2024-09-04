@@ -1,4 +1,4 @@
-"""Disturbance-observer-based grid-forming control for grid converters."""
+"""Disturbance-observer-based grid-forming control."""
 
 from dataclasses import dataclass
 
@@ -10,7 +10,7 @@ from motulator.grid.control._common import GridConverterControlSystem
 
 # %%
 @dataclass
-class ObserverBasedGFMControlCfg:
+class ObserverBasedGridFormingControlCfg:
     """
     Disturbance-observer-based grid-forming control configuration.
 
@@ -21,7 +21,7 @@ class ObserverBasedGFMControlCfg:
     nom_u : float
         Nominal grid voltage (V), line-to-neutral peak value.
     nom_w : float
-        Nominal grid frequency (rad/s).
+        Nominal grid angular frequency (rad/s).
     max_i : float
         Maximum current (A), peak value.
     R : float, optional
@@ -29,7 +29,7 @@ class ObserverBasedGFMControlCfg:
     R_a : float, optional
         Active resistance (Ω). The default is 0.25*nom_u/max_i.
     T_s : float, optional
-        Sampling period of the controller (s). The default is 100e-6.
+        Sampling period (s). The default is 100e-6.
     alpha_c : float, optional
         Current control bandwidth (rad/s). The default is 2*pi*400.
     alpha_o : float, optional
@@ -53,16 +53,16 @@ class ObserverBasedGFMControlCfg:
 
 
 # %%
-class ObserverBasedGFMControl(GridConverterControlSystem):
+class ObserverBasedGridFormingControl(GridConverterControlSystem):
     """
-    Disturbance-observer-based grid-forming control for grid converters.
+    Disturbance-observer-based grid-forming control.
     
     This implements the RFPSC-type grid-forming mode of the control method 
     described in [#Nur2024]_. Transparent current control is also implemented.
 
     Parameters
     ----------
-    cfg : ObserverBasedGFMControlCfg
+    cfg : ObserverBasedGridFormingControlCfg
         Controller configuration parameters.
 
     Notes

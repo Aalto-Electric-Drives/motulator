@@ -1,4 +1,4 @@
-"""Power synchronization control for grid-connected converters."""
+"""Power-synchronization control for grid-connected converters."""
 
 from dataclasses import dataclass
 
@@ -11,24 +11,24 @@ from motulator.grid.control._common import (
 
 # %%
 @dataclass
-class RFPSCControlCfg:
+class PowerSynchronizationControlCfg:
     """
-    Power synchronization control configuration.
+    Reference-feedforward power-synchronization control configuration.
 
     Parameters
     ----------
     nom_u : float
         Nominal grid voltage (V), line-to-neutral peak value.
     nom_w : float
-        Nominal grid frequency (rad/s).
+        Nominal grid angular frequency (rad/s).
     max_i : float
         Maximum current (A), peak value.
     R_a : float, optional
         Active resistance (Ω). The default is 0.25*nom_u/max_i.
     T_s : float, optional
-        Sampling period of the controller (s). The default is 100e-6.
+        Sampling period (s). The default is 100e-6.
     w_b : float, optional
-        Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.
+        Low-pass filter bandwidth (rad/s). The default is 2*pi*5.
 
     """
     nom_u: float
@@ -45,12 +45,12 @@ class RFPSCControlCfg:
 
 
 # %%
-class RFPSCControl(GridConverterControlSystem):
+class PowerSynchronizationControl(GridConverterControlSystem):
     """
-    Reference-feedforward power synchronization control for grid converters.
+    Reference-feedforward power-synchronization control.
     
-    This implements the reference-feedforward power synchronization control 
-    (RFPSC) method [#Har2020]_. 
+    This implements the reference-feedforward power-synchronization control 
+    method [#Har2020]_. 
 
     Parameters
     ----------
