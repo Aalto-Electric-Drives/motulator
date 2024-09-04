@@ -60,21 +60,23 @@ class PLL:
 # %%
 class DCBusVoltageController(PIController):
     """
-    DC-bus voltage controller.
+    PI controller for the DC-bus voltage.
 
-    This provides an interface for a DC-bus voltage controller. The gains are
-    initialized based on the desired closed-loop bandwidth and the DC-bus
-    capacitance estimate. The controller regulates the square of the DC-bus 
-    voltage in order to have a linear closed-loop system [#Hur2001]_.
+    This is a PI controller for the DC-bus voltage. The controller regulates 
+    the energy stored in the DC-bus capacitor (scaled square of the DC-bus 
+    voltage) in order to have a linear closed-loop system [#Hur2001]_. The 
+    gains are initialized based on the desired closed-loop bandwidth. 
 
     Parameters
     ----------
+    C_dc : float
+        DC-bus capacitance (F).
+    alpha_dc : float
+        Closed-loop bandwidth (rad/s). 
     zeta : float, optional
         Damping ratio of the closed-loop system. The default is 1.
-    alpha_dc : float, optional
-        Closed-loop bandwidth (rad/s). The default is 2*np.pi*30.
-    p_max : float, optional
-        Maximum converter power (W). The default is `inf`.
+    max_p : float, optional
+        Limit for the maximum converter power (W). The default is `inf`.
         
     References
     ----------
@@ -84,11 +86,18 @@ class DCBusVoltageController(PIController):
 
     """
 
-    def __init__(self, zeta=1, alpha_dc=2*np.pi*30, p_max=np.inf):
-        k_p = -2*zeta*alpha_dc
-        k_i = -alpha_dc**2
+    def __init__(self, C_dc, alpha_dc, zeta=1, max_p=np.inf):
+        k_p, k_i = -2*zeta*alpha_dc, -alpha_dc**2
         k_t = k_p
-        super().__init__(k_p, k_i, k_t, p_max)
+        super().__init__(k_p, k_i, k_t, max_p)
+        self.C_dc = C_dc
+
+    def output(self, ref_u_dc, u_dc, u_ff=0):
+        # pylint: disable=arguments-renamed
+        # Extends the base class method by transforming the
+        ref_W_dc = .5*self.C_dc*ref_u_dc**2
+        W_dc = .5*self.C_dc*u_dc**2
+        return super().output(ref_W_dc, W_dc, u_ff)
 
 
 # %%
@@ -102,8 +111,6 @@ class GridConverterControlSystem(ControlSystem, ABC):
 
     Parameters
     ----------
-    C_dc : float, optional
-        DC-bus capacitance (F). The default is None.
     T_s : float
         Sampling period (s).
 
@@ -125,15 +132,14 @@ class GridConverterControlSystem(ControlSystem, ABC):
                 DC-voltage reference (V) as a function of time (s). This signal
                 is needed in DC-bus voltage control mode.
 
-    dc_bus_volt_ctrl : DCBusVoltageController | None
+    dc_bus_voltage_ctrl : DCBusVoltageController | None
         DC-bus voltage controller. The default is None.
 
     """
 
-    def __init__(self, C_dc, T_s):
+    def __init__(self, T_s):
         super().__init__(T_s)
-        self.C_dc = C_dc
-        self.dc_bus_volt_ctrl = None
+        self.dc_bus_voltage_ctrl = None
         self.pwm = PWM(overmodulation="MPE")
         self.ref = SimpleNamespace()
 
@@ -203,15 +209,13 @@ class GridConverterControlSystem(ControlSystem, ABC):
                     Reactive power reference (VAr).  
 
         """
-        if self.dc_bus_volt_ctrl:
+        if self.dc_bus_voltage_ctrl:
             # DC-bus voltage control mode
             ref.u_dc = self.ref.u_dc(ref.t)
-            ref_W_dc = .5*self.C_dc*ref.u_dc**2
-            W_dc = .5*self.C_dc*fbk.u_dc**2
-            ref.p_g = self.dc_bus_volt_ctrl.output(ref_W_dc, W_dc)
+            ref.p_g = self.dc_bus_voltage_ctrl.output(ref.u_dc, fbk.u_dc)
         else:
             # Power control mode
-            ref.u_dc = None
+            #ref.u_dc = None
             ref.p_g = self.ref.p_g(ref.t)
 
         # Reactive power reference
@@ -223,8 +227,8 @@ class GridConverterControlSystem(ControlSystem, ABC):
     def update(self, fbk, ref):
         """Extend the base class method."""
         super().update(fbk, ref)
-        if self.dc_bus_volt_ctrl:
-            self.dc_bus_volt_ctrl.update(ref.T_s, ref.p_g)
+        if self.dc_bus_voltage_ctrl:
+            self.dc_bus_voltage_ctrl.update(ref.T_s, ref.p_g)
 
 
 # %%

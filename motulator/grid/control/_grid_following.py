@@ -31,8 +31,6 @@ class GFLControlCfg:
         Current-control bandwidth (rad/s). The default is 2*pi*400.
     alpha_pll : float, optional
         PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.
-    C_dc : float, optional
-        DC-bus capacitance (F). The default is None.
 
     """
     L: float
@@ -42,7 +40,6 @@ class GFLControlCfg:
     T_s: float = 100e-6
     alpha_c: float = 2*np.pi*400
     alpha_pll: float = 2*np.pi*20
-    C_dc: float = None
 
 
 # %%
@@ -66,7 +63,7 @@ class GFLControl(GridConverterControlSystem):
     """
 
     def __init__(self, cfg):
-        super().__init__(cfg.C_dc, cfg.T_s)
+        super().__init__(cfg.T_s)
         self.cfg = cfg
         self.current_ctrl = CurrentController(cfg)
         self.pll = PLL(cfg.alpha_pll, cfg.nom_u, cfg.nom_w)

@@ -10,6 +10,8 @@ grid, a current reference generator, and a PI-type current controller.
 """
 
 # %%
+import numpy as np
+
 from motulator.grid import model, control
 from motulator.grid.utils import (
     BaseValues, ACFilterPars, NominalValues, plot)
@@ -38,11 +40,12 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 # Create the control system
 cfg = control.GFLControlCfg(
-    L=.2*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i, C_dc=1e-3)
+    L=.2*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i)
 ctrl = control.GFLControl(cfg)
 
 # Add the DC-bus voltage controller to the control system
-ctrl.dc_bus_volt_ctrl = control.DCBusVoltageController(p_max=base.p)
+ctrl.dc_bus_voltage_ctrl = control.DCBusVoltageController(
+    C_dc=1e-3, alpha_dc=2*np.pi*30, max_p=base.p)
 
 # %%
 # Set the time-dependent reference and disturbance signals.
