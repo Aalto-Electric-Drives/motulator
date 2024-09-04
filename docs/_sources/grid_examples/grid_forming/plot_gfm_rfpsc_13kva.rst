@@ -96,11 +96,11 @@ Configure the control system.
 
 
     # Control configuration parameters
-    cfg = control.RFPSCControlCfg(
+    cfg = control.PowerSynchronizationControlCfg(
         nom_u=base.u, nom_w=base.w, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
 
     # Create the control system
-    ctrl = control.RFPSCControl(cfg)
+    ctrl = control.PowerSynchronizationControl(cfg)
 
 
 
@@ -188,7 +188,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.915 seconds)
+   **Total running time of the script:** (0 minutes 7.863 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_rfpsc_13kva.py:

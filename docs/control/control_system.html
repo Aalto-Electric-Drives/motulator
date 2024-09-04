@@ -446,7 +446,7 @@ document.write(`
 <h1>Common<a class="headerlink" href="#common" title="Permalink to this heading">#</a></h1>
 <section id="data-flow">
 <h2>Data Flow<a class="headerlink" href="#data-flow" title="Permalink to this heading">#</a></h2>
-<p>The two figures below shows the structure and data flow in a typical simulation model as well as an example of the internal structure of the discrete-time control system. The text in italics refers to the default object names used in the software. In the discrete-time control system, the signals are collected into the following SimpleNamespace objects:</p>
+<p>The two figures below show the structure and data flow in a typical simulation model as well as an example of the internal structure of a discrete-time control system. The text in italics refers to the default object names used in the software. In discrete-time control systems, the signals are collected into the following <a class="reference external" href="https://docs.python.org/3/library/types.html#types.SimpleNamespace" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">types.SimpleNamespace</span></code></a> objects:</p>
 <ul class="simple">
 <li><p>The object <cite>fbk</cite> contains feedback signals for the controllers. These signals can be measured quantities (such as the measured DC-bus voltage <cite>fbk.u_dc</cite>) as well as estimated quantities (such as the estimated stator flux linkage <cite>fbk.psi_s</cite>).</p></li>
 <li><p>The object <cite>ref</cite> contains the reference signals, both externally provided (such as <cite>ref.w_m</cite> for the angular speed reference) and internally generated (such as <cite>ref.d_c_abc</cite> for the duty ratios).</p></li>
@@ -461,13 +461,13 @@ document.write(`
 <figure class="align-center" id="id7">
 <a class="reference internal image-reference" href="../_images/discrete_control_system.svg"><img alt="Block diagram of the control system." src="../_images/discrete_control_system.svg" width="100%" /></a>
 <figcaption>
-<p><span class="caption-text">Block diagram exemplifying the internal structure of a typical cascade control system. The object <cite>ref</cite> at the controller output should contain the sampling period <cite>T_s</cite> and the converter duty ratios <cite>d_c_abc</cite> for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).</span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">Block diagram exemplifying the internal structure of a typical cascade control system. The object <cite>ref</cite> at the control system output should contain the sampling period <cite>T_s</cite> and the converter duty ratios <cite>d_c_abc</cite> for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).</span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
 <section id="main-control-loop">
 <h2>Main Control Loop<a class="headerlink" href="#main-control-loop" title="Permalink to this heading">#</a></h2>
-<p>By default, discrete-time control systems run the following scheme in their main control loops:</p>
+<p>A template for the main control loop is available in the base class for discrete-time control systems in <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>. The main control loop in this template has the following steps:</p>
 <ol class="arabic simple">
 <li><p>Get the feedback signals <cite>fbk</cite> for the controllers from the outputs of the continuous-time system model <cite>mdl</cite>. This step may contain first getting the measurements and then optionally computing the observer outputs (or otherwise manipulating the measured signals).</p></li>
 <li><p>Get the reference signals <cite>ref</cite> and compute the controller outputs based on the feedback signals <cite>fbk</cite>. Cascade control systems may contain multiple controllers, where the output of the outer controller is the reference signal for the inner controller.</p></li>
@@ -475,7 +475,7 @@ document.write(`
 <li><p>Save the feedback signals <cite>fbk</cite> and the reference signals <cite>ref</cite> so they can be accessed after the simulation.</p></li>
 <li><p>Return the sampling period <cite>T_s</cite> and the duty ratios <cite>d_c_abc</cite> for the carrier comparison.</p></li>
 </ol>
-<p>A template of this main control loop is available in the base class for control systems in <a class="reference internal" href="../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>. Using this template is not necessary, but it may simplify the implementation of new control systems.</p>
+<p>Using this template is not compulsory, but it may simplify the implementation of new control systems.</p>
 </section>
 <section id="dof-pi-controller">
 <h2>2DOF PI Controller<a class="headerlink" href="#dof-pi-controller" title="Permalink to this heading">#</a></h2>
@@ -486,7 +486,7 @@ document.write(`
 <div class="math notranslate nohighlight" id="equation-2dof-pi">
 <span class="eqno">(1)<a class="headerlink" href="#equation-2dof-pi" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} u_\mathrm{i}}{\mathrm{d} t} &amp;= k_\mathrm{i}\left(r - y\right) \\
 u &amp;= k_\mathrm{t}r - k_\mathrm{p}y + u_\mathrm{i} + u_\mathrm{ff}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(r\)</span> is the reference signal, <span class="math notranslate nohighlight">\(y\)</span> is the measured (or estimated) feedback signal, <span class="math notranslate nohighlight">\(u_\mathrm{i}\)</span> is the the integral state, and <span class="math notranslate nohighlight">\(u_\mathrm{ff}\)</span> is the optional feedforward signal. Furthermore, <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> is the reference-feedforward gain, <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span> and <span class="math notranslate nohighlight">\(u_\mathrm{ff} = 0\)</span> results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward <a class="footnote-reference brackets" href="#fra1997" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>where <span class="math notranslate nohighlight">\(r\)</span> is the reference signal, <span class="math notranslate nohighlight">\(y\)</span> is the measured (or estimated) feedback signal, <span class="math notranslate nohighlight">\(u_\mathrm{i}\)</span> is the the integral state, and <span class="math notranslate nohighlight">\(u_\mathrm{ff}\)</span> is the optional feedforward signal. Furthermore, <span class="math notranslate nohighlight">\(k_\mathrm{t}\)</span> is the reference-feedforward gain, <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. Setting <span class="math notranslate nohighlight">\(k_\mathrm{t} = k_\mathrm{p}\)</span> and <span class="math notranslate nohighlight">\(u_\mathrm{ff} = 0\)</span> results in the standard PI controller. This 2DOF PI controller can also be understood as a state-feedback controller with integral action and reference feedforward <a class="footnote-reference brackets" href="#fra1997" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <figure class="align-center" id="id8">
 <a class="reference internal image-reference" href="../_images/2dof_pi.svg"><img alt="2DOF PI controller." src="../_images/2dof_pi.svg" width="100%" /></a>
 <figcaption>

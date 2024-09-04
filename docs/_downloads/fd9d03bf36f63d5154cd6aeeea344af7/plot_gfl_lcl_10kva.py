@@ -38,9 +38,9 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 # %%
 # Configure the control system.
 
-cfg = control.GFLControlCfg(
+cfg = control.GridFollowingControlCfg(
     L=.073*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i)
-ctrl = control.GFLControl(cfg)
+ctrl = control.GridFollowingControl(cfg)
 
 # %%
 # Set the time-dependent reference and disturbance signals.

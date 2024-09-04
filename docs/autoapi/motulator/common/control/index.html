@@ -511,7 +511,7 @@ document.write(`
 <dd><p>Update the digital clock.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p>
+<dd class="field-odd"><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period (s).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -536,9 +536,9 @@ implemented based on the realized controller output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k_p</strong> (<em>float</em>) – Proportional gain.</p></li>
-<li><p><strong>k_i</strong> (<em>float</em>) – Integral gain.</p></li>
-<li><p><strong>k_t</strong> (<em>float</em><em>, </em><em>optional</em>) – Reference-feedforward gain. The default is <cite>k_p</cite>.</p></li>
+<li><p><strong>k_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Proportional gain.</p></li>
+<li><p><strong>k_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Integral gain.</p></li>
+<li><p><strong>k_t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Reference-feedforward gain. The default is <cite>k_p</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -561,16 +561,16 @@ regulators using complex vectors,” IEEE Trans. Ind. Appl., 2000,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref_i</strong> (<em>complex</em>) – Reference signal.</p></li>
-<li><p><strong>i</strong> (<em>complex</em>) – Feedback signal.</p></li>
-<li><p><strong>u_ff</strong> (<em>complex</em><em>, </em><em>optional</em>) – Feedforward signal. The default is 0.</p></li>
+<li><p><strong>ref_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)"><em>complex</em></a>) – Reference signal.</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)"><em>complex</em></a>) – Feedback signal.</p></li>
+<li><p><strong>u_ff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)"><em>complex</em></a><em>, </em><em>optional</em>) – Feedforward signal. The default is 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>u</strong> – Controller output.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>complex</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)">complex</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -582,9 +582,9 @@ regulators using complex vectors,” IEEE Trans. Ind. Appl., 2000,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
-<li><p><strong>u</strong> (<em>complex</em>) – Realized (limited) controller output.</p></li>
-<li><p><strong>w</strong> (<em>float</em>) – Angular speed of the reference frame (rad/s).</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period (s).</p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)"><em>complex</em></a>) – Realized (limited) controller output.</p></li>
+<li><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Angular speed of the reference frame (rad/s).</p></li>
 </ul>
 </dd>
 </dl>
@@ -595,7 +595,7 @@ regulators using complex vectors,” IEEE Trans. Ind. Appl., 2000,
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_control.html#ControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>Base class for control systems.</p>
 <p>This base class provides typical functionalities for control systems. It
 can be used as a template for implementing custom controllers. An instance
@@ -603,7 +603,7 @@ of this class can be called as a function. When called, it runs the main
 control loop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p>
+<dd class="field-odd"><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period (s).</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -771,10 +771,10 @@ reference <cite>ref_tau_M</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k_p</strong> (<em>float</em>) – Proportional gain.</p></li>
-<li><p><strong>k_i</strong> (<em>float</em>) – Integral gain.</p></li>
-<li><p><strong>k_t</strong> (<em>float</em><em>, </em><em>optional</em>) – Reference-feedforward gain. The default is <cite>k_p</cite>.</p></li>
-<li><p><strong>max_u</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum controller output. The default is <cite>inf</cite>.</p></li>
+<li><p><strong>k_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Proportional gain.</p></li>
+<li><p><strong>k_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Integral gain.</p></li>
+<li><p><strong>k_t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Reference-feedforward gain. The default is <cite>k_p</cite>.</p></li>
+<li><p><strong>max_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum controller output. The default is <cite>inf</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -785,16 +785,16 @@ reference <cite>ref_tau_M</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref_y</strong> (<em>float</em>) – Reference signal.</p></li>
-<li><p><strong>y</strong> (<em>float</em>) – Feedback signal.</p></li>
-<li><p><strong>u_ff</strong> (<em>float</em><em>, </em><em>optional</em>) – Feedforward signal. The default is 0.</p></li>
+<li><p><strong>ref_y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Reference signal.</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Feedback signal.</p></li>
+<li><p><strong>u_ff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Feedforward signal. The default is 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>u</strong> – Controller output.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -806,8 +806,8 @@ reference <cite>ref_tau_M</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
-<li><p><strong>u</strong> (<em>float</em>) – Realized (limited) controller output.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period (s).</p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Realized (limited) controller output.</p></li>
 </ul>
 </dd>
 </dl>
@@ -826,11 +826,11 @@ are taken into account in the realized voltage <a class="footnote-reference brac
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k_comp</strong> (<em>float</em><em>, </em><em>optional</em>) – Compensation factor for the delay effect on the voltage vector angle.
+<li><p><strong>k_comp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Compensation factor for the delay effect on the voltage vector angle.
 The default is 1.5.</p></li>
-<li><p><strong>u_cs0</strong> (<em>float</em><em>, </em><em>optional</em>) – Initial voltage (V) in stationary coordinates. This is used to compute
+<li><p><strong>u_cs0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Initial voltage (V) in stationary coordinates. This is used to compute
 the realized voltage. The default is 0.</p></li>
-<li><p><strong>overmodulation</strong> (<em>str</em><em>, </em><em>optional</em>) – Select one of the following overmodulation methods: minimum-magnitude-
+<li><p><strong>overmodulation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Select one of the following overmodulation methods: minimum-magnitude-
 error (“MME”); minimum-phase-error (“MPE”); six-step (“six_step”). The
 default is “MME”.</p></li>
 </ul>
@@ -858,8 +858,8 @@ Trans. Ind. Appl., 2003, <a class="reference external" href="https://doi.org/10.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref_u_cs</strong> (<em>complex</em>) – Converter voltage reference (V) in stationary coordinates.</p></li>
-<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V).</p></li>
+<li><p><strong>ref_u_cs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)"><em>complex</em></a>) – Converter voltage reference (V) in stationary coordinates.</p></li>
+<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – DC-bus voltage (V).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -881,7 +881,7 @@ Trans. Ind. Appl., 2003, <a class="reference external" href="https://doi.org/10.
 effect of the digital delays on the angle are compensated for.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>complex</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)">complex</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -893,10 +893,10 @@ effect of the digital delays on the angle are compensated for.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
-<li><p><strong>ref_u_cs</strong> (<em>complex</em>) – Converter voltage reference (V) in stationary coordinates.</p></li>
-<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V).</p></li>
-<li><p><strong>w</strong> (<em>float</em>) – Angular speed of synchronous coordinates (rad/s).</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period (s).</p></li>
+<li><p><strong>ref_u_cs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)"><em>complex</em></a>) – Converter voltage reference (V) in stationary coordinates.</p></li>
+<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – DC-bus voltage (V).</p></li>
+<li><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Angular speed of synchronous coordinates (rad/s).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -919,15 +919,15 @@ overmodulation region such that the six-step operation is reached
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref_u_cs</strong> (<em>complex</em>) – Converter voltage reference (V) in stationary coordinates.</p></li>
-<li><p><strong>u_dc</strong> (<em>float</em>) – DC-bus voltage (V).</p></li>
+<li><p><strong>ref_u_cs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)"><em>complex</em></a>) – Converter voltage reference (V) in stationary coordinates.</p></li>
+<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – DC-bus voltage (V).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ref_u_cs</strong> – Modified converter voltage reference (V) in stationary coordinates.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>complex</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.12)">complex</a></p>
 </dd>
 </dl>
 <p class="rubric">References</p>
@@ -955,7 +955,7 @@ Appl., 1997, <a class="reference external" href="https://doi.org/10.1109/28.5680
 <dd><p>Rate limiter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rate_limit</strong> (<em>float</em><em>, </em><em>optional</em>) – Rate limit. The default is inf.</p>
+<dd class="field-odd"><p><strong>rate_limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Rate limit. The default is inf.</p>
 </dd>
 </dl>
 </dd></dl>

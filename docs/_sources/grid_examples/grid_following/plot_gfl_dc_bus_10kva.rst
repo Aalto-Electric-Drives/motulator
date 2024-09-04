@@ -98,9 +98,9 @@ Configure the control system.
 
 
     # Create the control system
-    cfg = control.GFLControlCfg(
+    cfg = control.GridFollowingControlCfg(
         L=.2*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i)
-    ctrl = control.GFLControl(cfg)
+    ctrl = control.GridFollowingControl(cfg)
 
     # Add the DC-bus voltage controller to the control system
     ctrl.dc_bus_voltage_ctrl = control.DCBusVoltageController(
@@ -195,7 +195,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.216 seconds)
+   **Total running time of the script:** (0 minutes 1.211 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_dc_bus_10kva.py:

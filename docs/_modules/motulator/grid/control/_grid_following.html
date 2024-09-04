@@ -373,7 +373,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for motulator.grid.control._grid_following</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Grid-following control methods for grid converters.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Grid-following control methods.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
@@ -385,10 +385,10 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="GFLControlCfg"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControlCfg">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GFLControlCfg</span><span class="p">:</span>
+<div class="viewcode-block" id="GridFollowingControlCfg"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControlCfg">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">GridFollowingControlCfg</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Grid-following control configuration</span>
+<span class="sd">    Grid-following control configuration.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -397,7 +397,7 @@ document.write(`
 <span class="sd">    nom_u : float</span>
 <span class="sd">        Nominal grid voltage (V), line-to-neutral peak value.</span>
 <span class="sd">    nom_w : float</span>
-<span class="sd">        Nominal grid frequency (rad/s).</span>
+<span class="sd">        Nominal grid angular frequency (rad/s).</span>
 <span class="sd">    max_i : float</span>
 <span class="sd">        Maximum current (A), peak value. </span>
 <span class="sd">    T_s : float, optional</span>
@@ -418,23 +418,24 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="GFLControl"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl">[docs]</a><span class="k">class</span> <span class="nc">GFLControl</span><span class="p">(</span><span class="n">GridConverterControlSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="GridFollowingControl"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl">[docs]</a><span class="k">class</span> <span class="nc">GridFollowingControl</span><span class="p">(</span><span class="n">GridConverterControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Grid-following control for power converters.</span>
+<span class="sd">    Grid-following control.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    cfg : GFLControlCfg</span>
-<span class="sd">        Control configuration.</span>
+<span class="sd">    cfg : GridFollowingControlCfg</span>
+<span class="sd">        Control system configuration.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    current_ctrl : CurrentController</span>
 <span class="sd">        Current controller.</span>
 <span class="sd">    pll : PLL</span>
-<span class="sd">        Phase locked loop.</span>
-<span class="sd">    current_reference : CurrentRefCalc</span>
-<span class="sd">        Current reference calculator.</span>
+<span class="sd">        Phase-locked loop.</span>
+<span class="sd">    current_reference : CurrentReference</span>
+<span class="sd">        Current reference generator.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
@@ -442,9 +443,9 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span> <span class="o">=</span> <span class="n">CurrentController</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pll</span> <span class="o">=</span> <span class="n">PLL</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_pll</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_reference</span> <span class="o">=</span> <span class="n">CurrentRefCalc</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_reference</span> <span class="o">=</span> <span class="n">CurrentReference</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GFLControl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+<div class="viewcode-block" id="GridFollowingControl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_feedback_signals</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pll</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
         <span class="n">s_g</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
@@ -452,7 +453,7 @@ document.write(`
         <span class="n">fbk</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="n">s_g</span><span class="o">.</span><span class="n">imag</span>
         <span class="k">return</span> <span class="n">fbk</span></div>
 
-<div class="viewcode-block" id="GFLControl.output"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
+<div class="viewcode-block" id="GridFollowingControl.output"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
         <span class="c1"># Get the reference signals</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
@@ -466,7 +467,7 @@ document.write(`
         <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_cs</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ref</span></div>
 
-<div class="viewcode-block" id="GFLControl.update"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+<div class="viewcode-block" id="GridFollowingControl.update"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
@@ -484,8 +485,8 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    cfg : GFLControlCfg</span>
-<span class="sd">        Control configuration parameters.</span>
+<span class="sd">    cfg : GridFollowingControlCfg</span>
+<span class="sd">        Control system configuration.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -497,18 +498,18 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="CurrentRefCalc"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentRefCalc">[docs]</a><span class="k">class</span> <span class="nc">CurrentRefCalc</span><span class="p">:</span>
+<div class="viewcode-block" id="CurrentReference"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentReference">[docs]</a><span class="k">class</span> <span class="nc">CurrentReference</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Current controller reference generator</span>
+<span class="sd">    Current reference generator.</span>
 <span class="sd">    </span>
-<span class="sd">    This class is used to generate the current references for the current</span>
-<span class="sd">    controllers based on the active and reactive power references. The current</span>
-<span class="sd">    limiting algorithm is used to limit the current references.</span>
+<span class="sd">    This class generates the current reference based on the active and reactive </span>
+<span class="sd">    power references. The current limiting algorithm is used to limit the </span>
+<span class="sd">    current reference.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    cfg : GFLControlCfg</span>
-<span class="sd">        Control configuration parameters.</span>
+<span class="sd">    cfg : GridFollowingControlCfg</span>
+<span class="sd">        Control system configuration.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -516,11 +517,10 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">nom_u_g</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">CurrentLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_i</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CurrentRefCalc.get_current_reference"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentRefCalc.get_current_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+<div class="viewcode-block" id="CurrentReference.get_current_reference"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentReference.get_current_reference">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Current reference generator.&quot;&quot;&quot;</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_u_g</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="n">j</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_u_g</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_u_g</span><span class="p">)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">ref</span></div></div>
 </pre></div>
 

@@ -460,7 +460,7 @@ document.write(`
       <ul>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentVectorControl.current_ctrl">(motulator.drive.control.sm.CurrentVectorControl attribute)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.current_ctrl">(motulator.grid.control.GFLControl attribute)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.current_ctrl">(motulator.grid.control.GridFollowingControl attribute)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.TorqueCharacteristics.current_limit">current_limit() (motulator.drive.control.sm.TorqueCharacteristics method)</a>
@@ -472,7 +472,7 @@ document.write(`
       <ul>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentVectorControl.current_reference">(motulator.drive.control.sm.CurrentVectorControl attribute)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.current_reference">(motulator.grid.control.GFLControl attribute)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.current_reference">(motulator.grid.control.GridFollowingControl attribute)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentController">CurrentController (class in motulator.drive.control.im)</a>
@@ -485,12 +485,12 @@ document.write(`
       </ul></li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentLimiter">CurrentLimiter (class in motulator.grid.control)</a>
 </li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentRefCalc">CurrentRefCalc (class in motulator.grid.control)</a>
-</li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentReference">CurrentReference (class in motulator.drive.control.im)</a>
 
       <ul>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentReference">(class in motulator.drive.control.sm)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentReference">(class in motulator.grid.control)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentReferenceCfg">CurrentReferenceCfg (class in motulator.drive.control.im)</a>
@@ -587,7 +587,7 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.ThreePhaseVoltageSource.generate_space_vector">generate_space_vector() (motulator.grid.model.ThreePhaseVoltageSource method)</a>
 </li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentRefCalc.get_current_reference">get_current_reference() (motulator.grid.control.CurrentRefCalc method)</a>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentReference.get_current_reference">get_current_reference() (motulator.grid.control.CurrentReference method)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/index.html#motulator.drive.control.DriveControlSystem.get_electrical_measurements">get_electrical_measurements() (motulator.drive.control.DriveControlSystem method)</a>
 
@@ -606,13 +606,13 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SignalInjectionControl.get_feedback_signals">(motulator.drive.control.sm.SignalInjectionControl method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.get_feedback_signals">(motulator.grid.control.GFLControl method)</a>
-</li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.get_feedback_signals">(motulator.grid.control.GridConverterControlSystem method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl.get_feedback_signals">(motulator.grid.control.ObserverBasedGFMControl method)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.get_feedback_signals">(motulator.grid.control.GridFollowingControl method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.RFPSCControl.get_feedback_signals">(motulator.grid.control.RFPSCControl method)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl.get_feedback_signals">(motulator.grid.control.ObserverBasedGridFormingControl method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationControl.get_feedback_signals">(motulator.grid.control.PowerSynchronizationControl method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -629,13 +629,13 @@ document.write(`
 </li>
       <li><a href="autoapi/motulator/drive/control/index.html#motulator.drive.control.DriveControlSystem.get_torque_reference">get_torque_reference() (motulator.drive.control.DriveControlSystem method)</a>
 </li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl">GFLControl (class in motulator.grid.control)</a>
-</li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControlCfg">GFLControlCfg (class in motulator.grid.control)</a>
-</li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem">GridConverterControlSystem (class in motulator.grid.control)</a>
 </li>
       <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.GridConverterSystem">GridConverterSystem (class in motulator.grid.model)</a>
+</li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl">GridFollowingControl (class in motulator.grid.control)</a>
+</li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControlCfg">GridFollowingControlCfg (class in motulator.grid.control)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -941,9 +941,9 @@ document.write(`
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentVectorControl.observer">(motulator.drive.control.sm.CurrentVectorControl attribute)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl">ObserverBasedGFMControl (class in motulator.grid.control)</a>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl">ObserverBasedGridFormingControl (class in motulator.grid.control)</a>
 </li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControlCfg">ObserverBasedGFMControlCfg (class in motulator.grid.control)</a>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControlCfg">ObserverBasedGridFormingControlCfg (class in motulator.grid.control)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.ObserverBasedVHzControl">ObserverBasedVHzControl (class in motulator.drive.control.im)</a>
 
@@ -1004,13 +1004,13 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController.output">(motulator.grid.control.DCBusVoltageController method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.output">(motulator.grid.control.GFLControl method)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.output">(motulator.grid.control.GridFollowingControl method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl.output">(motulator.grid.control.ObserverBasedGFMControl method)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl.output">(motulator.grid.control.ObserverBasedGridFormingControl method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PLL.output">(motulator.grid.control.PLL method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.RFPSCControl.output">(motulator.grid.control.RFPSCControl method)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationControl.output">(motulator.grid.control.PowerSynchronizationControl method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1023,7 +1023,7 @@ document.write(`
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PLL">PLL (class in motulator.grid.control)</a>
 </li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.pll">pll (motulator.grid.control.GFLControl attribute)</a>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.pll">pll (motulator.grid.control.GridFollowingControl attribute)</a>
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot">plot() (in module motulator.drive.utils)</a>
 
@@ -1109,6 +1109,10 @@ document.write(`
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.VoltageSourceConverter.post_process_with_inputs">(motulator.grid.model.VoltageSourceConverter method)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationControl">PowerSynchronizationControl (class in motulator.grid.control)</a>
+</li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationControlCfg">PowerSynchronizationControlCfg (class in motulator.grid.control)</a>
+</li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.PWM">PWM (class in motulator.common.control)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.pwm">pwm (motulator.common.control.ControlSystem attribute)</a>
@@ -1127,10 +1131,6 @@ document.write(`
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.ref">(motulator.grid.control.GridConverterControlSystem attribute)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.RFPSCControl">RFPSCControl (class in motulator.grid.control)</a>
-</li>
-      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.RFPSCControlCfg">RFPSCControlCfg (class in motulator.grid.control)</a>
-</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.rhs">rhs() (motulator.common.model.Model method)</a>
 
       <ul>
@@ -1356,15 +1356,15 @@ document.write(`
 </li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SignalInjectionControl.update">(motulator.drive.control.sm.SignalInjectionControl method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GFLControl.update">(motulator.grid.control.GFLControl method)</a>
-</li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.update">(motulator.grid.control.GridConverterControlSystem method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl.update">(motulator.grid.control.ObserverBasedGFMControl method)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.update">(motulator.grid.control.GridFollowingControl method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl.update">(motulator.grid.control.ObserverBasedGridFormingControl method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PLL.update">(motulator.grid.control.PLL method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.RFPSCControl.update">(motulator.grid.control.RFPSCControl method)</a>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationControl.update">(motulator.grid.control.PowerSynchronizationControl method)</a>
 </li>
       </ul></li>
   </ul></td>

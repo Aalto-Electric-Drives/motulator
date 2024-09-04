@@ -37,11 +37,11 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 # Configure the control system.
 
 # Control configuration parameters
-cfg = control.RFPSCControlCfg(
+cfg = control.PowerSynchronizationControlCfg(
     nom_u=base.u, nom_w=base.w, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
 
 # Create the control system
-ctrl = control.RFPSCControl(cfg)
+ctrl = control.PowerSynchronizationControl(cfg)
 
 # %%
 # Set the references for converter output voltage magnitude and active power.

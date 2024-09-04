@@ -373,7 +373,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for motulator.grid.control._observer_gfm</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Disturbance-observer-based grid-forming control for grid converters.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Disturbance-observer-based grid-forming control.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
@@ -384,8 +384,8 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="ObserverBasedGFMControlCfg"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControlCfg">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ObserverBasedGFMControlCfg</span><span class="p">:</span>
+<div class="viewcode-block" id="ObserverBasedGridFormingControlCfg"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControlCfg">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ObserverBasedGridFormingControlCfg</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Disturbance-observer-based grid-forming control configuration.</span>
 
@@ -396,7 +396,7 @@ document.write(`
 <span class="sd">    nom_u : float</span>
 <span class="sd">        Nominal grid voltage (V), line-to-neutral peak value.</span>
 <span class="sd">    nom_w : float</span>
-<span class="sd">        Nominal grid frequency (rad/s).</span>
+<span class="sd">        Nominal grid angular frequency (rad/s).</span>
 <span class="sd">    max_i : float</span>
 <span class="sd">        Maximum current (A), peak value.</span>
 <span class="sd">    R : float, optional</span>
@@ -404,7 +404,7 @@ document.write(`
 <span class="sd">    R_a : float, optional</span>
 <span class="sd">        Active resistance (Ω). The default is 0.25*nom_u/max_i.</span>
 <span class="sd">    T_s : float, optional</span>
-<span class="sd">        Sampling period of the controller (s). The default is 100e-6.</span>
+<span class="sd">        Sampling period (s). The default is 100e-6.</span>
 <span class="sd">    alpha_c : float, optional</span>
 <span class="sd">        Current control bandwidth (rad/s). The default is 2*pi*400.</span>
 <span class="sd">    alpha_o : float, optional</span>
@@ -428,16 +428,16 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="ObserverBasedGFMControl"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl">[docs]</a><span class="k">class</span> <span class="nc">ObserverBasedGFMControl</span><span class="p">(</span><span class="n">GridConverterControlSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="ObserverBasedGridFormingControl"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl">[docs]</a><span class="k">class</span> <span class="nc">ObserverBasedGridFormingControl</span><span class="p">(</span><span class="n">GridConverterControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Disturbance-observer-based grid-forming control for grid converters.</span>
+<span class="sd">    Disturbance-observer-based grid-forming control.</span>
 <span class="sd">    </span>
 <span class="sd">    This implements the RFPSC-type grid-forming mode of the control method </span>
 <span class="sd">    described in [#Nur2024]_. Transparent current control is also implemented.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    cfg : ObserverBasedGFMControlCfg</span>
+<span class="sd">    cfg : ObserverBasedGridFormingControlCfg</span>
 <span class="sd">        Controller configuration parameters.</span>
 
 <span class="sd">    Notes</span>
@@ -462,7 +462,7 @@ document.write(`
             <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="ObserverBasedGFMControl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+<div class="viewcode-block" id="ObserverBasedGridFormingControl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the feedback signals.&quot;&quot;&quot;</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_feedback_signals</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">theta_c</span>
@@ -472,7 +472,7 @@ document.write(`
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fbk</span></div>
 
-<div class="viewcode-block" id="ObserverBasedGFMControl.output"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
+<div class="viewcode-block" id="ObserverBasedGridFormingControl.output"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span>
 
@@ -506,7 +506,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">ref</span></div>
 
-<div class="viewcode-block" id="ObserverBasedGFMControl.update"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGFMControl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+<div class="viewcode-block" id="ObserverBasedGridFormingControl.update"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span></div></div>

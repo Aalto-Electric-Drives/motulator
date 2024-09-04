@@ -38,7 +38,7 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 # Configure the control system.
 
 # Set the configuration parameters
-cfg = control.ObserverBasedGFMControlCfg(
+cfg = control.ObserverBasedGridFormingControlCfg(
     L=.35*base.L,
     R=.05*base.Z,
     nom_u=base.u,
@@ -48,7 +48,7 @@ cfg = control.ObserverBasedGFMControlCfg(
     R_a=.2*base.Z)
 
 # Create the control system
-ctrl = control.ObserverBasedGFMControl(cfg)
+ctrl = control.ObserverBasedGridFormingControl(cfg)
 
 # %%
 # Set the references for converter output voltage magnitude and active power.

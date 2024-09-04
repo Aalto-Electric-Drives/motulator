@@ -97,7 +97,7 @@ Configure the control system.
 
 
     # Set the configuration parameters
-    cfg = control.ObserverBasedGFMControlCfg(
+    cfg = control.ObserverBasedGridFormingControlCfg(
         L=.35*base.L,
         R=.05*base.Z,
         nom_u=base.u,
@@ -107,7 +107,7 @@ Configure the control system.
         R_a=.2*base.Z)
 
     # Create the control system
-    ctrl = control.ObserverBasedGFMControl(cfg)
+    ctrl = control.ObserverBasedGridFormingControl(cfg)
 
 
 
@@ -202,7 +202,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.291 seconds)
+   **Total running time of the script:** (0 minutes 8.184 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_obs_13kva.py:

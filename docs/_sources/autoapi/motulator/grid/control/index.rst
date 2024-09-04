@@ -34,16 +34,16 @@ Classes
 
    motulator.grid.control.CurrentController
    motulator.grid.control.CurrentLimiter
-   motulator.grid.control.CurrentRefCalc
+   motulator.grid.control.CurrentReference
    motulator.grid.control.DCBusVoltageController
-   motulator.grid.control.GFLControl
-   motulator.grid.control.GFLControlCfg
    motulator.grid.control.GridConverterControlSystem
-   motulator.grid.control.ObserverBasedGFMControl
-   motulator.grid.control.ObserverBasedGFMControlCfg
+   motulator.grid.control.GridFollowingControl
+   motulator.grid.control.GridFollowingControlCfg
+   motulator.grid.control.ObserverBasedGridFormingControl
+   motulator.grid.control.ObserverBasedGridFormingControlCfg
    motulator.grid.control.PLL
-   motulator.grid.control.RFPSCControl
-   motulator.grid.control.RFPSCControlCfg
+   motulator.grid.control.PowerSynchronizationControl
+   motulator.grid.control.PowerSynchronizationControlCfg
 
 
 Package Contents
@@ -61,8 +61,8 @@ Package Contents
    converters. The gains are initialized based on the desired closed-loop
    bandwidth and the filter inductance.
 
-   :param cfg: Control configuration parameters.
-   :type cfg: GFLControlCfg
+   :param cfg: Control system configuration.
+   :type cfg: GridFollowingControlCfg
 
 
 
@@ -109,17 +109,17 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentRefCalc(cfg)
+.. py:class:: CurrentReference(cfg)
 
    
-   Current controller reference generator
+   Current reference generator.
 
-   This class is used to generate the current references for the current
-   controllers based on the active and reactive power references. The current
-   limiting algorithm is used to limit the current references.
+   This class generates the current reference based on the active and reactive
+   power references. The current limiting algorithm is used to limit the
+   current reference.
 
-   :param cfg: Control configuration parameters.
-   :type cfg: GFLControlCfg
+   :param cfg: Control system configuration.
+   :type cfg: GridFollowingControlCfg
 
 
 
@@ -239,161 +239,6 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
-
-.. py:class:: GFLControl(cfg)
-
-   Bases: :class:`GridConverterControlSystem`
-
-
-   
-   Grid-following control for power converters.
-
-   :param cfg: Control configuration.
-   :type cfg: GFLControlCfg
-
-   .. attribute:: current_ctrl
-
-      Current controller.
-
-      :type: CurrentController
-
-   .. attribute:: pll
-
-      Phase locked loop.
-
-      :type: PLL
-
-   .. attribute:: current_reference
-
-      Current reference calculator.
-
-      :type: CurrentRefCalc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: get_feedback_signals(mdl)
-
-      
-      Get the feedback signals.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: output(fbk)
-
-      
-      Extend the base class method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update(fbk, ref)
-
-      
-      Extend the base class method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: GFLControlCfg
-
-   
-   Grid-following control configuration
-
-   :param L: Inductance (H).
-   :type L: float
-   :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
-   :type nom_u: float
-   :param nom_w: Nominal grid frequency (rad/s).
-   :type nom_w: float
-   :param max_i: Maximum current (A), peak value.
-   :type max_i: float
-   :param T_s: Sampling period (s). The default is 100e-6.
-   :type T_s: float, optional
-   :param alpha_c: Current-control bandwidth (rad/s). The default is 2*pi*400.
-   :type alpha_c: float, optional
-   :param alpha_pll: PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.
-   :type alpha_pll: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 
 .. py:class:: GridConverterControlSystem(T_s)
 
@@ -583,19 +428,174 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedGFMControl(cfg)
+.. py:class:: GridFollowingControl(cfg)
 
    Bases: :class:`GridConverterControlSystem`
 
 
    
-   Disturbance-observer-based grid-forming control for grid converters.
+   Grid-following control.
+
+   :param cfg: Control system configuration.
+   :type cfg: GridFollowingControlCfg
+
+   .. attribute:: current_ctrl
+
+      Current controller.
+
+      :type: CurrentController
+
+   .. attribute:: pll
+
+      Phase-locked loop.
+
+      :type: PLL
+
+   .. attribute:: current_reference
+
+      Current reference generator.
+
+      :type: CurrentReference
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_feedback_signals(mdl)
+
+      
+      Get the feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: output(fbk)
+
+      
+      Extend the base class method.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(fbk, ref)
+
+      
+      Extend the base class method.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: GridFollowingControlCfg
+
+   
+   Grid-following control configuration.
+
+   :param L: Inductance (H).
+   :type L: float
+   :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
+   :type nom_u: float
+   :param nom_w: Nominal grid angular frequency (rad/s).
+   :type nom_w: float
+   :param max_i: Maximum current (A), peak value.
+   :type max_i: float
+   :param T_s: Sampling period (s). The default is 100e-6.
+   :type T_s: float, optional
+   :param alpha_c: Current-control bandwidth (rad/s). The default is 2*pi*400.
+   :type alpha_c: float, optional
+   :param alpha_pll: PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.
+   :type alpha_pll: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: ObserverBasedGridFormingControl(cfg)
+
+   Bases: :class:`GridConverterControlSystem`
+
+
+   
+   Disturbance-observer-based grid-forming control.
 
    This implements the RFPSC-type grid-forming mode of the control method
    described in [#Nur2024]_. Transparent current control is also implemented.
 
    :param cfg: Controller configuration parameters.
-   :type cfg: ObserverBasedGFMControlCfg
+   :type cfg: ObserverBasedGridFormingControlCfg
 
    .. rubric:: Notes
 
@@ -699,7 +699,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedGFMControlCfg
+.. py:class:: ObserverBasedGridFormingControlCfg
 
    
    Disturbance-observer-based grid-forming control configuration.
@@ -708,7 +708,7 @@ Package Contents
    :type L: float
    :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
    :type nom_u: float
-   :param nom_w: Nominal grid frequency (rad/s).
+   :param nom_w: Nominal grid angular frequency (rad/s).
    :type nom_w: float
    :param max_i: Maximum current (A), peak value.
    :type max_i: float
@@ -716,7 +716,7 @@ Package Contents
    :type R: float, optional
    :param R_a: Active resistance (Ω). The default is 0.25*nom_u/max_i.
    :type R_a: float, optional
-   :param T_s: Sampling period of the controller (s). The default is 100e-6.
+   :param T_s: Sampling period (s). The default is 100e-6.
    :type T_s: float, optional
    :param alpha_c: Current control bandwidth (rad/s). The default is 2*pi*400.
    :type alpha_c: float, optional
@@ -820,16 +820,16 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: RFPSCControl(cfg)
+.. py:class:: PowerSynchronizationControl(cfg)
 
    Bases: :class:`GridConverterControlSystem`
 
 
    
-   Reference-feedforward power synchronization control for grid converters.
+   Reference-feedforward power-synchronization control.
 
-   This implements the reference-feedforward power synchronization control
-   (RFPSC) method [#Har2020]_.
+   This implements the reference-feedforward power-synchronization control
+   method [#Har2020]_.
 
    :param cfg: Model and controller configuration parameters.
    :type cfg: PSCControlCfg
@@ -929,22 +929,22 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: RFPSCControlCfg
+.. py:class:: PowerSynchronizationControlCfg
 
    
-   Power synchronization control configuration.
+   Reference-feedforward power-synchronization control configuration.
 
    :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
    :type nom_u: float
-   :param nom_w: Nominal grid frequency (rad/s).
+   :param nom_w: Nominal grid angular frequency (rad/s).
    :type nom_w: float
    :param max_i: Maximum current (A), peak value.
    :type max_i: float
    :param R_a: Active resistance (Ω). The default is 0.25*nom_u/max_i.
    :type R_a: float, optional
-   :param T_s: Sampling period of the controller (s). The default is 100e-6.
+   :param T_s: Sampling period (s). The default is 100e-6.
    :type T_s: float, optional
-   :param w_b: Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.
+   :param w_b: Low-pass filter bandwidth (rad/s). The default is 2*pi*5.
    :type w_b: float, optional
 
 

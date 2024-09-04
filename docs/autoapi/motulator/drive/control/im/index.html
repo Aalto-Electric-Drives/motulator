@@ -553,7 +553,7 @@ bandwidth and the leakage inductance.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine parameters, contains the leakage inductance <cite>L_sgm</cite> (H).</p></li>
-<li><p><strong>alpha_c</strong> (<em>float</em>) – Closed-loop bandwidth (rad/s).</p></li>
+<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Closed-loop bandwidth (rad/s).</p></li>
 </ul>
 </dd>
 </dl>
@@ -624,13 +624,13 @@ parameters are also required.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>max_i_s</strong> (<em>float</em>) – Maximum stator current (A).</p></li>
-<li><p><strong>nom_u_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Nominal stator voltage (V). The default is sqrt(2/3)*400.</p></li>
-<li><p><strong>nom_w_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Nominal stator angular frequency (rad/s). The default is 2*pi*50.</p></li>
-<li><p><strong>nom_psi_R</strong> (<em>float</em><em>, </em><em>optional</em>) – Nominal rotor flux linkage (Vs). The default is
+<li><p><strong>max_i_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Maximum stator current (A).</p></li>
+<li><p><strong>nom_u_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal stator voltage (V). The default is sqrt(2/3)*400.</p></li>
+<li><p><strong>nom_w_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal stator angular frequency (rad/s). The default is 2*pi*50.</p></li>
+<li><p><strong>nom_psi_R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal rotor flux linkage (Vs). The default is
 <cite>(nom_u_s/nom_w_s)/(1 + L_sgm/L_M)</cite>.</p></li>
-<li><p><strong>k_fw</strong> (<em>float</em><em>, </em><em>optional</em>) – Field-weakening gain (1/H). The default is <cite>2*R_R/(nom_w_s*L_sgm**2)</cite>.</p></li>
-<li><p><strong>k_u</strong> (<em>float</em><em>, </em><em>optional</em>) – Voltage utilization factor. The default is 0.95.</p></li>
+<li><p><strong>k_fw</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Field-weakening gain (1/H). The default is <cite>2*R_R/(nom_w_s*L_sgm**2)</cite>.</p></li>
+<li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor. The default is 0.95.</p></li>
 </ul>
 </dd>
 </dl>
@@ -649,9 +649,9 @@ current controller, a flux observer, and speed controller (optional).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.im.CurrentReferenceCfg" title="motulator.drive.control.im.CurrentReferenceCfg"><em>CurrentReferenceCfg</em></a>) – Current reference generator configuration.</p></li>
-<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kgm²). Needed only for the speed controller.</p></li>
-<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling time (s). The default is 250e-6.</p></li>
-<li><p><strong>sensorless</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable sensorless control. The default is True.</p></li>
+<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Moment of inertia (kgm²). Needed only for the speed controller.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling time (s). The default is 250e-6.</p></li>
+<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Enable sensorless control. The default is True.</p></li>
 </ul>
 </dd>
 </dl>
@@ -743,13 +743,13 @@ current controller, a flux observer, and speed controller (optional).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_psi</strong> (<em>float</em><em>, </em><em>optional</em>) – Flux-control bandwidth (rad/s). The default is 2*pi*100.</p></li>
-<li><p><strong>alpha_tau</strong> (<em>float</em><em>, </em><em>optional</em>) – Torque-control bandwidth (rad/s). The default is 2*pi*200.</p></li>
-<li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Internal current-control bandwidth (rad/s). The default is 2*pi*200.</p></li>
-<li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer bandwidth (rad/s). The default is 2*pi*40.</p></li>
-<li><p><strong>J</strong> (<em>float</em><em>, </em><em>optional</em>) – Moment of inertia (kgm²). Needed only for the speed controller.</p></li>
-<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s). The default is 250e-6.</p></li>
-<li><p><strong>sensorless</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, sensorless control is used. The default is True.</p></li>
+<li><p><strong>alpha_psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Flux-control bandwidth (rad/s). The default is 2*pi*100.</p></li>
+<li><p><strong>alpha_tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Torque-control bandwidth (rad/s). The default is 2*pi*200.</p></li>
+<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Internal current-control bandwidth (rad/s). The default is 2*pi*200.</p></li>
+<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Observer bandwidth (rad/s). The default is 2*pi*40.</p></li>
+<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Moment of inertia (kgm²). Needed only for the speed controller.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period (s). The default is 250e-6.</p></li>
+<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, sensorless control is used. The default is True.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.im.FluxVectorControlCfg" title="motulator.drive.control.im.FluxVectorControlCfg"><em>FluxVectorControlCfg</em></a>) – </p></li>
 </ul>
 </dd>
@@ -775,10 +775,10 @@ current controller, a flux observer, and speed controller (optional).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nom_psi_s</strong> (<em>float</em>) – Nominal stator flux linkage (Vs).</p></li>
-<li><p><strong>max_i_s</strong> (<em>float</em>) – Maximum stator current (A).</p></li>
-<li><p><strong>max_tau_M</strong> (<em>float</em>) – Maximum torque reference (Nm).</p></li>
-<li><p><strong>k_u</strong> (<em>float</em><em>, </em><em>optional</em>) – Voltage utilization factor. The default is 0.95.</p></li>
+<li><p><strong>nom_psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Nominal stator flux linkage (Vs).</p></li>
+<li><p><strong>max_i_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Maximum stator current (A).</p></li>
+<li><p><strong>max_tau_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Maximum torque reference (Nm).</p></li>
+<li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor. The default is 0.95.</p></li>
 </ul>
 </dd>
 </dl>
@@ -826,7 +826,7 @@ Proc. IEEE SLED, 2023, <a class="reference external" href="https://doi.org/10.11
 <p>Full-order observer configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>alpha_i</strong> (<em>float</em><em>, </em><em>optional</em>) – Current estimation bandwidth (rad/s). The default is 2*pi*400.</p>
+<dd class="field-odd"><p><strong>alpha_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Current estimation bandwidth (rad/s). The default is 2*pi*400.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -926,7 +926,7 @@ intermediate stator current reference.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<em>ModelPars</em>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverBasedVHzControlCfg" title="motulator.drive.control.im.ObserverBasedVHzControlCfg"><em>ObserverBasedVHzControlCfg</em></a>) – Control system configuration.</p></li>
-<li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period (s). The default is 250e-6.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s). The default is 250e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -960,14 +960,14 @@ Oct. 2022, <a class="reference external" href="https://doi.org/10.1109/ECCE50734
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nom_psi_s</strong> (<em>float</em>) – Nominal stator flux linkage (Vs).</p></li>
-<li><p><strong>max_i_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum stator current (A). The default is inf.</p></li>
-<li><p><strong>k_tau</strong> (<em>float</em><em>, </em><em>optional</em>) – Torque controller gain. The default is 3.</p></li>
-<li><p><strong>alpha_psi</strong> (<em>float</em><em>, </em><em>optional</em>) – Stator flux control bandwidth (rad/s). The default is 2*pi*20.</p></li>
-<li><p><strong>alpha_f</strong> (<em>float</em><em>, </em><em>optional</em>) – Torque high-pass filter bandwidth (rad/s). The default is 2*pi*1.</p></li>
-<li><p><strong>alpha_r</strong> (<em>float</em><em>, </em><em>optional</em>) – Low-pass-filter bandwidth (rad/s) for slip angular frequency. The
+<li><p><strong>nom_psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Nominal stator flux linkage (Vs).</p></li>
+<li><p><strong>max_i_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum stator current (A). The default is inf.</p></li>
+<li><p><strong>k_tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Torque controller gain. The default is 3.</p></li>
+<li><p><strong>alpha_psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Stator flux control bandwidth (rad/s). The default is 2*pi*20.</p></li>
+<li><p><strong>alpha_f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Torque high-pass filter bandwidth (rad/s). The default is 2*pi*1.</p></li>
+<li><p><strong>alpha_r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Low-pass-filter bandwidth (rad/s) for slip angular frequency. The
 default is 2*pi*1.</p></li>
-<li><p><strong>slip_compensation</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable slip compensation. The default is False.</p></li>
+<li><p><strong>slip_compensation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Enable slip compensation. The default is False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -981,9 +981,9 @@ default is 2*pi*1.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="../../utils/index.html#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
-<li><p><strong>sensorless</strong> (<em>bool</em>) – If True, sensorless mode is used.</p></li>
-<li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer bandwidth (rad/s). The default is 2*pi*40.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period (s).</p></li>
+<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, sensorless mode is used.</p></li>
+<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Observer bandwidth (rad/s). The default is 2*pi*40.</p></li>
 <li><p><strong>k_o</strong> (<em>callable</em><em>, </em><em>optional</em>) – Observer gain as a function of the rotor angular speed. The default is
 <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">(0.5*R_R/L_M</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))/(R_R/L_M</span> <span class="pre">-</span> <span class="pre">1j*w_m)</span></code> if
 <cite>sensorless</cite> else <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m)/(R_R/L_M</span> <span class="pre">-</span> <span class="pre">1j*w_m)</span></code>.</p></li>
@@ -1006,9 +1006,9 @@ based on the desired closed-loop bandwidth and the rotor inertia estimate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J</strong> (<em>float</em>) – Total inertia of the rotor (kgm²).</p></li>
-<li><p><strong>alpha_s</strong> (<em>float</em>) – Closed-loop bandwidth (rad/s).</p></li>
-<li><p><strong>max_tau_M</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum motor torque (Nm). The default is <cite>inf</cite>.</p></li>
+<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Total inertia of the rotor (kgm²).</p></li>
+<li><p><strong>alpha_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Closed-loop bandwidth (rad/s).</p></li>
+<li><p><strong>max_tau_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum motor torque (Nm). The default is <cite>inf</cite>.</p></li>
 </ul>
 </dd>
 </dl>
