@@ -3,23 +3,24 @@
 from motulator.grid.control._common import (
     CurrentLimiter, DCBusVoltageController, GridConverterControlSystem, PLL)
 from motulator.grid.control._grid_following import (
-    CurrentController, CurrentRefCalc, GFLControl, GFLControlCfg)
+    CurrentController, CurrentReference, GridFollowingControl,
+    GridFollowingControlCfg)
 from motulator.grid.control._observer_gfm import (
-    ObserverBasedGFMControl, ObserverBasedGFMControlCfg)
+    ObserverBasedGridFormingControl, ObserverBasedGridFormingControlCfg)
 from motulator.grid.control._power_synchronization import (
-    RFPSCControl, RFPSCControlCfg)
+    PowerSynchronizationControl, PowerSynchronizationControlCfg)
 
 __all__ = [
     "CurrentController",
     "CurrentLimiter",
-    "CurrentRefCalc",
+    "CurrentReference",
     "DCBusVoltageController",
-    "GFLControl",
-    "GFLControlCfg",
+    "GridFollowingControl",
+    "GridFollowingControlCfg",
     "GridConverterControlSystem",
-    "ObserverBasedGFMControl",
-    "ObserverBasedGFMControlCfg",
+    "ObserverBasedGridFormingControl",
+    "ObserverBasedGridFormingControlCfg",
     "PLL",
-    "RFPSCControl",
-    "RFPSCControlCfg",
+    "PowerSynchronizationControl",
+    "PowerSynchronizationControlCfg",
 ]

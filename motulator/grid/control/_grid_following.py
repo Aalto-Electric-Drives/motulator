@@ -1,4 +1,4 @@
-"""Grid-following control methods for grid converters."""
+"""Grid-following control methods."""
 
 from dataclasses import dataclass
 
@@ -11,9 +11,9 @@ from motulator.grid.control._common import (
 
 # %%
 @dataclass
-class GFLControlCfg:
+class GridFollowingControlCfg:
     """
-    Grid-following control configuration
+    Grid-following control configuration.
     
     Parameters
     ----------
@@ -22,7 +22,7 @@ class GFLControlCfg:
     nom_u : float
         Nominal grid voltage (V), line-to-neutral peak value.
     nom_w : float
-        Nominal grid frequency (rad/s).
+        Nominal grid angular frequency (rad/s).
     max_i : float
         Maximum current (A), peak value. 
     T_s : float, optional
@@ -43,23 +43,24 @@ class GFLControlCfg:
 
 
 # %%
-class GFLControl(GridConverterControlSystem):
+class GridFollowingControl(GridConverterControlSystem):
     """
-    Grid-following control for power converters.
+    Grid-following control.
     
     Parameters
     ----------
-    cfg : GFLControlCfg
-        Control configuration.
+    cfg : GridFollowingControlCfg
+        Control system configuration.
 
     Attributes
     ----------
     current_ctrl : CurrentController
         Current controller.
     pll : PLL
-        Phase locked loop.
-    current_reference : CurrentRefCalc
-        Current reference calculator.
+        Phase-locked loop.
+    current_reference : CurrentReference
+        Current reference generator.
+
     """
 
     def __init__(self, cfg):
@@ -67,7 +68,7 @@ class GFLControl(GridConverterControlSystem):
         self.cfg = cfg
         self.current_ctrl = CurrentController(cfg)
         self.pll = PLL(cfg.alpha_pll, cfg.nom_u, cfg.nom_w)
-        self.current_reference = CurrentRefCalc(cfg)
+        self.current_reference = CurrentReference(cfg)
 
     def get_feedback_signals(self, mdl):
         fbk = super().get_feedback_signals(mdl)
@@ -109,8 +110,8 @@ class CurrentController(ComplexPIController):
 
     Parameters
     ----------
-    cfg : GFLControlCfg
-        Control configuration parameters.
+    cfg : GridFollowingControlCfg
+        Control system configuration.
 
     """
 
@@ -122,18 +123,18 @@ class CurrentController(ComplexPIController):
 
 
 # %%
-class CurrentRefCalc:
+class CurrentReference:
     """
-    Current controller reference generator
+    Current reference generator.
     
-    This class is used to generate the current references for the current
-    controllers based on the active and reactive power references. The current
-    limiting algorithm is used to limit the current references.
+    This class generates the current reference based on the active and reactive 
+    power references. The current limiting algorithm is used to limit the 
+    current reference.
     
     Parameters
     ----------
-    cfg : GFLControlCfg
-        Control configuration parameters.
+    cfg : GridFollowingControlCfg
+        Control system configuration.
 
     """
 
@@ -143,7 +144,6 @@ class CurrentRefCalc:
 
     def get_current_reference(self, ref):
         """Current reference generator."""
-        ref.i_c = 2*ref.p_g/(3*self.nom_u_g) - 2j*ref.q_g/(3*self.nom_u_g)
+        ref.i_c = 2*(ref.p_g - 1j*ref.q_g)/(3*self.nom_u_g)
         ref.i_c = self.current_limiter(ref.i_c)
-
         return ref
