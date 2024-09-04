@@ -23,13 +23,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="200.17857"
-     inkscape:cy="76.071428"
+     inkscape:cx="197.67857"
+     inkscape:cy="76.25"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1131"
+     inkscape:window-width="2560"
+     inkscape:window-height="1403"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -1306,142 +1306,6 @@
        width="60"
        id="rect4628"
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    <g
-       inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,244.959,762.78125)"
-       id="g4414"
-       style="stroke-width:0.8">
-      <g
-         id="g615"
-         style="stroke-width:0.8">
-        <g
-           style="fill:#000000;fill-opacity:1;stroke-width:0.8"
-           id="g5464">
-          <use
-             xlink:href="#symbol4052"
-             x="91.925003"
-             y="81.962997"
-             id="use7317"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol5534"
-             x="101.05772"
-             y="81.962997"
-             id="use5744"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol7728"
-             x="106.03902"
-             y="81.962997"
-             id="use7021"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol9800"
-             x="111.02032"
-             y="81.962997"
-             id="use9990"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol594"
-             x="116.55553"
-             y="81.962997"
-             id="use4848"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol2239"
-             x="120.98292"
-             y="81.962997"
-             id="use2835"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol5761"
-             x="124.85737"
-             y="81.962997"
-             id="use1877"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol6165"
-             x="127.62498"
-             y="81.962997"
-             id="use6624"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-        </g>
-      </g>
-    </g>
-    <g
-       inkscape:label=""
-       transform="matrix(1.25,0,0,1.25,253.60372,779.39062)"
-       id="g4818"
-       style="stroke-width:0.8">
-      <g
-         id="g1596"
-         style="stroke-width:0.8">
-        <g
-           style="fill:#000000;fill-opacity:1;stroke-width:0.8"
-           id="g859">
-          <use
-             xlink:href="#symbol7263"
-             x="91.925003"
-             y="81.962997"
-             id="use3718"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol6903"
-             x="100.22684"
-             y="81.962997"
-             id="use8081"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-        </g>
-        <g
-           style="fill:#000000;fill-opacity:1;stroke-width:0.8"
-           id="g592">
-          <use
-             xlink:href="#symbol4139"
-             x="105.48708"
-             y="81.962997"
-             id="use4246"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol9031"
-             x="111.02231"
-             y="81.962997"
-             id="use9315"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-          <use
-             xlink:href="#symbol9637"
-             x="115.44968"
-             y="81.962997"
-             id="use1410"
-             width="100%"
-             height="100%"
-             style="stroke-width:0.8" />
-        </g>
-      </g>
-    </g>
     <path
        style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9-7)"
        d="m 415,910 h 30"
@@ -1565,5 +1429,21 @@
         </g>
       </g>
     </g>
+    <text
+       xml:space="preserve"
+       style="font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke-width:1.333;stroke-linejoin:round;stroke-dashoffset:3.15"
+       x="384.70312"
+       y="867.14581"
+       id="text2943"><tspan
+         sodipodi:role="line"
+         x="384.70312"
+         y="867.14581"
+         id="tspan2941"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle">Magnetic</tspan><tspan
+         sodipodi:role="line"
+         x="384.70312"
+         y="880.47919"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle"
+         id="tspan3541">model</tspan></text>
   </g>
 </svg>

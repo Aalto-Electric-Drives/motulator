@@ -1,4 +1,5 @@
 """Common control functions and classes."""
+
 from abc import ABC
 from types import SimpleNamespace
 
@@ -11,56 +12,71 @@ from motulator.common.utils import abc2complex, wrap
 # %%
 class PLL:
     """
-    Phase-locked loop.
+    Phase-locked loop including the voltage-magnitude filtering.
+
+    This class provides a simple frequency-tracking phase-locked loop. The 
+    magnitude of the measured PCC voltage is also filtered. 
 
     Parameters
     ----------
-    k_p : float
-        Proportional gain.
-    k_i : float
-        Integral gain.
+    alpha_pll : float
+        Frequency-tracking bandwidth.
+    abs_u_g0 : float
+        Initial value for the grid voltage estimate. 
     w_g0 : float
-        Initial value for the grid angular frequency estimate.
+        Initial value for the grid angular frequency estimate. 
         
     """
 
-    def __init__(self, k_p, k_i, w_g0, theta_g0=0):
-        self.est = SimpleNamespace(w_g=w_g0, theta_g=theta_g0)
-        self.gain = SimpleNamespace(k_p=k_p, k_i=k_i)
+    def __init__(self, alpha_pll, abs_u_g0, w_g0, theta_c0=0):
+        self.est = SimpleNamespace(
+            w_g=w_g0, theta_c=theta_c0, abs_u_g=abs_u_g0)
+        self.gain = SimpleNamespace(alpha_g=2*alpha_pll, k_w=alpha_pll**2)
 
     def output(self, fbk):
-        """Compute the frequency and phase angle estimates."""
-        # Measured voltage in control coordinates
-        fbk.u_g = fbk.u_gs*np.exp(-1j*fbk.theta_c)
-        # Grid frequency estimate for the angle calculation
-        fbk.w_g = self.gain.k_p*fbk.u_g.imag + self.est.w_g
+        """Output the estimates and coordinate transformed quantities."""
+        # Observer states
+        fbk.theta_c = self.est.theta_c
+        fbk.w_g = self.est.w_g
+        # Coordinate transformations
+        fbk.u_g = np.exp(-1j*fbk.theta_c)*fbk.u_gs
+        fbk.i_c = np.exp(-1j*fbk.theta_c)*fbk.i_cs
+        fbk.u_c = np.exp(-1j*fbk.theta_c)*fbk.u_cs
+        # Error signal
+        fbk.eps = fbk.u_g.imag/self.est.abs_u_g if self.est.abs_u_g > 0 else 0
+        # Angular speed of the coordinate system
+        fbk.w_c = fbk.w_g + self.gain.alpha_g*fbk.eps
         return fbk
 
     def update(self, T_s, fbk):
         """Update the integral states."""
-        self.est.w_g += T_s*self.gain.k_i*fbk.u_g.imag
-        self.est.theta_g += T_s*fbk.w_g
-        self.est.theta_g = wrap(self.est.theta_g)
+        self.est.theta_c += T_s*fbk.w_c
+        self.est.theta_c = wrap(self.est.theta_c)
+        self.est.w_g += T_s*self.gain.k_w*fbk.eps
+        self.est.abs_u_g += T_s*self.gain.alpha_g*(
+            fbk.u_g.real - self.est.abs_u_g)
 
 
 # %%
 class DCBusVoltageController(PIController):
     """
-    DC-bus voltage controller.
+    PI controller for the DC-bus voltage.
 
-    This provides an interface for a DC-bus voltage controller. The gains are
-    initialized based on the desired closed-loop bandwidth and the DC-bus
-    capacitance estimate. The controller regulates the square of the DC-bus 
-    voltage in order to have a linear closed-loop system [#Hur2001]_.
+    This is a PI controller for the DC-bus voltage. The controller regulates 
+    the energy stored in the DC-bus capacitor (scaled square of the DC-bus 
+    voltage) in order to have a linear closed-loop system [#Hur2001]_. The 
+    gains are initialized based on the desired closed-loop bandwidth. 
 
     Parameters
     ----------
+    C_dc : float
+        DC-bus capacitance (F).
+    alpha_dc : float
+        Closed-loop bandwidth (rad/s). 
     zeta : float, optional
         Damping ratio of the closed-loop system. The default is 1.
-    alpha_dc : float, optional
-        Closed-loop bandwidth (rad/s). The default is 2*np.pi*30.
-    p_max : float, optional
-        Maximum converter power (W). The default is `inf`.
+    max_p : float, optional
+        Limit for the maximum converter power (W). The default is `inf`.
         
     References
     ----------
@@ -70,11 +86,18 @@ class DCBusVoltageController(PIController):
 
     """
 
-    def __init__(self, zeta=1, alpha_dc=2*np.pi*30, p_max=np.inf):
-        k_p = -2*zeta*alpha_dc
-        k_i = -alpha_dc**2
+    def __init__(self, C_dc, alpha_dc, zeta=1, max_p=np.inf):
+        k_p, k_i = -2*zeta*alpha_dc, -alpha_dc**2
         k_t = k_p
-        super().__init__(k_p, k_i, k_t, p_max)
+        super().__init__(k_p, k_i, k_t, max_p)
+        self.C_dc = C_dc
+
+    def output(self, ref_u_dc, u_dc, u_ff=0):
+        # pylint: disable=arguments-renamed
+        # Extends the base class method by transforming the
+        ref_W_dc = .5*self.C_dc*ref_u_dc**2
+        W_dc = .5*self.C_dc*u_dc**2
+        return super().output(ref_W_dc, W_dc, u_ff)
 
 
 # %%
@@ -88,10 +111,6 @@ class GridConverterControlSystem(ControlSystem, ABC):
 
     Parameters
     ----------
-    grid_par : GridPars
-        Grid model parameters.
-    C_dc : float, optional
-        DC-bus capacitance (F). The default is None.
     T_s : float
         Sampling period (s).
 
@@ -113,16 +132,14 @@ class GridConverterControlSystem(ControlSystem, ABC):
                 DC-voltage reference (V) as a function of time (s). This signal
                 is needed in DC-bus voltage control mode.
 
-    dc_bus_volt_ctrl : DCBusVoltageController | None
+    dc_bus_voltage_ctrl : DCBusVoltageController | None
         DC-bus voltage controller. The default is None.
 
     """
 
-    def __init__(self, grid_par, C_dc, T_s):
+    def __init__(self, T_s):
         super().__init__(T_s)
-        self.grid_par = grid_par
-        self.C_dc = C_dc
-        self.dc_bus_volt_ctrl = None
+        self.dc_bus_voltage_ctrl = None
         self.pwm = PWM(overmodulation="MPE")
         self.ref = SimpleNamespace()
 
@@ -192,15 +209,13 @@ class GridConverterControlSystem(ControlSystem, ABC):
                     Reactive power reference (VAr).  
 
         """
-        if self.dc_bus_volt_ctrl:
+        if self.dc_bus_voltage_ctrl:
             # DC-bus voltage control mode
             ref.u_dc = self.ref.u_dc(ref.t)
-            ref_W_dc = .5*self.C_dc*ref.u_dc**2
-            W_dc = .5*self.C_dc*fbk.u_dc**2
-            ref.p_g = self.dc_bus_volt_ctrl.output(ref_W_dc, W_dc)
+            ref.p_g = self.dc_bus_voltage_ctrl.output(ref.u_dc, fbk.u_dc)
         else:
             # Power control mode
-            ref.u_dc = None
+            #ref.u_dc = None
             ref.p_g = self.ref.p_g(ref.t)
 
         # Reactive power reference
@@ -212,8 +227,8 @@ class GridConverterControlSystem(ControlSystem, ABC):
     def update(self, fbk, ref):
         """Extend the base class method."""
         super().update(fbk, ref)
-        if self.dc_bus_volt_ctrl:
-            self.dc_bus_volt_ctrl.update(ref.T_s, ref.p_g)
+        if self.dc_bus_voltage_ctrl:
+            self.dc_bus_voltage_ctrl.update(ref.T_s, ref.p_g)
 
 
 # %%

@@ -23,6 +23,9 @@ class PWM:
     k_comp : float, optional
         Compensation factor for the delay effect on the voltage vector angle. 
         The default is 1.5.
+    u_cs0 : float, optional
+        Initial voltage (V) in stationary coordinates. This is used to compute 
+        the realized voltage. The default is 0.
     overmodulation : str, optional
         Select one of the following overmodulation methods: minimum-magnitude-
         error ("MME"); minimum-phase-error ("MPE"); six-step ("six_step"). The 
@@ -40,11 +43,11 @@ class PWM:
     
     """
 
-    def __init__(self, k_comp=1.5, overmodulation="MME"):
+    def __init__(self, k_comp=1.5, u_cs0=0, overmodulation="MME"):
         self.k_comp = k_comp
         self.overmodulation = overmodulation
-        self.realized_voltage = 0
-        self._old_u_cs = 0
+        self.realized_voltage = u_cs0
+        self._old_u_cs = u_cs0
 
     @staticmethod
     def six_step_overmodulation(ref_u_cs, u_dc):
@@ -191,7 +194,6 @@ class PWM:
 
     def update(self, u_cs):
         """Update the realized voltage."""
-        # Update the voltage estimate for the next sampling instant
         self.realized_voltage = .5*(self._old_u_cs + u_cs)
         self._old_u_cs = u_cs
 
@@ -210,12 +212,13 @@ class PIController:
     This implements a discrete-time 2DOF PI controller, whose continuous-time
     counterpart is::
 
-        u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y)
+        u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y) + u_ff
 
     where `u` is the controller output, `y_ref` is the reference signal, `y` is
-    the feedback signal, and `1/s` refers to integration. The standard PI
-    controller is obtained by choosing ``k_t = k_p``. The integrator 
-    anti-windup is implemented based on the realized controller output.
+    the feedback signal, `u_ff` is the feedforward signal, and `1/s` refers to 
+    integration. The standard PI controller is obtained by choosing 
+    ``k_t = k_p``. The integrator anti-windup is implemented based on the 
+    realized controller output.
 
     Notes
     -----
@@ -245,7 +248,7 @@ class PIController:
         # States
         self.v, self.u_i = 0, 0
 
-    def output(self, ref_y, y):
+    def output(self, ref_y, y, u_ff=0):
         """
         Compute the controller output.
 
@@ -255,6 +258,8 @@ class PIController:
             Reference signal.
         y : float
             Feedback signal.
+        u_ff : float, optional
+            Feedforward signal. The default is 0.
 
         Returns
         -------
@@ -263,7 +268,7 @@ class PIController:
 
         """
         # Estimate of a disturbance input
-        self.v = self.u_i - (self.k_p - self.k_t)*y
+        self.v = self.u_i - (self.k_p - self.k_t)*y + u_ff
 
         # Controller output
         u = self.k_t*(ref_y - y) + self.v

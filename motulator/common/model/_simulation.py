@@ -66,7 +66,7 @@ class CarrierComparison:
 
     Examples
     --------
-    >>> from motulator.model import CarrierComparison
+    >>> from motulator.common.model import CarrierComparison
     >>> carrier_cmp = CarrierComparison(return_complex=False)
     >>> # First call gives rising edges
     >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.4, .2, .8])
@@ -187,14 +187,15 @@ class Simulation:
     """
     Simulation environment.
 
-    Each simulation object has a system model object and a controller object.
+    Each simulation object has a system model object and a control system 
+    object.
 
     Parameters
     ----------
     mdl : Model 
         Continuous-time system model.
     ctrl : ControlSystem
-        Discrete-time controller.
+        Discrete-time control system.
 
     """
 
@@ -204,7 +205,7 @@ class Simulation:
 
     def simulate(self, t_stop=1, max_step=np.inf):
         """
-        Solve the continuous-time model and call the discrete-time controller.
+        Solve the continuous-time system model and call the control system.
 
         Parameters
         ----------

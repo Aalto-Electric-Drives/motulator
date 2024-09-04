@@ -1,6 +1,5 @@
 """Import and plot flux maps from the SyR-e project."""
 
-# %%
 from types import SimpleNamespace
 
 import numpy as np

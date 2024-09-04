@@ -1,7 +1,9 @@
-*motulator:* Motor Drive Simulator in Python
-============================================
+*motulator:* Motor Drive and Grid Converter Simulator in Python
+===============================================================
 
-This open-source software includes simulation models for an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. The machine models are simulated in the continuous-time domain while the control methods run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from `scipy.integrate.solve_ivp`_. A number of control methods are provided as examples. The example methods aim to be simple yet feasible. 
+This open-source software includes simulation models and control methods for electric machine drives and grid converter systems. The machine models include an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. For modeling grid converter systems, various subsystem models are provided, such as an LCL filter connected to an inductive-resistive grid.
+
+The system models are simulated in the continuous-time domain while the control methods run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from `scipy.integrate.solve_ivp`_. A number of control methods are provided as examples. The example methods aim to be simple yet feasible. 
 
 .. _scipy.integrate.solve_ivp: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html
 
@@ -13,15 +15,26 @@ This open-source software includes simulation models for an induction machine, a
 
    installation
    usage
-   API Reference <autoapi/motulator/index>
+   contributing
+
+.. toctree:: 
+   :titlesonly:
+   :caption: Examples
+   :name: examples
+   :maxdepth: 1
+
+   drive_examples/index
+   grid_examples/index
 
 .. toctree::
    :titlesonly:
    :caption: System Models
    :name: models
-   :maxdepth: 2
+   :maxdepth: 1
 
-   model/index
+   model/common
+   model/drive/index
+   model/grid/index
 
 .. toctree::
    :titlesonly:
@@ -29,8 +42,17 @@ This open-source software includes simulation models for an induction machine, a
    :name: controllers
    :maxdepth: 1
 
-   control/design_notes
-   auto_examples/index
+   control/control_system
+   control/drive/index
+   control/grid/index
+
+.. toctree::
+   :titlesonly:
+   :caption: Class Reference
+   :name: api
+   :maxdepth: 1
+
+   API Reference <autoapi/motulator/index>
 
 .. rubric::
    Acknowledgement

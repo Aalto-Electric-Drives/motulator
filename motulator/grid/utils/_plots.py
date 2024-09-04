@@ -1,6 +1,5 @@
 """Example plotting scripts for grid converters."""
 
-# %%
 from types import SimpleNamespace
 
 import numpy as np
@@ -58,14 +57,12 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
 
     # Three-phase quantities
     i_g_abc = complex2abc(mdl.ac_filter.data.i_gs).T
-    e_g_abc = complex2abc(mdl.grid_model.data.e_gs).T
+    e_g_abc = complex2abc(mdl.ac_source.data.e_gs).T
     u_g_abc = complex2abc(mdl.ac_filter.data.u_gs).T
 
     # Calculation of active and reactive powers
-    p_g = 1.5*np.asarray(
-        np.real(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs)))
-    q_g = 1.5*np.asarray(
-        np.imag(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs)))
+    p_g = 1.5*np.real(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs))
+    q_g = 1.5*np.imag(mdl.ac_filter.data.e_gs*np.conj(mdl.ac_filter.data.i_gs))
 
     # Coordinate transformation in the case of observer-based GFM control
     if hasattr(sim.ctrl, "observer"):
@@ -84,7 +81,7 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
         if not plot_pcc_voltage:
             # Subplot 1: Grid voltage
             ax1.plot(
-                mdl.grid_model.data.t,
+                mdl.ac_source.data.t,
                 e_g_abc/base.u,
                 label=[
                     r"$e_\mathrm{ga}$", r"$e_\mathrm{gb}$", r"$e_\mathrm{gc}$"
@@ -125,8 +122,8 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
     if plot_w:
         # Subplot 3: Grid and converter frequencies
         ax3.plot(
-            mdl.grid_model.data.t,
-            mdl.grid_model.data.w_g/base.w,
+            mdl.ac_source.data.t,
+            mdl.ac_source.data.w_g/base.w,
             label=r"$\omega_\mathrm{g}$")
         ax3.plot(
             ctrl.t,
@@ -139,8 +136,8 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
     else:
         # Subplot 3: Phase angles
         ax3.plot(
-            mdl.grid_model.data.t,
-            mdl.grid_model.data.theta_g,
+            mdl.ac_source.data.t,
+            mdl.ac_source.data.theta_g,
             label=r"$\theta_\mathrm{g}$")
         ax3.plot(
             ctrl.t,
@@ -236,8 +233,8 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
             label=r"$\hat{v}_\mathrm{c}$",
             ds="steps-post")
         ax3.plot(
-            mdl.grid_model.data.t,
-            np.abs(mdl.grid_model.data.e_gs/base.u),
+            mdl.ac_source.data.t,
+            np.abs(mdl.ac_source.data.e_gs/base.u),
             "k--",
             label=r"$e_\mathrm{g}$")
     else:
@@ -253,8 +250,8 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
             label=r"$u_\mathrm{cq}$",
             ds="steps-post")
         ax3.plot(
-            mdl.grid_model.data.t,
-            np.abs(mdl.grid_model.data.e_gs)/base.u,
+            mdl.ac_source.data.t,
+            np.abs(mdl.ac_source.data.e_gs)/base.u,
             "k--",
             label=r"$e_\mathrm{g}$")
     ax3.legend()
@@ -304,8 +301,8 @@ def plot_voltage_vector(sim, base=None):
     # Plot the grid voltage vector in the complex plane
     _, ax = plt.subplots()
     ax.plot(
-        mdl.grid_model.data.e_gs.real/base.u,
-        mdl.grid_model.data.e_gs.imag/base.u,
+        mdl.ac_source.data.e_gs.real/base.u,
+        mdl.ac_source.data.e_gs.imag/base.u,
         label="Grid voltage")
     ax.axhline(0, color="k")
     ax.axvline(0, color="k")

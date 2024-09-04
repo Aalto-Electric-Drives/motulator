@@ -1,6 +1,5 @@
 """Common dataclasses usable in models and control of machine drives."""
 
-# %%
 from abc import ABC
 from dataclasses import dataclass
 # Note: Union can be replaced by "|" in Python 3.10
@@ -29,7 +28,6 @@ class NominalValues:
         Torque (Nm).
 
     """
-
     U: float
     I: float
     f: float

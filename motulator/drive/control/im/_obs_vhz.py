@@ -1,6 +1,5 @@
 """Observer-based V/Hz control for induction machine drives."""
 
-# %%
 from types import SimpleNamespace
 from dataclasses import dataclass
 

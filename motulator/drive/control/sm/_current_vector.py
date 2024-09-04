@@ -129,14 +129,13 @@ class CurrentController(ComplexPIController):
         self.L_d = par.L_d
         self.L_q = par.L_q
 
-    def output(self, ref_i, i):
+    def output(self, ref_i, i, u_ff=0):
         # Extends the base class method by transforming the currents to the
         # flux linkages, which is a simple way to take the saliency into
         # account
         ref_psi = self.L_d*ref_i.real + 1j*self.L_q*ref_i.imag
         psi = self.L_d*i.real + 1j*self.L_q*i.imag
-
-        return super().output(ref_psi, psi)
+        return super().output(ref_psi, psi, u_ff)
 
 
 # %%

@@ -1,6 +1,5 @@
 """Example plotting scripts for machine drives."""
 
-# %%
 from types import SimpleNamespace
 
 import numpy as np
@@ -334,7 +333,7 @@ def plot_extra(sim, base=None, t_span=None):
             label=r"$i_\mathrm{L}$")
         ax2.plot(
             mdl.converter.data.t,
-            mdl.converter.data.i_dc/base.i,
+            mdl.converter.data.i_dc_int/base.i,
             label=r"$i_\mathrm{dc}$")
         ax2.plot(
             mdl.converter.data.t,
