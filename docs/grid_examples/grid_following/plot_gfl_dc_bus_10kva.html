@@ -434,7 +434,9 @@ to download the full example code.</p>
 strong grid and regulating the DC-bus voltage. The control system includes a
 DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the
 grid, a current reference generator, and a PI-type current controller.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">motulator.grid</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">motulator.grid</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">control</span>
 <span class="kn">from</span> <span class="nn">motulator.grid.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaseValues</span><span class="p">,</span> <span class="n">ACFilterPars</span><span class="p">,</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">plot</span><span class="p">)</span>
 </pre></div>
@@ -459,11 +461,12 @@ grid, a current reference generator, and a PI-type current controller.</p>
 <p>Configure the control system.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the control system</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">GFLControlCfg</span><span class="p">(</span>
-    <span class="n">L</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">nom_u</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">nom_w</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">max_i</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">C_dc</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+    <span class="n">L</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">nom_u</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">nom_w</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">max_i</span><span class="o">=</span><span class="mf">1.5</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">GFLControl</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 
 <span class="c1"># Add the DC-bus voltage controller to the control system</span>
-<span class="n">ctrl</span><span class="o">.</span><span class="n">dc_bus_volt_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">DCBusVoltageController</span><span class="p">(</span><span class="n">p_max</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">DCBusVoltageController</span><span class="p">(</span>
+    <span class="n">C_dc</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">alpha_dc</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span> <span class="n">max_p</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Set the time-dependent reference and disturbance signals.</p>
@@ -491,7 +494,7 @@ grid, a current reference generator, and a PI-type current controller.</p>
 <li><img src="../../_images/sphx_glr_plot_gfl_dc_bus_10kva_001.png" srcset="../../_images/sphx_glr_plot_gfl_dc_bus_10kva_001.png" alt="plot gfl dc bus 10kva" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_gfl_dc_bus_10kva_002.png" srcset="../../_images/sphx_glr_plot_gfl_dc_bus_10kva_002.png" alt="plot gfl dc bus 10kva" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.283 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.216 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-grid-following-plot-gfl-dc-bus-10kva-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/838cd6750a1112dc674c6007b2ca3fba/plot_gfl_dc_bus_10kva.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gfl_dc_bus_10kva.ipynb</span></code></a></p>

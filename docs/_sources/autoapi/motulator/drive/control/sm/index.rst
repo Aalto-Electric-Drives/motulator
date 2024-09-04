@@ -92,7 +92,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(ref_i, i)
+   .. py:method:: output(ref_i, i, u_ff=0)
 
       
       Compute the controller output.

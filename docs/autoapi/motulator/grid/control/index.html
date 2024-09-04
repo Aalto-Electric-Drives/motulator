@@ -429,7 +429,10 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentRefCalc.get_current_reference"><code class="docutils literal notranslate"><span class="pre">CurrentRefCalc.get_current_reference()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController.output"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController.output()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl"><code class="docutils literal notranslate"><span class="pre">GFLControl</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.current_ctrl"><code class="docutils literal notranslate"><span class="pre">GFLControl.current_ctrl</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.pll"><code class="docutils literal notranslate"><span class="pre">GFLControl.pll</span></code></a></li>
@@ -442,7 +445,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControlCfg"><code class="docutils literal notranslate"><span class="pre">GFLControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.ref</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_volt_ctrl"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.dc_bus_volt_ctrl</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_voltage_ctrl"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.dc_bus_voltage_ctrl</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_electrical_measurements"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_electrical_measurements()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_feedback_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_power_reference"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_power_reference()</span></code></a></li>
@@ -498,7 +501,7 @@ document.write(`
 <td><p>Current controller reference generator</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a></p></td>
-<td><p>DC-bus voltage controller.</p></td>
+<td><p>PI controller for the DC-bus voltage.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.GFLControl" title="motulator.grid.control.GFLControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GFLControl</span></code></a></p></td>
 <td><p>Grid-following control for power converters.</p></td>
@@ -583,19 +586,20 @@ limiting algorithm is used to limit the current references.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.DCBusVoltageController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DCBusVoltageController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zeta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">np.pi</span> <span class="pre">*</span> <span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#DCBusVoltageController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DCBusVoltageController" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DCBusVoltageController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zeta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#DCBusVoltageController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DCBusVoltageController" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.PIController</span></code></a></p>
-<p>DC-bus voltage controller.</p>
-<p>This provides an interface for a DC-bus voltage controller. The gains are
-initialized based on the desired closed-loop bandwidth and the DC-bus
-capacitance estimate. The controller regulates the square of the DC-bus
-voltage in order to have a linear closed-loop system <a class="footnote-reference brackets" href="#hur2001" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>PI controller for the DC-bus voltage.</p>
+<p>This is a PI controller for the DC-bus voltage. The controller regulates
+the energy stored in the DC-bus capacitor (scaled square of the DC-bus
+voltage) in order to have a linear closed-loop system <a class="footnote-reference brackets" href="#hur2001" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The
+gains are initialized based on the desired closed-loop bandwidth.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>C_dc</strong> (<em>float</em>) – DC-bus capacitance (F).</p></li>
+<li><p><strong>alpha_dc</strong> (<em>float</em>) – Closed-loop bandwidth (rad/s).</p></li>
 <li><p><strong>zeta</strong> (<em>float</em><em>, </em><em>optional</em>) – Damping ratio of the closed-loop system. The default is 1.</p></li>
-<li><p><strong>alpha_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – Closed-loop bandwidth (rad/s). The default is 2*np.pi*30.</p></li>
-<li><p><strong>p_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum converter power (W). The default is <cite>inf</cite>.</p></li>
+<li><p><strong>max_p</strong> (<em>float</em><em>, </em><em>optional</em>) – Limit for the maximum converter power (W). The default is <cite>inf</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -608,6 +612,27 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 2001, <a class="reference external" href="https://doi.org/10.1109/41.937412">https://doi.org/10.1109/41.937412</a></p>
 </aside>
 </aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.DCBusVoltageController.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#DCBusVoltageController.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DCBusVoltageController.output" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute the controller output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_y</strong> (<em>float</em>) – Reference signal.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Feedback signal.</p></li>
+<li><p><strong>u_ff</strong> (<em>float</em><em>, </em><em>optional</em>) – Feedforward signal. The default is 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>u</strong> – Controller output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -687,7 +712,6 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 <li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
 <li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current-control bandwidth (rad/s). The default is 2*pi*400.</p></li>
 <li><p><strong>alpha_pll</strong> (<em>float</em><em>, </em><em>optional</em>) – PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.</p></li>
-<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -695,7 +719,7 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Base class for control of grid-connected converters.</p>
 <p>This base class provides typical functionalities for control of
@@ -703,10 +727,7 @@ grid-connected converters. This can be used both in power control and
 DC-bus voltage control modes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
-<li><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p></li>
-</ul>
+<dd class="field-odd"><p><strong>T_s</strong> (<em>float</em>) – Sampling period (s).</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -737,8 +758,8 @@ is needed in DC-bus voltage control mode.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.dc_bus_volt_ctrl">
-<span class="sig-name descname"><span class="pre">dc_bus_volt_ctrl</span></span><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_volt_ctrl" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.dc_bus_voltage_ctrl">
+<span class="sig-name descname"><span class="pre">dc_bus_voltage_ctrl</span></span><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_voltage_ctrl" title="Permalink to this definition">#</a></dt>
 <dd><p>DC-bus voltage controller. The default is None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -887,11 +908,10 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 <li><p><strong>nom_w</strong> (<em>float</em>) – Nominal grid frequency (rad/s).</p></li>
 <li><p><strong>max_i</strong> (<em>float</em>) – Maximum current (A), peak value.</p></li>
 <li><p><strong>R</strong> (<em>float</em><em>, </em><em>optional</em>) – Total series resistance (Ω). The default is 0.</p></li>
-<li><p><strong>R_a</strong> (<em>float</em><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*num_u/max_i.</p></li>
+<li><p><strong>R_a</strong> (<em>float</em><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*nom_u/max_i.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). The default is 100e-6.</p></li>
 <li><p><strong>alpha_c</strong> (<em>float</em><em>, </em><em>optional</em>) – Current control bandwidth (rad/s). The default is 2*pi*400.</p></li>
 <li><p><strong>alpha_o</strong> (<em>float</em><em>, </em><em>optional</em>) – Observer gain (rad/s). The default is 2*pi*50.</p></li>
-<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -977,10 +997,9 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <li><p><strong>nom_u</strong> (<em>float</em>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
 <li><p><strong>nom_w</strong> (<em>float</em>) – Nominal grid frequency (rad/s).</p></li>
 <li><p><strong>max_i</strong> (<em>float</em>) – Maximum current (A), peak value.</p></li>
-<li><p><strong>R_a</strong> (<em>float</em><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*num_u/max_i.</p></li>
+<li><p><strong>R_a</strong> (<em>float</em><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*nom_u/max_i.</p></li>
 <li><p><strong>T_s</strong> (<em>float</em><em>, </em><em>optional</em>) – Sampling period of the controller (s). The default is 100e-6.</p></li>
 <li><p><strong>w_b</strong> (<em>float</em><em>, </em><em>optional</em>) – Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.</p></li>
-<li><p><strong>C_dc</strong> (<em>float</em><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1041,7 +1060,10 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentRefCalc.get_current_reference"><code class="docutils literal notranslate"><span class="pre">CurrentRefCalc.get_current_reference()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController.output"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController.output()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl"><code class="docutils literal notranslate"><span class="pre">GFLControl</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.current_ctrl"><code class="docutils literal notranslate"><span class="pre">GFLControl.current_ctrl</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControl.pll"><code class="docutils literal notranslate"><span class="pre">GFLControl.pll</span></code></a></li>
@@ -1054,7 +1076,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GFLControlCfg"><code class="docutils literal notranslate"><span class="pre">GFLControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.ref</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_volt_ctrl"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.dc_bus_volt_ctrl</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_voltage_ctrl"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.dc_bus_voltage_ctrl</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_electrical_measurements"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_electrical_measurements()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_feedback_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_power_reference"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_power_reference()</span></code></a></li>

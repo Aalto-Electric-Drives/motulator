@@ -162,25 +162,27 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: DCBusVoltageController(zeta=1, alpha_dc=2 * np.pi * 30, p_max=np.inf)
+.. py:class:: DCBusVoltageController(C_dc, alpha_dc, zeta=1, max_p=np.inf)
 
    Bases: :py:obj:`motulator.common.control.PIController`
 
 
    
-   DC-bus voltage controller.
+   PI controller for the DC-bus voltage.
 
-   This provides an interface for a DC-bus voltage controller. The gains are
-   initialized based on the desired closed-loop bandwidth and the DC-bus
-   capacitance estimate. The controller regulates the square of the DC-bus
-   voltage in order to have a linear closed-loop system [#Hur2001]_.
+   This is a PI controller for the DC-bus voltage. The controller regulates
+   the energy stored in the DC-bus capacitor (scaled square of the DC-bus
+   voltage) in order to have a linear closed-loop system [#Hur2001]_. The
+   gains are initialized based on the desired closed-loop bandwidth.
 
+   :param C_dc: DC-bus capacitance (F).
+   :type C_dc: float
+   :param alpha_dc: Closed-loop bandwidth (rad/s).
+   :type alpha_dc: float
    :param zeta: Damping ratio of the closed-loop system. The default is 1.
    :type zeta: float, optional
-   :param alpha_dc: Closed-loop bandwidth (rad/s). The default is 2*np.pi*30.
-   :type alpha_dc: float, optional
-   :param p_max: Maximum converter power (W). The default is `inf`.
-   :type p_max: float, optional
+   :param max_p: Limit for the maximum converter power (W). The default is `inf`.
+   :type max_p: float, optional
 
    .. rubric:: References
 
@@ -204,6 +206,39 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: output(ref_u_dc, u_dc, u_ff=0)
+
+      
+      Compute the controller output.
+
+      :param ref_y: Reference signal.
+      :type ref_y: float
+      :param y: Feedback signal.
+      :type y: float
+      :param u_ff: Feedforward signal. The default is 0.
+      :type u_ff: float, optional
+
+      :returns: **u** -- Controller output.
+      :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: GFLControl(cfg)
 
@@ -342,8 +377,6 @@ Package Contents
    :type alpha_c: float, optional
    :param alpha_pll: PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.
    :type alpha_pll: float, optional
-   :param C_dc: DC-bus capacitance (F). The default is None.
-   :type C_dc: float, optional
 
 
 
@@ -362,7 +395,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: GridConverterControlSystem(C_dc, T_s)
+.. py:class:: GridConverterControlSystem(T_s)
 
    Bases: :py:obj:`motulator.common.control.ControlSystem`, :py:obj:`abc.ABC`
 
@@ -374,8 +407,6 @@ Package Contents
    grid-connected converters. This can be used both in power control and
    DC-bus voltage control modes.
 
-   :param C_dc: DC-bus capacitance (F). The default is None.
-   :type C_dc: float, optional
    :param T_s: Sampling period (s).
    :type T_s: float
 
@@ -398,7 +429,7 @@ Package Contents
 
       :type: SimpleNamespace
 
-   .. attribute:: dc_bus_volt_ctrl
+   .. attribute:: dc_bus_voltage_ctrl
 
       DC-bus voltage controller. The default is None.
 
@@ -683,7 +714,7 @@ Package Contents
    :type max_i: float
    :param R: Total series resistance (Ω). The default is 0.
    :type R: float, optional
-   :param R_a: Active resistance (Ω). The default is 0.25*num_u/max_i.
+   :param R_a: Active resistance (Ω). The default is 0.25*nom_u/max_i.
    :type R_a: float, optional
    :param T_s: Sampling period of the controller (s). The default is 100e-6.
    :type T_s: float, optional
@@ -691,8 +722,6 @@ Package Contents
    :type alpha_c: float, optional
    :param alpha_o: Observer gain (rad/s). The default is 2*pi*50.
    :type alpha_o: float, optional
-   :param C_dc: DC-bus capacitance (F). The default is None.
-   :type C_dc: float, optional
 
 
 
@@ -911,14 +940,12 @@ Package Contents
    :type nom_w: float
    :param max_i: Maximum current (A), peak value.
    :type max_i: float
-   :param R_a: Active resistance (Ω). The default is 0.25*num_u/max_i.
+   :param R_a: Active resistance (Ω). The default is 0.25*nom_u/max_i.
    :type R_a: float, optional
    :param T_s: Sampling period of the controller (s). The default is 100e-6.
    :type T_s: float, optional
    :param w_b: Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.
    :type w_b: float, optional
-   :param C_dc: DC-bus capacitance (F). The default is None.
-   :type C_dc: float, optional
 
 
 

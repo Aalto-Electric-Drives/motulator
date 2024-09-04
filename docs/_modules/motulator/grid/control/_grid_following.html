@@ -406,8 +406,6 @@ document.write(`
 <span class="sd">        Current-control bandwidth (rad/s). The default is 2*pi*400.</span>
 <span class="sd">    alpha_pll : float, optional</span>
 <span class="sd">        PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.</span>
-<span class="sd">    C_dc : float, optional</span>
-<span class="sd">        DC-bus capacitance (F). The default is None.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">L</span><span class="p">:</span> <span class="nb">float</span>
@@ -416,8 +414,7 @@ document.write(`
     <span class="n">max_i</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100e-6</span>
     <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">400</span>
-    <span class="n">alpha_pll</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">20</span>
-    <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="n">alpha_pll</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">20</span></div>
 
 
 <span class="c1"># %%</span>
@@ -441,7 +438,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">C_dc</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span> <span class="o">=</span> <span class="n">CurrentController</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pll</span> <span class="o">=</span> <span class="n">PLL</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_pll</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span><span class="p">)</span>

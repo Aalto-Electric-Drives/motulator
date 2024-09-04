@@ -504,14 +504,13 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_q</span>
 
-<div class="viewcode-block" id="CurrentController.output"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_i</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<div class="viewcode-block" id="CurrentController.output"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">u_ff</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="c1"># Extends the base class method by transforming the currents to the</span>
         <span class="c1"># flux linkages, which is a simple way to take the saliency into</span>
         <span class="c1"># account</span>
         <span class="n">ref_psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">ref_i</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">ref_i</span><span class="o">.</span><span class="n">imag</span>
         <span class="n">psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="o">*</span><span class="n">i</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="o">*</span><span class="n">i</span><span class="o">.</span><span class="n">imag</span>
-
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">ref_psi</span><span class="p">,</span> <span class="n">psi</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">ref_psi</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">u_ff</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># %%</span>

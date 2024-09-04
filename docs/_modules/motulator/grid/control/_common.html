@@ -435,21 +435,23 @@ document.write(`
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="DCBusVoltageController"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController">[docs]</a><span class="k">class</span> <span class="nc">DCBusVoltageController</span><span class="p">(</span><span class="n">PIController</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    DC-bus voltage controller.</span>
+<span class="sd">    PI controller for the DC-bus voltage.</span>
 
-<span class="sd">    This provides an interface for a DC-bus voltage controller. The gains are</span>
-<span class="sd">    initialized based on the desired closed-loop bandwidth and the DC-bus</span>
-<span class="sd">    capacitance estimate. The controller regulates the square of the DC-bus </span>
-<span class="sd">    voltage in order to have a linear closed-loop system [#Hur2001]_.</span>
+<span class="sd">    This is a PI controller for the DC-bus voltage. The controller regulates </span>
+<span class="sd">    the energy stored in the DC-bus capacitor (scaled square of the DC-bus </span>
+<span class="sd">    voltage) in order to have a linear closed-loop system [#Hur2001]_. The </span>
+<span class="sd">    gains are initialized based on the desired closed-loop bandwidth. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    C_dc : float</span>
+<span class="sd">        DC-bus capacitance (F).</span>
+<span class="sd">    alpha_dc : float</span>
+<span class="sd">        Closed-loop bandwidth (rad/s). </span>
 <span class="sd">    zeta : float, optional</span>
 <span class="sd">        Damping ratio of the closed-loop system. The default is 1.</span>
-<span class="sd">    alpha_dc : float, optional</span>
-<span class="sd">        Closed-loop bandwidth (rad/s). The default is 2*np.pi*30.</span>
-<span class="sd">    p_max : float, optional</span>
-<span class="sd">        Maximum converter power (W). The default is `inf`.</span>
+<span class="sd">    max_p : float, optional</span>
+<span class="sd">        Limit for the maximum converter power (W). The default is `inf`.</span>
 <span class="sd">        </span>
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -459,11 +461,18 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha_dc</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">30</span><span class="p">,</span> <span class="n">p_max</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
-        <span class="n">k_p</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">zeta</span><span class="o">*</span><span class="n">alpha_dc</span>
-        <span class="n">k_i</span> <span class="o">=</span> <span class="o">-</span><span class="n">alpha_dc</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">,</span> <span class="n">alpha_dc</span><span class="p">,</span> <span class="n">zeta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
+        <span class="n">k_p</span><span class="p">,</span> <span class="n">k_i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">zeta</span><span class="o">*</span><span class="n">alpha_dc</span><span class="p">,</span> <span class="o">-</span><span class="n">alpha_dc</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">k_t</span> <span class="o">=</span> <span class="n">k_p</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k_p</span><span class="p">,</span> <span class="n">k_i</span><span class="p">,</span> <span class="n">k_t</span><span class="p">,</span> <span class="n">p_max</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k_p</span><span class="p">,</span> <span class="n">k_i</span><span class="p">,</span> <span class="n">k_t</span><span class="p">,</span> <span class="n">max_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
+
+<div class="viewcode-block" id="DCBusVoltageController.output"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_u_dc</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">u_ff</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=arguments-renamed</span>
+        <span class="c1"># Extends the base class method by transforming the</span>
+        <span class="n">ref_W_dc</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span><span class="o">*</span><span class="n">ref_u_dc</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">W_dc</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span><span class="o">*</span><span class="n">u_dc</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">ref_W_dc</span><span class="p">,</span> <span class="n">W_dc</span><span class="p">,</span> <span class="n">u_ff</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># %%</span>
@@ -477,8 +486,6 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    C_dc : float, optional</span>
-<span class="sd">        DC-bus capacitance (F). The default is None.</span>
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s).</span>
 
@@ -500,15 +507,14 @@ document.write(`
 <span class="sd">                DC-voltage reference (V) as a function of time (s). This signal</span>
 <span class="sd">                is needed in DC-bus voltage control mode.</span>
 
-<span class="sd">    dc_bus_volt_ctrl : DCBusVoltageController | None</span>
+<span class="sd">    dc_bus_voltage_ctrl : DCBusVoltageController | None</span>
 <span class="sd">        DC-bus voltage controller. The default is None.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">,</span> <span class="n">T_s</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">T_s</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_volt_ctrl</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">(</span><span class="n">overmodulation</span><span class="o">=</span><span class="s2">&quot;MPE&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
 
@@ -578,15 +584,13 @@ document.write(`
 <span class="sd">                    Reactive power reference (VAr).  </span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_volt_ctrl</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="p">:</span>
             <span class="c1"># DC-bus voltage control mode</span>
             <span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-            <span class="n">ref_W_dc</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span><span class="o">**</span><span class="mi">2</span>
-            <span class="n">W_dc</span> <span class="o">=</span> <span class="mf">.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="o">**</span><span class="mi">2</span>
-            <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_volt_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">ref_W_dc</span><span class="p">,</span> <span class="n">W_dc</span><span class="p">)</span>
+            <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Power control mode</span>
-            <span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1">#ref.u_dc = None</span>
             <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
 
         <span class="c1"># Reactive power reference</span>
@@ -598,8 +602,8 @@ document.write(`
 <div class="viewcode-block" id="GridConverterControlSystem.update"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the base class method.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_volt_ctrl</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_volt_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span></div></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># %%</span>
