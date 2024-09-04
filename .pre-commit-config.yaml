@@ -29,8 +29,8 @@ repos:
         name: fix end of files
         description: "Ensures that a file is either empty, or ends with one newline"
         entry: end-of-file-fixer
-        stages: [ commit, push, manual ]
         types: [ text ]
+        stages: [ commit, push, manual ]
         language: python
 
       - id: trailing-whitespace
@@ -38,8 +38,19 @@ repos:
         description: "Trims trailing whitespace"
         entry: trailing-whitespace-fixer
         types: [ text ]
-        language: python
         stages: [ commit ]
+        language: python
+
+  # TOML
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-toml
+        name: check toml
+        description: "Checks .toml files for parseable syntax"
+        entry: check-toml
+        types: [toml]
+        language: python
 
   # YAML
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -64,3 +75,15 @@ repos:
         language: python
         types: [ python ]
         additional_dependencies: [ toml ]
+
+#  # NumPy Doc
+#  - repo: https://github.com/numpy/numpydoc
+#    rev: v1.8.0
+#    hooks:
+#      - id: numpydoc-validation
+#        name: numpydoc-validation
+#        description: "This hook validates that docstrings in committed files adhere to numpydoc standards"
+#        entry: numpydoc lint
+#        require_serial: true
+#        language: python
+#        types: [ python ]
