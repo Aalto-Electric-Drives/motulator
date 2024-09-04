@@ -63,10 +63,10 @@ class FluxVectorControl(DriveControlSystem):
         self,
         par,
         cfg: FluxVectorControlCfg,
-        alpha_psi=2 * np.pi * 100,
-        alpha_tau=2 * np.pi * 200,
-        alpha_c=2 * np.pi * 200,
-        alpha_o=2 * np.pi * 40,
+        alpha_psi=2*np.pi*100,
+        alpha_tau=2*np.pi*200,
+        alpha_c=2*np.pi*200,
+        alpha_o=2*np.pi*40,
         J=None,
         T_s=250e-6,
         sensorless=True,
@@ -74,7 +74,7 @@ class FluxVectorControl(DriveControlSystem):
         super().__init__(par, T_s, sensorless)
         self.cfg = cfg
         if J is not None:
-            self.speed_ctrl = SpeedController(J, 2 * np.pi * 4)
+            self.speed_ctrl = SpeedController(J, 2*np.pi*4)
         else:
             self.speed_ctrl = None
         self.observer = Observer(ObserverCfg(par, T_s, sensorless, alpha_o))
@@ -86,8 +86,8 @@ class FluxVectorControl(DriveControlSystem):
         """Simple field-weakening strategy."""
         # The flux magnitude is reduced inversely proportional to the angular
         # frequency beyond the nominal.
-        max_u_s = self.cfg.k_u * fbk.u_dc / np.sqrt(3)
-        max_psi_s = max_u_s / np.abs(fbk.w_s) if fbk.w_s != 0 else np.inf
+        max_u_s = self.cfg.k_u*fbk.u_dc/np.sqrt(3)
+        max_psi_s = max_u_s/np.abs(fbk.w_s) if fbk.w_s != 0 else np.inf
         return np.min([max_psi_s, self.cfg.nom_psi_s])
 
     def output(self, fbk):
@@ -103,32 +103,31 @@ class FluxVectorControl(DriveControlSystem):
         ref.tau_M = np.clip(ref.tau_M, -cfg.max_tau_M, cfg.max_tau_M)
 
         # Torque estimate
-        tau_M = 1.5 * par.n_p * np.imag(fbk.i_s * np.conj(fbk.psi_s))
+        tau_M = 1.5*par.n_p*np.imag(fbk.i_s*np.conj(fbk.psi_s))
 
         # Torque-production factor, c_tau = 0 corresponds to the MTPV condition
-        c_tau = 1.5 * par.n_p * np.real(fbk.psi_R * np.conj(fbk.psi_s))
+        c_tau = 1.5*par.n_p*np.real(fbk.psi_R*np.conj(fbk.psi_s))
 
         # References for the flux and torque controllers
-        e_psi = self.alpha_psi * (ref.psi_s - np.abs(fbk.psi_s))
-        e_tau = self.alpha_tau * (ref.tau_M - tau_M)
+        e_psi = self.alpha_psi*(ref.psi_s - np.abs(fbk.psi_s))
+        e_tau = self.alpha_tau*(ref.tau_M - tau_M)
         if c_tau > 0:
             e_s = (
-                1.5 * par.n_p * np.abs(fbk.psi_s) * fbk.psi_R * e_psi
-                + 1j * fbk.psi_s * par.L_sgm * e_tau
-            ) / c_tau
+                1.5*par.n_p*np.abs(fbk.psi_s)*fbk.psi_R*e_psi +
+                1j*fbk.psi_s*par.L_sgm*e_tau)/c_tau
         else:
             e_s = e_psi
 
         # Internal current reference for state feedback
-        ref.i_s = fbk.i_s + e_s / (self.alpha_c * self.par.L_sgm)
+        ref.i_s = fbk.i_s + e_s/(self.alpha_c*self.par.L_sgm)
         # Limit the current reference
         if np.abs(ref.i_s) > cfg.max_i_s:
-            ref.i_s = cfg.max_i_s * ref.i_s / np.abs(ref.i_s)
-        e_sp = self.alpha_c * self.par.L_sgm * (ref.i_s - fbk.i_s)
+            ref.i_s = cfg.max_i_s*ref.i_s/np.abs(ref.i_s)
+        e_sp = self.alpha_c*self.par.L_sgm*(ref.i_s - fbk.i_s)
 
         # Stator voltage reference
-        ref.u_s = par.R_s * fbk.i_s + 1j * (fbk.w_m + fbk.w_r) * fbk.psi_s + e_sp
-        u_ss = ref.u_s * np.exp(1j * fbk.theta_s)
+        ref.u_s = par.R_s*fbk.i_s + 1j*(fbk.w_m + fbk.w_r)*fbk.psi_s + e_sp
+        u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
         ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
 
         return ref

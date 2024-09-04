@@ -81,25 +81,21 @@ def i_s(psi_s):
 
     # Inverse inductance functions for the d- and q-axis
     G_d = (
-        a_d0
-        + a_dd * np.abs(psi_s.real) ** S
-        + (a_dq / (V + 2) * np.abs(psi_s.real) ** U * np.abs(psi_s.imag) ** (V + 2))
-    )
+        a_d0 + a_dd*np.abs(psi_s.real)**S +
+        (a_dq/(V + 2)*np.abs(psi_s.real)**U*np.abs(psi_s.imag)**(V + 2)))
     G_q = (
-        a_q0
-        + a_qq * np.abs(psi_s.imag) ** T
-        + (a_dq / (U + 2) * np.abs(psi_s.real) ** (U + 2) * np.abs(psi_s.imag) ** V)
-    )
+        a_q0 + a_qq*np.abs(psi_s.imag)**T +
+        (a_dq/(U + 2)*np.abs(psi_s.real)**(U + 2)*np.abs(psi_s.imag)**V))
 
     # Bridge flux
     psi_b = psi_s.real - psi_n
     # State of the bridge saturation depends also on the q-axis flux
-    psi_b_sat = np.sqrt(psi_b**2 + k_q * psi_s.imag**2)
+    psi_b_sat = np.sqrt(psi_b**2 + k_q*psi_s.imag**2)
     # Inverse inductance function for the bridge saturation
-    G_b = a_b * psi_b_sat**W / (1 + a_bp * psi_b_sat**W)
+    G_b = a_b*psi_b_sat**W/(1 + a_bp*psi_b_sat**W)
 
     # Stator current
-    return G_d * psi_s.real + G_b * psi_b + 1j * (G_q + k_q * G_b) * psi_s.imag
+    return G_d*psi_s.real + G_b*psi_b + 1j*(G_q + k_q*G_b)*psi_s.imag
 
 
 # %%
@@ -117,7 +113,7 @@ i_d_meas, i_q_meas = data["id_map"], data["iq_map"]
 psi_d = np.arange(0, 1, 0.05)
 psi_q = np.arange(-1.35, 1.35, 0.05)
 psi_d, psi_q = np.meshgrid(psi_d, psi_q)
-i_d, i_q = i_s(psi_d + 1j * psi_q).real, i_s(psi_d + 1j * psi_q).imag
+i_d, i_q = i_s(psi_d + 1j*psi_q).real, i_s(psi_d + 1j*psi_q).imag
 
 # Create the figure and the subplots
 fig = plt.figure()
@@ -129,8 +125,7 @@ surf1 = ax1.scatter(psi_d_meas, psi_q_meas, i_d_meas, marker=".", color="r")
 
 # Plot the d-axis model predictions as surfaces
 surf2 = ax1.plot_surface(
-    psi_d, psi_q, i_d, alpha=0.75, cmap="viridis", antialiased=False
-)
+    psi_d, psi_q, i_d, alpha=0.75, cmap="viridis", antialiased=False)
 ax1.set_xlabel(r"$\psi_\mathrm{d}$ (Vs)")
 ax1.set_ylabel(r"$\psi_\mathrm{q}$ (Vs)")
 ax1.set_zlabel(r"$i_\mathrm{d}$ (A)")
@@ -140,8 +135,7 @@ surf3 = ax2.scatter(psi_d_meas, psi_q_meas, i_q_meas, marker=".", color="r")
 
 # Plot the q-axis model predictions as surfaces
 surf4 = ax2.plot_surface(
-    psi_d, psi_q, i_q, alpha=0.75, cmap="viridis", antialiased=False
-)
+    psi_d, psi_q, i_q, alpha=0.75, cmap="viridis", antialiased=False)
 ax2.set_xlabel(r"$\psi_\mathrm{d}$ (Vs)")
 ax2.set_ylabel(r"$\psi_\mathrm{q}$ (Vs)")
 ax2.set_zlabel(r"$i_\mathrm{q}$ (A)")
@@ -153,8 +147,7 @@ plt.show()
 # which is needed in the machine model below.
 
 res = minimize_scalar(
-    lambda psi_d: np.abs(i_s(psi_d)), bounds=(0, base.psi), method="bounded"
-)
+    lambda psi_d: np.abs(i_s(psi_d)), bounds=(0, base.psi), method="bounded")
 psi_s0 = complex(res.x)  # psi_s0 = 0.477
 
 # %%
@@ -174,25 +167,26 @@ mdl = model.Drive(converter, machine, mechanics)
 # Configure the control system.
 
 # Control system is based on the constant inductances
-par = SynchronousMachinePars(n_p=2, R_s=0.63, L_d=18e-3, L_q=110e-3, psi_f=0.47)
+par = SynchronousMachinePars(
+    n_p=2, R_s=0.63, L_d=18e-3, L_q=110e-3, psi_f=0.47)
 # Limit the maximum reference flux to the base value
-cfg = control.FluxTorqueReferenceCfg(par, max_i_s=2 * base.i, k_u=1, max_psi_s=base.psi)
+cfg = control.FluxTorqueReferenceCfg(
+    par, max_i_s=2*base.i, k_u=1, max_psi_s=base.psi)
 ctrl = control.FluxVectorControl(par, cfg, J=0.015, sensorless=True)
 # Select a lower speed-estimation bandwidth to mitigate the saturation effects
 ctrl.observer = control.Observer(
-    control.ObserverCfg(par, alpha_o=2 * np.pi * 40, sensorless=True)
-)
+    control.ObserverCfg(par, alpha_o=2*np.pi*40, sensorless=True))
 
 # %%
 # Set the speed reference and the external load torque.
 
 # Speed reference (electrical rad/s)
-times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]) * 4
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0]) * base.w
+times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1])*4
+values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.ref.w_m = Sequence(times, values)
 # External load torque
-times = np.array([0, 0.125, 0.125, 0.875, 0.875, 1]) * 4
-values = np.array([0, 0, 1, 1, 0, 0]) * nom.tau
+times = np.array([0, 0.125, 0.125, 0.875, 0.875, 1])*4
+values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%

@@ -53,9 +53,9 @@ class CurrentVectorControl(DriveControlSystem):
     def __init__(self, par, cfg, J=None, T_s=250e-6, sensorless=True):
         super().__init__(par, T_s, sensorless)
         self.current_reference = CurrentReference(par, cfg)
-        self.current_ctrl = CurrentController(par, 2 * np.pi * 200)
+        self.current_ctrl = CurrentController(par, 2*np.pi*200)
         if J is not None:
-            self.speed_ctrl = SpeedController(J, 2 * np.pi * 4)
+            self.speed_ctrl = SpeedController(J, 2*np.pi*4)
         else:
             self.speed_ctrl = None
         self.observer = Observer(ObserverCfg(par, T_s, sensorless=sensorless))
@@ -65,7 +65,7 @@ class CurrentVectorControl(DriveControlSystem):
         ref = super().get_torque_reference(fbk, ref)
         ref = self.current_reference.output(fbk, ref)
         ref.u_s = self.current_ctrl.output(ref.i_s, fbk.i_s)
-        u_ss = ref.u_s * np.exp(1j * fbk.theta_s)
+        u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
         ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
 
         return ref
@@ -95,9 +95,9 @@ class CurrentController(ComplexPIController):
     """
 
     def __init__(self, par, alpha_c):
-        k_t = alpha_c * par.L_sgm
-        k_i = alpha_c * k_t
-        k_p = 2 * k_t
+        k_t = alpha_c*par.L_sgm
+        k_i = alpha_c*k_t
+        k_p = 2*k_t
         super().__init__(k_p, k_i, k_t)
 
 
@@ -134,19 +134,19 @@ class CurrentReferenceCfg:
 
     par: InitVar[InductionMachineInvGammaPars] = None
     max_i_s: float = None
-    nom_u_s: InitVar[float] = np.sqrt(2 / 3) * 400
-    nom_w_s: InitVar[float] = 2 * np.pi * 50
+    nom_u_s: InitVar[float] = np.sqrt(2/3)*400
+    nom_w_s: InitVar[float] = 2*np.pi*50
     nom_psi_R: float = None
     k_fw: float = None
     k_u: float = 0.95
 
     def __post_init__(self, par, nom_u_s, nom_w_s):
-        nom_psi_s = nom_u_s / nom_w_s  # Nominal stator flux
+        nom_psi_s = nom_u_s/nom_w_s  # Nominal stator flux
         if self.nom_psi_R is None:
             # Nominal rotor flux (omitting the slip)
-            self.nom_psi_R = nom_psi_s / (1 + par.L_sgm / par.L_M)
+            self.nom_psi_R = nom_psi_s/(1 + par.L_sgm/par.L_M)
         if self.k_fw is None:
-            self.k_fw = 2 * par.R_R / (nom_w_s * par.L_sgm**2)
+            self.k_fw = 2*par.R_R/(nom_w_s*par.L_sgm**2)
 
 
 # %%
@@ -191,7 +191,7 @@ class CurrentReference:
 
     def __init__(self, par, cfg):
         self.par, self.cfg = par, cfg
-        self.cfg.nom_i_sd = cfg.nom_psi_R / par.L_M  # Nominal d-axis current
+        self.cfg.nom_i_sd = cfg.nom_psi_R/par.L_M  # Nominal d-axis current
         self.ref_i_sd = self.cfg.nom_i_sd  # State
 
     def output(self, fbk, ref):
@@ -203,29 +203,29 @@ class CurrentReference:
             # Priority given to the d component
             max_i_sq1 = np.sqrt(cfg.max_i_s**2 - ref_i_sd**2)
             # Breakdown torque limit
-            max_i_sq2 = psi_R / par.L_sgm + ref_i_sd
+            max_i_sq2 = psi_R/par.L_sgm + ref_i_sd
             # q-axis current limit
             max_i_sq = np.min([max_i_sq1, max_i_sq2])
             return max_i_sq
 
         # q-axis current reference
-        ref_i_sq = ref.tau_M / (1.5 * par.n_p * fbk.psi_R) if fbk.psi_R > 0 else 0
+        ref_i_sq = ref.tau_M/(1.5*par.n_p*fbk.psi_R) if fbk.psi_R > 0 else 0
 
         # Limit the current
         max_i_sq = q_axis_current_limit(ref_i_sd, fbk.psi_R)
         ref_i_sq = np.clip(ref_i_sq, -max_i_sq, max_i_sq)
 
         # Current reference
-        ref.i_s = ref_i_sd + 1j * ref_i_sq
+        ref.i_s = ref_i_sd + 1j*ref_i_sq
 
         # Limited torque (for the speed controller)
-        ref.tau_M = 1.5 * par.n_p * fbk.psi_R * ref_i_sq
+        ref.tau_M = 1.5*par.n_p*fbk.psi_R*ref_i_sq
 
         return ref
 
     def update(self, fbk, ref):
         """Field-weakening based on the unlimited reference voltage."""
         cfg = self.cfg
-        max_u_s = cfg.k_u * fbk.u_dc / np.sqrt(3)
-        self.ref_i_sd += ref.T_s * cfg.k_fw * (max_u_s - np.abs(ref.u_s))
+        max_u_s = cfg.k_u*fbk.u_dc/np.sqrt(3)
+        self.ref_i_sd += ref.T_s*cfg.k_fw*(max_u_s - np.abs(ref.u_s))
         self.ref_i_sd = np.clip(self.ref_i_sd, -cfg.max_i_s, cfg.nom_i_sd)

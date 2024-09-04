@@ -106,14 +106,14 @@ class BaseValues:
         the power factor and efficiency being less than unity.
 
         """
-        u = np.sqrt(2 / 3) * nom.U
-        i = np.sqrt(2) * nom.I
-        w = 2 * np.pi * nom.f
-        psi = u / w
-        p = 1.5 * u * i
-        Z = u / i
-        L = Z / w
-        tau = n_p * p / w
+        u = np.sqrt(2/3)*nom.U
+        i = np.sqrt(2)*nom.I
+        w = 2*np.pi*nom.f
+        psi = u/w
+        p = 1.5*u*i
+        Z = u/i
+        L = Z/w
+        tau = n_p*p/w
 
         return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, tau=tau, n_p=n_p)
 
@@ -207,8 +207,8 @@ class InductionMachinePars(MachinePars):
             Γ model parameters.
 
         """
-        g = par.L_M / (par.L_M + par.L_sgm)
-        R_r, L_ell, L_s = par.R_R / g**2, par.L_sgm / g, par.L_M + par.L_sgm
+        g = par.L_M/(par.L_M + par.L_sgm)
+        R_r, L_ell, L_s = par.R_R/g**2, par.L_sgm/g, par.L_M + par.L_sgm
 
         return cls(R_s=par.R_s, R_r=R_r, L_ell=L_ell, L_s=L_s, n_p=par.n_p)
 
@@ -256,8 +256,8 @@ class InductionMachineInvGammaPars(MachinePars):
             Inverse-Γ model parameters.
 
         """
-        g = par.L_s / (par.L_s + par.L_ell)
-        R_R, L_sgm, L_M = g**2 * par.R_r, g * par.L_ell, g * par.L_s
+        g = par.L_s/(par.L_s + par.L_ell)
+        R_R, L_sgm, L_M = g**2*par.R_r, g*par.L_ell, g*par.L_s
 
         return cls(R_s=par.R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, n_p=par.n_p)
 

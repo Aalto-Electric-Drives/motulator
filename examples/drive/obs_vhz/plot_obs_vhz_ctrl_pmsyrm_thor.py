@@ -72,7 +72,8 @@ psi_s_data = np.asarray(data.psi_s).ravel()
 i_s_data = np.asarray(data.i_s).ravel()
 
 # Create the interpolant, i_s = current_dq(psi_s.real, psi_s.imag)
-current_dq = LinearNDInterpolator(list(zip(psi_s_data.real, psi_s_data.imag)), i_s_data)
+current_dq = LinearNDInterpolator(
+    list(zip(psi_s_data.real, psi_s_data.imag)), i_s_data)
 
 # Solve the PM flux for the initial value of the stator flux
 res = minimize_scalar(
@@ -93,15 +94,17 @@ def i_s(psi_s):
 # Configure the system model.
 
 # Create the machine model
-mdl_par = SynchronousMachinePars(n_p=2, R_s=0.2, L_d=4e-3, L_q=17e-3, psi_f=0.134)
+mdl_par = SynchronousMachinePars(
+    n_p=2, R_s=0.2, L_d=4e-3, L_q=17e-3, psi_f=0.134)
 machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=psi_s0)
 # Magnetically linear PM-SyRM model
 # mdl_par = SynchronousMachinePars(
 #     n_p=2, R_s=.2, L_d=4e-3, L_q=17e-3, psi_f=.134)
 # machine = model.SynchronousMachine(mdl_par)
 # Quadratic load torque profile (corresponding to pumps and fans)
-k = nom.tau / (base.w / base.n_p) ** 2
-mechanics = model.StiffMechanicalSystem(J=0.0042, B_L=lambda w_M: k * np.abs(w_M))
+k = nom.tau/(base.w/base.n_p)**2
+mechanics = model.StiffMechanicalSystem(
+    J=0.0042, B_L=lambda w_M: k*np.abs(w_M))
 converter = model.VoltageSourceConverter(u_dc=310)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -109,19 +112,19 @@ mdl = model.Drive(converter, machine, mechanics)
 # Configure the control system.
 
 par = SynchronousMachinePars(n_p=2, R_s=0.2, L_d=4e-3, L_q=17e-3, psi_f=0.134)
-cfg = control.ObserverBasedVHzControlCfg(par, max_i_s=2 * base.i)
+cfg = control.ObserverBasedVHzControlCfg(par, max_i_s=2*base.i)
 ctrl = control.ObserverBasedVHzControl(par, cfg, T_s=250e-6)
 
 # %%
 # Set the speed reference and the external load torque.
 
 # Speed reference
-times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]) * 8
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0]) * base.w
+times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1])*8
+values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.ref.w_m = Sequence(times, values)
 
 # External load torque set to zero
-mdl.mechanics.tau_L = lambda t: (t > 0) * 0
+mdl.mechanics.tau_L = lambda t: (t > 0)*0
 
 # %%
 # Create the simulation object and simulate it.

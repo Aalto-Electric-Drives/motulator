@@ -33,7 +33,7 @@ base = BaseValues.from_nominal(nom, n_p=2)
 
 def L_s(psi, L_su=0.34, beta=0.84, S=7):
     """Stator inductance saturation model."""
-    return L_su / (1 + (beta * psi) ** S)
+    return L_su/(1 + (beta*psi)**S)
 
 
 # %%
@@ -56,13 +56,14 @@ mdl = model.Drive(converter, machine, mechanics)
 # Configure the control system.
 
 # Machine model parameter estimates
-par = InductionMachineInvGammaPars(n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)
+par = InductionMachineInvGammaPars(
+    n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)
 # Set nominal values and limits for reference generation
 cfg = control.CurrentReferenceCfg(
-    par, max_i_s=1.5 * base.i, nom_u_s=base.u, nom_w_s=base.w
-)
+    par, max_i_s=1.5*base.i, nom_u_s=base.u, nom_w_s=base.w)
 # Create the control system
-ctrl = control.CurrentVectorControl(par, cfg, J=0.015, T_s=250e-6, sensorless=True)
+ctrl = control.CurrentVectorControl(
+    par, cfg, J=0.015, T_s=250e-6, sensorless=True)
 # As an example, you may replace the default 2DOF PI speed controller with the
 # regular PI speed controller by uncommenting the following line
 # from motulator.common.control import PIController
@@ -73,8 +74,8 @@ ctrl = control.CurrentVectorControl(par, cfg, J=0.015, T_s=250e-6, sensorless=Tr
 # uncomment the field-weakening sequence.
 
 # Simple acceleration and load torque step
-ctrl.ref.w_m = lambda t: (t > 0.2) * (0.5 * base.w)
-mdl.mechanics.tau_L = lambda t: (t > 0.75) * nom.tau
+ctrl.ref.w_m = lambda t: (t > 0.2)*(0.5*base.w)
+mdl.mechanics.tau_L = lambda t: (t > 0.75)*nom.tau
 
 # No load, field-weakening (uncomment to try)
 # ctrl.ref.w_m = lambda t: (t > .2)*(2*base.w)

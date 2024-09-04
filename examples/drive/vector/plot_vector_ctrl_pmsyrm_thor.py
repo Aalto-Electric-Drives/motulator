@@ -30,11 +30,13 @@ base = BaseValues.from_nominal(nom, n_p=2)
 # Configure the system model.
 
 # Configure magnetically linear motor model
-mdl_par = SynchronousMachinePars(n_p=2, R_s=0.2, L_d=4e-3, L_q=17e-3, psi_f=0.134)
+mdl_par = SynchronousMachinePars(
+    n_p=2, R_s=0.2, L_d=4e-3, L_q=17e-3, psi_f=0.134)
 machine = model.SynchronousMachine(mdl_par)
 # Quadratic load torque profile
-k = 0.05 * nom.tau / (base.w / base.n_p) ** 2
-mechanics = model.StiffMechanicalSystem(J=0.0042, B_L=lambda w_M: k * np.abs(w_M))
+k = 0.05*nom.tau/(base.w/base.n_p)**2
+mechanics = model.StiffMechanicalSystem(
+    J=0.0042, B_L=lambda w_M: k*np.abs(w_M))
 converter = model.VoltageSourceConverter(u_dc=310)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -42,14 +44,14 @@ mdl = model.Drive(converter, machine, mechanics)
 # Configure the control system.
 
 par = mdl_par  # Assume accurate machine model parameter estimates
-cfg = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=2 * base.i, k_u=0.9)
-ctrl = control.CurrentVectorControl(par, cfg, T_s=125e-6, J=0.0042, sensorless=True)
+cfg = control.CurrentReferenceCfg(
+    par, nom_w_m=base.w, max_i_s=2*base.i, k_u=0.9)
+ctrl = control.CurrentVectorControl(
+    par, cfg, T_s=125e-6, J=0.0042, sensorless=True)
 ctrl.observer = control.Observer(
-    control.ObserverCfg(par, sensorless=True, alpha_o=2 * np.pi * 200)
-)
+    control.ObserverCfg(par, sensorless=True, alpha_o=2*np.pi*200))
 ctrl.speed_ctrl = control.SpeedController(
-    J=0.0042, alpha_s=2 * np.pi * 4, max_tau_M=1.5 * nom.tau
-)
+    J=0.0042, alpha_s=2*np.pi*4, max_tau_M=1.5*nom.tau)
 
 # %%
 # Plot control characteristics, computed using constant L_d, L_q, and psi_f.
@@ -65,7 +67,7 @@ tq.plot_torque_current(ctrl.current_reference.cfg.max_i_s, base)
 # Set the speed reference. The external load torque is zero (by default).
 
 # Acceleration and load torque step
-ctrl.ref.w_m = lambda t: (t > 0.1) * base.w * 3
+ctrl.ref.w_m = lambda t: (t > 0.1)*base.w*3
 
 # %%
 # Create the simulation object, simulate, and plot results in per-unit values.

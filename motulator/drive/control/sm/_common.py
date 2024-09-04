@@ -39,7 +39,7 @@ class ObserverCfg:
     par: SynchronousMachinePars
     sensorless: bool
     gain: SimpleNamespace = field(init=False)
-    alpha_o: InitVar[float] = 2 * np.pi * 40
+    alpha_o: InitVar[float] = 2*np.pi*40
     k_o: InitVar[callable] = None
     k_f: InitVar[callable] = None
 
@@ -48,10 +48,11 @@ class ObserverCfg:
         # Observer gain
         if self.sensorless:
             par = self.par
-            sigma0 = 0.25 * par.R_s * (par.L_d + par.L_q) / (par.L_d * par.L_q)
-            k_o = (lambda w_m: sigma0 + 0.2 * np.abs(w_m)) if k_o is None else k_o
+            sigma0 = 0.25*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
+            k_o = (
+                lambda w_m: sigma0 + 0.2*np.abs(w_m)) if k_o is None else k_o
         else:
-            k_o = (lambda w_m: 2 * np.pi * 15) if k_o is None else k_o
+            k_o = (lambda w_m: 2*np.pi*15) if k_o is None else k_o
         # PM-flux estimation gain
         k_f = (lambda w_m: 0) if k_f is None else k_f
         # Collect the gains
@@ -93,8 +94,7 @@ class Observer:
         self.par, self.gain = cfg.par, cfg.gain
         # Initialize the state estimates
         self.est = SimpleNamespace(
-            theta_m=0, w_m=0, psi_s=self.par.psi_f, psi_f=self.par.psi_f
-        )
+            theta_m=0, w_m=0, psi_s=self.par.psi_f, psi_f=self.par.psi_f)
         # Private work variables for the update method
         self._work = SimpleNamespace(d_psi_s=0, d_psi_f=0, d_w_m=0)
 
@@ -151,28 +151,28 @@ class Observer:
             fbk.theta_m, fbk.w_m = self.est.theta_m, self.est.w_m
 
         # Current and voltage vectors in (estimated) rotor coordinates
-        fbk.i_s = np.exp(-1j * fbk.theta_m) * fbk.i_ss
-        fbk.u_s = np.exp(-1j * fbk.theta_m) * fbk.u_ss
+        fbk.i_s = np.exp(-1j*fbk.theta_m)*fbk.i_ss
+        fbk.u_s = np.exp(-1j*fbk.theta_m)*fbk.u_ss
 
         # Current estimation error, scaled by the stator inductances
-        e = fbk.psi_f + par.L_d * fbk.i_s.real + 1j * par.L_q * fbk.i_s.imag - fbk.psi_s
+        e = fbk.psi_f + par.L_d*fbk.i_s.real + 1j*par.L_q*fbk.i_s.imag - fbk.psi_s
 
         # Auxiliary flux
-        psi_a = fbk.psi_f + (par.L_d - par.L_q) * np.conj(fbk.i_s)
+        psi_a = fbk.psi_f + (par.L_d - par.L_q)*np.conj(fbk.i_s)
 
         # Observer gains and error terms
         if self.sensorless:
             # Observer gains
             k_o1 = gain.k_o(fbk.w_m)
-            k_o2 = k_o1 * psi_a / np.conj(psi_a) if np.abs(psi_a) > 0 else k_o1
+            k_o2 = k_o1*psi_a/np.conj(psi_a) if np.abs(psi_a) > 0 else k_o1
 
             # Error term for the rotor angle and speed estimation
-            eps_m = -np.imag(e / psi_a) if np.abs(psi_a) > 0 else 0
+            eps_m = -np.imag(e/psi_a) if np.abs(psi_a) > 0 else 0
             # Angular speed of the coordinate system
-            fbk.w_s = 2 * gain.alpha_o * eps_m + fbk.w_m
+            fbk.w_s = 2*gain.alpha_o*eps_m + fbk.w_m
 
             # Error term for the PM-flux estimation
-            eps_f = -np.real(e / psi_a) if np.abs(psi_a) > 0 else 0
+            eps_f = -np.real(e/psi_a) if np.abs(psi_a) > 0 else 0
         else:
             # Sensored mode assumes that the control system operates in the
             # measured rotor coordinates
@@ -182,20 +182,16 @@ class Observer:
 
         # Compute and store the time derivatives for the update method
         self._work.d_psi_s = (
-            fbk.u_s
-            - par.R_s * fbk.i_s
-            - 1j * fbk.w_s * fbk.psi_s
-            + k_o1 * e
-            + k_o2 * np.conj(e)
-        )
-        self._work.d_psi_f = gain.k_f(fbk.w_m) * eps_f
-        self._work.d_w_m = gain.alpha_o**2 * eps_m
+            fbk.u_s - par.R_s*fbk.i_s - 1j*fbk.w_s*fbk.psi_s + k_o1*e +
+            k_o2*np.conj(e))
+        self._work.d_psi_f = gain.k_f(fbk.w_m)*eps_f
+        self._work.d_w_m = gain.alpha_o**2*eps_m
 
         return fbk
 
     def update(self, T_s, fbk):
         """Update the state estimates."""
-        self.est.psi_s += T_s * self._work.d_psi_s
-        self.est.psi_f += T_s * self._work.d_psi_f
-        self.est.w_m += T_s * self._work.d_w_m
-        self.est.theta_m = wrap(fbk.theta_m + T_s * fbk.w_s)
+        self.est.psi_s += T_s*self._work.d_psi_s
+        self.est.psi_f += T_s*self._work.d_psi_f
+        self.est.w_m += T_s*self._work.d_w_m
+        self.est.theta_m = wrap(fbk.theta_m + T_s*fbk.w_s)

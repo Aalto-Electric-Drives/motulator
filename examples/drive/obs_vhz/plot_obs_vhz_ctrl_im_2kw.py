@@ -33,8 +33,7 @@ base = BaseValues.from_nominal(nom, n_p=2)
 
 # Configure the induction machine using its inverse-Γ parameters
 mdl_ig_par = InductionMachineInvGammaPars(
-    n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-)
+    n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)
 mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
 machine = model.InductionMachine(mdl_par)
 mechanics = model.StiffMechanicalSystem(J=0.015)
@@ -47,24 +46,23 @@ mdl = model.Drive(converter, machine, mechanics)
 # Inverse-Γ model parameter estimates
 par = mdl_ig_par  # Assume accurate machine model parameter estimates
 cfg = control.ObserverBasedVHzControlCfg(
-    nom_psi_s=base.psi, max_i_s=1.5 * base.i, slip_compensation=False
-)
+    nom_psi_s=base.psi, max_i_s=1.5*base.i, slip_compensation=False)
 ctrl = control.ObserverBasedVHzControl(par, cfg, T_s=250e-6)
 
 # %%
 # Set the speed reference.
 
 # Speed reference
-times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]) * 4
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0]) * base.w
+times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1])*4
+values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
 ctrl.ref.w_m = Sequence(times, values)
 
 # %%
 # Set the load torque reference.
 
 # External load torque
-times = np.array([0, 0.125, 0.125, 0.875, 0.875, 1]) * 4
-values = np.array([0, 0, 1, 1, 0, 0]) * nom.tau
+times = np.array([0, 0.125, 0.125, 0.875, 0.875, 1])*4
+values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
 mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%

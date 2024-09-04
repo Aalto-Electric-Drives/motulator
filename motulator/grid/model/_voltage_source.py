@@ -46,8 +46,11 @@ class ThreePhaseVoltageSource(Subsystem):
     def __init__(self, w_g, abs_e_g, phi=0, abs_e_g_neg=0, phi_neg=0):
         super().__init__()
         self.par = SimpleNamespace(
-            w_g=w_g, abs_e_g=abs_e_g, phi=phi, abs_e_g_neg=abs_e_g_neg, phi_neg=phi_neg
-        )
+            w_g=w_g,
+            abs_e_g=abs_e_g,
+            phi=phi,
+            abs_e_g_neg=abs_e_g_neg,
+            phi_neg=phi_neg)
         self.state = SimpleNamespace(exp_j_theta_g=complex(1))
         self.sol_states = SimpleNamespace(exp_j_theta_g=[])
 
@@ -62,9 +65,9 @@ class ThreePhaseVoltageSource(Subsystem):
         phi_neg = self._get_value(t, self.par.phi_neg)
 
         # Space vector in stationary coordinates
-        e_gs = abs_e_g * exp_j_theta_g * np.exp(1j * phi)
+        e_gs = abs_e_g*exp_j_theta_g*np.exp(1j*phi)
         # Add possible negative sequence component
-        e_gs += abs_e_g_neg * np.conj(exp_j_theta_g * np.exp(1j * phi_neg))
+        e_gs += abs_e_g_neg*np.conj(exp_j_theta_g*np.exp(1j*phi_neg))
 
         return e_gs
 
@@ -78,13 +81,13 @@ class ThreePhaseVoltageSource(Subsystem):
 
     def rhs(self):
         """Compute the state derivative."""
-        d_exp_j_theta_g = 1j * self.inp.w_g * self.state.exp_j_theta_g
+        d_exp_j_theta_g = 1j*self.inp.w_g*self.state.exp_j_theta_g
         return [d_exp_j_theta_g]
 
     def post_process_states(self):
         """Post-process the solution."""
-        self.data.w_g = np.vectorize(self._get_value)(self.data.t, self.par.w_g)
+        self.data.w_g = np.vectorize(self._get_value)(
+            self.data.t, self.par.w_g)
         self.data.theta_g = np.angle(self.data.exp_j_theta_g)
         self.data.e_gs = self.generate_space_vector(
-            self.data.t, self.data.exp_j_theta_g
-        )
+            self.data.t, self.data.exp_j_theta_g)
