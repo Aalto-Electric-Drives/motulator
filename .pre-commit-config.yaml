@@ -2,7 +2,7 @@ repos:
 
   # Checkov
   - repo: https://github.com/bridgecrewio/checkov
-    rev: 3.2.190
+    rev: 3.2.245
     hooks:
       - id: checkov
         name: checkov
