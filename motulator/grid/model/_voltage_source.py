@@ -16,8 +16,8 @@ class ThreePhaseVoltageSource(Subsystem):
     """
     Three-phase voltage source model.
 
-    The frequency, phase shift, and magnitude can be given either as constants 
-    or functions of time. An unbalanced source can be modeled by specifying a 
+    The frequency, phase shift, and magnitude can be given either as constants
+    or functions of time. An unbalanced source can be modeled by specifying a
     negative-sequence component. Notice that the zero-sequence component is not
     included in this model.
 
@@ -30,7 +30,7 @@ class ThreePhaseVoltageSource(Subsystem):
     phi : float | callable, optional
         Phase shift (rad) of the positive-sequence component. The default is 0.
     abs_e_g_neg : float | callable, optional
-        Magnitude of the negative-sequence component (peak value). The default 
+        Magnitude of the negative-sequence component (peak value). The default
         is 0.
     phi_neg : float | callable, optional
         Phase shift (rad) of the negative-sequence component. The default is 0.
@@ -38,7 +38,7 @@ class ThreePhaseVoltageSource(Subsystem):
     Notes
     -----
     This model is typically used to represent a voltage source, but it can be
-    configured to represent, e.g., a current source as well.      
+    configured to represent, e.g., a current source as well.
 
     """
 

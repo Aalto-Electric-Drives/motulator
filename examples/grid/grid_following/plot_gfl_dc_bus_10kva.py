@@ -1,10 +1,10 @@
 """
 10-kVA converter, DC-bus voltage
 ================================
-    
+
 This example simulates a grid-following-controlled converter connected to a
-strong grid and regulating the DC-bus voltage. The control system includes a 
-DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the 
+strong grid and regulating the DC-bus voltage. The control system includes a
+DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the
 grid, a current reference generator, and a PI-type current controller.
 
 """

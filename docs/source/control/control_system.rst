@@ -4,11 +4,11 @@ Common
 Data Flow
 ---------
 
-The two figures below shows the structure and data flow in a typical simulation model as well as an example of the internal structure of the discrete-time control system. The text in italics refers to the default object names used in the software. In the discrete-time control system, the signals are collected into the following SimpleNamespace objects: 
+The two figures below shows the structure and data flow in a typical simulation model as well as an example of the internal structure of the discrete-time control system. The text in italics refers to the default object names used in the software. In the discrete-time control system, the signals are collected into the following SimpleNamespace objects:
 
-- The object `fbk` contains feedback signals for the controllers. These signals can be measured quantities (such as the measured DC-bus voltage `fbk.u_dc`) as well as estimated quantities (such as the estimated stator flux linkage `fbk.psi_s`). 
+- The object `fbk` contains feedback signals for the controllers. These signals can be measured quantities (such as the measured DC-bus voltage `fbk.u_dc`) as well as estimated quantities (such as the estimated stator flux linkage `fbk.psi_s`).
 
-- The object `ref` contains the reference signals, both externally provided (such as `ref.w_m` for the angular speed reference) and internally generated (such as `ref.d_c_abc` for the duty ratios). 
+- The object `ref` contains the reference signals, both externally provided (such as `ref.w_m` for the angular speed reference) and internally generated (such as `ref.d_c_abc` for the duty ratios).
 
 These objects `fbk` and `ref` may propagate through several blocks (implemented as classes in the software), which may add new signals or modify the existing one. At the end of their propagation chain, both objects `fbk` and `ref` are saved to the lists. Therefore, the most relevant internal signals of the control system are directly accessible after the simulation. Furthermore, the states and inputs of the continuous-time system model are also saved. In the post-processing stage, the saved data is converted to the NumPy arrays.
 
@@ -16,22 +16,22 @@ These objects `fbk` and `ref` may propagate through several blocks (implemented 
    :width: 100%
    :align: center
    :alt: Block diagram of the control system.
-   
-   Block diagram illustrating the structure and data flow in a typical simulation model. The lower part of the figure illustrates how the data is saved. The post-processing is done after the simulation. The internal structure of a typical control system is exemplified in the figure below. 
+
+   Block diagram illustrating the structure and data flow in a typical simulation model. The lower part of the figure illustrates how the data is saved. The post-processing is done after the simulation. The internal structure of a typical control system is exemplified in the figure below.
 
 .. figure:: figs/discrete_control_system.svg
    :width: 100%
    :align: center
    :alt: Block diagram of the control system.
-   
-   Block diagram exemplifying the internal structure of a typical cascade control system. The object `ref` at the controller output should contain the sampling period `T_s` and the converter duty ratios `d_c_abc` for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop). 
+
+   Block diagram exemplifying the internal structure of a typical cascade control system. The object `ref` at the controller output should contain the sampling period `T_s` and the converter duty ratios `d_c_abc` for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).
 
 Main Control Loop
 -----------------
 
 By default, discrete-time control systems run the following scheme in their main control loops:
 
-1. Get the feedback signals `fbk` for the controllers from the outputs of the continuous-time system model `mdl`. This step may contain first getting the measurements and then optionally computing the observer outputs (or otherwise manipulating the measured signals).  
+1. Get the feedback signals `fbk` for the controllers from the outputs of the continuous-time system model `mdl`. This step may contain first getting the measurements and then optionally computing the observer outputs (or otherwise manipulating the measured signals).
 2. Get the reference signals `ref` and compute the controller outputs based on the feedback signals `fbk`. Cascade control systems may contain multiple controllers, where the output of the outer controller is the reference signal for the inner controller.
 3. Update the states of the control system for the next sampling instant.
 4. Save the feedback signals `fbk` and the reference signals `ref` so they can be accessed after the simulation.
@@ -54,14 +54,14 @@ The figure below shows a 2DOF PI controller with an optional feedforward term. I
    u &= k_\mathrm{t}r - k_\mathrm{p}y + u_\mathrm{i} + u_\mathrm{ff}
    :label: 2dof_pi
 
-where :math:`r` is the reference signal, :math:`y` is the measured (or estimated) feedback signal, :math:`u_\mathrm{i}` is the the integral state, and :math:`u_\mathrm{ff}` is the optional feedforward signal. Furthermore, :math:`k_\mathrm{t}` is the reference-feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` and :math:`u_\mathrm{ff} = 0` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward [#Fra1997]_. 
+where :math:`r` is the reference signal, :math:`y` is the measured (or estimated) feedback signal, :math:`u_\mathrm{i}` is the the integral state, and :math:`u_\mathrm{ff}` is the optional feedforward signal. Furthermore, :math:`k_\mathrm{t}` is the reference-feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` and :math:`u_\mathrm{ff} = 0` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward [#Fra1997]_.
 
 .. figure:: figs/2dof_pi.svg
    :width: 100%
    :align: center
    :alt: 2DOF PI controller.
 
-   2DOF PI controller with an optional feedforward term. The operator :math:`1/s` refers to integration. A discrete-time variant of this controller with the integrator anti-windup is implemented in the :class:`motulator.common.control.PIController` class.  
+   2DOF PI controller with an optional feedforward term. The operator :math:`1/s` refers to integration. A discrete-time variant of this controller with the integrator anti-windup is implemented in the :class:`motulator.common.control.PIController` class.
 
 Disturbance-Observer Structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -71,7 +71,7 @@ The controller :eq:`2dof_pi` can be equally represented using the disturbance-ob
 .. math::
 	\frac{\mathrm{d} u_\mathrm{i}}{\mathrm{d} t} &= \alpha_\mathrm{i}\left(u - \hat v\right) \\
    \hat v &= u_\mathrm{i} - (k_\mathrm{p} - k_\mathrm{t})y + u_\mathrm{ff} \\
-   u &= k_\mathrm{t}\left(r - y\right) + \hat v 
+   u &= k_\mathrm{t}\left(r - y\right) + \hat v
    :label: 2dof_pi_disturbance_observer
 
 where :math:`\alpha_\mathrm{i} = k_\mathrm{i}/k_\mathrm{t}` is the redefined integral gain and :math:`\hat v` is the input-equivalent disturbance estimate. This structure is convenient to prevent the integral windup that originates from the actuator saturation [#Fra1997]_. The actuator output is limited in practice due to physical constraints. Consequently, the realized actuator output is
@@ -85,7 +85,7 @@ where :math:`\mathrm{sat}(\cdot)` is the saturation function. If this saturation
 	\frac{\mathrm{d} u_\mathrm{i}}{\mathrm{d} t} = \alpha_\mathrm{i}\left(\bar{u} - \hat v \right)
    :label: anti_windup
 
-The other parts of the above controller are not affected by the saturation. 
+The other parts of the above controller are not affected by the saturation.
 
 Discrete-Time Algorithm
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -99,7 +99,7 @@ The discrete-time variant of the controller :eq:`2dof_pi_disturbance_observer` w
    \bar{u}(k) &= \mathrm{sat}[u(k)]
    :label: discrete_2dof_pi
 
-where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. This algorithm corresponds to the actual implementation in the :class:`motulator.common.control.PIController` class. 
+where :math:`T_\mathrm{s}` is the sampling period and :math:`k` is the discrete-time index. This algorithm corresponds to the actual implementation in the :class:`motulator.common.control.PIController` class.
 
 .. _complex-vector-2dof-pi-controller:
 
@@ -113,7 +113,7 @@ As shown in the figure below, the 2DOF PI controller presented above can be exte
     \boldsymbol{u} &= \boldsymbol{k}_\mathrm{t}\boldsymbol{r} - \boldsymbol{k}_\mathrm{p}\boldsymbol{y} + \boldsymbol{u}_\mathrm{i} + \boldsymbol{u}_\mathrm{ff}
     :label: complex_vector_2dof_pi
 
-where :math:`\boldsymbol{u}` is the output of the controller, :math:`\boldsymbol{r}` is the reference signal, :math:`\boldsymbol{u}_\mathrm{i}` is the the integral state, and :math:`\boldsymbol{u}_\mathrm{ff}` is the optional feedforward signal. Furthermore, :math:`\boldsymbol{k}_\mathrm{t}` is the reference-feedforward gain, :math:`\boldsymbol{k}_\mathrm{p}` is the proportional gain, and :math:`\boldsymbol{k}_\mathrm{i}` is the integral gain. 
+where :math:`\boldsymbol{u}` is the output of the controller, :math:`\boldsymbol{r}` is the reference signal, :math:`\boldsymbol{u}_\mathrm{i}` is the the integral state, and :math:`\boldsymbol{u}_\mathrm{ff}` is the optional feedforward signal. Furthermore, :math:`\boldsymbol{k}_\mathrm{t}` is the reference-feedforward gain, :math:`\boldsymbol{k}_\mathrm{p}` is the proportional gain, and :math:`\boldsymbol{k}_\mathrm{i}` is the integral gain.
 
 .. figure:: figs/complex_vector_2dof_pi.svg
    :width: 100%
@@ -131,5 +131,3 @@ The discrete-time implementation of :eq:`complex_vector_2dof_pi` with the anti-w
 .. [#Fra1997] Franklin, Powell, Workman, "Digital Control of Dynamic Systems," 3rd ed., Menlo Park, CA: Addison-Wesley, 1997
 
 .. [#Bri1999] Briz del Blanco, Degner, Lorenz, “Dynamic analysis of current regulators for AC motors using complex vectors,” IEEE Trans.Ind. Appl., 1999, https://doi.org/10.1109/28.806058
-
-

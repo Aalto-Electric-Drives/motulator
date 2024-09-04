@@ -1,9 +1,9 @@
 """
 12.5-kVA converter, RFPSC
 =========================
-    
-This example simulates reference-feedforward power-synchronization control 
-(RFPSC) of a converter connected to a weak grid. 
+
+This example simulates reference-feedforward power-synchronization control
+(RFPSC) of a converter connected to a weak grid.
 
 """
 

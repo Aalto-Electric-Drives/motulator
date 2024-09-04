@@ -1,7 +1,7 @@
 """
 10-kVA converter, LCL filter
 ============================
-    
+
 This example simulates a grid-following-controlled converter connected to a
 strong grid through an LCL filter. The control system includes a phase-locked
 loop (PLL) to synchronize with the grid, a current reference generator, and a

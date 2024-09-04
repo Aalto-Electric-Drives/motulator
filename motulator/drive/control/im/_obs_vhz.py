@@ -19,7 +19,7 @@ class ObserverBasedVHzControlCfg:
     Parameters
     ----------
     nom_psi_s : float
-        Nominal stator flux linkage (Vs). 
+        Nominal stator flux linkage (Vs).
     max_i_s : float, optional
         Maximum stator current (A). The default is inf.
     k_tau : float, optional
@@ -49,8 +49,8 @@ class ObserverBasedVHzControl(DriveControlSystem):
     """
     Observer-based V/Hz control for induction machines.
 
-    This implements the observer-based V/Hz control method [#Tii2022]_. The 
-    state-feedback control law is in the alternative form which uses an 
+    This implements the observer-based V/Hz control method [#Tii2022]_. The
+    state-feedback control law is in the alternative form which uses an
     intermediate stator current reference.
 
     Parameters
@@ -65,7 +65,7 @@ class ObserverBasedVHzControl(DriveControlSystem):
     References
     ----------
     .. [#Tii2022] Tiitinen, Hinkkanen, Harnefors, "Stable and passive observer-
-       based V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI, 
+       based V/Hz control for induction motors," Proc. IEEE ECCE, Detroit, MI,
        Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9948057
 
     """
@@ -143,9 +143,9 @@ class FluxObserver:
 
     This is a sensorless reduced-order flux observer in synchronous coordinates
     for an induction machine. The observer gain decouples the electrical and
-    mechanical dynamics and allows placing the poles of the linearized 
-    estimation error dynamics. This implementation operates in external 
-    coordinates (typically synchronous coordinates defined by reference signals 
+    mechanical dynamics and allows placing the poles of the linearized
+    estimation error dynamics. This implementation operates in external
+    coordinates (typically synchronous coordinates defined by reference signals
     of a control system).
 
     Parameters
@@ -154,15 +154,15 @@ class FluxObserver:
         Machine model parameters.
     alpha_o : float
         Speed-estimation bandwidth (rad/s).
-    b : callable, optional 
-        Coefficient (rad/s) of the characteristic polynomial as a function of 
-        the rotor angular speed estimate. The default is 
+    b : callable, optional
+        Coefficient (rad/s) of the characteristic polynomial as a function of
+        the rotor angular speed estimate. The default is
         ``lambda w_m: R_R/L_M + .4*abs(w_m)``.
 
     Notes
     -----
-    The characteristic polynomial of the observer in synchronous coordinates is 
-    ``s**2 + b*s + w_s**2``.  
+    The characteristic polynomial of the observer in synchronous coordinates is
+    ``s**2 + b*s + w_s**2``.
 
     """
 
