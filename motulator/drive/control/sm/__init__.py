@@ -2,14 +2,24 @@
 
 from motulator.drive.control.sm._common import Observer, ObserverCfg
 from motulator.drive.control.sm._flux_vector import (
-    FluxTorqueReference, FluxTorqueReferenceCfg, FluxVectorControl)
+    FluxTorqueReference,
+    FluxTorqueReferenceCfg,
+    FluxVectorControl,
+)
 from motulator.drive.control.sm._current_vector import (
-    CurrentController, CurrentReference, CurrentReferenceCfg,
-    CurrentVectorControl)
+    CurrentController,
+    CurrentReference,
+    CurrentReferenceCfg,
+    CurrentVectorControl,
+)
 from motulator.drive.control.sm._obs_vhz import (
-    ObserverBasedVHzControl, ObserverBasedVHzControlCfg)
+    ObserverBasedVHzControl,
+    ObserverBasedVHzControlCfg,
+)
 from motulator.drive.control.sm._signal_inj import (
-    SignalInjection, SignalInjectionControl)
+    SignalInjection,
+    SignalInjectionControl,
+)
 from motulator.drive.control.sm._torque import TorqueCharacteristics
 from motulator.drive.control._common import SpeedController
 

@@ -1,16 +1,27 @@
 """Controls for induction machines."""
 
 from motulator.drive.control.im._common import (
-    FullOrderObserver, FullOrderObserverCfg, Observer, ObserverCfg)
+    FullOrderObserver,
+    FullOrderObserverCfg,
+    Observer,
+    ObserverCfg,
+)
 from motulator.drive.control.im._current_vector import (
-    CurrentController, CurrentReference, CurrentReferenceCfg,
-    CurrentVectorControl)
+    CurrentController,
+    CurrentReference,
+    CurrentReferenceCfg,
+    CurrentVectorControl,
+)
 from motulator.drive.control.im._obs_vhz import (
-    ObserverBasedVHzControl, ObserverBasedVHzControlCfg)
+    ObserverBasedVHzControl,
+    ObserverBasedVHzControlCfg,
+)
 from motulator.drive.control.im._vhz import VHzControl, VHzControlCfg
 from motulator.drive.control._common import SpeedController
 from motulator.drive.control.im._flux_vector import (
-    FluxVectorControl, FluxVectorControlCfg)
+    FluxVectorControl,
+    FluxVectorControlCfg,
+)
 
 __all__ = [
     "FullOrderObserver",

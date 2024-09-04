@@ -8,7 +8,9 @@ import numpy as np
 from motulator.drive.control import DriveControlSystem
 from motulator.common.control import RateLimiter
 from motulator.drive.control.sm._flux_vector import (
-    FluxTorqueReference, FluxTorqueReferenceCfg)
+    FluxTorqueReference,
+    FluxTorqueReferenceCfg,
+)
 from motulator.common.utils import wrap
 
 
@@ -28,20 +30,21 @@ class ObserverBasedVHzControlCfg(FluxTorqueReferenceCfg):
         Bandwidth of the high-pass filter (rad/s). The default is 2*pi*1.
 
     """
-    alpha_psi: float = 2*np.pi*50
-    alpha_tau: InitVar[float] = 2*np.pi*50
-    alpha_f: float = 2*np.pi*1
+
+    alpha_psi: float = 2 * np.pi * 50
+    alpha_tau: InitVar[float] = 2 * np.pi * 50
+    alpha_f: float = 2 * np.pi * 1
 
     def __post_init__(self, par, alpha_tau):
         super().__post_init__(par)
         # Gain k_tau
-        G = (par.L_d - par.L_q)/(par.L_d*par.L_q)
+        G = (par.L_d - par.L_q) / (par.L_d * par.L_q)
         psi_s0 = par.psi_f if par.psi_f > 0 else self.min_psi_s
         if par.psi_f > 0:  # PMSM or PM-SyRM
-            c_delta0 = 1.5*par.n_p*(par.psi_f*psi_s0/par.L_d - G*psi_s0**2)
+            c_delta0 = 1.5 * par.n_p * (par.psi_f * psi_s0 / par.L_d - G * psi_s0**2)
         else:  # SyRM
-            c_delta0 = 1.5*par.n_p*G*psi_s0**2
-        self.k_tau = alpha_tau/c_delta0
+            c_delta0 = 1.5 * par.n_p * G * psi_s0**2
+        self.k_tau = alpha_tau / c_delta0
 
 
 # %%
@@ -91,22 +94,22 @@ class ObserverBasedVHzControl(DriveControlSystem):
 
         # Coordinate transformations
         fbk.theta_s = self.theta_s
-        fbk.i_s = np.exp(-1j*fbk.theta_s)*fbk.i_ss
-        fbk.u_s = np.exp(-1j*fbk.theta_s)*fbk.u_ss
+        fbk.i_s = np.exp(-1j * fbk.theta_s) * fbk.i_ss
+        fbk.u_s = np.exp(-1j * fbk.theta_s) * fbk.u_ss
 
         # Limited flux references
         ref = self.flux_torque_reference(fbk, ref)
 
         # Electromagnetic torque
-        fbk.tau_M = 1.5*par.n_p*np.imag(fbk.i_s*np.conj(fbk.psi_s))
+        fbk.tau_M = 1.5 * par.n_p * np.imag(fbk.i_s * np.conj(fbk.psi_s))
 
         # Dynamic frequency
-        fbk.w_s = ref.w_m - cfg.k_tau*(fbk.tau_M - ref.tau_M)
+        fbk.w_s = ref.w_m - cfg.k_tau * (fbk.tau_M - ref.tau_M)
 
         # Voltage reference
         err = ref.psi_s - fbk.psi_s
-        ref.u_s = par.R_s*fbk.i_s + 1j*fbk.w_s*ref.psi_s + cfg.alpha_psi*err
-        u_ss = ref.u_s*np.exp(1j*fbk.theta_s)
+        ref.u_s = par.R_s * fbk.i_s + 1j * fbk.w_s * ref.psi_s + cfg.alpha_psi * err
+        u_ss = ref.u_s * np.exp(1j * fbk.theta_s)
         ref.d_abc = self.pwm(ref.T_s, u_ss, fbk.u_dc, fbk.w_s)
         return ref
 
@@ -114,9 +117,9 @@ class ObserverBasedVHzControl(DriveControlSystem):
         """Update the states."""
         super().update(fbk, ref)
         # Low-pass filtered torque
-        self.ref.tau_M += ref.T_s*self.cfg.alpha_f*(fbk.tau_M - ref.tau_M)
+        self.ref.tau_M += ref.T_s * self.cfg.alpha_f * (fbk.tau_M - ref.tau_M)
         # Update the angle
-        self.theta_s = wrap(fbk.theta_s + ref.T_s*fbk.w_s)
+        self.theta_s = wrap(fbk.theta_s + ref.T_s * fbk.w_s)
 
 
 # %%
@@ -143,10 +146,10 @@ class FluxObserver:
 
     """
 
-    def __init__(self, par, alpha_o=2*np.pi*20, zeta_inf=.2):
+    def __init__(self, par, alpha_o=2 * np.pi * 20, zeta_inf=0.2):
         self.par = par
         self.alpha_o = alpha_o
-        self.b_p = .5*par.R_s*(par.L_d + par.L_q)/(par.L_d*par.L_q)
+        self.b_p = 0.5 * par.R_s * (par.L_d + par.L_q) / (par.L_d * par.L_q)
         self.zeta_inf = zeta_inf
         # Initial states
         self.est = SimpleNamespace(psi_s=par.psi_f, delta=0)
@@ -163,27 +166,28 @@ class FluxObserver:
 
         # Transformations to rotor coordinates. This is mathematically
         # equivalent to the version in [Tii2022].
-        i_sr = fbk.i_s*np.exp(1j*fbk.delta)
-        psi_sr = fbk.psi_s*np.exp(1j*fbk.delta)
+        i_sr = fbk.i_s * np.exp(1j * fbk.delta)
+        psi_sr = fbk.psi_s * np.exp(1j * fbk.delta)
 
         # Auxiliary flux and estimation error in rotor coordinates
-        psi_ar = par.psi_f + (par.L_d - par.L_q)*np.conj(i_sr)
-        e_r = par.L_d*i_sr.real + 1j*par.L_q*i_sr.imag + par.psi_f - psi_sr
+        psi_ar = par.psi_f + (par.L_d - par.L_q) * np.conj(i_sr)
+        e_r = par.L_d * i_sr.real + 1j * par.L_q * i_sr.imag + par.psi_f - psi_sr
 
         # Auxiliary flux in controller coordinates
-        psi_a = np.exp(-1j*fbk.delta)*psi_ar
+        psi_a = np.exp(-1j * fbk.delta) * psi_ar
 
-        k = self.b_p + 2*self.zeta_inf*np.abs(fbk.w_s)
+        k = self.b_p + 2 * self.zeta_inf * np.abs(fbk.w_s)
 
         if np.abs(psi_ar) > 0:
             # Correction voltage in controller coordinates
-            v = k*psi_a*np.real(e_r/psi_ar)
+            v = k * psi_a * np.real(e_r / psi_ar)
             # Error signal
-            w_delta = self.alpha_o*np.imag(e_r/psi_ar)
+            w_delta = self.alpha_o * np.imag(e_r / psi_ar)
         else:
             v, w_delta = 0, 0
 
         # Update the states
-        self.est.psi_s += T_s*(
-            fbk.u_s - par.R_s*fbk.i_s - 1j*fbk.w_s*fbk.psi_s + v)
-        self.est.delta += T_s*w_delta
+        self.est.psi_s += T_s * (
+            fbk.u_s - par.R_s * fbk.i_s - 1j * fbk.w_s * fbk.psi_s + v
+        )
+        self.est.delta += T_s * w_delta

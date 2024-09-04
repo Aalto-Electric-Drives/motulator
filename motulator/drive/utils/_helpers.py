@@ -2,6 +2,7 @@
 
 from abc import ABC
 from dataclasses import dataclass
+
 # Note: Union can be replaced by "|" in Python 3.10
 from typing import Callable, Union
 
@@ -29,7 +30,7 @@ class NominalValues:
 
     """
     U: float
-    I: float
+    I: float  # noqa: E741
     f: float
     P: float
     tau: float
@@ -105,14 +106,14 @@ class BaseValues:
         the power factor and efficiency being less than unity.
 
         """
-        u = np.sqrt(2/3)*nom.U
-        i = np.sqrt(2)*nom.I
-        w = 2*np.pi*nom.f
-        psi = u/w
-        p = 1.5*u*i
-        Z = u/i
-        L = Z/w
-        tau = n_p*p/w
+        u = np.sqrt(2 / 3) * nom.U
+        i = np.sqrt(2) * nom.I
+        w = 2 * np.pi * nom.f
+        psi = u / w
+        p = 1.5 * u * i
+        Z = u / i
+        L = Z / w
+        tau = n_p * p / w
 
         return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, tau=tau, n_p=n_p)
 
@@ -131,6 +132,7 @@ class MachinePars(ABC):
         Stator resistance (Ω).
 
     """
+
     n_p: int = None
     R_s: float = None
 
@@ -155,6 +157,7 @@ class SynchronousMachinePars(MachinePars):
         Permanent-magnet flux linkage (Vs).
 
     """
+
     L_d: float = None
     L_q: float = None
     psi_f: float = None
@@ -180,9 +183,10 @@ class InductionMachinePars(MachinePars):
         Stator inductance (H).
 
     """
+
     R_r: float = None
     L_ell: float = None
-    #L_s: float | Callable = None  # Can be used in Python 3.10 and later
+    # L_s: float | Callable = None  # Can be used in Python 3.10 and later
     L_s: Union[float, Callable] = None
 
     @classmethod
@@ -203,8 +207,8 @@ class InductionMachinePars(MachinePars):
             Γ model parameters.
 
         """
-        g = par.L_M/(par.L_M + par.L_sgm)
-        R_r, L_ell, L_s = par.R_R/g**2, par.L_sgm/g, par.L_M + par.L_sgm
+        g = par.L_M / (par.L_M + par.L_sgm)
+        R_r, L_ell, L_s = par.R_R / g**2, par.L_sgm / g, par.L_M + par.L_sgm
 
         return cls(R_s=par.R_s, R_r=R_r, L_ell=L_ell, L_s=L_s, n_p=par.n_p)
 
@@ -229,6 +233,7 @@ class InductionMachineInvGammaPars(MachinePars):
         Magnetizing inductance (H).
 
     """
+
     R_R: float = None
     L_sgm: float = None
     L_M: float = None
@@ -251,15 +256,15 @@ class InductionMachineInvGammaPars(MachinePars):
             Inverse-Γ model parameters.
 
         """
-        g = par.L_s/(par.L_s + par.L_ell)
-        R_R, L_sgm, L_M = g**2*par.R_r, g*par.L_ell, g*par.L_s
+        g = par.L_s / (par.L_s + par.L_ell)
+        R_R, L_sgm, L_M = g**2 * par.R_r, g * par.L_ell, g * par.L_s
 
         return cls(R_s=par.R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, n_p=par.n_p)
 
 
 # %%
 @dataclass
-class TwoMassMechanicalSystemPars():
+class TwoMassMechanicalSystemPars:
     """
     Two-mass mechanical system parameters.
 
@@ -280,6 +285,7 @@ class TwoMassMechanicalSystemPars():
         quadratic load torque ``k*w_L**2``. The default is ``B_L = 0``.
 
     """
+
     J_M: float = None
     J_L: float = None
     K_S: float = None

@@ -10,6 +10,7 @@ this case, this PM-flux estimate lumps the effects of inductance errors.
 Naturally, the PM-flux estimation can be used in PM machine drives as well.
 
 """
+
 # %%
 
 import numpy as np
@@ -18,7 +19,12 @@ import matplotlib.pyplot as plt
 from motulator.drive import model
 import motulator.drive.control.sm as control
 from motulator.drive.utils import (
-    BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+    BaseValues,
+    NominalValues,
+    plot,
+    Sequence,
+    SynchronousMachinePars,
+)
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -34,28 +40,34 @@ base = BaseValues.from_nominal(nom, n_p=2)
 def i_s(psi_s):
     """Magnetic model for a 6.7-kW synchronous reluctance motor."""
     # Parameters
-    a_d0, a_dd, S = 17.4, 373., 5  # d-axis self-saturation
-    a_q0, a_qq, T = 52.1, 658., 1  # q-axis self-saturation
-    a_dq, U, V = 1120., 1, 0  # Cross-saturation
+    a_d0, a_dd, S = 17.4, 373.0, 5  # d-axis self-saturation
+    a_q0, a_qq, T = 52.1, 658.0, 1  # q-axis self-saturation
+    a_dq, U, V = 1120.0, 1, 0  # Cross-saturation
     # Inverse inductance functions
-    G_d = a_d0 + a_dd*np.abs(psi_s.real)**S + (
-        a_dq/(V + 2)*np.abs(psi_s.real)**U*np.abs(psi_s.imag)**(V + 2))
-    G_q = a_q0 + a_qq*np.abs(psi_s.imag)**T + (
-        a_dq/(U + 2)*np.abs(psi_s.real)**(U + 2)*np.abs(psi_s.imag)**V)
+    G_d = (
+        a_d0
+        + a_dd * np.abs(psi_s.real) ** S
+        + (a_dq / (V + 2) * np.abs(psi_s.real) ** U * np.abs(psi_s.imag) ** (V + 2))
+    )
+    G_q = (
+        a_q0
+        + a_qq * np.abs(psi_s.imag) ** T
+        + (a_dq / (U + 2) * np.abs(psi_s.real) ** (U + 2) * np.abs(psi_s.imag) ** V)
+    )
     # Stator current
-    return G_d*psi_s.real + 1j*G_q*psi_s.imag
+    return G_d * psi_s.real + 1j * G_q * psi_s.imag
 
 
 # %%
 # Configure the system model.
 
-mdl_par = SynchronousMachinePars(n_p=2, R_s=.54)
+mdl_par = SynchronousMachinePars(n_p=2, R_s=0.54)
 machine = model.SynchronousMachine(mdl_par, i_s=i_s, psi_s0=0)
 # Magnetically linear SyRM model for comparison
 # mdl_par = SynchronousMachinePars(
 #     n_p=2, R_s=.54, L_d=37e-3, L_q=6.2e-3, psi_f=0)
 # machine = model.SynchronousMachine(mdl_par)
-mechanics = model.StiffMechanicalSystem(J=.015)
+mechanics = model.StiffMechanicalSystem(J=0.015)
 converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(converter, machine, mechanics)
 
@@ -65,31 +77,35 @@ mdl = model.Drive(converter, machine, mechanics)
 # lower values in order to demonstrate the PM-flux disturbance estimation.
 
 par = SynchronousMachinePars(
-    n_p=2, R_s=.54, L_d=.7*37e-3, L_q=.8*6.2e-3, psi_f=0)
+    n_p=2, R_s=0.54, L_d=0.7 * 37e-3, L_q=0.8 * 6.2e-3, psi_f=0
+)
 # Disable MTPA since the control system does not consider the saturation
 cfg = control.FluxTorqueReferenceCfg(
-    par, max_i_s=2*base.i, k_u=.9, min_psi_s=base.psi, max_psi_s=base.psi)
-ctrl = control.FluxVectorControl(par, cfg, J=.015, sensorless=True)
+    par, max_i_s=2 * base.i, k_u=0.9, min_psi_s=base.psi, max_psi_s=base.psi
+)
+ctrl = control.FluxVectorControl(par, cfg, J=0.015, sensorless=True)
 # Since the saturation is not considered in the control system, the speed
 # estimation bandwidth is set to a lower value. Furthermore, the PM-flux
 # disturbance estimation is enabled at speeds above 2*pi*20 rad/s (electrical).
 ctrl.observer = control.Observer(
     control.ObserverCfg(
         par,
-        alpha_o=2*np.pi*40,
-        k_f=lambda w_m: max(.05*(np.abs(w_m) - 2*np.pi*20), 0),
-        sensorless=True))
+        alpha_o=2 * np.pi * 40,
+        k_f=lambda w_m: max(0.05 * (np.abs(w_m) - 2 * np.pi * 20), 0),
+        sensorless=True,
+    )
+)
 
 # %%
 # Set the speed reference and the external load torque.
 
 # Speed reference (electrical rad/s)
-times = np.array([0, .125, .25, .375, .5, .625, .75, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w
+times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]) * 4
+values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0]) * base.w
 ctrl.ref.w_m = Sequence(times, values)
 # External load torque
-times = np.array([0, .125, .125, .875, .875, 1])*4
-values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
+times = np.array([0, 0.125, 0.125, 0.875, 0.875, 1]) * 4
+values = np.array([0, 0, 1, 1, 0, 0]) * nom.tau
 mdl.mechanics.tau_L = Sequence(times, values)
 
 # %%
@@ -115,12 +131,12 @@ ctrl.t = ctrl.ref.t  # Discrete time
 plt.figure()
 plt.plot(
     mdl.machine.data.t,
-    np.abs(mdl.machine.data.psi_s)/base.psi,
-    label=r"$\psi_\mathrm{s}$")
-plt.plot(
-    ctrl.t, np.abs(ctrl.fbk.psi_s)/base.psi, label=r"$\hat{\psi}_\mathrm{s}$")
-plt.plot(ctrl.t, ctrl.fbk.psi_f/base.psi, label=r"$\hat{\psi}_\mathrm{f}$")
-plt.plot(ctrl.t, ctrl.ref.psi_s/base.psi, "--", label=r"$\psi_\mathrm{s,ref}$")
+    np.abs(mdl.machine.data.psi_s) / base.psi,
+    label=r"$\psi_\mathrm{s}$",
+)
+plt.plot(ctrl.t, np.abs(ctrl.fbk.psi_s) / base.psi, label=r"$\hat{\psi}_\mathrm{s}$")
+plt.plot(ctrl.t, ctrl.fbk.psi_f / base.psi, label=r"$\hat{\psi}_\mathrm{f}$")
+plt.plot(ctrl.t, ctrl.ref.psi_s / base.psi, "--", label=r"$\psi_\mathrm{s,ref}$")
 plt.xlim(0, 4)
 plt.xlabel("Time (s)")
 plt.ylabel("Flux linkage (p.u.)")

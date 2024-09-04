@@ -29,9 +29,9 @@ class SpeedController(PIController):
     """
 
     def __init__(self, J, alpha_s, max_tau_M=np.inf):
-        k_p = 2*alpha_s*J
-        k_i = alpha_s**2*J
-        k_t = alpha_s*J
+        k_p = 2 * alpha_s * J
+        k_i = alpha_s**2 * J
+        k_t = alpha_s * J
         super().__init__(k_p, k_i, k_t, max_tau_M)
 
 
@@ -138,8 +138,8 @@ class DriveControlSystem(ControlSystem, ABC):
                     Rotor position (electrical rad).
 
         """
-        fbk.w_m = self.par.n_p*mdl.mechanics.meas_speed()
-        fbk.theta_m = wrap(self.par.n_p*mdl.mechanics.meas_position())
+        fbk.w_m = self.par.n_p * mdl.mechanics.meas_speed()
+        fbk.theta_m = wrap(self.par.n_p * mdl.mechanics.meas_position())
 
         return fbk
 
@@ -185,8 +185,8 @@ class DriveControlSystem(ControlSystem, ABC):
         if self.speed_ctrl:
             # Speed-control mode
             ref.w_m = self.ref.w_m(ref.t)
-            ref_w_M = ref.w_m/self.par.n_p
-            w_M = fbk.w_m/self.par.n_p
+            ref_w_M = ref.w_m / self.par.n_p
+            w_M = fbk.w_m / self.par.n_p
             ref.tau_M = self.speed_ctrl.output(ref_w_M, w_M)
         else:
             # Torque-control mode

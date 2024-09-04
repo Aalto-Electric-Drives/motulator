@@ -29,7 +29,7 @@ def abc2complex(u):
     (-1-0.5773502691896258j)
 
     """
-    return (2/3)*u[0] - (u[1] + u[2])/3 + 1j*(u[1] - u[2])/np.sqrt(3)
+    return (2 / 3) * u[0] - (u[1] + u[2]) / 3 + 1j * (u[1] - u[2]) / np.sqrt(3)
 
 
 # %%
@@ -55,10 +55,13 @@ def complex2abc(u):
     array([ 1.       , -0.9330127, -0.0669873])
 
     """
-    return np.array([
-        u.real, .5*(-u.real + np.sqrt(3)*u.imag),
-        .5*(-u.real - np.sqrt(3)*u.imag)
-    ])
+    return np.array(
+        [
+            u.real,
+            0.5 * (-u.real + np.sqrt(3) * u.imag),
+            0.5 * (-u.real - np.sqrt(3) * u.imag),
+        ]
+    )
 
 
 # %%
@@ -130,7 +133,7 @@ class Step:
             Step output.
 
         """
-        return self.initial_value + (t >= self.step_time)*self.step_value
+        return self.initial_value + (t >= self.step_time) * self.step_value
 
 
 # %%
@@ -150,7 +153,7 @@ def wrap(theta):
 
     """
 
-    return np.mod(theta + np.pi, 2*np.pi) - np.pi
+    return np.mod(theta + np.pi, 2 * np.pi) - np.pi
 
 
 # %%
@@ -175,7 +178,7 @@ class NominalValues:
     """
 
     U: float
-    I: float
+    I: float  # noqa: E741
     f: float
     P: float
     tau: float = None
@@ -255,17 +258,16 @@ class BaseValues:
         the power factor and efficiency being less than unity.
 
         """
-        u = np.sqrt(2/3)*nom.U
-        i = np.sqrt(2)*nom.I
-        w = 2*np.pi*nom.f
-        psi = u/w
-        p = 1.5*u*i
-        Z = u/i
-        L = Z/w
-        C = 1/(Z*w)
+        u = np.sqrt(2 / 3) * nom.U
+        i = np.sqrt(2) * nom.I
+        w = 2 * np.pi * nom.f
+        psi = u / w
+        p = 1.5 * u * i
+        Z = u / i
+        L = Z / w
+        C = 1 / (Z * w)
 
         if n_p is not None:
-            tau = n_p*p/w
-            return cls(
-                u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, C=C, tau=tau, n_p=n_p)
+            tau = n_p * p / w
+            return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, C=C, tau=tau, n_p=n_p)
         return cls(u=u, i=i, w=w, psi=psi, p=p, Z=Z, L=L, C=C)

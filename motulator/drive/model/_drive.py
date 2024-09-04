@@ -4,6 +4,7 @@ Continuous-time models for electric machine drives.
 Peak-valued complex space vectors are used.
 
 """
+
 from motulator.common.model import Model
 
 
@@ -73,20 +74,13 @@ class DriveWithLCFilter(Model):
 
     """
 
-    def __init__(
-            self,
-            converter=None,
-            machine=None,
-            mechanics=None,
-            lc_filter=None):
+    def __init__(self, converter=None, machine=None, mechanics=None, lc_filter=None):
         super().__init__()
         self.converter = converter
         self.machine = machine
         self.mechanics = mechanics
         self.lc_filter = lc_filter
-        self.subsystems = [
-            self.converter, self.machine, self.mechanics, self.lc_filter
-        ]
+        self.subsystems = [self.converter, self.machine, self.mechanics, self.lc_filter]
 
     def interconnect(self, _):
         """Interconnect the subsystems."""
@@ -131,19 +125,17 @@ class DriveWithDiodeBridge(Model):
 
     """
 
-    def __init__(
-            self,
-            diode_bridge=None,
-            converter=None,
-            machine=None,
-            mechanics=None):
+    def __init__(self, diode_bridge=None, converter=None, machine=None, mechanics=None):
         super().__init__()
         self.diode_bridge = diode_bridge
         self.converter = converter
         self.machine = machine
         self.mechanics = mechanics
         self.subsystems = [
-            self.diode_bridge, self.converter, self.machine, self.mechanics
+            self.diode_bridge,
+            self.converter,
+            self.machine,
+            self.mechanics,
         ]
 
     def interconnect(self, _):

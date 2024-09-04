@@ -10,7 +10,7 @@ from scipy.interpolate import griddata
 
 # Plotting parameters
 plt.rcParams["axes.prop_cycle"] = cycler(color="brgcmyk")
-plt.rcParams["lines.linewidth"] = 1.
+plt.rcParams["lines.linewidth"] = 1.0
 plt.rcParams["axes.grid"] = True
 plt.rcParams.update({"text.usetex": False})
 
@@ -75,8 +75,8 @@ def import_syre_data(fname, add_negative_q_axis=True):
         tau_M = np.concatenate((-np.flipud(tau_M), tau_M))
 
     # Pack the data in the complex form
-    i_s = i_d + 1j*i_q
-    psi_s = psi_d + 1j*psi_q
+    i_s = i_d + 1j * i_q
+    psi_s = psi_d + 1j * psi_q
 
     return SimpleNamespace(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
 
@@ -95,10 +95,8 @@ def plot_flux_map(data):
     fig = plt.figure(figsize=(10, 5))
     ax1 = fig.add_subplot(1, 2, 1, projection="3d")
     ax2 = fig.add_subplot(1, 2, 2, projection="3d")
-    ax1.plot_surface(
-        data.i_s.real, data.i_s.imag, data.psi_s.real, cmap="viridis")
-    ax2.plot_surface(
-        data.i_s.real, data.i_s.imag, data.psi_s.imag, cmap="viridis")
+    ax1.plot_surface(data.i_s.real, data.i_s.imag, data.psi_s.real, cmap="viridis")
+    ax2.plot_surface(data.i_s.real, data.i_s.imag, data.psi_s.imag, cmap="viridis")
     ax1.set_xlabel(r"$i_\mathrm{d}$ (A)")
     ax1.set_ylabel(r"$i_\mathrm{q}$ (A)")
     ax1.set_zlabel(r"$\psi_\mathrm{d}$ (Vs)")
@@ -151,31 +149,36 @@ def plot_flux_vs_current(data):
         data.psi_s.real[ind_q_0, :],
         color="r",
         linestyle="-",
-        label=r"$\psi_\mathrm{d}(i_\mathrm{d}, 0)$")
+        label=r"$\psi_\mathrm{d}(i_\mathrm{d}, 0)$",
+    )
     ax.plot(
         data.i_s.real[-1, :],
         data.psi_s.real[-1, :],
         color="r",
         linestyle="--",
-        label=r"$\psi_\mathrm{d}(i_\mathrm{d}, i_\mathrm{q,max})$")
+        label=r"$\psi_\mathrm{d}(i_\mathrm{d}, i_\mathrm{q,max})$",
+    )
     ax.plot(
         data.i_s.imag[:, ind_d_0],
         data.psi_s.imag[:, ind_d_0],
         color="b",
         linestyle="-",
-        label=r"$\psi_\mathrm{q}(0, i_\mathrm{q})$")
+        label=r"$\psi_\mathrm{q}(0, i_\mathrm{q})$",
+    )
     ax.plot(
         data.i_s.imag[:, ind_d_min],
         data.psi_s.imag[:, ind_d_min],
         color="b",
         linestyle=":",
-        label=r"$\psi_\mathrm{q}(i_\mathrm{d,min}, i_\mathrm{q})$")
+        label=r"$\psi_\mathrm{q}(i_\mathrm{d,min}, i_\mathrm{q})$",
+    )
     ax.plot(
         data.i_s.imag[:, ind_d_max],
         data.psi_s.imag[:, ind_d_max],
         color="b",
         linestyle="--",
-        label=r"$\psi_\mathrm{q}(i_\mathrm{d,max}, i_\mathrm{q})$")
+        label=r"$\psi_\mathrm{q}(i_\mathrm{d,max}, i_\mathrm{q})$",
+    )
 
     ax.set_xlabel(r"$i_\mathrm{d}$, $i_\mathrm{q}$ (A)")
     ax.set_ylabel(r"$\psi_\mathrm{d}$, $\psi_\mathrm{q}$ (Vs)")
@@ -216,7 +219,7 @@ def downsample_flux_map(data, N_d=32, N_q=32):
     points = (np.ravel(data.i_s.real), np.ravel(data.i_s.imag))
     psi_s = griddata(points, np.ravel(data.psi_s), (i_d, i_q), method="linear")
     tau_M = griddata(points, np.ravel(data.tau_M), (i_d, i_q), method="linear")
-    i_s = i_d + 1j*i_q
+    i_s = i_d + 1j * i_q
 
     return SimpleNamespace(i_s=i_s, psi_s=psi_s, tau_M=tau_M)
 
@@ -260,8 +263,7 @@ def invert_flux_map(data, N_d=32, N_q=32):
     # Interpolate data
     points = (np.ravel(data.psi_s.real), np.ravel(data.psi_s.imag))
     i_s = griddata(points, np.ravel(data.i_s), (psi_d, psi_q), method="linear")
-    tau_M = griddata(
-        points, np.ravel(data.tau_M), (psi_d, psi_q), method="linear")
-    psi_s = psi_d + 1j*psi_q
+    tau_M = griddata(points, np.ravel(data.tau_M), (psi_d, psi_q), method="linear")
+    psi_s = psi_d + 1j * psi_q
 
     return SimpleNamespace(psi_s=psi_s, i_s=i_s, tau_M=tau_M)
