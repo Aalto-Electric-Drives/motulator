@@ -63,3 +63,4 @@ repos:
         args: [ -i ] # inplace
         language: python
         types: [ python ]
+        additional_dependencies: [ toml ]
