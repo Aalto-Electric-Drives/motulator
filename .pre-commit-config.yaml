@@ -29,16 +29,16 @@ repos:
         name: fix end of files
         description: "Ensures that a file is either empty, or ends with one newline"
         entry: end-of-file-fixer
-        language: python
-        types: [ text ]
         stages: [ commit, push, manual ]
+        types: [ text ]
+        language: python
 
       - id: trailing-whitespace
         name: trim trailing whitespace
         description: "Trims trailing whitespace"
         entry: trailing-whitespace-fixer
-        language: python
         types: [ text ]
+        language: python
         stages: [ commit ]
 
   # YAML
@@ -49,33 +49,17 @@ repos:
         name: check yaml
         description: "Checks .yaml files for parseable syntax"
         entry: check-yaml
-        language: python
         types: [ yaml ]
-
-  # Black
-  - repo: https://github.com/psf/black
-    rev: 24.8.0
-    hooks:
-      - id: black
-        name: black
-        description: "Black: The uncompromising Python code formatter"
-        entry: black
         language: python
-        types_or: [ python, pyi ]
-        args: [ ]
-        require_serial: true
-        minimum_pre_commit_version: 2.9.2
 
-  # Ruff
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.2
+  # YAPF
+  - repo: https://github.com/google/yapf
+    rev: v0.40.2
     hooks:
-      - id: ruff
-        name: ruff
-        description: "Run 'ruff' for extremely fast Python linting"
-        entry: ruff check
+      - id: yapf
+        name: yapf
+        description: "A formatter for Python files"
+        entry: yapf
+        args: [ -i ] # inplace
         language: python
-        types_or: [ python, pyi ]
-        args: [ --force-exclude, --fix ]
-        require_serial: true
-        minimum_pre_commit_version: 2.9.2
+        types: [ python ]
