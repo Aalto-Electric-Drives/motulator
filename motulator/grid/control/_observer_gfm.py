@@ -27,15 +27,13 @@ class ObserverBasedGFMControlCfg:
     R : float, optional
         Total series resistance (Ω). The default is 0.
     R_a : float, optional
-        Active resistance (Ω). The default is 0.25*num_u/max_i.
+        Active resistance (Ω). The default is 0.25*nom_u/max_i.
     T_s : float, optional
         Sampling period of the controller (s). The default is 100e-6.
     alpha_c : float, optional
         Current control bandwidth (rad/s). The default is 2*pi*400.
     alpha_o : float, optional
         Observer gain (rad/s). The default is 2*pi*50.
-    C_dc : float, optional
-        DC-bus capacitance (F). The default is None.
 
     """
     L: float
@@ -47,7 +45,6 @@ class ObserverBasedGFMControlCfg:
     T_s: float = 100e-6
     alpha_c: float = 2*np.pi*400
     alpha_o: float = 2*np.pi*50
-    C_dc: float = None
 
     def __post_init__(self):
         if self.R_a is None:
@@ -84,7 +81,7 @@ class ObserverBasedGFMControl(GridConverterControlSystem):
     """
 
     def __init__(self, cfg):
-        super().__init__(cfg.C_dc, cfg.T_s)
+        super().__init__(cfg.T_s)
         self.cfg = cfg
         self.observer = DisturbanceObserver(
             cfg.nom_w, cfg.L, cfg.alpha_o, cfg.nom_u)

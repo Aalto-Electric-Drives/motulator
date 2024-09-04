@@ -24,13 +24,11 @@ class RFPSCControlCfg:
     max_i : float
         Maximum current (A), peak value.
     R_a : float, optional
-        Active resistance (Ω). The default is 0.25*num_u/max_i.
+        Active resistance (Ω). The default is 0.25*nom_u/max_i.
     T_s : float, optional
         Sampling period of the controller (s). The default is 100e-6.
     w_b : float, optional
         Current low-pass filter bandwidth (rad/s). The default is 2*pi*5.
-    C_dc : float, optional
-        DC-bus capacitance (F). The default is None.
 
     """
     nom_u: float
@@ -39,7 +37,6 @@ class RFPSCControlCfg:
     R_a: float = None
     T_s: float = 100e-6
     w_b: float = 2*np.pi*5
-    C_dc: float = None
 
     def __post_init__(self):
         if self.R_a is None:
@@ -69,7 +66,7 @@ class RFPSCControl(GridConverterControlSystem):
     """
 
     def __init__(self, cfg):
-        super().__init__(cfg.C_dc, cfg.T_s)
+        super().__init__(cfg.T_s)
         self.cfg = cfg
         self.current_limiter = CurrentLimiter(cfg.max_i)
         self.ref.q_g = 0
