@@ -389,7 +389,7 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2DOF PI speed controller.</span>
 
-<span class="sd">    This is an interface for a speed controller. The gains are initialized </span>
+<span class="sd">    This is an interface for a speed controller. The gains are initialized</span>
 <span class="sd">    based on the desired closed-loop bandwidth and the rotor inertia estimate.</span>
 
 <span class="sd">    Parameters</span>
@@ -397,7 +397,7 @@ document.write(`
 <span class="sd">    J : float</span>
 <span class="sd">        Total inertia of the rotor (kgm²).</span>
 <span class="sd">    alpha_s : float</span>
-<span class="sd">        Closed-loop bandwidth (rad/s). </span>
+<span class="sd">        Closed-loop bandwidth (rad/s).</span>
 <span class="sd">    max_tau_M : float, optional</span>
 <span class="sd">        Maximum motor torque (Nm). The default is `inf`.</span>
 
@@ -416,8 +416,8 @@ document.write(`
 <span class="sd">    Base class for drive control systems.</span>
 
 <span class="sd">    This base class provides typical functionalities for control of electric</span>
-<span class="sd">    machine drives. This can be used both in speed-control and torque-control </span>
-<span class="sd">    modes. </span>
+<span class="sd">    machine drives. This can be used both in speed-control and torque-control</span>
+<span class="sd">    modes.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -435,7 +435,7 @@ document.write(`
 <span class="sd">        References, possibly containing either of the following fields:</span>
 
 <span class="sd">            w_m : callable</span>
-<span class="sd">                Speed reference (electrical rad/s) as a function of time (s). </span>
+<span class="sd">                Speed reference (electrical rad/s) as a function of time (s).</span>
 <span class="sd">                This signal is needed in speed-control mode.</span>
 <span class="sd">            tau_M : callable</span>
 <span class="sd">                Torque reference (Nm) as a function of time (s). This signal</span>
@@ -443,9 +443,9 @@ document.write(`
 
 <span class="sd">    observer : motulator.drive.control.im.Observer | \</span>
 <span class="sd">               motulator.drive.control.sm.Observer | None</span>
-<span class="sd">        State observer can be None or an instance of either </span>
-<span class="sd">        `motulator.drive.control.im.Observer` or </span>
-<span class="sd">        `motulator.drive.control.sm.Observer` </span>
+<span class="sd">        State observer can be None or an instance of either</span>
+<span class="sd">        `motulator.drive.control.im.Observer` or</span>
+<span class="sd">        `motulator.drive.control.sm.Observer`</span>
 <span class="sd">        depending on the machine type. The default is None.</span>
 <span class="sd">    speed_ctrl : SpeedController | None</span>
 <span class="sd">        Speed controller. The default is None.</span>
@@ -463,7 +463,7 @@ document.write(`
 <div class="viewcode-block" id="DriveControlSystem.get_electrical_measurements"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveControlSystem.get_electrical_measurements">[docs]</a>    <span class="k">def</span> <span class="nf">get_electrical_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the currents and voltages.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fbk : SimpleNamespace</span>
@@ -494,7 +494,7 @@ document.write(`
 <div class="viewcode-block" id="DriveControlSystem.get_mechanical_measurements"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/index.html#motulator.drive.control.im.DriveControlSystem.get_mechanical_measurements">[docs]</a>    <span class="k">def</span> <span class="nf">get_mechanical_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the speed and position.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fbk : SimpleNamespace</span>
@@ -511,7 +511,7 @@ document.write(`
 <span class="sd">                    Rotor speed (electrical rad/s).</span>
 <span class="sd">                theta_m : float</span>
 <span class="sd">                    Rotor position (electrical rad).</span>
-<span class="sd">    </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="o">*</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_position</span><span class="p">())</span>
@@ -533,8 +533,8 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the torque reference in vector control.</span>
 
-<span class="sd">        This method can be used in vector control to get the torque reference </span>
-<span class="sd">        from the speed controller. If the speed controller method `speed_ctrl` </span>
+<span class="sd">        This method can be used in vector control to get the torque reference</span>
+<span class="sd">        from the speed controller. If the speed controller method `speed_ctrl`</span>
 <span class="sd">        is None, the torque reference is obtained directly from the reference.</span>
 
 <span class="sd">        Parameters</span>
@@ -543,18 +543,18 @@ document.write(`
 <span class="sd">            Feedback signals. In speed-control mode, the measured or estimated</span>
 <span class="sd">            rotor speed `w_m` is used to compute the torque reference.</span>
 <span class="sd">        ref : SimpleNamespace</span>
-<span class="sd">            Reference signals, containing the digital time `t`. The speed and </span>
+<span class="sd">            Reference signals, containing the digital time `t`. The speed and</span>
 <span class="sd">            torque references are added to this object.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        ref : SimpleNamespace</span>
 <span class="sd">            Reference signals, containing the following fields:</span>
-<span class="sd">                </span>
+
 <span class="sd">                w_m : float</span>
 <span class="sd">                    Speed reference (electrical rad/s).</span>
 <span class="sd">                tau_M : float</span>
-<span class="sd">                    Torque reference (Nm).  </span>
+<span class="sd">                    Torque reference (Nm).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="p">:</span>

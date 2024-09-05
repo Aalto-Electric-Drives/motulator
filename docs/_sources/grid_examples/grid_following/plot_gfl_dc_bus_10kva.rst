@@ -20,10 +20,10 @@
 
 10-kVA converter, DC-bus voltage
 ================================
-    
+
 This example simulates a grid-following-controlled converter connected to a
-strong grid and regulating the DC-bus voltage. The control system includes a 
-DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the 
+strong grid and regulating the DC-bus voltage. The control system includes a
+DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the
 grid, a current reference generator, and a PI-type current controller.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-19
@@ -195,7 +195,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.211 seconds)
+   **Total running time of the script:** (0 minutes 1.309 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_dc_bus_10kva.py:

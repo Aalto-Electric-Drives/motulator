@@ -6,6 +6,7 @@ Drives
 A collection of example scripts for machine drives.
 
 
+
 .. raw:: html
 
     <div class="sphx-glr-thumbnails">
@@ -21,7 +22,8 @@ A collection of example scripts for machine drives.
 Current-Vector Control
 ----------------------
 
-These examples are for current-vector control of induction machines and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/vector/plot_vector_ctrl_im_2kw`) as well as computation of control look-up tables for synchronous machines (:doc:`/drive_examples/vector/plot_vector_ctrl_pmsyrm_thor`). 
+These examples are for current-vector control of induction machines and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/vector/plot_vector_ctrl_im_2kw`) as well as computation of control look-up tables for synchronous machines (:doc:`/drive_examples/vector/plot_vector_ctrl_pmsyrm_thor`).
+
 
 
 .. raw:: html
@@ -32,7 +34,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive.">
 
 .. only:: html
 
@@ -49,7 +51,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM  drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM drive.">
 
 .. only:: html
 
@@ -66,7 +68,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive, equipped with a diode bridge rectifier. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier.">
 
 .. only:: html
 
@@ -83,7 +85,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode.">
 
 .. only:: html
 
@@ -117,7 +119,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction  motor drive. The magnetic saturation of the machine is also included in the  system model, while the control system assumes constant parameters. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction motor drive. The magnetic saturation of the machine is also included in the system model, while the control system assumes constant parameters.">
 
 .. only:: html
 
@@ -141,7 +143,8 @@ These examples are for current-vector control of induction machines and synchron
 V/Hz Control
 ------------
 
-These examples shows operation of an induction machine under open-loop V/Hz control. Furthermore, a diode front-end rectifier and transition to six-step modulation are also demonstrated. 
+These examples shows operation of an induction machine under open-loop V/Hz control. Furthermore, a diode front-end rectifier and transition to six-step modulation are also demonstrated.
+
 
 
 .. raw:: html
@@ -152,7 +155,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz control of a 2.2-kW induction motor drive. The  six-step overmodulation is enabled, which increases the fundamental voltage as  well as the harmonics. Since the PWM is not synchronized with the stator  frequency, the harmonic content also depends on the ratio between the stator  frequency and the sampling frequency.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz control of a 2.2-kW induction motor drive. The six-step overmodulation is enabled, which increases the fundamental voltage as well as the harmonics. Since the PWM is not synchronized with the stator frequency, the harmonic content also depends on the ratio between the stator frequency and the sampling frequency.">
 
 .. only:: html
 
@@ -169,7 +172,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters in this example yield open-loop V/Hz control. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters in this example yield open-loop V/Hz control.">
 
 .. only:: html
 
@@ -186,7 +189,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine drive equipped with an LC filter. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine drive equipped with an LC filter.">
 
 .. only:: html
 
@@ -210,7 +213,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 Observer-Based V/Hz Control
 ---------------------------
 
-These examples demonstrate observer-based V/Hz control for induction machines [#Tii2022a]_ and synchronous machines [#Tii2022b]_. The examples :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` and :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor` also present the use of saturation models. The example :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model. 
+These examples demonstrate observer-based V/Hz control for induction machines [#Tii2022a]_ and synchronous machines [#Tii2022b]_. The examples :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` and :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor` also present the use of saturation models. The example :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model.
 
 .. rubric:: References
 
@@ -262,7 +265,7 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a saturated 6.7-kW synchronous reluctance motor drive. The saturation is not taken into account in  the control method (only in the system model).">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a saturated 6.7-kW synchronous reluctance motor drive. The saturation is not taken into account in the control method (only in the system model).">
 
 .. only:: html
 
@@ -279,7 +282,7 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The mechanical subsystem is modeled as a two-mass system. The resonance frequency of the mechanics is around 85 Hz. The mechanical parameters correspond to  [#Saa2015]_, except that the torsional damping is set to a smaller value in  this example.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The mechanical subsystem is modeled as a two-mass system. The resonance frequency of the mechanics is around 85 Hz. The mechanical parameters correspond to [#Saa2015]_, except that the torsional damping is set to a smaller value in this example.">
 
 .. only:: html
 
@@ -328,7 +331,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
-.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 
+.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650
 
 
 
@@ -374,7 +377,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a saturated 6.7-kW synchronous reluctance motor drive. The saturation is not taken into account in the control method (only in the system model). Even if the machine  has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In  this case, this PM-flux estimate lumps the effects of inductance errors.  Naturally, the PM-flux estimation can be used in PM machine drives as well. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a saturated 6.7-kW synchronous reluctance motor drive. The saturation is not taken into account in the control method (only in the system model). Even if the machine has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In this case, this PM-flux estimate lumps the effects of inductance errors. Naturally, the PM-flux estimation can be used in PM machine drives as well.">
 
 .. only:: html
 
@@ -391,7 +394,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.5-kW  PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using  the algebraic saturation model from [#Lel2024]_, fitted to the flux linkage  maps measured using the constant-speed test. For comparison, the measured data  is plotted together with the model predictions. Notice that the control system  used in this example does not consider the saturation, only the system model  does.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.5-kW PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the algebraic saturation model from [#Lel2024]_, fitted to the flux linkage maps measured using the constant-speed test. For comparison, the measured data is plotted together with the model predictions. Notice that the control system used in this example does not consider the saturation, only the system model does.">
 
 .. only:: html
 

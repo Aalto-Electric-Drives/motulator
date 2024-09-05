@@ -5,7 +5,8 @@
 V/Hz Control
 ------------
 
-These examples shows operation of an induction machine under open-loop V/Hz control. Furthermore, a diode front-end rectifier and transition to six-step modulation are also demonstrated. 
+These examples shows operation of an induction machine under open-loop V/Hz control. Furthermore, a diode front-end rectifier and transition to six-step modulation are also demonstrated.
+
 
 
 .. raw:: html
@@ -16,7 +17,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz control of a 2.2-kW induction motor drive. The  six-step overmodulation is enabled, which increases the fundamental voltage as  well as the harmonics. Since the PWM is not synchronized with the stator  frequency, the harmonic content also depends on the ratio between the stator  frequency and the sampling frequency.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz control of a 2.2-kW induction motor drive. The six-step overmodulation is enabled, which increases the fundamental voltage as well as the harmonics. Since the PWM is not synchronized with the stator frequency, the harmonic content also depends on the ratio between the stator frequency and the sampling frequency.">
 
 .. only:: html
 
@@ -33,7 +34,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters in this example yield open-loop V/Hz control. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters in this example yield open-loop V/Hz control.">
 
 .. only:: html
 
@@ -50,7 +51,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine drive equipped with an LC filter. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine drive equipped with an LC filter.">
 
 .. only:: html
 

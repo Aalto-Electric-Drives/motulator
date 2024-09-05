@@ -395,18 +395,18 @@ document.write(`
 <span class="sd">    par : SynchronousMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    sensorless : bool</span>
-<span class="sd">        If True, sensorless mode is used. </span>
+<span class="sd">        If True, sensorless mode is used.</span>
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Observer bandwidth (rad/s). The default is 2*pi*40.</span>
 <span class="sd">    k_o : callable, optional</span>
-<span class="sd">        Observer gain as a function of the rotor angular speed. The default is </span>
+<span class="sd">        Observer gain as a function of the rotor angular speed. The default is</span>
 <span class="sd">        ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if</span>
 <span class="sd">        `sensorless` else ``lambda w_m: 2*pi*15``.</span>
 <span class="sd">    k_f : callable, optional</span>
-<span class="sd">        PM-flux estimation gain (V) as a function of the rotor angular speed. </span>
-<span class="sd">        The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of </span>
-<span class="sd">        the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below </span>
-<span class="sd">        the speed `w_min` (rad/s) and linearly increasing above that with the </span>
+<span class="sd">        PM-flux estimation gain (V) as a function of the rotor angular speed.</span>
+<span class="sd">        The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of</span>
+<span class="sd">        the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below</span>
+<span class="sd">        the speed `w_min` (rad/s) and linearly increasing above that with the</span>
 <span class="sd">        slope `k` (Vs).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -437,11 +437,11 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Observer for synchronous machines in estimated rotor coordinates.</span>
 
-<span class="sd">    This observer estimates the stator flux linkage, the rotor angle, the rotor </span>
-<span class="sd">    speed, and (optionally) the PM-flux linkage. The design is based on </span>
-<span class="sd">    [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and </span>
-<span class="sd">    mechanical dynamics and allows placing the poles of the corresponding </span>
-<span class="sd">    linearized estimation error dynamics. The PM-flux linkage can also be </span>
+<span class="sd">    This observer estimates the stator flux linkage, the rotor angle, the rotor</span>
+<span class="sd">    speed, and (optionally) the PM-flux linkage. The design is based on</span>
+<span class="sd">    [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and</span>
+<span class="sd">    mechanical dynamics and allows placing the poles of the corresponding</span>
+<span class="sd">    linearized estimation error dynamics. The PM-flux linkage can also be</span>
 <span class="sd">    estimated [#Tuo2018]_. The observer can also be used in the sensored mode,</span>
 <span class="sd">    in which case the control system is fixed to the measured rotor angle.</span>
 
@@ -449,7 +449,7 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    cfg : ObserverCfg</span>
 <span class="sd">        Observer configuration.</span>
-<span class="sd">            </span>
+
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, &quot;Observers for</span>
@@ -457,7 +457,7 @@ document.write(`
 <span class="sd">       IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753</span>
 
 <span class="sd">    .. [#Tuo2018] Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, &quot;Permanent-</span>
-<span class="sd">       magnet flux adaptation for sensorless synchronous motor drives,&quot; Proc. </span>
+<span class="sd">       magnet flux adaptation for sensorless synchronous motor drives,&quot; Proc.</span>
 <span class="sd">       IEEE SLED, 2018, https://doi.org/10.1109/SLED.2018.8485899</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -485,16 +485,16 @@ document.write(`
 <span class="sd">                i_ss : complex</span>
 <span class="sd">                    Stator current (A) in stator coordinates.</span>
 <span class="sd">                w_m : float, optional</span>
-<span class="sd">                    Rotor angular speed (electrical rad/s). This is only needed </span>
+<span class="sd">                    Rotor angular speed (electrical rad/s). This is only needed</span>
 <span class="sd">                    in the sensored mode.</span>
 <span class="sd">                theta_m : float, optional</span>
-<span class="sd">                    Rotor angle (electrical rad). This is only needed in the </span>
+<span class="sd">                    Rotor angle (electrical rad). This is only needed in the</span>
 <span class="sd">                    sensored mode.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        fbk : SimpleNamespace</span>
-<span class="sd">            Measured and estimated feedback signals for the control system, </span>
+<span class="sd">            Measured and estimated feedback signals for the control system,</span>
 <span class="sd">            containing at least the following fields:</span>
 
 <span class="sd">                u_s : complex</span>
@@ -502,7 +502,7 @@ document.write(`
 <span class="sd">                i_s : complex</span>
 <span class="sd">                    Stator current (A) in estimated rotor coordinates.</span>
 <span class="sd">                psi_f : float</span>
-<span class="sd">                    PM-flux magnitude estimate (Vs). </span>
+<span class="sd">                    PM-flux magnitude estimate (Vs).</span>
 <span class="sd">                theta_m : float</span>
 <span class="sd">                    Rotor angle estimate (electrical rad).</span>
 <span class="sd">                w_s : float</span>

@@ -4,10 +4,10 @@
 
 This example simulates sensorless stator-flux-vector control of a saturated
 6.7-kW synchronous reluctance motor drive. The saturation is not taken into
-account in the control method (only in the system model). Even if the machine 
-has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In 
-this case, this PM-flux estimate lumps the effects of inductance errors. 
-Naturally, the PM-flux estimation can be used in PM machine drives as well. 
+account in the control method (only in the system model). Even if the machine
+has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In
+this case, this PM-flux estimate lumps the effects of inductance errors.
+Naturally, the PM-flux estimation can be used in PM machine drives as well.
 
 """
 # %%

@@ -13,7 +13,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
-.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 
+.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650
 
 
 
@@ -59,7 +59,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a saturated 6.7-kW synchronous reluctance motor drive. The saturation is not taken into account in the control method (only in the system model). Even if the machine  has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In  this case, this PM-flux estimate lumps the effects of inductance errors.  Naturally, the PM-flux estimation can be used in PM machine drives as well. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a saturated 6.7-kW synchronous reluctance motor drive. The saturation is not taken into account in the control method (only in the system model). Even if the machine has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In this case, this PM-flux estimate lumps the effects of inductance errors. Naturally, the PM-flux estimation can be used in PM machine drives as well.">
 
 .. only:: html
 
@@ -76,7 +76,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.5-kW  PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using  the algebraic saturation model from [#Lel2024]_, fitted to the flux linkage  maps measured using the constant-speed test. For comparison, the measured data  is plotted together with the model predictions. Notice that the control system  used in this example does not consider the saturation, only the system model  does.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.5-kW PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the algebraic saturation model from [#Lel2024]_, fitted to the flux linkage maps measured using the constant-speed test. For comparison, the measured data is plotted together with the model predictions. Notice that the control system used in this example does not consider the saturation, only the system model does.">
 
 .. only:: html
 

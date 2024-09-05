@@ -21,9 +21,9 @@
 2.2-kW induction motor, saturated
 =================================
 
-This example simulates sensorless current-vector control of a 2.2-kW induction 
-motor drive. The magnetic saturation of the machine is also included in the 
-system model, while the control system assumes constant parameters. 
+This example simulates sensorless current-vector control of a 2.2-kW induction
+motor drive. The magnetic saturation of the machine is also included in the
+system model, while the control system assumes constant parameters.
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-18
 
@@ -223,7 +223,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.010 seconds)
+   **Total running time of the script:** (0 minutes 4.124 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vector_plot_vector_ctrl_im_2kw.py:

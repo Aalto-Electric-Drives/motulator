@@ -20,7 +20,7 @@
 
 10-kVA converter, LCL filter
 ============================
-    
+
 This example simulates a grid-following-controlled converter connected to a
 strong grid through an LCL filter. The control system includes a phase-locked
 loop (PLL) to synchronize with the grid, a current reference generator, and a
@@ -184,7 +184,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.227 seconds)
+   **Total running time of the script:** (0 minutes 1.336 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_lcl_10kva.py:

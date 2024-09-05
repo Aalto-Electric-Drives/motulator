@@ -20,9 +20,9 @@
 
 10-kVA converter
 ================
-    
+
 This example simulates a grid-following-controlled converter connected to an L
-filter and a strong grid. The control system includes a phase-locked loop (PLL) 
+filter and a strong grid. The control system includes a phase-locked loop (PLL)
 to synchronize with the grid, a current reference generator, and a PI-based
 current controller.
 
@@ -197,7 +197,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.158 seconds)
+   **Total running time of the script:** (0 minutes 1.257 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_10kva.py:

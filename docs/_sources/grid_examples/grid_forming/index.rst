@@ -14,6 +14,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer, "IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 
+
 .. raw:: html
 
     <div class="sphx-glr-thumbnails">
@@ -22,7 +23,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="12.5-kVA converter, RFPSC">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates reference-feedforward power-synchronization control (RFPSC) of a converter connected to a weak grid.">
 
 .. only:: html
 
@@ -39,7 +40,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="12.5-kVA converter, disturbance observer">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a converter using disturbance-observer-based control in grid-forming mode. The converter output voltage and the active power are directly controlled, and grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation.">
 
 .. only:: html
 

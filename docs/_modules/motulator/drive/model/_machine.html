@@ -376,7 +376,7 @@ document.write(`
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Continuous-time models for electric machines.</span>
 
-<span class="sd">Peak-valued complex space vectors are used. </span>
+<span class="sd">Peak-valued complex space vectors are used.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
@@ -392,8 +392,8 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Γ-equivalent model of an induction machine.</span>
 
-<span class="sd">    An induction machine is modeled using the Γ-equivalent model [#Sle1989]_. </span>
-<span class="sd">    The stator inductance `L_s` can either be constant or a function of the </span>
+<span class="sd">    An induction machine is modeled using the Γ-equivalent model [#Sle1989]_.</span>
+<span class="sd">    The stator inductance `L_s` can either be constant or a function of the</span>
 <span class="sd">    stator flux magnitude::</span>
 
 <span class="sd">        L_s = L_s(abs(psi_ss))</span>
@@ -411,7 +411,7 @@ document.write(`
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Sle1989] Slemon, &quot;Modelling of induction machines for electric </span>
+<span class="sd">    .. [#Sle1989] Slemon, &quot;Modelling of induction machines for electric</span>
 <span class="sd">       drives,&quot; IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -491,10 +491,10 @@ document.write(`
 <span class="sd">    par : SynchronousMachinePars</span>
 <span class="sd">        Machine parameters.</span>
 <span class="sd">    i_s : callable, optional</span>
-<span class="sd">        Stator current (A) as a function of the stator flux linkage (A) in </span>
+<span class="sd">        Stator current (A) as a function of the stator flux linkage (A) in</span>
 <span class="sd">        order to model the magnetic saturation. If this function is given, the</span>
 <span class="sd">        stator current is computed using this function instead of constants</span>
-<span class="sd">        `par.L_d`, `par.L_q`, and `par.psi_f`.  </span>
+<span class="sd">        `par.L_d`, `par.L_q`, and `par.psi_f`.</span>
 <span class="sd">    psi_s0 : float, optional</span>
 <span class="sd">        Initial stator flux linkage (Vs). If not given, `par.psi_f` is used.</span>
 

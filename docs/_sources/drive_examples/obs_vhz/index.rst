@@ -5,7 +5,7 @@
 Observer-Based V/Hz Control
 ---------------------------
 
-These examples demonstrate observer-based V/Hz control for induction machines [#Tii2022a]_ and synchronous machines [#Tii2022b]_. The examples :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` and :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor` also present the use of saturation models. The example :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model. 
+These examples demonstrate observer-based V/Hz control for induction machines [#Tii2022a]_ and synchronous machines [#Tii2022b]_. The examples :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw` and :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor` also present the use of saturation models. The example :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model.
 
 .. rubric:: References
 
@@ -57,7 +57,7 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a saturated 6.7-kW synchronous reluctance motor drive. The saturation is not taken into account in  the control method (only in the system model).">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a saturated 6.7-kW synchronous reluctance motor drive. The saturation is not taken into account in the control method (only in the system model).">
 
 .. only:: html
 
@@ -74,7 +74,7 @@ These examples demonstrate observer-based V/Hz control for induction machines [#
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The mechanical subsystem is modeled as a two-mass system. The resonance frequency of the mechanics is around 85 Hz. The mechanical parameters correspond to  [#Saa2015]_, except that the torsional damping is set to a smaller value in  this example.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The mechanical subsystem is modeled as a two-mass system. The resonance frequency of the mechanics is around 85 Hz. The mechanical parameters correspond to [#Saa2015]_, except that the torsional damping is set to a smaller value in this example.">
 
 .. only:: html
 
