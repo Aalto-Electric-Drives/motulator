@@ -23,8 +23,8 @@
 
 This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The
 mechanical subsystem is modeled as a two-mass system. The resonance frequency
-of the mechanics is around 85 Hz. The mechanical parameters correspond to
-[#Saa2015]_, except that the torsional damping is set to a smaller value in
+of the mechanics is around 85 Hz. The mechanical parameters correspond to 
+[#Saa2015]_, except that the torsional damping is set to a smaller value in 
 this example.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-23
@@ -265,7 +265,7 @@ rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.816 seconds)
+   **Total running time of the script:** (0 minutes 4.739 seconds)
 
 
 .. _sphx_glr_download_drive_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py:

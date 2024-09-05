@@ -3,7 +3,7 @@
 =================================
 
 This example simulates open-loop V/Hz control of a 2.2-kW induction machine
-drive equipped with an LC filter.
+drive equipped with an LC filter. 
 
 """
 # %%

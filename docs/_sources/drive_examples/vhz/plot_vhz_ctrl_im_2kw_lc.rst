@@ -22,7 +22,7 @@
 =================================
 
 This example simulates open-loop V/Hz control of a 2.2-kW induction machine
-drive equipped with an LC filter.
+drive equipped with an LC filter. 
 
 .. GENERATED FROM PYTHON SOURCE LINES 10-20
 
@@ -239,7 +239,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.948 seconds)
+   **Total running time of the script:** (0 minutes 9.865 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py:

@@ -1,10 +1,10 @@
 """
 12.5-kVA converter, disturbance observer
 ========================================
-
+    
 This example simulates a converter using disturbance-observer-based control in
-grid-forming mode. The converter output voltage and the active power are
-directly controlled, and grid synchronization is provided by the disturbance
+grid-forming mode. The converter output voltage and the active power are 
+directly controlled, and grid synchronization is provided by the disturbance 
 observer. A transparent current controller is included for current limitation.
 
 """

@@ -5,8 +5,7 @@
 Grid-Following Control
 ----------------------
 
-These examples demonstrate grid-following control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass filtered grid voltage.
-
+These examples demonstrate grid-following control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass filtered grid voltage. 
 
 
 .. raw:: html
@@ -17,7 +16,7 @@ These examples demonstrate grid-following control. The current controller uses 2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to a strong grid through an LCL filter. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller. The dynamics of the LCL filter are not taken into account in the control system.">
+    <div class="sphx-glr-thumbcontainer" tooltip="10-kVA converter, LCL filter">
 
 .. only:: html
 
@@ -34,7 +33,7 @@ These examples demonstrate grid-following control. The current controller uses 2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to a strong grid and regulating the DC-bus voltage. The control system includes a DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller.">
+    <div class="sphx-glr-thumbcontainer" tooltip="10-kVA converter, DC-bus voltage">
 
 .. only:: html
 
@@ -51,7 +50,7 @@ These examples demonstrate grid-following control. The current controller uses 2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to an L filter and a strong grid. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-based current controller.">
+    <div class="sphx-glr-thumbcontainer" tooltip="10-kVA converter">
 
 .. only:: html
 

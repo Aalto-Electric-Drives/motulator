@@ -376,10 +376,10 @@ document.write(`
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Continuous-time models for converters.</span>
 
-<span class="sd">A three-phase voltage-source inverter with optional DC-bus dynamics is</span>
+<span class="sd">A three-phase voltage-source inverter with optional DC-bus dynamics is </span>
 <span class="sd">modelled, along with a six-pulse diode bridge rectifier supplied from a stiff</span>
 <span class="sd">grid. Complex space vectors are used also for duty ratios and switching states,</span>
-<span class="sd">wherever applicable.</span>
+<span class="sd">wherever applicable. </span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
@@ -394,17 +394,17 @@ document.write(`
 <div class="viewcode-block" id="VoltageSourceConverter"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter">[docs]</a><span class="k">class</span> <span class="nc">VoltageSourceConverter</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Lossless three-phase voltage-source converter.</span>
-
+<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    u_dc : float</span>
-<span class="sd">        DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is</span>
+<span class="sd">        DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is </span>
 <span class="sd">        used as the initial condition.</span>
 <span class="sd">    C_dc : float, optional</span>
 <span class="sd">        DC-bus capacitance (F). The default is None.</span>
 <span class="sd">    i_dc : callable, optional</span>
 <span class="sd">        External current (A) fed to the DC bus. Needed if `C_dc` is not None.</span>
-
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">C_dc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">i_dc</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="kc">None</span><span class="p">):</span>
@@ -478,10 +478,10 @@ document.write(`
 <div class="viewcode-block" id="FrequencyConverter"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter">[docs]</a><span class="k">class</span> <span class="nc">FrequencyConverter</span><span class="p">(</span><span class="n">VoltageSourceConverter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Frequency converter with a six-pulse diode bridge.</span>
-
+<span class="sd">    </span>
 <span class="sd">    A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The</span>
-<span class="sd">    diode bridge is connected to the voltage-source inverter. The inductance of</span>
-<span class="sd">    the grid is omitted.</span>
+<span class="sd">    diode bridge is connected to the voltage-source inverter. The inductance of </span>
+<span class="sd">    the grid is omitted. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -490,7 +490,7 @@ document.write(`
 <span class="sd">    L_dc : float</span>
 <span class="sd">        DC-bus inductance (H).</span>
 <span class="sd">    U_g : float</span>
-<span class="sd">        Grid voltage (V, line-line, rms).</span>
+<span class="sd">        Grid voltage (V, line-line, rms). </span>
 <span class="sd">    f_g : float</span>
 <span class="sd">        Grid frequency (Hz).</span>
 

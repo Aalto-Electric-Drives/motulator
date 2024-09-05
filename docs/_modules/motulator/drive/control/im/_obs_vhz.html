@@ -394,7 +394,7 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    nom_psi_s : float</span>
-<span class="sd">        Nominal stator flux linkage (Vs).</span>
+<span class="sd">        Nominal stator flux linkage (Vs). </span>
 <span class="sd">    max_i_s : float, optional</span>
 <span class="sd">        Maximum stator current (A). The default is inf.</span>
 <span class="sd">    k_tau : float, optional</span>
@@ -424,8 +424,8 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Observer-based V/Hz control for induction machines.</span>
 
-<span class="sd">    This implements the observer-based V/Hz control method [#Tii2022]_. The</span>
-<span class="sd">    state-feedback control law is in the alternative form which uses an</span>
+<span class="sd">    This implements the observer-based V/Hz control method [#Tii2022]_. The </span>
+<span class="sd">    state-feedback control law is in the alternative form which uses an </span>
 <span class="sd">    intermediate stator current reference.</span>
 
 <span class="sd">    Parameters</span>
@@ -440,7 +440,7 @@ document.write(`
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [#Tii2022] Tiitinen, Hinkkanen, Harnefors, &quot;Stable and passive observer-</span>
-<span class="sd">       based V/Hz control for induction motors,&quot; Proc. IEEE ECCE, Detroit, MI,</span>
+<span class="sd">       based V/Hz control for induction motors,&quot; Proc. IEEE ECCE, Detroit, MI, </span>
 <span class="sd">       Oct. 2022, https://doi.org/10.1109/ECCE50734.2022.9948057</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -518,9 +518,9 @@ document.write(`
 
 <span class="sd">    This is a sensorless reduced-order flux observer in synchronous coordinates</span>
 <span class="sd">    for an induction machine. The observer gain decouples the electrical and</span>
-<span class="sd">    mechanical dynamics and allows placing the poles of the linearized</span>
-<span class="sd">    estimation error dynamics. This implementation operates in external</span>
-<span class="sd">    coordinates (typically synchronous coordinates defined by reference signals</span>
+<span class="sd">    mechanical dynamics and allows placing the poles of the linearized </span>
+<span class="sd">    estimation error dynamics. This implementation operates in external </span>
+<span class="sd">    coordinates (typically synchronous coordinates defined by reference signals </span>
 <span class="sd">    of a control system).</span>
 
 <span class="sd">    Parameters</span>
@@ -529,15 +529,15 @@ document.write(`
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float</span>
 <span class="sd">        Speed-estimation bandwidth (rad/s).</span>
-<span class="sd">    b : callable, optional</span>
-<span class="sd">        Coefficient (rad/s) of the characteristic polynomial as a function of</span>
-<span class="sd">        the rotor angular speed estimate. The default is</span>
+<span class="sd">    b : callable, optional </span>
+<span class="sd">        Coefficient (rad/s) of the characteristic polynomial as a function of </span>
+<span class="sd">        the rotor angular speed estimate. The default is </span>
 <span class="sd">        ``lambda w_m: R_R/L_M + .4*abs(w_m)``.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The characteristic polynomial of the observer in synchronous coordinates is</span>
-<span class="sd">    ``s**2 + b*s + w_s**2``.</span>
+<span class="sd">    The characteristic polynomial of the observer in synchronous coordinates is </span>
+<span class="sd">    ``s**2 + b*s + w_s**2``.  </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 

@@ -5,8 +5,7 @@
 Current-Vector Control
 ----------------------
 
-These examples are for current-vector control of induction machines and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/vector/plot_vector_ctrl_im_2kw`) as well as computation of control look-up tables for synchronous machines (:doc:`/drive_examples/vector/plot_vector_ctrl_pmsyrm_thor`).
-
+These examples are for current-vector control of induction machines and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/vector/plot_vector_ctrl_im_2kw`) as well as computation of control look-up tables for synchronous machines (:doc:`/drive_examples/vector/plot_vector_ctrl_pmsyrm_thor`). 
 
 
 .. raw:: html
@@ -17,7 +16,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive. ">
 
 .. only:: html
 
@@ -34,7 +33,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM  drive.">
 
 .. only:: html
 
@@ -51,7 +50,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM  drive, equipped with a diode bridge rectifier. ">
 
 .. only:: html
 
@@ -68,7 +67,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode. ">
 
 .. only:: html
 
@@ -102,7 +101,7 @@ These examples are for current-vector control of induction machines and synchron
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction motor drive. The magnetic saturation of the machine is also included in the system model, while the control system assumes constant parameters.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction  motor drive. The magnetic saturation of the machine is also included in the  system model, while the control system assumes constant parameters. ">
 
 .. only:: html
 

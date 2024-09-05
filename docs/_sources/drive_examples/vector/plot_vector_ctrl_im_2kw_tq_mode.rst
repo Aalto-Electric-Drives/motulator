@@ -22,7 +22,7 @@
 ===========================================
 
 This example simulates current-vector control of a 2.2-kW induction motor drive
-in torque-control mode.
+in torque-control mode. 
 
 .. GENERATED FROM PYTHON SOURCE LINES 10-18
 
@@ -179,7 +179,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.689 seconds)
+   **Total running time of the script:** (0 minutes 4.692 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vector_plot_vector_ctrl_im_2kw_tq_mode.py:

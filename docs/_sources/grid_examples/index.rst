@@ -6,7 +6,6 @@ Grid Converters
 A collection of example scripts for grid converters.
 
 
-
 .. raw:: html
 
     <div class="sphx-glr-thumbnails">
@@ -22,8 +21,7 @@ A collection of example scripts for grid converters.
 Grid-Following Control
 ----------------------
 
-These examples demonstrate grid-following control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass filtered grid voltage.
-
+These examples demonstrate grid-following control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass filtered grid voltage. 
 
 
 .. raw:: html
@@ -34,7 +32,7 @@ These examples demonstrate grid-following control. The current controller uses 2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to a strong grid through an LCL filter. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller. The dynamics of the LCL filter are not taken into account in the control system.">
+    <div class="sphx-glr-thumbcontainer" tooltip="10-kVA converter, LCL filter">
 
 .. only:: html
 
@@ -51,7 +49,7 @@ These examples demonstrate grid-following control. The current controller uses 2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to a strong grid and regulating the DC-bus voltage. The control system includes a DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller.">
+    <div class="sphx-glr-thumbcontainer" tooltip="10-kVA converter, DC-bus voltage">
 
 .. only:: html
 
@@ -68,7 +66,7 @@ These examples demonstrate grid-following control. The current controller uses 2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to an L filter and a strong grid. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-based current controller.">
+    <div class="sphx-glr-thumbcontainer" tooltip="10-kVA converter">
 
 .. only:: html
 
@@ -101,7 +99,6 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer, "IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 
-
 .. raw:: html
 
     <div class="sphx-glr-thumbnails">
@@ -110,7 +107,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates reference-feedforward power-synchronization control (RFPSC) of a converter connected to a weak grid.">
+    <div class="sphx-glr-thumbcontainer" tooltip="12.5-kVA converter, RFPSC">
 
 .. only:: html
 
@@ -127,7 +124,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a converter using disturbance-observer-based control in grid-forming mode. The converter output voltage and the active power are directly controlled, and grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation.">
+    <div class="sphx-glr-thumbcontainer" tooltip="12.5-kVA converter, disturbance observer">
 
 .. only:: html
 

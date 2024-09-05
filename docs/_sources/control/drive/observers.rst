@@ -1,7 +1,7 @@
 Observer Design
 ===============
 
-An observer is commonly used to estimate the state of an electrical machine. In motion-sensored drives, the state of interest is typically the flux linkage. In sensorless drives, the rotor speed estimate is needed as well. Furthermore, sensorless synchronous machine drives require estimation of the rotor position.
+An observer is commonly used to estimate the state of an electrical machine. In motion-sensored drives, the state of interest is typically the flux linkage. In sensorless drives, the rotor speed estimate is needed as well. Furthermore, sensorless synchronous machine drives require estimation of the rotor position.  
 
 Induction Machines
 ------------------
@@ -18,7 +18,7 @@ The inverse-Γ model of an induction machine is considered (see :doc:`/model/dri
     &= R_\mathrm{R}\boldsymbol{i}_\mathrm{s} - \left(\alpha - \mathrm{j}\omega_\mathrm{m} \right)\boldsymbol{\psi}_\mathrm{R}
     :label: dpsiR
 
-where :math:`\omega_\mathrm{m}` is the electrical rotor angular speed.
+where :math:`\omega_\mathrm{m}` is the electrical rotor angular speed. 
 
 Observer Structure
 ^^^^^^^^^^^^^^^^^^
@@ -29,10 +29,10 @@ General Coordinates
 Based on :eq:`dpsiR`, a reduced-order observer can be formulated in a coordinate system rotating at :math:`\omega_\mathrm{s}`,
 
 .. math::
-    \frac{\mathrm{d} \hat{\boldsymbol{\psi}}_\mathrm{R}}{\mathrm{d} t} + \mathrm{j}\omega_\mathrm{s}\hat{\boldsymbol{\psi}}_\mathrm{R} = \boldsymbol{v} + \boldsymbol{k}_1(\hat{\boldsymbol{v}} - \boldsymbol{v}) + \boldsymbol{k}_2(\hat{\boldsymbol{v}} - \boldsymbol{v})^*
+    \frac{\mathrm{d} \hat{\boldsymbol{\psi}}_\mathrm{R}}{\mathrm{d} t} + \mathrm{j}\omega_\mathrm{s}\hat{\boldsymbol{\psi}}_\mathrm{R} = \boldsymbol{v} + \boldsymbol{k}_1(\hat{\boldsymbol{v}} - \boldsymbol{v}) + \boldsymbol{k}_2(\hat{\boldsymbol{v}} - \boldsymbol{v})^* 
     :label: dhatpsiR
-
-where :math:`\boldsymbol{k}_1` and :math:`\boldsymbol{k}_2` are complex gains, the estimates are marked with the hat, and :math:`^*` marks the complex conjugate. The back-emf estimates are
+    
+where :math:`\boldsymbol{k}_1` and :math:`\boldsymbol{k}_2` are complex gains, the estimates are marked with the hat, and :math:`^*` marks the complex conjugate. The back-emf estimates are 
 
 .. math::
     \boldsymbol{v} &= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} - \mathrm{j} \omega_\mathrm{s}L_\sigma\boldsymbol{i}_\mathrm{s} \\
@@ -58,23 +58,23 @@ The flux estimate in stator coordinates can be expressed using the polar form, :
 
 .. math::
     \frac{\mathrm{d}\hat{\vartheta}_\mathrm{s}}{\mathrm{d} t} = \omega_\mathrm{s}
-    = \frac{\mathrm{Im} \{ \boldsymbol{v}' + \boldsymbol{k}_1(\hat{\boldsymbol{v}} - \boldsymbol{v}') + \boldsymbol{k}_2(\hat{\boldsymbol{v}} - \boldsymbol{v}')^* \} }{\hat{\psi}_\mathrm{R} + L_\sigma \mathrm{Re}\{(1 - \boldsymbol{k}_1)\boldsymbol{i}_\mathrm{s} + \boldsymbol{k}_2 \boldsymbol{i}_\mathrm{s}^* \}}
+    = \frac{\mathrm{Im} \{ \boldsymbol{v}' + \boldsymbol{k}_1(\hat{\boldsymbol{v}} - \boldsymbol{v}') + \boldsymbol{k}_2(\hat{\boldsymbol{v}} - \boldsymbol{v}')^* \} }{\hat{\psi}_\mathrm{R} + L_\sigma \mathrm{Re}\{(1 - \boldsymbol{k}_1)\boldsymbol{i}_\mathrm{s} + \boldsymbol{k}_2 \boldsymbol{i}_\mathrm{s}^* \}} 
     :label: hatws
 
-where
+where 
 
 .. math::
-    \boldsymbol{v}' = \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t}
+    \boldsymbol{v}' = \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} 
     :label: vp
 
-The flux magnitude dynamics are
+The flux magnitude dynamics are 
 
 .. math::
-    \frac{\mathrm{d} \hat{\psi}_\mathrm{R}}{\mathrm{d} t}
+    \frac{\mathrm{d} \hat{\psi}_\mathrm{R}}{\mathrm{d} t} 
     = \mathrm{Re}\{ \boldsymbol{v} + \boldsymbol{k}_1(\hat{\boldsymbol{v}} - \boldsymbol{v}) + \boldsymbol{k}_2(\hat{\boldsymbol{v}} - \boldsymbol{v})^* \}
     :label: dhatpsiR_abs
 
-Notice that the right-hand side of :eq:`hatws` is independent of :math:`\omega_\mathrm{s}`. Futhermore, in these coordinates, the condition :eq:`inherently` for an inherently sensorless observer reduces to :math:`\boldsymbol{k}_2 = \boldsymbol{k}_1`. This observer structure is implemented in the :class:`motulator.drive.control.im.Observer`, where simple forward-Euler discretization is used.
+Notice that the right-hand side of :eq:`hatws` is independent of :math:`\omega_\mathrm{s}`. Futhermore, in these coordinates, the condition :eq:`inherently` for an inherently sensorless observer reduces to :math:`\boldsymbol{k}_2 = \boldsymbol{k}_1`. This observer structure is implemented in the :class:`motulator.drive.control.im.Observer`, where simple forward-Euler discretization is used. 
 
 Gain Selection
 ^^^^^^^^^^^^^^
@@ -94,7 +94,7 @@ where the estimation error of the rotor flux is :math:`\Delta\tilde{\boldsymbol{
 Sensored Case
 """""""""""""
 
-Here, :math:`\boldsymbol{k}_2 = 0` and :math:`\Delta\tilde{\omega}_\mathrm{m} = 0` are assumed, corresponding to the sensored reduced-order observer in [#Ver1988]_. Under these assumptions, the estimation-error dynamics in :eq:`dtildepsiR` reduce to
+Here, :math:`\boldsymbol{k}_2 = 0` and :math:`\Delta\tilde{\omega}_\mathrm{m} = 0` are assumed, corresponding to the sensored reduced-order observer in [#Ver1988]_. Under these assumptions, the estimation-error dynamics in :eq:`dtildepsiR` reduce to 
 
 .. math::
 	\frac{\mathrm{d} \Delta\tilde{\boldsymbol{\psi}}_\mathrm{R}}{\mathrm{d} t} =  -\left[\boldsymbol{k}_1\left(\alpha - \mathrm{j}\omega_\mathrm{m0} \right) + \mathrm{j}\omega_\mathrm{s0}\right]\Delta\tilde{\boldsymbol{\psi}}_\mathrm{R}
@@ -102,29 +102,29 @@ Here, :math:`\boldsymbol{k}_2 = 0` and :math:`\Delta\tilde{\omega}_\mathrm{m} = 
 
 It can be noticed that the closed-loop pole could be arbitrarily placed via the gain :math:`\boldsymbol{k}_1`. Well-damped estimation-error dynamics can be obtained, e.g., by choosing
 
-.. math::
-    \boldsymbol{k}_1 = 1 + \frac{g |\omega_\mathrm{m}|}{\alpha - \mathrm{j}\omega_\mathrm{m}}
+.. math:: 
+    \boldsymbol{k}_1 = 1 + \frac{g |\omega_\mathrm{m}|}{\alpha - \mathrm{j}\omega_\mathrm{m}} 
     :label: k1_sensored
 
 where :math:`g` is a unitless positive design parameter. The corresponding pole is located at :math:`s = -\alpha - g |\omega_\mathrm{m0}| - \mathrm{j}\omega_\mathrm{r0}`, where :math:`\omega_\mathrm{r0} = \omega_\mathrm{s0} - \omega_\mathrm{m0}` is the operating-point slip angular frequency.
 
 .. note::
 
-    As a special case, :math:`\boldsymbol{k}_1  = 0` yields the voltage model. As another special case, the current model is obtained choosing :math:`\boldsymbol{k}_1 = 1`.
+    As a special case, :math:`\boldsymbol{k}_1  = 0` yields the voltage model. As another special case, the current model is obtained choosing :math:`\boldsymbol{k}_1 = 1`. 
 
 Sensorless Case
 """""""""""""""
 
-For sensorless drives, choosing
+For sensorless drives, choosing 
 
 .. math::
     \boldsymbol{k}_2 = (\hat{\boldsymbol{\psi}}_\mathrm{R}/\hat{\boldsymbol{\psi}}_\mathrm{R}^*) \boldsymbol{k}_1
     :label: inherently
-
+    
 yields an inherently sensorless observer, i.e., the rotor speed estimate :math:`\hat{\omega}_\mathrm{m}` cancels out from the observer equations [#Hin2010]_. Under this condition, the linearized estimation-error dynamics in :eq:`dtildepsiR` become
 
 .. math::
-	\frac{\mathrm{d}}{\mathrm{d} t} \begin{bmatrix} \Delta\tilde{\psi}_\mathrm{Rd} \\ \Delta\tilde{\psi}_\mathrm{Rq} \end{bmatrix} = \begin{bmatrix} -2k_\mathrm{d}\alpha & -2k_\mathrm{d}\omega_\mathrm{m0} + \omega_\mathrm{s0} \\ -2k_\mathrm{q}\alpha - \omega_\mathrm{s0} & -2k_\mathrm{q}\omega_\mathrm{m0}
+	\frac{\mathrm{d}}{\mathrm{d} t} \begin{bmatrix} \Delta\tilde{\psi}_\mathrm{Rd} \\ \Delta\tilde{\psi}_\mathrm{Rq} \end{bmatrix} = \begin{bmatrix} -2k_\mathrm{d}\alpha & -2k_\mathrm{d}\omega_\mathrm{m0} + \omega_\mathrm{s0} \\ -2k_\mathrm{q}\alpha - \omega_\mathrm{s0} & -2k_\mathrm{q}\omega_\mathrm{m0} 
      \end{bmatrix} \begin{bmatrix} \Delta\tilde{\psi}_\mathrm{Rd} \\ \Delta\tilde{\psi}_\mathrm{Rq} \end{bmatrix}
     :label: dtildepsiR_sensorless
 
@@ -148,56 +148,56 @@ which results in the characteristic polynomial :math:`D(s)=s^2 + 2\sigma s + \om
 Synchronous Machines
 --------------------
 
-In sensorless control of synchronous machine drives, the rotor position and speed estimates are needed [#Jon1989]_, [#Cap2001]_, [#Hin2018]_. As a side product, the stator flux linkage is also estimated. In the following, an observer design available in the :class:`motulator.drive.control.sm.Observer` class is considered, which is based on [#Hin2018]_. This observer implementation also includes a sensored mode.
+In sensorless control of synchronous machine drives, the rotor position and speed estimates are needed [#Jon1989]_, [#Cap2001]_, [#Hin2018]_. As a side product, the stator flux linkage is also estimated. In the following, an observer design available in the :class:`motulator.drive.control.sm.Observer` class is considered, which is based on [#Hin2018]_. This observer implementation also includes a sensored mode. 
 
 
 Machine Model in General Coordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In :doc:`/model/drive/machines`, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at :math:`\vartheta_\mathrm{s}` and rotating at :math:`\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t` with respect to stator coordinates. Furthermore, the rotor is aligned at :math:`\vartheta_\mathrm{m}` and rotates at :math:`\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t` with respect to stator coordinates. This coordinate transformation results in
+In :doc:`/model/drive/machines`, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at :math:`\vartheta_\mathrm{s}` and rotating at :math:`\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t` with respect to stator coordinates. Furthermore, the rotor is aligned at :math:`\vartheta_\mathrm{m}` and rotates at :math:`\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t` with respect to stator coordinates. This coordinate transformation results in 
 
 .. math::
     \frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{s}\boldsymbol{\psi}_\mathrm{s} \\
-    \frac{\mathrm{d}\delta}{\mathrm{d} t} &= \omega_\mathrm{m} - \omega_\mathrm{s}
+    \frac{\mathrm{d}\delta}{\mathrm{d} t} &= \omega_\mathrm{m} - \omega_\mathrm{s}  
     :label: sm
 
-where :math:`\boldsymbol{u}_\mathrm{s}` is the stator voltage, :math:`\boldsymbol{i}_\mathrm{s}` is the stator current, and :math:`\delta = \vartheta_\mathrm{m} - \vartheta_\mathrm{s}` is the electrical angle of the rotor as seen from the general coordinate system. Assuming linear magnetics, the relation between the stator flux linkage and the stator current is governed by
+where :math:`\boldsymbol{u}_\mathrm{s}` is the stator voltage, :math:`\boldsymbol{i}_\mathrm{s}` is the stator current, and :math:`\delta = \vartheta_\mathrm{m} - \vartheta_\mathrm{s}` is the electrical angle of the rotor as seen from the general coordinate system. Assuming linear magnetics, the relation between the stator flux linkage and the stator current is governed by 
 
 .. math::
 	\boldsymbol{\psi}_\mathrm{s} = \mathrm{e}^{\mathrm{j}\delta}\left(L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s} \mathrm{e}^{-\mathrm{j}\delta}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\mathrm{e}^{-\mathrm{j}\delta}\} + \psi_\mathrm{f}\right)
-    :label: sm_flux_gen
+    :label: sm_flux_gen 
 
-where :math:`L_\mathrm{d}` is the d-axis inductance, :math:`L_\mathrm{q}` is the q-axis inductance, and :math:`\psi_\mathrm{f}` is the PM flux linkage.
+where :math:`L_\mathrm{d}` is the d-axis inductance, :math:`L_\mathrm{q}` is the q-axis inductance, and :math:`\psi_\mathrm{f}` is the PM flux linkage. 
 
-Notice that setting :math:`\vartheta_\mathrm{s}=0` yields the machine model in stator coordinates. In the following, the coordinate system will be fixed to the estimated angle of the rotor, i.e., to the coordinate system used by the control system.
+Notice that setting :math:`\vartheta_\mathrm{s}=0` yields the machine model in stator coordinates. In the following, the coordinate system will be fixed to the estimated angle of the rotor, i.e., to the coordinate system used by the control system.  
 
 Observer Structure
 ^^^^^^^^^^^^^^^^^^
 
-The observer is assumed to operate in estimated rotor coordinates, whose d-axis is aligned with the rotor angle estimate :math:`\hat{\vartheta}_\mathrm{m}`. Now, the angle :math:`\delta = \vartheta_\mathrm{m} - \hat{\vartheta}_\mathrm{m}` in the machine model :eq:`sm` corresponds to the estimation error of the rotor angle, which naturally is unknown to the sensorless control system.
+The observer is assumed to operate in estimated rotor coordinates, whose d-axis is aligned with the rotor angle estimate :math:`\hat{\vartheta}_\mathrm{m}`. Now, the angle :math:`\delta = \vartheta_\mathrm{m} - \hat{\vartheta}_\mathrm{m}` in the machine model :eq:`sm` corresponds to the estimation error of the rotor angle, which naturally is unknown to the sensorless control system. 
 
-Since the stator current is measured, the observer is fundamentally corrected by means of the current estimation error. However, due to the saliency, it is more convenient to scale the current estimation error by the stator inductance, resulting in the flux linkage error
+Since the stator current is measured, the observer is fundamentally corrected by means of the current estimation error. However, due to the saliency, it is more convenient to scale the current estimation error by the stator inductance, resulting in the flux linkage error   
 
 .. math::
-	\boldsymbol{e} = \psi_\mathrm{f} + L_\mathrm{d} \mathrm{Re}\{ \boldsymbol{i}_\mathrm{s}\} + \mathrm{j} L_\mathrm{q} \mathrm{Im}\{\boldsymbol{i}_\mathrm{s} \} - \hat{\boldsymbol{\psi}}_\mathrm{s}
+	\boldsymbol{e} = \psi_\mathrm{f} + L_\mathrm{d} \mathrm{Re}\{ \boldsymbol{i}_\mathrm{s}\} + \mathrm{j} L_\mathrm{q} \mathrm{Im}\{\boldsymbol{i}_\mathrm{s} \} - \hat{\boldsymbol{\psi}}_\mathrm{s} 
     :label: e
 
-where :math:`\hat{\boldsymbol{\psi}}_\mathrm{s}` is the stator flux estimate. The flux linkage is estimated by
+where :math:`\hat{\boldsymbol{\psi}}_\mathrm{s}` is the stator flux estimate. The flux linkage is estimated by 
 
 .. math::
-    \frac{\mathrm{d} \hat{\boldsymbol{\psi}}_\mathrm{s}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{s}\hat{\boldsymbol{\psi}}_\mathrm{s} + \boldsymbol{k}_1 \boldsymbol{e} + \boldsymbol{k}_2 \boldsymbol{e}^*
+    \frac{\mathrm{d} \hat{\boldsymbol{\psi}}_\mathrm{s}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{s}\hat{\boldsymbol{\psi}}_\mathrm{s} + \boldsymbol{k}_1 \boldsymbol{e} + \boldsymbol{k}_2 \boldsymbol{e}^* 
     :label: sm_flux_observer
 
-where :math:`\boldsymbol{k}_1` and :math:`\boldsymbol{k}_2` are gains (complex in a general case), the estimates are marked with the hat, and :math:`^*` marks the complex conjugate.
+where :math:`\boldsymbol{k}_1` and :math:`\boldsymbol{k}_2` are gains (complex in a general case), the estimates are marked with the hat, and :math:`^*` marks the complex conjugate. 
 
 In the sensored mode, :math:`\omega_\mathrm{s} = \omega_\mathrm{m}` is used. In the sensorless mode, the speed-adaptive structure (which would correspond to the phase-locked loop if the observer were implemented in stator coordinates) can be used to estimate the rotor angle and speed, respectively, as
 
 .. math::
     \frac{\mathrm{d} \hat{\omega}_\mathrm{m}}{\mathrm{d} t} &= \mathrm{Im}\{\boldsymbol{k}_\mathrm{i} \boldsymbol{e}\} \\
-    \frac{\mathrm{d}\hat{\vartheta}_\mathrm{m}}{\mathrm{d} t} &= \hat{\omega}_\mathrm{m} + \mathrm{Im}\{\boldsymbol{k}_\mathrm{p} \boldsymbol{e}\} = \omega_\mathrm{s}
+    \frac{\mathrm{d}\hat{\vartheta}_\mathrm{m}}{\mathrm{d} t} &= \hat{\omega}_\mathrm{m} + \mathrm{Im}\{\boldsymbol{k}_\mathrm{p} \boldsymbol{e}\} = \omega_\mathrm{s}  
     :label: sm_speed_pos_observer
 
-where :math:`\boldsymbol{k}_\mathrm{i}` and :math:`\boldsymbol{k}_\mathrm{p}` are complex gains. This observer structure is used in the :class:`motulator.drive.control.sm.Observer` class.
+where :math:`\boldsymbol{k}_\mathrm{i}` and :math:`\boldsymbol{k}_\mathrm{p}` are complex gains. This observer structure is used in the :class:`motulator.drive.control.sm.Observer` class. 
 
 .. note::
     Real-valued column vectors and the corresponding :math:`2\times 2` gain matrix were used in [#Hin2018]_. The complex form in :eq:`sm_flux_observer` has the same degrees of freedom.
@@ -212,13 +212,13 @@ Gain Selection
 Sensored Case
 """""""""""""
 
-In the sensored case, the gain :math:`\boldsymbol{k}_2=0` can be set in :eq:`sm_flux_observer`. Furthermore, :math:`\delta=0` holds. Therefore, using :eq:`sm` and :eq:`sm_flux_observer`, the linearized estimation error dynamics become
+In the sensored case, the gain :math:`\boldsymbol{k}_2=0` can be set in :eq:`sm_flux_observer`. Furthermore, :math:`\delta=0` holds. Therefore, using :eq:`sm` and :eq:`sm_flux_observer`, the linearized estimation error dynamics become 
 
 .. math::
-    \frac{\mathrm{d} \Delta\tilde{\boldsymbol{\psi}}_\mathrm{s}}{\mathrm{d} t} = -(\boldsymbol{k}_1 + \mathrm{j}\omega_\mathrm{m0})\Delta\tilde{\boldsymbol{\psi}}_\mathrm{s}
+    \frac{\mathrm{d} \Delta\tilde{\boldsymbol{\psi}}_\mathrm{s}}{\mathrm{d} t} = -(\boldsymbol{k}_1 + \mathrm{j}\omega_\mathrm{m0})\Delta\tilde{\boldsymbol{\psi}}_\mathrm{s}  
     :label: dtildepsis_sensored
 
-where :math:`\tilde{\boldsymbol{\psi}}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s} - \hat{\boldsymbol{\psi}}_\mathrm{s}` is the estimation error, :math:`\Delta` marks the small-signal quantities, and the subscript 0 marks the operating-point quantities. It can be seen that the pole can be arbitrarily placed via the gain :math:`\boldsymbol{k}_1`. Well-damped estimation-error dynamics can be obtained simply by using a real gain, :math:`\boldsymbol{k}_1 = \sigma`, resulting in the pole at :math:`s = -\sigma - \mathrm{j}\omega_\mathrm{m0}`, where :math:`\sigma = 2\pi \cdot 15` rad/s is used as the default value in :class:`motulator.drive.control.sm.Observer`.
+where :math:`\tilde{\boldsymbol{\psi}}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s} - \hat{\boldsymbol{\psi}}_\mathrm{s}` is the estimation error, :math:`\Delta` marks the small-signal quantities, and the subscript 0 marks the operating-point quantities. It can be seen that the pole can be arbitrarily placed via the gain :math:`\boldsymbol{k}_1`. Well-damped estimation-error dynamics can be obtained simply by using a real gain, :math:`\boldsymbol{k}_1 = \sigma`, resulting in the pole at :math:`s = -\sigma - \mathrm{j}\omega_\mathrm{m0}`, where :math:`\sigma = 2\pi \cdot 15` rad/s is used as the default value in :class:`motulator.drive.control.sm.Observer`. 
 
 Sensorless Case
 """""""""""""""
@@ -239,7 +239,7 @@ where :math:`\sigma` is the desired decay rate of the flux estimation error and
 
 allows to decouple the flux-estimation error dynamics from the rotor-position dynamics. By default, the decay rate is scheduled as
 
-.. math::
+.. math:: 
     \sigma = \frac{R_\mathrm{s}}{4}\left(\frac{1}{L_\mathrm{d}} + \frac{1}{L_\mathrm{q}}\right) + \zeta_\infty |\hat{\omega}_\mathrm{m} |
     :label: sigma_sensorless
 
@@ -253,12 +253,12 @@ The gains of the speed adaptation in :eq:`sm_speed_pos_observer` are selected as
 
 where :math:`\alpha_\mathrm{o}` is the desired speed-estimation bandwidth. The choices :eq:`k1k2_sensorless` and :eq:`ki_kp_sensorless` result in the observer characteristic polynomial :math:`D(s) = (s^2 + 2\sigma s + \omega_\mathrm{m0}^2)(s + \alpha_\mathrm{o})^2`. Furthermore, it can also be shown that the resulting speed-estimation error dynamics are
 
-.. math::
+.. math:: 
     \frac{\Delta \hat{\omega}_\mathrm{m}(s)}{\Delta \omega_\mathrm{m}(s)} = \frac{\alpha_\mathrm{o}^2}{(s + \alpha_\mathrm{o})^2}
     :label: speed_est_dyn
 
-.. note::
-    The flux linkage :math:`\boldsymbol{\psi}_\mathrm{a}` is called the auxiliary flux linkage in [#Hin2018]_. It is also linked to the maximum-torque-per-ampere (MTPA) condition, which can be compactly expressed as :math:`\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\boldsymbol{\psi}_\mathrm{a}^*\}=0` [#Var2021]_.
+.. note:: 
+    The flux linkage :math:`\boldsymbol{\psi}_\mathrm{a}` is called the auxiliary flux linkage in [#Hin2018]_. It is also linked to the maximum-torque-per-ampere (MTPA) condition, which can be compactly expressed as :math:`\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\boldsymbol{\psi}_\mathrm{a}^*\}=0` [#Var2021]_. 
 
 .. rubric:: References
 

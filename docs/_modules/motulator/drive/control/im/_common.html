@@ -397,20 +397,20 @@ document.write(`
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s).</span>
 <span class="sd">    sensorless : bool</span>
-<span class="sd">        If True, sensorless mode is used.</span>
+<span class="sd">        If True, sensorless mode is used. </span>
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Observer bandwidth (rad/s). The default is 2*pi*40.</span>
 <span class="sd">    k_o : callable, optional</span>
-<span class="sd">        Observer gain as a function of the rotor angular speed. The default is</span>
+<span class="sd">        Observer gain as a function of the rotor angular speed. The default is </span>
 <span class="sd">        ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if</span>
 <span class="sd">        `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in</span>
-<span class="sd">    the marginally stable estimation-error dynamics. The current model is</span>
-<span class="sd">    obtained by setting ``k_o = lambda w_m: 1``.</span>
-
+<span class="sd">    The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in </span>
+<span class="sd">    the marginally stable estimation-error dynamics. The current model is </span>
+<span class="sd">    obtained by setting ``k_o = lambda w_m: 1``. </span>
+<span class="sd">            </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span>
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span>
@@ -439,10 +439,10 @@ document.write(`
 <span class="sd">    Reduced-order flux observer operating in estimated rotor flux coordinates.</span>
 
 <span class="sd">    This class implements a reduced-order flux observer for induction machines.</span>
-<span class="sd">    Both sensored and sensorless operation are supported. The observer</span>
-<span class="sd">    structure is similar to [#Hin2010]_. The observer operates in estimated</span>
-<span class="sd">    rotor flux coordinates.</span>
-
+<span class="sd">    Both sensored and sensorless operation are supported. The observer </span>
+<span class="sd">    structure is similar to [#Hin2010]_. The observer operates in estimated </span>
+<span class="sd">    rotor flux coordinates. </span>
+<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cfg : ObserverCfg</span>
@@ -450,9 +450,9 @@ document.write(`
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Hin2010] Hinkkanen, Harnefors, Luomi, &quot;Reduced-order flux observers</span>
-<span class="sd">       with stator-resistance adaptation for speed-sensorless induction motor</span>
-<span class="sd">       drives,&quot; IEEE Trans. Power Electron., 2010,</span>
+<span class="sd">    .. [#Hin2010] Hinkkanen, Harnefors, Luomi, &quot;Reduced-order flux observers </span>
+<span class="sd">       with stator-resistance adaptation for speed-sensorless induction motor </span>
+<span class="sd">       drives,&quot; IEEE Trans. Power Electron., 2010, </span>
 <span class="sd">       https://doi.org/10.1109/TPEL.2009.2039650</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -466,7 +466,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_work</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">d_psi_R</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">d_w_m</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">old_i_s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Observer.output"><a class="viewcode-back" href="../../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.Observer.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;         </span>
 <span class="sd">        Compute the feedback signals for the control system.</span>
 
 <span class="sd">        Parameters</span>
@@ -479,13 +479,13 @@ document.write(`
 <span class="sd">                i_ss : complex</span>
 <span class="sd">                    Stator current (A) in stator coordinates.</span>
 <span class="sd">                w_m : float, optional</span>
-<span class="sd">                    Rotor angular speed (electrical rad/s). This signal is only</span>
+<span class="sd">                    Rotor angular speed (electrical rad/s). This signal is only </span>
 <span class="sd">                    needed in the sensored mode.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        fbk : SimpleNamespace</span>
-<span class="sd">            Measured and estimated feedback signals for the control system,</span>
+<span class="sd">            Measured and estimated feedback signals for the control system, </span>
 <span class="sd">            containing at least the following fields:</span>
 
 <span class="sd">                u_s : complex</span>
@@ -504,7 +504,7 @@ document.write(`
 <span class="sd">                    Slip angular frequency (rad/s).</span>
 <span class="sd">                psi_s : complex</span>
 <span class="sd">                    Stator flux estimate (Vs).</span>
-
+<span class="sd"> </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Unpack</span>
         <span class="n">par</span><span class="p">,</span> <span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain</span>
@@ -591,10 +591,10 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Full-order flux observer operating in estimated rotor flux coordinates.</span>
 
-<span class="sd">    This class implements a full-order flux observer for induction machines.</span>
-<span class="sd">    The observer structure is similar to [#Tii2023]_. The observer operates in</span>
-<span class="sd">    estimated rotor flux coordinates.</span>
-
+<span class="sd">    This class implements a full-order flux observer for induction machines. </span>
+<span class="sd">    The observer structure is similar to [#Tii2023]_. The observer operates in </span>
+<span class="sd">    estimated rotor flux coordinates. </span>
+<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cfg : ObserverCfg</span>
@@ -602,8 +602,8 @@ document.write(`
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, &quot;Speed-adaptive full-order</span>
-<span class="sd">       observer revisited: Closed-form design for induction motor drives,&quot;</span>
+<span class="sd">    .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, &quot;Speed-adaptive full-order </span>
+<span class="sd">       observer revisited: Closed-form design for induction motor drives,&quot; </span>
 <span class="sd">       Proc. IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>

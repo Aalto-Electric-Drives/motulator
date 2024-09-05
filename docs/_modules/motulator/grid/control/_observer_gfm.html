@@ -431,8 +431,8 @@ document.write(`
 <div class="viewcode-block" id="ObserverBasedGridFormingControl"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl">[docs]</a><span class="k">class</span> <span class="nc">ObserverBasedGridFormingControl</span><span class="p">(</span><span class="n">GridConverterControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Disturbance-observer-based grid-forming control.</span>
-
-<span class="sd">    This implements the RFPSC-type grid-forming mode of the control method</span>
+<span class="sd">    </span>
+<span class="sd">    This implements the RFPSC-type grid-forming mode of the control method </span>
 <span class="sd">    described in [#Nur2024]_. Transparent current control is also implemented.</span>
 
 <span class="sd">    Parameters</span>
@@ -442,11 +442,11 @@ document.write(`
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    In this implementation, the control system operates in synchronous</span>
+<span class="sd">    In this implementation, the control system operates in synchronous </span>
 <span class="sd">    coordinates rotating at the nominal grid angular frequency, which is worth</span>
 <span class="sd">    noticing when plotting the results. For other implementation options, see</span>
-<span class="sd">    [#Nur2024]_.</span>
-
+<span class="sd">    [#Nur2024]_. </span>
+<span class="sd">    </span>
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, &quot;Multifunctional</span>
@@ -515,9 +515,9 @@ document.write(`
 <span class="k">class</span> <span class="nc">DisturbanceObserver</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Disturbance observer.</span>
-
+<span class="sd">    </span>
 <span class="sd">    This implements a disturbance observer, which estimates the quasi-static</span>
-<span class="sd">    converter output voltage. Coordinates rotating at the nominal grid angular</span>
+<span class="sd">    converter output voltage. Coordinates rotating at the nominal grid angular </span>
 <span class="sd">    frequency are used.</span>
 
 <span class="sd">    Parameters</span>
@@ -530,7 +530,7 @@ document.write(`
 <span class="sd">        Observer gain (rad/s).</span>
 <span class="sd">    v_c0 : float</span>
 <span class="sd">        Initial value of converter voltage state (V).</span>
-
+<span class="sd">      </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_g</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">alpha_o</span><span class="p">,</span> <span class="n">v_c0</span><span class="p">):</span>

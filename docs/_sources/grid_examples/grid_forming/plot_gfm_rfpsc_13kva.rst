@@ -20,9 +20,9 @@
 
 12.5-kVA converter, RFPSC
 =========================
-
-This example simulates reference-feedforward power-synchronization control
-(RFPSC) of a converter connected to a weak grid.
+    
+This example simulates reference-feedforward power-synchronization control 
+(RFPSC) of a converter connected to a weak grid. 
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-15
 
@@ -188,7 +188,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.958 seconds)
+   **Total running time of the script:** (0 minutes 8.175 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_rfpsc_13kva.py:

@@ -389,33 +389,33 @@ document.write(`
 <span class="sd">    Duty ratios and realized voltage for three-phase space-vector PWM.</span>
 
 <span class="sd">    This computes the duty ratios corresponding to standard space-vector PWM</span>
-<span class="sd">    and overmodulation [#Hav1999]_. The realized voltage is computed based on</span>
-<span class="sd">    the measured DC-bus voltage and the duty ratios. The digital delay effects</span>
+<span class="sd">    and overmodulation [#Hav1999]_. The realized voltage is computed based on </span>
+<span class="sd">    the measured DC-bus voltage and the duty ratios. The digital delay effects </span>
 <span class="sd">    are taken into account in the realized voltage [#Bae2003]_.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    k_comp : float, optional</span>
-<span class="sd">        Compensation factor for the delay effect on the voltage vector angle.</span>
+<span class="sd">        Compensation factor for the delay effect on the voltage vector angle. </span>
 <span class="sd">        The default is 1.5.</span>
 <span class="sd">    u_cs0 : float, optional</span>
-<span class="sd">        Initial voltage (V) in stationary coordinates. This is used to compute</span>
+<span class="sd">        Initial voltage (V) in stationary coordinates. This is used to compute </span>
 <span class="sd">        the realized voltage. The default is 0.</span>
 <span class="sd">    overmodulation : str, optional</span>
 <span class="sd">        Select one of the following overmodulation methods: minimum-magnitude-</span>
-<span class="sd">        error (&quot;MME&quot;); minimum-phase-error (&quot;MPE&quot;); six-step (&quot;six_step&quot;). The</span>
+<span class="sd">        error (&quot;MME&quot;); minimum-phase-error (&quot;MPE&quot;); six-step (&quot;six_step&quot;). The </span>
 <span class="sd">        default is &quot;MME&quot;.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Hav1999] Hava, Sul, Kerkman, Lipo, &quot;Dynamic overmodulation</span>
+<span class="sd">    .. [#Hav1999] Hava, Sul, Kerkman, Lipo, &quot;Dynamic overmodulation </span>
 <span class="sd">       characteristics of triangle intersection PWM methods,&quot; IEEE Trans. Ind.</span>
 <span class="sd">       Appl., 1999, https://doi.org/10.1109/28.777199</span>
-
-<span class="sd">    .. [#Bae2003] Bae, Sul, &quot;A compensation method for time delay of</span>
+<span class="sd">    </span>
+<span class="sd">    .. [#Bae2003] Bae, Sul, &quot;A compensation method for time delay of </span>
 <span class="sd">       full-digital synchronous frame current regulator of PWM AC drives,&quot; IEEE</span>
 <span class="sd">       Trans. Ind. Appl., 2003, https://doi.org/10.1109/TIA.2003.810660</span>
-
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k_comp</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">u_cs0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">overmodulation</span><span class="o">=</span><span class="s2">&quot;MME&quot;</span><span class="p">):</span>
@@ -430,7 +430,7 @@ document.write(`
 <span class="sd">        Overmodulation up to six-step operation.</span>
 
 <span class="sd">        This method modifies the angle of the voltage reference vector in the</span>
-<span class="sd">        overmodulation region such that the six-step operation is reached</span>
+<span class="sd">        overmodulation region such that the six-step operation is reached </span>
 <span class="sd">        [#Bol1997]_.</span>
 
 <span class="sd">        Parameters</span>
@@ -447,8 +447,8 @@ document.write(`
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
-<span class="sd">        .. [#Bol1997] Bolognani, Zigliotto, &quot;Novel digital continuous control</span>
-<span class="sd">           of SVM inverters in the overmodulation range,&quot; IEEE Trans. Ind.</span>
+<span class="sd">        .. [#Bol1997] Bolognani, Zigliotto, &quot;Novel digital continuous control </span>
+<span class="sd">           of SVM inverters in the overmodulation range,&quot; IEEE Trans. Ind. </span>
 <span class="sd">           Appl., 1997, https://doi.org/10.1109/28.568019</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -535,7 +535,7 @@ document.write(`
 <span class="sd">            Duty ratios for the next sampling period.</span>
 <span class="sd">        u_cs : complex</span>
 <span class="sd">            Limited voltage reference (V) in stationary coordinates.</span>
-
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Advance the angle due to the computational delay (N*T_s) and the ZOH</span>
         <span class="c1"># (PWM) delay (0.5*T_s), typically 1.5*T_s*w</span>
@@ -557,13 +557,13 @@ document.write(`
 <div class="viewcode-block" id="PWM.get_realized_voltage"><a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.PWM.get_realized_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">get_realized_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the realized voltage.</span>
-
+<span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        realized_voltage : complex</span>
-<span class="sd">            Realized converter voltage (V) in stationary coordinates. The</span>
+<span class="sd">            Realized converter voltage (V) in stationary coordinates. The </span>
 <span class="sd">            effect of the digital delays on the angle are compensated for.</span>
-
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span></div>
 
@@ -590,15 +590,15 @@ document.write(`
 <span class="sd">        u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y) + u_ff</span>
 
 <span class="sd">    where `u` is the controller output, `y_ref` is the reference signal, `y` is</span>
-<span class="sd">    the feedback signal, `u_ff` is the feedforward signal, and `1/s` refers to</span>
-<span class="sd">    integration. The standard PI controller is obtained by choosing</span>
-<span class="sd">    ``k_t = k_p``. The integrator anti-windup is implemented based on the</span>
+<span class="sd">    the feedback signal, `u_ff` is the feedforward signal, and `1/s` refers to </span>
+<span class="sd">    integration. The standard PI controller is obtained by choosing </span>
+<span class="sd">    ``k_t = k_p``. The integrator anti-windup is implemented based on the </span>
 <span class="sd">    realized controller output.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This controller can be used, e.g., as a speed controller. In this case, `y`</span>
-<span class="sd">    corresponds to the rotor angular speed `w_M` and `u` to the torque</span>
+<span class="sd">    This controller can be used, e.g., as a speed controller. In this case, `y` </span>
+<span class="sd">    corresponds to the rotor angular speed `w_M` and `u` to the torque </span>
 <span class="sd">    reference `ref_tau_M`.</span>
 
 <span class="sd">    Parameters</span>
@@ -662,7 +662,7 @@ document.write(`
 <span class="sd">        T_s : float</span>
 <span class="sd">            Sampling period (s).</span>
 <span class="sd">        u : float</span>
-<span class="sd">            Realized (limited) controller output.</span>
+<span class="sd">            Realized (limited) controller output. </span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">+=</span> <span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_i</span><span class="o">*</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">)</span></div></div>
@@ -674,15 +674,15 @@ document.write(`
 <span class="sd">    2DOF synchronous-frame complex-vector PI controller.</span>
 
 <span class="sd">    This implements a discrete-time 2DOF synchronous-frame complex-vector PI</span>
-<span class="sd">    controller [#Bri2000]_. The continuous-time counterpart of the controller</span>
+<span class="sd">    controller [#Bri2000]_. The continuous-time counterpart of the controller </span>
 <span class="sd">    is::</span>
 
 <span class="sd">        u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i) + u_ff</span>
 
 <span class="sd">    where `u` is the controller output, `ref_i` is the reference signal, `i` is</span>
-<span class="sd">    the feedback signal, `w` is the angular speed of synchronous coordinates,</span>
-<span class="sd">    `u_ff` is the feedforward signal, and `1/s` refers to integration. The 1DOF</span>
-<span class="sd">    version is obtained by setting ``k_t = k_p``. The integrator anti-windup is</span>
+<span class="sd">    the feedback signal, `w` is the angular speed of synchronous coordinates, </span>
+<span class="sd">    `u_ff` is the feedforward signal, and `1/s` refers to integration. The 1DOF </span>
+<span class="sd">    version is obtained by setting ``k_t = k_p``. The integrator anti-windup is </span>
 <span class="sd">    implemented based on the realized controller output.</span>
 
 <span class="sd">    Parameters</span>
@@ -836,9 +836,9 @@ document.write(`
 <div class="viewcode-block" id="ControlSystem"><a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem">[docs]</a><span class="k">class</span> <span class="nc">ControlSystem</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for control systems.</span>
-
+<span class="sd">    </span>
 <span class="sd">    This base class provides typical functionalities for control systems. It</span>
-<span class="sd">    can be used as a template for implementing custom controllers. An instance</span>
+<span class="sd">    can be used as a template for implementing custom controllers. An instance </span>
 <span class="sd">    of this class can be called as a function. When called, it runs the main</span>
 <span class="sd">    control loop.</span>
 
@@ -853,7 +853,7 @@ document.write(`
 <span class="sd">        Digital clock.</span>
 <span class="sd">    data : SimpleNamespace</span>
 <span class="sd">        Saved simulation data.</span>
-<span class="sd">    pwm : PWM</span>
+<span class="sd">    pwm : PWM   </span>
 <span class="sd">        Pulse-width modulator.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -879,7 +879,7 @@ document.write(`
 <span class="sd">        -------</span>
 <span class="sd">        fbk : SimpleNamespace</span>
 <span class="sd">            Feedback signals.</span>
-
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
 
@@ -904,7 +904,7 @@ document.write(`
 <span class="sd">                    Next sampling period (s).</span>
 <span class="sd">                d_abc : ndarray, shape (3,)</span>
 <span class="sd">                    Duty ratios.</span>
-
+<span class="sd">                    </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">t</span>
@@ -916,14 +916,14 @@ document.write(`
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the states.</span>
-
+<span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fbk : SimpleNamespace</span>
 <span class="sd">            Feedback signals.</span>
 <span class="sd">        ref : SimpleNamespace</span>
 <span class="sd">            Reference signals.</span>
-
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span></div>
@@ -932,9 +932,9 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the data of the control system.</span>
 
-<span class="sd">        Each keyword represents a data category, and its value (a</span>
+<span class="sd">        Each keyword represents a data category, and its value (a </span>
 <span class="sd">        SimpleNamespace) contains the data for that category.</span>
-
+<span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        **kwargs : SimpleNamespace</span>
@@ -971,7 +971,7 @@ document.write(`
 
 <span class="sd">        This method runs the main control loop, having the following structure:</span>
 
-<span class="sd">        1. Get the feedback signals. This step may contain first getting the</span>
+<span class="sd">        1. Get the feedback signals. This step may contain first getting the </span>
 <span class="sd">           measurements and then optionally computing the observer outputs.</span>
 <span class="sd">        2. Compute the reference signals (controller outputs) based on the</span>
 <span class="sd">           feedback signals.</span>
@@ -979,7 +979,7 @@ document.write(`
 <span class="sd">        4. Save the feedback signals and the reference signals.</span>
 <span class="sd">        5. Return the sampling period `T_s` and the duty ratios `d_abc` for the</span>
 <span class="sd">           carrier comparison.</span>
-
+<span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        mdl : Model</span>

@@ -2,7 +2,7 @@
 6.7-kW SyRM
 ===========
 
-This example simulates sensorless current-vector control of a 6.7-kW SyRM
+This example simulates sensorless current-vector control of a 6.7-kW SyRM 
 drive.
 
 """

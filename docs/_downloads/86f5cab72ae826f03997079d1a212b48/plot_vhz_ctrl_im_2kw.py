@@ -3,7 +3,7 @@
 ====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters in this example yield open-loop V/Hz control.
+parameters in this example yield open-loop V/Hz control. 
 
 """
 # %%
