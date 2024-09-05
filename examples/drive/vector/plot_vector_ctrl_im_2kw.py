@@ -2,9 +2,9 @@
 2.2-kW induction motor, saturated
 =================================
 
-This example simulates sensorless current-vector control of a 2.2-kW induction
-motor drive. The magnetic saturation of the machine is also included in the
-system model, while the control system assumes constant parameters.
+This example simulates sensorless current-vector control of a 2.2-kW induction 
+motor drive. The magnetic saturation of the machine is also included in the 
+system model, while the control system assumes constant parameters. 
 
 """
 # %%

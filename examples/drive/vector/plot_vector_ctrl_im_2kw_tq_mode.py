@@ -3,7 +3,7 @@
 ===========================================
 
 This example simulates current-vector control of a 2.2-kW induction motor drive
-in torque-control mode.
+in torque-control mode. 
 
 """
 # %%

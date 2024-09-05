@@ -2,9 +2,6 @@ name: Check docs on pull request
 
 on: [pull_request]
 
-permissions:
-  contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest # Easy to use GitHub hosted runner, self hosted runner would require manual configurations
@@ -20,3 +17,4 @@ jobs:
       with:
         name: DocumentationHTML
         path: docs/_build
+

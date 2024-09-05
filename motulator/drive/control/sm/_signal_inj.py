@@ -14,19 +14,19 @@ class SignalInjectionControl(DriveControlSystem):
     """
     Sensorless control with signal injection for synchronous machine drives.
 
-    This class implements a square-wave signal injection for low-speed
-    operation according to [#Kim2012]_. A phase-locked loop is used to track
-    the rotor position.
-
+    This class implements a square-wave signal injection for low-speed 
+    operation according to [#Kim2012]_. A phase-locked loop is used to track 
+    the rotor position. 
+    
     Notes
     -----
-    For a wider speed range, signal injection could be combined to a
+    For a wider speed range, signal injection could be combined to a 
     model-based observer. The effects of magnetic saturation are not
     compensated for in this version.
 
     References
     ----------
-    .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection
+    .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection 
        sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012,
        https://doi.org/10.1109/TIA.2012.2210175
 
@@ -103,8 +103,8 @@ class SignalInjection:
     Estimate the rotor position error based on signal injection.
 
     This signal-injection method estimates the rotor position error based on
-    the injected switching frequency signal. The estimate can be used in a
-    phase-locked loop or in a state observer to robustify low-speed sensorless
+    the injected switching frequency signal. The estimate can be used in a 
+    phase-locked loop or in a state observer to robustify low-speed sensorless 
     operation.
 
     Parameters

@@ -20,18 +20,18 @@ class ObserverCfg:
     par : SynchronousMachinePars
         Machine model parameters.
     sensorless : bool
-        If True, sensorless mode is used.
+        If True, sensorless mode is used. 
     alpha_o : float, optional
         Observer bandwidth (rad/s). The default is 2*pi*40.
     k_o : callable, optional
-        Observer gain as a function of the rotor angular speed. The default is
+        Observer gain as a function of the rotor angular speed. The default is 
         ``lambda w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if
         `sensorless` else ``lambda w_m: 2*pi*15``.
     k_f : callable, optional
-        PM-flux estimation gain (V) as a function of the rotor angular speed.
-        The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of
-        the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below
-        the speed `w_min` (rad/s) and linearly increasing above that with the
+        PM-flux estimation gain (V) as a function of the rotor angular speed. 
+        The default is zero, ``lambda w_m: 0``. A typical nonzero gain is of 
+        the form ``lambda w_m: max(k*(abs(w_m) - w_min), 0)``, i.e., zero below 
+        the speed `w_min` (rad/s) and linearly increasing above that with the 
         slope `k` (Vs).
 
     """
@@ -62,11 +62,11 @@ class Observer:
     """
     Observer for synchronous machines in estimated rotor coordinates.
 
-    This observer estimates the stator flux linkage, the rotor angle, the rotor
-    speed, and (optionally) the PM-flux linkage. The design is based on
-    [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and
-    mechanical dynamics and allows placing the poles of the corresponding
-    linearized estimation error dynamics. The PM-flux linkage can also be
+    This observer estimates the stator flux linkage, the rotor angle, the rotor 
+    speed, and (optionally) the PM-flux linkage. The design is based on 
+    [#Hin2018]_ and [#Tuo2018]. The observer gain decouples the electrical and 
+    mechanical dynamics and allows placing the poles of the corresponding 
+    linearized estimation error dynamics. The PM-flux linkage can also be 
     estimated [#Tuo2018]_. The observer can also be used in the sensored mode,
     in which case the control system is fixed to the measured rotor angle.
 
@@ -74,7 +74,7 @@ class Observer:
     ----------
     cfg : ObserverCfg
         Observer configuration.
-
+            
     References
     ----------
     .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
@@ -82,7 +82,7 @@ class Observer:
        IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
 
     .. [#Tuo2018] Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, "Permanent-
-       magnet flux adaptation for sensorless synchronous motor drives," Proc.
+       magnet flux adaptation for sensorless synchronous motor drives," Proc. 
        IEEE SLED, 2018, https://doi.org/10.1109/SLED.2018.8485899
 
     """
@@ -110,16 +110,16 @@ class Observer:
                 i_ss : complex
                     Stator current (A) in stator coordinates.
                 w_m : float, optional
-                    Rotor angular speed (electrical rad/s). This is only needed
+                    Rotor angular speed (electrical rad/s). This is only needed 
                     in the sensored mode.
                 theta_m : float, optional
-                    Rotor angle (electrical rad). This is only needed in the
+                    Rotor angle (electrical rad). This is only needed in the 
                     sensored mode.
 
         Returns
         -------
         fbk : SimpleNamespace
-            Measured and estimated feedback signals for the control system,
+            Measured and estimated feedback signals for the control system, 
             containing at least the following fields:
 
                 u_s : complex
@@ -127,7 +127,7 @@ class Observer:
                 i_s : complex
                     Stator current (A) in estimated rotor coordinates.
                 psi_f : float
-                    PM-flux magnitude estimate (Vs).
+                    PM-flux magnitude estimate (Vs). 
                 theta_m : float
                     Rotor angle estimate (electrical rad).
                 w_s : float

@@ -22,20 +22,20 @@ class ObserverCfg:
     T_s : float
         Sampling period (s).
     sensorless : bool
-        If True, sensorless mode is used.
+        If True, sensorless mode is used. 
     alpha_o : float, optional
         Observer bandwidth (rad/s). The default is 2*pi*40.
     k_o : callable, optional
-        Observer gain as a function of the rotor angular speed. The default is
+        Observer gain as a function of the rotor angular speed. The default is 
         ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)`` if
         `sensorless` else ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
 
     Notes
     -----
-    The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in
-    the marginally stable estimation-error dynamics. The current model is
-    obtained by setting ``k_o = lambda w_m: 1``.
-
+    The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in 
+    the marginally stable estimation-error dynamics. The current model is 
+    obtained by setting ``k_o = lambda w_m: 1``. 
+            
     """
     par: InductionMachineInvGammaPars
     T_s: float
@@ -64,10 +64,10 @@ class Observer:
     Reduced-order flux observer operating in estimated rotor flux coordinates.
 
     This class implements a reduced-order flux observer for induction machines.
-    Both sensored and sensorless operation are supported. The observer
-    structure is similar to [#Hin2010]_. The observer operates in estimated
-    rotor flux coordinates.
-
+    Both sensored and sensorless operation are supported. The observer 
+    structure is similar to [#Hin2010]_. The observer operates in estimated 
+    rotor flux coordinates. 
+    
     Parameters
     ----------
     cfg : ObserverCfg
@@ -75,9 +75,9 @@ class Observer:
 
     References
     ----------
-    .. [#Hin2010] Hinkkanen, Harnefors, Luomi, "Reduced-order flux observers
-       with stator-resistance adaptation for speed-sensorless induction motor
-       drives," IEEE Trans. Power Electron., 2010,
+    .. [#Hin2010] Hinkkanen, Harnefors, Luomi, "Reduced-order flux observers 
+       with stator-resistance adaptation for speed-sensorless induction motor 
+       drives," IEEE Trans. Power Electron., 2010, 
        https://doi.org/10.1109/TPEL.2009.2039650
 
     """
@@ -91,7 +91,7 @@ class Observer:
         self._work = SimpleNamespace(d_psi_R=0, d_w_m=0, old_i_s=0)
 
     def output(self, fbk):
-        """
+        """         
         Compute the feedback signals for the control system.
 
         Parameters
@@ -104,13 +104,13 @@ class Observer:
                 i_ss : complex
                     Stator current (A) in stator coordinates.
                 w_m : float, optional
-                    Rotor angular speed (electrical rad/s). This signal is only
+                    Rotor angular speed (electrical rad/s). This signal is only 
                     needed in the sensored mode.
 
         Returns
         -------
         fbk : SimpleNamespace
-            Measured and estimated feedback signals for the control system,
+            Measured and estimated feedback signals for the control system, 
             containing at least the following fields:
 
                 u_s : complex
@@ -129,7 +129,7 @@ class Observer:
                     Slip angular frequency (rad/s).
                 psi_s : complex
                     Stator flux estimate (Vs).
-
+ 
         """
         # Unpack
         par, gain = self.par, self.gain
@@ -216,10 +216,10 @@ class FullOrderObserver:
     """
     Full-order flux observer operating in estimated rotor flux coordinates.
 
-    This class implements a full-order flux observer for induction machines.
-    The observer structure is similar to [#Tii2023]_. The observer operates in
-    estimated rotor flux coordinates.
-
+    This class implements a full-order flux observer for induction machines. 
+    The observer structure is similar to [#Tii2023]_. The observer operates in 
+    estimated rotor flux coordinates. 
+    
     Parameters
     ----------
     cfg : ObserverCfg
@@ -227,8 +227,8 @@ class FullOrderObserver:
 
     References
     ----------
-    .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, "Speed-adaptive full-order
-       observer revisited: Closed-form design for induction motor drives,"
+    .. [#Tii2023] Tiitinen, Hinkkanen, Harnefors, "Speed-adaptive full-order 
+       observer revisited: Closed-form design for induction motor drives," 
        Proc. IEEE SLED, 2023, https://doi.org/10.1109/SLED57582.2023.10261359
 
     """

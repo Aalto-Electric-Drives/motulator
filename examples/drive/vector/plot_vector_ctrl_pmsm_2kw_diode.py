@@ -2,8 +2,8 @@
 2.2-kW PMSM, diode bridge
 =========================
 
-This example simulates sensorless current-vector control of a 2.2-kW PMSM
-drive, equipped with a diode bridge rectifier.
+This example simulates sensorless current-vector control of a 2.2-kW PMSM 
+drive, equipped with a diode bridge rectifier. 
 
 """
 # %%

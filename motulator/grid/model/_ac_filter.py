@@ -1,8 +1,8 @@
 """
 AC filter and grid impedance models.
 
-This module contains continuous-time models for subsystems comprising an AC
-filter and a grid impedance between the converter and grid voltage sources. The
+This module contains continuous-time models for subsystems comprising an AC 
+filter and a grid impedance between the converter and grid voltage sources. The 
 models are implemented with space vectors in stationary coordinates.
 
 """
@@ -56,9 +56,9 @@ class LFilter(ACFilter):
     """
     Model of an L filter and an inductive-resistive grid.
 
-    An L filter and an inductive-resistive grid, between the converter and grid
-    voltage sources, are modeled combining their inductances and series
-    resistances. The point-of-common-coupling (PCC) voltage between the L
+    An L filter and an inductive-resistive grid, between the converter and grid 
+    voltage sources, are modeled combining their inductances and series 
+    resistances. The point-of-common-coupling (PCC) voltage between the L 
     filter and the grid impedance is calculated.
 
     Parameters
@@ -73,7 +73,7 @@ class LFilter(ACFilter):
             L_g : float
                 Grid inductance (H).
             R_g : float, optional
-                Series resistance (Ω).
+                Series resistance (Ω). 
 
     """
 
@@ -137,9 +137,9 @@ class LCLFilter(ACFilter):
     """
     Model of an LCL filter and an inductive-resistive grid.
 
-    An LCL filter and an inductive-resistive grid impedance, between the
+    An LCL filter and an inductive-resistive grid impedance, between the 
     converter and grid voltage sources, are modeled. The point-of-common-
-    coupling (PCC) voltage between the LCL filter and the grid impedance is
+    coupling (PCC) voltage between the LCL filter and the grid impedance is 
     also calculated.
 
     Parameters
