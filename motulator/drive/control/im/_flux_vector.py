@@ -50,7 +50,7 @@ class FluxVectorControl(DriveControlSystem):
     alpha_o : float, optional
         Observer bandwidth (rad/s). The default is 2*pi*40.
     J : float, optional
-        Moment of inertia (kgm²). Needed only for the speed controller. 
+        Moment of inertia (kgm²). Needed only for the speed controller.
     T_s : float
         Sampling period (s). The default is 250e-6.
     sensorless : bool, optional

@@ -62,8 +62,8 @@ class ObserverBasedVHzControl(DriveControlSystem):
 
     References
     ----------
-    .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors, 
-       "Stable and passive observer-based V/Hz control for synchronous Motors," 
+    .. [#Tii2022] Tiitinen, Hinkkanen, Kukkola, Routimo, Pellegrino, Harnefors,
+       "Stable and passive observer-based V/Hz control for synchronous Motors,"
        Proc. IEEE ECCE, 2022, https://doi.org/10.1109/ECCE50734.2022.9947858
 
     """
@@ -124,12 +124,12 @@ class FluxObserver:
     """
     Sensorless stator flux observer in external coordinates.
 
-    This observer estimates the stator flux linkage and the angle of the 
-    coordinate system with respect to the d-axis of the rotor. Speed-estimation 
-    is omitted. The observer gain decouples the electrical and mechanical 
-    dynamics and allows placing the poles of the corresponding linearized 
-    estimation error dynamics. This implementation operates in external 
-    coordinates (typically synchronous coordinates defined by reference signals 
+    This observer estimates the stator flux linkage and the angle of the
+    coordinate system with respect to the d-axis of the rotor. Speed-estimation
+    is omitted. The observer gain decouples the electrical and mechanical
+    dynamics and allows placing the poles of the corresponding linearized
+    estimation error dynamics. This implementation operates in external
+    coordinates (typically synchronous coordinates defined by reference signals
     of a control system).
 
     Parameters
@@ -140,7 +140,7 @@ class FluxObserver:
         Observer gain (rad/s). The default is 2*pi*20.
     zeta_inf : float, optional
         Damping ratio at infinite speed. The default is 0.2.
-  
+
     """
 
     def __init__(self, par, alpha_o=2*np.pi*20, zeta_inf=.2):

@@ -1,15 +1,15 @@
 """
 Torque characteristics for synchronous machines.
 
-This contains computation and plotting of torque characteristics for 
-synchronous machines, including the MTPA and MTPV loci [#Mor1990]_. The methods 
-can be used to define look-up tables for control and to analyze the 
+This contains computation and plotting of torque characteristics for
+synchronous machines, including the MTPA and MTPV loci [#Mor1990]_. The methods
+can be used to define look-up tables for control and to analyze the
 characteristics. This implementation omits the magnetic saturation.
 
 References
 ----------
-.. [#Mor1990] Morimoto, Takeda, Hirasa, Taniguchi, "Expansion of operating 
-   limits for permanent magnet motor by current vector control considering 
+.. [#Mor1990] Morimoto, Takeda, Hirasa, Taniguchi, "Expansion of operating
+   limits for permanent magnet motor by current vector control considering
    inverter capacity," IEEE Trans. Ind. Appl., 1990,
    https://doi.org/10.1109/28.60058
 
@@ -234,7 +234,7 @@ class TorqueCharacteristics:
         Parameters
         ----------
         max_i_s : float
-            Maximum stator current magnitude (A) at which the locus is 
+            Maximum stator current magnitude (A) at which the locus is
             computed.
         min_psi_s : float, optional
             Minimum stator flux magnitude (Vs) at which the locus is computed.
@@ -297,10 +297,10 @@ class TorqueCharacteristics:
         Parameters
         ----------
         max_psi_s : float, optional
-            Maximum stator flux magnitude (Vs) at which the locus is computed. 
+            Maximum stator flux magnitude (Vs) at which the locus is computed.
             Either `max_psi_s` or `max_i_s` must be given.
         max_i_s : float, optional
-            Maximum stator current magnitude (A) at which the locus is 
+            Maximum stator current magnitude (A) at which the locus is
             computed.
         N : int, optional
             Amount of points. The default is 20.
@@ -350,7 +350,7 @@ class TorqueCharacteristics:
         Parameters
         ----------
         max_i_s : float
-            Current limit (A). 
+            Current limit (A).
         gamma1 : float, optional
             Starting angle (electrical rad). The default is 0.
         gamma2 : float, optional

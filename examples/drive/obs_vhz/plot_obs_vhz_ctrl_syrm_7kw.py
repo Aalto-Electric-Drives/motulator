@@ -3,7 +3,7 @@
 ======================
 
 This example simulates observer-based V/Hz control of a saturated 6.7-kW
-synchronous reluctance motor drive. The saturation is not taken into account in 
+synchronous reluctance motor drive. The saturation is not taken into account in
 the control method (only in the system model).
 
 """
@@ -49,7 +49,7 @@ def i_s(psi_s):
 
     Notes
     -----
-    For nonzero `i_f`, the initial value of the stator flux linkage `psi_s0` 
+    For nonzero `i_f`, the initial value of the stator flux linkage `psi_s0`
     needs to be solved, e.g., as follows::
 
     from scipy.optimize import minimize_scalar

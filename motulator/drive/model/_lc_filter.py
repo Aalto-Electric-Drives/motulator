@@ -1,7 +1,7 @@
 """
 Continuous-time model for an output LC filter.
 
-The space vector model is implemented in stator coordinates. 
+The space vector model is implemented in stator coordinates.
 
 """
 from types import SimpleNamespace
