@@ -2,12 +2,12 @@
 5.5-kW PM-SyRM, saturated
 =========================
 
-This example simulates sensorless stator-flux-vector control of a 5.5-kW
-PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using
-the algebraic saturation model from [#Lel2024]_, fitted to the flux linkage
-maps measured using the constant-speed test. For comparison, the measured data
-is plotted together with the model predictions. Notice that the control system
-used in this example does not consider the saturation, only the system model
+This example simulates sensorless stator-flux-vector control of a 5.5-kW 
+PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using 
+the algebraic saturation model from [#Lel2024]_, fitted to the flux linkage 
+maps measured using the constant-speed test. For comparison, the measured data 
+is plotted together with the model predictions. Notice that the control system 
+used in this example does not consider the saturation, only the system model 
 does.
 
 """
@@ -41,11 +41,11 @@ base = BaseValues.from_nominal(nom, n_p=2)
 def i_s(psi_s):
     """
     Saturation model for a 5.5-kW PM-SyRM.
-
-    This model takes into account the bridge saturation in addition to the
-    regular self- and cross-saturation effects of the d- and q-axis. The bridge
-    saturation model is based on a nonlinear reluctance element in parallel
-    with the Norton-equivalent PM model.
+    
+    This model takes into account the bridge saturation in addition to the 
+    regular self- and cross-saturation effects of the d- and q-axis. The bridge 
+    saturation model is based on a nonlinear reluctance element in parallel 
+    with the Norton-equivalent PM model. 
 
     Parameters
     ----------
@@ -59,9 +59,9 @@ def i_s(psi_s):
 
     Notes
     -----
-    For simplicity, the saturation model parameters are hard-coded in the
-    function below. This model can also be used for other PM-SyRMs by changing
-    the model parameters.
+    For simplicity, the saturation model parameters are hard-coded in the 
+    function below. This model can also be used for other PM-SyRMs by changing 
+    the model parameters.  
 
     """
     # d-axis self-saturation

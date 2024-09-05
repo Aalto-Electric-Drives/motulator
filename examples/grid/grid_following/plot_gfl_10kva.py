@@ -1,9 +1,9 @@
 """
 10-kVA converter
 ================
-
+    
 This example simulates a grid-following-controlled converter connected to an L
-filter and a strong grid. The control system includes a phase-locked loop (PLL)
+filter and a strong grid. The control system includes a phase-locked loop (PLL) 
 to synchronize with the grid, a current reference generator, and a PI-based
 current controller.
 

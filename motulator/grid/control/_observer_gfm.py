@@ -56,8 +56,8 @@ class ObserverBasedGridFormingControlCfg:
 class ObserverBasedGridFormingControl(GridConverterControlSystem):
     """
     Disturbance-observer-based grid-forming control.
-
-    This implements the RFPSC-type grid-forming mode of the control method
+    
+    This implements the RFPSC-type grid-forming mode of the control method 
     described in [#Nur2024]_. Transparent current control is also implemented.
 
     Parameters
@@ -67,11 +67,11 @@ class ObserverBasedGridFormingControl(GridConverterControlSystem):
 
     Notes
     -----
-    In this implementation, the control system operates in synchronous
+    In this implementation, the control system operates in synchronous 
     coordinates rotating at the nominal grid angular frequency, which is worth
     noticing when plotting the results. For other implementation options, see
-    [#Nur2024]_.
-
+    [#Nur2024]_. 
+    
     References
     ----------
     .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional
@@ -140,9 +140,9 @@ class ObserverBasedGridFormingControl(GridConverterControlSystem):
 class DisturbanceObserver:
     """
     Disturbance observer.
-
+    
     This implements a disturbance observer, which estimates the quasi-static
-    converter output voltage. Coordinates rotating at the nominal grid angular
+    converter output voltage. Coordinates rotating at the nominal grid angular 
     frequency are used.
 
     Parameters
@@ -155,7 +155,7 @@ class DisturbanceObserver:
         Observer gain (rad/s).
     v_c0 : float
         Initial value of converter voltage state (V).
-
+      
     """
 
     def __init__(self, w_g, L, alpha_o, v_c0):

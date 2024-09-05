@@ -1,7 +1,7 @@
 """
 Continuous-time models for electric machines.
 
-Peak-valued complex space vectors are used.
+Peak-valued complex space vectors are used. 
 
 """
 from types import SimpleNamespace
@@ -17,8 +17,8 @@ class InductionMachine(Subsystem):
     """
     Γ-equivalent model of an induction machine.
 
-    An induction machine is modeled using the Γ-equivalent model [#Sle1989]_.
-    The stator inductance `L_s` can either be constant or a function of the
+    An induction machine is modeled using the Γ-equivalent model [#Sle1989]_. 
+    The stator inductance `L_s` can either be constant or a function of the 
     stator flux magnitude::
 
         L_s = L_s(abs(psi_ss))
@@ -36,7 +36,7 @@ class InductionMachine(Subsystem):
 
     References
     ----------
-    .. [#Sle1989] Slemon, "Modelling of induction machines for electric
+    .. [#Sle1989] Slemon, "Modelling of induction machines for electric 
        drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
 
     """
@@ -116,10 +116,10 @@ class SynchronousMachine(Subsystem):
     par : SynchronousMachinePars
         Machine parameters.
     i_s : callable, optional
-        Stator current (A) as a function of the stator flux linkage (A) in
+        Stator current (A) as a function of the stator flux linkage (A) in 
         order to model the magnetic saturation. If this function is given, the
         stator current is computed using this function instead of constants
-        `par.L_d`, `par.L_q`, and `par.psi_f`.
+        `par.L_d`, `par.L_q`, and `par.psi_f`.  
     psi_s0 : float, optional
         Initial stator flux linkage (Vs). If not given, `par.psi_f` is used.
 

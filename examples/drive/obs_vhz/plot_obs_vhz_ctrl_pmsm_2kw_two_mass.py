@@ -4,8 +4,8 @@
 
 This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The
 mechanical subsystem is modeled as a two-mass system. The resonance frequency
-of the mechanics is around 85 Hz. The mechanical parameters correspond to
-[#Saa2015]_, except that the torsional damping is set to a smaller value in
+of the mechanics is around 85 Hz. The mechanical parameters correspond to 
+[#Saa2015]_, except that the torsional damping is set to a smaller value in 
 this example.
 
 """

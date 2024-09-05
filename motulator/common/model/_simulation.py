@@ -187,12 +187,12 @@ class Simulation:
     """
     Simulation environment.
 
-    Each simulation object has a system model object and a control system
+    Each simulation object has a system model object and a control system 
     object.
 
     Parameters
     ----------
-    mdl : Model
+    mdl : Model 
         Continuous-time system model.
     ctrl : ControlSystem
         Discrete-time control system.
@@ -283,13 +283,13 @@ class Model(ABC):
     """
     Base class for continuous-time system models.
 
-    This base class is a template for a system model that interconnects the
-    subsystems and provides an interface to the solver.
+    This base class is a template for a system model that interconnects the 
+    subsystems and provides an interface to the solver. 
 
     Parameters
     ----------
     pwm : zoh | CarrierComparison, optional
-        Zero-order hold of duty ratios or carrier comparison. If None, the
+        Zero-order hold of duty ratios or carrier comparison. If None, the 
         default is `zoh`.
     delay : int, optional
         Amount of computational delays. The default is 1.

@@ -101,7 +101,7 @@ class BaseValues:
 
         Notes
         -----
-        Notice that the nominal torque is larger than the base torque due to
+        Notice that the nominal torque is larger than the base torque due to 
         the power factor and efficiency being less than unity.
 
         """
@@ -122,14 +122,14 @@ class BaseValues:
 class MachinePars(ABC):
     """
     Base class for electrical parameters of an electric machine.
-
+    
     Parameters
     ----------
     n_p : int
         Number of pole pairs.
     R_s : float
         Stator resistance (Ω).
-
+    
     """
     n_p: int = None
     R_s: float = None
@@ -140,7 +140,7 @@ class MachinePars(ABC):
 class SynchronousMachinePars(MachinePars):
     """
     Synchronous machine parameters.
-
+    
     Parameters
     ----------
     n_p : int
@@ -153,7 +153,7 @@ class SynchronousMachinePars(MachinePars):
         q-axis inductance (H).
     psi_f : float
         Permanent-magnet flux linkage (Vs).
-
+    
     """
     L_d: float = None
     L_q: float = None
@@ -165,7 +165,7 @@ class SynchronousMachinePars(MachinePars):
 class InductionMachinePars(MachinePars):
     """
     Γ-model parameters of an induction machine.
-
+    
     Parameters
     ----------
     n_p : int
@@ -178,7 +178,7 @@ class InductionMachinePars(MachinePars):
         Leakage inductance (H).
     L_s : float | callable
         Stator inductance (H).
-
+ 
     """
     R_r: float = None
     L_ell: float = None
@@ -190,18 +190,18 @@ class InductionMachinePars(MachinePars):
         """
         Compute Γ-model parameters from inverse-Γ model parameters.
 
-        This transformation assumes that the parameters are constant.
+        This transformation assumes that the parameters are constant. 
 
         Parameters
         ----------
         par : InductionMachineInvGammaPars
             Inverse-Γ model parameters.
-
+ 
         Returns
         -------
         InductionMachinePars
             Γ model parameters.
-
+ 
         """
         g = par.L_M/(par.L_M + par.L_sgm)
         R_r, L_ell, L_s = par.R_R/g**2, par.L_sgm/g, par.L_M + par.L_sgm
@@ -214,7 +214,7 @@ class InductionMachinePars(MachinePars):
 class InductionMachineInvGammaPars(MachinePars):
     """
     Inverse-Γ model parameters of an induction machine.
-
+    
     Parameters
     ----------
     n_p : int
@@ -227,7 +227,7 @@ class InductionMachineInvGammaPars(MachinePars):
         Leakage inductance (H).
     L_M : float
         Magnetizing inductance (H).
-
+    
     """
     R_R: float = None
     L_sgm: float = None
@@ -238,18 +238,18 @@ class InductionMachineInvGammaPars(MachinePars):
         """
         Compute inverse-Γ model parameters from Γ model parameters.
 
-        This transformation assumes that the parameters are constant.
+        This transformation assumes that the parameters are constant. 
 
         Parameters
         ----------
         par : InductionMachinePars
             Γ-model parameters.
-
+ 
         Returns
         -------
         InductionMachineInvGammaPars
             Inverse-Γ model parameters.
-
+ 
         """
         g = par.L_s/(par.L_s + par.L_ell)
         R_R, L_sgm, L_M = g**2*par.R_r, g*par.L_ell, g*par.L_s
@@ -262,7 +262,7 @@ class InductionMachineInvGammaPars(MachinePars):
 class TwoMassMechanicalSystemPars():
     """
     Two-mass mechanical system parameters.
-
+    
     Parameters
     ----------
     J_M : float
@@ -274,9 +274,9 @@ class TwoMassMechanicalSystemPars():
     C_S : float
         Shaft torsional damping (Nm/(rad/s)).
     B_L : float | callable
-        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
-        to viscous friction, or an arbitrary function of the load speed. For
-        example, choosing ``B_L = lambda w_L: k*abs(w_M)`` leads to the
+        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding 
+        to viscous friction, or an arbitrary function of the load speed. For 
+        example, choosing ``B_L = lambda w_L: k*abs(w_M)`` leads to the 
         quadratic load torque ``k*w_L**2``. The default is ``B_L = 0``.
 
     """

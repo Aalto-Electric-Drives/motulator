@@ -16,7 +16,7 @@ class CurrentVectorControl(DriveControlSystem):
     """
     Current vector control for synchronous machine drives.
 
-    This class interconnects the subsystems of the control system and provides
+    This class interconnects the subsystems of the control system and provides 
     the interface to the solver.
 
     Parameters
@@ -28,7 +28,7 @@ class CurrentVectorControl(DriveControlSystem):
     T_s : float, optional
         Sampling period (s). The default is 250e-6.
     J : float, optional
-        Moment of inertia (kgm²). Needed only for the speed controller.
+        Moment of inertia (kgm²). Needed only for the speed controller. 
     alpha_c : float, optional
         Current controller bandwidth (rad/s). The default is 2*pi*200.
     alpha_o : float, optional
@@ -46,7 +46,7 @@ class CurrentVectorControl(DriveControlSystem):
         Current controller. The default is CurrentController(par, 2*np.pi*200).
     speed_ctrl : SpeedController | None
         Speed controller. The default is SpeedController(par.J, 2*np.pi*4).
-
+        
     """
 
     def __init__(
@@ -105,19 +105,19 @@ class CurrentController(ComplexPIController):
     Current controller for synchronous machines.
 
     This provides an interface of a current controller for synchronous machines
-    [#Awa2019a]_. The gains are initialized based on the desired closed-loop
-    bandwidth and the inductances.
+    [#Awa2019a]_. The gains are initialized based on the desired closed-loop 
+    bandwidth and the inductances. 
 
     Parameters
     ----------
     par : SynchronousMachinePars
-        Synchronous machine parameters, should contain `L_d` and `L_q` (H).
+        Synchronous machine parameters, should contain `L_d` and `L_q` (H). 
     alpha_c : float
         Closed-loop bandwidth (rad/s).
 
     References
     ----------
-    .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current
+    .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current 
        control of saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
        https://doi.org/10.1109/TIA.2019.2919258
 
@@ -150,7 +150,7 @@ class CurrentReferenceCfg:
     par : SynchronousMachinePars
         Machine model parameters.
     max_i_s : float
-        Maximum stator current (A).
+        Maximum stator current (A). 
     min_psi_s : float, optional
         Minimum stator flux (Vs). The default is `psi_f`.
     nom_w_m : float, optional
@@ -173,7 +173,7 @@ class CurrentReferenceCfg:
     lim_i_sd : callable
         d-axis current limit (A) as a function of the stator flux linkage (Vs).
         This limit merges the MTPV and current limits.
-
+    
     """
     par: InitVar[SynchronousMachinePars]
     max_i_s: float
@@ -221,14 +221,14 @@ class CurrentReference:
     -----
     Instead of the PI controller used in [#Bed2020]_, we use a simpler integral
     controller with a constant gain. The resulting operating-point-dependent
-    closed-loop pole could be derived using (12) of the paper. Unlike in
-    [#Bed2020]_, the MTPV limit is also included here by means of limiting the
+    closed-loop pole could be derived using (12) of the paper. Unlike in 
+    [#Bed2020]_, the MTPV limit is also included here by means of limiting the 
     reference torque and the d-axis current reference.
 
     References
     ----------
-    .. [#Bed2020] Bedetti, Calligaro, Petrella, "Analytical design and
-       autotuning of adaptive flux-weakening voltage regulation loop in IPMSM
+    .. [#Bed2020] Bedetti, Calligaro, Petrella, "Analytical design and 
+       autotuning of adaptive flux-weakening voltage regulation loop in IPMSM 
        drives with accurate torque regulation," IEEE Trans. Ind. Appl., 2020,
        https://doi.org/10.1109/TIA.2019.2942807
 

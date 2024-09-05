@@ -251,7 +251,7 @@ class BaseValues:
 
         Notes
         -----
-        Notice that the nominal torque is larger than the base torque due to
+        Notice that the nominal torque is larger than the base torque due to 
         the power factor and efficiency being less than unity.
 
         """

@@ -7,7 +7,7 @@
 
 Introduction
 ------------
-This open-source software includes simulation models and controllers for electric machine drives and grid converter systems. The machine models include an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. Various subsystem models are provided for modeling grid converter systems, such as an LCL filter connected to an inductive-resistive grid.
+This open-source software includes simulation models and controllers for electric machine drives and grid converter systems. The machine models include an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. Various subsystem models are provided for modeling grid converter systems, such as an LCL filter connected to an inductive-resistive grid. 
 
 The system models are simulated in the continuous-time domain while the control algorithms run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from scipy.integrate.solve_ivp. Various control algorithms are provided as examples. The documentation is available here:
 
@@ -15,7 +15,7 @@ https://aalto-electric-drives.github.io/motulator/
 
 Installation
 ------------
-This software can be installed using pip:
+This software can be installed using pip: 
 
 ```bash
 pip install motulator

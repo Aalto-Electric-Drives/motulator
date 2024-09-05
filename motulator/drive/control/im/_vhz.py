@@ -42,7 +42,7 @@ class VHzControl(DriveControlSystem):
     """
     V/Hz control with the stator current feedback.
 
-    The method is similar to [#Hin2022]_. Open-loop V/Hz control can be
+    The method is similar to [#Hin2022]_. Open-loop V/Hz control can be 
     obtained as a special case by choosing::
 
         R_s, R_R = 0, 0
@@ -51,8 +51,8 @@ class VHzControl(DriveControlSystem):
     References
     ----------
     .. [#Hin2022] Hinkkanen, Tiitinen, Mölsä, Harnefors, "On the stability of
-       volts-per-hertz control for induction motors," IEEE J. Emerg. Sel.
-       Topics Power Electron., 2022,
+       volts-per-hertz control for induction motors," IEEE J. Emerg. Sel. 
+       Topics Power Electron., 2022, 
        https://doi.org/10.1109/JESTPE.2021.3060583
 
     """
