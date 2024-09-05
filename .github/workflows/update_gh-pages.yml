@@ -5,9 +5,6 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-
 jobs:
   build-doc:
     runs-on: ubuntu-latest # Easy to use GitHub hosted runner, self hosted runner would require manual configurations
