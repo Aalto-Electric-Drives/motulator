@@ -26,7 +26,7 @@ class ACFilterPars:
     R_g : float, optional
         Grid resistance (Ω). The default is 0.
     u_fs0 : float, optional
-        Initial value of the filter capacitor voltage (V). Needed in the case 
+        Initial value of the filter capacitor voltage (V). Needed in the case
         of an LCL filter.
 
     """

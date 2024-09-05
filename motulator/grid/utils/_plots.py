@@ -25,14 +25,14 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
     sim : Simulation
         Should contain the simulated data.
     base : BaseValues, optional
-        Base values for scaling the waveforms. If not given, plots the figures 
+        Base values for scaling the waveforms. If not given, plots the figures
         in SI units.
     plot_pcc_voltage : bool, optional
-        If True, the phase voltage waveforms are plotted at the point of common 
-        coupling (PCC). Otherwise, the grid voltage waveforms are plotted. The 
-        default is True.        
+        If True, the phase voltage waveforms are plotted at the point of common
+        coupling (PCC). Otherwise, the grid voltage waveforms are plotted. The
+        default is True.
     plot_w : bool, optional
-        If True, plot the grid frequency. Otherwise, plot the phase angle. The 
+        If True, plot the grid frequency. Otherwise, plot the phase angle. The
         default is False.
     t_span : 2-tuple, optional
         Time span. The default is (0, sim.ctrl.ref.t[-1]).

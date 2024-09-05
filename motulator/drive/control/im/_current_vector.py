@@ -18,10 +18,10 @@ from motulator.drive.utils import InductionMachineInvGammaPars
 class CurrentVectorControl(DriveControlSystem):
     """
     Current-vector control for induction machine drives.
-    
-    This class provides an interface for current-vector control of induction 
-    machines. The control system consists of a current reference generator, a 
-    current controller, a flux observer, and speed controller (optional). 
+
+    This class provides an interface for current-vector control of induction
+    machines. The control system consists of a current reference generator, a
+    current controller, a flux observer, and speed controller (optional).
 
     Parameters
     ----------
@@ -46,7 +46,7 @@ class CurrentVectorControl(DriveControlSystem):
         Current controller. The default is CurrentController(par, 2*np.pi*200).
     speed_ctrl : SpeedController | None
         Speed controller. The default is SpeedController(J, 2*np.pi*4)
-  
+
     """
 
     def __init__(self, par, cfg, J=None, T_s=250e-6, sensorless=True):
@@ -80,14 +80,14 @@ class CurrentController(ComplexPIController):
     """
     2DOF PI current controller for induction machines.
 
-    This class provides an interface for a current controller for induction 
-    machines. The gains are initialized based on the desired closed-loop 
-    bandwidth and the leakage inductance. 
+    This class provides an interface for a current controller for induction
+    machines. The gains are initialized based on the desired closed-loop
+    bandwidth and the leakage inductance.
 
     Parameters
     ----------
     par : InductionMachineInvGammaPars
-        Machine parameters, contains the leakage inductance `L_sgm` (H).  
+        Machine parameters, contains the leakage inductance `L_sgm` (H).
     alpha_c : float
         Closed-loop bandwidth (rad/s).
 
@@ -107,8 +107,8 @@ class CurrentReferenceCfg:
     """
     Reference generation configuration.
 
-    This dataclass stores the nominal and limit values needed for reference 
-    generation. For calculating the rotor flux reference, the machine 
+    This dataclass stores the nominal and limit values needed for reference
+    generation. For calculating the rotor flux reference, the machine
     parameters are also required.
 
     Parameters
@@ -116,19 +116,19 @@ class CurrentReferenceCfg:
     par : InductionMachineInvGammaPars
         Machine model parameters.
     max_i_s : float
-        Maximum stator current (A). 
+        Maximum stator current (A).
     nom_u_s : float, optional
         Nominal stator voltage (V). The default is sqrt(2/3)*400.
     nom_w_s : float, optional
         Nominal stator angular frequency (rad/s). The default is 2*pi*50.
     nom_psi_R : float, optional
-        Nominal rotor flux linkage (Vs). The default is 
+        Nominal rotor flux linkage (Vs). The default is
         `(nom_u_s/nom_w_s)/(1 + L_sgm/L_M)`.
     k_fw : float, optional
         Field-weakening gain (1/H). The default is `2*R_R/(nom_w_s*L_sgm**2)`.
     k_u : float, optional
         Voltage utilization factor. The default is 0.95.
-    
+
     """
     par: InitVar[InductionMachineInvGammaPars] = None
     max_i_s: float = None
@@ -152,24 +152,24 @@ class CurrentReference:
     """
     Current reference generation.
 
-    In the base-speed region, the current reference in rotor-flux coordinates 
+    In the base-speed region, the current reference in rotor-flux coordinates
     is given by::
 
         ref_i_s = nom_psi_R/L_M + 1j*ref_tau_M/(1.5*n_p*abs(psi_R))
 
-    where `nom_psi_R` is the nominal rotor flux magnitude and `psi_R` is the 
-    estimated rotor flux. The field-weakening operation is based on adjusting 
+    where `nom_psi_R` is the nominal rotor flux magnitude and `psi_R` is the
+    estimated rotor flux. The field-weakening operation is based on adjusting
     the flux-producing current component::
 
         ref_i_s.real = (k_fw/s)*(max_u_s - abs(ref_u_s))
 
-    where `1/s` refers to integration, ``max_u_s = k_u*u_dc/sqrt(3)`` is the 
-    maximum stator voltage in the linear modulation region, `ref_u_s` is the 
-    (unlimited) stator voltage reference, and `k_fw` is the field-weakening 
+    where `1/s` refers to integration, ``max_u_s = k_u*u_dc/sqrt(3)`` is the
+    maximum stator voltage in the linear modulation region, `ref_u_s` is the
+    (unlimited) stator voltage reference, and `k_fw` is the field-weakening
     gain. The field-weakening method and its tuning corresponds roughly to
-    [#Hin2006]_. Furthermore, the torque-producing current component 
-    `ref_i_s.imag` is limited based on the maximum stator current and the 
-    breakdown slip. 
+    [#Hin2006]_. Furthermore, the torque-producing current component
+    `ref_i_s.imag` is limited based on the maximum stator current and the
+    breakdown slip.
 
     Parameters
     ----------
@@ -180,9 +180,9 @@ class CurrentReference:
 
     References
     ----------
-    .. [#Hin2006] Hinkkanen, Luomi, "Braking scheme for vector-controlled 
-       induction motor drives equipped with diode rectifier without braking 
-       resistor," IEEE Trans. Ind. Appl., 2006, 
+    .. [#Hin2006] Hinkkanen, Luomi, "Braking scheme for vector-controlled
+       induction motor drives equipped with diode rectifier without braking
+       resistor," IEEE Trans. Ind. Appl., 2006,
        https://doi.org/10.1109/TIA.2006.880852
 
     """

@@ -14,7 +14,7 @@ from motulator.grid.control._common import (
 class GridFollowingControlCfg:
     """
     Grid-following control configuration.
-    
+
     Parameters
     ----------
     L : float
@@ -24,7 +24,7 @@ class GridFollowingControlCfg:
     nom_w : float
         Nominal grid angular frequency (rad/s).
     max_i : float
-        Maximum current (A), peak value. 
+        Maximum current (A), peak value.
     T_s : float, optional
         Sampling period (s). The default is 100e-6.
     alpha_c : float, optional
@@ -46,7 +46,7 @@ class GridFollowingControlCfg:
 class GridFollowingControl(GridConverterControlSystem):
     """
     Grid-following control.
-    
+
     Parameters
     ----------
     cfg : GridFollowingControlCfg
@@ -104,9 +104,9 @@ class CurrentController(ComplexPIController):
     """
     2DOF PI current controller for grid converters.
 
-    This class provides an interface for a current controller for grid 
-    converters. The gains are initialized based on the desired closed-loop 
-    bandwidth and the filter inductance. 
+    This class provides an interface for a current controller for grid
+    converters. The gains are initialized based on the desired closed-loop
+    bandwidth and the filter inductance.
 
     Parameters
     ----------
@@ -126,11 +126,11 @@ class CurrentController(ComplexPIController):
 class CurrentReference:
     """
     Current reference generator.
-    
-    This class generates the current reference based on the active and reactive 
-    power references. The current limiting algorithm is used to limit the 
+
+    This class generates the current reference based on the active and reactive
+    power references. The current limiting algorithm is used to limit the
     current reference.
-    
+
     Parameters
     ----------
     cfg : GridFollowingControlCfg

@@ -17,12 +17,12 @@ class StiffMechanicalSystem(Subsystem):
     J : float
         Total moment of inertia (kgm²).
     B_L : float | callable
-        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding 
-        to viscous friction, or an arbitrary function of the rotor speed. For 
-        example, choosing ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic 
+        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
+        to viscous friction, or an arbitrary function of the rotor speed. For
+        example, choosing ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic
         load torque ``k*w_M**2``. The default is ``B_L = 0``.
     tau_L : callable
-        External load torque (Nm) as a function of time, `tau_L_t(t)`. The 
+        External load torque (Nm) as a function of time, `tau_L_t(t)`. The
         default is zero, ``lambda t: 0*t``.
 
     """
@@ -174,7 +174,7 @@ class ExternalRotorSpeed(Subsystem):
     Parameters
     ----------
     w_M : callable
-        Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is 
+        Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is
         zero, ``lambda t: 0*t``.
 
     """
