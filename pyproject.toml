@@ -18,14 +18,14 @@ description = "Motor Drive and Grid Converter Simulator in Python"
 readme = "README.md"
 license = "MIT"
 keywords = [
-    "control", 
+    "control",
     "converter",
     "grid",
-    "electric", 
-    "inverter", 
-    "machine", 
-    "motor", 
-    "power", 
+    "electric",
+    "inverter",
+    "machine",
+    "motor",
+    "power",
     "simulation",
 ]
 classifiers = [

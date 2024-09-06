@@ -1,8 +1,8 @@
 """
 Continuous-time grid converter system model.
 
-This interconnects the subsystems of a converter with a grid and provides an 
-interface to the solver. More complicated systems could be modeled using a 
+This interconnects the subsystems of a converter with a grid and provides an
+interface to the solver. More complicated systems could be modeled using a
 similar template. Peak-valued complex space vectors are used.
 
 """

@@ -1,10 +1,10 @@
 """
 Continuous-time models for converters.
 
-A three-phase voltage-source inverter with optional DC-bus dynamics is 
+A three-phase voltage-source inverter with optional DC-bus dynamics is
 modelled, along with a six-pulse diode bridge rectifier supplied from a stiff
 grid. Complex space vectors are used also for duty ratios and switching states,
-wherever applicable. 
+wherever applicable.
 
 """
 from types import SimpleNamespace
@@ -19,17 +19,17 @@ from motulator.common.utils import abc2complex, complex2abc
 class VoltageSourceConverter(Subsystem):
     """
     Lossless three-phase voltage-source converter.
-    
+
     Parameters
     ----------
     u_dc : float
-        DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is 
+        DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
         used as the initial condition.
     C_dc : float, optional
         DC-bus capacitance (F). The default is None.
     i_dc : callable, optional
         External current (A) fed to the DC bus. Needed if `C_dc` is not None.
-    
+
     """
 
     def __init__(self, u_dc, C_dc=None, i_dc=lambda t: None):
@@ -103,10 +103,10 @@ class VoltageSourceConverter(Subsystem):
 class FrequencyConverter(VoltageSourceConverter):
     """
     Frequency converter with a six-pulse diode bridge.
-    
+
     A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The
-    diode bridge is connected to the voltage-source inverter. The inductance of 
-    the grid is omitted. 
+    diode bridge is connected to the voltage-source inverter. The inductance of
+    the grid is omitted.
 
     Parameters
     ----------
@@ -115,7 +115,7 @@ class FrequencyConverter(VoltageSourceConverter):
     L_dc : float
         DC-bus inductance (H).
     U_g : float
-        Grid voltage (V, line-line, rms). 
+        Grid voltage (V, line-line, rms).
     f_g : float
         Grid frequency (Hz).
 
