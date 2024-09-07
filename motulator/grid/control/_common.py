@@ -14,18 +14,18 @@ class PLL:
     """
     Phase-locked loop including the voltage-magnitude filtering.
 
-    This class provides a simple frequency-tracking phase-locked loop. The
-    magnitude of the measured PCC voltage is also filtered.
+    This class provides a simple frequency-tracking phase-locked loop. The 
+    magnitude of the measured PCC voltage is also filtered. 
 
     Parameters
     ----------
     alpha_pll : float
-        Frequency-tracking bandwidth.
+        Frequency-tracking bandwidth (rad/s).
     abs_u_g0 : float
-        Initial value for the grid voltage estimate.
+        Initial value for the grid voltage estimate (V). 
     w_g0 : float
-        Initial value for the grid angular frequency estimate.
-
+        Initial value for the grid angular frequency estimate (rad/s). 
+        
     """
 
     def __init__(self, alpha_pll, abs_u_g0, w_g0, theta_c0=0):
@@ -60,24 +60,21 @@ class PLL:
 # %%
 class DCBusVoltageController(PIController):
     """
-    PI controller for the DC-bus voltage.
+    DC-bus voltage PI controller.
 
-    This is a PI controller for the DC-bus voltage. The controller regulates
-    the energy stored in the DC-bus capacitor (scaled square of the DC-bus
-    voltage) in order to have a linear closed-loop system [#Hur2001]_. The
-    gains are initialized based on the desired closed-loop bandwidth.
+    This controller regulates the energy stored in the DC-bus capacitor (scaled 
+    square of the DC-bus voltage) in order to have a linear closed-loop system 
+    [#Hur2001]_. 
 
     Parameters
     ----------
     C_dc : float
         DC-bus capacitance (F).
     alpha_dc : float
-        Closed-loop bandwidth (rad/s).
-    zeta : float, optional
-        Damping ratio of the closed-loop system. The default is 1.
+        Approximate closed-loop bandwidth (rad/s). 
     max_p : float, optional
         Limit for the maximum converter power (W). The default is `inf`.
-
+        
     References
     ----------
     .. [#Hur2001] Hur, Jung, Nam, "A fast dynamic DC-link power-balancing
@@ -86,15 +83,14 @@ class DCBusVoltageController(PIController):
 
     """
 
-    def __init__(self, C_dc, alpha_dc, zeta=1, max_p=np.inf):
-        k_p, k_i = -2*zeta*alpha_dc, -alpha_dc**2
+    def __init__(self, C_dc, alpha_dc, max_p=np.inf):
+        k_p, k_i = -2*alpha_dc, -alpha_dc**2
         k_t = k_p
         super().__init__(k_p, k_i, k_t, max_p)
         self.C_dc = C_dc
 
     def output(self, ref_u_dc, u_dc, u_ff=0):
         # pylint: disable=arguments-renamed
-        # Extends the base class method by transforming the
         ref_W_dc = .5*self.C_dc*ref_u_dc**2
         W_dc = .5*self.C_dc*u_dc**2
         return super().output(ref_W_dc, W_dc, u_ff)
@@ -104,10 +100,10 @@ class DCBusVoltageController(PIController):
 class GridConverterControlSystem(ControlSystem, ABC):
     """
     Base class for control of grid-connected converters.
-
+    
     This base class provides typical functionalities for control of
     grid-connected converters. This can be used both in power control and
-    DC-bus voltage control modes.
+    DC-bus voltage control modes. 
 
     Parameters
     ----------
@@ -121,7 +117,7 @@ class GridConverterControlSystem(ControlSystem, ABC):
 
             v : float | callable
                 Converter output voltage reference (V). Can be given either as
-                a constant or a function of time (s).
+                a constant or a function of time (s). 
             p_g : callable
                 Active power reference (W) as a function of time (s). This
                 signal is needed in power control mode.
@@ -146,7 +142,7 @@ class GridConverterControlSystem(ControlSystem, ABC):
     def get_electrical_measurements(self, fbk, mdl):
         """
         Measure the currents and voltages.
-
+        
         Parameters
         ----------
         fbk : SimpleNamespace
@@ -200,13 +196,13 @@ class GridConverterControlSystem(ControlSystem, ABC):
         -------
         ref : SimpleNamespace
             Reference signals, containing the following fields:
-
+                
                 u_dc : float
                     DC-bus voltage reference (V).
                 p_g : float
                     Active power reference (W).
                 q_g : float
-                    Reactive power reference (VAr).
+                    Reactive power reference (VAr).  
 
         """
         if self.dc_bus_voltage_ctrl:

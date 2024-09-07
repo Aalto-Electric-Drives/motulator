@@ -2,10 +2,10 @@
 2.2-kW induction motor, 6-step mode
 ===================================
 
-This example simulates V/Hz control of a 2.2-kW induction motor drive. The
-six-step overmodulation is enabled, which increases the fundamental voltage as
-well as the harmonics. Since the PWM is not synchronized with the stator
-frequency, the harmonic content also depends on the ratio between the stator
+This example simulates V/Hz control of a 2.2-kW induction motor drive. The 
+six-step overmodulation is enabled, which increases the fundamental voltage as 
+well as the harmonics. Since the PWM is not synchronized with the stator 
+frequency, the harmonic content also depends on the ratio between the stator 
 frequency and the sampling frequency.
 
 """
@@ -57,7 +57,7 @@ values = np.array([0, 0, 1, 1])*2*base.w
 ctrl.ref.w_m = Sequence(times, values)
 
 # External load torque could be set here, now zero
-mdl.mechanics.tau_L = lambda t: (t > 1.)*nom.tau*.1
+mdl.mechanics.tau_L = lambda t: (t > 1.)*nom.tau*0
 
 # %%
 # Create the simulation object and simulate it.
@@ -70,4 +70,4 @@ sim.simulate(t_stop=2)
 
 # sphinx_gallery_thumbnail_number = 2
 plot(sim, base)
-plot_extra(sim, base, t_span=(0.58, 0.7))
+plot_extra(sim, base, t_span=(.58, .7))
