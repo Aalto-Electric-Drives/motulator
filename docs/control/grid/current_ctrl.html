@@ -463,11 +463,11 @@ document.write(`
 <div class="math notranslate nohighlight">
 \[\boldsymbol{i}_\mathrm{c} = \boldsymbol{G}_\mathrm{c}(s)\boldsymbol{i}_\mathrm{c,ref} - \boldsymbol{Y}_\mathrm{c}(s)\boldsymbol{u}_\mathrm{g}\]</div>
 <p>The disturbance rejection depends on the closed-loop admittance</p>
-<div class="math notranslate nohighlight" id="equation-yc">
-<span class="eqno">(3)<a class="headerlink" href="#equation-yc" title="Permalink to this equation">#</a></span>\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}}\]</div>
+<div class="math notranslate nohighlight" id="equation-yc-grid">
+<span class="eqno">(3)<a class="headerlink" href="#equation-yc-grid" title="Permalink to this equation">#</a></span>\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}}\]</div>
 <p>The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is</p>
-<div class="math notranslate nohighlight" id="equation-gc">
-<span class="eqno">(4)<a class="headerlink" href="#equation-gc" title="Permalink to this equation">#</a></span>\[\boldsymbol{G}_\mathrm{c}(s) = \frac{(s + \mathrm{j}\omega_\mathrm{c}) \boldsymbol{k}_\mathrm{t} + \boldsymbol{k}_\mathrm{i} }{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}}\]</div>
+<div class="math notranslate nohighlight" id="equation-gc-grid">
+<span class="eqno">(4)<a class="headerlink" href="#equation-gc-grid" title="Permalink to this equation">#</a></span>\[\boldsymbol{G}_\mathrm{c}(s) = \frac{(s + \mathrm{j}\omega_\mathrm{c}) \boldsymbol{k}_\mathrm{t} + \boldsymbol{k}_\mathrm{i} }{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}}\]</div>
 <p>whose zero can be placed by means of the reference-feedforward gain <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t}\)</span>.</p>
 </section>
 <section id="gain-selection">
@@ -477,7 +477,7 @@ document.write(`
 \[\boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \hat L \qquad\qquad
 \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2\hat L  \qquad \qquad
 \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c} \hat L\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat L\)</span> is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(3)</a> and <a class="reference internal" href="#equation-gc">(4)</a> reduce to</p>
+<p>where <span class="math notranslate nohighlight">\(\hat L\)</span> is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc-grid">(3)</a> and <a class="reference internal" href="#equation-gc-grid">(4)</a> reduce to</p>
 <div class="math notranslate nohighlight">
 \[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{c})}
 \qquad\qquad
