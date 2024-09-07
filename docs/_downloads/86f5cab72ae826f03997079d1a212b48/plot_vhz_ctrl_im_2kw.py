@@ -3,7 +3,7 @@
 ====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters in this example yield open-loop V/Hz control.
+parameters in this example yield open-loop V/Hz control. 
 
 """
 # %%
@@ -39,7 +39,6 @@ frequency_converter = model.FrequencyConverter(
     C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
 mdl = model.Drive(
     converter=frequency_converter, machine=machine, mechanics=mechanics)
-
 mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 # %%
@@ -56,7 +55,7 @@ ctrl = control.VHzControl(
 ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
 # Stepwise load torque at t = 1 s, 20% of the rated torque
-mdl.mechanics.tau_L = lambda t: (t > 1.)*.2*nom.tau
+mdl.mechanics.tau_L = lambda t: (t > 1)*.2*nom.tau
 
 # %%
 # Create the simulation object and simulate it.

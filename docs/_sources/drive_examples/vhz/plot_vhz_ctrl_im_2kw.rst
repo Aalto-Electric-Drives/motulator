@@ -22,7 +22,7 @@
 ====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters in this example yield open-loop V/Hz control.
+parameters in this example yield open-loop V/Hz control. 
 
 .. GENERATED FROM PYTHON SOURCE LINES 10-19
 
@@ -67,7 +67,7 @@ Compute base values based on the nominal values (just for figures).
 
 Create the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-45
+.. GENERATED FROM PYTHON SOURCE LINES 27-44
 
 .. code-block:: Python
 
@@ -86,7 +86,6 @@ Create the system model.
         C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
     mdl = model.Drive(
         converter=frequency_converter, machine=machine, mechanics=mechanics)
-
     mdl.pwm = model.CarrierComparison()  # Enable the PWM model
 
 
@@ -96,11 +95,11 @@ Create the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-53
+.. GENERATED FROM PYTHON SOURCE LINES 46-52
 
 .. code-block:: Python
 
@@ -117,11 +116,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-61
+.. GENERATED FROM PYTHON SOURCE LINES 54-60
 
 .. code-block:: Python
 
@@ -129,7 +128,7 @@ Set the speed reference and the external load torque.
     ctrl.ref.w_m = lambda t: (t > .2)*base.w
 
     # Stepwise load torque at t = 1 s, 20% of the rated torque
-    mdl.mechanics.tau_L = lambda t: (t > 1.)*.2*nom.tau
+    mdl.mechanics.tau_L = lambda t: (t > 1)*.2*nom.tau
 
 
 
@@ -138,11 +137,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-67
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
@@ -157,7 +156,7 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-75
+.. GENERATED FROM PYTHON SOURCE LINES 67-74
 
 Plot results in per-unit values.
 
@@ -167,7 +166,7 @@ Plot results in per-unit values.
    resistance to the DC link. You can notice this instability if simulating a
    longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-80
+.. GENERATED FROM PYTHON SOURCE LINES 74-79
 
 .. code-block:: Python
 
@@ -207,7 +206,7 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-86
+.. GENERATED FROM PYTHON SOURCE LINES 80-85
 
 .. rubric:: References
 
@@ -218,7 +217,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.242 seconds)
+   **Total running time of the script:** (0 minutes 17.744 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_vhz_ctrl_im_2kw.py:

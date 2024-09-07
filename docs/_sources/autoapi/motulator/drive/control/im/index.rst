@@ -971,7 +971,7 @@ Package Contents
    .. py:method:: output(fbk)
 
       
-      Extend the base class method.
+      Compute outputs.
 
 
 
@@ -995,7 +995,7 @@ Package Contents
    .. py:method:: update(fbk, ref)
 
       
-      Extend the base class method.
+      Update states.
 
 
 

@@ -227,6 +227,8 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
 </ul>
 </li>
@@ -461,7 +463,6 @@ parameters in this example yield open-loop V/Hz control.</p>
     <span class="n">C_dc</span><span class="o">=</span><span class="mf">235e-6</span><span class="p">,</span> <span class="n">L_dc</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">U_g</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nom</span><span class="o">.</span><span class="n">U</span></a><span class="p">,</span> <span class="n">f_g</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nom</span><span class="o">.</span><span class="n">f</span></a><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">Drive</span></a><span class="p">(</span>
     <span class="n">converter</span><span class="o">=</span><span class="n">frequency_converter</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="n">machine</span><span class="p">,</span> <span class="n">mechanics</span><span class="o">=</span><span class="n">mechanics</span><span class="p">)</span>
-
 <span class="n">mdl</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">CarrierComparison</span><span class="p">()</span>  <span class="c1"># Enable the PWM model</span>
 </pre></div>
 </div>
@@ -476,7 +477,7 @@ parameters in this example yield open-loop V/Hz control.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">.2</span><span class="p">)</span><span class="o">*</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a>
 
 <span class="c1"># Stepwise load torque at t = 1 s, 20% of the rated torque</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">)</span><span class="o">*</span><span class="mf">.2</span><span class="o">*</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nom</span><span class="o">.</span><span class="n">tau</span></a>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mf">.2</span><span class="o">*</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nom</span><span class="o">.</span><span class="n">tau</span></a>
 </pre></div>
 </div>
 <p>Create the simulation object and simulate it.</p>
@@ -511,7 +512,7 @@ equipped with small DC-Link capacitance,” Proc. EPE, 2007,
 <a class="reference external" href="https://doi.org/10.1109/EPE.2007.4417763">https://doi.org/10.1109/EPE.2007.4417763</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.242 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 17.744 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-vhz-plot-vhz-ctrl-im-2kw-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1901236edeea2d2b57c3aeb0455fdb6c/plot_vhz_ctrl_im_2kw.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_vhz_ctrl_im_2kw.ipynb</span></code></a></p>

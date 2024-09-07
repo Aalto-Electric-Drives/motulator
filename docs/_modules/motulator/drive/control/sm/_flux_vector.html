@@ -224,6 +224,8 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../control/grid/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
 </ul>
 </li>
@@ -390,11 +392,11 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Flux-vector control of synchronous machine drives.</span>
 
-<span class="sd">    This class implements a variant of flux-vector control [#Pel2009]_. Rotor</span>
-<span class="sd">    coordinates as well as decoupling between the stator flux and torque</span>
-<span class="sd">    channels are used according to [#Awa2019b]_. Here, the stator flux</span>
-<span class="sd">    magnitude and the electromagnetic torque are selected as controllable</span>
-<span class="sd">    variables, and proportional controllers are used for simplicity</span>
+<span class="sd">    This class implements a variant of flux-vector control [#Pel2009]_. Rotor </span>
+<span class="sd">    coordinates as well as decoupling between the stator flux and torque </span>
+<span class="sd">    channels are used according to [#Awa2019b]_. Here, the stator flux </span>
+<span class="sd">    magnitude and the electromagnetic torque are selected as controllable </span>
+<span class="sd">    variables, and proportional controllers are used for simplicity </span>
 <span class="sd">    [#Tii2024]_. The magnetic saturation is not considered in this</span>
 <span class="sd">    implementation.</span>
 
@@ -411,7 +413,7 @@ document.write(`
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Observer bandwidth (rad/s). The default is 2*pi*100.</span>
 <span class="sd">    J : float, optional</span>
-<span class="sd">        Moment of inertia (kgm²). Needed only for the speed controller.</span>
+<span class="sd">        Moment of inertia (kgm²). Needed only for the speed controller. </span>
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s). The default is 250e-6.</span>
 <span class="sd">    sensorless : bool, optional</span>
@@ -419,18 +421,18 @@ document.write(`
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented</span>
-<span class="sd">       control of IPM drives with variable DC link in the field-weakening</span>
-<span class="sd">       region,” IEEE Trans.Ind. Appl., 2009,</span>
+<span class="sd">    .. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented </span>
+<span class="sd">       control of IPM drives with variable DC link in the field-weakening </span>
+<span class="sd">       region,” IEEE Trans. Ind. Appl., 2009, </span>
 <span class="sd">       https://doi.org/10.1109/TIA.2009.2027167</span>
 
-<span class="sd">    .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, &quot;Stator-flux-oriented</span>
-<span class="sd">       control of synchronous motors: A systematic design procedure,&quot; IEEE</span>
+<span class="sd">    .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, &quot;Stator-flux-oriented </span>
+<span class="sd">       control of synchronous motors: A systematic design procedure,&quot; IEEE </span>
 <span class="sd">       Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316</span>
 
-<span class="sd">    .. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, &quot;Design framework for</span>
-<span class="sd">       sensorless control of synchronous machine drives,&quot; IEEE Trans. Ind.</span>
-<span class="sd">       Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650</span>
+<span class="sd">    .. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, &quot;Design framework for </span>
+<span class="sd">       sensorless control of synchronous machine drives,&quot; IEEE Trans. Ind. </span>
+<span class="sd">       Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -502,7 +504,7 @@ document.write(`
 <span class="sd">    par : SynchronousMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    max_i_s : float</span>
-<span class="sd">        Maximum stator current (A).</span>
+<span class="sd">        Maximum stator current (A). </span>
 <span class="sd">    min_psi_s : float, optional</span>
 <span class="sd">        Minimum stator flux (Vs). The default is `par.psi_f`.</span>
 <span class="sd">    max_psi_s : float, optional</span>

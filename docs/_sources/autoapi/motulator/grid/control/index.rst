@@ -162,25 +162,22 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: DCBusVoltageController(C_dc, alpha_dc, zeta=1, max_p=np.inf)
+.. py:class:: DCBusVoltageController(C_dc, alpha_dc, max_p=np.inf)
 
    Bases: :py:obj:`motulator.common.control.PIController`
 
 
    
-   PI controller for the DC-bus voltage.
+   DC-bus voltage PI controller.
 
-   This is a PI controller for the DC-bus voltage. The controller regulates
-   the energy stored in the DC-bus capacitor (scaled square of the DC-bus
-   voltage) in order to have a linear closed-loop system [#Hur2001]_. The
-   gains are initialized based on the desired closed-loop bandwidth.
+   This controller regulates the energy stored in the DC-bus capacitor (scaled
+   square of the DC-bus voltage) in order to have a linear closed-loop system
+   [#Hur2001]_.
 
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
-   :param alpha_dc: Closed-loop bandwidth (rad/s).
+   :param alpha_dc: Approximate closed-loop bandwidth (rad/s).
    :type alpha_dc: float
-   :param zeta: Damping ratio of the closed-loop system. The default is 1.
-   :type zeta: float, optional
    :param max_p: Limit for the maximum converter power (W). The default is `inf`.
    :type max_p: float, optional
 
@@ -748,11 +745,11 @@ Package Contents
    This class provides a simple frequency-tracking phase-locked loop. The
    magnitude of the measured PCC voltage is also filtered.
 
-   :param alpha_pll: Frequency-tracking bandwidth.
+   :param alpha_pll: Frequency-tracking bandwidth (rad/s).
    :type alpha_pll: float
-   :param abs_u_g0: Initial value for the grid voltage estimate.
+   :param abs_u_g0: Initial value for the grid voltage estimate (V).
    :type abs_u_g0: float
-   :param w_g0: Initial value for the grid angular frequency estimate.
+   :param w_g0: Initial value for the grid angular frequency estimate (rad/s).
    :type w_g0: float
 
 

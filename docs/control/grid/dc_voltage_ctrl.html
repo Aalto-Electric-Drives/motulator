@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Drives &#8212; motulator 0.4.0 documentation</title>
+    <title>DC-Bus Voltage Control &#8212; motulator 0.4.0 documentation</title>
   
   
   
@@ -48,11 +48,12 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'control/drive/index';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'control/grid/dc_voltage_ctrl';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Speed Control" href="speed_ctrl.html" />
-    <link rel="prev" title="Common" href="../control_system.html" />
+    <link rel="next" title="Current Control" href="current_ctrl.html" />
+    <link rel="prev" title="Grid Converters" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -220,16 +221,16 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../control_system.html">Common</a></li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Drives</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="observers.html">Observers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../drive/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drive/observers.html">Observers</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../grid/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Grid Converters</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="synchronization.html">Disturbance-Observer-Based PLL</a></li>
 </ul>
 </li>
 </ul>
@@ -329,7 +330,7 @@
       
       
       
-      <li><a href="../../_sources/control/drive/index.rst" target="_blank"
+      <li><a href="../../_sources/control/grid/dc_voltage_ctrl.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -400,7 +401,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -411,11 +414,21 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Drives</h1>
+    <h1>DC-Bus Voltage Control</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#controller-structure">Controller Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -425,16 +438,46 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="drives">
-<h1>Drives<a class="headerlink" href="#drives" title="Permalink to this heading">#</a></h1>
-<p>Design notes for selected control methods for machine drives are provided in this section. The aim of these notes is to link the implemented methods to the theory and to provide a reference for the implementation. Further details are available in the references provided.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
-<li class="toctree-l1"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
-<li class="toctree-l1"><a class="reference internal" href="observers.html">Observers</a></li>
-</ul>
-</div>
+  <section id="dc-bus-voltage-control">
+<h1>DC-Bus Voltage Control<a class="headerlink" href="#dc-bus-voltage-control" title="Permalink to this heading">#</a></h1>
+<p>A PI controller for the DC-bus voltage is implemented in the <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.DCBusVoltageController</span></code></a> class, whose base class is <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.PIController</span></code></a>. In the following, the tuning of the DC-bus voltage controller is considered in the continuous-time domain.</p>
+<section id="controller-structure">
+<h2>Controller Structure<a class="headerlink" href="#controller-structure" title="Permalink to this heading">#</a></h2>
+<p>In order to have a linear closed-loop system, it is convenient to use the DC-bus energy as the controlled variable, <a class="footnote-reference brackets" href="#hur2001" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+<div class="math notranslate nohighlight" id="equation-dc-cap-energy">
+<span class="eqno">(1)<a class="headerlink" href="#equation-dc-cap-energy" title="Permalink to this equation">#</a></span>\[\hat W_\mathrm{dc} = \frac{1}{2}\hat{C}_\mathrm{dc} u_\mathrm{dc}^2 \qquad
+W_\mathrm{dc,ref} = \frac{1}{2}\hat{C}_\mathrm{dc} u_\mathrm{dc,ref}^2\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{C}_\mathrm{dc}\)</span> is the DC-bus capacitance estimate, <span class="math notranslate nohighlight">\(u_\mathrm{dc}\)</span> is the measured DC-bus voltage, and <span class="math notranslate nohighlight">\(u_\mathrm{dc,ref}\)</span> is the DC-bus voltage reference. Using these variables, the output power reference <span class="math notranslate nohighlight">\(p_\mathrm{c,ref}\)</span> for the converter is obtained from a PI controller,</p>
+<div class="math notranslate nohighlight" id="equation-dc-voltage-ctrl">
+<span class="eqno">(2)<a class="headerlink" href="#equation-dc-voltage-ctrl" title="Permalink to this equation">#</a></span>\[p_\mathrm{c,ref} = -k_\mathrm{p} (W_\mathrm{dc,ref} - \hat{W}_\mathrm{dc}) - \int k_\mathrm{i} (W_\mathrm{dc,ref} - \hat{W}_\mathrm{dc}) \mathrm{d} t\]</div>
+<p>where <span class="math notranslate nohighlight">\(k_\mathrm{p}\)</span> is the proportional gain and <span class="math notranslate nohighlight">\(k_\mathrm{i}\)</span> is the integral gain. The negative signs appear since the positive converter output power decreases the DC-bus capacitor energy, see <a class="reference internal" href="#equation-capacitor">(3)</a>.</p>
+</section>
+<section id="closed-loop-system">
+<h2>Closed-Loop System<a class="headerlink" href="#closed-loop-system" title="Permalink to this heading">#</a></h2>
+<p>For simplicity, the capacitance estimate being accurate, <span class="math notranslate nohighlight">\(\hat{C}_\mathrm{dc} = C_\mathrm{dc}\)</span>. Furthermore, the converter is assumed to be lossless and its output power control ideal. The DC-bus energy balance is</p>
+<div class="math notranslate nohighlight" id="equation-capacitor">
+<span class="eqno">(3)<a class="headerlink" href="#equation-capacitor" title="Permalink to this equation">#</a></span>\[\frac{\mathrm{d} W_\mathrm{dc}}{\mathrm{d} t} = p_\mathrm{dc} - p_\mathrm{c}\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_\mathrm{dc}\)</span> is the external power fed to the DC bus, <span class="math notranslate nohighlight">\(p_\mathrm{c}\)</span> is the converter output power, and <span class="math notranslate nohighlight">\(W_\mathrm{dc} = (C_\mathrm{dc}/2) u_\mathrm{dc}^2\)</span> is the energy stored in the DC-bus capacitor. The power <span class="math notranslate nohighlight">\(p_\mathrm{dc}\)</span> is considered as an unknown disturbance.</p>
+<p>In the Laplace domain, the closed-loop system resulting from <a class="reference internal" href="#equation-dc-voltage-ctrl">(2)</a> and <a class="reference internal" href="#equation-capacitor">(3)</a> is given by</p>
+<div class="math notranslate nohighlight" id="equation-dc-voltage-ctrl-closed-loop">
+<span class="eqno">(4)<a class="headerlink" href="#equation-dc-voltage-ctrl-closed-loop" title="Permalink to this equation">#</a></span>\[W_\mathrm{dc}(s) = \frac{k_\mathrm{p} s + k_\mathrm{i}}{s^2 + k_\mathrm{p} s + k_\mathrm{i}} W_\mathrm{dc,ref}(s) + \frac{s}{s^2 + k_\mathrm{p} s + k_\mathrm{i}} p_\mathrm{dc}(s)\]</div>
+<p>where it can be seen that <span class="math notranslate nohighlight">\(W_\mathrm{dc} = W_\mathrm{dc,ref}\)</span> holds in the steady state. Furthermore, it can be shown that also <span class="math notranslate nohighlight">\(u_\mathrm{dc} = u_\mathrm{dc,ref}\)</span> holds in the steady state (independently of the errors in the capacitance estimate <span class="math notranslate nohighlight">\(\hat{C}\)</span>, since both reference and measured values in <a class="reference internal" href="#equation-dc-cap-energy">(1)</a> are scaled by the same estimate).</p>
+</section>
+<section id="gain-selection">
+<h2>Gain Selection<a class="headerlink" href="#gain-selection" title="Permalink to this heading">#</a></h2>
+<p>Based on <a class="reference internal" href="#equation-dc-voltage-ctrl-closed-loop">(4)</a>, the gain selection</p>
+<div class="math notranslate nohighlight">
+\[k_\mathrm{p} = 2\alpha_\mathrm{dc} \qquad
+k_\mathrm{i} = \alpha_\mathrm{dc}^2\]</div>
+<p>results in the double real pole at <span class="math notranslate nohighlight">\(s = -\alpha_\mathrm{dc}\)</span>. The closed-loop bandwidth is approximately <span class="math notranslate nohighlight">\(\alpha_\mathrm{dc}\)</span>.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="hur2001" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Hur, Jung, Nam, “A fast dynamic DC-link power-balancing scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron., 2001, <a class="reference external" href="https://doi.org/10.1109/41.937412">https://doi.org/10.1109/41.937412</a></p>
+</aside>
+</aside>
+</section>
 </section>
 
 
@@ -449,20 +492,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../control_system.html"
+       href="index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Common</p>
+        <p class="prev-next-title">Grid Converters</p>
       </div>
     </a>
     <a class="right-next"
-       href="speed_ctrl.html"
+       href="current_ctrl.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Speed Control</p>
+        <p class="prev-next-title">Current Control</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -472,6 +515,22 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#controller-structure">Controller Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

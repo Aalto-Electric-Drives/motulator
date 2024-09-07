@@ -515,7 +515,7 @@ Package Contents
 
    .. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented
       control of IPM drives with variable DC link in the field-weakening
-      region,” IEEE Trans.Ind. Appl., 2009,
+      region,” IEEE Trans. Ind. Appl., 2009,
       https://doi.org/10.1109/TIA.2009.2027167
 
    .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented
