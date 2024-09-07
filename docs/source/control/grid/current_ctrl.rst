@@ -35,13 +35,13 @@ The disturbance rejection depends on the closed-loop admittance
 
 .. math::
     \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}} 
-    :label: Yc
+    :label: Yc_grid
 
 The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is
 
 .. math::
 	\boldsymbol{G}_\mathrm{c}(s) = \frac{(s + \mathrm{j}\omega_\mathrm{c}) \boldsymbol{k}_\mathrm{t} + \boldsymbol{k}_\mathrm{i} }{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}}     
-    :label: Gc
+    :label: Gc_grid
 
 whose zero can be placed by means of the reference-feedforward gain :math:`\boldsymbol{k}_\mathrm{t}`.
 
@@ -55,7 +55,7 @@ Consider the gains
     \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2\hat L  \qquad \qquad
     \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c} \hat L
 
-where :math:`\hat L` is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Yc` and :eq:`Gc` reduce to
+where :math:`\hat L` is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Yc_grid` and :eq:`Gc_grid` reduce to
 
 .. math::
     \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{c})}
