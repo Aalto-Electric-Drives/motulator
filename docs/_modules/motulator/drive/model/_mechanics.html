@@ -392,12 +392,12 @@ document.write(`
 <span class="sd">    J : float</span>
 <span class="sd">        Total moment of inertia (kgm²).</span>
 <span class="sd">    B_L : float | callable</span>
-<span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding </span>
-<span class="sd">        to viscous friction, or an arbitrary function of the rotor speed. For </span>
-<span class="sd">        example, choosing ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic </span>
+<span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding</span>
+<span class="sd">        to viscous friction, or an arbitrary function of the rotor speed. For</span>
+<span class="sd">        example, choosing ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic</span>
 <span class="sd">        load torque ``k*w_M**2``. The default is ``B_L = 0``.</span>
 <span class="sd">    tau_L : callable</span>
-<span class="sd">        External load torque (Nm) as a function of time, `tau_L_t(t)`. The </span>
+<span class="sd">        External load torque (Nm) as a function of time, `tau_L_t(t)`. The</span>
 <span class="sd">        default is zero, ``lambda t: 0*t``.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -549,7 +549,7 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    w_M : callable</span>
-<span class="sd">        Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is </span>
+<span class="sd">        Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is</span>
 <span class="sd">        zero, ``lambda t: 0*t``.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>

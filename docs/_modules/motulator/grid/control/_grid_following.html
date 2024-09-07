@@ -389,7 +389,7 @@ document.write(`
 <span class="k">class</span> <span class="nc">GridFollowingControlCfg</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Grid-following control configuration.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    L : float</span>
@@ -399,7 +399,7 @@ document.write(`
 <span class="sd">    nom_w : float</span>
 <span class="sd">        Nominal grid angular frequency (rad/s).</span>
 <span class="sd">    max_i : float</span>
-<span class="sd">        Maximum current (A), peak value. </span>
+<span class="sd">        Maximum current (A), peak value.</span>
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s). The default is 100e-6.</span>
 <span class="sd">    alpha_c : float, optional</span>
@@ -421,7 +421,7 @@ document.write(`
 <div class="viewcode-block" id="GridFollowingControl"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl">[docs]</a><span class="k">class</span> <span class="nc">GridFollowingControl</span><span class="p">(</span><span class="n">GridConverterControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Grid-following control.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cfg : GridFollowingControlCfg</span>
@@ -479,9 +479,9 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2DOF PI current controller for grid converters.</span>
 
-<span class="sd">    This class provides an interface for a current controller for grid </span>
-<span class="sd">    converters. The gains are initialized based on the desired closed-loop </span>
-<span class="sd">    bandwidth and the filter inductance. </span>
+<span class="sd">    This class provides an interface for a current controller for grid</span>
+<span class="sd">    converters. The gains are initialized based on the desired closed-loop</span>
+<span class="sd">    bandwidth and the filter inductance.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -501,11 +501,11 @@ document.write(`
 <div class="viewcode-block" id="CurrentReference"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentReference">[docs]</a><span class="k">class</span> <span class="nc">CurrentReference</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Current reference generator.</span>
-<span class="sd">    </span>
-<span class="sd">    This class generates the current reference based on the active and reactive </span>
-<span class="sd">    power references. The current limiting algorithm is used to limit the </span>
+
+<span class="sd">    This class generates the current reference based on the active and reactive</span>
+<span class="sd">    power references. The current limiting algorithm is used to limit the</span>
 <span class="sd">    current reference.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cfg : GridFollowingControlCfg</span>

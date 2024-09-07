@@ -20,10 +20,10 @@
 
 12.5-kVA converter, disturbance observer
 ========================================
-    
+
 This example simulates a converter using disturbance-observer-based control in
-grid-forming mode. The converter output voltage and the active power are 
-directly controlled, and grid synchronization is provided by the disturbance 
+grid-forming mode. The converter output voltage and the active power are
+directly controlled, and grid synchronization is provided by the disturbance
 observer. A transparent current controller is included for current limitation.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-17
@@ -202,7 +202,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.413 seconds)
+   **Total running time of the script:** (0 minutes 8.268 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_obs_13kva.py:

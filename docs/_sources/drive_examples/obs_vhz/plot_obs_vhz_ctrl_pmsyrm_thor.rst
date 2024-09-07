@@ -29,8 +29,8 @@ motor, known as THOR, are from the SyR-e project:
 
 The SyR-e project has been licensed under the Apache License, Version 2.0. We
 acknowledge the developers of the SyR-e project. The flux maps from other
-sources can be used in a similar manner. It is worth noticing that the 
-saturation is not taken into account in the control method, only in the system 
+sources can be used in a similar manner. It is worth noticing that the
+saturation is not taken into account in the control method, only in the system
 model. Naturally, the control performance could be improved by taking the
 saturation into account in the control algorithm.
 
@@ -287,7 +287,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 51.636 seconds)
+   **Total running time of the script:** (0 minutes 52.269 seconds)
 
 
 .. _sphx_glr_download_drive_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py:

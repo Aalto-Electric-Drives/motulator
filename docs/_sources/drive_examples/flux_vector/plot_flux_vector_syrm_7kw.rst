@@ -23,10 +23,10 @@
 
 This example simulates sensorless stator-flux-vector control of a saturated
 6.7-kW synchronous reluctance motor drive. The saturation is not taken into
-account in the control method (only in the system model). Even if the machine 
-has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In 
-this case, this PM-flux estimate lumps the effects of inductance errors. 
-Naturally, the PM-flux estimation can be used in PM machine drives as well. 
+account in the control method (only in the system model). Even if the machine
+has no magnets, the PM-flux disturbance estimation is enabled [#Tuo2018]_. In
+this case, this PM-flux estimate lumps the effects of inductance errors.
+Naturally, the PM-flux estimation can be used in PM machine drives as well.
 
 .. GENERATED FROM PYTHON SOURCE LINES 14-23
 
@@ -280,7 +280,7 @@ machine has no magnets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 15.171 seconds)
+   **Total running time of the script:** (0 minutes 15.429 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

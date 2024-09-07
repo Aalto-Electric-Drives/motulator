@@ -1,7 +1,7 @@
 Speed Control
 =============
 
-A speed controller is implemented in the :class:`motulator.drive.control.SpeedController` class, whose base class is :class:`motulator.common.control.PIController`. In the following, the tuning of the speed controller is discussed. The presented approach can be extended to many other control tasks as well. 
+A speed controller is implemented in the :class:`motulator.drive.control.SpeedController` class, whose base class is :class:`motulator.common.control.PIController`. In the following, the tuning of the speed controller is discussed. The presented approach can be extended to many other control tasks as well.
 
 2DOF PI Controller
 ------------------
@@ -10,15 +10,15 @@ Even if controllers operate in the discrete-time domain, they are often designed
 
 .. math::
 	\frac{\mathrm{d} \tau_\mathrm{i}}{\mathrm{d} t} &= k_\mathrm{i}\left(\omega_\mathrm{M,ref} - \omega_\mathrm{M}\right) \\
-    	\tau_\mathrm{M,ref} &= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i} 
+    	\tau_\mathrm{M,ref} &= k_\mathrm{t}\omega_\mathrm{M,ref} - k_\mathrm{p}\omega_\mathrm{M} + \tau_\mathrm{i}
     :label: speed_ctrl
 
-where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angular speed of the rotor, :math:`\omega_\mathrm{M,ref}` is the reference angular speed, and :math:`\tau_\mathrm{i}` is the the integral state. Furthermore, :math:`k_\mathrm{t}` is the reference feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward [#Fra1997]_. 
+where :math:`\omega_\mathrm{M}` is the measured (or estimated) mechanical angular speed of the rotor, :math:`\omega_\mathrm{M,ref}` is the reference angular speed, and :math:`\tau_\mathrm{i}` is the the integral state. Furthermore, :math:`k_\mathrm{t}` is the reference feedforward gain, :math:`k_\mathrm{p}` is the proportional gain, and :math:`k_\mathrm{i}` is the integral gain. Setting :math:`k_\mathrm{t} = k_\mathrm{p}` results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward [#Fra1997]_.
 
 Closed-Loop System
 ------------------
 
-For simplicity, let us assume ideal torque control (:math:`\tau_\mathrm{M} = \tau_\mathrm{M,ref}`) and a stiff mechanical system 
+For simplicity, let us assume ideal torque control (:math:`\tau_\mathrm{M} = \tau_\mathrm{M,ref}`) and a stiff mechanical system
 
 .. math::
     J\frac{\mathrm{d}\omega_\mathrm{M}}{\mathrm{d} t} = \tau_\mathrm{M} - \tau_\mathrm{L}
@@ -29,19 +29,19 @@ where :math:`\tau_\mathrm{M}` is the electromagnetic torque, :math:`\tau_\mathrm
 .. math::
     \omega_\mathrm{M}(s) = \frac{k_\mathrm{t} s + k_\mathrm{i}}{J s^2 + k_\mathrm{p} s + k_\mathrm{i}} \omega_\mathrm{M,ref}(s) - \frac{s}{J s^2 + k_\mathrm{p} s + k_\mathrm{i}} \tau_\mathrm{L}(s)
 
-where it can be seen that the gain :math:`k_\mathrm{t}` allows to place the reference-tracking zero. 
+where it can be seen that the gain :math:`k_\mathrm{t}` allows to place the reference-tracking zero.
 
 Gain Selection
 --------------
 
-The gain selection [#Har2013]_ 
+The gain selection [#Har2013]_
 
 .. math::
     k_\mathrm{t} = \alpha_\mathrm{s} \hat{J} \qquad
     k_\mathrm{p} = 2\alpha_\mathrm{s} \hat{J} \qquad
-    k_\mathrm{i} = \alpha_\mathrm{s}^2 \hat{J} 
+    k_\mathrm{i} = \alpha_\mathrm{s}^2 \hat{J}
 
-results in 
+results in
 
 .. math::
     \omega_\mathrm{M}(s) = \frac{\alpha_\mathrm{s}}{s + \alpha_\mathrm{s}} \omega_\mathrm{M,ref}(s) - \frac{s}{J (s + \alpha_\mathrm{s})^2} \tau_\mathrm{L}(s)

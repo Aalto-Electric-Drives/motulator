@@ -21,8 +21,8 @@
 2.2-kW PMSM, diode bridge
 =========================
 
-This example simulates sensorless current-vector control of a 2.2-kW PMSM 
-drive, equipped with a diode bridge rectifier. 
+This example simulates sensorless current-vector control of a 2.2-kW PMSM
+drive, equipped with a diode bridge rectifier.
 
 .. GENERATED FROM PYTHON SOURCE LINES 10-15
 
@@ -180,7 +180,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 14.388 seconds)
+   **Total running time of the script:** (0 minutes 14.703 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vector_plot_vector_ctrl_pmsm_2kw_diode.py:

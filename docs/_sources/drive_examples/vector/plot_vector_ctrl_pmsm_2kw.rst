@@ -21,8 +21,8 @@
 2.2-kW PMSM
 ===========
 
-This example simulates sensorless current-vector control of a 2.2-kW PMSM 
-drive. 
+This example simulates sensorless current-vector control of a 2.2-kW PMSM
+drive.
 
 .. GENERATED FROM PYTHON SOURCE LINES 10-18
 
@@ -157,7 +157,7 @@ Create the simulation object and simulate it.
 
  .. code-block:: none
 
-    Simulation time: 4.41 s
+    Simulation time: 4.40 s
 
 
 
@@ -165,7 +165,7 @@ Create the simulation object and simulate it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.469 seconds)
+   **Total running time of the script:** (0 minutes 5.459 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vector_plot_vector_ctrl_pmsm_2kw.py:

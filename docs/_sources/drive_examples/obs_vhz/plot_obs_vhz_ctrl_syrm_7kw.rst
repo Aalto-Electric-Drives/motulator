@@ -22,7 +22,7 @@
 ======================
 
 This example simulates observer-based V/Hz control of a saturated 6.7-kW
-synchronous reluctance motor drive. The saturation is not taken into account in 
+synchronous reluctance motor drive. The saturation is not taken into account in
 the control method (only in the system model).
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-18
@@ -96,7 +96,7 @@ look-up tables can be used.
 
         Notes
         -----
-        For nonzero `i_f`, the initial value of the stator flux linkage `psi_s0` 
+        For nonzero `i_f`, the initial value of the stator flux linkage `psi_s0`
         needs to be solved, e.g., as follows::
 
         from scipy.optimize import minimize_scalar
@@ -266,7 +266,7 @@ the results in SI units.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 28.702 seconds)
+   **Total running time of the script:** (0 minutes 29.113 seconds)
 
 
 .. _sphx_glr_download_drive_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py:

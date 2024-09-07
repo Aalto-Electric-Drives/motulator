@@ -22,7 +22,7 @@
 ====================================
 
 A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters in this example yield open-loop V/Hz control. 
+parameters in this example yield open-loop V/Hz control.
 
 .. GENERATED FROM PYTHON SOURCE LINES 10-19
 
@@ -218,7 +218,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.146 seconds)
+   **Total running time of the script:** (0 minutes 18.242 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_vhz_ctrl_im_2kw.py:

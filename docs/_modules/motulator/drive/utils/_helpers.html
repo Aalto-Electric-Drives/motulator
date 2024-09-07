@@ -476,7 +476,7 @@ document.write(`
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Notice that the nominal torque is larger than the base torque due to </span>
+<span class="sd">        Notice that the nominal torque is larger than the base torque due to</span>
 <span class="sd">        the power factor and efficiency being less than unity.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -497,14 +497,14 @@ document.write(`
 <span class="k">class</span> <span class="nc">MachinePars</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for electrical parameters of an electric machine.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    n_p : int</span>
 <span class="sd">        Number of pole pairs.</span>
 <span class="sd">    R_s : float</span>
 <span class="sd">        Stator resistance (Ω).</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
@@ -515,7 +515,7 @@ document.write(`
 <span class="k">class</span> <span class="nc">SynchronousMachinePars</span><span class="p">(</span><span class="n">MachinePars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous machine parameters.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    n_p : int</span>
@@ -528,7 +528,7 @@ document.write(`
 <span class="sd">        q-axis inductance (H).</span>
 <span class="sd">    psi_f : float</span>
 <span class="sd">        Permanent-magnet flux linkage (Vs).</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">L_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">L_q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
@@ -540,7 +540,7 @@ document.write(`
 <span class="k">class</span> <span class="nc">InductionMachinePars</span><span class="p">(</span><span class="n">MachinePars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Γ-model parameters of an induction machine.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    n_p : int</span>
@@ -553,7 +553,7 @@ document.write(`
 <span class="sd">        Leakage inductance (H).</span>
 <span class="sd">    L_s : float | callable</span>
 <span class="sd">        Stator inductance (H).</span>
-<span class="sd"> </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">R_r</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">L_ell</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
@@ -565,18 +565,18 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute Γ-model parameters from inverse-Γ model parameters.</span>
 
-<span class="sd">        This transformation assumes that the parameters are constant. </span>
+<span class="sd">        This transformation assumes that the parameters are constant.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        par : InductionMachineInvGammaPars</span>
 <span class="sd">            Inverse-Γ model parameters.</span>
-<span class="sd"> </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        InductionMachinePars</span>
 <span class="sd">            Γ model parameters.</span>
-<span class="sd"> </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">g</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span><span class="p">)</span>
         <span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="p">,</span> <span class="n">L_s</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_R</span><span class="o">/</span><span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">/</span><span class="n">g</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span>
@@ -589,7 +589,7 @@ document.write(`
 <span class="k">class</span> <span class="nc">InductionMachineInvGammaPars</span><span class="p">(</span><span class="n">MachinePars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Inverse-Γ model parameters of an induction machine.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    n_p : int</span>
@@ -602,7 +602,7 @@ document.write(`
 <span class="sd">        Leakage inductance (H).</span>
 <span class="sd">    L_M : float</span>
 <span class="sd">        Magnetizing inductance (H).</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">R_R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">L_sgm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
@@ -613,18 +613,18 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute inverse-Γ model parameters from Γ model parameters.</span>
 
-<span class="sd">        This transformation assumes that the parameters are constant. </span>
+<span class="sd">        This transformation assumes that the parameters are constant.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        par : InductionMachinePars</span>
 <span class="sd">            Γ-model parameters.</span>
-<span class="sd"> </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        InductionMachineInvGammaPars</span>
 <span class="sd">            Inverse-Γ model parameters.</span>
-<span class="sd"> </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">g</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_s</span><span class="o">/</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_ell</span><span class="p">)</span>
         <span class="n">R_R</span><span class="p">,</span> <span class="n">L_sgm</span><span class="p">,</span> <span class="n">L_M</span> <span class="o">=</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R_r</span><span class="p">,</span> <span class="n">g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_ell</span><span class="p">,</span> <span class="n">g</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span>
@@ -637,7 +637,7 @@ document.write(`
 <span class="k">class</span> <span class="nc">TwoMassMechanicalSystemPars</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-mass mechanical system parameters.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    J_M : float</span>
@@ -649,9 +649,9 @@ document.write(`
 <span class="sd">    C_S : float</span>
 <span class="sd">        Shaft torsional damping (Nm/(rad/s)).</span>
 <span class="sd">    B_L : float | callable</span>
-<span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding </span>
-<span class="sd">        to viscous friction, or an arbitrary function of the load speed. For </span>
-<span class="sd">        example, choosing ``B_L = lambda w_L: k*abs(w_M)`` leads to the </span>
+<span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding</span>
+<span class="sd">        to viscous friction, or an arbitrary function of the load speed. For</span>
+<span class="sd">        example, choosing ``B_L = lambda w_L: k*abs(w_M)`` leads to the</span>
 <span class="sd">        quadratic load torque ``k*w_L**2``. The default is ``B_L = 0``.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
