@@ -48,15 +48,15 @@ class PowerSynchronizationControlCfg:
 class PowerSynchronizationControl(GridConverterControlSystem):
     """
     Reference-feedforward power-synchronization control.
-    
-    This implements the reference-feedforward power-synchronization control 
-    method [#Har2020]_. 
+
+    This implements the reference-feedforward power-synchronization control
+    method [#Har2020]_.
 
     Parameters
     ----------
     cfg : PSCControlCfg
         Model and controller configuration parameters.
-    
+
     References
     ----------
     .. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-feedforward

@@ -12,8 +12,8 @@ class Drive(Model):
     """
     Continuous-time model for machine drives.
 
-    This interconnects the subsystems of a machine drive and provides an 
-    interface to the solver. 
+    This interconnects the subsystems of a machine drive and provides an
+    interface to the solver.
 
     Parameters
     ----------
@@ -22,7 +22,7 @@ class Drive(Model):
     machine : InductionMachine | SynchronousMachine
         Machine model.
     mechanics : ExternalRotorSpeed | StiffMechanicalSystem |\
-                TwoMassMechanicalSystem                
+                TwoMassMechanicalSystem
         Mechanical subsystem model.
 
     """
@@ -66,7 +66,7 @@ class DriveWithLCFilter(Model):
     machine : InductionMachine | SynchronousMachine
         Machine model.
     mechanics : ExternalRotorSpeed | StiffMechanicalSystem |\
-                TwoMassMechanicalSystem                
+                TwoMassMechanicalSystem
         Mechanical subsystem model.
     lc_filter : LCFilter
         LC-filter model.
@@ -126,7 +126,7 @@ class DriveWithDiodeBridge(Model):
     machine : InductionMachine | SynchronousMachine
         Machine model.
     mechanics : ExternalRotorSpeed | StiffMechanicalSystem |\
-                TwoMassMechanicalSystem                
+                TwoMassMechanicalSystem
         Mechanical subsystem model.
 
     """
