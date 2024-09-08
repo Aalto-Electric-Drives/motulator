@@ -52,7 +52,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'control/grid/current_ctrl';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Disturbance-Observer-Based PLL" href="synchronization.html" />
+    <link rel="next" title="Phase-Locked Loop" href="pll.html" />
     <link rel="prev" title="DC-Bus Voltage Control" href="dc_voltage_ctrl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -230,7 +230,8 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Grid Converters</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="synchronization.html">Disturbance-Observer-Based PLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid-forming.html">Grid-Forming Control</a></li>
 </ul>
 </li>
 </ul>
@@ -424,11 +425,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-controller">2DOF PI Controller</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-controller">2DOF PI Controller</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
 </ul>
             </nav>
         </div>
@@ -454,8 +453,9 @@ document.write(`
 <span class="eqno">(1)<a class="headerlink" href="#equation-grid-cc" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= (\boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c}\boldsymbol{k}_\mathrm{t} )\left(\boldsymbol{i}_\mathrm{c,ref} - \boldsymbol{i}_\mathrm{c}\right) \\
 \boldsymbol{u}_\mathrm{c,ref} &amp;= \boldsymbol{k}_\mathrm{t}\boldsymbol{i}_\mathrm{c,ref} - \boldsymbol{k}_\mathrm{p}\boldsymbol{i}_\mathrm{c} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{c,ref}\)</span> is the output of the controller, i.e., the converter voltage reference, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{c}\)</span> is the measured converter current, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{c,ref}\)</span> is the converter current reference, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{i}\)</span> is the the integral state, and <span class="math notranslate nohighlight">\(\omega_\mathrm{c}\)</span> is the angular speed of the coordinate system. Furthermore, <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t}\)</span> is the reference-feedforward gain, <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{i}\)</span> is the integral gain.</p>
+</section>
 <section id="closed-loop-system">
-<h3>Closed-Loop System<a class="headerlink" href="#closed-loop-system" title="Permalink to this heading">#</a></h3>
+<h2>Closed-Loop System<a class="headerlink" href="#closed-loop-system" title="Permalink to this heading">#</a></h2>
 <p>Consider the grid model in synchronous coordinates</p>
 <div class="math notranslate nohighlight" id="equation-l-filt-sync">
 <span class="eqno">(2)<a class="headerlink" href="#equation-l-filt-sync" title="Permalink to this equation">#</a></span>\[L\frac{\mathrm{d}\boldsymbol{i}_\mathrm{c}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{c} - \boldsymbol{u}_\mathrm{g} - \mathrm{j} \omega_\mathrm{c} L \boldsymbol{i}_\mathrm{c}\]</div>
@@ -471,7 +471,7 @@ document.write(`
 <p>whose zero can be placed by means of the reference-feedforward gain <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t}\)</span>.</p>
 </section>
 <section id="gain-selection">
-<h3>Gain Selection<a class="headerlink" href="#gain-selection" title="Permalink to this heading">#</a></h3>
+<h2>Gain Selection<a class="headerlink" href="#gain-selection" title="Permalink to this heading">#</a></h2>
 <p>Consider the gains</p>
 <div class="math notranslate nohighlight">
 \[\boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \hat L \qquad\qquad
@@ -508,7 +508,6 @@ document.write(`
 </aside>
 </section>
 </section>
-</section>
 
 
                 </article>
@@ -531,11 +530,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="synchronization.html"
+       href="pll.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Disturbance-Observer-Based PLL</p>
+        <p class="prev-next-title">Phase-Locked Loop</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -554,11 +553,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-controller">2DOF PI Controller</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dof-pi-controller">2DOF PI Controller</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system">Closed-Loop System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-selection">Gain Selection</a></li>
 </ul>
   </nav></div>
 

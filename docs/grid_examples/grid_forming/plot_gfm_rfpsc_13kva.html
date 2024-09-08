@@ -229,7 +229,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../control/grid/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
 </li>
 </ul>
@@ -446,7 +447,7 @@ to download the full example code.</p>
 </div>
 <p>Configure the system model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter and grid</span>
-<span class="n">par</span> <span class="o">=</span> <span class="n">ACFilterPars</span><span class="p">(</span><span class="n">L_fc</span><span class="o">=</span><span class="mf">.15</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">L_g</span><span class="o">=</span><span class="mf">.74</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">ACFilterPars</span><span class="p">(</span><span class="n">L_fc</span><span class="o">=</span><span class="mf">.15</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">R_fc</span><span class="o">=</span><span class="mf">.05</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="n">L_g</span><span class="o">=</span><span class="mf">.74</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
 <span class="c1"># par.L_g = 0  # Uncomment this line to simulate a strong grid</span>
 <span class="n">ac_filter</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">ACFilter</span></a><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 <span class="c1"># Grid voltage source with constant frequency and voltage magnitude</span>
@@ -461,7 +462,12 @@ to download the full example code.</p>
 <p>Configure the control system.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Control configuration parameters</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">PowerSynchronizationControlCfg</span><span class="p">(</span>
-    <span class="n">nom_u</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">nom_w</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">,</span> <span class="n">max_i</span><span class="o">=</span><span class="mf">1.3</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">T_s</span><span class="o">=</span><span class="mf">100e-6</span><span class="p">,</span> <span class="n">R_a</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
+    <span class="n">nom_u</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+    <span class="n">nom_w</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">,</span>
+    <span class="n">max_i</span><span class="o">=</span><span class="mf">1.3</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
+    <span class="n">R</span><span class="o">=</span><span class="mf">.05</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span>
+    <span class="n">R_a</span><span class="o">=</span><span class="mf">.2</span><span class="o">*</span><span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span>
+    <span class="n">T_s</span><span class="o">=</span><span class="mf">100e-6</span><span class="p">)</span>
 
 <span class="c1"># Create the control system</span>
 <span class="n">ctrl</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">PowerSynchronizationControl</span></a><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
@@ -489,7 +495,7 @@ to download the full example code.</p>
 <li><img src="../../_images/sphx_glr_plot_gfm_rfpsc_13kva_001.png" srcset="../../_images/sphx_glr_plot_gfm_rfpsc_13kva_001.png" alt="plot gfm rfpsc 13kva" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_gfm_rfpsc_13kva_002.png" srcset="../../_images/sphx_glr_plot_gfm_rfpsc_13kva_002.png" alt="plot gfm rfpsc 13kva" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.722 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.786 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-grid-forming-plot-gfm-rfpsc-13kva-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/11388a34fc999c2467fbd17556f5ee11/plot_gfm_rfpsc_13kva.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gfm_rfpsc_13kva.ipynb</span></code></a></p>

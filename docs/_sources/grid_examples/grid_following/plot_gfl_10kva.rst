@@ -66,7 +66,7 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-41
+.. GENERATED FROM PYTHON SOURCE LINES 27-39
 
 .. code-block:: Python
 
@@ -80,9 +80,7 @@ Configure the system model.
 
     # Create system model
     mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
-
-    # Uncomment line below to enable the PWM model
-    # mdl.pwm = model.CarrierComparison()
+    # mdl.pwm = model.CarrierComparison()  # Uncomment to enable the PWM model
 
 
 
@@ -91,11 +89,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-48
+.. GENERATED FROM PYTHON SOURCE LINES 41-46
 
 .. code-block:: Python
 
@@ -111,11 +109,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-60
+.. GENERATED FROM PYTHON SOURCE LINES 48-58
 
 .. code-block:: Python
 
@@ -136,11 +134,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-66
+.. GENERATED FROM PYTHON SOURCE LINES 60-64
 
 .. code-block:: Python
 
@@ -155,11 +153,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-75
+.. GENERATED FROM PYTHON SOURCE LINES 66-73
 
 .. code-block:: Python
 
@@ -197,7 +195,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.230 seconds)
+   **Total running time of the script:** (0 minutes 1.254 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_10kva.py:

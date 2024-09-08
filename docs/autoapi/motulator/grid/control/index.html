@@ -229,7 +229,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
 </li>
 </ul>
@@ -709,8 +710,6 @@ is needed in DC-bus voltage control mode.</p>
 <dt>u_cs<span class="classifier">complex</span></dt><dd><p>Realized converter output voltage (V) in stationary
 coordinates. This signal is obtained from the PWM.</p>
 </dd>
-<dt>u_gs<span class="classifier">complex</span></dt><dd><p>PCC voltage (V) in stationary coordinates.</p>
-</dd>
 </dl>
 </div></blockquote>
 </p>
@@ -740,7 +739,7 @@ coordinates. This signal is obtained from the PWM.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p><strong>ref</strong> –</p>
-<p>Reference signals, containing the following fields:</p>
+<p>Reference signals, containing some of the following fields:</p>
 <blockquote>
 <div><dl class="simple">
 <dt>u_dc<span class="classifier">float</span></dt><dd><p>DC-bus voltage reference (V).</p>
@@ -858,7 +857,7 @@ coordinates. This signal is obtained from the PWM.</p>
 described in <a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Transparent current control is also implemented.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingControlCfg" title="motulator.grid.control.ObserverBasedGridFormingControlCfg"><em>ObserverBasedGridFormingControlCfg</em></a>) – Controller configuration parameters.</p>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingControlCfg" title="motulator.grid.control.ObserverBasedGridFormingControlCfg"><em>ObserverBasedGridFormingControlCfg</em></a>) – Control system configuration parameters.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -909,9 +908,10 @@ Trans. Power Electron., 2024, <a class="reference external" href="https://doi.or
 <li><p><strong>max_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
 <li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Total series resistance (Ω). The default is 0.</p></li>
 <li><p><strong>R_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*nom_u/max_i.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
+<li><p><strong>k_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage control gain. The default is <cite>alpha_o/nom_w</cite>.</p></li>
 <li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Current control bandwidth (rad/s). The default is 2*pi*400.</p></li>
 <li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Observer gain (rad/s). The default is 2*pi*50.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -997,9 +997,10 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <li><p><strong>nom_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
 <li><p><strong>nom_w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Nominal grid angular frequency (rad/s).</p></li>
 <li><p><strong>max_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
+<li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Total series resistance (Ω). The default is 0.</p></li>
 <li><p><strong>R_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*nom_u/max_i.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
 <li><p><strong>w_b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Low-pass filter bandwidth (rad/s). The default is 2*pi*5.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
 </ul>
 </dd>
 </dl>

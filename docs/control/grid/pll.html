@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Grid Converters &#8212; motulator 0.4.0 documentation</title>
+    <title>Phase-Locked Loop &#8212; motulator 0.4.0 documentation</title>
   
   
   
@@ -48,11 +48,12 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'model/grid/index';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'control/grid/pll';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="AC Filter and Grid Impedance" href="filter_and_grid.html" />
-    <link rel="prev" title="Six-Pulse Diode Bridge" href="../drive/diode_bridge.html" />
+    <link rel="next" title="Disturbance-Observer-Based Grid-Forming Control" href="grid-forming.html" />
+    <link rel="prev" title="Current Control" href="current_ctrl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -202,35 +203,35 @@
 </li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../common.html">Common</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../drive/machines.html">Electric Machines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../drive/mechanics.html">Mechanics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../drive/ac_filter.html">Output LC Filter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../model/common.html">Common</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/machines.html">Electric Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/mechanics.html">Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Grid Converters</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="grid_volt_source.html">Three-Phase Voltage Source</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
 </ul>
 </li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../control/control_system.html">Common</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../control/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../control/drive/speed_ctrl.html">Speed Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../control/drive/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../control/drive/observers.html">Observers</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../control_system.html">Common</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../drive/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drive/observers.html">Observers</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../control/grid/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../control/grid/pll.html">Phase-Locked Loop</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Grid Converters</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid-forming.html">Grid-Forming Control</a></li>
 </ul>
 </li>
 </ul>
@@ -330,7 +331,7 @@
       
       
       
-      <li><a href="../../_sources/model/grid/index.rst" target="_blank"
+      <li><a href="../../_sources/control/grid/pll.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -401,7 +402,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -412,11 +415,22 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Grid Converters</h1>
+    <h1>Phase-Locked Loop</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-model">Disturbance Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pll-in-general-coordinates">PLL in General Coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pll-in-estimated-pcc-voltage-coordinates">PLL in Estimated PCC Voltage Coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linearized-closed-loop-system">Linearized Closed-Loop System</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -426,18 +440,84 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="grid-converters">
-<h1>Grid Converters<a class="headerlink" href="#grid-converters" title="Permalink to this heading">#</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="filter_and_grid.html">AC Filter and Grid Impedance</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="filter_and_grid.html#l-filter">L Filter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filter_and_grid.html#lcl-filter">LCL Filter</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="grid_volt_source.html">Three-Phase Voltage Source</a></li>
-</ul>
+  <section id="phase-locked-loop">
+<h1>Phase-Locked Loop<a class="headerlink" href="#phase-locked-loop" title="Permalink to this heading">#</a></h1>
+<p>A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid <a class="footnote-reference brackets" href="#kau1997" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Here, we represent the PLL using the disturbance observer structure <a class="footnote-reference brackets" href="#fra1997" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see <a class="footnote-reference brackets" href="#nur2024" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<section id="disturbance-model">
+<h2>Disturbance Model<a class="headerlink" href="#disturbance-model" title="Permalink to this heading">#</a></h2>
+<p>Consider the positive-sequence voltage at the point of common coupling (PCC) in general coordinates, rotating at the angular speed <span class="math notranslate nohighlight">\(\omega_\mathrm{c}\)</span>. The dynamics of the PCC voltage <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{g}\)</span> can be modeled using a disturbance model as</p>
+<div class="math notranslate nohighlight" id="equation-disturbance">
+<span class="eqno">(1)<a class="headerlink" href="#equation-disturbance" title="Permalink to this equation">#</a></span>\[\frac{\mathrm{d}\boldsymbol{u}_\mathrm{g}}{\mathrm{d}t} = \mathrm{j}(\omega_\mathrm{g} - \omega_\mathrm{c})\boldsymbol{u}_\mathrm{g}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega_\mathrm{g}\)</span> is the grid angular frequency. If needed, this disturbance model could be extended, e.g., with a negative-sequence component, allowing to design the PLL for unbalanced grids.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The disturbance model in <a class="reference internal" href="#equation-disturbance">(1)</a> can be equivalently expressed in polar form as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{\mathrm{d} u_\mathrm{g}}{\mathrm{d} t} &amp;= 0 \\
+\frac{\mathrm{d} \delta_\mathrm{g}}{\mathrm{d} t} &amp;= \omega_\mathrm{g} - \omega_\mathrm{c} \\
+\boldsymbol{u}_\mathrm{g} &amp;= u_\mathrm{g} \mathrm{e}^{\mathrm{j}\delta_\mathrm{g}}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\delta_\mathrm{g} = \vartheta_\mathrm{g} - \vartheta_\mathrm{c}\)</span> is the angle of the grid voltage in general coordinates and the last equation is the output equation.</p>
 </div>
+</section>
+<section id="pll-in-general-coordinates">
+<h2>PLL in General Coordinates<a class="headerlink" href="#pll-in-general-coordinates" title="Permalink to this heading">#</a></h2>
+<p>Based on <a class="reference internal" href="#equation-disturbance">(1)</a>, the disturbance observer containing the regular PLL functionality can be formulated as</p>
+<div class="math notranslate nohighlight" id="equation-pll">
+<span class="eqno">(2)<a class="headerlink" href="#equation-pll" title="Permalink to this equation">#</a></span>\[\frac{\mathrm{d}\hat{\boldsymbol{u}}_\mathrm{g}}{\mathrm{d}t} = \mathrm{j}(\hat{\omega}_\mathrm{g} - \omega_\mathrm{c})\hat{\boldsymbol{u}}_\mathrm{g} + \alpha_\mathrm{o} (\boldsymbol{u}_\mathrm{g} - \hat{\boldsymbol{u}}_\mathrm{g} )\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{\boldsymbol{u}}_\mathrm{g}\)</span> is the estimated PCC voltage, <span class="math notranslate nohighlight">\(\hat{\omega}_\mathrm{g}\)</span> is the grid angular frequency estimate (either constant corresponding to the nominal value or dynamic from grid-frequency tracking), and <span class="math notranslate nohighlight">\(\alpha_\mathrm{o}\)</span> is the bandwidth. If needed, the disturbance observer can be extended with the frequency tracking as</p>
+<div class="math notranslate nohighlight" id="equation-frequency-tracking">
+<span class="eqno">(3)<a class="headerlink" href="#equation-frequency-tracking" title="Permalink to this equation">#</a></span>\[\frac{\mathrm{d}\hat{\omega}_\mathrm{g}}{\mathrm{d}t} = k_\omega\mathrm{Im}\left\{ \frac{\boldsymbol{u}_\mathrm{g} - \hat{\boldsymbol{u}}_\mathrm{g}}{\hat{\boldsymbol{u}}_\mathrm{g}} \right\}\]</div>
+<p>where <span class="math notranslate nohighlight">\(k_\omega\)</span> is the frequency-tracking gain. Notice that <a class="reference internal" href="#equation-pll">(2)</a> and <a class="reference internal" href="#equation-frequency-tracking">(3)</a> are both driven by the estimation error <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{g} - \hat{\boldsymbol{u}}_\mathrm{g}\)</span> of the PCC voltage.</p>
+</section>
+<section id="pll-in-estimated-pcc-voltage-coordinates">
+<h2>PLL in Estimated PCC Voltage Coordinates<a class="headerlink" href="#pll-in-estimated-pcc-voltage-coordinates" title="Permalink to this heading">#</a></h2>
+<p>The disturbance observer <a class="reference internal" href="#equation-pll">(2)</a> can be equivalently expressed in estimated PCC voltage coordinates, where <span class="math notranslate nohighlight">\(\hat{\boldsymbol{u}}_\mathrm{g} = \hat{u}_\mathrm{g}\)</span> and <span class="math notranslate nohighlight">\(\omega_\mathrm{c} = \mathrm{d} \hat{\vartheta}_\mathrm{g}/ \mathrm{d} t\)</span>, resulting in</p>
+<div class="math notranslate nohighlight" id="equation-pll-polar">
+<span class="eqno">(4)<a class="headerlink" href="#equation-pll-polar" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d}\hat{u}_\mathrm{g}}{\mathrm{d}t} &amp;= \alpha_\mathrm{o} \left(\mathrm{Re}\{\boldsymbol{u}_\mathrm{g}\} - \hat{u}_\mathrm{g} \right) \\
+\frac{\mathrm{d} \hat{\vartheta}_\mathrm{g}}{\mathrm{d} t} &amp;= \hat{\omega}_\mathrm{g} + \frac{\alpha_\mathrm{o}}{\hat{u}_\mathrm{g}}\mathrm{Im}\{ \boldsymbol{u}_\mathrm{g} \} = \omega_\mathrm{c}\end{split}\]</div>
+<p>It can be seen that the first equation in <a class="reference internal" href="#equation-pll-polar">(4)</a> is low-pass filtering of the measured PCC voltage magnitude and the second equation is the conventional angle-tracking PLL. In these coordinates, the frequency tracking <a class="reference internal" href="#equation-frequency-tracking">(3)</a> reduces to</p>
+<div class="math notranslate nohighlight" id="equation-frequency-tracking-polar">
+<span class="eqno">(5)<a class="headerlink" href="#equation-frequency-tracking-polar" title="Permalink to this equation">#</a></span>\[\frac{\mathrm{d} \hat{\omega}_\mathrm{g}}{\mathrm{d} t} = \frac{k_\omega}{\hat{u}_\mathrm{g} } \mathrm{Im}\{ \boldsymbol{u}_\mathrm{g} \}\]</div>
+<p>It can be noticed that the disturbance observer with the frequency tracking equals the conventional frequency-adaptive PLL <a class="footnote-reference brackets" href="#kau1997" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, with the additional feature of low-pass filtering the PCC voltage magnitude. The low-pass filtered PCC voltage can be used as a feedforward term in current control <a class="footnote-reference brackets" href="#har2021" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+</section>
+<section id="linearized-closed-loop-system">
+<h2>Linearized Closed-Loop System<a class="headerlink" href="#linearized-closed-loop-system" title="Permalink to this heading">#</a></h2>
+<p>The estimation-error dynamics are analyzed by means of linearization. Using the PCC voltage as an example, the small-signal deviation about the operating point is denoted by <span class="math notranslate nohighlight">\(\Delta \boldsymbol{u}_\mathrm{g} = \boldsymbol{u}_\mathrm{g} - \boldsymbol{u}_\mathrm{g0}\)</span>, where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{g0}\)</span> is the operating-point quantity. From <a class="reference internal" href="#equation-disturbance">(1)</a>–<a class="reference internal" href="#equation-frequency-tracking">(3)</a>, the linearized model for the estimation-error dynamics is obtained as</p>
+<div class="math notranslate nohighlight" id="equation-linearized-model">
+<span class="eqno">(6)<a class="headerlink" href="#equation-linearized-model" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d}\Delta \tilde{\boldsymbol{u}}_\mathrm{g}}{\mathrm{d}t} &amp;= -\alpha_\mathrm{o}\Delta \tilde{\boldsymbol{u}}_\mathrm{g} + \mathrm{j}\boldsymbol{u}_\mathrm{g0} (\Delta \omega_\mathrm{g} - \Delta \hat{\omega}_\mathrm{g}) \\
+\frac{\mathrm{d}\Delta \hat{\omega}_\mathrm{g}}{\mathrm{d}t} &amp;= k_\omega\mathrm{Im}\left\{ \frac{\Delta \tilde{\boldsymbol{u}}_\mathrm{g}}{\boldsymbol{u}_\mathrm{g0}} \right\}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta \tilde{\boldsymbol{u}}_\mathrm{g} = \Delta\boldsymbol{u}_\mathrm{g} - \Delta \hat{\boldsymbol{u}}_\mathrm{g}\)</span> is the estimation error.</p>
+<p>First, assume that the grid frequency <span class="math notranslate nohighlight">\(\omega_\mathrm{g}\)</span> is constant and the frequency tracking is disabled. From <a class="reference internal" href="#equation-linearized-model">(6)</a>, the closed-loop transfer function from the PCC voltage to its estimate becomes</p>
+<div class="math notranslate nohighlight" id="equation-closed-loop-pll">
+<span class="eqno">(7)<a class="headerlink" href="#equation-closed-loop-pll" title="Permalink to this equation">#</a></span>\[\frac{\Delta\hat{\boldsymbol{u}}_\mathrm{g}(s)}{\Delta\boldsymbol{u}_\mathrm{g}(s)} = \frac{\alpha_\mathrm{o}}{s + \alpha_\mathrm{o}}\]</div>
+<p>It can be realized that both the angle and magnitude of the PCC voltage estimate converge with the bandwidth <span class="math notranslate nohighlight">\(\alpha_\mathrm{o}\)</span>.</p>
+<p>Next, the frequency-tracking dynamics are also considered. From <a class="reference internal" href="#equation-linearized-model">(6)</a>, the closed-loop transfer function from the grid angular frequency to its estimate becomes</p>
+<div class="math notranslate nohighlight" id="equation-closed-loop-pll-frequency-tracking">
+<span class="eqno">(8)<a class="headerlink" href="#equation-closed-loop-pll-frequency-tracking" title="Permalink to this equation">#</a></span>\[\frac{\Delta\hat{\omega}_\mathrm{g}(s)}{\Delta\omega_\mathrm{g}(s)}
+= \frac{k_\omega}{s^2 + \alpha_\mathrm{o}s + k_\omega}\]</div>
+<p>Choosing <span class="math notranslate nohighlight">\(k_\omega = \alpha_\mathrm{pll}^2\)</span> and <span class="math notranslate nohighlight">\(\alpha_\mathrm{o} = 2\alpha_\mathrm{pll}\)</span> yields the double pole at <span class="math notranslate nohighlight">\(s = -\alpha_\mathrm{pll}\)</span>, where <span class="math notranslate nohighlight">\(\alpha_\mathrm{pll}\)</span> is the frequency-tracking bandwidth.</p>
+<p>This PLL in estimated PCC coordinates is implemented in the class <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.PLL</span></code></a>. The <a class="reference internal" href="../../grid_examples/grid_following/index.html"><span class="doc">Grid-Following Control</span></a> examples use the PLL to synchronize with the grid.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="kau1997" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
+<p>Kaura, Blasko, “Operation of a phase locked loop system under distorted utility conditions,” IEEE Trans. Ind. Appl., 1997, <a class="reference external" href="https://doi.org/10.1109/28.567077">https://doi.org/10.1109/28.567077</a></p>
+</aside>
+<aside class="footnote brackets" id="fra1997" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Franklin, Powell, Workman, “Digital Control of Dynamic Systems,” 3rd ed., Menlo Park, CA: Addison-Wesley, 1997</p>
+</aside>
+<aside class="footnote brackets" id="nur2024" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming converter control based on a disturbance observer, “IEEE Trans. Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
+</aside>
+<aside class="footnote brackets" id="har2021" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
+<p>Harnefors, Kukkola, Routimo, Hinkkanen, Wang, “A universal controller for grid-connected voltage-source converters,” IEEE J. Emerg. Sel. Topics Power Electron., 2021, <a class="reference external" href="https://doi.org/10.1109/JESTPE.2020.3039407">https://doi.org/10.1109/JESTPE.2020.3039407</a></p>
+</aside>
+</aside>
+</section>
 </section>
 
 
@@ -452,20 +532,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../drive/diode_bridge.html"
+       href="current_ctrl.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Six-Pulse Diode Bridge</p>
+        <p class="prev-next-title">Current Control</p>
       </div>
     </a>
     <a class="right-next"
-       href="filter_and_grid.html"
+       href="grid-forming.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">AC Filter and Grid Impedance</p>
+        <p class="prev-next-title">Disturbance-Observer-Based Grid-Forming Control</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -475,6 +555,23 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disturbance-model">Disturbance Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pll-in-general-coordinates">PLL in General Coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pll-in-estimated-pcc-voltage-coordinates">PLL in Estimated PCC Voltage Coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linearized-closed-loop-system">Linearized Closed-Loop System</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

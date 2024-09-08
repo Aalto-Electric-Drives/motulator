@@ -155,7 +155,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz control of a 2.2-kW induction motor drive. The  six-step overmodulation is enabled, which increases the fundamental voltage as  well as the harmonics. Since the PWM is not synchronized with the stator  frequency, the harmonic content also depends on the ratio between the stator  frequency and the sampling frequency.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates V/Hz control of a 2.2-kW induction motor drive. The six-step overmodulation is enabled, which increases the fundamental voltage as well as the harmonics. Since the PWM is not synchronized with the stator frequency, the harmonic content also depends on the ratio between the stator frequency and the sampling frequency.">
 
 .. only:: html
 
@@ -172,7 +172,7 @@ These examples shows operation of an induction machine under open-loop V/Hz cont
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters in this example yield open-loop V/Hz control. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The default parameters in this example yield open-loop V/Hz control.">
 
 .. only:: html
 
@@ -331,7 +331,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
-.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 
+.. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650
 
 
 

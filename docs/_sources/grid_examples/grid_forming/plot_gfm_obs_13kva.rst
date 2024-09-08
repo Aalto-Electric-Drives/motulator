@@ -71,7 +71,7 @@ Configure the system model.
 
     # Filter and grid parameters
     par = ACFilterPars(L_fc=.15*base.L, R_fc=.05*base.Z, L_g=.74*base.L)
-    # par.L_g = 0 # Uncomment this line to simulate a strong grid
+    # par.L_g = 0  # Uncomment this line to simulate a strong grid
     ac_filter = model.ACFilter(par)
     ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
     # Inverter with constant DC voltage
@@ -103,8 +103,8 @@ Configure the control system.
         nom_u=base.u,
         nom_w=base.w,
         max_i=1.3*base.i,
-        T_s=100e-6,
-        R_a=.2*base.Z)
+        R_a=.2*base.Z,
+        T_s=100e-6)
 
     # Create the control system
     ctrl = control.ObserverBasedGridFormingControl(cfg)
@@ -202,7 +202,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.097 seconds)
+   **Total running time of the script:** (0 minutes 8.092 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_obs_13kva.py:

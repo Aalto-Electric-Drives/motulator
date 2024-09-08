@@ -315,8 +315,6 @@ Package Contents
                     u_cs : complex
                         Realized converter output voltage (V) in stationary
                         coordinates. This signal is obtained from the PWM.
-                    u_gs : complex
-                        PCC voltage (V) in stationary coordinates.
       :rtype: SimpleNamespace
 
 
@@ -373,7 +371,7 @@ Package Contents
 
       :returns: **ref** --
 
-                Reference signals, containing the following fields:
+                Reference signals, containing some of the following fields:
 
                     u_dc : float
                         DC-bus voltage reference (V).
@@ -591,7 +589,7 @@ Package Contents
    This implements the RFPSC-type grid-forming mode of the control method
    described in [#Nur2024]_. Transparent current control is also implemented.
 
-   :param cfg: Controller configuration parameters.
+   :param cfg: Control system configuration parameters.
    :type cfg: ObserverBasedGridFormingControlCfg
 
    .. rubric:: Notes
@@ -713,12 +711,14 @@ Package Contents
    :type R: float, optional
    :param R_a: Active resistance (Ω). The default is 0.25*nom_u/max_i.
    :type R_a: float, optional
-   :param T_s: Sampling period (s). The default is 100e-6.
-   :type T_s: float, optional
+   :param k_v: Voltage control gain. The default is `alpha_o/nom_w`.
+   :type k_v: float, optional
    :param alpha_c: Current control bandwidth (rad/s). The default is 2*pi*400.
    :type alpha_c: float, optional
    :param alpha_o: Observer gain (rad/s). The default is 2*pi*50.
    :type alpha_o: float, optional
+   :param T_s: Sampling period (s). The default is 100e-6.
+   :type T_s: float, optional
 
 
 
@@ -834,8 +834,8 @@ Package Contents
    .. rubric:: References
 
    .. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-feedforward
-       power-synchronization control," IEEE Trans. Power Electron., 2020,
-       https://doi.org/10.1109/TPEL.2020.2970991
+      power-synchronization control," IEEE Trans. Power Electron., 2020,
+      https://doi.org/10.1109/TPEL.2020.2970991
 
 
 
@@ -937,12 +937,14 @@ Package Contents
    :type nom_w: float
    :param max_i: Maximum current (A), peak value.
    :type max_i: float
+   :param R: Total series resistance (Ω). The default is 0.
+   :type R: float, optional
    :param R_a: Active resistance (Ω). The default is 0.25*nom_u/max_i.
    :type R_a: float, optional
-   :param T_s: Sampling period (s). The default is 100e-6.
-   :type T_s: float, optional
    :param w_b: Low-pass filter bandwidth (rad/s). The default is 2*pi*5.
    :type w_b: float, optional
+   :param T_s: Sampling period (s). The default is 100e-6.
+   :type T_s: float, optional
 
 
 

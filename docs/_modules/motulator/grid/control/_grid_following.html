@@ -226,7 +226,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
 </li>
 </ul>
@@ -384,6 +385,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">motulator.common.control</span> <span class="kn">import</span> <span class="n">ComplexPIController</span>
 <span class="kn">from</span> <span class="nn">motulator.grid.control._common</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">CurrentLimiter</span><span class="p">,</span> <span class="n">GridConverterControlSystem</span><span class="p">,</span> <span class="n">PLL</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">abc2complex</span>
 
 
 <span class="c1"># %%</span>
@@ -449,6 +451,8 @@ document.write(`
 
 <div class="viewcode-block" id="GridFollowingControl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridFollowingControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_feedback_signals</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">u_gs</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_pcc_voltages</span><span class="p">())</span>
+        <span class="c1"># fbk.u_gs = abc2complex(mdl.ac_filter.meas_capacitor_voltages())</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pll</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
         <span class="n">s_g</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="n">s_g</span><span class="o">.</span><span class="n">real</span>

@@ -226,7 +226,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
 </li>
 </ul>
@@ -400,20 +401,23 @@ document.write(`
 <span class="sd">        Nominal grid angular frequency (rad/s).</span>
 <span class="sd">    max_i : float</span>
 <span class="sd">        Maximum current (A), peak value.</span>
+<span class="sd">    R : float, optional</span>
+<span class="sd">        Total series resistance (Ω). The default is 0.</span>
 <span class="sd">    R_a : float, optional</span>
 <span class="sd">        Active resistance (Ω). The default is 0.25*nom_u/max_i.</span>
-<span class="sd">    T_s : float, optional</span>
-<span class="sd">        Sampling period (s). The default is 100e-6.</span>
 <span class="sd">    w_b : float, optional</span>
 <span class="sd">        Low-pass filter bandwidth (rad/s). The default is 2*pi*5.</span>
+<span class="sd">    T_s : float, optional</span>
+<span class="sd">        Sampling period (s). The default is 100e-6.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nom_u</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">nom_w</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">max_i</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">R_a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100e-6</span>
     <span class="n">w_b</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">5</span>
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100e-6</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -437,8 +441,8 @@ document.write(`
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, &quot;Reference-feedforward</span>
-<span class="sd">        power-synchronization control,&quot; IEEE Trans. Power Electron., 2020,</span>
-<span class="sd">        https://doi.org/10.1109/TPEL.2020.2970991</span>
+<span class="sd">       power-synchronization control,&quot; IEEE Trans. Power Electron., 2020,</span>
+<span class="sd">       https://doi.org/10.1109/TPEL.2020.2970991</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -446,7 +450,6 @@ document.write(`
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">CurrentLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_i</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_c_flt</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
 
@@ -459,7 +462,8 @@ document.write(`
         <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_cs</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_cs</span>
         <span class="c1"># Active power</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">p_c</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">))</span>
+        <span class="n">p_loss</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">R</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">))</span> <span class="o">-</span> <span class="n">p_loss</span>
         <span class="k">return</span> <span class="n">fbk</span></div>
 
 <div class="viewcode-block" id="PowerSynchronizationControl.output"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationControl.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
@@ -473,7 +477,7 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span>
 
         <span class="c1"># Calculation of power droop</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_p_psc</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">p_c</span><span class="p">)</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_p_psc</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span>
 
         <span class="c1"># Optionally, use of reference feedforward for d-axis current</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c_flt</span><span class="o">.</span><span class="n">imag</span>
@@ -483,7 +487,7 @@ document.write(`
         <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
 
         <span class="c1"># Calculation of converter voltage output reference</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
 
         <span class="c1"># Duty ratios for PWM</span>

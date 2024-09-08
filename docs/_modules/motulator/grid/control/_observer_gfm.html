@@ -226,7 +226,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
 </li>
 </ul>
@@ -382,7 +383,8 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">motulator.common.utils</span> <span class="kn">import</span> <span class="n">wrap</span>
-<span class="kn">from</span> <span class="nn">motulator.grid.control._common</span> <span class="kn">import</span> <span class="n">GridConverterControlSystem</span>
+<span class="kn">from</span> <span class="nn">motulator.grid.control._common</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GridConverterControlSystem</span><span class="p">,</span> <span class="n">CurrentLimiter</span><span class="p">)</span>
 
 
 <span class="c1"># %%</span>
@@ -405,12 +407,14 @@ document.write(`
 <span class="sd">        Total series resistance (Ω). The default is 0.</span>
 <span class="sd">    R_a : float, optional</span>
 <span class="sd">        Active resistance (Ω). The default is 0.25*nom_u/max_i.</span>
-<span class="sd">    T_s : float, optional</span>
-<span class="sd">        Sampling period (s). The default is 100e-6.</span>
+<span class="sd">    k_v : float, optional</span>
+<span class="sd">        Voltage control gain. The default is `alpha_o/nom_w`.</span>
 <span class="sd">    alpha_c : float, optional</span>
 <span class="sd">        Current control bandwidth (rad/s). The default is 2*pi*400.</span>
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Observer gain (rad/s). The default is 2*pi*50.</span>
+<span class="sd">    T_s : float, optional</span>
+<span class="sd">        Sampling period (s). The default is 100e-6.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">L</span><span class="p">:</span> <span class="nb">float</span>
@@ -419,13 +423,16 @@ document.write(`
     <span class="n">max_i</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">R_a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100e-6</span>
+    <span class="n">k_v</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">400</span>
     <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span>
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100e-6</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="mf">.25</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_u</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">max_i</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_w</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_c</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># Current control gain</span></div>
 
 
@@ -440,7 +447,7 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cfg : ObserverBasedGridFormingControlCfg</span>
-<span class="sd">        Controller configuration parameters.</span>
+<span class="sd">        Control system configuration parameters.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -460,9 +467,8 @@ document.write(`
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">DisturbanceObserver</span><span class="p">(</span>
-            <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">DisturbanceObserver</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">CurrentLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_i</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ObserverBasedGridFormingControl.get_feedback_signals"><a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControl.get_feedback_signals">[docs]</a>    <span class="k">def</span> <span class="nf">get_feedback_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the feedback signals.&quot;&quot;&quot;</span>
@@ -485,21 +491,19 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span>
 
         <span class="c1"># Complex gains for grid-forming mode</span>
-        <span class="n">abs_k_p</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span>
-        <span class="n">abs_v_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span>
-        <span class="n">k_p</span> <span class="o">=</span> <span class="n">abs_k_p</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="o">/</span><span class="n">abs_v_c</span> <span class="k">if</span> <span class="n">abs_v_c</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">k_v</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="o">/</span><span class="n">abs_v_c</span> <span class="k">if</span> <span class="n">abs_v_c</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">exp_j_theta</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">k_p</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="o">/</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span><span class="o">*</span><span class="n">exp_j_theta</span>
+        <span class="n">k_v</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span><span class="p">)</span><span class="o">*</span><span class="n">exp_j_theta</span>
 
         <span class="c1"># Feedback correction for grid-forming mode</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span> <span class="o">=</span> <span class="n">k_p</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span> <span class="o">+</span> <span class="n">k_v</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">-</span> <span class="n">abs_v_c</span><span class="p">)</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span> <span class="o">=</span> <span class="n">k_p</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span> <span class="o">+</span> <span class="n">k_v</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">))</span>
 
-        <span class="c1"># Current limitation</span>
+        <span class="c1"># Transparent current limitation</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">+</span> <span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span><span class="o">/</span><span class="n">cfg</span><span class="o">.</span><span class="n">k_c</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">cfg</span><span class="o">.</span><span class="n">max_i</span><span class="p">:</span>
-            <span class="n">ref</span><span class="o">.</span><span class="n">i_c_lim</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_i</span>
-            <span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_c</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c_lim</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_c</span><span class="o">*</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
 
-        <span class="c1"># Voltage reference</span>
+        <span class="c1"># Voltage reference (with optional resistive voltage drop compensation)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span> <span class="o">+</span> <span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">+</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_cs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span><span class="o">*</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
 
@@ -524,42 +528,32 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    w_g : float</span>
-<span class="sd">        Nominal grid angular frequency (rad/s).</span>
-<span class="sd">    L : float</span>
-<span class="sd">        Estimate of total inductance (H) between converter and grid.</span>
-<span class="sd">    alpha_o : float</span>
-<span class="sd">        Observer gain (rad/s).</span>
-<span class="sd">    v_c0 : float</span>
-<span class="sd">        Initial value of converter voltage state (V).</span>
+<span class="sd">    cfg : ObserverBasedGridFormingControlCfg</span>
+<span class="sd">        Control system configuration parameters.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_g</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">alpha_o</span><span class="p">,</span> <span class="n">v_c0</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="n">w_g</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">w_g</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_o</span> <span class="o">=</span> <span class="n">alpha_o</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">w_g</span>
-        <span class="c1"># Initial states</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v_cp</span> <span class="o">=</span> <span class="n">v_c0</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nom_u</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the estimates.&quot;&quot;&quot;</span>
-        <span class="c1"># Quasi-static converter voltage</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_cp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
-        <span class="c1"># Grid voltage</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
-        <span class="c1"># Active and reactive power</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">))</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">))</span>
+        <span class="c1"># Estimates for the quasi-static converter voltage and the grid voltage</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
+        <span class="c1"># Active and reactive powers</span>
+        <span class="n">s_g</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="n">s_g</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">s_g</span><span class="o">.</span><span class="n">imag</span>
         <span class="k">return</span> <span class="n">fbk</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the observer states.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v_cp</span> <span class="o">+=</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_o</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">v_cp</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+=</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">w_c</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the states.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">+=</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span><span class="o">*</span><span class="n">fbk</span><span class="o">.</span><span class="n">e_c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+=</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">w_g</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span>
 </pre></div>
 

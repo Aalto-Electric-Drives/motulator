@@ -226,7 +226,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/synchronization.html">Disturbance-Observer-Based PLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
 </li>
 </ul>
@@ -559,12 +560,13 @@ document.write(`
         <span class="s2">&quot;--&quot;</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p_\mathrm{g,ref}$&quot;</span><span class="p">,</span>
         <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
-        <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$q_\mathrm{g,ref}$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;q_g&quot;</span><span class="p">):</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="o">/</span><span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$q_\mathrm{g,ref}$&quot;</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>

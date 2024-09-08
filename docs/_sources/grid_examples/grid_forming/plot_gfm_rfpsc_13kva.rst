@@ -68,7 +68,7 @@ Configure the system model.
 
 
     # Filter and grid
-    par = ACFilterPars(L_fc=.15*base.L, L_g=.74*base.L)
+    par = ACFilterPars(L_fc=.15*base.L, R_fc=.05*base.Z, L_g=.74*base.L)
     # par.L_g = 0  # Uncomment this line to simulate a strong grid
     ac_filter = model.ACFilter(par)
     # Grid voltage source with constant frequency and voltage magnitude
@@ -90,14 +90,19 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-46
+.. GENERATED FROM PYTHON SOURCE LINES 38-51
 
 .. code-block:: Python
 
 
     # Control configuration parameters
     cfg = control.PowerSynchronizationControlCfg(
-        nom_u=base.u, nom_w=base.w, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
+        nom_u=base.u,
+        nom_w=base.w,
+        max_i=1.3*base.i,
+        R=.05*base.Z,
+        R_a=.2*base.Z,
+        T_s=100e-6)
 
     # Create the control system
     ctrl = control.PowerSynchronizationControl(cfg)
@@ -109,11 +114,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-56
+.. GENERATED FROM PYTHON SOURCE LINES 53-61
 
 .. code-block:: Python
 
@@ -132,11 +137,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-58
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-62
+.. GENERATED FROM PYTHON SOURCE LINES 63-67
 
 .. code-block:: Python
 
@@ -151,11 +156,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-66
+.. GENERATED FROM PYTHON SOURCE LINES 69-71
 
 .. code-block:: Python
 
@@ -188,7 +193,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.722 seconds)
+   **Total running time of the script:** (0 minutes 7.786 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_rfpsc_13kva.py:
