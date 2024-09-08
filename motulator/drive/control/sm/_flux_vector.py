@@ -15,11 +15,11 @@ class FluxVectorControl(DriveControlSystem):
     """
     Flux-vector control of synchronous machine drives.
 
-    This class implements a variant of flux-vector control [#Pel2009]_. Rotor 
-    coordinates as well as decoupling between the stator flux and torque 
-    channels are used according to [#Awa2019b]_. Here, the stator flux 
-    magnitude and the electromagnetic torque are selected as controllable 
-    variables, and proportional controllers are used for simplicity 
+    This class implements a variant of flux-vector control [#Pel2009]_. Rotor
+    coordinates as well as decoupling between the stator flux and torque
+    channels are used according to [#Awa2019b]_. Here, the stator flux
+    magnitude and the electromagnetic torque are selected as controllable
+    variables, and proportional controllers are used for simplicity
     [#Tii2024]_. The magnetic saturation is not considered in this
     implementation.
 
@@ -36,7 +36,7 @@ class FluxVectorControl(DriveControlSystem):
     alpha_o : float, optional
         Observer bandwidth (rad/s). The default is 2*pi*100.
     J : float, optional
-        Moment of inertia (kgm²). Needed only for the speed controller. 
+        Moment of inertia (kgm²). Needed only for the speed controller.
     T_s : float
         Sampling period (s). The default is 250e-6.
     sensorless : bool, optional
@@ -44,18 +44,18 @@ class FluxVectorControl(DriveControlSystem):
 
     References
     ----------
-    .. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented 
-       control of IPM drives with variable DC link in the field-weakening 
-       region,” IEEE Trans. Ind. Appl., 2009, 
+    .. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented
+       control of IPM drives with variable DC link in the field-weakening
+       region,” IEEE Trans. Ind. Appl., 2009,
        https://doi.org/10.1109/TIA.2009.2027167
 
-    .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented 
-       control of synchronous motors: A systematic design procedure," IEEE 
+    .. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented
+       control of synchronous motors: A systematic design procedure," IEEE
        Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
-    .. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for 
-       sensorless control of synchronous machine drives," IEEE Trans. Ind. 
-       Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650 
+    .. [#Tii2024] Tiitinen, Hinkkanen, Harnefors, "Design framework for
+       sensorless control of synchronous machine drives," IEEE Trans. Ind.
+       Electron., 2024, https://doi.org/10.1109/TIE.2024.3429650
 
     """
 
@@ -127,7 +127,7 @@ class FluxTorqueReferenceCfg:
     par : SynchronousMachinePars
         Machine model parameters.
     max_i_s : float
-        Maximum stator current (A). 
+        Maximum stator current (A).
     min_psi_s : float, optional
         Minimum stator flux (Vs). The default is `par.psi_f`.
     max_psi_s : float, optional

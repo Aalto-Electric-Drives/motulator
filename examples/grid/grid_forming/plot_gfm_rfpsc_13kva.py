@@ -22,7 +22,7 @@ base = BaseValues.from_nominal(nom)
 # Configure the system model.
 
 # Filter and grid
-par = ACFilterPars(L_fc=.15*base.L, L_g=.74*base.L)
+par = ACFilterPars(L_fc=.15*base.L, R_fc=.05*base.Z, L_g=.74*base.L)
 # par.L_g = 0  # Uncomment this line to simulate a strong grid
 ac_filter = model.ACFilter(par)
 # Grid voltage source with constant frequency and voltage magnitude
@@ -38,7 +38,12 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 # Control configuration parameters
 cfg = control.PowerSynchronizationControlCfg(
-    nom_u=base.u, nom_w=base.w, max_i=1.3*base.i, T_s=100e-6, R_a=.2*base.Z)
+    nom_u=base.u,
+    nom_w=base.w,
+    max_i=1.3*base.i,
+    R=.05*base.Z,
+    R_a=.2*base.Z,
+    T_s=100e-6)
 
 # Create the control system
 ctrl = control.PowerSynchronizationControl(cfg)

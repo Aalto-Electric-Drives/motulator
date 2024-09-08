@@ -14,18 +14,18 @@ class PLL:
     """
     Phase-locked loop including the voltage-magnitude filtering.
 
-    This class provides a simple frequency-tracking phase-locked loop. The 
-    magnitude of the measured PCC voltage is also filtered. 
+    This class provides a simple frequency-tracking phase-locked loop. The
+    magnitude of the measured PCC voltage is also filtered.
 
     Parameters
     ----------
     alpha_pll : float
         Frequency-tracking bandwidth (rad/s).
     abs_u_g0 : float
-        Initial value for the grid voltage estimate (V). 
+        Initial value for the grid voltage estimate (V).
     w_g0 : float
-        Initial value for the grid angular frequency estimate (rad/s). 
-        
+        Initial value for the grid angular frequency estimate (rad/s).
+
     """
 
     def __init__(self, alpha_pll, abs_u_g0, w_g0, theta_c0=0):
@@ -62,19 +62,19 @@ class DCBusVoltageController(PIController):
     """
     DC-bus voltage PI controller.
 
-    This controller regulates the energy stored in the DC-bus capacitor (scaled 
-    square of the DC-bus voltage) in order to have a linear closed-loop system 
-    [#Hur2001]_. 
+    This controller regulates the energy stored in the DC-bus capacitor (scaled
+    square of the DC-bus voltage) in order to have a linear closed-loop system
+    [#Hur2001]_.
 
     Parameters
     ----------
     C_dc : float
         DC-bus capacitance (F).
     alpha_dc : float
-        Approximate closed-loop bandwidth (rad/s). 
+        Approximate closed-loop bandwidth (rad/s).
     max_p : float, optional
         Limit for the maximum converter power (W). The default is `inf`.
-        
+
     References
     ----------
     .. [#Hur2001] Hur, Jung, Nam, "A fast dynamic DC-link power-balancing
@@ -100,10 +100,10 @@ class DCBusVoltageController(PIController):
 class GridConverterControlSystem(ControlSystem, ABC):
     """
     Base class for control of grid-connected converters.
-    
+
     This base class provides typical functionalities for control of
     grid-connected converters. This can be used both in power control and
-    DC-bus voltage control modes. 
+    DC-bus voltage control modes.
 
     Parameters
     ----------
@@ -117,7 +117,7 @@ class GridConverterControlSystem(ControlSystem, ABC):
 
             v : float | callable
                 Converter output voltage reference (V). Can be given either as
-                a constant or a function of time (s). 
+                a constant or a function of time (s).
             p_g : callable
                 Active power reference (W) as a function of time (s). This
                 signal is needed in power control mode.
@@ -142,7 +142,7 @@ class GridConverterControlSystem(ControlSystem, ABC):
     def get_electrical_measurements(self, fbk, mdl):
         """
         Measure the currents and voltages.
-        
+
         Parameters
         ----------
         fbk : SimpleNamespace
@@ -162,15 +162,11 @@ class GridConverterControlSystem(ControlSystem, ABC):
                 u_cs : complex
                     Realized converter output voltage (V) in stationary
                     coordinates. This signal is obtained from the PWM.
-                u_gs : complex
-                    PCC voltage (V) in stationary coordinates.
 
         """
         fbk.u_dc = mdl.converter.meas_dc_voltage()
         fbk.i_cs = abc2complex(mdl.ac_filter.meas_currents())
         fbk.u_cs = self.pwm.get_realized_voltage()
-        fbk.u_gs = abc2complex(mdl.ac_filter.meas_pcc_voltages())
-        # fbk.u_gs = abc2complex(mdl.ac_filter.meas_capacitor_voltages())
 
         return fbk
 
@@ -195,14 +191,14 @@ class GridConverterControlSystem(ControlSystem, ABC):
         Returns
         -------
         ref : SimpleNamespace
-            Reference signals, containing the following fields:
-                
+            Reference signals, containing some of the following fields:
+
                 u_dc : float
                     DC-bus voltage reference (V).
                 p_g : float
                     Active power reference (W).
                 q_g : float
-                    Reactive power reference (VAr).  
+                    Reactive power reference (VAr).
 
         """
         if self.dc_bus_voltage_ctrl:
@@ -211,12 +207,12 @@ class GridConverterControlSystem(ControlSystem, ABC):
             ref.p_g = self.dc_bus_voltage_ctrl.output(ref.u_dc, fbk.u_dc)
         else:
             # Power control mode
-            #ref.u_dc = None
             ref.p_g = self.ref.p_g(ref.t)
 
-        # Reactive power reference
-        ref.q_g = self.ref.q_g(ref.t) if callable(
-            self.ref.q_g) else self.ref.q_g
+        # Reactive power reference (if exists)
+        if hasattr(self.ref, 'q_g'):
+            ref.q_g = self.ref.q_g(ref.t) if callable(
+                self.ref.q_g) else self.ref.q_g
 
         return ref
 

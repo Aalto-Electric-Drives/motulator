@@ -5,7 +5,8 @@ from dataclasses import dataclass
 import numpy as np
 
 from motulator.common.utils import wrap
-from motulator.grid.control._common import GridConverterControlSystem
+from motulator.grid.control._common import (
+    GridConverterControlSystem, CurrentLimiter)
 
 
 # %%
@@ -28,12 +29,14 @@ class ObserverBasedGridFormingControlCfg:
         Total series resistance (Ω). The default is 0.
     R_a : float, optional
         Active resistance (Ω). The default is 0.25*nom_u/max_i.
-    T_s : float, optional
-        Sampling period (s). The default is 100e-6.
+    k_v : float, optional
+        Voltage control gain. The default is `alpha_o/nom_w`.
     alpha_c : float, optional
         Current control bandwidth (rad/s). The default is 2*pi*400.
     alpha_o : float, optional
         Observer gain (rad/s). The default is 2*pi*50.
+    T_s : float, optional
+        Sampling period (s). The default is 100e-6.
 
     """
     L: float
@@ -42,13 +45,16 @@ class ObserverBasedGridFormingControlCfg:
     max_i: float
     R: float = 0
     R_a: float = None
-    T_s: float = 100e-6
+    k_v: float = None
     alpha_c: float = 2*np.pi*400
     alpha_o: float = 2*np.pi*50
+    T_s: float = 100e-6
 
     def __post_init__(self):
         if self.R_a is None:
             self.R_a = .25*self.nom_u/self.max_i
+        if self.k_v is None:
+            self.k_v = self.alpha_o/self.nom_w
         self.k_c = self.alpha_c*self.L  # Current control gain
 
 
@@ -63,7 +69,7 @@ class ObserverBasedGridFormingControl(GridConverterControlSystem):
     Parameters
     ----------
     cfg : ObserverBasedGridFormingControlCfg
-        Controller configuration parameters.
+        Control system configuration parameters.
 
     Notes
     -----
@@ -83,9 +89,8 @@ class ObserverBasedGridFormingControl(GridConverterControlSystem):
     def __init__(self, cfg):
         super().__init__(cfg.T_s)
         self.cfg = cfg
-        self.observer = DisturbanceObserver(
-            cfg.nom_w, cfg.L, cfg.alpha_o, cfg.nom_u)
-        self.ref.q_g = 0
+        self.observer = DisturbanceObserver(cfg)
+        self.current_limiter = CurrentLimiter(cfg.max_i)
 
     def get_feedback_signals(self, mdl):
         """Get the feedback signals."""
@@ -108,21 +113,19 @@ class ObserverBasedGridFormingControl(GridConverterControlSystem):
             self.ref.v_c) else self.ref.v_c
 
         # Complex gains for grid-forming mode
-        abs_k_p = cfg.R_a/(1.5*ref.v_c)
-        abs_v_c = np.abs(fbk.v_c)
-        k_p = abs_k_p*fbk.v_c/abs_v_c if abs_v_c > 0 else 0
-        k_v = (1 - 1j)*fbk.v_c/abs_v_c if abs_v_c > 0 else 0
+        exp_j_theta = fbk.v_c/np.abs(fbk.v_c) if np.abs(fbk.v_c) > 0 else 1
+        k_p = cfg.R_a/(1.5*ref.v_c)*exp_j_theta
+        k_v = (1 - 1j*cfg.k_v)*exp_j_theta
 
         # Feedback correction for grid-forming mode
-        fbk.e_c = k_p*(ref.p_g - fbk.p_g) + k_v*(ref.v_c - abs_v_c)
+        fbk.e_c = k_p*(ref.p_g - fbk.p_g) + k_v*(ref.v_c - np.abs(fbk.v_c))
 
-        # Current limitation
+        # Transparent current limitation
         ref.i_c = fbk.i_c + fbk.e_c/cfg.k_c
-        if np.abs(ref.i_c) > cfg.max_i:
-            ref.i_c_lim = ref.i_c/np.abs(ref.i_c)*cfg.max_i
-            fbk.e_c = cfg.k_c*(ref.i_c_lim - fbk.i_c)
+        ref.i_c = self.current_limiter(ref.i_c)
+        fbk.e_c = cfg.k_c*(ref.i_c - fbk.i_c)
 
-        # Voltage reference
+        # Voltage reference (with optional resistive voltage drop compensation)
         ref.u_c = fbk.e_c + fbk.v_c + cfg.R*fbk.i_c
         ref.u_cs = np.exp(1j*fbk.theta_c)*ref.u_c
 
@@ -147,40 +150,30 @@ class DisturbanceObserver:
 
     Parameters
     ----------
-    w_g : float
-        Nominal grid angular frequency (rad/s).
-    L : float
-        Estimate of total inductance (H) between converter and grid.
-    alpha_o : float
-        Observer gain (rad/s).
-    v_c0 : float
-        Initial value of converter voltage state (V).
+    cfg : ObserverBasedGridFormingControlCfg
+        Control system configuration parameters.
 
     """
 
-    def __init__(self, w_g, L, alpha_o, v_c0):
-        self.w_g = w_g
-        self.w_c = w_g
-        self.L = L
-        self.k_o = alpha_o - 1j*w_g
-        # Initial states
-        self.v_cp = v_c0
+    def __init__(self, cfg):
+        self.alpha_o = cfg.alpha_o
+        self.L = cfg.L
+        self.w_g = cfg.nom_w
+        self.u_gp = cfg.nom_u
         self.theta_c = 0
 
     def output(self, fbk):
         """Compute the estimates."""
-        # Quasi-static converter voltage
-        fbk.v_c = self.v_cp - self.k_o*self.L*fbk.i_c
-        # Grid voltage
-        fbk.u_g = fbk.v_c - 1j*self.w_g*self.L*fbk.i_c
-        # Active and reactive power
-        fbk.p_g = 1.5*np.real(fbk.v_c*np.conj(fbk.i_c))
-        fbk.q_g = 1.5*np.imag(fbk.u_g*np.conj(fbk.i_c))
+        # Estimates for the quasi-static converter voltage and the grid voltage
+        fbk.v_c = self.u_gp - (self.alpha_o - 1j*self.w_g)*self.L*fbk.i_c
+        fbk.u_g = self.u_gp - self.alpha_o*self.L*fbk.i_c
+        # Active and reactive powers
+        s_g = 1.5*fbk.u_g*np.conj(fbk.i_c)
+        fbk.p_g, fbk.q_g = s_g.real, s_g.imag
         return fbk
 
     def update(self, fbk, ref):
-        """Update the observer states."""
-        self.v_cp += ref.T_s*(self.k_o + 1j*self.w_c)*fbk.e_c + 1j*(
-            self.w_g - self.w_c)*self.v_cp
-        self.theta_c += ref.T_s*self.w_c
+        """Update the states."""
+        self.u_gp += ref.T_s*self.alpha_o*fbk.e_c
+        self.theta_c += ref.T_s*self.w_g
         self.theta_c = wrap(self.theta_c)

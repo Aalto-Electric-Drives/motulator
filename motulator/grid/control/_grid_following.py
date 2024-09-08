@@ -7,6 +7,7 @@ import numpy as np
 from motulator.common.control import ComplexPIController
 from motulator.grid.control._common import (
     CurrentLimiter, GridConverterControlSystem, PLL)
+from motulator.common.utils import abc2complex
 
 
 # %%
@@ -72,6 +73,8 @@ class GridFollowingControl(GridConverterControlSystem):
 
     def get_feedback_signals(self, mdl):
         fbk = super().get_feedback_signals(mdl)
+        fbk.u_gs = abc2complex(mdl.ac_filter.meas_pcc_voltages())
+        # fbk.u_gs = abc2complex(mdl.ac_filter.meas_capacitor_voltages())
         fbk = self.pll.output(fbk)
         s_g = 1.5*fbk.u_c*np.conj(fbk.i_c)
         fbk.p_g = s_g.real

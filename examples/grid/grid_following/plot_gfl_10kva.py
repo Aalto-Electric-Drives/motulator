@@ -34,9 +34,7 @@ converter = model.VoltageSourceConverter(u_dc=650)
 
 # Create system model
 mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
-
-# Uncomment line below to enable the PWM model
-# mdl.pwm = model.CarrierComparison()
+# mdl.pwm = model.CarrierComparison()  # Uncomment to enable the PWM model
 
 # %%
 # Configure the control system.

@@ -182,12 +182,13 @@ def plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None):
         "--",
         label=r"$p_\mathrm{g,ref}$",
         ds="steps-post")
-    ax1.plot(
-        ctrl.t,
-        ctrl.ref.q_g/base.p,
-        "--",
-        label=r"$q_\mathrm{g,ref}$",
-        ds="steps-post")
+    if hasattr(ctrl.ref, "q_g"):
+        ax1.plot(
+            ctrl.t,
+            ctrl.ref.q_g/base.p,
+            "--",
+            label=r"$q_\mathrm{g,ref}$",
+            ds="steps-post")
     ax1.legend()
     ax1.set_xlim(t_span)
     ax1.set_xticklabels([])

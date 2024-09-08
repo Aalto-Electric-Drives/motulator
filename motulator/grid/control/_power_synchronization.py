@@ -23,20 +23,23 @@ class PowerSynchronizationControlCfg:
         Nominal grid angular frequency (rad/s).
     max_i : float
         Maximum current (A), peak value.
+    R : float, optional
+        Total series resistance (Ω). The default is 0.
     R_a : float, optional
         Active resistance (Ω). The default is 0.25*nom_u/max_i.
-    T_s : float, optional
-        Sampling period (s). The default is 100e-6.
     w_b : float, optional
         Low-pass filter bandwidth (rad/s). The default is 2*pi*5.
+    T_s : float, optional
+        Sampling period (s). The default is 100e-6.
 
     """
     nom_u: float
     nom_w: float
     max_i: float
+    R: float = 0
     R_a: float = None
-    T_s: float = 100e-6
     w_b: float = 2*np.pi*5
+    T_s: float = 100e-6
 
     def __post_init__(self):
         if self.R_a is None:
@@ -60,8 +63,8 @@ class PowerSynchronizationControl(GridConverterControlSystem):
     References
     ----------
     .. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-feedforward
-        power-synchronization control," IEEE Trans. Power Electron., 2020,
-        https://doi.org/10.1109/TPEL.2020.2970991
+       power-synchronization control," IEEE Trans. Power Electron., 2020,
+       https://doi.org/10.1109/TPEL.2020.2970991
 
     """
 
@@ -69,7 +72,6 @@ class PowerSynchronizationControl(GridConverterControlSystem):
         super().__init__(cfg.T_s)
         self.cfg = cfg
         self.current_limiter = CurrentLimiter(cfg.max_i)
-        self.ref.q_g = 0
         self.theta_c = 0
         self.i_c_flt = 0j
 
@@ -82,7 +84,8 @@ class PowerSynchronizationControl(GridConverterControlSystem):
         fbk.i_c = np.exp(-1j*fbk.theta_c)*fbk.i_cs
         fbk.u_c = np.exp(-1j*fbk.theta_c)*fbk.u_cs
         # Active power
-        fbk.p_c = 1.5*np.real(fbk.u_c*np.conj(fbk.i_c))
+        p_loss = 1.5*self.cfg.R*np.abs(fbk.i_c)**2
+        fbk.p_g = 1.5*np.real(fbk.u_c*np.conj(fbk.i_c)) - p_loss
         return fbk
 
     def output(self, fbk):
@@ -96,7 +99,7 @@ class PowerSynchronizationControl(GridConverterControlSystem):
             self.ref.v_c) else self.ref.v_c
 
         # Calculation of power droop
-        fbk.w_c = cfg.nom_w + cfg.k_p_psc*(ref.p_g - fbk.p_c)
+        fbk.w_c = cfg.nom_w + cfg.k_p_psc*(ref.p_g - fbk.p_g)
 
         # Optionally, use of reference feedforward for d-axis current
         ref.i_c = ref.p_g/(1.5*ref.v_c) + 1j*fbk.i_c_flt.imag
@@ -106,7 +109,7 @@ class PowerSynchronizationControl(GridConverterControlSystem):
         ref.i_c = self.current_limiter(ref.i_c)
 
         # Calculation of converter voltage output reference
-        ref.u_c = ref.v_c + cfg.R_a*(ref.i_c - fbk.i_c)
+        ref.u_c = ref.v_c + cfg.R_a*(ref.i_c - fbk.i_c) + cfg.R*fbk.i_c
         ref.u_cs = np.exp(1j*fbk.theta_c)*ref.u_c
 
         # Duty ratios for PWM
