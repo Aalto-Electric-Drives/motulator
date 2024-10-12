@@ -379,9 +379,9 @@ document.write(`
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Continuous-time models for converters.</span>
 
-<span class="sd">A three-phase voltage-source inverter with optional DC-bus dynamics is</span>
-<span class="sd">modelled, along with a six-pulse diode bridge rectifier supplied from a stiff</span>
-<span class="sd">grid. Complex space vectors are used also for duty ratios and switching states,</span>
+<span class="sd">A three-phase voltage-source inverter with optional DC-bus dynamics is modeled,</span>
+<span class="sd">along with a six-pulse diode bridge rectifier supplied from a stiff grid.</span>
+<span class="sd">Complex space vectors are used also for duty ratios and switching states,</span>
 <span class="sd">wherever applicable.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -512,7 +512,7 @@ document.write(`
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_L</span><span class="o">.</span><span class="n">real</span></div>
 
-<div class="viewcode-block" id="FrequencyConverter.set_inputs"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.set_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="FrequencyConverter.set_inputs"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.set_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_L</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span></div>

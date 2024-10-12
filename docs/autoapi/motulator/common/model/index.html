@@ -501,8 +501,8 @@ allowing faster simulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of the counter quantization levels. The default is 2**12.</p></li>
-<li><p><strong>return_complex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Complex switching state space vectors are returned if True. Otherwise
+<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of the counter quantization levels. The default is 2**12.</p></li>
+<li><p><strong>return_complex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Complex switching state space vectors are returned if True. Otherwise
 phase switching states are returned. The default is True.</p></li>
 </ul>
 </dd>
@@ -552,7 +552,7 @@ phase switching states are returned. The default is True.</p></li>
 <dd><p>Computational delay modeled as a ring buffer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Length of the buffer in samples. The default is 1.</p>
+<dd class="field-odd"><p><strong>length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Length of the buffer in samples. The default is 1.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -560,7 +560,7 @@ phase switching states are returned. The default is True.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.Model">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>Base class for continuous-time system models.</p>
 <p>This base class is a template for a system model that interconnects the
 subsystems and provides an interface to the solver.</p>
@@ -569,7 +569,7 @@ subsystems and provides an interface to the solver.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pwm</strong> (<em>zoh</em><em> | </em><a class="reference internal" href="#motulator.common.model.CarrierComparison" title="motulator.common.model.CarrierComparison"><em>CarrierComparison</em></a><em>, </em><em>optional</em>) – Zero-order hold of duty ratios or carrier comparison. If None, the
 default is <cite>zoh</cite>.</p></li>
-<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of computational delays. The default is 1.</p></li>
+<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of computational delays. The default is 1.</p></li>
 </ul>
 </dd>
 </dl>
@@ -632,7 +632,7 @@ default is <cite>zoh</cite>.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.Subsystem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Subsystem</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Subsystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>Base class for subsystems.</p>
 </dd></dl>
 
@@ -643,7 +643,7 @@ default is <cite>zoh</cite>.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Sampling period.</p></li>
 <li><p><strong>d_c_abc</strong> (<em>array_like</em><em> of </em><em>floats</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Duty ratios in the range [0, 1].</p></li>
 </ul>
 </dd>

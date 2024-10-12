@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:56.805** total execution time for 5 files **from drive_examples/obs_vhz**:
+**01:58.487** total execution time for 5 files **from drive_examples/obs_vhz**:
 
 .. container::
 
@@ -33,17 +33,17 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_obs_vhz_plot_obs_vhz_ctrl_pmsyrm_thor.py` (``plot_obs_vhz_ctrl_pmsyrm_thor.py``)
-     - 00:51.017
+     - 00:50.890
      - 0.0
    * - :ref:`sphx_glr_drive_examples_obs_vhz_plot_obs_vhz_ctrl_syrm_7kw.py` (``plot_obs_vhz_ctrl_syrm_7kw.py``)
-     - 00:28.140
+     - 00:28.956
      - 0.0
    * - :ref:`sphx_glr_drive_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py` (``plot_obs_vhz_ctrl_pmsm_2kw.py``)
-     - 00:23.917
+     - 00:24.646
      - 0.0
    * - :ref:`sphx_glr_drive_examples_obs_vhz_plot_obs_vhz_ctrl_im_2kw.py` (``plot_obs_vhz_ctrl_im_2kw.py``)
-     - 00:08.982
+     - 00:09.196
      - 0.0
    * - :ref:`sphx_glr_drive_examples_obs_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py` (``plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py``)
-     - 00:04.749
+     - 00:04.799
      - 0.0

@@ -488,64 +488,6 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_M</span>
         <span class="c1"># Post-processing based on the inputs and the states</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process_with_inputs</span><span class="p">()</span></div></div>
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="DriveWithDiodeBridge"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.DriveWithDiodeBridge">[docs]</a><span class="k">class</span> <span class="nc">DriveWithDiodeBridge</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Machine drive with a diode bridge rectifier.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    diode_bridge : DiodeBridge</span>
-<span class="sd">        Diode bridge model.</span>
-<span class="sd">    converter : VoltageSourceConverter</span>
-<span class="sd">        Converter model.</span>
-<span class="sd">    machine : InductionMachine | SynchronousMachine</span>
-<span class="sd">        Machine model.</span>
-<span class="sd">    mechanics : ExternalRotorSpeed | StiffMechanicalSystem |\</span>
-<span class="sd">                TwoMassMechanicalSystem</span>
-<span class="sd">        Mechanical subsystem model.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">diode_bridge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">mechanics</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">diode_bridge</span> <span class="o">=</span> <span class="n">diode_bridge</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">machine</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span> <span class="o">=</span> <span class="n">mechanics</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">diode_bridge</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span>
-        <span class="p">]</span>
-
-<div class="viewcode-block" id="DriveWithDiodeBridge.interconnect"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.DriveWithDiodeBridge.interconnect">[docs]</a>    <span class="k">def</span> <span class="nf">interconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interconnect the subsystems.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">diode_bridge</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_ext</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diode_bridge</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_L</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_ss</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_cs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">tau_M</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">w_M</span></div>
-
-<div class="viewcode-block" id="DriveWithDiodeBridge.post_process"><a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.DriveWithDiodeBridge.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process the solution.&quot;&quot;&quot;</span>
-        <span class="c1"># Post-processing based on the states</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process_states</span><span class="p">()</span>
-        <span class="c1"># Add the input data to the subsystems for post-processing</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">diode_bridge</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_dc</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_ext</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diode_bridge</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_L</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">i_ss</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_ss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">u_cs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">w_M</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tau_M</span>
-        <span class="c1"># Post-processing based on the inputs and the states</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process_with_inputs</span><span class="p">()</span></div></div>
 </pre></div>
 
                 </article>

@@ -568,8 +568,8 @@ allowing faster simulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of the counter quantization levels. The default is 2**12.</p></li>
-<li><p><strong>return_complex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Complex switching state space vectors are returned if True. Otherwise
+<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of the counter quantization levels. The default is 2**12.</p></li>
+<li><p><strong>return_complex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Complex switching state space vectors are returned if True. Otherwise
 phase switching states are returned. The default is True.</p></li>
 </ul>
 </dd>
@@ -804,7 +804,7 @@ object.</p>
 <dd><p>Save the simulation data into MATLAB .mat files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Name for the simulation instance. The default is <cite>sim</cite>.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Name for the simulation instance. The default is <cite>sim</cite>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -816,8 +816,8 @@ object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t_stop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Simulation stop time. The default is 1.</p></li>
-<li><p><strong>max_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Max step size of the solver. The default is inf.</p></li>
+<li><p><strong>t_stop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Simulation stop time. The default is 1.</p></li>
+<li><p><strong>max_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Max step size of the solver. The default is inf.</p></li>
 </ul>
 </dd>
 </dl>
@@ -840,12 +840,12 @@ included in this model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>w_g</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> | </em><em>callable</em>) – Angular frequency (rad/s).</p></li>
-<li><p><strong>abs_e_g</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> | </em><em>callable</em>) – Magnitude of the positive-sequence component (peak value).</p></li>
-<li><p><strong>phi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> | </em><em>callable</em><em>, </em><em>optional</em>) – Phase shift (rad) of the positive-sequence component. The default is 0.</p></li>
-<li><p><strong>abs_e_g_neg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> | </em><em>callable</em><em>, </em><em>optional</em>) – Magnitude of the negative-sequence component (peak value). The default
+<li><p><strong>w_g</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em>) – Angular frequency (rad/s).</p></li>
+<li><p><strong>abs_e_g</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em>) – Magnitude of the positive-sequence component (peak value).</p></li>
+<li><p><strong>phi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em><em>, </em><em>optional</em>) – Phase shift (rad) of the positive-sequence component. The default is 0.</p></li>
+<li><p><strong>abs_e_g_neg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em><em>, </em><em>optional</em>) – Magnitude of the negative-sequence component (peak value). The default
 is 0.</p></li>
-<li><p><strong>phi_neg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> | </em><em>callable</em><em>, </em><em>optional</em>) – Phase shift (rad) of the negative-sequence component. The default is 0.</p></li>
+<li><p><strong>phi_neg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em><em>, </em><em>optional</em>) – Phase shift (rad) of the negative-sequence component. The default is 0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -892,9 +892,9 @@ configured to represent, e.g., a current source as well.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
+<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
 used as the initial condition.</p></li>
-<li><p><strong>C_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
+<li><p><strong>C_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – DC-bus capacitance (F). The default is None.</p></li>
 <li><p><strong>i_dc</strong> (<em>callable</em><em>, </em><em>optional</em>) – External current (A) fed to the DC bus. Needed if <cite>C_dc</cite> is not None.</p></li>
 </ul>
 </dd>

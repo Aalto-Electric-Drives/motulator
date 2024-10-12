@@ -280,7 +280,7 @@ machine has no magnets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 14.955 seconds)
+   **Total running time of the script:** (0 minutes 15.398 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_flux_vector_syrm_7kw.py:

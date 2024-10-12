@@ -482,7 +482,7 @@ document.write(`
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.DriveControlSystem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.</span></span><span class="sig-name descname"><span class="pre">DriveControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/control/_common.html#DriveControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.DriveControlSystem" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>Base class for drive control systems.</p>
 <p>This base class provides typical functionalities for control of electric
 machine drives. This can be used both in speed-control and torque-control
@@ -491,8 +491,8 @@ modes.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<em>motulator.drive.control.im.ModelPars</em><em> |          </em><em>motulator.drive.control.sm.ModelPars</em>) – Machine model parameters.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Sampling period (s).</p></li>
-<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, sensorless control mode is used.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Sampling period (s).</p></li>
+<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, sensorless control mode is used.</p></li>
 </ul>
 </dd>
 </dl>
@@ -664,9 +664,9 @@ based on the desired closed-loop bandwidth and the rotor inertia estimate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Total inertia of the rotor (kgm²).</p></li>
-<li><p><strong>alpha_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Closed-loop bandwidth (rad/s).</p></li>
-<li><p><strong>max_tau_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum motor torque (Nm). The default is <cite>inf</cite>.</p></li>
+<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Total inertia of the rotor (kgm²).</p></li>
+<li><p><strong>alpha_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Closed-loop bandwidth (rad/s).</p></li>
+<li><p><strong>max_tau_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum motor torque (Nm). The default is <cite>inf</cite>.</p></li>
 </ul>
 </dd>
 </dl>

@@ -34,7 +34,6 @@ Classes
 
    motulator.drive.model.CarrierComparison
    motulator.drive.model.Drive
-   motulator.drive.model.DriveWithDiodeBridge
    motulator.drive.model.DriveWithLCFilter
    motulator.drive.model.ExternalRotorSpeed
    motulator.drive.model.FrequencyConverter
@@ -133,88 +132,6 @@ Package Contents
 
    :param converter: Converter model.
    :type converter: VoltageSourceConverter | FrequencyConverter
-   :param machine: Machine model.
-   :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanical subsystem model.
-   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: interconnect(_)
-
-      
-      Interconnect the subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: DriveWithDiodeBridge(diode_bridge=None, converter=None, machine=None, mechanics=None)
-
-   Bases: :py:obj:`motulator.common.model.Model`
-
-
-   
-   Machine drive with a diode bridge rectifier.
-
-   :param diode_bridge: Diode bridge model.
-   :type diode_bridge: DiodeBridge
-   :param converter: Converter model.
-   :type converter: VoltageSourceConverter
    :param machine: Machine model.
    :type machine: InductionMachine | SynchronousMachine
    :param mechanics: Mechanical subsystem model.
@@ -630,7 +547,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_inputs(t)
+   .. py:method:: set_inputs(_)
 
       
       Set output variables.
