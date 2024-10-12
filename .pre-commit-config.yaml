@@ -20,7 +20,7 @@ repos:
         description: "Ensures that a file is either empty, or ends with one newline"
         entry: end-of-file-fixer
         types: [ text ]
-        stages: [ commit, push, manual ]
+        stages: [ pre-commit, pre-push, manual ]
         language: python
 
       - id: trailing-whitespace
@@ -28,7 +28,7 @@ repos:
         description: "Trims trailing whitespace"
         entry: trailing-whitespace-fixer
         types: [ text ]
-        stages: [ commit ]
+        stages: [ pre-commit ]
         language: python
 
   # TOML

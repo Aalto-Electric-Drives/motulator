@@ -1,9 +1,9 @@
 """
 Continuous-time models for converters.
 
-A three-phase voltage-source inverter with optional DC-bus dynamics is
-modelled, along with a six-pulse diode bridge rectifier supplied from a stiff
-grid. Complex space vectors are used also for duty ratios and switching states,
+A three-phase voltage-source inverter with optional DC-bus dynamics is modeled,
+along with a six-pulse diode bridge rectifier supplied from a stiff grid.
+Complex space vectors are used also for duty ratios and switching states,
 wherever applicable.
 
 """
@@ -134,7 +134,7 @@ class FrequencyConverter(VoltageSourceConverter):
         super().set_outputs(t)
         self.out.i_L = self.state.i_L.real
 
-    def set_inputs(self, t):
+    def set_inputs(self, _):
         """Set output variables."""
         self.inp.i_dc = self.out.i_L
         self.inp.u_dc = self.out.u_dc
