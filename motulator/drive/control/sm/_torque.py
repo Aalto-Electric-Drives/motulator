@@ -378,7 +378,7 @@ class TorqueCharacteristics:
 
         gamma = np.linspace(gamma1, gamma2, N)
 
-        # MTPA locus expressed with different quantities
+        # Current limit expressed with different quantities
         i_s = max_i_s*np.exp(1j*gamma)
         psi_s = self.flux(i_s)
         tau_M = self.torque(psi_s)
@@ -475,13 +475,12 @@ class TorqueCharacteristics:
         _, ax = plt.subplots()
         ax.plot(
             mtpa.psi_s.real/base.psi, mtpa.psi_s.imag/base.psi, label="MTPA")
-        try:
+
+        if hasattr(mtpv, 'psi_s') and np.any(mtpv.psi_s):
             ax.plot(
                 mtpv.psi_s.real/base.psi,
                 mtpv.psi_s.imag/base.psi,
                 label="MTPV")
-        except AttributeError:
-            pass
         ax.plot(
             current_lim.psi_s.real/base.psi,
             current_lim.psi_s.imag/base.psi,
@@ -519,10 +518,10 @@ class TorqueCharacteristics:
         # Plot the i_sd--i_sq current plane
         _, ax = plt.subplots()
         ax.plot(mtpa.i_s.real/base.i, mtpa.i_s.imag/base.i, label="MTPA")
-        try:
+
+        if hasattr(mtpv, 'i_s') and np.any(mtpv.i_s):
             ax.plot(mtpv.i_s.real/base.i, mtpv.i_s.imag/base.i, label="MTPV")
-        except AttributeError:
-            pass
+
         ax.plot(
             current_lim.i_s.real/base.i,
             current_lim.i_s.imag/base.i,
@@ -565,10 +564,10 @@ class TorqueCharacteristics:
         # Plot i_sd vs. tau_M
         _, (ax1, ax2) = plt.subplots(2, 1)
         ax1.plot(mtpa.tau_M/base.tau, mtpa.i_s.real/base.i)
-        try:
+
+        if hasattr(mtpv, 'tau_M') and hasattr(mtpv.i_s, 'real'):
             ax1.plot(mtpv.tau_M/base.tau, mtpv.i_s.real/base.i)
-        except AttributeError:
-            pass
+
         ax1.plot(current_lim.tau_M/base.tau, current_lim.i_s.real/base.i)
 
         ax1.set_xlim(0, max_i_s/base.i)
@@ -581,10 +580,9 @@ class TorqueCharacteristics:
 
         # Plot i_sq vs. tau_M
         ax2.plot(mtpa.tau_M/base.tau, mtpa.i_s.imag/base.i)
-        try:
+        if hasattr(mtpv, 'tau_M') and hasattr(mtpv.i_s, 'imag'):
             ax2.plot(mtpv.tau_M/base.tau, mtpv.i_s.imag/base.i)
-        except TypeError:
-            pass
+
         ax2.plot(current_lim.tau_M/base.tau, current_lim.i_s.imag/base.i)
 
         ax2.set_xlim(0, max_i_s/base.i)
@@ -619,10 +617,10 @@ class TorqueCharacteristics:
         # Plot
         _, ax = plt.subplots(1, 1)
         ax.plot(np.abs(mtpa.psi_s)/base.psi, mtpa.tau_M/base.tau)
-        try:
+
+        if hasattr(mtpv, 'psi_s') and hasattr(mtpv, 'tau_M'):
             ax.plot(np.abs(mtpv.psi_s)/base.psi, mtpv.tau_M/base.tau)
-        except AttributeError:
-            pass
+
         ax.plot(np.abs(current_lim.psi_s)/base.psi, current_lim.tau_M/base.tau)
 
         ax.legend(["MTPA", "MTPV", "Constant current"])
