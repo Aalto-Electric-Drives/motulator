@@ -15,6 +15,10 @@ plt.rcParams["axes.grid"] = True
 plt.rcParams.update({"text.usetex": False})
 
 
+def _get_machine_type(mdl):
+    return "im" if hasattr(mdl.machine.data, 'psi_Rs') else "sm"
+
+
 # %%
 # pylint: disable=too-many-branches
 def plot(sim, base=None, t_span=None):
@@ -35,7 +39,6 @@ def plot(sim, base=None, t_span=None):
 
     """
     # pylint: disable=too-many-statements
-    #mdl = sim.mdl.data  # Continuous-time data
     mdl = sim.mdl  # Continuous-time data
     ctrl = sim.ctrl.data  # Discrete-time data
     ctrl.t = ctrl.ref.t  # Discrete time
@@ -51,63 +54,48 @@ def plot(sim, base=None, t_span=None):
     else:
         pu_vals = True
 
-    # Recognize the motor type by checking if the rotor flux data exist
-    try:
-        if mdl.psi_Rs is not None:
-            motor_type = "im"
-    except AttributeError:
-        motor_type = "sm"
-
     fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(8, 10))
 
     # Subplot 1: angular speeds
-    try:
+    if hasattr(ctrl.ref, 'w_m') and np.any(ctrl.ref.w_m):
         ax1.plot(
             ctrl.t,
             ctrl.ref.w_m/base.w,
             "--",
             ds="steps-post",
             label=r"$\omega_\mathrm{m,ref}$")
-    except (AttributeError, TypeError):
-        pass
     ax1.plot(
         mdl.machine.data.t,
         mdl.machine.data.w_m/base.w,
         label=r"$\omega_\mathrm{m}$")
-    try:
+    if hasattr(ctrl.fbk, 'w_m'):
         ax1.plot(
             ctrl.t,
             ctrl.fbk.w_m/base.w,
             label=r"$\hat \omega_\mathrm{m}$",
             ds="steps-post")
-    except AttributeError:
-        pass
     ax1.legend()
     ax1.set_xlim(t_span)
     ax1.set_xticklabels([])
 
     # Subplot 2: torques
-    try:
+    if hasattr(mdl.mechanics.data, 'tau_L_tot'):
         ax2.plot(
             mdl.mechanics.data.t,
             mdl.mechanics.data.tau_L_tot/base.tau,
             ":",
             label=r"$\tau_\mathrm{L,tot}$")
-    except AttributeError:
-        pass
     ax2.plot(
         mdl.machine.data.t,
         mdl.machine.data.tau_M/base.tau,
         label=r"$\tau_\mathrm{M}$")
-    try:
+    if hasattr(ctrl.ref, 'tau_M'):
         ax2.plot(
             ctrl.t,
             ctrl.ref.tau_M/base.tau,
             "--",
             label=r"$\tau_\mathrm{M,ref}$",
             ds="steps-post")
-    except AttributeError:
-        pass
     ax2.legend()
     ax2.set_xlim(t_span)
     ax2.set_xticklabels([])
@@ -123,7 +111,7 @@ def plot(sim, base=None, t_span=None):
         ctrl.fbk.i_s.imag/base.i,
         label=r"$i_\mathrm{sq}$",
         ds="steps-post")
-    try:
+    if hasattr(ctrl.ref, 'i_s'):
         ax3.plot(
             ctrl.t,
             ctrl.ref.i_s.real/base.i,
@@ -136,8 +124,6 @@ def plot(sim, base=None, t_span=None):
             "--",
             label=r"$i_\mathrm{sq,ref}$",
             ds="steps-post")
-    except (AttributeError, TypeError):
-        pass
     ax3.legend()
     ax3.set_xlim(t_span)
     ax3.set_xticklabels([])
@@ -159,44 +145,39 @@ def plot(sim, base=None, t_span=None):
     ax4.set_xticklabels([])
 
     # Subplot 5: flux linkages
-    if motor_type == "sm":
+    if _get_machine_type(mdl) == "sm":
         ax5.plot(
             mdl.machine.data.t,
             np.abs(mdl.machine.data.psi_ss)/base.psi,
             label=r"$\psi_\mathrm{s}$")
-        try:
+        if hasattr(ctrl.fbk, 'psi_s'):
             ax5.plot(
                 ctrl.t,
                 np.abs(ctrl.fbk.psi_s)/base.psi,
                 label=r"$\hat\psi_\mathrm{s}$",
                 ds="steps-post")
-        except (AttributeError, TypeError):
-            pass
-        try:
+        if hasattr(ctrl.ref, 'psi_s'):
             ax5.plot(
                 ctrl.t,
                 np.abs(ctrl.ref.psi_s)/base.psi,
                 "--",
                 label=r"$\psi_\mathrm{s,ref}$",
                 ds="steps-post")
-        except (AttributeError, TypeError):
-            pass
-
     else:
         ax5.plot(
             mdl.machine.data.t,
             np.abs(mdl.machine.data.psi_ss)/base.psi,
             label=r"$\psi_\mathrm{s}$")
         ax5.plot(
-            mdl.t, np.abs(mdl.psi_Rs)/base.psi, label=r"$\psi_\mathrm{R}$")
-        try:
+            mdl.machine.data.t,
+            np.abs(mdl.machine.data.psi_Rs)/base.psi,
+            label=r"$\psi_\mathrm{R}$")
+        if hasattr(ctrl.fbk, 'psi_s'):
             ax5.plot(
                 ctrl.t,
                 np.abs(ctrl.fbk.psi_s)/base.psi,
                 label=r"$\hat\psi_\mathrm{s}$",
                 ds="steps-post")
-        except AttributeError:
-            pass
     ax5.legend()
     ax5.set_xlim(t_span)
 
@@ -252,10 +233,10 @@ def plot_extra(sim, base=None, t_span=None):
         base = SimpleNamespace(w=1, u=1, i=1, psi=1, tau=1)
 
     # Angle of synchronous coordinates
-    try:
-        theta = ctrl.fbk.theta_s  # Induction machine
-    except AttributeError:
-        theta = ctrl.fbk.theta_m  # Synchronous machine
+    if _get_machine_type(mdl) == "sm":
+        theta = ctrl.fbk.theta_m
+    else:
+        theta = ctrl.fbk.theta_s
 
     # Quantities in stator coordinates
     ctrl.fbk.u_ss = np.exp(1j*theta)*ctrl.fbk.u_s
@@ -301,12 +282,7 @@ def plot_extra(sim, base=None, t_span=None):
     fig1.align_ylabels()
 
     # Plots the DC bus and grid-side variables (if exist)
-    try:
-        mdl.converter.data.i_L
-    except AttributeError:
-        mdl.converter.data.i_L = None
-
-    if mdl.converter.data.i_L is not None:
+    if hasattr(mdl.converter.data, 'i_L'):
         fig2, (ax1, ax2) = plt.subplots(2, 1)
 
         # Subplot 1: voltages
@@ -349,12 +325,8 @@ def plot_extra(sim, base=None, t_span=None):
         else:
             ax1.set_ylabel("Voltage (V)")
             ax2.set_ylabel("Current (A)")
-        ax2.set_xlabel("Time (s)")
 
-        try:
-            fig2.align_ylabels()
-        except UnboundLocalError:
-            pass
+        fig2.align_ylabels()
 
     plt.tight_layout()
     plt.show()
