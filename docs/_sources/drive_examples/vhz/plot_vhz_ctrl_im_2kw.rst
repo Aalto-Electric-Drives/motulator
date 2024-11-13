@@ -217,7 +217,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 17.388 seconds)
+   **Total running time of the script:** (0 minutes 17.639 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_vhz_ctrl_im_2kw.py:

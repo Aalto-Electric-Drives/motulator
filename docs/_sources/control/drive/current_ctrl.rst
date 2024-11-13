@@ -123,14 +123,17 @@ Here, the complex vector design is considered. Hence, the controller :eq:`cc` ca
 
 where the angular speed of the coordinate system equals typically the measured rotor speed, :math:`\omega_\mathrm{s} = \omega_\mathrm{m}`, or the estimated rotor speed :math:`\omega_\mathrm{s} = \hat{\omega}_\mathrm{m}`. If the magnetic saturation is not considered, this flux-linkage-based current controller is equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate). Notice that :math:`\boldsymbol{i}_\mathrm{s,ref} = \boldsymbol{i}_\mathrm{s}` holds in the steady state even with inductance estimate inaccuracies, since the same inductances are used to map both the reference current and the actual current to the corresponding flux linkages.
 
+.. note::
+    The control law :eq:`cc_flux` omits the effect of the stator resistance for simplicity, i.e., :math:`\hat R_\mathrm{s} = 0` is assumed. This is a common and practical assumption. However, if needed, the resistive voltage drop term :math:`\hat R_\mathrm{s}\boldsymbol{i}_\mathrm{s}` could be simply added to :math:`\boldsymbol{u}_\mathrm{s,ref}` in :eq:`cc_flux`.
+
 The gain selection analogous to :eq:`complex_vector_gains` becomes
 
 .. math::
-    \boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} - \hat R_\mathrm{s} \qquad\qquad
+    \boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \qquad\qquad
     \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2 \qquad \qquad
     \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c}
 
-where :math:`\hat R_\mathrm{s} = 0` can be used in practice. Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using :eq:`sm_model`, :eq:`flux_mapping_sm`, and :eq:`cc_flux`, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class.
+Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using :eq:`sm_model`, :eq:`flux_mapping_sm`, and :eq:`cc_flux`, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class.
 
 .. rubric:: References
 
