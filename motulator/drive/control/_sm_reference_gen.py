@@ -22,8 +22,8 @@ class ReferenceGenerator:
     given torque reference. The MTPA locus as well as the current, voltage and MTPV
     limits are taken into account. This class can be used also for a saturated machine
     model. The flux and torque references are computed using pre-computed lookup
-    tables, while the current reference is computed using a root-finding algorithm
-    (needed only in the case of current-vector control).
+    tables [#Mey2006]_, [#Awa2018]_. The current reference is computed using a
+    root-finding algorithm (needed only for current-vector control).
 
     Parameters
     ----------
@@ -41,6 +41,16 @@ class ReferenceGenerator:
         MTPV margin, defaults to 1.
     max_iter : int, optional
         Max number of iterations for the current reference computation, defaults to 6.
+
+    References
+    ----------
+    .. [#Mey2006] Meyer, Böcker, “Optimum control for interior permanent magnet
+       synchronous motors (IPMSM) in constant torque and flux weakening range,” Proc.
+       EPE-PEMC, 2006, https://doi.org/10.1109/EPEPEMC.2006.4778413
+
+    .. [#Awa2018] Awan, Song, Saarakkala, Hinkkanen, “Optimal torque control of
+       saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
+       2018, https://doi.org/10.1109/TIA.2018.2862410
 
     """
 
