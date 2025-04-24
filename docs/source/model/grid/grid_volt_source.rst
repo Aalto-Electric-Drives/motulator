@@ -1,7 +1,7 @@
-Three-Phase Voltage Source
-==========================
+Three-Phase Source
+==================
 
-A model for an ideal three-phase voltage source is implemented in the class :class:`motulator.grid.model.ThreePhaseVoltageSource`. The voltage space vector is calculated as a combination of a positive-sequence and optional negative-sequence components as
+A model for an ideal three-phase source is implemented in the class :class:`motulator.grid.model.ThreePhaseSource`. Typically, this model is used to represent the grid voltage source. The voltage space vector is calculated as a combination of a positive-sequence and optional negative-sequence components as
 
 .. math::
     \frac{\mathrm{d}\vartheta_\mathrm{g}}{\mathrm{d} t} &= \omega_\mathrm{g} \\

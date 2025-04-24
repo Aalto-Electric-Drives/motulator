@@ -1,1 +1,1 @@
-"""Common functions and classes."""
+"""Common model package."""

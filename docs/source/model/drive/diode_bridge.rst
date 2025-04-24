@@ -11,6 +11,7 @@ The figure below shows a six-pulse diode bridge rectifier, where the inductor :m
 where :math:`i_\mathrm{L}` is the DC-bus current, :math:`u_\mathrm{di}` is the voltage over the diode bridge, :math:`u_\mathrm{dc}` is the DC-bus voltage, and :math:`L_{\mathrm{dc}}` is the DC-bus inductance.
 
 .. figure:: ../figs/diode_bridge.svg
+   :figclass: only-light
    :width: 100%
    :align: center
    :alt: Six-pulse diode bridge rectifier an three-phase supply voltage
@@ -18,4 +19,13 @@ where :math:`i_\mathrm{L}` is the DC-bus current, :math:`u_\mathrm{di}` is the v
 
    Six-pulse diode bridge rectifier.
 
-The voltage-source converter described in :doc:`/model/common` is extended with this diode bridge model in the class :class:`motulator.drive.model.FrequencyConverter`. Examples using the six-pulse diode bridge can be found in :doc:`/drive_examples/vhz/plot_vhz_ctrl_im_2kw` and :doc:`/drive_examples/vector/plot_vector_ctrl_pmsm_2kw_diode`.
+.. figure:: ../figs/diode_bridge.svg
+   :figclass: invert-colors-dark only-dark
+   :width: 100%
+   :align: center
+   :alt: Six-pulse diode bridge rectifier an three-phase supply voltage
+   :target: .
+
+   Six-pulse diode bridge rectifier.
+
+The voltage-source converter described in the :doc:`/model/common/converters` document is extended with this diode bridge model in the :class:`motulator.drive.model.FrequencyConverter` class. Examples using the six-pulse diode bridge can be found in :doc:`/drive_examples/vhz/plot_vhz_ctrl_im_2kw` and :doc:`/drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw_diode`.

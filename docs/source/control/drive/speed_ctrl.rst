@@ -3,6 +3,8 @@ Speed Control
 
 A speed controller is implemented in the :class:`motulator.drive.control.SpeedController` class, whose base class is :class:`motulator.common.control.PIController`. In the following, the tuning of the speed controller is discussed. The presented approach can be extended to many other control tasks as well.
 
+.. _2dof-pi-controller:
+
 2DOF PI Controller
 ------------------
 
@@ -28,6 +30,7 @@ where :math:`\tau_\mathrm{M}` is the electromagnetic torque, :math:`\tau_\mathrm
 
 .. math::
     \omega_\mathrm{M}(s) = \frac{k_\mathrm{t} s + k_\mathrm{i}}{J s^2 + k_\mathrm{p} s + k_\mathrm{i}} \omega_\mathrm{M,ref}(s) - \frac{s}{J s^2 + k_\mathrm{p} s + k_\mathrm{i}} \tau_\mathrm{L}(s)
+    :label: speed_ctrl_closed_loop_system
 
 where it can be seen that the gain :math:`k_\mathrm{t}` allows to place the reference-tracking zero.
 
@@ -38,15 +41,17 @@ The gain selection [#Har2013]_
 
 .. math::
     k_\mathrm{t} = \alpha_\mathrm{s} \hat{J} \qquad
-    k_\mathrm{p} = 2\alpha_\mathrm{s} \hat{J} \qquad
-    k_\mathrm{i} = \alpha_\mathrm{s}^2 \hat{J}
+    k_\mathrm{p} = (\alpha_\mathrm{s} + \alpha_\mathrm{i}) \hat{J} \qquad
+    k_\mathrm{i} = \alpha_\mathrm{s}\alpha_\mathrm{i} \hat{J}
+    :label: speed_ctrl_gain_selection
 
 results in
 
 .. math::
-    \omega_\mathrm{M}(s) = \frac{\alpha_\mathrm{s}}{s + \alpha_\mathrm{s}} \omega_\mathrm{M,ref}(s) - \frac{s}{J (s + \alpha_\mathrm{s})^2} \tau_\mathrm{L}(s)
+    \omega_\mathrm{M}(s) = \frac{\alpha_\mathrm{s}}{s + \alpha_\mathrm{s}} \omega_\mathrm{M,ref}(s) - \frac{s}{J (s + \alpha_\mathrm{s})(s + \alpha_\mathrm{i})} \tau_\mathrm{L}(s)
+    :label: speed_ctrl_closed_loop_system2
 
-where :math:`\alpha_\mathrm{s}` is the closed-loop bandwidth of reference tracking and :math:`\hat{J} = J` is assumed.
+where :math:`\alpha_\mathrm{s}` is the closed-loop reference-tracking bandwidth and :math:`\alpha_\mathrm{i}` is the integral action bandwidth. An accurate inertia estimate :math:`\hat{J} = J` is assumed in the above closed-loop system.
 
 .. rubric:: References
 

@@ -4,6 +4,16 @@ Output LC Filter
 An LC filter may be used between the voltage-source converter and the electric machine in some applications [#Sal2006]_. The subscripts c and s refer to the converter-side and stator-side quantities, respectively. The superscript s refers to the stationary coordinates.
 
 .. figure:: ../figs/lc_filter.svg
+   :figclass: only-light
+   :width: 100%
+   :align: center
+   :alt: LC filter
+   :target: .
+
+   LC filter.
+
+.. figure:: ../figs/lc_filter.svg
+   :figclass: invert-colors-dark only-dark
    :width: 100%
    :align: center
    :alt: LC filter

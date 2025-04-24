@@ -17,15 +17,25 @@ where :math:`\omega_\mathrm{M}` is the mechanical angular speed of the rotor, :m
     \tau_\mathrm{L,tot} = B_\mathrm{L}\omega_\mathrm{M} + \tau_{\mathrm{L}}
     :label: total_load_torque
 
-A constant friction coefficient :math:`B_\mathrm{L}` models viscous friction that appears, e.g., due to laminar fluid flow in bearings. The friction coefficient is allowed to depend on the rotor speed, :math:`B_\mathrm{L} = B_\mathrm{L}(\omega_\mathrm{M})`. As an example, the quadratic load torque profile is achieved choosing :math:`B_\mathrm{L} = k|\omega_\mathrm{M}|`, where :math:`k` is a constant. The quadratic load torque appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance. The model of a stiff mechanical system is provided in the class :class:`motulator.drive.model.StiffMechanicalSystem`.
+A constant friction coefficient :math:`B_\mathrm{L}` models viscous friction that appears, e.g., due to laminar fluid flow in bearings. The friction coefficient is allowed to depend on the rotor speed, :math:`B_\mathrm{L} = B_\mathrm{L}(\omega_\mathrm{M})`. As an example, the quadratic load torque profile is achieved choosing :math:`B_\mathrm{L} = k|\omega_\mathrm{M}|`, where :math:`k` is a constant. The quadratic load torque appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance. The model of a stiff mechanical system is provided in the class :class:`motulator.drive.model.MechanicalSystem`.
 
 .. figure:: ../figs/mech_block.svg
-   :width: 100%
-   :align: center
-   :alt: Block diagram of a stiff mechanical system.
-   :target: .
+    :figclass: only-light
+    :width: 100%
+    :align: center
+    :alt: Block diagram of a stiff mechanical system.
+    :target: .
 
-   Block diagram of a stiff mechanical system.
+    Block diagram of a stiff mechanical system.
+
+.. figure:: ../figs/mech_block.svg
+    :figclass: invert-colors-dark only-dark
+    :width: 100%
+    :align: center
+    :alt: Block diagram of a stiff mechanical system.
+    :target: .
+
+    Block diagram of a stiff mechanical system.
 
 Two-Mass Mechanical System
 --------------------------
@@ -44,17 +54,27 @@ where :math:`\omega_\mathrm{L}` is the angular speed of the load, :math:`\varthe
     \tau_\mathrm{S} = K_\mathrm{S}\vartheta_\mathrm{ML} + C_\mathrm{S}(\omega_\mathrm{M} - \omega_\mathrm{L})
     :label: shaft_torque
 
-where :math:`K_\mathrm{S}` is the torsional stiffness of the shaft, and :math:`C_\mathrm{S}` is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanical system. A two-mass mechanical system is modeled in the class :class:`motulator.drive.model.TwoMassMechanicalSystem`. See also the example in :doc:`/drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass`.
+where :math:`K_\mathrm{S}` is the torsional stiffness of the shaft, and :math:`C_\mathrm{S}` is the torsional damping of the shaft. The other quantities correspond to those defined for the stiff mechanical system. A two-mass mechanical system is modeled in the class :class:`motulator.drive.model.TwoMassMechanicalSystem`. See also the example in :doc:`/drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass`.
 
 .. figure:: ../figs/two_mass_block.svg
-   :width: 100%
-   :align: center
-   :alt: Block diagram of a two-mass mechanical system.
-   :target: .
+    :figclass: only-light
+    :width: 100%
+    :align: center
+    :alt: Block diagram of a two-mass mechanical system.
+    :target: .
 
-   Block diagram of a two-mass mechanical system.
+    Block diagram of a two-mass mechanical system.
+
+.. figure:: ../figs/two_mass_block.svg
+    :figclass: invert-colors-dark only-dark
+    :width: 100%
+    :align: center
+    :alt: Block diagram of a two-mass mechanical system.
+    :target: .
+
+    Block diagram of a two-mass mechanical system.
 
 Externally Specified Rotor Speed
 --------------------------------
 
-It is also possible to omit the mechanical dynamics and directly specify the actual rotor speed :math:`\omega_\mathrm{M}` as a function of time, see the class :class:`motulator.drive.model.ExternalRotorSpeed`. This feature is typically needed when torque-control mode is studied, see the example :doc:`/drive_examples/vector/plot_vector_ctrl_im_2kw_tq_mode`.
+It is also possible to omit the mechanical dynamics and directly specify the actual rotor speed :math:`\omega_\mathrm{M}` as a function of time, see the class :class:`motulator.drive.model.ExternalRotorSpeed`. This feature is typically needed when torque-control mode is studied, see the example :doc:`/drive_examples/current_vector/plot_vector_ctrl_im_2kw_tq_mode`.
