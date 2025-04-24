@@ -1,24 +1,35 @@
-name: update the gh-pages branch
+name: Update the gh-pages branch
 
 on:
-  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
   push:
     branches: [main]
 
 jobs:
   build-doc:
-    runs-on: ubuntu-latest # Easy to use GitHub hosted runner, self hosted runner would require manual configurations
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2 # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Build Sphinx documentation
-      uses: ammaraskar/sphinx-action@master
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
       with:
-        docs-folder: "docs/"
-    # Publish built docs to gh-pages branch.
-    # ===============================
+        python-version: '3.12'
+
+    - name: Install documentation dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .[doc]
+
+    - name: Build Sphinx documentation
+      run: |
+        sphinx-build -b html docs/source docs/build/html
+
     - name: Commit documentation changes
       run: |
-        git clone https://github.com/Aalto-Electric-Drives/motulator.git --branch gh-pages --single-branch gh-pages
+        git clone https://github.com/Aalto-Electric-Drives/motulator-rc.git --branch gh-pages --single-branch gh-pages
+        mkdir -p gh-pages/docs
+        rm -rf gh-pages/docs/*
         cp -r docs/build/html/* gh-pages/docs
         cd gh-pages
         touch docs/.nojekyll
@@ -26,12 +37,10 @@ jobs:
         git config --local user.name "GitHub Action"
         git add .
         git commit -m "Update documentation" -a || true
-        # The above command will fail if no changes were present, so we ignore
-        # that.
+
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         branch: gh-pages
         directory: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
-    # ===============================
