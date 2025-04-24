@@ -27,7 +27,7 @@ jobs:
 
     - name: Commit documentation changes
       run: |
-        git clone https://github.com/mhinkkan/motulator.git --branch gh-pages --single-branch gh-pages
+        git clone https://github.com/mhinkkan/motulator-rc.git --branch gh-pages --single-branch gh-pages
         mkdir -p gh-pages/docs
         rm -rf gh-pages/docs/*
         cp -r docs/build/html/* gh-pages/docs
