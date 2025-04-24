@@ -153,7 +153,7 @@ In sensorless control of synchronous machine drives, the rotor position and spee
 Machine Model in General Coordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In :doc:`/model/drive/machines`, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at :math:`\vartheta_\mathrm{s}` and rotating at :math:`\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t` with respect to stator coordinates. Furthermore, the rotor is aligned at :math:`\vartheta_\mathrm{m}` and rotates at :math:`\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t` with respect to stator coordinates. This coordinate transformation results in
+In the :ref:`synchronous-machine` document, the synchronous machine model is given in rotor coordinates. For the observer design and analysis, it is convenient to express this model in general coordinates, aligned at :math:`\vartheta_\mathrm{s}` and rotating at :math:`\omega_\mathrm{s} = \mathrm{d} \vartheta_\mathrm{s}/\mathrm{d} t` with respect to stator coordinates. Furthermore, the rotor is aligned at :math:`\vartheta_\mathrm{m}` and rotates at :math:`\omega_\mathrm{m} = \mathrm{d} \vartheta_\mathrm{m}/\mathrm{d} t` with respect to stator coordinates. This coordinate transformation results in
 
 .. math::
     \frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{s}\boldsymbol{\psi}_\mathrm{s} \\
@@ -189,7 +189,7 @@ where :math:`\hat{\boldsymbol{\psi}}_\mathrm{s}` is the stator flux estimate. Th
 
 where :math:`\boldsymbol{k}_1` and :math:`\boldsymbol{k}_2` are gains (complex in a general case), the estimates are marked with the hat, and :math:`^*` marks the complex conjugate.
 
-In the sensored mode, :math:`\omega_\mathrm{s} = \omega_\mathrm{m}` is used. In the sensorless mode, the speed-adaptive structure (which would correspond to the phase-locked loop if the observer were implemented in stator coordinates) can be used to estimate the rotor angle and speed, respectively, as
+In sensored mode, :math:`\omega_\mathrm{s} = \omega_\mathrm{m}` is used. In the sensorless mode, the speed-adaptive structure (which would correspond to the phase-locked loop if the observer were implemented in stator coordinates) can be used to estimate the rotor angle and speed, respectively, as
 
 .. math::
     \frac{\mathrm{d} \hat{\omega}_\mathrm{m}}{\mathrm{d} t} &= \mathrm{Im}\{\boldsymbol{k}_\mathrm{i} \boldsymbol{e}\} \\
@@ -211,7 +211,7 @@ Gain Selection
 Sensored Case
 """""""""""""
 
-In the sensored case, the gain :math:`\boldsymbol{k}_2=0` can be set in :eq:`sm_flux_observer`. Furthermore, :math:`\delta=0` holds. Therefore, using :eq:`sm` and :eq:`sm_flux_observer`, the linearized estimation error dynamics become
+In sensored case, the gain :math:`\boldsymbol{k}_2=0` can be set in :eq:`sm_flux_observer`. Furthermore, :math:`\delta=0` holds. Therefore, using :eq:`sm` and :eq:`sm_flux_observer`, the linearized estimation error dynamics become
 
 .. math::
     \frac{\mathrm{d} \Delta\tilde{\boldsymbol{\psi}}_\mathrm{s}}{\mathrm{d} t} = -(\boldsymbol{k}_1 + \mathrm{j}\omega_\mathrm{m0})\Delta\tilde{\boldsymbol{\psi}}_\mathrm{s}
@@ -230,7 +230,7 @@ To decouple the flux estimation from the rotor angle, the gains of :eq:`sm_flux_
 	\boldsymbol{k}_1 = \sigma \qquad \boldsymbol{k}_2 = \frac{\sigma\hat{\boldsymbol{\psi}}_\mathrm{a}}{\hat{\boldsymbol{\psi}}_\mathrm{a}^*}
     :label: k1k2_sensorless
 
-where :math:`\sigma` is the desired decay rate of the flux estimation error and
+where :math:`\sigma` is the desired decay rate of the flux estimation error and the auxiliary flux is defined as
 
 .. math::
     \hat{\boldsymbol{\psi}}_\mathrm{a} = \psi_\mathrm{f} + (L_\mathrm{d} - L_\mathrm{q}) \boldsymbol{i}_\mathrm{s}^*
@@ -257,7 +257,7 @@ where :math:`\alpha_\mathrm{o}` is the desired speed-estimation bandwidth. The c
     :label: speed_est_dyn
 
 .. note::
-    The flux linkage :math:`\boldsymbol{\psi}_\mathrm{a}` is called the auxiliary flux linkage in [#Hin2018]_. It is also linked to the maximum-torque-per-ampere (MTPA) condition, which can be compactly expressed as :math:`\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\boldsymbol{\psi}_\mathrm{a}^*\}=0` [#Var2021]_.
+    The auxiliary flux is also linked to the maximum-torque-per-ampere (MTPA) condition that can be compactly expressed as :math:`\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\boldsymbol{\psi}_\mathrm{a}^*\}=0`, see :eq:`sm_mtpa`.
 
 .. rubric:: References
 
@@ -266,5 +266,3 @@ where :math:`\alpha_\mathrm{o}` is the desired speed-estimation bandwidth. The c
 .. [#Cap2001] Capecchi, Guglielmo, Pastorelli, Vagati, “Position-sensorless control of the transverse-laminated synchronous reluctance motor,” IEEE Trans. Ind. Appl., 2001, https://doi.org/10.1109/28.968190
 
 .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for sensorless synchronous motor drives: Framework for design and analysis," IEEE Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
-
-.. [#Var2021] Varatharajan, Pellegrino, Armando, “Direct flux vector control of synchronous motor drives: A small-signal model for optimal reference generation,” IEEE Trans. Power Electron., 2021, https://doi.org/10.1109/TPEL.2021.3067694

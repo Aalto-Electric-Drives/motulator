@@ -114,7 +114,7 @@ An internal change of the state variable from the stator current to the stator f
     \hat{\boldsymbol{\psi}_\mathrm{s}} &= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\}
     :label: flux_mapping_sm
 
-This choice of using the flux linkage as the internal state has some advantages: the gain expressions become simpler; the magnetic saturation would be more convenient to take into account; and the same control structure can be used for salient and non-salient machines.
+This choice of using the flux linkage as the internal state has some advantages: the gain expressions become simpler; the magnetic saturation is easier to take into account; and the same control structure can be used for salient and non-salient machines.
 
 Here, the complex vector design is considered. Hence, the controller :eq:`cc` can be rewritten as
 
@@ -138,7 +138,7 @@ The gain selection analogous to :eq:`complex_vector_gains` becomes
 
 Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using :eq:`sm_model`, :eq:`flux_mapping_sm`, and :eq:`cc_flux`, the closed-loop system can be shown to be analogous to the induction machine case.
 
-This control design corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class. In the case of saturated synchronous machine, the nonlinear flux linkage map can be used to replace the linear magnetics in :eq:`flux_mapping_sm`, see :class:`motulator.drive.control.sm.CurrentController` and :class:`motulator.drive.control.sm.SaturatedSynchronousMachinePars`.
+This control design corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class. In the case of saturated synchronous machine, the nonlinear flux linkage map can be used to replace the linear magnetics in :eq:`flux_mapping_sm`, see :class:`motulator.drive.control.sm.SaturatedSynchronousMachinePars`.
 
 .. rubric:: References
 

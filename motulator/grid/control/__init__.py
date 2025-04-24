@@ -1,4 +1,4 @@
-"""Controllers for grid-connected converters."""
+"""Controllers for grid converters."""
 
 from motulator.grid.control._base import GridConverterControlSystem
 from motulator.grid.control._controllers import CurrentLimiter, DCBusVoltageController
@@ -8,7 +8,7 @@ from motulator.grid.control._gfl_current_vector import (
     CurrentVectorController,
 )
 from motulator.grid.control._gfm_observer import ObserverBasedGridFormingController
-from motulator.grid.control._gfm_psc import PowerSynchronizationControl
+from motulator.grid.control._gfm_psc import PowerSynchronizationController
 
 __all__ = [
     "CurrentController",
@@ -18,5 +18,5 @@ __all__ = [
     "GridConverterControlSystem",
     "ObserverBasedGridFormingController",
     "PLL",
-    "PowerSynchronizationControl",
+    "PowerSynchronizationController",
 ]

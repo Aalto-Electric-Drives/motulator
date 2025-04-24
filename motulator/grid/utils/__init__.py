@@ -1,4 +1,4 @@
-"""This module contains utility functions for grid converters."""
+"""Utility functions for grid converters."""
 
 from motulator.common.utils._utils import (
     BaseValues,

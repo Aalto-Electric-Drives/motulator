@@ -17,7 +17,11 @@ from motulator.drive.control._sm_flux_vector import (
     ObserverBasedVHzController,
     ObserverBasedVHzControllerCfg,
 )
-from motulator.drive.control._sm_observers import ObserverOutputs
+from motulator.drive.control._sm_observers import (
+    FluxObserver,
+    ObserverOutputs,
+    SpeedFluxObserver,
+)
 from motulator.drive.control._sm_reference_gen import ReferenceGenerator
 from motulator.drive.control._sm_signal_inj import SignalInjectionController
 from motulator.drive.utils._parameters import (
@@ -30,6 +34,8 @@ __all__ = [
     "CurrentVectorControllerCfg",
     "VHzControlSystem",
     "VectorControlSystem",
+    "FluxObserver",
+    "SpeedFluxObserver",
     "CurrentController",
     "CurrentVectorController",
     "FluxVectorController",
