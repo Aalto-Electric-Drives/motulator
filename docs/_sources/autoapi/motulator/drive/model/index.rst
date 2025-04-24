@@ -32,16 +32,18 @@ Classes
 
 .. autoapisummary::
 
-   motulator.drive.model.CarrierComparison
    motulator.drive.model.Drive
-   motulator.drive.model.DriveWithLCFilter
    motulator.drive.model.ExternalRotorSpeed
    motulator.drive.model.FrequencyConverter
    motulator.drive.model.InductionMachine
+   motulator.drive.model.InductionMachineInvGammaPars
+   motulator.drive.model.InductionMachinePars
    motulator.drive.model.LCFilter
+   motulator.drive.model.MechanicalSystem
+   motulator.drive.model.SaturatedSynchronousMachinePars
    motulator.drive.model.Simulation
-   motulator.drive.model.StiffMechanicalSystem
    motulator.drive.model.SynchronousMachine
+   motulator.drive.model.SynchronousMachinePars
    motulator.drive.model.TwoMassMechanicalSystem
    motulator.drive.model.VoltageSourceConverter
 
@@ -49,93 +51,27 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: CarrierComparison(N=2**12, return_complex=True)
+.. py:class:: Drive(machine, mechanics, converter, lc_filter = None, pwm = False, delay = 1)
 
-   
-   Carrier comparison.
-
-   This computes the the switching states and their durations based on the
-   duty ratios. Instead of searching for zero crossings, the switching
-   instants are explicitly computed in the beginning of each sampling period,
-   allowing faster simulations.
-
-   :param N: Amount of the counter quantization levels. The default is 2**12.
-   :type N: int, optional
-   :param return_complex: Complex switching state space vectors are returned if True. Otherwise
-                          phase switching states are returned. The default is True.
-   :type return_complex: bool, optional
-
-   .. rubric:: Examples
-
-   >>> from motulator.common.model import CarrierComparison
-   >>> carrier_cmp = CarrierComparison(return_complex=False)
-   >>> # First call gives rising edges
-   >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.4, .2, .8])
-   >>> # Durations of the switching states
-   >>> t_steps
-   array([0.00019995, 0.00040015, 0.00019995, 0.00019995])
-   >>> # Switching states
-   >>> q_c_abc
-   array([[0, 0, 0],
-          [0, 0, 1],
-          [1, 0, 1],
-          [1, 1, 1]])
-   >>> # Second call gives falling edges
-   >>> t_steps, q_c_abc = carrier_cmp(.001, [.4, .2, .8])
-   >>> t_steps
-   array([0.00019995, 0.00019995, 0.00040015, 0.00019995])
-   >>> q_c_abc
-   array([[1, 1, 1],
-          [1, 0, 1],
-          [0, 0, 1],
-          [0, 0, 0]])
-   >>> # Sum of the step times equals T_s
-   >>> np.sum(t_steps)
-   0.001
-   >>> # 50% duty ratios in all phases
-   >>> t_steps, q_c_abc = carrier_cmp(1e-3, [.5, .5, .5])
-   >>> t_steps
-   array([0.0005, 0.    , 0.    , 0.0005])
-   >>> q_c_abc
-   array([[0, 0, 0],
-          [0, 0, 0],
-          [0, 0, 0],
-          [1, 1, 1]])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: Drive(converter=None, machine=None, mechanics=None)
-
-   Bases: :py:obj:`motulator.common.model.Model`
+   Bases: :py:obj:`motulator.common.model._base.Model`
 
 
    
-   Continuous-time model for machine drives.
+   Continuous-time system model for a machine drive.
 
-   This interconnects the subsystems of a machine drive and provides an
-   interface to the solver.
-
+   :param machine: Electric machine model.
+   :type machine: InductionMachine | SynchronousMachine
+   :param mechanics: Mechanical system model.
+   :type mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
    :param converter: Converter model.
    :type converter: VoltageSourceConverter | FrequencyConverter
-   :param machine: Machine model.
-   :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanical subsystem model.
-   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
+   :param lc_filter: LC filter model. If not given, a direct connection between the converter and
+                     machine is used.
+   :type lc_filter: LCFilter, optional
+   :param pwm: Enable PWM model, defaults to False.
+   :type pwm: bool, optional
+   :param delay: Computational delay (samples), defaults to 1.
+   :type delay: int, optional
 
 
 
@@ -154,147 +90,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: interconnect(_)
-
-      
-      Interconnect the subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: DriveWithLCFilter(converter=None, machine=None, mechanics=None, lc_filter=None)
-
-   Bases: :py:obj:`motulator.common.model.Model`
-
-
-   
-   Machine drive with an output LC filter.
-
-   :param converter: Converter model.
-   :type converter: VoltageSourceConverter | FrequencyConverter
-   :param machine: Machine model.
-   :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanical subsystem model.
-   :type mechanics: ExternalRotorSpeed | StiffMechanicalSystem |                TwoMassMechanicalSystem
-   :param lc_filter: LC-filter model.
-   :type lc_filter: LCFilter
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: interconnect(_)
-
-      
-      Interconnect the subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: ExternalRotorSpeed(w_M=lambda t: 0 * t)
+.. py:class:: ExternalRotorSpeed
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
 
    
-   Integrate the rotor angle from the externally given rotor speed.
+   Integrate rotor angle from externally given rotor speed.
 
-   :param w_M: Rotor speed (rad/s) as a function of time, `w_M(t)`. The default is
-               zero, ``lambda t: 0*t``.
-   :type w_M: callable
+   This class maintains the same interface as other mechanical systems but the speed is
+   determined by an external function rather than by torque dynamics.
 
 
 
@@ -313,13 +118,35 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: meas_position()
 
       
-      Measure the rotor angle.
+      Measure mechanical rotor angle (rad).
 
-      :returns: **theta_M** -- Rotor angle (mechanical rad).
-      :rtype: float
 
 
 
@@ -342,33 +169,7 @@ Package Contents
    .. py:method:: meas_speed()
 
       
-      Measure the rotor speed.
-
-      :returns: **w_M** -- Rotor angular speed (mechanical rad/s).
-      :rtype: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_states()
-
-      
-      Post-process data.
+      Measure mechanical rotor speed (rad/s).
 
 
 
@@ -389,10 +190,60 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: rhs()
+   .. py:method:: rhs(t)
 
       
       Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_external_load_torque(tau_L)
+      :abstractmethod:
+
+
+      
+      Set external load torque (Nm).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_external_rotor_speed(w_M)
+
+      
+      Set external rotor speed (rad/s).
 
 
 
@@ -445,9 +296,8 @@ Package Contents
    
    Frequency converter with a six-pulse diode bridge.
 
-   A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The
-   diode bridge is connected to the voltage-source inverter. The inductance of
-   the grid is omitted.
+   A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The diode
+   bridge is connected to the voltage-source inverter. The grid inductance is zero.
 
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
@@ -475,10 +325,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: post_process_states()
+   .. py:method:: compute_voltages(state)
 
       
-      Post-process data.
+      Compute grid and rectified voltages.
 
 
 
@@ -499,10 +349,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_with_inputs()
+   .. py:method:: create_time_series(t)
 
       
-      Post-process data with inputs.
+      Time series.
 
 
 
@@ -523,10 +373,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: rhs()
+   .. py:method:: rhs(t)
 
       
-      Compute the state derivatives.
+      Compute state derivatives.
 
 
 
@@ -547,10 +397,150 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_inputs(_)
+   .. py:method:: set_outputs(t)
 
       
-      Set output variables.
+      Set output variables for interconnection.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: InductionMachine(par)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   Γ-equivalent model of an induction machine.
+
+   An induction machine is modeled using the Γ-equivalent model [#Sle1989]_. The stator
+   inductance `L_s` can either be constant or a function of the stator flux magnitude::
+
+       L_s = L_s(abs(psi_s_ab))
+
+   :param par: Machine parameters.
+   :type par: InductionMachinePars
+
+   .. rubric:: Notes
+
+   The Γ model is chosen here since it can be extended with the magnetic saturation
+   model in a straightforward manner. If the magnetic saturation is omitted, the Γ
+   model is mathematically identical to the inverse-Γ and T models [#Sle1989]_.
+
+   .. rubric:: References
+
+   .. [#Sle1989] Slemon, "Modelling of induction machines for electric
+      drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_outputs(state)
+
+      
+      Compute output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_currents()
+
+      
+      Measure phase currents (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Compute state derivatives.
 
 
 
@@ -595,34 +585,21 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMachine(par)
-
-   Bases: :py:obj:`motulator.common.model.Subsystem`
-
+.. py:class:: InductionMachineInvGammaPars
 
    
-   Γ-equivalent model of an induction machine.
+   Inverse-Γ model parameters of an induction machine.
 
-   An induction machine is modeled using the Γ-equivalent model [#Sle1989]_.
-   The stator inductance `L_s` can either be constant or a function of the
-   stator flux magnitude::
-
-       L_s = L_s(abs(psi_ss))
-
-   :param par:
-   :type par: InductionMachinePars
-
-   .. rubric:: Notes
-
-   The Γ model is chosen here since it can be extended with the magnetic
-   saturation model in a straightforward manner. If the magnetic saturation is
-   omitted, the Γ model is mathematically identical to the inverse-Γ and T
-   models [#Sle1989]_.
-
-   .. rubric:: References
-
-   .. [#Sle1989] Slemon, "Modelling of induction machines for electric
-      drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param R_R: Rotor resistance (Ω).
+   :type R_R: float
+   :param L_sgm: Leakage inductance (H).
+   :type L_sgm: float
+   :param L_M: Magnetizing inductance (H).
+   :type L_M: float
 
 
 
@@ -641,10 +618,20 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:property:: L_s
-      
-      Stator inductance (H).
+   .. py:method:: from_gamma_pars(par)
+      :classmethod:
 
+
+      
+      Compute inverse-Γ model parameters from Γ model parameters.
+
+      This transformation assumes that the parameters are constant.
+
+      :param par: Γ-model parameters.
+      :type par: InductionMachinePars
+
+      :returns: Inverse-Γ model parameters.
+      :rtype: InductionMachineInvGammaPars
 
 
 
@@ -664,10 +651,54 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:property:: i_rs
-      
-      Rotor current (A).
+.. py:class:: InductionMachinePars
 
+   
+   Γ-model parameters of an induction machine.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param R_r: Rotor resistance (Ω).
+   :type R_r: float
+   :param L_ell: Leakage inductance (H).
+   :type L_ell: float
+   :param L_s: Stator inductance (H). If callable, it should be a function of the stator flux
+               linkage magnitude (Vs).
+   :type L_s: float | Callable[[float], float]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: from_inv_gamma_pars(par)
+      :classmethod:
+
+
+      
+      Compute Γ-model parameters from inverse-Γ model parameters.
+
+      This transformation assumes that the parameters are constant.
+
+      :param par: Inverse-Γ model parameters.
+      :type par: InductionMachineInvGammaPars
+
+      :returns: Γ model parameters.
+      :rtype: InductionMachinePars
 
 
 
@@ -687,173 +718,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:property:: i_ss
-      
-      Stator current (A).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_currents()
-
-      
-      Measure the phase currents.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_states()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_with_inputs()
-
-      
-      Post-process the solution.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
-
-      
-      Compute state derivatives.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_outputs(_)
-
-      
-      Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: tau_M
-      
-      Electromagnetic torque (Nm).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: LCFilter(L_f, C_f, R_f=0)
+.. py:class:: LCFilter(L_f, C_f, R_f = 0.0)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -865,7 +730,7 @@ Package Contents
    :type L_f: float
    :param C_f: Filter capacitance (F).
    :type C_f: float
-   :param R_f: Series resistance (Ω) of the inductor. The default is 0.
+   :param R_f: Series resistance (Ω) of the inductor, defaults to 0.
    :type R_f: float, optional
 
 
@@ -884,6 +749,30 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
    .. py:method:: meas_capacitor_voltages()
 
@@ -933,303 +822,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: rhs()
-
-      
-      Compute state derivatives.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_outputs(_)
-
-      
-      Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: Simulation(mdl=None, ctrl=None)
-
-   
-   Simulation environment.
-
-   Each simulation object has a system model object and a control system
-   object.
-
-   :param mdl: Continuous-time system model.
-   :type mdl: Model
-   :param ctrl: Discrete-time control system.
-   :type ctrl: ControlSystem
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: save_mat(name='sim')
-
-      
-      Save the simulation data into MATLAB .mat files.
-
-      :param name: Name for the simulation instance. The default is `sim`.
-      :type name: str, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: simulate(t_stop=1, max_step=np.inf)
-
-      
-      Solve the continuous-time system model and call the control system.
-
-      :param t_stop: Simulation stop time. The default is 1.
-      :type t_stop: float, optional
-      :param max_step: Max step size of the solver. The default is inf.
-      :type max_step: float, optional
-
-      .. rubric:: Notes
-
-      Other options of `solve_ivp` could be easily used if needed, but, for
-      simplicity, only `max_step` is included as an option of this method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: StiffMechanicalSystem(J, B_L=0, tau_L=lambda t: 0 * t)
-
-   Bases: :py:obj:`motulator.common.model.Subsystem`
-
-
-   
-   Stiff mechanical system.
-
-   :param J: Total moment of inertia (kgm²).
-   :type J: float
-   :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
-               to viscous friction, or an arbitrary function of the rotor speed. For
-               example, choosing ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic
-               load torque ``k*w_M**2``. The default is ``B_L = 0``.
-   :type B_L: float | callable
-   :param tau_L: External load torque (Nm) as a function of time, `tau_L_t(t)`. The
-                 default is zero, ``lambda t: 0*t``.
-   :type tau_L: callable
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:property:: B_L
-      
-      Friction coefficient (Nm/(rad/s)).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_position()
-
-      
-      Measure the rotor angle.
-
-      :returns: **theta_M** -- Rotor angle (mechanical rad).
-      :rtype: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_speed()
-
-      
-      Measure the rotor speed.
-
-      :returns: **w_M** -- Rotor angular speed (mechanical rad/s).
-      :rtype: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_states()
-
-      
-      Post-process data.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: post_process_with_inputs()
-
-      
-      Post-process data with inputs.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs()
+   .. py:method:: rhs(t)
 
       
       Compute state derivatives.
@@ -1277,23 +870,21 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SynchronousMachine(par, i_s=None, psi_s0=None)
+.. py:class:: MechanicalSystem(J, B_L = 0.0)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
 
    
-   Synchronous machine model.
+   Stiff mechanical system.
 
-   :param par: Machine parameters.
-   :type par: SynchronousMachinePars
-   :param i_s: Stator current (A) as a function of the stator flux linkage (A) in
-               order to model the magnetic saturation. If this function is given, the
-               stator current is computed using this function instead of constants
-               `par.L_d`, `par.L_q`, and `par.psi_f`.
-   :type i_s: callable, optional
-   :param psi_s0: Initial stator flux linkage (Vs). If not given, `par.psi_f` is used.
-   :type psi_s0: float, optional
+   :param J: Total moment of inertia (kgm²).
+   :type J: float
+   :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
+               friction, or an arbitrary function of the rotor speed. For example, choosing
+               ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque ``k*w_M**2``.
+               The default is ``B_L = 0``.
+   :type B_L: float | callable
 
 
 
@@ -1312,9 +903,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:property:: i_s
+   .. py:method:: compute_total_load_torque(t, state)
+
       
-      Stator current (A).
+      Total load torque (Nm).
 
 
 
@@ -1335,10 +927,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: meas_currents()
+   .. py:method:: create_time_series(t)
 
       
-      Measure the phase currents.
+      Create time series from state list.
 
 
 
@@ -1359,10 +951,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_states()
+   .. py:method:: meas_position()
 
       
-      Post-process the solution.
+      Measure mechanical rotor angle (rad).
 
 
 
@@ -1383,10 +975,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_with_inputs()
+   .. py:method:: meas_speed()
 
       
-      Post-process the solution.
+      Measure mechanical rotor speed (rad/s).
 
 
 
@@ -1407,7 +999,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: rhs()
+   .. py:method:: rhs(t)
 
       
       Compute state derivatives.
@@ -1431,7 +1023,57 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_outputs(_)
+   .. py:method:: set_external_load_torque(tau_L)
+
+      
+      Set external load torque (Nm).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_external_rotor_speed(_)
+      :abstractmethod:
+
+
+      
+      Set external rotor speed (rad/s).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
 
       
       Set output variables.
@@ -1455,9 +1097,61 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:property:: tau_M
+.. py:class:: SaturatedSynchronousMachinePars
+
+   Bases: :py:obj:`BaseSynchronousMachinePars`
+
+
+   
+   Parameters of a saturated synchronous machine.
+
+   The saturation model is specified as as a current map (current as a function of the
+   flux linkage). Optionally, to be used only in control systems, a flux map (flux
+   linkage as a function of the current) can be provided. For convenience, this class
+   also provides the incremental inductance matrix and its inverse, which can be used
+   for the system model and optimal reference generation.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). This function
+                      should be differentiable, if inverse incremental inductances are used.
+   :type i_s_dq_fcn: callable
+   :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A). This function
+                        should be differentiable, if incremental inductances are used. Needed only for
+                        some control methods, not in the system model. If not given, the modified
+                        Powell's method is used to iteratively compute the flux linkage.
+   :type psi_s_dq_fcn: callable, optional
+   :param max_iter: Maximum number of iterations for the modified Powell's method, defaults to 20.
+                    This is needed only for some control methods (not for the system model) in such
+                    a case that `psi_s_dq_fcn` is not given.
+   :type max_iter: int, optional
+   :param kind: Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
+                "rel" (reluctance).
+   :type kind: str, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: i_s_dq(psi_s_dq)
+
       
-      Electromagnetic torque (Nm).
+      Current as a function of the flux linkage.
 
 
 
@@ -1478,19 +1172,124 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: TwoMassMechanicalSystem(par, tau_L=lambda t: 0 * t)
+   .. py:method:: incr_ind_mat(i_s_dq)
 
-   Bases: :py:obj:`StiffMechanicalSystem`
+      
+      Incremental inductance matrix vs. current.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: inv_incr_ind_mat(psi_s_dq)
+
+      
+      Inverse incremental inductance matrix vs. flux linkage.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s_dq)
+
+      
+      Flux linkage as a function of the stator current.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: solve_psi_s_dq(i_s_dq_target, psi_s_dq_init, max_iter)
+
+      
+      Solve for flux linkage given target current, accounting for cross-saturation.
+
+      :param i_s_dq_target: Target stator current (A)
+      :type i_s_dq_target: complex
+      :param psi_s_dq_init: Initial guess for flux linkage (Vs).
+      :type psi_s_dq_init: complex
+      :param max_iter: Maximum number of iterations.
+      :type max_iter: int
+
+      :returns: Stator flux linkage (Vs) that produces the target current.
+      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Simulation(mdl, ctrl, show_progress = True, cfg = None)
 
    
-   Two-mass mechanical subsystem.
+   Simulation environment.
 
-   :param par: Two-mass mechanical system parameters.
-   :type par: TwoMassMechanicalSystemPars
-   :param tau_L: Load torque (Nm) as a function of time, `tau_L(t)`. The default is
-                 zero, ``lambda t: 0*t``.
-   :type tau_L: callable
+   :param mdl: Continuous-time system model.
+   :type mdl: Model
+   :param ctrl: Discrete-time control system.
+   :type ctrl: ControlSystem
+   :param show_progress: Show progress during simulation, defaults to True.
+   :type show_progress: bool, optional
+   :param cfg: Simulation configuration parameters.
+   :type cfg: SimulationCfg, optional
 
 
 
@@ -1509,9 +1308,386 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:property:: B_L
+   .. py:method:: simulate(t_stop = 1.0)
+
       
-      Friction coefficient (Nm/(rad/s)).
+      Solve continuous-time system model and call control system.
+
+      :param t_stop: Simulation stop time, defaults to 1.
+      :type t_stop: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SynchronousMachine(par)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   Synchronous machine model.
+
+   This model is internally represented in rotor coordinates, which results in the
+   simplest implementation. The interfaces are in stator coordinates.
+
+   :param par: Machine parameters. The magnetic saturation can be modeled by providing a
+               nonlinear current map par.i_s_dq (callable).
+   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_outputs(state)
+
+      
+      Compute output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_currents()
+
+      
+      Measure phase currents (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SynchronousMachinePars
+
+   Bases: :py:obj:`BaseSynchronousMachinePars`
+
+
+   
+   Synchronous machine parameters, without saturation.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param L_d: d-axis inductance (H).
+   :type L_d: float
+   :param L_q: q-axis inductance (H).
+   :type L_q: float
+   :param psi_f: Permanent-magnet flux linkage (Vs).
+   :type psi_f: float
+   :param kind: Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
+                "rel" (reluctance).
+   :type kind: str, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: i_s_dq(psi_s_dq)
+
+      
+      Current (A) as a function of the flux linkage (Vs).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: incr_ind_mat(i_s_dq)
+
+      
+      Incremental inductance matrix (H).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: inv_incr_ind_mat(psi_s_dq)
+
+      
+      Inverse of the incremental inductance matrix (1/H).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s_dq)
+
+      
+      Flux linkage (Vs) as a function of the stator current (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: TwoMassMechanicalSystem(J_M, J_L, K_S, C_S, B_L = 0.0)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   Two-mass mechanical subsystem.
+
+   :param J_M: Motor moment of inertia (kgm²).
+   :type J_M: float
+   :param J_L: Load moment of inertia (kgm²).
+   :type J_L: float
+   :param K_S: Shaft torsional stiffness (Nm/rad).
+   :type K_S: float
+   :param C_S: Shaft torsional damping (Nm/(rad/s)).
+   :type C_S: float
+   :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
+               friction, or an arbitrary function of the load speed. For example, choosing
+               ``B_L = lambda w_L: k*abs(w_L)`` leads to quadratic load torque ``k*w_L**2``.
+               The default is ``B_L = 0``.
+   :type B_L: float | callable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_torques(t, state)
+
+      
+      Compute shaft and load torques (Nm).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
 
 
 
@@ -1580,10 +1756,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_states()
+   .. py:method:: meas_position()
 
       
-      Post-process data.
+      Measure mechanical rotor angle (rad).
 
 
 
@@ -1604,10 +1780,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_with_inputs()
+   .. py:method:: meas_speed()
 
       
-      Post-process data with inputs.
+      Measure mechanical rotor speed (rad/s).
 
 
 
@@ -1628,10 +1804,60 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: rhs()
+   .. py:method:: rhs(t)
 
       
       Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_external_load_torque(tau_L)
+
+      
+      Set external load torque (Nm).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_external_rotor_speed(_)
+      :abstractmethod:
+
+
+      
+      Set external rotor speed (rad/s).
 
 
 
@@ -1676,21 +1902,16 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc, C_dc=None, i_dc=lambda t: None)
+.. py:class:: VoltageSourceConverter(u_dc)
 
-   Bases: :py:obj:`motulator.common.model.Subsystem`
+   Bases: :py:obj:`motulator.common.model._base.Subsystem`
 
 
    
-   Lossless three-phase voltage-source converter.
+   Lossless three-phase voltage-source converter with constant DC-bus voltage.
 
-   :param u_dc: DC-bus voltage (V). If the DC-bus capacitor is modeled, this value is
-                used as the initial condition.
+   :param u_dc: DC-bus voltage (V).
    :type u_dc: float
-   :param C_dc: DC-bus capacitance (F). The default is None.
-   :type C_dc: float, optional
-   :param i_dc: External current (A) fed to the DC bus. Needed if `C_dc` is not None.
-   :type i_dc: callable, optional
 
 
 
@@ -1709,9 +1930,34 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:property:: i_dc_int
+   .. py:method:: compute_internal_dc_current(inp)
+
       
-      Converter-side DC current (A).
+      Compute the internal DC current (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series.
 
 
 
@@ -1735,7 +1981,7 @@ Package Contents
    .. py:method:: meas_dc_voltage()
 
       
-      Measure the converter DC-bus voltage (V).
+      Measure converter DC-bus voltage (V).
 
 
 
@@ -1756,10 +2002,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_states()
+   .. py:method:: rhs(t)
 
       
-      Post-process data.
+      Default empty implementation.
 
 
 
@@ -1780,10 +2026,12 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process_with_inputs()
+   .. py:method:: set_external_dc_current(i_dc)
+      :abstractmethod:
+
 
       
-      Post-process data with inputs.
+      Set external DC current (A).
 
 
 
@@ -1804,104 +2052,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: rhs()
-
-      
-      Compute the state derivatives.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_inputs(t)
-
-      
-      Set input variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_outputs(_)
+   .. py:method:: set_outputs(t)
 
       
       Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: u_cs
-      
-      AC-side voltage (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: u_dc
-      
-      DC-bus voltage (V).
 
 
 

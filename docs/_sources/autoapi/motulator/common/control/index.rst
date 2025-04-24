@@ -32,100 +32,49 @@ Classes
 
 .. autoapisummary::
 
-   motulator.common.control.Clock
    motulator.common.control.ComplexPIController
    motulator.common.control.ControlSystem
    motulator.common.control.PIController
    motulator.common.control.PWM
    motulator.common.control.RateLimiter
+   motulator.common.control.TimeSeries
 
 
 Package Contents
 ----------------
 
-.. py:class:: Clock
-
-   
-   Digital clock.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: update(T_s)
-
-      
-      Update the digital clock.
-
-      :param T_s: Sampling period (s).
-      :type T_s: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: ComplexPIController(k_p, k_i, k_t=None)
+.. py:class:: ComplexPIController(k_p, k_i, k_t = None)
 
    
    2DOF synchronous-frame complex-vector PI controller.
 
-   This implements a discrete-time 2DOF synchronous-frame complex-vector PI
-   controller [#Bri2000]_. The continuous-time counterpart of the controller
-   is::
+   This implements a discrete-time 2DOF synchronous-frame complex-vector PI controller
+   [#Bri2000]_. The continuous-time counterpart of the controller is::
 
-       u = k_t*ref_i - k_p*i + (k_i + 1j*w*k_t)/s*(ref_i - i) + u_ff
+       u = k_t*i_ref - k_p*i + (k_i + 1j*w*k_t)/s*(i_ref - i) + u_ff
 
-   where `u` is the controller output, `ref_i` is the reference signal, `i` is
-   the feedback signal, `w` is the angular speed of synchronous coordinates,
-   `u_ff` is the feedforward signal, and `1/s` refers to integration. The 1DOF
-   version is obtained by setting ``k_t = k_p``. The integrator anti-windup is
-   implemented based on the realized controller output.
+   where `u` is the controller output, `i_ref` is the reference signal, `i` is the
+   feedback signal, `w` is the angular speed of synchronous coordinates, `u_ff` is the
+   feedforward signal, and `1/s` refers to integration. The 1DOF version is obtained by
+   setting ``k_t = k_p``. The integrator anti-windup is implemented based on the
+   realized controller output.
 
    :param k_p: Proportional gain.
    :type k_p: float
    :param k_i: Integral gain.
    :type k_i: float
-   :param k_t: Reference-feedforward gain. The default is `k_p`.
+   :param k_t: Reference-feedforward gain, defaults to `k_p`.
    :type k_t: float, optional
 
    .. rubric:: Notes
 
-   This controller can be used, e.g., as a current controller. In this case,
-   `i` corresponds to the stator current and `u` to the stator voltage.
+   This controller can be used, e.g., as a current controller. In this case, `i`
+   corresponds to the stator current and `u` to the stator voltage.
 
    .. rubric:: References
 
-   .. [#Bri2000] Briz, Degner, Lorenz, "Analysis and design of current
-      regulators using complex vectors," IEEE Trans. Ind. Appl., 2000,
-      https://doi.org/10.1109/28.845057
+   .. [#Bri2000] Briz, Degner, Lorenz, "Analysis and design of current regulators using
+      complex vectors," IEEE Trans. Ind. Appl., 2000, https://doi.org/10.1109/28.845057
 
 
 
@@ -144,16 +93,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(ref_i, i, u_ff=0)
+   .. py:method:: compute_output(i_ref, i, u_ff = 0j)
 
       
       Compute the controller output.
 
-      :param ref_i: Reference signal.
-      :type ref_i: complex
+      :param i_ref: Reference signal.
+      :type i_ref: complex
       :param i: Feedback signal.
       :type i: complex
-      :param u_ff: Feedforward signal. The default is 0.
+      :param u_ff: Feedforward signal, defaults to 0.
       :type u_ff: complex, optional
 
       :returns: **u** -- Controller output.
@@ -207,39 +156,17 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ControlSystem(T_s)
+.. py:class:: ControlSystem
 
-   Bases: :py:obj:`abc.ABC`
+   Bases: :py:obj:`Protocol`
 
 
    
    Base class for control systems.
 
-   This base class provides typical functionalities for control systems. It
-   can be used as a template for implementing custom controllers. An instance
-   of this class can be called as a function. When called, it runs the main
-   control loop.
-
-   :param T_s: Sampling period (s).
-   :type T_s: float
-
-   .. attribute:: clock
-
-      Digital clock.
-
-      :type: Clock
-
-   .. attribute:: data
-
-      Saved simulation data.
-
-      :type: SimpleNamespace
-
-   .. attribute:: pwm
-
-      Pulse-width modulator.
-
-      :type: PWM
+   This class defines the interface for control systems. It is a generic class that can
+   be used with different models, measurements, feedback signals, and reference
+   signals. The class provides methods for saving, post-processing, and clearing data.
 
 
 
@@ -258,18 +185,11 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: get_feedback_signals(mdl)
-      :abstractmethod:
-
+   .. py:method:: clear_data()
 
       
-      Get the feedback signals.
+      Clear all stored data.
 
-      :param mdl: Continuous-time system model.
-      :type mdl: Model
-
-      :returns: **fbk** -- Feedback signals.
-      :rtype: SimpleNamespace
 
 
 
@@ -289,27 +209,11 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: main(mdl)
+   .. py:method:: compute_output(fbk)
 
       
-      Main control loop.
+      Compute controller output based on feedback.
 
-      This method runs the main control loop, having the following structure:
-
-      1. Get the feedback signals. This step may contain first getting the
-         measurements and then optionally computing the observer outputs.
-      2. Compute the reference signals (controller outputs) based on the
-         feedback signals.
-      3. Update the control system states for the next sampling instant.
-      4. Save the feedback signals and the reference signals.
-      5. Return the sampling period `T_s` and the duty ratios `d_abc` for the
-         carrier comparison.
-
-      :param mdl: Continuous-time system model.
-      :type mdl: Model
-
-      :returns: * **T_s** (*float*) -- Sampling period (s).
-                * **d_abc** (*ndarray, shape (3,)*) -- Duty ratios.
 
 
 
@@ -329,25 +233,59 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: output(fbk)
-      :abstractmethod:
-
+   .. py:method:: get_duty_ratios(ref)
 
       
-      Compute the controller outputs.
+      Extract duty ratios from the reference signals.
 
-      :param fbk: Feedback signals.
-      :type fbk: SimpleNamespace
 
-      :returns: **ref** --
 
-                References, containing at least the following fields:
 
-                    T_s : float
-                        Next sampling period (s).
-                    d_abc : ndarray, shape (3,)
-                        Duty ratios.
-      :rtype: SimpleNamespace
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(meas)
+
+      
+      Get feedback signals from the model.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_measurement(mdl)
+
+      
+      Get measurements from the model.
+
 
 
 
@@ -370,10 +308,8 @@ Package Contents
    .. py:method:: post_process()
 
       
-      Transform the lists to the ndarray format.
+      Convert stored lists to numpy arrays.
 
-      This method can be run after the simulation has been completed in order
-      to simplify plotting and analysis of the stored data.
 
 
 
@@ -393,17 +329,11 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: save(**kwargs)
+   .. py:method:: run_control_loop(mdl)
 
       
-      Save the data of the control system.
+      Run the default control loop, can be overridden.
 
-      Each keyword represents a data category, and its value (a
-      SimpleNamespace) contains the data for that category.
-
-      :param \*\*kwargs: One or more keyword arguments where the key is the name and the
-                         value is a SimpleNamespace containing the data to be saved.
-      :type \*\*kwargs: SimpleNamespace
 
 
 
@@ -423,17 +353,11 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(fbk, ref)
-      :abstractmethod:
-
+   .. py:method:: save(t, **signal_groups)
 
       
-      Update the states.
+      Save a single timestep of data.
 
-      :param fbk: Feedback signals.
-      :type fbk: SimpleNamespace
-      :param ref: Reference signals.
-      :type ref: SimpleNamespace
 
 
 
@@ -453,7 +377,31 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PIController(k_p, k_i, k_t=None, max_u=np.inf)
+   .. py:method:: update(ref, fbk)
+
+      
+      Update controller internal states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: PIController(k_p, k_i, k_t = None, u_max = inf)
 
    
    2DOF PI controller.
@@ -461,28 +409,27 @@ Package Contents
    This implements a discrete-time 2DOF PI controller, whose continuous-time
    counterpart is::
 
-       u = k_t*ref_y - k_p*y + (k_i/s)*(ref_y - y) + u_ff
+       u = k_t*y_ref - k_p*y + (k_i/s)*(y_ref - y) + u_ff
 
-   where `u` is the controller output, `y_ref` is the reference signal, `y` is
-   the feedback signal, `u_ff` is the feedforward signal, and `1/s` refers to
-   integration. The standard PI controller is obtained by choosing
-   ``k_t = k_p``. The integrator anti-windup is implemented based on the
-   realized controller output.
+   where `u` is the controller output, `y_ref` is the reference signal, `y` is the
+   feedback signal, `u_ff` is the feedforward signal, and `1/s` refers to integration.
+   The standard PI controller is obtained by choosing ``k_t = k_p``. The integrator
+   anti-windup is implemented based on the realized controller output.
 
    .. rubric:: Notes
 
    This controller can be used, e.g., as a speed controller. In this case, `y`
-   corresponds to the rotor angular speed `w_M` and `u` to the torque
-   reference `ref_tau_M`.
+   corresponds to the rotor angular speed `w_M` and `u` to the torque reference
+   `tau_M_ref`.
 
    :param k_p: Proportional gain.
    :type k_p: float
    :param k_i: Integral gain.
    :type k_i: float
-   :param k_t: Reference-feedforward gain. The default is `k_p`.
+   :param k_t: Reference-feedforward gain, defaults to `k_p`.
    :type k_t: float, optional
-   :param max_u: Maximum controller output. The default is `inf`.
-   :type max_u: float, optional
+   :param u_max: Maximum controller output, defaults to `inf`.
+   :type u_max: float, optional
 
 
 
@@ -501,16 +448,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(ref_y, y, u_ff=0)
+   .. py:method:: compute_output(y_ref, y, u_ff = 0.0)
 
       
       Compute the controller output.
 
-      :param ref_y: Reference signal.
-      :type ref_y: float
+      :param y_ref: Reference signal.
+      :type y_ref: float
       :param y: Feedback signal.
       :type y: float
-      :param u_ff: Feedforward signal. The default is 0.
+      :param u_ff: Feedforward signal, defaults to 0.
       :type u_ff: float, optional
 
       :returns: **u** -- Controller output.
@@ -562,36 +509,36 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp=1.5, u_cs0=0, overmodulation='MME')
+.. py:class:: PWM(k_comp = 1.5, u_c_ab0 = 0j, overmodulation = 'MPE')
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
 
-   This computes the duty ratios corresponding to standard space-vector PWM
-   and overmodulation [#Hav1999]_. The realized voltage is computed based on
-   the measured DC-bus voltage and the duty ratios. The digital delay effects
-   are taken into account in the realized voltage [#Bae2003]_.
+   This computes the duty ratios corresponding to standard space-vector PWM and
+   overmodulation [#Hav1999]_. The realized voltage is computed based on the measured
+   DC-bus voltage and the duty ratios. The digital delay effects are taken into account
+   in the realized voltage [#Bae2003]_.
 
-   :param k_comp: Compensation factor for the delay effect on the voltage vector angle.
-                  The default is 1.5.
+   :param k_comp: Compensation factor for the angular delay effect, defaults to 1.5.
    :type k_comp: float, optional
-   :param u_cs0: Initial voltage (V) in stationary coordinates. This is used to compute
-                 the realized voltage. The default is 0.
-   :type u_cs0: float, optional
-   :param overmodulation: Select one of the following overmodulation methods: minimum-magnitude-
-                          error ("MME"); minimum-phase-error ("MPE"); six-step ("six_step"). The
-                          default is "MME".
-   :type overmodulation: str, optional
+   :param u_c_ab0: Initial voltage (V) in stationary coordinates. This is used to compute the
+                   realized voltage, defaults to 0.
+   :type u_c_ab0: float, optional
+   :param overmodulation: Overmodulation method, defaults to "MPE". Valid options are:
+                          - "MPE": minimum phase error
+                          - "MME": minimum magnitude error
+                          - "six_step": six-step operation
+   :type overmodulation: Literal["MPE", "MME", "six_step"], optional
 
    .. rubric:: References
 
-   .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation
-      characteristics of triangle intersection PWM methods," IEEE Trans. Ind.
-      Appl., 1999, https://doi.org/10.1109/28.777199
+   .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation characteristics of
+      triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
+      https://doi.org/10.1109/28.777199
 
-   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of
-      full-digital synchronous frame current regulator of PWM AC drives," IEEE
-      Trans. Ind. Appl., 2003, https://doi.org/10.1109/TIA.2003.810660
+   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
+      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
+      2003, https://doi.org/10.1109/TIA.2003.810660
 
 
 
@@ -610,18 +557,53 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: duty_ratios(ref_u_cs, u_dc)
+   .. py:method:: compute_output(T_s, u_c_ab_ref, u_dc, w)
+
+      
+      Compute the duty ratios and the limited voltage reference.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param u_c_ab_ref: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ab_ref: complex
+      :param u_dc: DC-bus voltage (V).
+      :type u_dc: float
+      :param w: Angular speed of synchronous coordinates (rad/s).
+      :type w: float
+
+      :returns: * **d_abc** (*list[float]*) -- Duty ratios for the next sampling period.
+                * **u_c_ab** (*complex*) -- Limited voltage reference (V) in stationary coordinates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: duty_ratios(u_c_ab_ref, u_dc)
 
       
       Compute the duty ratios for three-phase space-vector PWM.
 
-      :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
-      :type ref_u_cs: complex
+      :param u_c_ab_ref: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ab_ref: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
       :returns: **d_abc** -- Duty ratios.
-      :rtype: ndarray, shape (3,)
+      :rtype: list[float]
 
 
 
@@ -646,8 +628,8 @@ Package Contents
       
       Get the realized voltage.
 
-      :returns: **realized_voltage** -- Realized converter voltage (V) in stationary coordinates. The
-                effect of the digital delays on the angle are compensated for.
+      :returns: **realized_voltage** -- Realized converter voltage (V) in stationary coordinates. The effect of the
+                digital delays on the angle are compensated for.
       :rtype: complex
 
 
@@ -668,42 +650,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: output(T_s, ref_u_cs, u_dc, w)
-
-      
-      Compute the duty ratios and the limited voltage reference.
-
-      :param T_s: Sampling period (s).
-      :type T_s: float
-      :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
-      :type ref_u_cs: complex
-      :param u_dc: DC-bus voltage (V).
-      :type u_dc: float
-      :param w: Angular speed of synchronous coordinates (rad/s).
-      :type w: float
-
-      :returns: * **d_abc** (*ndarray, shape (3,)*) -- Duty ratios for the next sampling period.
-                * **u_cs** (*complex*) -- Limited voltage reference (V) in stationary coordinates.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: six_step_overmodulation(ref_u_cs, u_dc)
+   .. py:method:: six_step_overmodulation(u_c_ab_ref, u_dc)
       :staticmethod:
 
 
@@ -711,22 +658,21 @@ Package Contents
       Overmodulation up to six-step operation.
 
       This method modifies the angle of the voltage reference vector in the
-      overmodulation region such that the six-step operation is reached
-      [#Bol1997]_.
+      overmodulation region such that the six-step operation is reached [#Bol1997]_.
 
-      :param ref_u_cs: Converter voltage reference (V) in stationary coordinates.
-      :type ref_u_cs: complex
+      :param u_c_ab_ref: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ab_ref: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: **ref_u_cs** -- Modified converter voltage reference (V) in stationary coordinates.
+      :returns: **u_c_ab_ref** -- Modified converter voltage reference (V) in stationary coordinates.
       :rtype: complex
 
       .. rubric:: References
 
-      .. [#Bol1997] Bolognani, Zigliotto, "Novel digital continuous control
-         of SVM inverters in the overmodulation range," IEEE Trans. Ind.
-         Appl., 1997, https://doi.org/10.1109/28.568019
+      .. [#Bol1997] Bolognani, Zigliotto, "Novel digital continuous control of SVM
+         inverters in the overmodulation range," IEEE Trans. Ind. Appl., 1997,
+         https://doi.org/10.1109/28.568019
 
 
 
@@ -746,7 +692,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(u_cs)
+   .. py:method:: update(u_c_ab)
 
       
       Update the realized voltage.
@@ -770,13 +716,36 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: RateLimiter(rate_limit=np.inf)
+.. py:class:: RateLimiter(rate_limit = inf)
 
    
    Rate limiter.
 
-   :param rate_limit: Rate limit. The default is inf.
+   :param rate_limit: Rate limit, defaults to `inf`.
    :type rate_limit: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: TimeSeries
+
+   
+   Container for control system's discrete-time data.
+
 
 
 

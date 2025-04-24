@@ -4,7 +4,7 @@
    height="250"
    id="svg6781"
    version="1.1"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
    sodipodi:docname="overall_system.svg"
    viewBox="0 0 480.00001 250"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -22,13 +22,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="269.45819"
-     inkscape:cy="40.153563"
+     inkscape:cx="269.20565"
+     inkscape:cy="40.911178"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="2560"
-     inkscape:window-height="1403"
+     inkscape:window-height="1371"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -132,41 +132,6 @@
          style="fill:context-stroke;fill-rule:evenodd;stroke:none"
          id="path7-0" />
     </marker>
-    <clipPath
-       id="clipPath9752">
-      <path
-         clip-rule="nonzero"
-         d="M 6,0 H 37 V 8.746094 H 6 Z m 0,0"
-         id="path56295" />
-    </clipPath>
-    <clipPath
-       id="clipPath6876">
-      <path
-         clip-rule="nonzero"
-         d="m 165,12 h 16 v 4.769531 h -16 z m 0,0"
-         id="path80781" />
-    </clipPath>
-    <clipPath
-       id="clipPath79150">
-      <path
-         clip-rule="nonzero"
-         d="m 180,9 h 27 v 7.769531 h -27 z m 0,0"
-         id="path57081" />
-    </clipPath>
-    <clipPath
-       id="clipPath2047">
-      <path
-         clip-rule="nonzero"
-         d="m 165,12 h 16 v 4.769531 h -16 z m 0,0"
-         id="path57897" />
-    </clipPath>
-    <clipPath
-       id="clipPath1556">
-      <path
-         clip-rule="nonzero"
-         d="m 180,9 h 27 v 7.769531 h -27 z m 0,0"
-         id="path90105" />
-    </clipPath>
     <marker
        refX="0"
        inkscape:stockid="Arrow2Mend-9-59636"
@@ -195,482 +160,6 @@
          style="font-size:12px;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke:#0000ff;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
          inkscape:connector-curvature="0" />
     </marker>
-    <clipPath
-       id="clipPath8623">
-      <path
-         clip-rule="nonzero"
-         d="m 161,10 h 50 v 8.707031 h -50 z m 0,0"
-         id="path58045" />
-    </clipPath>
-    <clipPath
-       id="clipPath4211">
-      <path
-         clip-rule="nonzero"
-         d="M 0,0 H 31 V 6.917969 H 0 Z m 0,0"
-         id="path3690" />
-    </clipPath>
-    <clipPath
-       id="clipPath67883">
-      <path
-         clip-rule="nonzero"
-         d="m 30,2 h 8.855469 V 6.917969 H 30 Z m 0,0"
-         id="path81798" />
-    </clipPath>
-    <clipPath
-       id="clipPath3737">
-      <path
-         clip-rule="nonzero"
-         d="m 171,30 h 30 v 8.632812 h -30 z m 0,0"
-         id="path33722" />
-    </clipPath>
-    <clipPath
-       id="clipPath4401">
-      <path
-         clip-rule="nonzero"
-         d="m 173,32 h 13 v 4.695312 h -13 z m 0,0"
-         id="path73369" />
-    </clipPath>
-    <clipPath
-       id="clipPath63058">
-      <path
-         clip-rule="nonzero"
-         d="m 186,29 h 13 v 7.695312 h -13 z m 0,0"
-         id="path1499" />
-    </clipPath>
-    <clipPath
-       id="clipPath5815">
-      <path
-         clip-rule="nonzero"
-         d="m 173,12 h 13 v 4.882812 h -13 z m 0,0"
-         id="path37996" />
-    </clipPath>
-    <clipPath
-       id="clipPath79750">
-      <path
-         clip-rule="nonzero"
-         d="m 186,9 h 13 v 7.882812 h -13 z m 0,0"
-         id="path72686" />
-    </clipPath>
-    <clipPath
-       id="clipPath2959">
-      <path
-         clip-rule="nonzero"
-         d="m 167,9 h 33 v 7.769531 h -33 z m 0,0"
-         id="path52110" />
-    </clipPath>
-    <clipPath
-       id="clipPath82002">
-      <path
-         clip-rule="nonzero"
-         d="m 199,9 h 6 v 7.769531 h -6 z m 0,0"
-         id="path18418" />
-    </clipPath>
-    <clipPath
-       id="clipPath6396">
-      <path
-         clip-rule="nonzero"
-         d="M 0,1 H 6 V 8.300781 H 0 Z m 0,0"
-         id="path27635" />
-    </clipPath>
-    <clipPath
-       id="clipPath97891">
-      <path
-         clip-rule="nonzero"
-         d="M 18,0 H 33.683594 V 7 H 18 Z m 0,0"
-         id="path9156" />
-    </clipPath>
-    <clipPath
-       id="clipPath4587">
-      <path
-         clip-rule="nonzero"
-         d="M 0,0 H 6 V 6.089844 H 0 Z m 0,0"
-         id="path95795" />
-    </clipPath>
-    <clipPath
-       id="clipPath14648">
-      <path
-         clip-rule="nonzero"
-         d="m 5,5 h 5 V 6.089844 H 5 Z m 0,0"
-         id="path21026" />
-    </clipPath>
-    <clipPath
-       id="clipPath16744">
-      <path
-         clip-rule="nonzero"
-         d="m 9,1 h 5 V 6.089844 H 9 Z m 0,0"
-         id="path72835" />
-    </clipPath>
-    <clipPath
-       id="clipPath63977">
-      <path
-         clip-rule="nonzero"
-         d="m 14,5 h 5 v 1.089844 h -5 z m 0,0"
-         id="path72488" />
-    </clipPath>
-    <clipPath
-       id="clipPath45972">
-      <path
-         clip-rule="nonzero"
-         d="M 18,0 H 33.683594 V 6.089844 H 18 Z m 0,0"
-         id="path71871" />
-    </clipPath>
-    <clipPath
-       id="clipPath4157">
-      <path
-         clip-rule="nonzero"
-         d="m 0,9 h 55 v 7.882812 H 0 Z m 0,0"
-         id="path45143" />
-    </clipPath>
-    <clipPath
-       id="clipPath9586">
-      <path
-         clip-rule="nonzero"
-         d="M 0,0 H 11 V 6.917969 H 0 Z m 0,0"
-         id="path45209" />
-    </clipPath>
-    <clipPath
-       id="clipPath66363">
-      <path
-         clip-rule="nonzero"
-         d="m 10,2 h 6 v 4.917969 h -6 z m 0,0"
-         id="path6205" />
-    </clipPath>
-    <clipPath
-       id="clipPath44003">
-      <path
-         clip-rule="nonzero"
-         d="m 15,2 h 5 v 4.917969 h -5 z m 0,0"
-         id="path51593" />
-    </clipPath>
-    <clipPath
-       id="clipPath49234">
-      <path
-         clip-rule="nonzero"
-         d="M 23,0 H 56 V 6.917969 H 23 Z m 0,0"
-         id="path88059" />
-    </clipPath>
-    <clipPath
-       id="clipPath86349">
-      <path
-         clip-rule="nonzero"
-         d="M 59,0 H 78.953125 V 6.917969 H 59 Z m 0,0"
-         id="path58827" />
-    </clipPath>
-    <clipPath
-       id="clipPath7235">
-      <path
-         clip-rule="nonzero"
-         d="M 0,0 H 11 V 6.917969 H 0 Z m 0,0"
-         id="path7783" />
-    </clipPath>
-    <clipPath
-       id="clipPath43069">
-      <path
-         clip-rule="nonzero"
-         d="m 10,2 h 6 v 4.917969 h -6 z m 0,0"
-         id="path1513" />
-    </clipPath>
-    <clipPath
-       id="clipPath48564">
-      <path
-         clip-rule="nonzero"
-         d="m 15,2 h 5 v 4.917969 h -5 z m 0,0"
-         id="path92327" />
-    </clipPath>
-    <clipPath
-       id="clipPath72573">
-      <path
-         clip-rule="nonzero"
-         d="M 23,2 H 38 V 6.917969 H 23 Z m 0,0"
-         id="path5426" />
-    </clipPath>
-    <clipPath
-       id="clipPath43616">
-      <path
-         clip-rule="nonzero"
-         d="M 37,0 H 50 V 6.917969 H 37 Z m 0,0"
-         id="path11966" />
-    </clipPath>
-    <clipPath
-       id="clipPath51002">
-      <path
-         clip-rule="nonzero"
-         d="M 49,2 H 70 V 6.917969 H 49 Z m 0,0"
-         id="path58308" />
-    </clipPath>
-    <clipPath
-       id="clipPath91168">
-      <path
-         clip-rule="nonzero"
-         d="M 73,0 H 92.210938 V 6.917969 H 73 Z m 0,0"
-         id="path16009" />
-    </clipPath>
-    <clipPath
-       id="clipPath3360">
-      <path
-         clip-rule="nonzero"
-         d="M 0,0 H 26.621094 V 6.808594 H 0 Z m 0,0"
-         id="path71209" />
-    </clipPath>
-    <clipPath
-       id="clipPath9795">
-      <path
-         clip-rule="nonzero"
-         d="M 28,0 H 49 V 9.964844 H 28 Z m 0,0"
-         id="path49871" />
-    </clipPath>
-    <clipPath
-       id="clipPath4873">
-      <path
-         clip-rule="nonzero"
-         d="M 55,0 H 75 V 9.964844 H 55 Z m 0,0"
-         id="path28543" />
-    </clipPath>
-    <clipPath
-       id="clipPath6187">
-      <path
-         clip-rule="nonzero"
-         d="M 45,0 H 79 V 8.855469 H 45 Z m 0,0"
-         id="path53497" />
-    </clipPath>
-    <clipPath
-       id="clipPath1157">
-      <path
-         clip-rule="nonzero"
-         d="m 222,19 h 32 v 10.335938 h -32 z m 0,0"
-         id="path14928" />
-    </clipPath>
-    <clipPath
-       id="clipPath40960">
-      <path
-         clip-rule="nonzero"
-         d="m 253,19 h 9 v 10.335938 h -9 z m 0,0"
-         id="path88151" />
-    </clipPath>
-    <clipPath
-       id="clipPath7249">
-      <path
-         clip-rule="nonzero"
-         d="m 211,19 h 33 v 10.335938 h -33 z m 0,0"
-         id="path58461" />
-    </clipPath>
-    <clipPath
-       id="clipPath20093">
-      <path
-         clip-rule="nonzero"
-         d="m 243,19 h 9 v 10.335938 h -9 z m 0,0"
-         id="path73818" />
-    </clipPath>
-    <clipPath
-       id="clipPath4496">
-      <path
-         clip-rule="nonzero"
-         d="m 0,19 h 29 v 7.84375 H 0 Z m 0,0"
-         id="path57726" />
-    </clipPath>
-    <clipPath
-       id="clipPath7413">
-      <path
-         clip-rule="nonzero"
-         d="M 28,0 H 49 V 9.964844 H 28 Z m 0,0"
-         id="path74048" />
-    </clipPath>
-    <clipPath
-       id="clipPath1382">
-      <path
-         clip-rule="nonzero"
-         d="M 32,0 H 52 V 9.964844 H 32 Z m 0,0"
-         id="path2770" />
-    </clipPath>
-    <clipPath
-       id="clipPath5861">
-      <path
-         clip-rule="nonzero"
-         d="M 58,0 H 78 V 9.964844 H 58 Z m 0,0"
-         id="path78089" />
-    </clipPath>
-    <clipPath
-       id="clipPath1604">
-      <path
-         clip-rule="nonzero"
-         d="m 0,12 h 15 v 4.882812 H 0 Z m 0,0"
-         id="path40205" />
-    </clipPath>
-    <clipPath
-       id="clipPath40286">
-      <path
-         clip-rule="nonzero"
-         d="m 14,10 h 18 v 6.882812 H 14 Z m 0,0"
-         id="path81545" />
-    </clipPath>
-    <clipPath
-       id="clipPath96768">
-      <path
-         clip-rule="nonzero"
-         d="m 35,10 h 27 v 6.882812 H 35 Z m 0,0"
-         id="path12324" />
-    </clipPath>
-    <clipPath
-       id="clipPath44436">
-      <path
-         clip-rule="nonzero"
-         d="m 61,16 h 5 v 0.882812 h -5 z m 0,0"
-         id="path91955" />
-    </clipPath>
-    <clipPath
-       id="clipPath9950">
-      <path
-         clip-rule="nonzero"
-         d="m 65,12 h 5 v 4.882812 h -5 z m 0,0"
-         id="path27829" />
-    </clipPath>
-    <clipPath
-       id="clipPath43146">
-      <path
-         clip-rule="nonzero"
-         d="m 74,9 h 16 v 7.882812 H 74 Z m 0,0"
-         id="path39473" />
-    </clipPath>
-    <clipPath
-       id="clipPath17735">
-      <path
-         clip-rule="nonzero"
-         d="m 93,10 h 27 v 6.882812 H 93 Z m 0,0"
-         id="path71538" />
-    </clipPath>
-    <clipPath
-       id="clipPath32528">
-      <path
-         clip-rule="nonzero"
-         d="m 119,16 h 5 v 0.882812 h -5 z m 0,0"
-         id="path32705" />
-    </clipPath>
-    <clipPath
-       id="clipPath75406">
-      <path
-         clip-rule="nonzero"
-         d="m 123,12 h 5 v 4.882812 h -5 z m 0,0"
-         id="path13067" />
-    </clipPath>
-    <clipPath
-       id="clipPath17338">
-      <path
-         clip-rule="nonzero"
-         d="m 128,16 h 5 v 0.882812 h -5 z m 0,0"
-         id="path70458" />
-    </clipPath>
-    <clipPath
-       id="clipPath48910">
-      <path
-         clip-rule="nonzero"
-         d="m 132,10 h 15 v 6.882812 h -15 z m 0,0"
-         id="path23889" />
-    </clipPath>
-    <clipPath
-       id="clipPath9249">
-      <path
-         clip-rule="nonzero"
-         d="m 0,20 h 26 v 6.84375 H 0 Z m 0,0"
-         id="path4290" />
-    </clipPath>
-    <clipPath
-       id="clipPath9246">
-      <path
-         clip-rule="nonzero"
-         d="m 26,26 h 5 v 0.84375 h -5 z m 0,0"
-         id="path30872" />
-    </clipPath>
-    <clipPath
-       id="clipPath42861">
-      <path
-         clip-rule="nonzero"
-         d="m 30,22 h 5 v 4.84375 h -5 z m 0,0"
-         id="path76249" />
-    </clipPath>
-    <clipPath
-       id="clipPath64777">
-      <path
-         clip-rule="nonzero"
-         d="m 38,19 h 17 v 7.84375 H 38 Z m 0,0"
-         id="path61485" />
-    </clipPath>
-    <clipPath
-       id="clipPath56985">
-      <path
-         clip-rule="nonzero"
-         d="m 58,20 h 26 v 6.84375 H 58 Z m 0,0"
-         id="path5930" />
-    </clipPath>
-    <clipPath
-       id="clipPath76858">
-      <path
-         clip-rule="nonzero"
-         d="m 84,26 h 4 v 0.84375 h -4 z m 0,0"
-         id="path24500" />
-    </clipPath>
-    <clipPath
-       id="clipPath19579">
-      <path
-         clip-rule="nonzero"
-         d="m 88,22 h 5 v 4.84375 h -5 z m 0,0"
-         id="path96958" />
-    </clipPath>
-    <clipPath
-       id="clipPath81248">
-      <path
-         clip-rule="nonzero"
-         d="m 93,26 h 4 v 0.84375 h -4 z m 0,0"
-         id="path18554" />
-    </clipPath>
-    <clipPath
-       id="clipPath79988">
-      <path
-         clip-rule="nonzero"
-         d="m 97,20 h 15 v 6.84375 H 97 Z m 0,0"
-         id="path45943" />
-    </clipPath>
-    <clipPath
-       id="clipPath4725">
-      <path
-         clip-rule="nonzero"
-         d="m 0,30 h 27 v 6.808594 H 0 Z m 0,0"
-         id="path76623" />
-    </clipPath>
-    <clipPath
-       id="clipPath88266">
-      <path
-         clip-rule="nonzero"
-         d="m 26,36 h 5 v 0.808594 h -5 z m 0,0"
-         id="path68532" />
-    </clipPath>
-    <clipPath
-       id="clipPath81263">
-      <path
-         clip-rule="nonzero"
-         d="m 30,32 h 5 v 4.808594 h -5 z m 0,0"
-         id="path82239" />
-    </clipPath>
-    <clipPath
-       id="clipPath64029">
-      <path
-         clip-rule="nonzero"
-         d="m 35,36 h 5 v 0.808594 h -5 z m 0,0"
-         id="path18169" />
-    </clipPath>
-    <clipPath
-       id="clipPath45255">
-      <path
-         clip-rule="nonzero"
-         d="m 39,30 h 16 v 6.808594 H 39 Z m 0,0"
-         id="path40911" />
-    </clipPath>
-    <clipPath
-       id="clipPath2977">
-      <path
-         clip-rule="nonzero"
-         d="m 9,1 h 9 V 7.472656 H 9 Z m 0,0"
-         id="path88031" />
-    </clipPath>
   </defs>
   <metadata
      id="metadata6786">
@@ -1035,7 +524,7 @@
          x="374.9505"
          y="569.3125"
          id="tspan8049"
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle">T_s, d_c_abc</tspan></text>
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle">T_s, d_abc</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke-width:1.333;stroke-linejoin:round;stroke-dashoffset:3.15"
@@ -1046,7 +535,7 @@
          x="462.95053"
          y="569.3125"
          id="tspan8053"
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle">q_c_abc</tspan></text>
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle">q_abc</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke-width:1.333;stroke-linejoin:round;stroke-dashoffset:3.15"
@@ -1057,22 +546,22 @@
          x="379.29269"
          y="633.3125"
          id="tspan8057"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle">Measured outputs in <tspan
-   style="font-style:italic"
-   id="tspan8061">mdl</tspan></tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle"><tspan
+           style="font-style:italic"
+           id="tspan8061">mdl</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke-width:1.333;stroke-linejoin:round;stroke-dashoffset:3.15"
-       x="286.75519"
+       x="280.75519"
        y="708.4104"
        id="text8065"><tspan
          sodipodi:role="line"
-         x="286.75519"
+         x="280.75519"
          y="708.4104"
          id="tspan8063"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle"><tspan
-   style="font-style:italic"
-   id="tspan8067">_data</tspan> (list)</tspan></text>
+           style="font-style:italic"
+           id="tspan8067">_history</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke-width:1.333;stroke-linejoin:round;stroke-dashoffset:3.15"
@@ -1092,16 +581,16 @@
     <text
        xml:space="preserve"
        style="font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke-width:1.333;stroke-linejoin:round;stroke-dashoffset:3.15"
-       x="550.75519"
+       x="536.75519"
        y="708.4104"
        id="text8073"><tspan
          sodipodi:role="line"
-         x="550.75519"
+         x="536.75519"
          y="708.4104"
          id="tspan8071"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:center;text-anchor:middle"><tspan
-   style="font-style:italic"
-   id="tspan8069">sol_states </tspan>(list)</tspan></text>
+           style="font-style:italic"
+           id="tspan8069">_history</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke-width:1.333;stroke-linejoin:round;stroke-dashoffset:3.15"
@@ -1123,21 +612,21 @@
          x="196.83594"
          y="766.8125"
          id="tspan8758"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start">Discrete-time data, e.g.</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start">Discrete-time results, e.g.</tspan><tspan
          sodipodi:role="line"
          x="196.83594"
          y="780.17181"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start"
          id="tspan8762"><tspan
    style="font-style:italic;text-align:start;text-anchor:start"
-   id="tspan8764">ctrl.data.ref.i_s</tspan> (ndarray)</tspan><tspan
+   id="tspan8764">res.ctrl.ref.i_s</tspan> (ndarray)</tspan><tspan
          sodipodi:role="line"
          x="196.83594"
          y="793.53107"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start"
          id="tspan8766"><tspan
    style="font-style:italic"
-   id="tspan8780">ctrl.data.fbk.i_s</tspan> (ndarray)</tspan></text>
+   id="tspan8780">res.ctrl.fbk.i_s</tspan> (ndarray)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke-width:1.333;stroke-linejoin:round;stroke-dashoffset:3.15"
@@ -1148,20 +637,20 @@
          x="431.00003"
          y="766.8125"
          id="tspan8768"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start">Continuous-time data, e.g.</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start">Continuous-time results, e.g.</tspan><tspan
          sodipodi:role="line"
          x="431.00003"
          y="780.17181"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start"
          id="tspan8772"><tspan
    style="font-style:italic;text-align:start;text-anchor:start"
-   id="tspan8770">mdl.converter.data.u_cs</tspan> (ndarray)</tspan><tspan
+   id="tspan8770">res.mdl.converter.u_c_ab</tspan> (ndarray)</tspan><tspan
          sodipodi:role="line"
          x="431.00003"
          y="793.53107"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:start;text-anchor:start"
          id="tspan8774"><tspan
    style="font-style:italic"
-   id="tspan8778">mdl.machine.data.i_ss</tspan> (ndarray)</tspan></text>
+   id="tspan8778">res.mdl.machine.i_s_ab</tspan> (ndarray)</tspan></text>
   </g>
 </svg>

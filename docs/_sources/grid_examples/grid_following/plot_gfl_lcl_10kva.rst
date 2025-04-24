@@ -21,19 +21,16 @@
 10-kVA converter, LCL filter
 ============================
 
-This example simulates a grid-following-controlled converter connected to a
-strong grid through an LCL filter. The control system includes a phase-locked
-loop (PLL) to synchronize with the grid, a current reference generator, and a
-PI-type current controller. The dynamics of the LCL filter are not taken into
-account in the control system.
+This example simulates a grid-following-controlled converter connected to a strong grid
+through an LCL filter. The control system includes a phase-locked loop (PLL) to
+synchronize with the grid, a current reference generator, and a PI-type current
+controller. The LCL filter dynamics are not taken into account in the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-18
+.. GENERATED FROM PYTHON SOURCE LINES 13-15
 
 .. code-block:: Python
 
-    from motulator.grid import model, control
-    from motulator.grid.utils import (
-        BaseValues, ACFilterPars, NominalValues, plot)
+    from motulator.grid import control, model, utils
 
 
 
@@ -42,17 +39,17 @@ account in the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-20
+.. GENERATED FROM PYTHON SOURCE LINES 16-17
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-24
+.. GENERATED FROM PYTHON SOURCE LINES 17-21
 
 .. code-block:: Python
 
 
-    nom = NominalValues(U=400, I=14.5, f=50, P=10e3)
-    base = BaseValues.from_nominal(nom)
+    nom = utils.NominalValues(U=400, I=14.5, f=50, P=10e3)
+    base = utils.BaseValues.from_nominal(nom)
 
 
 
@@ -61,24 +58,20 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-38
+.. GENERATED FROM PYTHON SOURCE LINES 23-31
 
 .. code-block:: Python
 
 
-    # Grid and filter
-    par = ACFilterPars(
-        L_fc=.073*base.L, L_fg=.073*base.L, C_f=.043*base.C, u_fs0=base.u)
-    ac_filter = model.ACFilter(par)
-    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-    # Inverter model with constant DC voltage
+    ac_filter = model.LCLFilter(
+        L_fc=0.073 * base.L, L_fg=0.073 * base.L, C_f=0.043 * base.C, u_f0_ab=base.u
+    )
+    ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
     converter = model.VoltageSourceConverter(u_dc=650)
-
-    # Create system model
     mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 
@@ -88,18 +81,19 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-45
+.. GENERATED FROM PYTHON SOURCE LINES 33-40
 
 .. code-block:: Python
 
 
-    cfg = control.GridFollowingControlCfg(
-        L=.073*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i)
-    ctrl = control.GridFollowingControl(cfg)
+    inner_ctrl = control.CurrentVectorController(
+        i_max=1.5 * base.i, L=0.073 * base.L, T_s=100e-6
+    )
+    ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
 
@@ -108,18 +102,19 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
-Set the time-dependent reference and disturbance signals.
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-52
+Set external references.
+
+.. GENERATED FROM PYTHON SOURCE LINES 42-47
 
 .. code-block:: Python
 
 
     # Set the active and reactive power references
-    ctrl.ref.p_g = lambda t: (t > .02)*5e3
-    ctrl.ref.q_g = lambda t: (t > .04)*4e3
+    ctrl.set_power_ref(lambda t: (t > 0.02) * 5e3)
+    ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 
 
 
@@ -128,17 +123,17 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-58
+.. GENERATED FROM PYTHON SOURCE LINES 49-53
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    sim.simulate(t_stop=.1)
+    res = sim.simulate(t_stop=0.08)
 
 
 
@@ -147,16 +142,16 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-62
+.. GENERATED FROM PYTHON SOURCE LINES 55-57
 
 .. code-block:: Python
 
 
-    plot(sim, base)
+    utils.plot(res, base)
 
 
 
@@ -184,7 +179,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.312 seconds)
+   **Total running time of the script:** (0 minutes 1.127 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_lcl_10kva.py:

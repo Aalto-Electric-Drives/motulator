@@ -21,21 +21,17 @@
 2.2-kW induction motor, diode bridge
 ====================================
 
-A diode bridge, stiff three-phase grid, and a DC link is modeled. The default
-parameters in this example yield open-loop V/Hz control.
+A diode bridge, stiff three-phase grid, and a DC link is modeled. The control system is
+configured as pure open-loop V/Hz control.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-19
+.. GENERATED FROM PYTHON SOURCE LINES 11-16
 
 .. code-block:: Python
 
+    from math import inf, pi
 
-    import numpy as np
-
-    from motulator.drive import model
     import motulator.drive.control.im as control
-    from motulator.drive.utils import (
-        BaseValues, InductionMachineInvGammaPars, InductionMachinePars,
-        NominalValues, plot, plot_extra)
+    from motulator.drive import model, utils
 
 
 
@@ -44,17 +40,17 @@ parameters in this example yield open-loop V/Hz control.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-25
+.. GENERATED FROM PYTHON SOURCE LINES 18-22
 
 .. code-block:: Python
 
 
-    nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
-    base = BaseValues.from_nominal(nom, n_p=2)
+    nom = utils.NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
+    base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 
 
@@ -63,30 +59,46 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
-Create the system model.
+Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-44
+.. GENERATED FROM PYTHON SOURCE LINES 24-34
 
 .. code-block:: Python
 
 
-    # Machine model, using its inverse-Γ parameters
-    mdl_ig_par = InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
-    mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
-    machine = model.InductionMachine(mdl_par)
-    # Mechanical subsystem with the quadratic load torque profile
-    k = 1.1*nom.tau/(base.w/base.n_p)**2
-    mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
+    par = model.InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
+    )
+    machine = model.InductionMachine(par)
+    k = 1.1 * nom.tau / base.w_M**2  # Quadratic load torque profile
+    mechanics = model.MechanicalSystem(J=0.015, B_L=lambda w_M: k * abs(w_M))
+    converter = model.FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
+    mdl = model.Drive(machine, mechanics, converter, pwm=True)
 
-    # Frequency converter with a diode bridge
-    frequency_converter = model.FrequencyConverter(
-        C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
-    mdl = model.Drive(
-        converter=frequency_converter, machine=machine, mechanics=mechanics)
-    mdl.pwm = model.CarrierComparison()  # Enable the PWM model
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
+
+Configure the control system as open-loop V/Hz control.
+
+.. GENERATED FROM PYTHON SOURCE LINES 36-44
+
+.. code-block:: Python
+
+
+    est_par = control.InductionMachineInvGammaPars(n_p=2, R_s=0, R_R=0, L_sgm=0, L_M=inf)
+    cfg = control.ObserverBasedVHzControllerCfg(
+        psi_s_nom=base.psi, i_s_max=inf, alpha_f=0, alpha_tau=0, alpha_psi=0
+    )
+    vhz_ctrl = control.ObserverBasedVHzController(est_par, cfg)
+    ctrl = control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 60)
 
 
 
@@ -97,38 +109,15 @@ Create the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 45-46
 
-Control system (parametrized as open-loop V/Hz control).
-
-.. GENERATED FROM PYTHON SOURCE LINES 46-52
-
-.. code-block:: Python
-
-
-    # Inverse-Γ model parameter estimates
-    par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-    ctrl = control.VHzControl(
-        control.VHzControlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
-
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-60
+.. GENERATED FROM PYTHON SOURCE LINES 46-51
 
 .. code-block:: Python
 
 
-    ctrl.ref.w_m = lambda t: (t > .2)*base.w
-
-    # Stepwise load torque at t = 1 s, 20% of the rated torque
-    mdl.mechanics.tau_L = lambda t: (t > 1)*.2*nom.tau
+    ctrl.set_speed_ref(lambda t: (t > 0.2) * base.w_M)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > 1) * 0.2 * nom.tau)
 
 
 
@@ -137,43 +126,21 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
-Create the simulation object and simulate it.
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-66
+Create the simulation object, simulate, and plot the results in per-unit values.
+
+.. GENERATED FROM PYTHON SOURCE LINES 53-60
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    sim.simulate(t_stop=1.5)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 67-74
-
-Plot results in per-unit values.
-
-.. note::
-   The DC link of this particular example is actually unstable at 1-p.u.
-   speed at the rated load torque, since the inverter looks like a negative
-   resistance to the DC link. You can notice this instability if simulating a
-   longer period (e.g. set `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
-
-.. GENERATED FROM PYTHON SOURCE LINES 74-79
-
-.. code-block:: Python
-
-
+    res = sim.simulate(t_stop=1.4)
     # sphinx_gallery_thumbnail_number = 2
-    plot(sim, base)
-    plot_extra(sim, base, t_span=(1.1, 1.125))
+    utils.plot(res, base)
+    utils.plot_extra(res, base, t_span=(1.1, 1.125))
 
 
 
@@ -206,18 +173,24 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-85
+.. GENERATED FROM PYTHON SOURCE LINES 61-72
+
+.. note::
+   The DC link of this particular example is actually unstable at 1-p.u. speed at the
+   rated load torque, since the inverter looks like a negative resistance to the DC
+   link. You can notice this instability if simulating a longer period (e.g. set
+   `t_stop=2`). For analysis, see e.g., [#Hin2007]_.
 
 .. rubric:: References
 
-.. [#Hin2007] Hinkkanen, Harnefors, Luomi, "Control of induction motor drives
-   equipped with small DC-Link capacitance," Proc. EPE, 2007,
+.. [#Hin2007] Hinkkanen, Harnefors, Luomi, "Control of induction motor drives equipped
+   with small DC-Link capacitance," Proc. EPE, 2007,
    https://doi.org/10.1109/EPE.2007.4417763
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 17.639 seconds)
+   **Total running time of the script:** (0 minutes 13.711 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_vhz_ctrl_im_2kw.py:

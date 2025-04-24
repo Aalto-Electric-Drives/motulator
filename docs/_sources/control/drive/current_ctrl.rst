@@ -16,6 +16,7 @@ The inverse-Γ model of an induction machine is considered (see :doc:`/model/dri
 .. math::
     L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} &= \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \underbrace{\left(\mathrm{j}\omega_\mathrm{m} - \frac{R_\mathrm{R}}{L_\mathrm{M}}\right)\boldsymbol{\psi}_\mathrm{R}}_{\text{back-emf } \boldsymbol{e}_\mathrm{s}} \\
 	\frac{\mathrm{d} \boldsymbol{\psi}_\mathrm{R}}{\mathrm{d} t} &= R_\mathrm{R}\boldsymbol{i}_\mathrm{s} - \left(\frac{R_\mathrm{R}}{L_\mathrm{M}} + \mathrm{j}\omega_\mathrm{r} \right)\boldsymbol{\psi}_\mathrm{R}
+    :label: im_model_i_s_psi_R
 
 where :math:`R_\sigma = R_\mathrm{s} + R_\mathrm{R}` is the total resistance and :math:`\omega_\mathrm{r} = \omega_\mathrm{s} - \omega_\mathrm{m}` is the slip angular frequency. The rotor flux linkage :math:`\boldsymbol{\psi}_\mathrm{R}` and the rotor speed :math:`\omega_\mathrm{m}` change slowly as compared to the stator current. Consequently, the back-emf :math:`\boldsymbol{e}_\mathrm{s}` can be considered as a quasi-constant input (load) disturbance for the current controller, and it suffices to consider the stator current dynamics
 
@@ -45,12 +46,7 @@ Here, ideal voltage production is assumed, :math:`\boldsymbol{u}_\mathrm{s} = \b
 
 .. math::
 	\boldsymbol{i}_\mathrm{s} = \boldsymbol{G}_\mathrm{c}(s)\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{Y}_\mathrm{c}(s)\boldsymbol{e}_\mathrm{s}
-
-The disturbance rejection depends on the closed-loop admittance
-
-.. math::
-    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}
-    :label: Yc
+    :label: closed_loop_current_control
 
 The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is
 
@@ -58,7 +54,11 @@ The closed-loop poles can be arbitrarily placed by means of the gains. The refer
 	\boldsymbol{G}_\mathrm{c}(s) = \frac{(s + \mathrm{j}\omega_\mathrm{s}) \boldsymbol{k}_\mathrm{t} + \boldsymbol{k}_\mathrm{i} }{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}
     :label: Gc
 
-whose zero can be placed by means of the reference-feedforward gain :math:`\boldsymbol{k}_\mathrm{t}`.
+whose zero can be placed by means of the reference-feedforward gain :math:`\boldsymbol{k}_\mathrm{t}`.The disturbance rejection depends on the closed-loop admittance
+
+.. math::
+    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}
+    :label: Yc
 
 Gain Selection
 ^^^^^^^^^^^^^^
@@ -66,24 +66,26 @@ Gain Selection
 Consider the gains
 
 .. math::
-    \boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \hat L_\sigma - \hat R_\sigma \qquad\qquad
-    \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2\hat L_\sigma  \qquad \qquad
+    \boldsymbol{k}_\mathrm{p} = (\alpha_\mathrm{c} + \alpha_\mathrm{i}) \hat L_\sigma - \hat R_\sigma \qquad\qquad
+    \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}\alpha_\mathrm{i}\hat L_\sigma  \qquad \qquad
     \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma
     :label: complex_vector_gains
 
-where :math:`\hat R_\sigma = 0` can be used in practice due to its minor effect and integral action. Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Yc` and :eq:`Gc` reduce to
+where :math:`\alpha_\mathrm{s}` is the closed-loop reference-tracking bandwidth and :math:`\alpha_\mathrm{i}` is the integral action bandwidth. Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Yc` and :eq:`Gc` reduce to
 
 .. math::
-    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s})}
-    \qquad\qquad
     \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}
+    \qquad\qquad
+    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{i} + \mathrm{j}\omega_\mathrm{s})}
+    :label: Gc_Yc
 
-It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at :math:`s=-\alpha_\mathrm{c}`, while another pole moves with the angular frequency of the coordinate system, :math:`s= -\alpha_\mathrm{c} - \mathrm{j}\omega_\mathrm{s}`. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole.
+It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at :math:`s=-\alpha_\mathrm{c}`, while another pole moves with the angular frequency of the coordinate system, :math:`s= -\alpha_\mathrm{i} - \mathrm{j}\omega_\mathrm{s}`. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole. Notice that :math:`\hat R_\sigma = 0` can be used in practice in :eq:`complex_vector_gains`.
 
 This gain selection is used in the :class:`motulator.drive.control.im.CurrentController` class. The stator voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is
 
 .. math::
     \bar{\boldsymbol{u}}_\mathrm{s,ref} = \mathrm{sat}(\boldsymbol{u}_\mathrm{s,ref})
+    :label: limited_voltage
 
 where :math:`\mathrm{sat}(\cdot)` is the saturation function. The limited voltage can be obtained from a pulse-width modulation (PWM) algorithm (see the :class:`motulator.common.control.PWM` class). The anti-windup of the integrator is included in the implementation of the :class:`motulator.common.control.ComplexPIController` base class.
 
@@ -112,7 +114,7 @@ An internal change of the state variable from the stator current to the stator f
     \hat{\boldsymbol{\psi}_\mathrm{s}} &= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\}
     :label: flux_mapping_sm
 
-This choice of using the flux linkage as the internal state has some advantages: the gain expressions become simpler; the magnetic saturation would be more convenient to take into account; and the same control structure can be used for salient and nonsalient machines.
+This choice of using the flux linkage as the internal state has some advantages: the gain expressions become simpler; the magnetic saturation would be more convenient to take into account; and the same control structure can be used for salient and non-salient machines.
 
 Here, the complex vector design is considered. Hence, the controller :eq:`cc` can be rewritten as
 
@@ -129,11 +131,14 @@ where the angular speed of the coordinate system equals typically the measured r
 The gain selection analogous to :eq:`complex_vector_gains` becomes
 
 .. math::
-    \boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \qquad\qquad
-    \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2 \qquad \qquad
+    \boldsymbol{k}_\mathrm{p} = \alpha_\mathrm{c} + \alpha_\mathrm{i} \qquad\qquad
+    \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}\alpha_\mathrm{i} \qquad \qquad
     \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c}
+    :label: sm_gains
 
-Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using :eq:`sm_model`, :eq:`flux_mapping_sm`, and :eq:`cc_flux`, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class.
+Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using :eq:`sm_model`, :eq:`flux_mapping_sm`, and :eq:`cc_flux`, the closed-loop system can be shown to be analogous to the induction machine case.
+
+This control design corresponds to the implementation in the :class:`motulator.drive.control.sm.CurrentController` class. In the case of saturated synchronous machine, the nonlinear flux linkage map can be used to replace the linear magnetics in :eq:`flux_mapping_sm`, see :class:`motulator.drive.control.sm.CurrentController` and :class:`motulator.drive.control.sm.SaturatedSynchronousMachinePars`.
 
 .. rubric:: References
 

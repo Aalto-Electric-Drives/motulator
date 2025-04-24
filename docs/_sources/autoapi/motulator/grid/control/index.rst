@@ -34,35 +34,35 @@ Classes
 
    motulator.grid.control.CurrentController
    motulator.grid.control.CurrentLimiter
-   motulator.grid.control.CurrentReference
+   motulator.grid.control.CurrentVectorController
    motulator.grid.control.DCBusVoltageController
    motulator.grid.control.GridConverterControlSystem
-   motulator.grid.control.GridFollowingControl
-   motulator.grid.control.GridFollowingControlCfg
-   motulator.grid.control.ObserverBasedGridFormingControl
-   motulator.grid.control.ObserverBasedGridFormingControlCfg
+   motulator.grid.control.ObserverBasedGridFormingController
    motulator.grid.control.PLL
    motulator.grid.control.PowerSynchronizationControl
-   motulator.grid.control.PowerSynchronizationControlCfg
 
 
 Package Contents
 ----------------
 
-.. py:class:: CurrentController(cfg)
+.. py:class:: CurrentController(L, alpha_c, alpha_i = None)
 
-   Bases: :py:obj:`motulator.common.control.ComplexPIController`
+   Bases: :py:obj:`motulator.common.control._controllers.ComplexPIController`
 
 
    
    2DOF PI current controller for grid converters.
 
-   This class provides an interface for a current controller for grid
-   converters. The gains are initialized based on the desired closed-loop
-   bandwidth and the filter inductance.
+   This class provides an interface for a current controller for grid converters. The
+   gains are initialized based on the desired closed-loop bandwidth and the filter
+   inductance.
 
-   :param cfg: Control system configuration.
-   :type cfg: GridFollowingControlCfg
+   :param L: Inductance (H).
+   :type L: float
+   :param alpha_c: Current-control bandwidth (rad/s).
+   :type alpha_c: float
+   :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_c`.
+   :type alpha_i: float, optional
 
 
 
@@ -81,13 +81,13 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentLimiter(max_i)
+.. py:class:: CurrentLimiter(i_max)
 
    
    Limit the amplitude of the input signal.
 
-   :param max_i: Maximum current (A).
-   :type max_i: float
+   :param i_max: Maximum current (A).
+   :type i_max: float
 
    :returns: Limited signal.
    :rtype: complex
@@ -109,17 +109,27 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentReference(cfg)
+.. py:class:: CurrentVectorController(i_max, L, alpha_c = 2 * pi * 400, alpha_i = None, u_nom = sqrt(2 / 3) * 400, w_nom = 2 * pi * 50, alpha_pll = 2 * pi * 20, T_s = 0.000125)
 
    
-   Current reference generator.
+   Current-vector grid-following controller.
 
-   This class generates the current reference based on the active and reactive
-   power references. The current limiting algorithm is used to limit the
-   current reference.
-
-   :param cfg: Control system configuration.
-   :type cfg: GridFollowingControlCfg
+   :param i_max: Maximum current (A), peak value.
+   :type i_max: float
+   :param L: Filter inductance (H).
+   :type L: float
+   :param alpha_c: Current-control bandwidth (rad/s), defaults to 2*pi*400.
+   :type alpha_c: float, optional
+   :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_c`.
+   :type alpha_i: float, optional
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to sqrt(2/3)*400.
+   :type u_nom: float, optional
+   :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
+   :type w_nom: float, optional
+   :param alpha_pll: PLL frequency-tracking bandwidth (rad/s), defaults to 2*pi*20.
+   :type alpha_pll: float, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
 
 
 
@@ -138,10 +148,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: get_current_reference(ref)
+   .. py:method:: compute_output(p_g_ref, q_g_ref, fbk)
 
       
-      Current reference generator.
+      Compute references.
 
 
 
@@ -162,30 +172,101 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: DCBusVoltageController(C_dc, alpha_dc, max_p=np.inf)
+   .. py:method:: get_feedback(meas)
 
-   Bases: :py:obj:`motulator.common.control.PIController`
+      
+      Get feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(ref, fbk)
+
+      
+      Update states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DCBusVoltageController(C_dc, alpha_dc, p_max = inf)
+
+   Bases: :py:obj:`motulator.common.control._controllers.PIController`
 
 
    
    DC-bus voltage PI controller.
 
-   This controller regulates the energy stored in the DC-bus capacitor (scaled
-   square of the DC-bus voltage) in order to have a linear closed-loop system
-   [#Hur2001]_.
+   This controller regulates the energy stored in the DC-bus capacitor (scaled square
+   of the DC-bus voltage) in order to have a linear closed-loop system [#Hur2001]_.
 
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
    :param alpha_dc: Approximate closed-loop bandwidth (rad/s).
    :type alpha_dc: float
-   :param max_p: Limit for the maximum converter power (W). The default is `inf`.
-   :type max_p: float, optional
+   :param p_max: Limit for the maximum converter power (W), defaults to `inf`.
+   :type p_max: float, optional
 
    .. rubric:: References
 
-   .. [#Hur2001] Hur, Jung, Nam, "A fast dynamic DC-link power-balancing
-      scheme for a PWM converter-inverter system," IEEE Trans. Ind. Electron.,
-      2001, https://doi.org/10.1109/41.937412
+   .. [#Hur2001] Hur, Jung, Nam, "A fast dynamic DC-link power-balancing scheme for a
+      PWM converter-inverter system," IEEE Trans. Ind. Electron., 2001,
+      https://doi.org/10.1109/41.937412
 
 
 
@@ -204,16 +285,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(ref_u_dc, u_dc, u_ff=0)
+   .. py:method:: compute_output(y_ref, y, u_ff = 0.0)
 
       
       Compute the controller output.
 
-      :param ref_y: Reference signal.
-      :type ref_y: float
+      :param y_ref: Reference signal.
+      :type y_ref: float
       :param y: Feedback signal.
       :type y: float
-      :param u_ff: Feedforward signal. The default is 0.
+      :param u_ff: Feedforward signal, defaults to 0.
       :type u_ff: float, optional
 
       :returns: **u** -- Controller output.
@@ -237,45 +318,22 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: GridConverterControlSystem(T_s)
+.. py:class:: GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl = None)
 
-   Bases: :py:obj:`motulator.common.control.ControlSystem`, :py:obj:`abc.ABC`
+   Bases: :py:obj:`motulator.common.control._base.ControlSystem`
 
 
    
-   Base class for control of grid-connected converters.
+   Grid converter control system.
 
-   This base class provides typical functionalities for control of
-   grid-connected converters. This can be used both in power control and
-   DC-bus voltage control modes.
+   This class defines the interface for control systems of grid converters. It is a
+   generic class that can be used with different models, measurements, feedback
+   signals, and reference signals.
 
-   :param T_s: Sampling period (s).
-   :type T_s: float
-
-   .. attribute:: ref
-
-      References, possibly containing the following fields:
-
-          v : float | callable
-              Converter output voltage reference (V). Can be given either as
-              a constant or a function of time (s).
-          p_g : callable
-              Active power reference (W) as a function of time (s). This
-              signal is needed in power control mode.
-          q_g : callable
-              Reactive power reference (VAr) as a function of time (s). This
-              signal is needed if grid-following control is used.
-          u_dc : callable
-              DC-voltage reference (V) as a function of time (s). This signal
-              is needed in DC-bus voltage control mode.
-
-      :type: SimpleNamespace
-
-   .. attribute:: dc_bus_voltage_ctrl
-
-      DC-bus voltage controller. The default is None.
-
-      :type: DCBusVoltageController | None
+   :param inner_ctrl: Inner controller.
+   :type inner_ctrl: GridFormingController | GridFollowingController
+   :param dc_bus_voltage_ctrl: DC-bus voltage controller. If not given, power-control mode is used.
+   :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
 
 
 
@@ -294,51 +352,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: get_electrical_measurements(fbk, mdl)
+   .. py:method:: compute_output(fbk)
 
       
-      Measure the currents and voltages.
-
-      :param fbk: Measured signals are added to this object.
-      :type fbk: SimpleNamespace
-      :param mdl: Continuous-time system model.
-      :type mdl: Model
-
-      :returns: **fbk** --
-
-                Measured signals, containing the following fields:
-
-                    u_dc : float
-                        DC-bus voltage (V).
-                    i_cs : complex
-                        Converter current (A) in stationary coordinates.
-                    u_cs : complex
-                        Realized converter output voltage (V) in stationary
-                        coordinates. This signal is obtained from the PWM.
-      :rtype: SimpleNamespace
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_feedback_signals(mdl)
-
-      
-      Get the feedback signals.
+      Compute controller outputs based on feedback.
 
 
 
@@ -359,50 +376,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_power_reference(fbk, ref)
+   .. py:method:: get_feedback(meas)
 
       
-      Get the active power reference in DC bus voltage control mode.
-
-      :param fbk: Feedback signals.
-      :type fbk: SimpleNamespace
-      :param ref: Reference signals, containing the digital time `t`.
-      :type ref: SimpleNamespace
-
-      :returns: **ref** --
-
-                Reference signals, containing some of the following fields:
-
-                    u_dc : float
-                        DC-bus voltage reference (V).
-                    p_g : float
-                        Active power reference (W).
-                    q_g : float
-                        Reactive power reference (VAr).
-      :rtype: SimpleNamespace
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update(fbk, ref)
-
-      
-      Extend the base class method.
+      Get feedback signals.
 
 
 
@@ -423,187 +400,212 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: GridFollowingControl(cfg)
+   .. py:method:: get_measurement(mdl)
 
-   Bases: :class:`GridConverterControlSystem`
+      
+      Get measurements from sensors.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process()
+
+      
+      Extend the post-process method.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_ac_voltage_ref(ref_fcn)
+
+      
+      Set the external ac voltage reference.
+
+      :param ref_fcn: AC-side converter voltage reference (V), constant or a function of time.
+      :type ref_fcn: float | Callable[[float], float]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_dc_bus_voltage_ref(ref_fcn)
+
+      
+      Set the external DC-bus voltage reference.
+
+      :param ref_fcn: DC-bus voltage reference (V), constant or a function of time.
+      :type ref_fcn: float | Callable[[float], float]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_power_ref(ref_fcn)
+
+      
+      Set the external active power reference.
+
+      :param ref_fcn: Active power reference (W), constant or a function of time.
+      :type ref_fcn: Callable[[float], float]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_reactive_power_ref(ref_fcn)
+
+      
+      Set the external reactive power reference.
+
+      :param ref_fcn: Power reference (VAr), constant or a function of time.
+      :type ref_fcn: Callable[[float], float] | float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(ref, fbk)
+
+      
+      Update controller states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ObserverBasedGridFormingController(i_max, L, R = 0, R_a = None, k_v = None, alpha_o = 2 * pi * 50, alpha_c = 2 * pi * 400, u_nom = sqrt(2 / 3) * 400, w_nom = 2 * pi * 50, T_s = 0.000125)
 
    
-   Grid-following control.
-
-   :param cfg: Control system configuration.
-   :type cfg: GridFollowingControlCfg
-
-   .. attribute:: current_ctrl
-
-      Current controller.
-
-      :type: CurrentController
-
-   .. attribute:: pll
-
-      Phase-locked loop.
-
-      :type: PLL
-
-   .. attribute:: current_reference
-
-      Current reference generator.
-
-      :type: CurrentReference
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: get_feedback_signals(mdl)
-
-      
-      Get the feedback signals.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: output(fbk)
-
-      
-      Extend the base class method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update(fbk, ref)
-
-      
-      Extend the base class method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: GridFollowingControlCfg
-
-   
-   Grid-following control configuration.
-
-   :param L: Inductance (H).
-   :type L: float
-   :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
-   :type nom_u: float
-   :param nom_w: Nominal grid angular frequency (rad/s).
-   :type nom_w: float
-   :param max_i: Maximum current (A), peak value.
-   :type max_i: float
-   :param T_s: Sampling period (s). The default is 100e-6.
-   :type T_s: float, optional
-   :param alpha_c: Current-control bandwidth (rad/s). The default is 2*pi*400.
+   Disturbance-observer-based grid-forming controller.
+
+   This implements the RFPSC-type grid-forming mode of the control method described in
+   [#Nur2024]_. Transparent current control is also implemented.
+
+   :param i_max: Maximum current (A), peak value.
+   :type i_max: float
+   :param R_a: Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
+   :type R_a: float, optional
+   :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
+   :type k_v: float, optional
+   :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
    :type alpha_c: float, optional
-   :param alpha_pll: PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.
-   :type alpha_pll: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: ObserverBasedGridFormingControl(cfg)
-
-   Bases: :class:`GridConverterControlSystem`
-
-
-   
-   Disturbance-observer-based grid-forming control.
-
-   This implements the RFPSC-type grid-forming mode of the control method
-   described in [#Nur2024]_. Transparent current control is also implemented.
-
-   :param cfg: Control system configuration parameters.
-   :type cfg: ObserverBasedGridFormingControlCfg
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
 
    .. rubric:: Notes
 
-   In this implementation, the control system operates in synchronous
-   coordinates rotating at the nominal grid angular frequency, which is worth
-   noticing when plotting the results. For other implementation options, see
-   [#Nur2024]_.
+   In this implementation, the control system operates in synchronous coordinates
+   rotating at the nominal grid angular frequency. For other implementation options,
+   see [#Nur2024]_.
 
    .. rubric:: References
 
-   .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional
-       grid-forming converter control based on a disturbance observer, "IEEE
-       Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
+   .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming
+      converter control based on a disturbance observer," IEEE Trans. Power Electron.,
+      2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 
 
@@ -622,7 +624,31 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: get_feedback_signals(mdl)
+   .. py:method:: compute_output(p_g_ref, v_c_ref, fbk)
+
+      
+      Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(meas)
 
       
       Get the feedback signals.
@@ -646,10 +672,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: output(fbk)
+   .. py:method:: post_process(ts)
 
       
-      Extend the base class method.
+      Post-process controller time series.
 
 
 
@@ -670,10 +696,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(fbk, ref)
+   .. py:method:: update(ref, fbk)
 
       
-      Extend the base class method.
+      Update states.
 
 
 
@@ -694,63 +720,20 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedGridFormingControlCfg
-
-   
-   Disturbance-observer-based grid-forming control configuration.
-
-   :param L: Total inductance.
-   :type L: float
-   :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
-   :type nom_u: float
-   :param nom_w: Nominal grid angular frequency (rad/s).
-   :type nom_w: float
-   :param max_i: Maximum current (A), peak value.
-   :type max_i: float
-   :param R: Total series resistance (Ω). The default is 0.
-   :type R: float, optional
-   :param R_a: Active resistance (Ω). The default is 0.25*nom_u/max_i.
-   :type R_a: float, optional
-   :param k_v: Voltage control gain. The default is `alpha_o/nom_w`.
-   :type k_v: float, optional
-   :param alpha_c: Current control bandwidth (rad/s). The default is 2*pi*400.
-   :type alpha_c: float, optional
-   :param alpha_o: Observer gain (rad/s). The default is 2*pi*50.
-   :type alpha_o: float, optional
-   :param T_s: Sampling period (s). The default is 100e-6.
-   :type T_s: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: PLL(alpha_pll, abs_u_g0, w_g0, theta_c0=0)
+.. py:class:: PLL(u_nom, w_nom, alpha_pll)
 
    
    Phase-locked loop including the voltage-magnitude filtering.
 
-   This class provides a simple frequency-tracking phase-locked loop. The
-   magnitude of the measured PCC voltage is also filtered.
+   This class provides a simple frequency-tracking phase-locked loop. The magnitude of
+   the measured PCC voltage is also filtered.
 
-   :param alpha_pll: Frequency-tracking bandwidth (rad/s).
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value.
+   :type u_nom: float
+   :param w_nom: Nominal grid angular frequency (rad/s).
+   :type w_nom: float
+   :param alpha_pll: PLL frequency-tracking bandwidth (rad/s).
    :type alpha_pll: float
-   :param abs_u_g0: Initial value for the grid voltage estimate (V).
-   :type abs_u_g0: float
-   :param w_g0: Initial value for the grid angular frequency estimate (rad/s).
-   :type w_g0: float
 
 
 
@@ -769,10 +752,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: output(fbk)
+   .. py:method:: compute_output(meas, u_c_ab)
 
       
-      Output the estimates and coordinate transformed quantities.
+      Output estimates and coordinate transformed quantities.
 
 
 
@@ -793,10 +776,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s, fbk)
+   .. py:method:: update(T_s, out)
 
       
-      Update the integral states.
+      Update integral states.
 
 
 
@@ -817,19 +800,27 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PowerSynchronizationControl(cfg)
-
-   Bases: :class:`GridConverterControlSystem`
-
+.. py:class:: PowerSynchronizationControl(u_nom, w_nom, i_max, R = 0.0, R_a = None, w_b = 2 * pi * 5, T_s = 0.000125)
 
    
    Reference-feedforward power-synchronization control.
 
-   This implements the reference-feedforward power-synchronization control
-   method [#Har2020]_.
+   This implements the reference-feedforward power-synchronization control [#Har2020]_.
 
-   :param cfg: Model and controller configuration parameters.
-   :type cfg: PSCControlCfg
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value.
+   :type u_nom: float
+   :param w_nom: Nominal grid angular frequency (rad/s).
+   :type w_nom: float
+   :param i_max: Maximum current (A), peak value.
+   :type i_max: float
+   :param R: Total series resistance (Ω), defaults to 0.
+   :type R: float, optional
+   :param R_a: Active resistance (Ω), defaults to 0.25*u_nom/i_max.
+   :type R_a: float, optional
+   :param w_b: Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.
+   :type w_b: float, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
 
    .. rubric:: References
 
@@ -854,7 +845,31 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: get_feedback_signals(mdl)
+   .. py:method:: compute_output(p_g_ref, v_c_ref, fbk)
+
+      
+      Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(meas)
 
       
       Get the feedback signals.
@@ -878,10 +893,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: output(fbk)
+   .. py:method:: post_process(ts)
 
       
-      Extend the base class method.
+      Post-process controller time series.
 
 
 
@@ -902,10 +917,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(fbk, ref)
+   .. py:method:: update(ref, fbk)
 
       
-      Extend the base class method.
+      Update states.
 
 
 
@@ -925,41 +940,4 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
-
-.. py:class:: PowerSynchronizationControlCfg
-
-   
-   Reference-feedforward power-synchronization control configuration.
-
-   :param nom_u: Nominal grid voltage (V), line-to-neutral peak value.
-   :type nom_u: float
-   :param nom_w: Nominal grid angular frequency (rad/s).
-   :type nom_w: float
-   :param max_i: Maximum current (A), peak value.
-   :type max_i: float
-   :param R: Total series resistance (Ω). The default is 0.
-   :type R: float, optional
-   :param R_a: Active resistance (Ω). The default is 0.25*nom_u/max_i.
-   :type R_a: float, optional
-   :param w_b: Low-pass filter bandwidth (rad/s). The default is 2*pi*5.
-   :type w_b: float, optional
-   :param T_s: Sampling period (s). The default is 100e-6.
-   :type T_s: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 

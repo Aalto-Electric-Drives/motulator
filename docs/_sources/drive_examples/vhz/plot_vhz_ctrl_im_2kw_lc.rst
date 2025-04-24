@@ -21,22 +21,19 @@
 2.2-kW induction motor, LC filter
 =================================
 
-This example simulates open-loop V/Hz control of a 2.2-kW induction machine
-drive equipped with an LC filter.
+This example simulates open-loop V/Hz control of a 2.2-kW induction machine drive
+equipped with an output LC filter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-20
+.. GENERATED FROM PYTHON SOURCE LINES 11-18
 
 .. code-block:: Python
 
+    from math import inf, pi
 
-    import numpy as np
     import matplotlib.pyplot as plt
 
-    from motulator.drive import model
     import motulator.drive.control.im as control
-    from motulator.drive.utils import (
-        BaseValues, InductionMachinePars, InductionMachineInvGammaPars,
-        NominalValues, plot)
+    from motulator.drive import model, utils
 
 
 
@@ -45,17 +42,17 @@ drive equipped with an LC filter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-26
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
 
-    nom = NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
-    base = BaseValues.from_nominal(nom, n_p=2)
+    nom = utils.NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
+    base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 
 
@@ -64,26 +61,24 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-28
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
-Create the system model. The filter parameters correspond to [#Sal2006]_.
+Create the system model, filter parameters correspond to [#Sal2006]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-41
+.. GENERATED FROM PYTHON SOURCE LINES 26-37
 
 .. code-block:: Python
 
 
-    mdl_ig_par = InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=.021, L_M=.224)
-    mdl_par = InductionMachinePars.from_inv_gamma_model_pars(mdl_ig_par)
-    machine = model.InductionMachine(mdl_par)
-    # Quadratic load torque profile (corresponding to pumps and fans)
-    k = 1.1*nom.tau/(base.w/base.n_p)**2
-    mechanics = model.StiffMechanicalSystem(J=.015, B_L=lambda w_M: k*np.abs(w_M))
+    par = model.InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
+    )
+    machine = model.InductionMachine(par)
+    k = 1.1 * nom.tau / base.w_M**2  # Quadratic load torque profile
+    mechanics = model.MechanicalSystem(J=0.015, B_L=lambda w_M: k * abs(w_M))
     converter = model.VoltageSourceConverter(u_dc=540)
-    lc_filter = model.LCFilter(L_f=8e-3, C_f=9.9e-6, R_f=.1)
-    mdl = model.DriveWithLCFilter(converter, machine, mechanics, lc_filter)
-    mdl.pwm = model.CarrierComparison()  # Enable the PWM model
+    lc_filter = model.LCFilter(L_f=8e-3, C_f=9.9e-6, R_f=0.1)
+    mdl = model.Drive(machine, mechanics, converter, lc_filter, pwm=True)
 
 
 
@@ -92,19 +87,21 @@ Create the system model. The filter parameters correspond to [#Sal2006]_.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Control system (parametrized as open-loop V/Hz control).
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-49
+.. GENERATED FROM PYTHON SOURCE LINES 39-48
 
 .. code-block:: Python
 
 
-    # Inverse-Γ model parameter estimates
-    par = InductionMachineInvGammaPars(R_s=0*3.7, R_R=0*2.1, L_sgm=.021, L_M=.224)
-    ctrl = control.VHzControl(
-        control.VHzControlCfg(par, nom_psi_s=base.psi, k_u=0, k_w=0))
+    est_par = control.InductionMachineInvGammaPars(n_p=2, R_s=0, R_R=0, L_sgm=0, L_M=inf)
+    cfg = control.ObserverBasedVHzControllerCfg(
+        psi_s_nom=base.psi, i_s_max=inf, alpha_f=0, alpha_tau=0, alpha_psi=0
+    )
+    vhz_ctrl = control.ObserverBasedVHzController(est_par, cfg)
+    ctrl = control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 60)
 
 
 
@@ -113,16 +110,17 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
-Set the speed reference. The external load torque is zero (by default).
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-54
+Set the speed reference. The external load torque is zero by default.
+
+.. GENERATED FROM PYTHON SOURCE LINES 50-53
 
 .. code-block:: Python
 
 
-    ctrl.ref.w_m = lambda t: (t > .2)*base.w
+    ctrl.set_speed_ref(lambda t: (t > 0.2) * base.w_M)
 
 
 
@@ -131,36 +129,19 @@ Set the speed reference. The external load torque is zero (by default).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
-Create the simulation object and simulate it.
+Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-60
+.. GENERATED FROM PYTHON SOURCE LINES 55-61
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    sim.simulate(t_stop=1.5)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
-
-Plot results in per-unit values.
-
-.. GENERATED FROM PYTHON SOURCE LINES 62-66
-
-.. code-block:: Python
-
-
+    res = sim.simulate(t_stop=1.4)
     # sphinx_gallery_thumbnail_number = 2
-    plot(sim, base)
+    utils.plot(res, base)
 
 
 
@@ -174,46 +155,33 @@ Plot results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 Plot additional waveforms.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-102
+.. GENERATED FROM PYTHON SOURCE LINES 63-84
 
 .. code-block:: Python
 
 
     t_span = (1.1, 1.125)  # Time span for the zoomed-in plot
-    mdl = sim.mdl  # Continuous-time data
+
     # Plot the converter and stator voltages (phase a)
     fig1, (ax1, ax2) = plt.subplots(2, 1)
-    ax1.plot(
-        mdl.converter.data.t,
-        mdl.converter.data.u_cs.real/base.u,
-        label=r"$u_\mathrm{ca}$")
-    ax1.plot(
-        mdl.machine.data.t,
-        mdl.machine.data.u_ss.real/base.u,
-        label=r"$u_\mathrm{sa}$")
+    ax1.plot(res.mdl.t, res.mdl.converter.u_c_ab.real / base.u, label=r"$u_\mathrm{ca}$")
+    ax1.plot(res.mdl.t, res.mdl.machine.u_s_ab.real / base.u, label=r"$u_\mathrm{sa}$")
     ax1.set_xlim(t_span)
     ax1.legend()
     ax1.set_xticklabels([])
     ax1.set_ylabel("Voltage (p.u.)")
     # Plot the converter and stator currents (phase a)
-    ax2.plot(
-        mdl.converter.data.t,
-        mdl.converter.data.i_cs.real/base.i,
-        label=r"$i_\mathrm{ca}$")
-    ax2.plot(
-        mdl.machine.data.t,
-        mdl.machine.data.i_ss.real/base.i,
-        label=r"$i_\mathrm{sa}$")
+    ax2.plot(res.mdl.t, res.mdl.converter.i_c_ab.real / base.i, label=r"$i_\mathrm{ca}$")
+    ax2.plot(res.mdl.t, res.mdl.machine.i_s_ab.real / base.i, label=r"$i_\mathrm{sa}$")
     ax2.set_xlim(t_span)
     ax2.legend()
     ax2.set_ylabel("Current (p.u.)")
     ax2.set_xlabel("Time (s)")
 
-    plt.tight_layout()
     plt.show()
 
 
@@ -228,18 +196,18 @@ Plot additional waveforms.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-108
+.. GENERATED FROM PYTHON SOURCE LINES 85-90
 
 .. rubric:: References
 
-.. [#Sal2006] Salomäki, Hinkkanen, Luomi, "Sensorless control of induction
-   motor drives equipped with inverter output filter," IEEE Trans. Ind.
-   Electron., 2006, https://doi.org/10.1109/TIE.2006.878314
+.. [#Sal2006] Salomäki, Hinkkanen, Luomi, "Sensorless control of induction motor
+   drives equipped with inverter output filter," IEEE Trans. Ind. Electron., 2006,
+   https://doi.org/10.1109/TIE.2006.878314
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.706 seconds)
+   **Total running time of the script:** (0 minutes 7.600 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py:

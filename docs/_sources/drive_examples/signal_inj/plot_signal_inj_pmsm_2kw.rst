@@ -21,21 +21,18 @@
 2.2-kW PMSM
 ===========
 
-This example simulates sensorless vector control of a 2.2-kW PMSM drive.
-Square-wave signal injection is used with a simple phase-locked loop.
+This example simulates sensorless vector control of a 2.2-kW PMSM drive. Square-wave
+signal injection is used with a simple phase-locked loop.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-19
+.. GENERATED FROM PYTHON SOURCE LINES 11-17
 
 .. code-block:: Python
 
-
-    import numpy as np
     import matplotlib.pyplot as plt
+    import numpy as np
 
-    from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import (
-        BaseValues, NominalValues, plot, Sequence, SynchronousMachinePars)
+    from motulator.drive import model, utils
 
 
 
@@ -44,17 +41,17 @@ Square-wave signal injection is used with a simple phase-locked loop.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-25
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: Python
 
 
-    nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
-    base = BaseValues.from_nominal(nom, n_p=3)
+    nom = utils.NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+    base = utils.BaseValues.from_nominal(nom, n_p=3)
 
 
 
@@ -63,21 +60,20 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-35
+.. GENERATED FROM PYTHON SOURCE LINES 25-32
 
 .. code-block:: Python
 
 
-    mdl_par = SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-    machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.StiffMechanicalSystem(J=.015)
+    par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545)
+    machine = model.SynchronousMachine(par)
+    mechanics = model.MechanicalSystem(J=0.015)
     converter = model.VoltageSourceConverter(u_dc=540)
-    mdl = model.Drive(converter, machine, mechanics)
+    mdl = model.Drive(machine, mechanics, converter)
 
 
 
@@ -86,19 +82,20 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-43
+.. GENERATED FROM PYTHON SOURCE LINES 34-42
 
 .. code-block:: Python
 
 
-    par = mdl_par  # Assume accurate machine model parameter estimates
-    cfg = control.CurrentReferenceCfg(par, nom_w_m=base.w, max_i_s=2*base.i)
-    ctrl = control.SignalInjectionControl(par, cfg, J=.015, T_s=250e-6)
-    # ctrl.current_ctrl = control.sm.CurrentControl(par, 2*np.pi*100)
+    est_par = par  # Assume accurate model parameter estimates
+    cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i)
+    vector_ctrl = control.SignalInjectionController(est_par, cfg)
+    speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
+    ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 
 
@@ -107,23 +104,24 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
+
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-55
+.. GENERATED FROM PYTHON SOURCE LINES 44-54
 
 .. code-block:: Python
 
 
-    # Speed reference
-    times = np.array([0, .25, .25, .375, .5, .625, .75, .75, 1])*4
-    values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0])*base.w*.1
-    ctrl.ref.w_m = Sequence(times, values)
-    # External load torque
-    times = np.array([0, .125, .125, .875, .875, 1])*4
-    values = np.array([0, 0, 1, 1, 0, 0])*nom.tau
-    mdl.mechanics.tau_L = Sequence(times, values)
+    t_stop = 4
+    times = np.array([0, 0.25, 0.25, 0.375, 0.5, 0.625, 0.75, 0.75, 1]) * t_stop
+    values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0]) * 0.1 * base.w_M
+    ctrl.set_speed_ref(utils.SequenceGenerator(times, values))
+
+    times = np.array([0, 0.125, 0.125, 0.875, 0.875, 1]) * t_stop
+    values = np.array([0, 0, 1, 1, 0, 0]) * nom.tau
+    mdl.mechanics.set_external_load_torque(utils.SequenceGenerator(times, values))
 
 
 
@@ -132,20 +130,26 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-57
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
-Create the simulation object and simulate it.
+Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-61
+.. GENERATED FROM PYTHON SOURCE LINES 56-61
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    sim.simulate(t_stop=4)
+    res = sim.simulate(t_stop)
+    utils.plot(res, base)
 
 
 
+
+.. image-sg:: /drive_examples/signal_inj/images/sphx_glr_plot_signal_inj_pmsm_2kw_001.png
+   :alt: plot signal inj pmsm 2kw
+   :srcset: /drive_examples/signal_inj/images/sphx_glr_plot_signal_inj_pmsm_2kw_001.png
+   :class: sphx-glr-single-img
 
 
 
@@ -153,31 +157,21 @@ Create the simulation object and simulate it.
 
 .. GENERATED FROM PYTHON SOURCE LINES 62-63
 
-Plot results in per-unit values.
+Plot also the angles.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-87
+.. GENERATED FROM PYTHON SOURCE LINES 63-77
 
 .. code-block:: Python
 
 
-    # Plot the "basic" figure
-    plot(sim, base)
-
-    # Plot also the angles
-    mdl = sim.mdl  # Continuous-time data
-    ctrl = sim.ctrl.data  # Discrete-time data
-    ctrl.t = ctrl.ref.t  # Discrete time
-
     plt.figure()
+    plt.plot(res.mdl.t, res.mdl.machine.theta_m, label=r"$\vartheta_\mathrm{m}$")
     plt.plot(
-        mdl.machine.data.t,
-        mdl.machine.data.theta_m,
-        label=r"$\vartheta_\mathrm{m}$")
-    plt.plot(
-        ctrl.t,
-        ctrl.fbk.theta_m,
+        res.ctrl.t,
+        res.ctrl.fbk.theta_m,
         ds="steps-post",
-        label=r"$\hat \vartheta_\mathrm{m}$")
+        label=r"$\hat \vartheta_\mathrm{m}$",
+    )
     plt.legend()
     plt.xlim(0, 4)
     plt.xlabel("Time (s)")
@@ -186,22 +180,10 @@ Plot results in per-unit values.
 
 
 
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image-sg:: /drive_examples/signal_inj/images/sphx_glr_plot_signal_inj_pmsm_2kw_001.png
-         :alt: plot signal inj pmsm 2kw
-         :srcset: /drive_examples/signal_inj/images/sphx_glr_plot_signal_inj_pmsm_2kw_001.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /drive_examples/signal_inj/images/sphx_glr_plot_signal_inj_pmsm_2kw_002.png
-         :alt: plot signal inj pmsm 2kw
-         :srcset: /drive_examples/signal_inj/images/sphx_glr_plot_signal_inj_pmsm_2kw_002.png
-         :class: sphx-glr-multi-img
+.. image-sg:: /drive_examples/signal_inj/images/sphx_glr_plot_signal_inj_pmsm_2kw_002.png
+   :alt: plot signal inj pmsm 2kw
+   :srcset: /drive_examples/signal_inj/images/sphx_glr_plot_signal_inj_pmsm_2kw_002.png
+   :class: sphx-glr-single-img
 
 
 
@@ -210,7 +192,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.719 seconds)
+   **Total running time of the script:** (0 minutes 16.876 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_signal_inj_pmsm_2kw.py:

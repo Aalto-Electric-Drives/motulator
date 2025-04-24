@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>motulator.grid.control._base &#8212; motulator 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ebd526be" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=3af6fc4c"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/motulator/grid/control/_base';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">motulator 0.6.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/sampled_data.html">Sampled-Data Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/space_vectors.html">Space Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/converters.html">Voltage-Source Converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/machines.html">Electric Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/mechanics.html">Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Three-Phase Source</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/control_system.html">Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/controllers.html">Controllers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../autoapi/motulator/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/common/control/index.html">motulator.common.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/common/model/index.html">motulator.common.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/common/utils/index.html">motulator.common.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/drive/index.html">motulator.drive</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../autoapi/motulator/drive/control/index.html">motulator.drive.control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/motulator/drive/control/im/index.html">motulator.drive.control.im</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/grid/index.html">motulator.grid</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/grid/control/index.html">motulator.grid.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/grid/model/index.html">motulator.grid.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/grid/utils/index.html">motulator.grid.utils</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aalto-Electric-Drives/motulator" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for motulator.grid.control._base</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Base control system for grid converters.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlSystem</span><span class="p">,</span> <span class="n">TimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">get_value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DCBusVoltageController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridConverterSystem</span>
+
+
+<span class="c1"># %%</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Feedbacks</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol defining the required fields for feedback signals.&quot;&quot;&quot;</span>
+
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">References</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol defining the required fields for reference signals.&quot;&quot;&quot;</span>
+
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">p_g</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExternalReferences</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;External reference signals.&quot;&quot;&quot;</span>
+
+    <span class="n">p_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">q_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">v_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Measurements</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Measured signals.&quot;&quot;&quot;</span>
+
+    <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="n">u_g_ab</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="c1"># %%</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GridFormingController</span><span class="p">[</span><span class="n">Ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">Fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol defining the interface for grid-forming controllers.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback signals from measurements.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_g_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">v_c_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ref</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute control output from feedback signals.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">Ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update controller states.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process controller outputs.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GridFollowingController</span><span class="p">[</span><span class="n">Ref</span><span class="p">,</span> <span class="n">Fbk</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol defining the interface for grid-following controllers.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback signals from measurements.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_g_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">q_g_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ref</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute control output from feedback signals.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">Ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update controller states.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process controller outputs.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GridConverterControlSystem</span><span class="p">(</span><span class="n">ControlSystem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Grid converter control system.</span>
+
+<span class="sd">    This class defines the interface for control systems of grid converters. It is a</span>
+<span class="sd">    generic class that can be used with different models, measurements, feedback</span>
+<span class="sd">    signals, and reference signals.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inner_ctrl : GridFormingController | GridFollowingController</span>
+<span class="sd">        Inner controller.</span>
+<span class="sd">    dc_bus_voltage_ctrl: DCBusVoltageController, optional</span>
+<span class="sd">        DC-bus voltage controller. If not given, power-control mode is used.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inner_ctrl</span><span class="p">:</span> <span class="n">GridFormingController</span> <span class="o">|</span> <span class="n">GridFollowingController</span><span class="p">,</span>
+        <span class="n">dc_bus_voltage_ctrl</span><span class="p">:</span> <span class="n">DCBusVoltageController</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span> <span class="o">=</span> <span class="n">inner_ctrl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="o">=</span> <span class="n">dc_bus_voltage_ctrl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="p">:</span> <span class="n">ExternalReferences</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GridConverterControlSystem.set_power_ref">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.set_power_ref">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_power_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the external active power reference.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ref_fcn : Callable[[float], float]</span>
+<span class="sd">            Active power reference (W), constant or a function of time.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem.set_reactive_power_ref">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.set_reactive_power_ref">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_reactive_power_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the external reactive power reference.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ref_fcn : Callable[[float], float] | float</span>
+<span class="sd">            Power reference (VAr), constant or a function of time.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem.set_ac_voltage_ref">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.set_ac_voltage_ref">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_ac_voltage_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the external ac voltage reference.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ref_fcn : float | Callable[[float], float]</span>
+<span class="sd">            AC-side converter voltage reference (V), constant or a function of time.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem.set_dc_bus_voltage_ref">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.set_dc_bus_voltage_ref">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_dc_bus_voltage_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the external DC-bus voltage reference.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ref_fcn : float | Callable[[float], float]</span>
+<span class="sd">            DC-bus voltage reference (V), constant or a function of time.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem.get_measurement">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.get_measurement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">GridConverterSystem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Measurements</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get measurements from sensors.&quot;&quot;&quot;</span>
+        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
+        <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
+        <span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_pcc_voltages</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_g_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem.get_feedback">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.get_feedback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback signals.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">meas</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem.compute_output">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.compute_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute controller outputs based on feedback.&quot;&quot;&quot;</span>
+        <span class="c1"># Determine control mode</span>
+        <span class="n">is_gfm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">v_c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">is_gfl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">q_g</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">is_power_ctrl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">is_dc_bus_ctrl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">is_gfm</span> <span class="ow">and</span> <span class="n">is_power_ctrl</span><span class="p">:</span>
+            <span class="c1"># Grid-forming power control mode</span>
+            <span class="n">v_c_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">p_g_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">p_g_ref</span><span class="p">,</span> <span class="n">v_c_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ref</span>
+        <span class="k">if</span> <span class="n">is_gfm</span> <span class="ow">and</span> <span class="n">is_dc_bus_ctrl</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="p">:</span>
+            <span class="c1"># Grid-forming DC-bus voltage control mode</span>
+            <span class="n">v_c_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">u_dc_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">p_g_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_dc_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">p_g_ref</span><span class="p">,</span> <span class="n">v_c_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+            <span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">u_dc_ref</span>
+            <span class="k">return</span> <span class="n">ref</span>
+        <span class="k">if</span> <span class="n">is_gfl</span> <span class="ow">and</span> <span class="n">is_power_ctrl</span><span class="p">:</span>
+            <span class="c1"># Grid-following power control mode</span>
+            <span class="n">q_g_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">q_g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">p_g_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">p_g_ref</span><span class="p">,</span> <span class="n">q_g_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ref</span>
+        <span class="k">if</span> <span class="n">is_gfl</span> <span class="ow">and</span> <span class="n">is_dc_bus_ctrl</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="p">:</span>
+            <span class="c1"># Grid-following DC-bus voltage control mode</span>
+            <span class="n">q_g_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">q_g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">u_dc_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">p_g_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_dc_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">p_g_ref</span><span class="p">,</span> <span class="n">q_g_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+            <span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">u_dc_ref</span>
+            <span class="k">return</span> <span class="n">ref</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span></div>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem.update">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update controller states.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="ow">and</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GridConverterControlSystem.post_process">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.post_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeSeries</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the post-process method.&quot;&quot;&quot;</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ts</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aalto Electric Drives
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Aalto Electric Drives.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

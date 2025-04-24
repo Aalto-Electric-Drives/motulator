@@ -24,13 +24,11 @@
 This example simulates reference-feedforward power-synchronization control
 (RFPSC) of a converter connected to a weak grid.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-15
+.. GENERATED FROM PYTHON SOURCE LINES 11-13
 
 .. code-block:: Python
 
-    from motulator.grid import model, control
-    from motulator.grid.utils import (
-        BaseValues, ACFilterPars, NominalValues, plot)
+    from motulator.grid import control, model, utils
 
 
 
@@ -39,17 +37,17 @@ This example simulates reference-feedforward power-synchronization control
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 14-15
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 15-19
 
 .. code-block:: Python
 
 
-    nom = NominalValues(U=400, I=18, f=50, P=12.5e3)
-    base = BaseValues.from_nominal(nom)
+    nom = utils.NominalValues(U=400, I=18, f=50, P=12.5e3)
+    base = utils.BaseValues.from_nominal(nom)
 
 
 
@@ -58,26 +56,41 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-36
+.. GENERATED FROM PYTHON SOURCE LINES 21-27
 
 .. code-block:: Python
 
 
-    # Filter and grid
-    par = ACFilterPars(L_fc=.15*base.L, R_fc=.05*base.Z, L_g=.74*base.L)
-    # par.L_g = 0  # Uncomment this line to simulate a strong grid
-    ac_filter = model.ACFilter(par)
-    # Grid voltage source with constant frequency and voltage magnitude
-    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-    # Inverter with constant DC voltage
+    ac_filter = model.LFilter(L_f=0.15 * base.L, R_f=0.05 * base.Z, L_g=0.74 * base.L)
+    ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
     converter = model.VoltageSourceConverter(u_dc=650)
-
-    # Create system model
     mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 28-29
+
+Configure the control system.
+
+.. GENERATED FROM PYTHON SOURCE LINES 29-36
+
+.. code-block:: Python
+
+
+    # Control configuration parameters
+    inner_ctrl = control.PowerSynchronizationControl(
+        u_nom=base.u, w_nom=base.w, i_max=1.3 * base.i, R=0.05 * base.Z, R_a=0.2 * base.Z
+    )
+    ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
 
@@ -88,47 +101,20 @@ Configure the system model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 37-38
 
-Configure the control system.
-
-.. GENERATED FROM PYTHON SOURCE LINES 38-51
-
-.. code-block:: Python
-
-
-    # Control configuration parameters
-    cfg = control.PowerSynchronizationControlCfg(
-        nom_u=base.u,
-        nom_w=base.w,
-        max_i=1.3*base.i,
-        R=.05*base.Z,
-        R_a=.2*base.Z,
-        T_s=100e-6)
-
-    # Create the control system
-    ctrl = control.PowerSynchronizationControl(cfg)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
-
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-61
+.. GENERATED FROM PYTHON SOURCE LINES 38-47
 
 .. code-block:: Python
 
 
     # Converter output voltage magnitude reference
-    ctrl.ref.v_c = lambda t: base.u
+    ctrl.set_ac_voltage_ref(base.u)
 
     # Active power reference
-    ctrl.ref.p_g = lambda t: ((t > .2)/3 + (t > .5)/3 + (t > .8)/3 -
-                              (t > 1.2))*nom.P
+    ctrl.set_power_ref(
+        lambda t: ((t > 0.2) / 3 + (t > 0.5) / 3 + (t > 0.8) / 3 - (t > 1.2)) * nom.P
+    )
 
 
 
@@ -137,35 +123,18 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
-Create the simulation object and simulate it.
+Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-67
+.. GENERATED FROM PYTHON SOURCE LINES 49-53
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    sim.simulate(t_stop=1.5)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
-
-Plot the results.
-
-.. GENERATED FROM PYTHON SOURCE LINES 69-71
-
-.. code-block:: Python
-
-
-    plot(sim, base)
+    res = sim.simulate(t_stop=1.4)
+    utils.plot(res, base)
 
 
 
@@ -193,7 +162,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.659 seconds)
+   **Total running time of the script:** (0 minutes 5.479 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_rfpsc_13kva.py:

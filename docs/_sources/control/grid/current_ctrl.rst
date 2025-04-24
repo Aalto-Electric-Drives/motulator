@@ -30,12 +30,7 @@ where :math:`\boldsymbol{u}_\mathrm{c}` is the converter output voltage, :math:`
 
 .. math::
 	\boldsymbol{i}_\mathrm{c} = \boldsymbol{G}_\mathrm{c}(s)\boldsymbol{i}_\mathrm{c,ref} - \boldsymbol{Y}_\mathrm{c}(s)\boldsymbol{u}_\mathrm{g}
-
-The disturbance rejection depends on the closed-loop admittance
-
-.. math::
-    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}}
-    :label: Yc_grid
+    :label: closed_loop_current_control_grid
 
 The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is
 
@@ -43,7 +38,11 @@ The closed-loop poles can be arbitrarily placed by means of the gains. The refer
 	\boldsymbol{G}_\mathrm{c}(s) = \frac{(s + \mathrm{j}\omega_\mathrm{c}) \boldsymbol{k}_\mathrm{t} + \boldsymbol{k}_\mathrm{i} }{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}}
     :label: Gc_grid
 
-whose zero can be placed by means of the reference-feedforward gain :math:`\boldsymbol{k}_\mathrm{t}`.
+whose zero can be placed by means of the reference-feedforward gain :math:`\boldsymbol{k}_\mathrm{t}`. The disturbance rejection depends on the closed-loop admittance
+
+.. math::
+    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L s^2 + (\boldsymbol{k}_\mathrm{p} + \mathrm{j}\omega_\mathrm{c} L) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{c} \boldsymbol{k}_\mathrm{t}}
+    :label: Yc_grid
 
 Gain Selection
 --------------
@@ -51,23 +50,26 @@ Gain Selection
 Consider the gains
 
 .. math::
-    \boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \hat L \qquad\qquad
-    \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2\hat L  \qquad \qquad
+    \boldsymbol{k}_\mathrm{p} = (\alpha_\mathrm{c} + \alpha_\mathrm{i}) \hat L \qquad\qquad
+    \boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}\alpha_\mathrm{i}\hat L  \qquad \qquad
     \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c} \hat L
+    :label: grid_cc_gain_selection
 
-where :math:`\hat L` is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Yc_grid` and :eq:`Gc_grid` reduce to
+where  :math:`\alpha_\mathrm{s}` is the closed-loop reference-tracking bandwidth, :math:`\alpha_\mathrm{i}` is the integral action bandwidth, and :math:`\hat L` is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions :eq:`Gc_grid` and :eq:`Yc_grid` reduce to
 
 .. math::
-    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{c})}
-    \qquad\qquad
     \boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}
+    \qquad\qquad
+    \boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{i} + \mathrm{j}\omega_\mathrm{c})}
+    :label: Gc_Yc_grid
 
-It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at :math:`s=-\alpha_\mathrm{c}` and another pole at :math:`s= -\alpha_\mathrm{c} - \mathrm{j}\omega_\mathrm{c}`. This gain selection is used in the :class:`motulator.grid.control.CurrentController` class.
+It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at :math:`s = -\alpha_\mathrm{c}` and another pole at :math:`s= -\alpha_\mathrm{i} - \mathrm{j}\omega_\mathrm{c}`. This gain selection is used in the :class:`motulator.grid.control.CurrentController` class.
 
 The converter output voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is
 
 .. math::
     \bar{\boldsymbol{u}}_\mathrm{c,ref} = \mathrm{sat}(\boldsymbol{u}_\mathrm{c,ref})
+    :label: limited_voltage_grid
 
 where :math:`\mathrm{sat}(\cdot)` is the saturation function. The limited voltage can be obtained from a pulse-width modulation (PWM) algorithm (see the :class:`motulator.common.control.PWM` class). The anti-windup of the integrator is included in the implementation of the :class:`motulator.common.control.ComplexPIController` base class.
 

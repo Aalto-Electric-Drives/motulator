@@ -2,52 +2,53 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.utils &#8212; motulator 0.5.0 documentation</title>
+    <title>motulator.drive.utils &#8212; motulator 0.6.0 documentation</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ebd526be" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=8d05f57a"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/documentation_options.js?v=3af6fc4c"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/motulator/drive/utils/index';</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -62,28 +63,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -105,12 +101,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -127,6 +131,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../../../../index.html">
   
@@ -135,10 +141,21 @@
   
   
   
-    <p class="title logo__title">motulator 0.5.0 documentation</p>
+    <p class="title logo__title">motulator 0.6.0 documentation</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
@@ -148,119 +165,125 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_following/index.html">Grid-Following Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/common.html">Common</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/sampled_data.html">Sampled-Data Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/space_vectors.html">Space Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/converters.html">Voltage-Source Converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/machines.html">Electric Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/ac_filter.html">Output LC Filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Three-Phase Source</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../control/control_system.html">Common</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/control_system.html">Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/controllers.html">Controllers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../common/control/index.html">motulator.common.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../common/model/index.html">motulator.common.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../common/utils/index.html">motulator.common.utils</a></li>
 </ul>
-</li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">motulator.drive</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3 has-children"><a class="reference internal" href="../control/index.html">motulator.drive.control</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">motulator.drive</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="../control/index.html">motulator.drive.control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../control/im/index.html">motulator.drive.control.im</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="../model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">motulator.drive.utils</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid/index.html">motulator.grid</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid/index.html">motulator.grid</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../grid/control/index.html">motulator.grid.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid/model/index.html">motulator.grid.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid/utils/index.html">motulator.grid.utils</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -276,7 +299,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -285,14 +308,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -385,10 +408,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -396,14 +419,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -429,27 +452,66 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.BaseValues"><code class="docutils literal notranslate"><span class="pre">BaseValues</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.BaseValues.from_nominal"><code class="docutils literal notranslate"><span class="pre">BaseValues.from_nominal()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.BaseValues.unity"><code class="docutils literal notranslate"><span class="pre">BaseValues.unity()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachineInvGammaPars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.from_gamma_model_pars()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci"><code class="docutils literal notranslate"><span class="pre">ControlLoci</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_const_current_locus()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_current_angle()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_locus()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_flux_angle()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_locus()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachinePars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.from_inv_gamma_model_pars()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics.plot_current_loci"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics.plot_current_loci()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics.plot_current_vs_torque"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics.plot_current_vs_torque()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics.plot_flux_loci"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics.plot_flux_loci()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics.plot_flux_vs_torque"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics.plot_flux_vs_torque()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel"><code class="docutils literal notranslate"><span class="pre">MagneticModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.i_s_dq"><code class="docutils literal notranslate"><span class="pre">MagneticModel.i_s_dq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">MagneticModel.psi_s_dq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.lookup_fcn"><code class="docutils literal notranslate"><span class="pre">MagneticModel.lookup_fcn</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.tau_M"><code class="docutils literal notranslate"><span class="pre">MagneticModel.tau_M</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.type"><code class="docutils literal notranslate"><span class="pre">MagneticModel.type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.create_interpolated_model"><code class="docutils literal notranslate"><span class="pre">MagneticModel.create_interpolated_model()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.get_input_output"><code class="docutils literal notranslate"><span class="pre">MagneticModel.get_input_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.invert"><code class="docutils literal notranslate"><span class="pre">MagneticModel.invert()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.is_current_map"><code class="docutils literal notranslate"><span class="pre">MagneticModel.is_current_map()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.is_flux_map"><code class="docutils literal notranslate"><span class="pre">MagneticModel.is_flux_map()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.Sequence"><code class="docutils literal notranslate"><span class="pre">Sequence</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.psi_n"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.psi_n</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.a_b"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.a_b</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.a_bp"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.a_bp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.W"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.W</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.k_q"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.k_q</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_d0"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_d0</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_dd"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_dd</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_q0"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_q0</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_qq"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_qq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_dq"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_dq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.S"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.S</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.T"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.T</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.U"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.U</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.V"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.V</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.TwoMassMechanicalSystemPars"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystemPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.import_syre_data"><code class="docutils literal notranslate"><span class="pre">import_syre_data()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_extra"><code class="docutils literal notranslate"><span class="pre">plot_extra()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_flux_map"><code class="docutils literal notranslate"><span class="pre">plot_flux_map()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_flux_vs_current"><code class="docutils literal notranslate"><span class="pre">plot_flux_vs_current()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_torque_map"><code class="docutils literal notranslate"><span class="pre">plot_torque_map()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_maps"><code class="docutils literal notranslate"><span class="pre">plot_maps()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -461,72 +523,74 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="module-motulator.drive.utils">
-<span id="motulator-drive-utils"></span><h1>motulator.drive.utils<a class="headerlink" href="#module-motulator.drive.utils" title="Permalink to this heading">#</a></h1>
+<span id="motulator-drive-utils"></span><h1>motulator.drive.utils<a class="headerlink" href="#module-motulator.drive.utils" title="Link to this heading">#</a></h1>
 <p>This module contains utility functions for machine drives.</p>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
-<table class="autosummary longtable table autosummary">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
 <td><p>Base values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a></p></td>
-<td><p>Inverse-Γ model parameters of an induction machine.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.ControlLoci" title="motulator.drive.utils.ControlLoci"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ControlLoci</span></code></a></p></td>
+<td><p>Compute MTPA and MTPV loci based on the machine parameters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.InductionMachinePars" title="motulator.drive.utils.InductionMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a></p></td>
-<td><p>Γ-model parameters of an induction machine.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.MachineCharacteristics" title="motulator.drive.utils.MachineCharacteristics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MachineCharacteristics</span></code></a></p></td>
+<td><p>Analyze and visualize control loci for synchronous machines.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MagneticModel</span></code></a></p></td>
+<td><p>Store and manipulate flux linkage or current maps for synchronous machines.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
 <td><p>Nominal values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.Sequence" title="motulator.drive.utils.Sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.SaturationModelPMSyRM" title="motulator.drive.utils.SaturationModelPMSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelPMSyRM</span></code></a></p></td>
+<td><p>Saturation model for PM synchronous reluctance machines.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.SaturationModelSyRM" title="motulator.drive.utils.SaturationModelSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelSyRM</span></code></a></p></td>
+<td><p>Saturation model for synchronous reluctance machines.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.SequenceGenerator" title="motulator.drive.utils.SequenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></p></td>
 <td><p>Sequence generator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.Step" title="motulator.drive.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.Step" title="motulator.drive.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
 <td><p>Step function.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.SynchronousMachinePars" title="motulator.drive.utils.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
-<td><p>Synchronous machine parameters.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.TwoMassMechanicalSystemPars" title="motulator.drive.utils.TwoMassMechanicalSystemPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoMassMechanicalSystemPars</span></code></a></p></td>
-<td><p>Two-mass mechanical system parameters.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
 <section id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h2>
-<table class="autosummary longtable table autosummary">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.import_syre_data" title="motulator.drive.utils.import_syre_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_syre_data</span></code></a>(fname[, add_negative_q_axis])</p></td>
 <td><p>Import a flux map from the MATLAB data file in the SyR-e format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.plot" title="motulator.drive.utils.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(sim[, base, t_span])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.plot" title="motulator.drive.utils.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(res[, base, t_span, latex])</p></td>
 <td><p>Plot example figures.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.plot_extra" title="motulator.drive.utils.plot_extra"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_extra</span></code></a>(sim[, base, t_span])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.plot_extra" title="motulator.drive.utils.plot_extra"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_extra</span></code></a>(res[, base, t_span, latex])</p></td>
 <td><p>Plot extra waveforms for a motor drive with a diode bridge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.plot_flux_map" title="motulator.drive.utils.plot_flux_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_map</span></code></a>(data)</p></td>
-<td><p>Plot the flux linkage as function of the current.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.plot_flux_vs_current" title="motulator.drive.utils.plot_flux_vs_current"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_vs_current</span></code></a>(data)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.plot_flux_vs_current" title="motulator.drive.utils.plot_flux_vs_current"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_flux_vs_current</span></code></a>(data[, base, lims, latex])</p></td>
 <td><p>Plot the flux vs. current characteristics.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.plot_torque_map" title="motulator.drive.utils.plot_torque_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_torque_map</span></code></a>(data)</p></td>
-<td><p>Plot the torque as function of the current.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.plot_maps" title="motulator.drive.utils.plot_maps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_maps</span></code></a>(data[, base, x_lims, y_lims, z_lims, ...])</p></td>
+<td><p>Plot flux maps and current maps.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
 <section id="package-contents">
-<h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading">#</a></h2>
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.utils.BaseValues">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.BaseValues" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.BaseValues" title="Link to this definition">#</a></dt>
 <dd><p>Base values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -539,21 +603,21 @@ document.write(`
 <li><p><strong>Z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Impedance (Ω).</p></li>
 <li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Inductance (H).</p></li>
 <li><p><strong>C</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Capacitance (F).</p></li>
-<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Torque (Nm). The default is None.</p></li>
-<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Number of pole pairs. The default is None.</p></li>
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Torque (Nm), defaults to 0.</p></li>
+<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Number of pole pairs, defaults to 0.</p></li>
+<li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Mechanical angular frequency (rad/s), defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.utils.BaseValues.from_nominal">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_nominal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues.from_nominal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.BaseValues.from_nominal" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_nominal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues.from_nominal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.BaseValues.from_nominal" title="Link to this definition">#</a></dt>
 <dd><p>Compute base values from nominal values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nom</strong> (<a class="reference internal" href="#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><em>NominalValues</em></a>) – <p>Nominal values containing the following fields:</p>
-<blockquote>
-<div><dl class="simple">
+<li><p><strong>nom</strong> (<a class="reference internal" href="#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><em>NominalValues</em></a>) – <dl class="simple">
+<dt>Nominal values containing the following fields:</dt><dd><dl class="simple">
 <dt>U<span class="classifier">float</span></dt><dd><p>Voltage (V, rms, line-line).</p>
 </dd>
 <dt>I<span class="classifier">float</span></dt><dd><p>Current (A, rms).</p>
@@ -561,10 +625,10 @@ document.write(`
 <dt>f<span class="classifier">float</span></dt><dd><p>Frequency (Hz).</p>
 </dd>
 </dl>
-</div></blockquote>
+</dd>
+</dl>
 </p></li>
-<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Number of pole pairs. If not given it is assumed that base values
-for a grid converter are calculated. The default is None.</p></li>
+<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Number of pole pairs, default to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -575,42 +639,17 @@ for a grid converter are calculated. The default is None.</p></li>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Notice that the nominal torque is larger than the base torque due to
-the power factor and efficiency being less than unity.</p>
+<p>Notice that the nominal torque is larger than the base torque due to the power
+factor and efficiency being less than unity.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.utils.InductionMachineInvGammaPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">InductionMachineInvGammaPars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#InductionMachineInvGammaPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.InductionMachineInvGammaPars" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">MachinePars</span></code></p>
-<p>Inverse-Γ model parameters of an induction machine.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Stator resistance (Ω).</p></li>
-<li><p><strong>R_R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Rotor resistance (Ω).</p></li>
-<li><p><strong>L_sgm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Leakage inductance (H).</p></li>
-<li><p><strong>L_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Magnetizing inductance (H).</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_gamma_model_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#InductionMachineInvGammaPars.from_gamma_model_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars" title="Permalink to this definition">#</a></dt>
-<dd><p>Compute inverse-Γ model parameters from Γ model parameters.</p>
-<p>This transformation assumes that the parameters are constant.</p>
+<dt class="sig sig-object py" id="motulator.drive.utils.BaseValues.unity">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues.unity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.BaseValues.unity" title="Link to this definition">#</a></dt>
+<dd><p>Create base values with all values set to 1.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.utils.InductionMachinePars" title="motulator.drive.utils.InductionMachinePars"><em>InductionMachinePars</em></a>) – Γ-model parameters.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Inverse-Γ model parameters.</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars">InductionMachineInvGammaPars</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues">BaseValues</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -618,35 +657,381 @@ the power factor and efficiency being less than unity.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.utils.InductionMachinePars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">InductionMachinePars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#InductionMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.InductionMachinePars" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">MachinePars</span></code></p>
-<p>Γ-model parameters of an induction machine.</p>
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">ControlLoci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci" title="Link to this definition">#</a></dt>
+<dd><p>Compute MTPA and MTPV loci based on the machine parameters.</p>
+<p>This class computes optimal control loci for synchronous machines, including the
+maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limit
+loci <a class="footnote-reference brackets" href="#mor1994" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The magnetic saturation is taken into account. The methods
+can be used to precompute lookup tables for control and to analyze the machine
+characteristics.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The MTPA and MTPV conditions are expressed in terms of the auxiliary flux and the
+auxiliary current, respectively <a class="footnote-reference brackets" href="#var2022" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, allowing a compact representation of
+the conditions. Notice that we define these auxiliary vectors 90 degrees rotated as
+compared to <a class="footnote-reference brackets" href="#var2022" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, but otherwise the concepts are equivalent.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="../control/sm/index.html#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="../control/sm/index.html#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="mor1994" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Morimoto, Sanada, Takeda, “Wide-speed operation of interior permanent
+magnet synchronous motors with high-performance current regulator,” IEEE Trans.
+Ind. Appl., <a class="reference external" href="https://doi.org/10.1109/28.297908">https://doi.org/10.1109/28.297908</a></p>
+</aside>
+<aside class="footnote brackets" id="var2022" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id3">2</a>)</span>
+<p>Varatharajan, Pellegrino, Armando, “Direct flux vector control of
+synchronous motor drives: Accurate decoupled control with online adaptive maximum
+torque per ampere and maximum torque per volts evaluation,” IEEE Trans. Ind.
+Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE.2021.3060665">https://doi.org/10.1109/TIE.2021.3060665</a></p>
+</aside>
+</aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_const_current_locus">
+<span class="sig-name descname"><span class="pre">compute_const_current_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(np.pi,</span> <span class="pre">0.5</span> <span class="pre">*</span> <span class="pre">np.pi)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_const_current_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus" title="Link to this definition">#</a></dt>
+<dd><p>Compute the constant current locus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Stator resistance (Ω).</p></li>
-<li><p><strong>R_r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Rotor resistance (Ω).</p></li>
-<li><p><strong>L_ell</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Leakage inductance (H).</p></li>
-<li><p><strong>L_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em>) – Stator inductance (H).</p></li>
+<li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Current limit (A).</p></li>
+<li><p><strong>gamma_range</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range of the current angle (electrical rad), defaults to (pi, pi/2).</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points, defaults to 16.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Constant current locus data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CurrentLimitLocus</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpa_current_angle">
+<span class="sig-name descname"><span class="pre">compute_mtpa_current_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpa_current_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle" title="Link to this definition">#</a></dt>
+<dd><p>MTPA current angle (rad) for a given current magnitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpa_locus">
+<span class="sig-name descname"><span class="pre">compute_mtpa_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpa_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus" title="Link to this definition">#</a></dt>
+<dd><p>Compute the MTPA locus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current magnitude (A) at which the locus is computed.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points, defaults to 16.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>MTPA locus data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MTPALocus</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_current">
+<span class="sig-name descname"><span class="pre">compute_mtpv_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current" title="Link to this definition">#</a></dt>
+<dd><p>MTPV current at given current magnitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Current magnitude (A).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>MTPV current (A). If no MTPV exists, returns np.nan.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)">complex</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle">
+<span class="sig-name descname"><span class="pre">compute_mtpv_flux_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_flux_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle" title="Link to this definition">#</a></dt>
+<dd><p>MTPV flux angle (rad) for a given flux magnitude (Vs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>psi_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_locus">
+<span class="sig-name descname"><span class="pre">compute_mtpv_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus" title="Link to this definition">#</a></dt>
+<dd><p>Compute the MTPV locus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum flux magnitude (Vs) at which the locus is computed.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points, defaults to 16.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>MTPV locus data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MTPVLocus</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.MachineCharacteristics">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">MachineCharacteristics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_plot_control_loci.html#MachineCharacteristics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MachineCharacteristics" title="Link to this definition">#</a></dt>
+<dd><p>Analyze and visualize control loci for synchronous machines.</p>
+<p>This class provides a unified interface for plotting different characteristics of
+synchronous machines directly from machine parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="../control/sm/index.html#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a>) – Machine parameters.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_inv_gamma_model_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#InductionMachinePars.from_inv_gamma_model_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars" title="Permalink to this definition">#</a></dt>
-<dd><p>Compute Γ-model parameters from inverse-Γ model parameters.</p>
-<p>This transformation assumes that the parameters are constant.</p>
+<dt class="sig sig-object py" id="motulator.drive.utils.MachineCharacteristics.plot_current_loci">
+<span class="sig-name descname"><span class="pre">plot_current_loci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_plot_control_loci.html#MachineCharacteristics.plot_current_loci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MachineCharacteristics.plot_current_loci" title="Link to this definition">#</a></dt>
+<dd><p>Plot the current loci.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.utils.InductionMachineInvGammaPars" title="motulator.drive.utils.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Inverse-Γ model parameters.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_s_vals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Current magnitudes (A) at which the loci are evaluated. If <cite>base</cite> is given,
+the values are interpreted as per-unit values.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the loci.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points to be evaluated, defaults to 16.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels, requires a working LaTeX installation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.MachineCharacteristics.plot_current_vs_torque">
+<span class="sig-name descname"><span class="pre">plot_current_vs_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_plot_control_loci.html#MachineCharacteristics.plot_current_vs_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MachineCharacteristics.plot_current_vs_torque" title="Link to this definition">#</a></dt>
+<dd><p>Plot current vs. torque characteristics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_s_vals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Current magnitudes (A) at which the loci are evaluated. If <cite>base</cite> is given,
+the values are interpreted as per-unit values.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the loci.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points to be evaluated, defaults to 16.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels, requires a working LaTeX installation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.MachineCharacteristics.plot_flux_loci">
+<span class="sig-name descname"><span class="pre">plot_flux_loci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_plot_control_loci.html#MachineCharacteristics.plot_flux_loci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MachineCharacteristics.plot_flux_loci" title="Link to this definition">#</a></dt>
+<dd><p>Plot the flux linkage loci.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_s_vals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Current magnitudes (A) at which the loci are evaluated. If <cite>base</cite> is given,
+the values are interpreted as per-unit values.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the loci.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points to be evaluated, defaults to 16.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels, requires a working LaTeX installation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.MachineCharacteristics.plot_flux_vs_torque">
+<span class="sig-name descname"><span class="pre">plot_flux_vs_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_plot_control_loci.html#MachineCharacteristics.plot_flux_vs_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MachineCharacteristics.plot_flux_vs_torque" title="Link to this definition">#</a></dt>
+<dd><p>Plot flux magnitude vs. torque characteristics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_s_vals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Current magnitudes (A) at which the loci are evaluated. If <cite>base</cite> is given,
+the values are interpreted as per-unit values.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the loci.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points to be evaluated, defaults to 16.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels, requires a working LaTeX installation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">MagneticModel</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#MagneticModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MagneticModel" title="Link to this definition">#</a></dt>
+<dd><p>Store and manipulate flux linkage or current maps for synchronous machines.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.i_s_dq">
+<span class="sig-name descname"><span class="pre">i_s_dq</span></span><a class="headerlink" href="#motulator.drive.utils.MagneticModel.i_s_dq" title="Link to this definition">#</a></dt>
+<dd><p>Complex array of stator current (A).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.psi_s_dq">
+<span class="sig-name descname"><span class="pre">psi_s_dq</span></span><a class="headerlink" href="#motulator.drive.utils.MagneticModel.psi_s_dq" title="Link to this definition">#</a></dt>
+<dd><p>Complex array of stator flux linkage (Vs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.lookup_fcn">
+<span class="sig-name descname"><span class="pre">lookup_fcn</span></span><a class="headerlink" href="#motulator.drive.utils.MagneticModel.lookup_fcn" title="Link to this definition">#</a></dt>
+<dd><p>Linear interpolation function that evaluates the map at arbitrary points. Takes
+complex inputs (d + j*q) and returns interpolated output values. For flux maps,
+maps i_s_dq → psi_s_dq; for current maps, maps psi_s_dq → i_s_dq. The function
+extrapolates outside the map range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.tau_M">
+<span class="sig-name descname"><span class="pre">tau_M</span></span><a class="headerlink" href="#motulator.drive.utils.MagneticModel.tau_M" title="Link to this definition">#</a></dt>
+<dd><p>Array of electromagnetic torque (Nm).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#motulator.drive.utils.MagneticModel.type" title="Link to this definition">#</a></dt>
+<dd><p>Type of the map, defaults to “flux_map”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Literal[“current_map”, “flux_map”], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.create_interpolated_model">
+<span class="sig-name descname"><span class="pre">create_interpolated_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#MagneticModel.create_interpolated_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MagneticModel.create_interpolated_model" title="Link to this definition">#</a></dt>
+<dd><p>Interpolate or invert this magnetic model onto a regular grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d_range</strong> (<em>Any</em><em>, </em><em>optional</em>) – Range for the d-axis. If None, the range is determined from the data,
+defaults to None.</p></li>
+<li><p><strong>q_range</strong> (<em>Any</em><em>, </em><em>optional</em>) – Range for the q-axis. If None, the range is determined from the data,
+defaults to None.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points in each axis. If None, uses the maximum dimension from the
+original map to preserve resolution, defaults to None.</p></li>
+<li><p><strong>invert</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Invert the map (swap input and output), defaults to False.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Γ model parameters.</p>
+<dd class="field-even"><p>Interpolated magnetic model.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.InductionMachinePars" title="motulator.drive.utils.InductionMachinePars">InductionMachinePars</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel">MagneticModel</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.get_input_output">
+<span class="sig-name descname"><span class="pre">get_input_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#MagneticModel.get_input_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MagneticModel.get_input_output" title="Link to this definition">#</a></dt>
+<dd><p>Get input and output arrays based on map type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a>[numpy.ndarray, numpy.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.invert">
+<span class="sig-name descname"><span class="pre">invert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#MagneticModel.invert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MagneticModel.invert" title="Link to this definition">#</a></dt>
+<dd><p>Invert the map (swap input and output).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d_range</strong> (<em>Any</em><em>, </em><em>optional</em>) – Range for the d-axis. If None, the range is determined from the data,
+defaults to None.</p></li>
+<li><p><strong>q_range</strong> (<em>Any</em><em>, </em><em>optional</em>) – Range for the q-axis. If None, the range is determined from the data,
+defaults to None.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points in each axis. If None, uses the maximum dimension from the
+original map to preserve resolution, defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel">MagneticModel</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.is_current_map">
+<span class="sig-name descname"><span class="pre">is_current_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#MagneticModel.is_current_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MagneticModel.is_current_map" title="Link to this definition">#</a></dt>
+<dd><p>Return True if this is a current map (psi_s → i_s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.MagneticModel.is_flux_map">
+<span class="sig-name descname"><span class="pre">is_flux_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#MagneticModel.is_flux_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.MagneticModel.is_flux_map" title="Link to this definition">#</a></dt>
+<dd><p>Return True if this is a flux map (i_s → psi_s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -655,7 +1040,7 @@ the power factor and efficiency being less than unity.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.utils.NominalValues">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">NominalValues</span></span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#NominalValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.NominalValues" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">NominalValues</span></span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#NominalValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.NominalValues" title="Link to this definition">#</a></dt>
 <dd><p>Nominal values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -664,24 +1049,216 @@ the power factor and efficiency being less than unity.</p>
 <li><p><strong>I</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Current (A, rms).</p></li>
 <li><p><strong>f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Frequency (Hz).</p></li>
 <li><p><strong>P</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Power (W).</p></li>
-<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Torque (Nm). The default value is None.</p></li>
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Torque (Nm), defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.utils.Sequence">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">Sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#Sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.Sequence" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelPMSyRM</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelPMSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.utils.SaturationModelSyRM" title="motulator.drive.utils.SaturationModelSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelSyRM</span></code></a></p>
+<p>Saturation model for PM synchronous reluctance machines.</p>
+<p>This model takes into account the bridge saturation in addition to the self- and
+cross-saturation effects of the d- and q-axis <a class="footnote-reference brackets" href="#lel2024" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The bridge saturation
+model is based on a nonlinear reluctance element in parallel with the Norton-
+equivalent PM model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM.psi_n">
+<span class="sig-name descname"><span class="pre">psi_n</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM.psi_n" title="Link to this definition">#</a></dt>
+<dd><p>PM flux linkage (Vs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM.a_b">
+<span class="sig-name descname"><span class="pre">a_b</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM.a_b" title="Link to this definition">#</a></dt>
+<dd><p>Coefficient for bridge inverse inductance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM.a_bp">
+<span class="sig-name descname"><span class="pre">a_bp</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM.a_bp" title="Link to this definition">#</a></dt>
+<dd><p>Coefficient for bridge saturation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM.W">
+<span class="sig-name descname"><span class="pre">W</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM.W" title="Link to this definition">#</a></dt>
+<dd><p>Exponent for bridge saturation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM.k_q">
+<span class="sig-name descname"><span class="pre">k_q</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM.k_q" title="Link to this definition">#</a></dt>
+<dd><p>Cross-coupling factor for bridge flux.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="lel2024" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p>Lelli, Hinkkanen, Giulii Capponi, “A saturation model based on a
+simplified equivalent magnetic circuit for permanent magnet machines,” Proc.
+ICEM, 2024, <a class="reference external" href="https://doi.org/10.1109/ICEM60801.2024.10700403">https://doi.org/10.1109/ICEM60801.2024.10700403</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelSyRM</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelBase</span></code></p>
+<p>Saturation model for synchronous reluctance machines.</p>
+<p>This model takes into account the self- and cross-saturation effects of the d- and
+q-axis <a class="footnote-reference brackets" href="#hin2017" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.a_d0">
+<span class="sig-name descname"><span class="pre">a_d0</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.a_d0" title="Link to this definition">#</a></dt>
+<dd><p>Offset coefficient for d-axis inverse inductance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.a_dd">
+<span class="sig-name descname"><span class="pre">a_dd</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.a_dd" title="Link to this definition">#</a></dt>
+<dd><p>Self-saturation coefficient for d-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.a_q0">
+<span class="sig-name descname"><span class="pre">a_q0</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.a_q0" title="Link to this definition">#</a></dt>
+<dd><p>Offset coefficient for q-axis inverse inductance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.a_qq">
+<span class="sig-name descname"><span class="pre">a_qq</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.a_qq" title="Link to this definition">#</a></dt>
+<dd><p>Self-saturation coefficient for q-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.a_dq">
+<span class="sig-name descname"><span class="pre">a_dq</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.a_dq" title="Link to this definition">#</a></dt>
+<dd><p>Cross-saturation coefficient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.S">
+<span class="sig-name descname"><span class="pre">S</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.S" title="Link to this definition">#</a></dt>
+<dd><p>Exponent for d-axis self-saturation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.T">
+<span class="sig-name descname"><span class="pre">T</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.T" title="Link to this definition">#</a></dt>
+<dd><p>Exponent for q-axis self-saturation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.U">
+<span class="sig-name descname"><span class="pre">U</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.U" title="Link to this definition">#</a></dt>
+<dd><p>First exponent for cross-saturation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.V">
+<span class="sig-name descname"><span class="pre">V</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.V" title="Link to this definition">#</a></dt>
+<dd><p>Second exponent for cross-saturation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="hin2017" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
+<p>Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi, “Sensorless
+self-commissioning of synchronous reluctance motors at standstill without rotor
+locking,” IEEE Trans. Ind. Appl., 2017, <a class="reference external" href="https://doi.org/10.1109/TIA.2016.2644624">https://doi.org/10.1109/TIA.2016.2644624</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.SequenceGenerator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SequenceGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#SequenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SequenceGenerator" title="Link to this definition">#</a></dt>
 <dd><p>Sequence generator.</p>
-<p>The time array must be increasing. The output values are interpolated
-between the data points.</p>
+<p>The time array must be increasing. The output values are interpolated between the
+data points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>times</strong> (<em>ndarray</em>) – Time values.</p></li>
 <li><p><strong>values</strong> (<em>ndarray</em>) – Output values.</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Enables periodicity. The default is False.</p></li>
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Enables periodicity, defaults to False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -689,43 +1266,14 @@ between the data points.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.utils.Step">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">Step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.Step" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">Step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.Step" title="Link to this definition">#</a></dt>
 <dd><p>Step function.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.utils.SynchronousMachinePars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SynchronousMachinePars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#SynchronousMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SynchronousMachinePars" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">MachinePars</span></code></p>
-<p>Synchronous machine parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of pole pairs.</p></li>
-<li><p><strong>R_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Stator resistance (Ω).</p></li>
-<li><p><strong>L_d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – d-axis inductance (H).</p></li>
-<li><p><strong>L_q</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – q-axis inductance (H).</p></li>
-<li><p><strong>psi_f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Permanent-magnet flux linkage (Vs).</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.utils.TwoMassMechanicalSystemPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">TwoMassMechanicalSystemPars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_helpers.html#TwoMassMechanicalSystemPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.TwoMassMechanicalSystemPars" title="Permalink to this definition">#</a></dt>
-<dd><p>Two-mass mechanical system parameters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>J_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Motor moment of inertia (kgm²).</p></li>
-<li><p><strong>J_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Load moment of inertia (kgm²).</p></li>
-<li><p><strong>K_S</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Shaft torsional stiffness (Nm/rad).</p></li>
-<li><p><strong>C_S</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Shaft torsional damping (Nm/(rad/s)).</p></li>
-<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding
-to viscous friction, or an arbitrary function of the load speed. For
-example, choosing <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_L:</span> <span class="pre">k*abs(w_M)</span></code> leads to the
-quadratic load torque <code class="docutils literal notranslate"><span class="pre">k*w_L**2</span></code>. The default is <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+<li><p><strong>step_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Time of the step.</p></li>
+<li><p><strong>step_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Value of the step.</p></li>
+<li><p><strong>initial_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Initial value, defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -733,98 +1281,116 @@ quadratic load torque <code class="docutils literal notranslate"><span class="pr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="motulator.drive.utils.import_syre_data">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">import_syre_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_negative_q_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_flux_maps.html#import_syre_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.import_syre_data" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">import_syre_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_negative_q_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#import_syre_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.import_syre_data" title="Link to this definition">#</a></dt>
 <dd><p>Import a flux map from the MATLAB data file in the SyR-e format.</p>
-<p>For more information on the SyR-e project and the MATLAB file format,
-please visit:</p>
+<p>For more information on the SyR-e project and the MATLAB file format, please visit:</p>
 <blockquote>
 <div><p><a class="github reference external" href="https://github.com/SyR-e/syre_public">SyR-e/syre_public</a></p>
 </div></blockquote>
-<p>The imported data is converted to the PMSM coordinate convention, in which
-the PM flux is along the d axis.</p>
+<p>The imported data is converted to the PMSM coordinate convention, in which the PM
+flux is along the d axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – MATLAB file name.</p></li>
-<li><p><strong>add_negative_q_axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Adds the negative q-axis data based on the symmetry.</p></li>
+<li><p><strong>add_negative_q_axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Adds the negative q-axis data based on the symmetry, defaults to True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>SimpleNamespace object with the following fields defined</em></p></li>
-<li><p><strong>i_s</strong> (<em>complex ndarray</em>) – Stator current data (A).</p></li>
-<li><p><strong>psi_s</strong> (<em>complex ndarray</em>) – Stator flux linkage data (Vs).</p></li>
-<li><p><strong>tau_M</strong> (<em>ndarray</em>) – Torque data (Nm).</p></li>
-</ul>
-</p>
+<dd class="field-even"><p>Magnetic model data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel">MagneticModel</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Some example data files (including THOR.mat) are available in the SyR-e
-repository, licensed under the Apache License, Version 2.0.</p>
+<p>Some example data files (including THOR.mat) are available in the SyR-e repository,
+licensed under the Apache License, Version 2.0.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="motulator.drive.utils.plot">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_plots.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_plots.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot" title="Link to this definition">#</a></dt>
 <dd><p>Plot example figures.</p>
-<p>Plots figures in per-unit values, if the base values are given. Otherwise
-SI units are used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sim</strong> (<a class="reference internal" href="../model/index.html#motulator.drive.model.Simulation" title="motulator.drive.model.Simulation"><em>Simulation</em></a>) – Should contain the simulated data.</p></li>
-<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms.</p></li>
-<li><p><strong>t_span</strong> (<em>2-tuple</em><em>, </em><em>optional</em>) – Time span. The default is (0, sim.ctrl.t[-1]).</p></li>
+<li><p><strong>res</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><em>SimulationResults</em></a>) – Simulation results.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms. If not given, the waveforms are plotted
+in SI units.</p></li>
+<li><p><strong>t_span</strong> (<em>2-tuple</em><em>, </em><em>optional</em>) – Time span. If not given, the whole simulation time is plotted.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
+installation, defaults to False.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="motulator.drive.utils.plot_extra">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_extra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_plots.html#plot_extra"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_extra" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_extra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_plots.html#plot_extra"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_extra" title="Link to this definition">#</a></dt>
 <dd><p>Plot extra waveforms for a motor drive with a diode bridge.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sim</strong> (<a class="reference internal" href="../model/index.html#motulator.drive.model.Simulation" title="motulator.drive.model.Simulation"><em>Simulation</em></a>) – Should contain the simulated data.</p></li>
+<li><p><strong>res</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><em>Simulation</em></a>) – Should contain the simulated data.</p></li>
 <li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms.</p></li>
-<li><p><strong>t_span</strong> (<em>2-tuple</em><em>, </em><em>optional</em>) – Time span. The default is (0, sim.ctrl.t[-1]).</p></li>
+<li><p><strong>t_span</strong> (<em>2-tuple</em><em>, </em><em>optional</em>) – Time span, defaults to (0, sim.ctrl.t[-1]).</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels, requires a working LaTeX installation.</p></li>
 </ul>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="motulator.drive.utils.plot_flux_map">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_flux_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_flux_maps.html#plot_flux_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_flux_map" title="Permalink to this definition">#</a></dt>
-<dd><p>Plot the flux linkage as function of the current.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>SimpleNamespace</em>) – Flux map data.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="motulator.drive.utils.plot_flux_vs_current">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_flux_vs_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_flux_maps.html#plot_flux_vs_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_flux_vs_current" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_flux_vs_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#plot_flux_vs_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_flux_vs_current" title="Link to this definition">#</a></dt>
 <dd><p>Plot the flux vs. current characteristics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>SimpleNamespace</em>) – Flux map data.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><em>MagneticModel</em></a>) – Flux map data. The current array should be a rectilinear grid.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the maps.</p></li>
+<li><p><strong>lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range for the x-axis as (min, max). If None, determined from the data.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels, requires a working LaTeX installation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="motulator.drive.utils.plot_torque_map">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_torque_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_flux_maps.html#plot_torque_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_torque_map" title="Permalink to this definition">#</a></dt>
-<dd><p>Plot the torque as function of the current.</p>
+<dt class="sig sig-object py" id="motulator.drive.utils.plot_maps">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#plot_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_maps" title="Link to this definition">#</a></dt>
+<dd><p>Plot flux maps and current maps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>SimpleNamespace</em>) – Flux map data.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><em>MagneticModel</em></a>) – Data containing the flux and current information. The coordinates are selected
+based on the <cite>type</cite> field, which is either “flux_map” or “current_map” (the
+default is “flux_map”).</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the maps.</p></li>
+<li><p><strong>x_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range for the x-axis as (min, max). If None, the range is determined from the
+data, defaults to None.</p></li>
+<li><p><strong>y_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range for the y-axis as (min, max). If None, the range is determined from the
+data, defaults to None.</p></li>
+<li><p><strong>z_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range for the z-axis as (min, max). If None, the range is determined from the
+data, defaults to None.</p></li>
+<li><p><strong>raw_data</strong> (<a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><em>MagneticModel</em></a><em>, </em><em>optional</em>) – Flux and current information for comparison..</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
+installation, defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -840,7 +1406,7 @@ SI units are used.</p>
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -870,6 +1436,7 @@ SI units are used.</p>
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
@@ -881,27 +1448,66 @@ SI units are used.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.BaseValues"><code class="docutils literal notranslate"><span class="pre">BaseValues</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.BaseValues.from_nominal"><code class="docutils literal notranslate"><span class="pre">BaseValues.from_nominal()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.BaseValues.unity"><code class="docutils literal notranslate"><span class="pre">BaseValues.unity()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachineInvGammaPars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachineInvGammaPars.from_gamma_model_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.from_gamma_model_pars()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci"><code class="docutils literal notranslate"><span class="pre">ControlLoci</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_const_current_locus()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_current_angle()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_locus()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_flux_angle()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_locus()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachinePars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.InductionMachinePars.from_inv_gamma_model_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.from_inv_gamma_model_pars()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics.plot_current_loci"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics.plot_current_loci()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics.plot_current_vs_torque"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics.plot_current_vs_torque()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics.plot_flux_loci"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics.plot_flux_loci()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics.plot_flux_vs_torque"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics.plot_flux_vs_torque()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel"><code class="docutils literal notranslate"><span class="pre">MagneticModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.i_s_dq"><code class="docutils literal notranslate"><span class="pre">MagneticModel.i_s_dq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">MagneticModel.psi_s_dq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.lookup_fcn"><code class="docutils literal notranslate"><span class="pre">MagneticModel.lookup_fcn</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.tau_M"><code class="docutils literal notranslate"><span class="pre">MagneticModel.tau_M</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.type"><code class="docutils literal notranslate"><span class="pre">MagneticModel.type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.create_interpolated_model"><code class="docutils literal notranslate"><span class="pre">MagneticModel.create_interpolated_model()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.get_input_output"><code class="docutils literal notranslate"><span class="pre">MagneticModel.get_input_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.invert"><code class="docutils literal notranslate"><span class="pre">MagneticModel.invert()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.is_current_map"><code class="docutils literal notranslate"><span class="pre">MagneticModel.is_current_map()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MagneticModel.is_flux_map"><code class="docutils literal notranslate"><span class="pre">MagneticModel.is_flux_map()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.Sequence"><code class="docutils literal notranslate"><span class="pre">Sequence</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.psi_n"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.psi_n</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.a_b"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.a_b</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.a_bp"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.a_bp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.W"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.W</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.k_q"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.k_q</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_d0"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_d0</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_dd"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_dd</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_q0"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_q0</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_qq"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_qq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.a_dq"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.a_dq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.S"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.S</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.T"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.T</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.U"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.U</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelSyRM.V"><code class="docutils literal notranslate"><span class="pre">SaturationModelSyRM.V</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.TwoMassMechanicalSystemPars"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystemPars</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.import_syre_data"><code class="docutils literal notranslate"><span class="pre">import_syre_data()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_extra"><code class="docutils literal notranslate"><span class="pre">plot_extra()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_flux_map"><code class="docutils literal notranslate"><span class="pre">plot_flux_map()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_flux_vs_current"><code class="docutils literal notranslate"><span class="pre">plot_flux_vs_current()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_torque_map"><code class="docutils literal notranslate"><span class="pre">plot_torque_map()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.plot_maps"><code class="docutils literal notranslate"><span class="pre">plot_maps()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -928,7 +1534,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2024, Aalto Electric Drives.
+      © Copyright 2025, Aalto Electric Drives.
       <br/>
     
   </p>
@@ -952,8 +1558,8 @@ By Aalto Electric Drives
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

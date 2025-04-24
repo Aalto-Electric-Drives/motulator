@@ -2,57 +2,58 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Current Control &#8212; motulator 0.5.0 documentation</title>
+    <title>Current Control &#8212; motulator 0.6.0 documentation</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=ebd526be" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=8d05f57a"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/documentation_options.js?v=3af6fc4c"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'control/drive/current_ctrl';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Observer Design" href="observers.html" />
+    <link rel="next" title="Flux-Vector Control" href="flux_vector_ctrl.html" />
     <link rel="prev" title="Speed Control" href="speed_ctrl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -63,28 +64,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -106,12 +102,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -128,6 +132,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../../index.html">
   
@@ -136,10 +142,21 @@
   
   
   
-    <p class="title logo__title">motulator 0.5.0 documentation</p>
+    <p class="title logo__title">motulator 0.6.0 documentation</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
@@ -149,119 +166,125 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../drive_examples/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_following/index.html">Grid-Following Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../model/common.html">Common</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model/common/sampled_data.html">Sampled-Data Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/common/space_vectors.html">Space Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/common/converters.html">Voltage-Source Converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/machines.html">Electric Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/ac_filter.html">Output LC Filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../model/grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/grid/grid_volt_source.html">Three-Phase Source</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../control_system.html">Common</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Drives</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../common/control_system.html">Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../common/controllers.html">Controllers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Drives</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flux_vector_ctrl.html">Flux-Vector Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observers.html">Observers</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../grid/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../grid/pll.html">Phase-Locked Loop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/control/index.html">motulator.common.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/model/index.html">motulator.common.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/utils/index.html">motulator.common.utils</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/index.html">motulator.drive</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/control/index.html">motulator.drive.control</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/index.html">motulator.drive</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/control/index.html">motulator.drive.control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html">motulator.drive.control.im</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/grid/index.html">motulator.grid</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/grid/index.html">motulator.grid</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/control/index.html">motulator.grid.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/model/index.html">motulator.grid.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/utils/index.html">motulator.grid.utils</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -277,7 +300,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -286,14 +309,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -386,10 +409,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -397,14 +420,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -446,100 +469,100 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="current-control">
-<h1>Current Control<a class="headerlink" href="#current-control" title="Permalink to this heading">#</a></h1>
+<h1>Current Control<a class="headerlink" href="#current-control" title="Link to this heading">#</a></h1>
 <p>Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control is commonly used in three-phase AC machine drives <a class="footnote-reference brackets" href="#har1998" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#bri1999" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#awa2019" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#hin2024" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. This control structure allows to compensate for the cross-coupling originating from rotating coordinates as well as to improve disturbance rejection.</p>
 <p>A 2DOF PI current controller for induction machines is available in the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentController" title="motulator.drive.control.im.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.CurrentController</span></code></a> class and for synchronous machines in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class, both of which inherit from the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> class. In the following, current control of induction machines is first considered in detail. Then, the same principles are applied to synchronous machines. Complex space vectors are used to represent three-phase quantities.</p>
 <section id="induction-machines">
-<h2>Induction Machines<a class="headerlink" href="#induction-machines" title="Permalink to this heading">#</a></h2>
+<h2>Induction Machines<a class="headerlink" href="#induction-machines" title="Link to this heading">#</a></h2>
 <section id="system-model">
-<h3>System Model<a class="headerlink" href="#system-model" title="Permalink to this heading">#</a></h3>
+<h3>System Model<a class="headerlink" href="#system-model" title="Link to this heading">#</a></h3>
 <p>The inverse-Γ model of an induction machine is considered (see <a class="reference internal" href="../../model/drive/machines.html"><span class="doc">Electric Machines</span></a>). Using the stator current <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s}\)</span> and the rotor flux linkage <span class="math notranslate nohighlight">\(\boldsymbol{\psi}_\mathrm{R}\)</span> as state variables, the model in synchronous coordinates rotating at <span class="math notranslate nohighlight">\(\omega_\mathrm{s}\)</span> can be written as</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \underbrace{\left(\mathrm{j}\omega_\mathrm{m} - \frac{R_\mathrm{R}}{L_\mathrm{M}}\right)\boldsymbol{\psi}_\mathrm{R}}_{\text{back-emf } \boldsymbol{e}_\mathrm{s}} \\
+<div class="math notranslate nohighlight" id="equation-im-model-i-s-psi-r">
+<span class="eqno">(1)<a class="headerlink" href="#equation-im-model-i-s-psi-r" title="Link to this equation">#</a></span>\[\begin{split}L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \underbrace{\left(\mathrm{j}\omega_\mathrm{m} - \frac{R_\mathrm{R}}{L_\mathrm{M}}\right)\boldsymbol{\psi}_\mathrm{R}}_{\text{back-emf } \boldsymbol{e}_\mathrm{s}} \\
     \frac{\mathrm{d} \boldsymbol{\psi}_\mathrm{R}}{\mathrm{d} t} &amp;= R_\mathrm{R}\boldsymbol{i}_\mathrm{s} - \left(\frac{R_\mathrm{R}}{L_\mathrm{M}} + \mathrm{j}\omega_\mathrm{r} \right)\boldsymbol{\psi}_\mathrm{R}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(R_\sigma = R_\mathrm{s} + R_\mathrm{R}\)</span> is the total resistance and <span class="math notranslate nohighlight">\(\omega_\mathrm{r} = \omega_\mathrm{s} - \omega_\mathrm{m}\)</span> is the slip angular frequency. The rotor flux linkage <span class="math notranslate nohighlight">\(\boldsymbol{\psi}_\mathrm{R}\)</span> and the rotor speed <span class="math notranslate nohighlight">\(\omega_\mathrm{m}\)</span> change slowly as compared to the stator current. Consequently, the back-emf <span class="math notranslate nohighlight">\(\boldsymbol{e}_\mathrm{s}\)</span> can be considered as a quasi-constant input (load) disturbance for the current controller, and it suffices to consider the stator current dynamics</p>
 <div class="math notranslate nohighlight" id="equation-im-current">
-<span class="eqno">(1)<a class="headerlink" href="#equation-im-current" title="Permalink to this equation">#</a></span>\[L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \boldsymbol{e}_\mathrm{s}\]</div>
+<span class="eqno">(2)<a class="headerlink" href="#equation-im-current" title="Link to this equation">#</a></span>\[L_\sigma \frac{\mathrm{d} \boldsymbol{i}_\mathrm{s}}{\mathrm{d} t} = \boldsymbol{u}_\mathrm{s} - (R_\sigma + \mathrm{j} \omega_\mathrm{s}L_\sigma)\boldsymbol{i}_\mathrm{s} - \boldsymbol{e}_\mathrm{s}\]</div>
 </section>
 <section id="dof-pi-controller">
-<h3>2DOF PI Controller<a class="headerlink" href="#dof-pi-controller" title="Permalink to this heading">#</a></h3>
-<p>The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design <a class="footnote-reference brackets" href="#har1998" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and the complex-vector design <a class="footnote-reference brackets" href="#bri1999" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Here, only the complex-vector design is considered, see <a class="reference internal" href="../control_system.html#complex-vector-2dof-pi-controller"><span class="std std-ref">Complex-Vector 2DOF PI Controller</span></a>, which is compatible with the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> base class. The controller can be expressed in a state-space form as</p>
+<h3>2DOF PI Controller<a class="headerlink" href="#dof-pi-controller" title="Link to this heading">#</a></h3>
+<p>The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design <a class="footnote-reference brackets" href="#har1998" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and the complex-vector design <a class="footnote-reference brackets" href="#bri1999" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Here, only the complex-vector design is considered, see <a class="reference internal" href="../common/controllers.html#complex-vector-2dof-pi-controller"><span class="std std-ref">Complex-Vector 2DOF PI Controller</span></a>, which is compatible with the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> base class. The controller can be expressed in a state-space form as</p>
 <div class="math notranslate nohighlight" id="equation-cc">
-<span class="eqno">(2)<a class="headerlink" href="#equation-cc" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= (\boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s}\boldsymbol{k}_\mathrm{t} )\left(\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{i}_\mathrm{s}\right) \\
+<span class="eqno">(3)<a class="headerlink" href="#equation-cc" title="Link to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= (\boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s}\boldsymbol{k}_\mathrm{t} )\left(\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{i}_\mathrm{s}\right) \\
 \boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}_\mathrm{t}\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{k}_\mathrm{p}\boldsymbol{i}_\mathrm{s} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s,ref}\)</span> is the output of the controller, i.e., the stator voltage reference, <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s,ref}\)</span> is the stator current reference, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{i}\)</span> is the the integral state, and <span class="math notranslate nohighlight">\(\omega_\mathrm{s}\)</span> is the angular speed of the coordinate system. Furthermore, <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t}\)</span> is the reference-feedforward gain, <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{p}\)</span> is the proportional gain, and <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{i}\)</span> is the integral gain.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The gain definitions used in <a class="reference internal" href="#equation-cc">(2)</a> differ from <a class="footnote-reference brackets" href="#hin2024" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, where a more general controller structure is considered.</p>
+<p>The gain definitions used in <a class="reference internal" href="#equation-cc">(3)</a> differ from <a class="footnote-reference brackets" href="#hin2024" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, where a more general controller structure is considered.</p>
 </div>
 </section>
 <section id="closed-loop-system">
-<h3>Closed-Loop System<a class="headerlink" href="#closed-loop-system" title="Permalink to this heading">#</a></h3>
-<p>Here, ideal voltage production is assumed, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s} = \boldsymbol{u}_\mathrm{s,ref}\)</span>. Using <a class="reference internal" href="#equation-im-current">(1)</a> and <a class="reference internal" href="#equation-cc">(2)</a>, the closed-loop system in the Laplace domain becomes</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{i}_\mathrm{s} = \boldsymbol{G}_\mathrm{c}(s)\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{Y}_\mathrm{c}(s)\boldsymbol{e}_\mathrm{s}\]</div>
-<p>The disturbance rejection depends on the closed-loop admittance</p>
-<div class="math notranslate nohighlight" id="equation-yc">
-<span class="eqno">(3)<a class="headerlink" href="#equation-yc" title="Permalink to this equation">#</a></span>\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}\]</div>
+<h3>Closed-Loop System<a class="headerlink" href="#closed-loop-system" title="Link to this heading">#</a></h3>
+<p>Here, ideal voltage production is assumed, <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s} = \boldsymbol{u}_\mathrm{s,ref}\)</span>. Using <a class="reference internal" href="#equation-im-current">(2)</a> and <a class="reference internal" href="#equation-cc">(3)</a>, the closed-loop system in the Laplace domain becomes</p>
+<div class="math notranslate nohighlight" id="equation-closed-loop-current-control">
+<span class="eqno">(4)<a class="headerlink" href="#equation-closed-loop-current-control" title="Link to this equation">#</a></span>\[\boldsymbol{i}_\mathrm{s} = \boldsymbol{G}_\mathrm{c}(s)\boldsymbol{i}_\mathrm{s,ref} - \boldsymbol{Y}_\mathrm{c}(s)\boldsymbol{e}_\mathrm{s}\]</div>
 <p>The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is</p>
 <div class="math notranslate nohighlight" id="equation-gc">
-<span class="eqno">(4)<a class="headerlink" href="#equation-gc" title="Permalink to this equation">#</a></span>\[\boldsymbol{G}_\mathrm{c}(s) = \frac{(s + \mathrm{j}\omega_\mathrm{s}) \boldsymbol{k}_\mathrm{t} + \boldsymbol{k}_\mathrm{i} }{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}\]</div>
-<p>whose zero can be placed by means of the reference-feedforward gain <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t}\)</span>.</p>
+<span class="eqno">(5)<a class="headerlink" href="#equation-gc" title="Link to this equation">#</a></span>\[\boldsymbol{G}_\mathrm{c}(s) = \frac{(s + \mathrm{j}\omega_\mathrm{s}) \boldsymbol{k}_\mathrm{t} + \boldsymbol{k}_\mathrm{i} }{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}\]</div>
+<p>whose zero can be placed by means of the reference-feedforward gain <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{t}\)</span>.The disturbance rejection depends on the closed-loop admittance</p>
+<div class="math notranslate nohighlight" id="equation-yc">
+<span class="eqno">(6)<a class="headerlink" href="#equation-yc" title="Link to this equation">#</a></span>\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma s^2 + (R_\sigma + \mathrm{j}\omega_\mathrm{s} L_\sigma + \boldsymbol{k}_\mathrm{p}) s + \boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s} \boldsymbol{k}_\mathrm{t}}\]</div>
 </section>
 <section id="gain-selection">
-<h3>Gain Selection<a class="headerlink" href="#gain-selection" title="Permalink to this heading">#</a></h3>
+<h3>Gain Selection<a class="headerlink" href="#gain-selection" title="Link to this heading">#</a></h3>
 <p>Consider the gains</p>
 <div class="math notranslate nohighlight" id="equation-complex-vector-gains">
-<span class="eqno">(5)<a class="headerlink" href="#equation-complex-vector-gains" title="Permalink to this equation">#</a></span>\[\boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \hat L_\sigma - \hat R_\sigma \qquad\qquad
-\boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2\hat L_\sigma  \qquad \qquad
+<span class="eqno">(7)<a class="headerlink" href="#equation-complex-vector-gains" title="Link to this equation">#</a></span>\[\boldsymbol{k}_\mathrm{p} = (\alpha_\mathrm{c} + \alpha_\mathrm{i}) \hat L_\sigma - \hat R_\sigma \qquad\qquad
+\boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}\alpha_\mathrm{i}\hat L_\sigma  \qquad \qquad
 \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c} \hat L_\sigma\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat R_\sigma = 0\)</span> can be used in practice due to its minor effect and integral action. Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(3)</a> and <a class="reference internal" href="#equation-gc">(4)</a> reduce to</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{c} + \mathrm{j}\omega_\mathrm{s})}
+<p>where <span class="math notranslate nohighlight">\(\alpha_\mathrm{s}\)</span> is the closed-loop reference-tracking bandwidth and <span class="math notranslate nohighlight">\(\alpha_\mathrm{i}\)</span> is the integral action bandwidth. Assuming accurate parameter estimates, the closed-loop transfer functions <a class="reference internal" href="#equation-yc">(6)</a> and <a class="reference internal" href="#equation-gc">(5)</a> reduce to</p>
+<div class="math notranslate nohighlight" id="equation-gc-yc">
+<span class="eqno">(8)<a class="headerlink" href="#equation-gc-yc" title="Link to this equation">#</a></span>\[\boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}
 \qquad\qquad
-\boldsymbol{G}_\mathrm{c}(s) = \frac{\alpha_\mathrm{c}}{s + \alpha_\mathrm{c}}\]</div>
-<p>It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at <span class="math notranslate nohighlight">\(s=-\alpha_\mathrm{c}\)</span>, while another pole moves with the angular frequency of the coordinate system, <span class="math notranslate nohighlight">\(s= -\alpha_\mathrm{c} - \mathrm{j}\omega_\mathrm{s}\)</span>. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole.</p>
+\boldsymbol{Y}_\mathrm{c}(s) = \frac{s}{L_\sigma (s + \alpha_\mathrm{c})(s + \alpha_\mathrm{i} + \mathrm{j}\omega_\mathrm{s})}\]</div>
+<p>It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at <span class="math notranslate nohighlight">\(s=-\alpha_\mathrm{c}\)</span>, while another pole moves with the angular frequency of the coordinate system, <span class="math notranslate nohighlight">\(s= -\alpha_\mathrm{i} - \mathrm{j}\omega_\mathrm{s}\)</span>. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole. Notice that <span class="math notranslate nohighlight">\(\hat R_\sigma = 0\)</span> can be used in practice in <a class="reference internal" href="#equation-complex-vector-gains">(7)</a>.</p>
 <p>This gain selection is used in the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentController" title="motulator.drive.control.im.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.CurrentController</span></code></a> class. The stator voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is</p>
-<div class="math notranslate nohighlight">
-\[\bar{\boldsymbol{u}}_\mathrm{s,ref} = \mathrm{sat}(\boldsymbol{u}_\mathrm{s,ref})\]</div>
+<div class="math notranslate nohighlight" id="equation-limited-voltage">
+<span class="eqno">(9)<a class="headerlink" href="#equation-limited-voltage" title="Link to this equation">#</a></span>\[\bar{\boldsymbol{u}}_\mathrm{s,ref} = \mathrm{sat}(\boldsymbol{u}_\mathrm{s,ref})\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathrm{sat}(\cdot)\)</span> is the saturation function. The limited voltage can be obtained from a pulse-width modulation (PWM) algorithm (see the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.PWM</span></code></a> class). The anti-windup of the integrator is included in the implementation of the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> base class.</p>
 </section>
 </section>
 <section id="synchronous-machines">
-<h2>Synchronous Machines<a class="headerlink" href="#synchronous-machines" title="Permalink to this heading">#</a></h2>
+<h2>Synchronous Machines<a class="headerlink" href="#synchronous-machines" title="Link to this heading">#</a></h2>
 <section id="id8">
-<h3>System Model<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
+<h3>System Model<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
 <p>Consider the synchronous machine model in rotor coordinates, rotating at <span class="math notranslate nohighlight">\(\omega_\mathrm{m}\)</span> and aligned along the d-axis of the rotor,</p>
 <div class="math notranslate nohighlight" id="equation-sm-model">
-<span class="eqno">(6)<a class="headerlink" href="#equation-sm-model" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s} \\
+<span class="eqno">(10)<a class="headerlink" href="#equation-sm-model" title="Link to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d}\boldsymbol{\psi}_\mathrm{s}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{s} - R_\mathrm{s}\boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s} \\
     \boldsymbol{\psi}_\mathrm{s} &amp;= L_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j}L_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\} + \psi_\mathrm{f}\end{split}\]</div>
 <p>where linear magnetics are assumed for simplicity. For further details, see <a class="reference internal" href="../../model/drive/machines.html"><span class="doc">Electric Machines</span></a>.</p>
 </section>
 <section id="id9">
-<h3>2DOF PI Controller<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
+<h3>2DOF PI Controller<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
 <p>An internal change of the state variable from the stator current to the stator flux linkage simplifies the control design for synchronous machines, allowing the same algorithm to be used for both non-salient and salient synchronous machines <a class="footnote-reference brackets" href="#awa2019" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Both the reference current and the actual current are scaled by the inductance estimates,</p>
 <div class="math notranslate nohighlight" id="equation-flux-mapping-sm">
-<span class="eqno">(7)<a class="headerlink" href="#equation-flux-mapping-sm" title="Permalink to this equation">#</a></span>\[\begin{split}\boldsymbol{\psi}_\mathrm{s,ref} &amp;= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s,ref}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s,ref}\} \\
+<span class="eqno">(11)<a class="headerlink" href="#equation-flux-mapping-sm" title="Link to this equation">#</a></span>\[\begin{split}\boldsymbol{\psi}_\mathrm{s,ref} &amp;= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s,ref}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s,ref}\} \\
 \hat{\boldsymbol{\psi}_\mathrm{s}} &amp;= \hat{L}_\mathrm{d}\mathrm{Re}\{\boldsymbol{i}_\mathrm{s}\} + \mathrm{j} \hat{L}_\mathrm{q}\mathrm{Im}\{\boldsymbol{i}_\mathrm{s}\}\end{split}\]</div>
-<p>This choice of using the flux linkage as the internal state has some advantages: the gain expressions become simpler; the magnetic saturation would be more convenient to take into account; and the same control structure can be used for salient and nonsalient machines.</p>
-<p>Here, the complex vector design is considered. Hence, the controller <a class="reference internal" href="#equation-cc">(2)</a> can be rewritten as</p>
+<p>This choice of using the flux linkage as the internal state has some advantages: the gain expressions become simpler; the magnetic saturation would be more convenient to take into account; and the same control structure can be used for salient and non-salient machines.</p>
+<p>Here, the complex vector design is considered. Hence, the controller <a class="reference internal" href="#equation-cc">(3)</a> can be rewritten as</p>
 <div class="math notranslate nohighlight" id="equation-cc-flux">
-<span class="eqno">(8)<a class="headerlink" href="#equation-cc-flux" title="Permalink to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= (\boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s}\boldsymbol{k}_\mathrm{t} )\left(\boldsymbol{\psi}_\mathrm{s,ref} - \hat{\boldsymbol{\psi}}_\mathrm{s}\right) \\
+<span class="eqno">(12)<a class="headerlink" href="#equation-cc-flux" title="Link to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \boldsymbol{u}_\mathrm{i}}{\mathrm{d} t} &amp;= (\boldsymbol{k}_\mathrm{i} + \mathrm{j}\omega_\mathrm{s}\boldsymbol{k}_\mathrm{t} )\left(\boldsymbol{\psi}_\mathrm{s,ref} - \hat{\boldsymbol{\psi}}_\mathrm{s}\right) \\
 \boldsymbol{u}_\mathrm{s,ref} &amp;= \boldsymbol{k}_\mathrm{t}\boldsymbol{\psi}_\mathrm{s,ref} - \boldsymbol{k}_\mathrm{p}\hat{\boldsymbol{\psi}}_\mathrm{s} + \boldsymbol{u}_\mathrm{i}\end{split}\]</div>
 <p>where the angular speed of the coordinate system equals typically the measured rotor speed, <span class="math notranslate nohighlight">\(\omega_\mathrm{s} = \omega_\mathrm{m}\)</span>, or the estimated rotor speed <span class="math notranslate nohighlight">\(\omega_\mathrm{s} = \hat{\omega}_\mathrm{m}\)</span>. If the magnetic saturation is not considered, this flux-linkage-based current controller is equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate). Notice that <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{s,ref} = \boldsymbol{i}_\mathrm{s}\)</span> holds in the steady state even with inductance estimate inaccuracies, since the same inductances are used to map both the reference current and the actual current to the corresponding flux linkages.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The control law <a class="reference internal" href="#equation-cc-flux">(8)</a> omits the effect of the stator resistance for simplicity, i.e., <span class="math notranslate nohighlight">\(\hat R_\mathrm{s} = 0\)</span> is assumed. This is a common and practical assumption. However, if needed, the resistive voltage drop term <span class="math notranslate nohighlight">\(\hat R_\mathrm{s}\boldsymbol{i}_\mathrm{s}\)</span> could be simply added to <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s,ref}\)</span> in <a class="reference internal" href="#equation-cc-flux">(8)</a>.</p>
+<p>The control law <a class="reference internal" href="#equation-cc-flux">(12)</a> omits the effect of the stator resistance for simplicity, i.e., <span class="math notranslate nohighlight">\(\hat R_\mathrm{s} = 0\)</span> is assumed. This is a common and practical assumption. However, if needed, the resistive voltage drop term <span class="math notranslate nohighlight">\(\hat R_\mathrm{s}\boldsymbol{i}_\mathrm{s}\)</span> could be simply added to <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{s,ref}\)</span> in <a class="reference internal" href="#equation-cc-flux">(12)</a>.</p>
 </div>
-<p>The gain selection analogous to <a class="reference internal" href="#equation-complex-vector-gains">(5)</a> becomes</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{k}_\mathrm{p} = 2\alpha_\mathrm{c} \qquad\qquad
-\boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}^2 \qquad \qquad
+<p>The gain selection analogous to <a class="reference internal" href="#equation-complex-vector-gains">(7)</a> becomes</p>
+<div class="math notranslate nohighlight" id="equation-sm-gains">
+<span class="eqno">(13)<a class="headerlink" href="#equation-sm-gains" title="Link to this equation">#</a></span>\[\boldsymbol{k}_\mathrm{p} = \alpha_\mathrm{c} + \alpha_\mathrm{i} \qquad\qquad
+\boldsymbol{k}_\mathrm{i} = \alpha_\mathrm{c}\alpha_\mathrm{i} \qquad \qquad
 \boldsymbol{k}_\mathrm{t} = \alpha_\mathrm{c}\]</div>
-<p>Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using <a class="reference internal" href="#equation-sm-model">(6)</a>, <a class="reference internal" href="#equation-flux-mapping-sm">(7)</a>, and <a class="reference internal" href="#equation-cc-flux">(8)</a>, the closed-loop system can be shown to be analogous to the induction machine case. This control design corresponds to the implementation in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class.</p>
+<p>Assume accurate parameter estimates and perfect alignment of the controller coordinate system with the rotor coordinate system. Then, using <a class="reference internal" href="#equation-sm-model">(10)</a>, <a class="reference internal" href="#equation-flux-mapping-sm">(11)</a>, and <a class="reference internal" href="#equation-cc-flux">(12)</a>, the closed-loop system can be shown to be analogous to the induction machine case.</p>
+<p>This control design corresponds to the implementation in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> class. In the case of saturated synchronous machine, the nonlinear flux linkage map can be used to replace the linear magnetics in <a class="reference internal" href="#equation-flux-mapping-sm">(11)</a>, see <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> and <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.SaturatedSynchronousMachinePars</span></code></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har1998" role="doc-footnote">
@@ -575,7 +598,7 @@ document.write(`
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -588,11 +611,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="observers.html"
+       href="flux_vector_ctrl.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Observer Design</p>
+        <p class="prev-next-title">Flux-Vector Control</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -604,6 +627,7 @@ document.write(`
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -647,7 +671,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2024, Aalto Electric Drives.
+      © Copyright 2025, Aalto Electric Drives.
       <br/>
     
   </p>
@@ -671,8 +695,8 @@ By Aalto Electric Drives
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

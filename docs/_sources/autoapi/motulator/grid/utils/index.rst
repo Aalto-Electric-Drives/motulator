@@ -32,9 +32,9 @@ Classes
 
 .. autoapisummary::
 
-   motulator.grid.utils.ACFilterPars
    motulator.grid.utils.BaseValues
    motulator.grid.utils.NominalValues
+   motulator.grid.utils.SequenceGenerator
    motulator.grid.utils.Step
 
 
@@ -49,46 +49,6 @@ Functions
 
 Package Contents
 ----------------
-
-.. py:class:: ACFilterPars
-
-   
-   AC filter and grid impedance parameters.
-
-   :param L_fc: Converter-side filter inductance (H).
-   :type L_fc: float
-   :param L_fg: Grid-side filter inductance (H). The default is 0.
-   :type L_fg: float, optional
-   :param C_f: Filter capacitance (F). The default is 0.
-   :type C_f: float, optional
-   :param R_fc: Series resistance (Ω) of the converter-side inductor. The default is 0.
-   :type R_fc: float, optional
-   :param R_fg: Series resistance (Ω) of the grid-side inductor. The default is 0.
-   :type R_fg: float, optional
-   :param L_g: Grid inductance (H). The default is 0.
-   :type L_g: float, optional
-   :param R_g: Grid resistance (Ω). The default is 0.
-   :type R_g: float, optional
-   :param u_fs0: Initial value of the filter capacitor voltage (V). Needed in the case
-                 of an LCL filter.
-   :type u_fs0: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 
 .. py:class:: BaseValues
 
@@ -111,10 +71,12 @@ Package Contents
    :type L: float
    :param C: Capacitance (F).
    :type C: float
-   :param tau: Torque (Nm). The default is None.
+   :param tau: Torque (Nm), defaults to 0.
    :type tau: float, optional
-   :param n_p: Number of pole pairs. The default is None.
+   :param n_p: Number of pole pairs, defaults to 0.
    :type n_p: int, optional
+   :param w_M: Mechanical angular frequency (rad/s), defaults to 0.
+   :type w_M: float, optional
 
 
 
@@ -133,7 +95,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: from_nominal(nom, n_p=None)
+   .. py:method:: from_nominal(nom, n_p = None)
       :classmethod:
 
 
@@ -142,7 +104,6 @@ Package Contents
 
       :param nom:
                   Nominal values containing the following fields:
-
                       U : float
                           Voltage (V, rms, line-line).
                       I : float
@@ -150,17 +111,42 @@ Package Contents
                       f : float
                           Frequency (Hz).
       :type nom: NominalValues
-      :param n_p: Number of pole pairs. If not given it is assumed that base values
-                  for a grid converter are calculated. The default is None.
-      :type n_p: int, optional
+      :param n_p: Number of pole pairs, default to None.
+      :type n_p: int | None, optional
 
       :returns: Base values.
       :rtype: BaseValues
 
       .. rubric:: Notes
 
-      Notice that the nominal torque is larger than the base torque due to
-      the power factor and efficiency being less than unity.
+      Notice that the nominal torque is larger than the base torque due to the power
+      factor and efficiency being less than unity.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: unity()
+      :classmethod:
+
+
+      
+      Create base values with all values set to 1.
+
 
 
 
@@ -193,7 +179,7 @@ Package Contents
    :type f: float
    :param P: Power (W).
    :type P: float
-   :param tau: Torque (Nm). The default value is None.
+   :param tau: Torque (Nm), defaults to 0.
    :type tau: float, optional
 
 
@@ -213,11 +199,49 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Step(step_time, step_value, initial_value=0)
+.. py:class:: SequenceGenerator(times, values, periodic = False)
+
+   
+   Sequence generator.
+
+   The time array must be increasing. The output values are interpolated between the
+   data points.
+
+   :param times: Time values.
+   :type times: ndarray
+   :param values: Output values.
+   :type values: ndarray
+   :param periodic: Enables periodicity, defaults to False.
+   :type periodic: bool, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Step(step_time, step_value, initial_value = 0.0)
 
    
    Step function.
 
+   :param step_time: Time of the step.
+   :type step_time: float
+   :param step_value: Value of the step.
+   :type step_value: float
+   :param initial_value: Initial value, defaults to 0.
+   :type initial_value: float, optional
 
 
 
@@ -236,25 +260,21 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot(sim, base=None, plot_pcc_voltage=True, plot_w=False, t_span=None)
+.. py:function:: plot(res, base, t_span = None, latex = False, plot_pcc_voltage = True)
 
    
-   Plot example figures of grid converter simulations.
+   Plot example figures.
 
-   :param sim: Should contain the simulated data.
-   :type sim: Simulation
-   :param base: Base values for scaling the waveforms. If not given, plots the figures
+   :param res: Should contain the simulated data.
+   :type res: SimulationResults
+   :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
    :type base: BaseValues, optional
-   :param plot_pcc_voltage: If True, the phase voltage waveforms are plotted at the point of common
-                            coupling (PCC). Otherwise, the grid voltage waveforms are plotted. The
-                            default is True.
-   :type plot_pcc_voltage: bool, optional
-   :param plot_w: If True, plot the grid frequency. Otherwise, plot the phase angle. The
-                  default is False.
-   :type plot_w: bool, optional
-   :param t_span: Time span. The default is (0, sim.ctrl.ref.t[-1]).
+   :param t_span: Time span. If not given, the whole simulation time is plotted.
    :type t_span: 2-tuple, optional
+   :param plot_pcc_voltage: If True, plot the phase voltage waveforms at the point of common coupling (PCC).
+                            Otherwise, plot the grid voltage waveforms, defaults to True.
+   :type plot_pcc_voltage: bool, optional
 
 
 
@@ -273,13 +293,13 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_voltage_vector(sim, base=None)
+.. py:function:: plot_voltage_vector(res, base)
 
    
    Plot locus of the grid voltage vector.
 
-   :param sim: Should contain the simulated data.
-   :type sim: Simulation
+   :param res: Simulation results.
+   :type res: SimulationResults
    :param base: Base values for scaling the waveforms.
    :type base: BaseValues, optional
 

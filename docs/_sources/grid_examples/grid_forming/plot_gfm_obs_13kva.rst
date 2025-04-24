@@ -21,18 +21,16 @@
 12.5-kVA converter, disturbance observer
 ========================================
 
-This example simulates a converter using disturbance-observer-based control in
-grid-forming mode. The converter output voltage and the active power are
-directly controlled, and grid synchronization is provided by the disturbance
-observer. A transparent current controller is included for current limitation.
+This example simulates a converter using disturbance-observer-based control in grid-
+forming mode. The converter output voltage and the active power are directly controlled,
+and grid synchronization is provided by the disturbance observer. A transparent current
+controller is included for current limitation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-17
+.. GENERATED FROM PYTHON SOURCE LINES 13-15
 
 .. code-block:: Python
 
-    from motulator.grid import model, control
-    from motulator.grid.utils import (
-        BaseValues, ACFilterPars, NominalValues, plot)
+    from motulator.grid import control, model, utils
 
 
 
@@ -41,17 +39,17 @@ observer. A transparent current controller is included for current limitation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 16-17
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 17-21
 
 .. code-block:: Python
 
 
-    nom = NominalValues(U=400, I=18, f=50, P=12.5e3)
-    base = BaseValues.from_nominal(nom)
+    nom = utils.NominalValues(U=400, I=18, f=50, P=12.5e3)
+    base = utils.BaseValues.from_nominal(nom)
 
 
 
@@ -60,24 +58,18 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-37
+.. GENERATED FROM PYTHON SOURCE LINES 23-29
 
 .. code-block:: Python
 
 
-    # Filter and grid parameters
-    par = ACFilterPars(L_fc=.15*base.L, R_fc=.05*base.Z, L_g=.74*base.L)
-    # par.L_g = 0  # Uncomment this line to simulate a strong grid
-    ac_filter = model.ACFilter(par)
-    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-    # Inverter with constant DC voltage
+    ac_filter = model.LFilter(L_f=0.15 * base.L, R_f=0.05 * base.Z, L_g=0.74 * base.L)
+    ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
     converter = model.VoltageSourceConverter(u_dc=650)
-
-    # Create system model
     mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 
@@ -87,27 +79,24 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-53
+.. GENERATED FROM PYTHON SOURCE LINES 31-42
 
 .. code-block:: Python
 
 
-    # Set the configuration parameters
-    cfg = control.ObserverBasedGridFormingControlCfg(
-        L=.35*base.L,
-        R=.05*base.Z,
-        nom_u=base.u,
-        nom_w=base.w,
-        max_i=1.3*base.i,
-        R_a=.2*base.Z,
-        T_s=100e-6)
-
-    # Create the control system
-    ctrl = control.ObserverBasedGridFormingControl(cfg)
+    inner_ctrl = control.ObserverBasedGridFormingController(
+        i_max=1.3 * base.i,
+        L=0.35 * base.L,
+        R=0.05 * base.Z,
+        R_a=0.2 * base.Z,
+        u_nom=base.u,
+        w_nom=base.w,
+    )
+    ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
 
@@ -116,28 +105,28 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-70
+.. GENERATED FROM PYTHON SOURCE LINES 44-59
 
 .. code-block:: Python
 
 
     # Converter output voltage magnitude reference
-    ctrl.ref.v_c = lambda t: base.u
-
-    # Active power reference
-    ctrl.ref.p_g = lambda t: ((t > .2)/3 + (t > .5)/3 + (t > .8)/3 -
-                              (t > 1.2))*nom.P
+    ctrl.set_ac_voltage_ref(base.u)
+    ctrl.set_power_ref(
+        lambda t: ((t > 0.2) / 3 + (t > 0.5) / 3 + (t > 0.8) / 3 - (t > 1.2)) * nom.P
+    )
 
     # Uncomment line below to simulate operation in rectifier mode
-    # ctrl.ref.p_g = lambda t: ((t > .2) - (t > .7)*2 + (t > 1.2))*nom.P
+    # ctrl.ext_ref.p_g = lambda t: ((t > 0.2) - (t > 0.7) * 2 + (t > 1.2)) * nom.P
 
     # Uncomment lines below to simulate a grid voltage sag with constant ref.p_g
-    # mdl.ac_source.par.abs_e_g = lambda t: (1 - (t > .2)*.8 + (t > 1)*.8)*base.u
-    # ctrl.ref.p_g = lambda t: nom.P
+    # mdl.ac_filter.L_g = 0
+    # mdl.ac_source.e_g = lambda t: (1 - (t > 0.2) * 0.8 + (t > 1) * 0.8) * base.u
+    # ctrl.ext_ref.p_g = lambda t: nom.P
 
 
 
@@ -146,35 +135,18 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
-Create the simulation object and simulate it.
+Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 61-65
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    sim.simulate(t_stop=1.5)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
-
-Plot the results.
-
-.. GENERATED FROM PYTHON SOURCE LINES 78-80
-
-.. code-block:: Python
-
-
-    plot(sim, base)
+    res = sim.simulate(t_stop=1.4)
+    utils.plot(res, base)
 
 
 
@@ -202,7 +174,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.832 seconds)
+   **Total running time of the script:** (0 minutes 5.247 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_obs_13kva.py:

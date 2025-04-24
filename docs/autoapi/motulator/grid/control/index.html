@@ -2,52 +2,53 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.grid.control &#8212; motulator 0.5.0 documentation</title>
+    <title>motulator.grid.control &#8212; motulator 0.6.0 documentation</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ebd526be" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=8d05f57a"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/documentation_options.js?v=3af6fc4c"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/motulator/grid/control/index';</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -62,28 +63,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -105,12 +101,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -127,6 +131,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../../../../index.html">
   
@@ -135,10 +141,21 @@
   
   
   
-    <p class="title logo__title">motulator 0.5.0 documentation</p>
+    <p class="title logo__title">motulator 0.6.0 documentation</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
@@ -148,119 +165,125 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vector/index.html">Current-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_pmsyrm_thor.html">5-kW PM-SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_6step_im_2kw.html">2.2-kW induction motor, 6-step mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/obs_vhz/index.html">Observer-Based V/Hz Control</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_syrm_7kw.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/obs_vhz/plot_obs_vhz_ctrl_pmsyrm_thor.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw.html">6.7-kW SyRM, saturated, disturbance estimation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_following/index.html">Grid-Following Control</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../model/common.html">Common</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/sampled_data.html">Sampled-Data Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/space_vectors.html">Space Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/converters.html">Voltage-Source Converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/machines.html">Electric Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/ac_filter.html">Output LC Filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Three-Phase Voltage Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Three-Phase Source</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../control/control_system.html">Common</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/control_system.html">Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/controllers.html">Controllers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html">motulator.common</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../common/control/index.html">motulator.common.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../common/model/index.html">motulator.common.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../common/utils/index.html">motulator.common.utils</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive/index.html">motulator.drive</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../drive/control/index.html">motulator.drive.control</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive/index.html">motulator.drive</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../drive/control/index.html">motulator.drive.control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../drive/control/im/index.html">motulator.drive.control.im</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive/model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
-</li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">motulator.grid</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">motulator.grid</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">motulator.grid.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../model/index.html">motulator.grid.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utils/index.html">motulator.grid.utils</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -276,7 +299,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -285,14 +308,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -385,10 +408,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -396,14 +419,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -428,52 +451,48 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentController"><code class="docutils literal notranslate"><span class="pre">CurrentController</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentLimiter"><code class="docutils literal notranslate"><span class="pre">CurrentLimiter</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentReference"><code class="docutils literal notranslate"><span class="pre">CurrentReference</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentReference.get_current_reference"><code class="docutils literal notranslate"><span class="pre">CurrentReference.get_current_reference()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController.output"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController.compute_output"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController.compute_output()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.ref</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_voltage_ctrl"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.dc_bus_voltage_ctrl</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_electrical_measurements"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_electrical_measurements()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_power_reference"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_power_reference()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_measurement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.set_ac_voltage_ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.set_ac_voltage_ref()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.set_dc_bus_voltage_ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.set_dc_bus_voltage_ref()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.set_power_ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.set_power_ref()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.set_reactive_power_ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.set_reactive_power_ref()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.update"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.current_ctrl"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.current_ctrl</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.pll"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.pll</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.current_reference"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.current_reference</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.output"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.update"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.get_feedback"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.post_process"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControlCfg"><code class="docutils literal notranslate"><span class="pre">GridFollowingControlCfg</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControl"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControl.output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControl.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl.update()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControlCfg"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL"><code class="docutils literal notranslate"><span class="pre">PLL</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.output"><code class="docutils literal notranslate"><span class="pre">PLL.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.compute_output"><code class="docutils literal notranslate"><span class="pre">PLL.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.update"><code class="docutils literal notranslate"><span class="pre">PLL.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.output"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.compute_output"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.get_feedback"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.post_process"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.update"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControlCfg"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControlCfg</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -485,14 +504,14 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="module-motulator.grid.control">
-<span id="motulator-grid-control"></span><h1>motulator.grid.control<a class="headerlink" href="#module-motulator.grid.control" title="Permalink to this heading">#</a></h1>
+<span id="motulator-grid-control"></span><h1>motulator.grid.control<a class="headerlink" href="#module-motulator.grid.control" title="Link to this heading">#</a></h1>
 <p>Controllers for grid-connected converters.</p>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
-<table class="autosummary longtable table autosummary">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.CurrentController" title="motulator.grid.control.CurrentController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentController</span></code></a></p></td>
 <td><p>2DOF PI current controller for grid converters.</p></td>
@@ -500,63 +519,56 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.CurrentLimiter" title="motulator.grid.control.CurrentLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentLimiter</span></code></a></p></td>
 <td><p>Limit the amplitude of the input signal.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.CurrentReference" title="motulator.grid.control.CurrentReference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentReference</span></code></a></p></td>
-<td><p>Current reference generator.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.CurrentVectorController" title="motulator.grid.control.CurrentVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a></p></td>
+<td><p>Current-vector grid-following controller.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a></p></td>
 <td><p>DC-bus voltage PI controller.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p></td>
-<td><p>Base class for control of grid-connected converters.</p></td>
+<td><p>Grid converter control system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.GridFollowingControl" title="motulator.grid.control.GridFollowingControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridFollowingControl</span></code></a></p></td>
-<td><p>Grid-following control.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingController" title="motulator.grid.control.ObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController</span></code></a></p></td>
+<td><p>Disturbance-observer-based grid-forming controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.GridFollowingControlCfg" title="motulator.grid.control.GridFollowingControlCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridFollowingControlCfg</span></code></a></p></td>
-<td><p>Grid-following control configuration.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingControl" title="motulator.grid.control.ObserverBasedGridFormingControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl</span></code></a></p></td>
-<td><p>Disturbance-observer-based grid-forming control.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingControlCfg" title="motulator.grid.control.ObserverBasedGridFormingControlCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControlCfg</span></code></a></p></td>
-<td><p>Disturbance-observer-based grid-forming control configuration.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
 <td><p>Phase-locked loop including the voltage-magnitude filtering.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControl" title="motulator.grid.control.PowerSynchronizationControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControl</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControl" title="motulator.grid.control.PowerSynchronizationControl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControl</span></code></a></p></td>
 <td><p>Reference-feedforward power-synchronization control.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControlCfg" title="motulator.grid.control.PowerSynchronizationControlCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControlCfg</span></code></a></p></td>
-<td><p>Reference-feedforward power-synchronization control configuration.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
 <section id="package-contents">
-<h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading">#</a></h2>
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.CurrentController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#CurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentController" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a></p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#CurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentController" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._controllers.ComplexPIController</span></code></p>
 <p>2DOF PI current controller for grid converters.</p>
-<p>This class provides an interface for a current controller for grid
-converters. The gains are initialized based on the desired closed-loop
-bandwidth and the filter inductance.</p>
+<p>This class provides an interface for a current controller for grid converters. The
+gains are initialized based on the desired closed-loop bandwidth and the filter
+inductance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.GridFollowingControlCfg" title="motulator.grid.control.GridFollowingControlCfg"><em>GridFollowingControlCfg</em></a>) – Control system configuration.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Inductance (H).</p></li>
+<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Current-control bandwidth (rad/s).</p></li>
+<li><p><strong>alpha_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Integral-action bandwidth (rad/s), defaults to <cite>alpha_c</cite>.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.CurrentLimiter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentLimiter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#CurrentLimiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentLimiter" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentLimiter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_controllers.html#CurrentLimiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentLimiter" title="Link to this definition">#</a></dt>
 <dd><p>Limit the amplitude of the input signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>max_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current (A).</p>
+<dd class="field-odd"><p><strong>i_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current (A).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Limited signal.</p>
@@ -568,39 +580,101 @@ bandwidth and the filter inductance.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.control.CurrentReference">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentReference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#CurrentReference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentReference" title="Permalink to this definition">#</a></dt>
-<dd><p>Current reference generator.</p>
-<p>This class generates the current reference based on the active and reactive
-power references. The current limiting algorithm is used to limit the
-current reference.</p>
+<dt class="sig sig-object py" id="motulator.grid.control.CurrentVectorController">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentVectorController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_nom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">sqrt(2</span> <span class="pre">/</span> <span class="pre">3)</span> <span class="pre">*</span> <span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_nom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_pll</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.000125</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#CurrentVectorController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentVectorController" title="Link to this definition">#</a></dt>
+<dd><p>Current-vector grid-following controller.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.GridFollowingControlCfg" title="motulator.grid.control.GridFollowingControlCfg"><em>GridFollowingControlCfg</em></a>) – Control system configuration.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
+<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Filter inductance (H).</p></li>
+<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Current-control bandwidth (rad/s), defaults to 2*pi*400.</p></li>
+<li><p><strong>alpha_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Integral-action bandwidth (rad/s), defaults to <cite>alpha_c</cite>.</p></li>
+<li><p><strong>u_nom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal grid voltage (V), line-to-neutral peak value, defaults to sqrt(2/3)*400.</p></li>
+<li><p><strong>w_nom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal grid angular frequency (rad/s), defaults to 2*pi*50.</p></li>
+<li><p><strong>alpha_pll</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – PLL frequency-tracking bandwidth (rad/s), defaults to 2*pi*20.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.CurrentReference.get_current_reference">
-<span class="sig-name descname"><span class="pre">get_current_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#CurrentReference.get_current_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentReference.get_current_reference" title="Permalink to this definition">#</a></dt>
-<dd><p>Current reference generator.</p>
+<dt class="sig sig-object py" id="motulator.grid.control.CurrentVectorController.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_g_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_g_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#CurrentVectorController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentVectorController.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>q_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<em>PLLOutputSignals</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.CurrentVectorController.get_feedback">
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#CurrentVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentVectorController.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get feedback signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>PLLOutputSignals</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.CurrentVectorController.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#CurrentVectorController.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentVectorController.post_process" title="Link to this definition">#</a></dt>
+<dd><p>Post-process controller signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.CurrentVectorController.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#CurrentVectorController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentVectorController.update" title="Link to this definition">#</a></dt>
+<dd><p>Update states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>fbk</strong> (<em>PLLOutputSignals</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.DCBusVoltageController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DCBusVoltageController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#DCBusVoltageController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DCBusVoltageController" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.PIController</span></code></a></p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DCBusVoltageController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_controllers.html#DCBusVoltageController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DCBusVoltageController" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._controllers.PIController</span></code></p>
 <p>DC-bus voltage PI controller.</p>
-<p>This controller regulates the energy stored in the DC-bus capacitor (scaled
-square of the DC-bus voltage) in order to have a linear closed-loop system
-<a class="footnote-reference brackets" href="#hur2001" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>This controller regulates the energy stored in the DC-bus capacitor (scaled square
+of the DC-bus voltage) in order to have a linear closed-loop system <a class="footnote-reference brackets" href="#hur2001" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>C_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – DC-bus capacitance (F).</p></li>
 <li><p><strong>alpha_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Approximate closed-loop bandwidth (rad/s).</p></li>
-<li><p><strong>max_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Limit for the maximum converter power (W). The default is <cite>inf</cite>.</p></li>
+<li><p><strong>p_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Limit for the maximum converter power (W), defaults to <cite>inf</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -608,21 +682,21 @@ square of the DC-bus voltage) in order to have a linear closed-loop system
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hur2001" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Hur, Jung, Nam, “A fast dynamic DC-link power-balancing
-scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
-2001, <a class="reference external" href="https://doi.org/10.1109/41.937412">https://doi.org/10.1109/41.937412</a></p>
+<p>Hur, Jung, Nam, “A fast dynamic DC-link power-balancing scheme for a
+PWM converter-inverter system,” IEEE Trans. Ind. Electron., 2001,
+<a class="reference external" href="https://doi.org/10.1109/41.937412">https://doi.org/10.1109/41.937412</a></p>
 </aside>
 </aside>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.DCBusVoltageController.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#DCBusVoltageController.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DCBusVoltageController.output" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.control.DCBusVoltageController.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_controllers.html#DCBusVoltageController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DCBusVoltageController.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute the controller output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref_y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Reference signal.</p></li>
+<li><p><strong>y_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Reference signal.</p></li>
 <li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Feedback signal.</p></li>
-<li><p><strong>u_ff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Feedforward signal. The default is 0.</p></li>
+<li><p><strong>u_ff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Feedforward signal, defaults to 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -638,324 +712,316 @@ scheme for a PWM converter-inverter system,” IEEE Trans. Ind. Electron.,
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
-<p>Base class for control of grid-connected converters.</p>
-<p>This base class provides typical functionalities for control of
-grid-connected converters. This can be used both in power control and
-DC-bus voltage control modes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Sampling period (s).</p>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.ref">
-<span class="sig-name descname"><span class="pre">ref</span></span><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.ref" title="Permalink to this definition">#</a></dt>
-<dd><p>References, possibly containing the following fields:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>v<span class="classifier">float | callable</span></dt><dd><p>Converter output voltage reference (V). Can be given either as
-a constant or a function of time (s).</p>
-</dd>
-<dt>p_g<span class="classifier">callable</span></dt><dd><p>Active power reference (W) as a function of time (s). This
-signal is needed in power control mode.</p>
-</dd>
-<dt>q_g<span class="classifier">callable</span></dt><dd><p>Reactive power reference (VAr) as a function of time (s). This
-signal is needed if grid-following control is used.</p>
-</dd>
-<dt>u_dc<span class="classifier">callable</span></dt><dd><p>DC-voltage reference (V) as a function of time (s). This signal
-is needed in DC-bus voltage control mode.</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>SimpleNamespace</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.dc_bus_voltage_ctrl">
-<span class="sig-name descname"><span class="pre">dc_bus_voltage_ctrl</span></span><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_voltage_ctrl" title="Permalink to this definition">#</a></dt>
-<dd><p>DC-bus voltage controller. The default is None.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController">DCBusVoltageController</a> | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.get_electrical_measurements">
-<span class="sig-name descname"><span class="pre">get_electrical_measurements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem.get_electrical_measurements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.get_electrical_measurements" title="Permalink to this definition">#</a></dt>
-<dd><p>Measure the currents and voltages.</p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus_voltage_ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._base.ControlSystem</span></code></p>
+<p>Grid converter control system.</p>
+<p>This class defines the interface for control systems of grid converters. It is a
+generic class that can be used with different models, measurements, feedback
+signals, and reference signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fbk</strong> (<em>SimpleNamespace</em>) – Measured signals are added to this object.</p></li>
-<li><p><strong>mdl</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a>) – Continuous-time system model.</p></li>
+<li><p><strong>inner_ctrl</strong> (<em>GridFormingController</em><em> | </em><em>GridFollowingController</em>) – Inner controller.</p></li>
+<li><p><strong>dc_bus_voltage_ctrl</strong> (<a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><em>DCBusVoltageController</em></a><em>, </em><em>optional</em>) – DC-bus voltage controller. If not given, power-control mode is used.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p><strong>fbk</strong> –</p>
-<p>Measured signals, containing the following fields:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>u_dc<span class="classifier">float</span></dt><dd><p>DC-bus voltage (V).</p>
-</dd>
-<dt>i_cs<span class="classifier">complex</span></dt><dd><p>Converter current (A) in stationary coordinates.</p>
-</dd>
-<dt>u_cs<span class="classifier">complex</span></dt><dd><p>Realized converter output voltage (V) in stationary
-coordinates. This signal is obtained from the PWM.</p>
-</dd>
 </dl>
-</div></blockquote>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>SimpleNamespace</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.get_feedback_signals">
-<span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.get_feedback_signals" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the feedback signals.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.get_power_reference">
-<span class="sig-name descname"><span class="pre">get_power_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem.get_power_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.get_power_reference" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the active power reference in DC bus voltage control mode.</p>
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute controller outputs based on feedback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fbk</strong> (<em>SimpleNamespace</em>) – Feedback signals.</p></li>
-<li><p><strong>ref</strong> (<em>SimpleNamespace</em>) – Reference signals, containing the digital time <cite>t</cite>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p><strong>ref</strong> –</p>
-<p>Reference signals, containing some of the following fields:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>u_dc<span class="classifier">float</span></dt><dd><p>DC-bus voltage reference (V).</p>
-</dd>
-<dt>p_g<span class="classifier">float</span></dt><dd><p>Active power reference (W).</p>
-</dd>
-<dt>q_g<span class="classifier">float</span></dt><dd><p>Reactive power reference (VAr).</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>References</p>
 </dd>
 </dl>
-</div></blockquote>
-</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.get_feedback">
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get feedback signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>meas</strong> (<em>Measurements</em>)</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Feedbacks</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.get_measurement">
+<span class="sig-name descname"><span class="pre">get_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.get_measurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.get_measurement" title="Link to this definition">#</a></dt>
+<dd><p>Get measurements from sensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mdl</strong> (<a class="reference internal" href="../model/index.html#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><em>motulator.grid.model.GridConverterSystem</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Measurements</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.post_process" title="Link to this definition">#</a></dt>
+<dd><p>Extend the post-process method.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>SimpleNamespace</p>
+<dd class="field-odd"><p>motulator.common.control._base.TimeSeries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.set_ac_voltage_ref">
+<span class="sig-name descname"><span class="pre">set_ac_voltage_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_fcn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.set_ac_voltage_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.set_ac_voltage_ref" title="Link to this definition">#</a></dt>
+<dd><p>Set the external ac voltage reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ref_fcn</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – AC-side converter voltage reference (V), constant or a function of time.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.set_dc_bus_voltage_ref">
+<span class="sig-name descname"><span class="pre">set_dc_bus_voltage_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_fcn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.set_dc_bus_voltage_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.set_dc_bus_voltage_ref" title="Link to this definition">#</a></dt>
+<dd><p>Set the external DC-bus voltage reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ref_fcn</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – DC-bus voltage reference (V), constant or a function of time.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.set_power_ref">
+<span class="sig-name descname"><span class="pre">set_power_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_fcn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.set_power_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.set_power_ref" title="Link to this definition">#</a></dt>
+<dd><p>Set the external active power reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ref_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – Active power reference (W), constant or a function of time.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.set_reactive_power_ref">
+<span class="sig-name descname"><span class="pre">set_reactive_power_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_fcn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.set_reactive_power_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.set_reactive_power_ref" title="Link to this definition">#</a></dt>
+<dd><p>Set the external reactive power reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ref_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Power reference (VAr), constant or a function of time.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#GridConverterControlSystem.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Extend the base class method.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.control.GridFollowingControl">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridFollowingControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GridFollowingControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridFollowingControl" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p>
-<p>Grid-following control.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.GridFollowingControlCfg" title="motulator.grid.control.GridFollowingControlCfg"><em>GridFollowingControlCfg</em></a>) – Control system configuration.</p>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.grid.control.GridFollowingControl.current_ctrl">
-<span class="sig-name descname"><span class="pre">current_ctrl</span></span><a class="headerlink" href="#motulator.grid.control.GridFollowingControl.current_ctrl" title="Permalink to this definition">#</a></dt>
-<dd><p>Current controller.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.control.CurrentController" title="motulator.grid.control.CurrentController">CurrentController</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.grid.control.GridFollowingControl.pll">
-<span class="sig-name descname"><span class="pre">pll</span></span><a class="headerlink" href="#motulator.grid.control.GridFollowingControl.pll" title="Permalink to this definition">#</a></dt>
-<dd><p>Phase-locked loop.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL">PLL</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.grid.control.GridFollowingControl.current_reference">
-<span class="sig-name descname"><span class="pre">current_reference</span></span><a class="headerlink" href="#motulator.grid.control.GridFollowingControl.current_reference" title="Permalink to this definition">#</a></dt>
-<dd><p>Current reference generator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.control.CurrentReference" title="motulator.grid.control.CurrentReference">CurrentReference</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.GridFollowingControl.get_feedback_signals">
-<span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GridFollowingControl.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridFollowingControl.get_feedback_signals" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the feedback signals.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.GridFollowingControl.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GridFollowingControl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridFollowingControl.output" title="Permalink to this definition">#</a></dt>
-<dd><p>Extend the base class method.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.GridFollowingControl.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GridFollowingControl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridFollowingControl.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Extend the base class method.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.control.GridFollowingControlCfg">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridFollowingControlCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_grid_following.html#GridFollowingControlCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridFollowingControlCfg" title="Permalink to this definition">#</a></dt>
-<dd><p>Grid-following control configuration.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem.update" title="Link to this definition">#</a></dt>
+<dd><p>Update controller states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Inductance (H).</p></li>
-<li><p><strong>nom_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
-<li><p><strong>nom_w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid angular frequency (rad/s).</p></li>
-<li><p><strong>max_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
-<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Current-control bandwidth (rad/s). The default is 2*pi*400.</p></li>
-<li><p><strong>alpha_pll</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – PLL frequency-tracking bandwidth (rad/s). The default is 2*pi*20.</p></li>
+<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingControl">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGridFormingControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGridFormingControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingControl" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p>
-<p>Disturbance-observer-based grid-forming control.</p>
-<p>This implements the RFPSC-type grid-forming mode of the control method
-described in <a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Transparent current control is also implemented.</p>
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingController">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGridFormingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_nom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">sqrt(2</span> <span class="pre">/</span> <span class="pre">3)</span> <span class="pre">*</span> <span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_nom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.000125</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer.html#ObserverBasedGridFormingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingController" title="Link to this definition">#</a></dt>
+<dd><p>Disturbance-observer-based grid-forming controller.</p>
+<p>This implements the RFPSC-type grid-forming mode of the control method described in
+<a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Transparent current control is also implemented.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingControlCfg" title="motulator.grid.control.ObserverBasedGridFormingControlCfg"><em>ObserverBasedGridFormingControlCfg</em></a>) – Control system configuration parameters.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
+<li><p><strong>R_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Active resistance (Ω), defaults to <cite>0.25*u_nom/i_max</cite>.</p></li>
+<li><p><strong>k_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage control gain, defaults to <cite>alpha_o/w_nom</cite>.</p></li>
+<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Current control bandwidth (rad/s), defaults to 2*pi*400.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
+<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>u_nom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>w_nom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>In this implementation, the control system operates in synchronous
-coordinates rotating at the nominal grid angular frequency, which is worth
-noticing when plotting the results. For other implementation options, see
-<a class="footnote-reference brackets" href="#nur2024" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>In this implementation, the control system operates in synchronous coordinates
+rotating at the nominal grid angular frequency. For other implementation options,
+see <a class="footnote-reference brackets" href="#nur2024" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="nur2024" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id3">2</a>)</span>
-<p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional
-grid-forming converter control based on a disturbance observer, “IEEE
-Trans. Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
+<p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming
+converter control based on a disturbance observer,” IEEE Trans. Power Electron.,
+2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
 </aside>
 </aside>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingControl.get_feedback_signals">
-<span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGridFormingControl.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingControl.get_feedback_signals" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the feedback signals.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingControl.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGridFormingControl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingControl.output" title="Permalink to this definition">#</a></dt>
-<dd><p>Extend the base class method.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingControl.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGridFormingControl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingControl.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Extend the base class method.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingControlCfg">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGridFormingControlCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_observer_gfm.html#ObserverBasedGridFormingControlCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingControlCfg" title="Permalink to this definition">#</a></dt>
-<dd><p>Disturbance-observer-based grid-forming control configuration.</p>
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingController.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_g_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_c_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer.html#ObserverBasedGridFormingController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingController.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute references.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Total inductance.</p></li>
-<li><p><strong>nom_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
-<li><p><strong>nom_w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid angular frequency (rad/s).</p></li>
-<li><p><strong>max_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
-<li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Total series resistance (Ω). The default is 0.</p></li>
-<li><p><strong>R_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*nom_u/max_i.</p></li>
-<li><p><strong>k_v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage control gain. The default is <cite>alpha_o/nom_w</cite>.</p></li>
-<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Current control bandwidth (rad/s). The default is 2*pi*400.</p></li>
-<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Observer gain (rad/s). The default is 2*pi*50.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
+<li><p><strong>p_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>v_c_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="../../drive/control/sm/index.html#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>References</p>
+</dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingController.get_feedback">
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer.html#ObserverBasedGridFormingController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingController.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get the feedback signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../drive/control/sm/index.html#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs">ObserverOutputs</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingController.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer.html#ObserverBasedGridFormingController.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingController.post_process" title="Link to this definition">#</a></dt>
+<dd><p>Post-process controller time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverBasedGridFormingController.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer.html#ObserverBasedGridFormingController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingController.update" title="Link to this definition">#</a></dt>
+<dd><p>Update states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="../../drive/control/sm/index.html#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.PLL">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_pll</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abs_u_g0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_g0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_c0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#PLL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_pll</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#PLL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL" title="Link to this definition">#</a></dt>
 <dd><p>Phase-locked loop including the voltage-magnitude filtering.</p>
-<p>This class provides a simple frequency-tracking phase-locked loop. The
-magnitude of the measured PCC voltage is also filtered.</p>
+<p>This class provides a simple frequency-tracking phase-locked loop. The magnitude of
+the measured PCC voltage is also filtered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>alpha_pll</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Frequency-tracking bandwidth (rad/s).</p></li>
-<li><p><strong>abs_u_g0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Initial value for the grid voltage estimate (V).</p></li>
-<li><p><strong>w_g0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Initial value for the grid angular frequency estimate (rad/s).</p></li>
+<li><p><strong>u_nom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
+<li><p><strong>w_nom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid angular frequency (rad/s).</p></li>
+<li><p><strong>alpha_pll</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – PLL frequency-tracking bandwidth (rad/s).</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.PLL.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#PLL.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL.output" title="Permalink to this definition">#</a></dt>
-<dd><p>Output the estimates and coordinate transformed quantities.</p>
+<dt class="sig sig-object py" id="motulator.grid.control.PLL.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#PLL.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Output estimates and coordinate transformed quantities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p></li>
+<li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>PLLOutputSignals</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.control.PLL.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#PLL.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Update the integral states.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#PLL.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLL.update" title="Link to this definition">#</a></dt>
+<dd><p>Update integral states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>out</strong> (<em>PLLOutputSignals</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationControl">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PowerSynchronizationControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#PowerSynchronizationControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p>
-<p>Reference-feedforward power-synchronization control.</p>
-<p>This implements the reference-feedforward power-synchronization control
-method <a class="footnote-reference brackets" href="#har2020" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PowerSynchronizationControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.000125</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_psc.html#PowerSynchronizationControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl" title="Link to this definition">#</a></dt>
+<dd><p>Reference-feedforward power-synchronization control.</p>
+<p>This implements the reference-feedforward power-synchronization control <a class="footnote-reference brackets" href="#har2020" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<em>PSCControlCfg</em>) – Model and controller configuration parameters.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_nom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
+<li><p><strong>w_nom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid angular frequency (rad/s).</p></li>
+<li><p><strong>i_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
+<li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Total series resistance (Ω), defaults to 0.</p></li>
+<li><p><strong>R_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Active resistance (Ω), defaults to 0.25*u_nom/i_max.</p></li>
+<li><p><strong>w_b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">References</p>
@@ -968,42 +1034,68 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 </aside>
 </aside>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationControl.get_feedback_signals">
-<span class="sig-name descname"><span class="pre">get_feedback_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#PowerSynchronizationControl.get_feedback_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl.get_feedback_signals" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the feedback signals.</p>
+<dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationControl.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_g_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_c_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_psc.html#PowerSynchronizationControl.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>v_c_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>References</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationControl.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#PowerSynchronizationControl.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl.output" title="Permalink to this definition">#</a></dt>
-<dd><p>Extend the base class method.</p>
+<dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationControl.get_feedback">
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_psc.html#PowerSynchronizationControl.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get the feedback signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Feedbacks</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationControl.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_psc.html#PowerSynchronizationControl.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl.post_process" title="Link to this definition">#</a></dt>
+<dd><p>Post-process controller time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationControl.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#PowerSynchronizationControl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Extend the base class method.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationControlCfg">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PowerSynchronizationControlCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_power_synchronization.html#PowerSynchronizationControlCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControlCfg" title="Permalink to this definition">#</a></dt>
-<dd><p>Reference-feedforward power-synchronization control configuration.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_psc.html#PowerSynchronizationControl.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationControl.update" title="Link to this definition">#</a></dt>
+<dd><p>Update states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nom_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid voltage (V), line-to-neutral peak value.</p></li>
-<li><p><strong>nom_w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Nominal grid angular frequency (rad/s).</p></li>
-<li><p><strong>max_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
-<li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Total series resistance (Ω). The default is 0.</p></li>
-<li><p><strong>R_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Active resistance (Ω). The default is 0.25*nom_u/max_i.</p></li>
-<li><p><strong>w_b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Low-pass filter bandwidth (rad/s). The default is 2*pi*5.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s). The default is 100e-6.</p></li>
+<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
 </ul>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
 </dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1017,7 +1109,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -1047,6 +1139,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
@@ -1057,52 +1150,48 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentController"><code class="docutils literal notranslate"><span class="pre">CurrentController</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentLimiter"><code class="docutils literal notranslate"><span class="pre">CurrentLimiter</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentReference"><code class="docutils literal notranslate"><span class="pre">CurrentReference</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentReference.get_current_reference"><code class="docutils literal notranslate"><span class="pre">CurrentReference.get_current_reference()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController.output"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController.compute_output"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController.compute_output()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.ref</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.dc_bus_voltage_ctrl"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.dc_bus_voltage_ctrl</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_electrical_measurements"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_electrical_measurements()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_power_reference"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_power_reference()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_measurement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.set_ac_voltage_ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.set_ac_voltage_ref()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.set_dc_bus_voltage_ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.set_dc_bus_voltage_ref()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.set_power_ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.set_power_ref()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.set_reactive_power_ref"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.set_reactive_power_ref()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.update"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.current_ctrl"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.current_ctrl</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.pll"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.pll</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.current_reference"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.current_reference</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.output"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControl.update"><code class="docutils literal notranslate"><span class="pre">GridFollowingControl.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.get_feedback"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.post_process"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridFollowingControlCfg"><code class="docutils literal notranslate"><span class="pre">GridFollowingControlCfg</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControl"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControl.output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl.output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControl.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControl.update()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControlCfg"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControlCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL"><code class="docutils literal notranslate"><span class="pre">PLL</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.output"><code class="docutils literal notranslate"><span class="pre">PLL.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.compute_output"><code class="docutils literal notranslate"><span class="pre">PLL.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.update"><code class="docutils literal notranslate"><span class="pre">PLL.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.get_feedback_signals"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.get_feedback_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.output"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.compute_output"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.get_feedback"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.post_process"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControl.update"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControl.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControlCfg"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControlCfg</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1129,7 +1218,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2024, Aalto Electric Drives.
+      © Copyright 2025, Aalto Electric Drives.
       <br/>
     
   </p>
@@ -1153,8 +1242,8 @@ By Aalto Electric Drives
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

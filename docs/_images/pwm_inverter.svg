@@ -4,7 +4,7 @@
    height="170"
    id="svg3470"
    sodipodi:version="0.32"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
    sodipodi:docname="pwm_inverter.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
@@ -28,8 +28,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.2195994"
-     inkscape:cx="201.11198"
-     inkscape:cy="35.252833"
+     inkscape:cx="200.95668"
+     inkscape:cy="35.097534"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="true"
@@ -38,7 +38,7 @@
      inkscape:object-points="false"
      inkscape:grid-bbox="false"
      inkscape:window-width="2560"
-     inkscape:window-height="1403"
+     inkscape:window-height="1371"
      inkscape:window-x="0"
      inkscape:window-y="0"
      width="349.29px"
@@ -1440,7 +1440,7 @@
        height="80"
        width="100"
        id="rect9001"
-       style="display:inline;fill:#ecebeb;fill-opacity:1;stroke:none" />
+       style="display:inline;fill:#cfcfcf;fill-opacity:1;stroke:none" />
     <path
        inkscape:connector-curvature="0"
        inkscape:export-ydpi="300"

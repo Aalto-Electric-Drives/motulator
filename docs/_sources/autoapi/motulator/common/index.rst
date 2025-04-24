@@ -6,7 +6,7 @@ motulator.common
 .. autoapi-nested-parse::
 
    
-   Common functions and classes.
+   Common model package.
 
 
 

@@ -10,4 +10,5 @@ Design notes for selected control methods for machine drives are provided in thi
 
    speed_ctrl
    current_ctrl
+   flux_vector_ctrl
    Observers <observers>

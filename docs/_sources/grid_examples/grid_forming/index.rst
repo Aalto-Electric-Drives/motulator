@@ -40,7 +40,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a converter using disturbance-observer-based control in grid-forming mode. The converter output voltage and the active power are directly controlled, and grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a converter using disturbance-observer-based control in grid- forming mode. The converter output voltage and the active power are directly controlled, and grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation.">
 
 .. only:: html
 

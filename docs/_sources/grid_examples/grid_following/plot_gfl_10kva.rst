@@ -21,20 +21,15 @@
 10-kVA converter
 ================
 
-This example simulates a grid-following-controlled converter connected to an L
-filter and a strong grid. The control system includes a phase-locked loop (PLL)
-to synchronize with the grid, a current reference generator, and a PI-based
-current controller.
+This example simulates a grid-following-controlled converter connected to an L filter
+and a strong grid. The control system includes a phase-locked loop (PLL) to synchronize
+with the grid, a current reference generator, and a PI-based current controller.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-19
+.. GENERATED FROM PYTHON SOURCE LINES 12-14
 
 .. code-block:: Python
 
-    from motulator.grid import model, control
-    from motulator.grid.utils import (
-        BaseValues, ACFilterPars, NominalValues, plot)
-    # from motulator.grid.utils import plot_voltage_vector
-    # import numpy as np
+    from motulator.grid import control, model, utils
 
 
 
@@ -43,17 +38,17 @@ current controller.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-25
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: Python
 
 
-    nom = NominalValues(U=400, I=14.5, f=50, P=10e3)
-    base = BaseValues.from_nominal(nom)
+    nom = utils.NominalValues(U=400, I=14.5, f=50, P=10e3)
+    base = utils.BaseValues.from_nominal(nom)
 
 
 
@@ -62,25 +57,20 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-39
+.. GENERATED FROM PYTHON SOURCE LINES 22-29
 
 .. code-block:: Python
 
 
     # Filter and grid
-    par = ACFilterPars(L_fc=.2*base.L)
-    ac_filter = model.ACFilter(par)
-    ac_source = model.ThreePhaseVoltageSource(w_g=base.w, abs_e_g=base.u)
-    # Inverter with constant DC voltage
+    ac_filter = model.LFilter(L_f=0.2 * base.L)
+    ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
     converter = model.VoltageSourceConverter(u_dc=650)
-
-    # Create system model
     mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
-    # mdl.pwm = model.CarrierComparison()  # Uncomment to enable the PWM model
 
 
 
@@ -89,18 +79,17 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-46
+.. GENERATED FROM PYTHON SOURCE LINES 31-35
 
 .. code-block:: Python
 
 
-    cfg = control.GridFollowingControlCfg(
-        L=.2*base.L, nom_u=base.u, nom_w=base.w, max_i=1.5*base.i)
-    ctrl = control.GridFollowingControl(cfg)
+    inner_ctrl = control.CurrentVectorController(i_max=1.5 * base.i, L=0.2 * base.L)
+    ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
 
@@ -109,23 +98,24 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-58
+.. GENERATED FROM PYTHON SOURCE LINES 37-48
 
 .. code-block:: Python
 
 
     # Set the active and reactive power references
-    ctrl.ref.p_g = lambda t: (t > .02)*5e3
-    ctrl.ref.q_g = lambda t: (t > .04)*4e3
+    ctrl.set_power_ref(lambda t: (t > 0.02) * 5e3)
+    ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 
     # Uncomment lines below to simulate an unbalanced fault (add negative sequence)
-    # mdl.ac_source.par.abs_e_g = .75*base.u
-    # mdl.ac_source.par.abs_e_g_neg = .25*base.u
-    # mdl.ac_source.par.phi_neg = -np.pi/3
+    # from math import pi
+    # mdl.ac_source.e_g = 0.75 * base.u
+    # mdl.ac_source.e_g_neg = 0.25 * base.u
+    # mdl.ac_source.phi_neg = -pi / 3
 
 
 
@@ -134,40 +124,21 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
-Create the simulation object and simulate it.
+Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-64
+.. GENERATED FROM PYTHON SOURCE LINES 50-57
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    sim.simulate(t_stop=.1)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
-
-Plot the results.
-
-.. GENERATED FROM PYTHON SOURCE LINES 66-73
-
-.. code-block:: Python
-
-
-    # By default results are plotted in per-unit values. By omitting the argument
-    # `base` you can plot the results in SI units.
+    res = sim.simulate(t_stop=0.08)
+    utils.plot(res, base, plot_pcc_voltage=False)
 
     # Uncomment line below to plot locus of the grid voltage space vector
-    # plot_voltage_vector(sim, base)
-    plot(sim, base, plot_pcc_voltage=False)
+    # utils.plot_voltage_vector(res, base)
 
 
 
@@ -195,7 +166,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.240 seconds)
+   **Total running time of the script:** (0 minutes 1.017 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_10kva.py:

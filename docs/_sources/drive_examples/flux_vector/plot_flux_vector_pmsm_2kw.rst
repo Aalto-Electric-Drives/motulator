@@ -23,15 +23,14 @@
 
 This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-15
+.. GENERATED FROM PYTHON SOURCE LINES 10-15
 
 .. code-block:: Python
 
+    from math import pi
 
-    from motulator.drive import model
     import motulator.drive.control.sm as control
-    from motulator.drive.utils import (
-        BaseValues, NominalValues, plot, SynchronousMachinePars)
+    from motulator.drive import model, utils
 
 
 
@@ -49,8 +48,8 @@ Compute base values based on the nominal values (just for figures).
 .. code-block:: Python
 
 
-    nom = NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
-    base = BaseValues.from_nominal(nom, n_p=2)
+    nom = utils.NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
+    base = utils.BaseValues.from_nominal(nom, n_p=3)
 
 
 
@@ -63,17 +62,16 @@ Compute base values based on the nominal values (just for figures).
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-31
+.. GENERATED FROM PYTHON SOURCE LINES 23-30
 
 .. code-block:: Python
 
 
-    mdl_par = SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=.036, L_q=.051, psi_f=.545)
-    machine = model.SynchronousMachine(mdl_par)
-    mechanics = model.StiffMechanicalSystem(J=.015)
+    par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545)
+    machine = model.SynchronousMachine(par)
+    mechanics = model.MechanicalSystem(J=0.015)
     converter = model.VoltageSourceConverter(u_dc=540)
-    mdl = model.Drive(converter, machine, mechanics)
+    mdl = model.Drive(machine, mechanics, converter)
 
 
 
@@ -82,18 +80,20 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-38
+.. GENERATED FROM PYTHON SOURCE LINES 32-39
 
 .. code-block:: Python
 
 
-    par = mdl_par  # Assume accurate machine model parameter estimates
-    cfg = control.FluxTorqueReferenceCfg(par, max_i_s=1.5*base.i, k_u=.9)
-    ctrl = control.FluxVectorControl(par, cfg, J=.015, T_s=250e-6, sensorless=True)
+    est_par = par  # Assume accurate model parameter estimates
+    cfg = control.FluxVectorControllerCfg(i_s_max=1.5 * base.i)
+    vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+    speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
+    ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 
 
@@ -102,20 +102,17 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-47
+.. GENERATED FROM PYTHON SOURCE LINES 41-45
 
 .. code-block:: Python
 
 
-    # Speed reference (electrical rad/s)
-    ctrl.ref.w_m = lambda t: (t > .2)*2*base.w
-
-    # Load torque step
-    mdl.mechanics.tau_L = lambda t: (t > .8)*nom.tau*.7
+    ctrl.set_speed_ref(lambda t: (t > 0.2) * 2 * base.w_M)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
 
 
 
@@ -124,35 +121,18 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
-Create the simulation object and simulate it.
+Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-53
+.. GENERATED FROM PYTHON SOURCE LINES 47-51
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    sim.simulate(t_stop=1.6)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
-
-Plot results in per-unit values.
-
-.. GENERATED FROM PYTHON SOURCE LINES 55-57
-
-.. code-block:: Python
-
-
-    plot(sim, base)
+    res = sim.simulate(t_stop=1.6)
+    utils.plot(res, base)
 
 
 
@@ -168,7 +148,7 @@ Plot results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.175 seconds)
+   **Total running time of the script:** (0 minutes 9.107 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_flux_vector_pmsm_2kw.py:
