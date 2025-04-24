@@ -6,7 +6,7 @@ An observer is commonly used to estimate the state of an electrical machine. In 
 Induction Machines
 ------------------
 
-In the following, reduced-order observer designs for the induction machine are considered [#Ver1988]_, [#Har2001]_, [#Hin2010]_. Both sensored and sensorless observer variants are available in the :class:`motulator.drive.control.im.Observer` class. Similar design principles are applied to synchronous machines as well.
+In the following, reduced-order observer designs for the induction machine are considered [#Ver1988]_, [#Har2001]_, [#Hin2010]_. Both sensored and sensorless observer variants are available, see the :class:`motulator.drive.control.im.FluxObserver` and :class:`motulator.drive.control.im.SpeedFluxObserver` classes. Similar design principles are applied to synchronous machines as well.
 
 Machine Model
 ^^^^^^^^^^^^^
@@ -74,7 +74,7 @@ The flux magnitude dynamics are
     = \mathrm{Re}\{ \hat{\boldsymbol{v}}_\mathrm{s} + \boldsymbol{k}_1(\hat{\boldsymbol{v}} - \hat{\boldsymbol{v}}_\mathrm{s}) + \boldsymbol{k}_2(\hat{\boldsymbol{v}} - \hat{\boldsymbol{v}}_\mathrm{s})^* \}
     :label: dhatpsiR_abs
 
-Notice that the right-hand side of :eq:`hatws` is independent of :math:`\omega_\mathrm{s}`. Furthermore, in these coordinates, the condition :eq:`inherently` for an inherently sensorless observer reduces to :math:`\boldsymbol{k}_2 = \boldsymbol{k}_1`. This observer structure is implemented in the :class:`motulator.drive.control.im.Observer`, where simple forward-Euler discretization is used.
+Notice that the right-hand side of :eq:`hatws` is independent of :math:`\omega_\mathrm{s}`. Furthermore, in these coordinates, the condition :eq:`inherently` for an inherently sensorless observer reduces to :math:`\boldsymbol{k}_2 = \boldsymbol{k}_1`. This observer structure is implemented in the :class:`motulator.drive.control.im.FluxObserver`, where simple forward-Euler discretization is used.
 
 Gain Selection
 ^^^^^^^^^^^^^^
@@ -148,8 +148,7 @@ which results in the characteristic polynomial :math:`D(s)=s^2 + 2\sigma s + \om
 Synchronous Machines
 --------------------
 
-In sensorless control of synchronous machine drives, the rotor position and speed estimates are needed [#Jon1989]_, [#Cap2001]_, [#Hin2018]_. As a side product, the stator flux linkage is also estimated. In the following, an observer design available in the :class:`motulator.drive.control.sm.Observer` class is considered, which is based on [#Hin2018]_. This observer implementation also includes a sensored mode.
-
+In sensorless control of synchronous machine drives, the rotor position and speed estimates are needed [#Jon1989]_, [#Cap2001]_, [#Hin2018]_. As a side product, the stator flux linkage is also estimated. In the following, an observer design available in the :class:`motulator.drive.control.sm.FluxObserver` and :class:`motulator.drive.control.sm.SpeedFluxObserver` classes is considered, which is based on [#Hin2018]_. This observer implementation also includes a sensored mode. The implementation takes the magnetic saturation into account, but, for simplicity, the following equations are given assuming linear magnetics.
 
 Machine Model in General Coordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -197,7 +196,7 @@ In the sensored mode, :math:`\omega_\mathrm{s} = \omega_\mathrm{m}` is used. In 
     \frac{\mathrm{d}\hat{\vartheta}_\mathrm{m}}{\mathrm{d} t} &= \hat{\omega}_\mathrm{m} + \mathrm{Im}\{\boldsymbol{k}_\mathrm{p} \boldsymbol{e}\} = \omega_\mathrm{s}
     :label: sm_speed_pos_observer
 
-where :math:`\boldsymbol{k}_\mathrm{i}` and :math:`\boldsymbol{k}_\mathrm{p}` are complex gains. This observer structure is used in the :class:`motulator.drive.control.sm.Observer` class.
+where :math:`\boldsymbol{k}_\mathrm{i}` and :math:`\boldsymbol{k}_\mathrm{p}` are complex gains. This observer structure is used in the :class:`motulator.drive.control.sm.FluxObserver` class.
 
 .. note::
     Real-valued column vectors and the corresponding :math:`2\times 2` gain matrix were used in [#Hin2018]_. The complex form in :eq:`sm_flux_observer` has the same degrees of freedom.
@@ -218,12 +217,12 @@ In the sensored case, the gain :math:`\boldsymbol{k}_2=0` can be set in :eq:`sm_
     \frac{\mathrm{d} \Delta\tilde{\boldsymbol{\psi}}_\mathrm{s}}{\mathrm{d} t} = -(\boldsymbol{k}_1 + \mathrm{j}\omega_\mathrm{m0})\Delta\tilde{\boldsymbol{\psi}}_\mathrm{s}
     :label: dtildepsis_sensored
 
-where :math:`\tilde{\boldsymbol{\psi}}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s} - \hat{\boldsymbol{\psi}}_\mathrm{s}` is the estimation error, :math:`\Delta` marks the small-signal quantities, and the subscript 0 marks the operating-point quantities. It can be seen that the pole can be arbitrarily placed via the gain :math:`\boldsymbol{k}_1`. Well-damped estimation-error dynamics can be obtained simply by using a real gain, :math:`\boldsymbol{k}_1 = \sigma`, resulting in the pole at :math:`s = -\sigma - \mathrm{j}\omega_\mathrm{m0}`, where :math:`\sigma = 2\pi \cdot 15` rad/s is used as the default value in :class:`motulator.drive.control.sm.Observer`.
+where :math:`\tilde{\boldsymbol{\psi}}_\mathrm{s} = \boldsymbol{\psi}_\mathrm{s} - \hat{\boldsymbol{\psi}}_\mathrm{s}` is the estimation error, :math:`\Delta` marks the small-signal quantities, and the subscript 0 marks the operating-point quantities. It can be seen that the pole can be arbitrarily placed via the gain :math:`\boldsymbol{k}_1`. Well-damped estimation-error dynamics can be obtained simply by using a real gain, :math:`\boldsymbol{k}_1 = \sigma`, resulting in the pole at :math:`s = -\sigma - \mathrm{j}\omega_\mathrm{m0}`, where :math:`\sigma = 2\pi \cdot 15` rad/s is used as the default value in :class:`motulator.drive.control.sm.FluxObserver`.
 
 Sensorless Case
 """""""""""""""
 
-The analysis of the sensorless case is more complicated. Here, the main results are summarized using the complex notation. The following results can be derived from the linearized form of :eq:`sm` -- :eq:`sm_speed_pos_observer`, see further details in [#Hin2018]_
+The analysis of the sensorless case is more complicated. Here, the main results are summarized using the complex notation. The following results can be derived from the linearized form of :eq:`sm` -- :eq:`sm_speed_pos_observer`, see further details in [#Hin2018]_.
 
 To decouple the flux estimation from the rotor angle, the gains of :eq:`sm_flux_observer` have to be of the form
 

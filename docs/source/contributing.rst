@@ -4,17 +4,17 @@ Contributing
 Style Guide
 -----------
 
-We follow the `Style Guide for Python Code PEP8 <https://peps.python.org/pep-0008/>`_. Furthermore, we use the `YAPF Python code formatter <https://github.com/google/yapf>`_, configured based on the PEP8 conventions in the ``pyproject.toml`` file. Public methods and classes should have proper `docstrings <https://peps.python.org/pep-0257/>`_, formatted according to the `NumPy docstring guide <https://numpydoc.readthedocs.io/en/latest/format.html>`_.
+We follow the `Style Guide for Python Code PEP8 <https://peps.python.org/pep-0008/>`_. Furthermore, we use the `Ruff code formatter <https://github.com/astral-sh/ruff>`_ and `Pyright static type checker <https://github.com/microsoft/pyright>`_, both configured in the `pyproject.toml <https://github.com/Aalto-Electric-Drives/motulator/blob/main/pyproject.toml>`_ file.
+Public methods and classes should have proper `docstrings <https://peps.python.org/pep-0257/>`_, formatted according to the `NumPy docstring guide <https://numpydoc.readthedocs.io/en/latest/format.html>`_.
 
-`Sphinx <https://www.sphinx-doc.org>`_ is used to auto-generate documentation. We use `Sphinx-Gallery <https://sphinx-gallery.github.io/stable/index.html>`_ to automatically generate the `examples <https://aalto-electric-drives.github.io/motulator/drive_examples/index.html>`_ from the scripts in the ``examples`` folder. The format of the example scripts is essential for their proper rendering in the documentation (see the existing example scripts).
+`Sphinx <https://www.sphinx-doc.org>`_ is used to auto-generate documentation. We use `Sphinx-Gallery <https://sphinx-gallery.github.io/stable/index.html>`_ to automatically generate the :ref:`examples` from the scripts in the `examples <https://github.com/Aalto-Electric-Drives/motulator/tree/main/examples>`_ folder. The format of the example scripts is essential for their proper rendering in the documentation (see the existing example scripts).
 
 Install Optional Dependencies
 -----------------------------
 
-We recommend to install the ``dev`` dependencies (see also :doc:`/installation`). To enable YAPF in VS Code, you can install the `YAPF extension <https://marketplace.visualstudio.com/items?itemName=eeyore.yapf>`_. This extension will automatically format the code according when you save the file.
+We recommend to install the ``dev`` dependencies (see also :doc:`/installation`) as well as the VS Code extensions recommended in the `extensions.json <https://github.com/Aalto-Electric-Drives/motulator/blob/main/.vscode/extensions.json>`_ file. These extensions ensure consistent code style, proper type checking, and an efficient development workflow when contributing to this project.
 
 If you aim to work with the documentation, install also the ``doc`` dependencies. For previewing the documentation in VS Code, you can install the `Esbonio extension <https://marketplace.visualstudio.com/items?itemName=swyddfa.esbonio>`_. Alternatively, you can build the documentation locally using the command ``make html`` in the ``docs`` directory. The documentation will be built in the ``docs/build`` directory.
-
 
 Submitting a Bug Report or a Feature Request
 --------------------------------------------

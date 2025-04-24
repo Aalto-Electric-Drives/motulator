@@ -6,12 +6,10 @@ on:
 jobs:
   pre-commit:
     name: Run pre-commit
-    runs-on: ubuntu-22.04
-
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - uses: pre-commit/action@v3.0.1
         with:
           extra_args: --all-files

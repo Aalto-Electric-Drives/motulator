@@ -1,4 +1,4 @@
-name: Upload Package
+name: Upload package
 
 on:
   release:
@@ -14,11 +14,11 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.12'
     - name: Install build dependencies
       run: |
         python -m pip install --upgrade pip

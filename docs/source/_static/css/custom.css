@@ -1,0 +1,6 @@
+/* Only apply inversion in dark mode */
+@media (prefers-color-scheme: dark) {
+    .invert-colors-dark img {
+        filter: invert(1) hue-rotate(180deg) !important;
+    }
+}

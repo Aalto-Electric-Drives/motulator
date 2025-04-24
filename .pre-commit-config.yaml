@@ -19,16 +19,16 @@ repos:
         name: fix end of files
         description: "Ensures that a file is either empty, or ends with one newline"
         entry: end-of-file-fixer
-        types: [ text ]
-        stages: [ pre-commit, pre-push, manual ]
+        types: [text]
+        stages: [pre-commit, pre-push, manual]
         language: python
 
       - id: trailing-whitespace
         name: trim trailing whitespace
         description: "Trims trailing whitespace"
         entry: trailing-whitespace-fixer
-        types: [ text ]
-        stages: [ pre-commit ]
+        types: [text]
+        stages: [pre-commit]
         language: python
 
   # TOML
@@ -50,18 +50,24 @@ repos:
         name: check yaml
         description: "Checks .yaml files for parseable syntax"
         entry: check-yaml
-        types: [ yaml ]
+        types: [yaml]
         language: python
 
-  # YAPF
-  - repo: https://github.com/google/yapf
-    rev: v0.40.2
+  # Ruff formatter & linter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0  # Use the latest version
     hooks:
-      - id: yapf
-        name: yapf
-        description: "A formatter for Python files"
-        entry: yapf
-        args: [ -i ] # inplace
-        language: python
-        types: [ python ]
-        additional_dependencies: [ toml ]
+    - id: ruff
+      args: [--fix]
+      name: ruff (linter)
+    - id: ruff-format
+      name: ruff (formatter)
+
+  # Pyright
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.398
+    hooks:
+      - id: pyright
+        additional_dependencies: [numpy, scipy, matplotlib, sphinx-gallery]
+        args:
+        - --venvpath=./.venv

@@ -36,7 +36,7 @@ New system models and controllers can be developed using the existing ones as te
 
 Contributing
 ------------
-If you would like to help us develop motulator, please have a look at these [guidelines](https://aalto-electric-drives.github.io/motulator/contributing.html) first.
+If you would like to help us develop *motulator*, see these [guidelines](https://aalto-electric-drives.github.io/motulator/contributing.html) first.
 
 Contributors
 ------------

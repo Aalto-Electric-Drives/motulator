@@ -48,6 +48,7 @@ Based on :eq:`dc_voltage_ctrl_closed_loop`, the gain selection
 .. math::
     k_\mathrm{p} = 2\alpha_\mathrm{dc} \qquad
     k_\mathrm{i} = \alpha_\mathrm{dc}^2
+    :label: dc_voltage_ctrl_gain_selection
 
 results in the double real pole at :math:`s = -\alpha_\mathrm{dc}`. The closed-loop bandwidth is approximately :math:`\alpha_\mathrm{dc}`.
 

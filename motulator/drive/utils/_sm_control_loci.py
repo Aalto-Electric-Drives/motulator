@@ -1,0 +1,258 @@
+"""
+Computation of optimal control loci for synchronous machines.
+
+This contains computation of torque control loci for synchronous machines, including the
+MTPA and MTPV loci. The methods can be used to precompute lookup tables for control and
+to analyze the machine characteristics.
+
+"""
+
+from dataclasses import dataclass
+from typing import Any, Callable
+
+import numpy as np
+from scipy.optimize import root_scalar
+
+from motulator.drive.utils._parameters import (
+    SaturatedSynchronousMachinePars,
+    SynchronousMachinePars,
+)
+
+
+# %%
+@dataclass
+class MTPALocus:
+    """Maximum-torque-per-ampere (MTPA) locus data."""
+
+    i_s_dq: Any
+    psi_s_dq: Any
+    tau_M: Any
+    i_s_dq_vs_tau_M: Callable[[float], complex]
+
+
+@dataclass
+class MTPVLocus:
+    """Maximum-torque-per-volt (MTPV) locus data."""
+
+    psi_s_dq: Any
+    i_s_dq: Any
+    tau_M: Any
+    tau_M_vs_psi_s_abs: Callable[[float], float]
+    psi_s_dq_vs_psi_s_abs: Callable[[float], complex]
+
+
+@dataclass
+class CurrentLimitLocus:
+    """Constant current limit locus data."""
+
+    psi_s_dq: Any
+    i_s_dq: Any
+    tau_M: Any
+    i_s_dq_vs_psi_s_abs: Callable[[float], complex]
+
+
+# %%
+class ControlLoci:
+    """
+    Compute MTPA and MTPV loci based on the machine parameters.
+
+    Parameters
+    ----------
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+        Machine model parameters.
+
+    """
+
+    def __init__(
+        self, par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+    ) -> None:
+        self.par = par
+
+    def compute_mtpa_current_angle(self, i_s_abs: float) -> float:
+        """MTPA current angle (rad) for a given current magnitude."""
+        par = self.par
+
+        def mtpa_cond(gamma: float) -> float:
+            i_s_dq = i_s_abs * np.exp(1j * gamma)
+            psi_a_dq = self.par.aux_flux(i_s_dq)
+            return np.real(psi_a_dq * np.conj(i_s_dq))
+
+        match par.kind:
+            case "rel":
+                gamma_range = (0, 0.5 * np.pi)
+            case "pm":
+                gamma_range = (0.5 * np.pi, np.pi)
+
+        if mtpa_cond(gamma_range[0]) * mtpa_cond(gamma_range[1]) >= 0:
+            return 0.0
+        delta = root_scalar(mtpa_cond, bracket=gamma_range, method="brentq").root
+        return delta
+
+    def compute_mtpv_flux_angle(self, psi_s_abs: float) -> float:
+        """MTPV flux angle (rad) for a given flux magnitude (Vs)."""
+        par = self.par
+
+        def mtpv_cond(delta: float) -> Any:
+            psi_s_dq = psi_s_abs * np.exp(1j * delta)
+            i_a_dq = par.aux_current(psi_s_dq)
+            return np.real(i_a_dq * np.conj(psi_s_dq))
+
+        match par.kind:
+            case "rel":
+                delta_range = (0, 0.5 * np.pi)
+            case "pm":
+                delta_range = (0.5 * np.pi, np.pi)
+
+        if mtpv_cond(delta_range[0]) * mtpv_cond(delta_range[1]) >= 0:
+            return 0.0
+        gamma = root_scalar(mtpv_cond, bracket=delta_range, method="brentq").root
+        return gamma
+
+    def compute_mtpa_locus(self, i_s_max: float, num: int = 16) -> MTPALocus:
+        """
+        Compute the MTPA locus.
+
+        Parameters
+        ----------
+        i_s_max : float
+            Maximum current magnitude (A) at which the locus is computed.
+        num : int, optional
+            Amount of points, defaults to 16.
+
+        Returns
+        -------
+        MTPALocus
+            MTPA locus data.
+
+        """
+        current_magnitudes = np.linspace(0, i_s_max, num)
+
+        # Calculate MTPA points iteratively for each current magnitude
+        gamma = np.zeros_like(current_magnitudes)
+        for idx, i_s_mag in enumerate(current_magnitudes):
+            gamma[idx] = self.compute_mtpa_current_angle(float(i_s_mag))
+
+        # MTPA locus expressed with different quantities
+        i_s_dq = current_magnitudes * np.exp(1j * gamma)
+        psi_s_dq = self.par.psi_s_dq(i_s_dq)
+        tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
+
+        return MTPALocus(
+            i_s_dq=i_s_dq,
+            psi_s_dq=psi_s_dq,
+            tau_M=tau_M,
+            i_s_dq_vs_tau_M=lambda x: np.interp(x, tau_M, i_s_dq),
+        )
+
+    def compute_mtpv_locus(self, psi_s_max: float, num: int = 16) -> MTPVLocus:
+        """
+        Compute the MTPV locus.
+
+        Parameters
+        ----------
+        psi_s_max : float
+            Maximum flux magnitude (Vs) at which the locus is computed.
+        num : int, optional
+            Amount of points, defaults to 16.
+
+        Returns
+        -------
+        MTPVLocus
+            MTPV locus data.
+
+        """
+        flux_magnitudes = np.linspace(0, psi_s_max, num)
+
+        # Calculate MTPV points iteratively for each current magnitude
+        delta = np.zeros_like(flux_magnitudes)
+        for idx, psi_s_abs in enumerate(flux_magnitudes):
+            delta[idx] = self.compute_mtpv_flux_angle(float(psi_s_abs))
+
+        # MTPV locus expressed with different quantities
+        psi_s_dq = flux_magnitudes * np.exp(1j * delta)
+        i_s_dq = self.par.i_s_dq(psi_s_dq)
+        tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
+
+        return MTPVLocus(
+            psi_s_dq=psi_s_dq,
+            i_s_dq=i_s_dq,
+            tau_M=tau_M,
+            tau_M_vs_psi_s_abs=lambda x: np.interp(x, abs(psi_s_dq), tau_M),
+            psi_s_dq_vs_psi_s_abs=lambda x: np.interp(x, abs(psi_s_dq), psi_s_dq),
+        )
+
+    def compute_const_current_locus(
+        self,
+        i_s_max: float,
+        gamma_range: tuple[Any, Any] = (np.pi, 0.5 * np.pi),
+        num: int = 16,
+    ) -> CurrentLimitLocus:
+        """
+        Compute the constant current locus.
+
+        Parameters
+        ----------
+        i_s_max : float
+            Current limit (A).
+        gamma_range : tuple, optional
+            Range of the current angle (electrical rad), defaults to (pi, pi/2).
+        num : int, optional
+            Amount of points, defaults to 16.
+
+        Returns
+        -------
+        CurrentLimitLocus
+            Constant current locus data.
+
+        """
+        if np.isnan(gamma_range[0]):  # No MTPV
+            gamma_range = (np.pi, gamma_range[-1])
+
+        gamma = np.linspace(*gamma_range, num)
+
+        # Current limit expressed with different quantities
+        i_s_dq = i_s_max * np.exp(1j * gamma)
+        psi_s_dq = self.par.psi_s_dq(i_s_dq)
+        tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
+
+        return CurrentLimitLocus(
+            psi_s_dq=psi_s_dq,
+            i_s_dq=i_s_dq,
+            tau_M=tau_M,
+            i_s_dq_vs_psi_s_abs=lambda x: np.interp(x, np.abs(psi_s_dq), i_s_dq),
+        )
+
+    def compute_mtpv_current(self, i_s_abs: float) -> complex:
+        """
+        MTPV current at given current magnitude.
+
+        Parameters
+        ----------
+        i_s_abs : float
+            Current magnitude (A).
+
+        Returns
+        -------
+        complex
+            MTPV current (A). If no MTPV exists, returns np.nan.
+
+        """
+        par = self.par
+
+        def mtpv_cond(delta: float) -> Any:
+            i_s_dq = i_s_abs * np.exp(1j * delta)
+            psi_s_dq = self.par.psi_s_dq(i_s_dq)
+            i_a_dq = par.aux_current(psi_s_dq)
+            return np.real(i_a_dq * np.conj(psi_s_dq))
+
+        match par.kind:
+            case "rel":
+                gamma_range = (0, 0.5 * np.pi)
+            case "pm":
+                gamma_range = (0.5 * np.pi, np.pi)
+
+        if mtpv_cond(gamma_range[0]) * mtpv_cond(gamma_range[1]) >= 0:
+            return np.nan  # No MTPV for this current
+        gamma = root_scalar(mtpv_cond, bracket=gamma_range, method="brentq").root
+
+        return complex(i_s_abs * np.exp(1j * gamma))

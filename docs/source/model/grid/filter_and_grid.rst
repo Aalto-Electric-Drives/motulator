@@ -1,7 +1,7 @@
 AC Filter and Grid Impedance
 ============================
 
-This document describes continuous-time models of an AC filter and grid impedance. The dynamics of the AC filters and grid impedance are modeled in the class :class:`motulator.grid.model.ACFilter`. Based on the filter parameters the ACFilter class initializes either an L- or LCL filter. The parameters of the AC filter and grid impedance are defined in the data class :class:`motulator.grid.utils.ACFilterPars`.
+This document describes continuous-time models of an AC filter and grid impedance.
 
 L Filter
 --------
@@ -25,6 +25,16 @@ where :math:`\boldsymbol{i}_\mathrm{c}^\mathrm{s}` is the converter current, :ma
    :label: L_filt_PCC_voltage
 
 .. figure:: ../figs/l_filter.svg
+   :figclass: only-light
+   :width: 100%
+   :align: center
+   :alt: Diagram of L filter and grid impedance
+   :target: .
+
+   L filter and inductive-resistive grid impedance.
+
+.. figure:: ../figs/l_filter.svg
+   :figclass: invert-colors-dark only-dark
    :width: 100%
    :align: center
    :alt: Diagram of L filter and grid impedance
@@ -62,6 +72,16 @@ where :math:`\boldsymbol{i}_\mathrm{c}^\mathrm{s}` is the converter current, :ma
    :label: LCL_filt_PCC_voltage
 
 .. figure:: ../figs/lcl_filter.svg
+   :figclass: only-light
+   :width: 100%
+   :align: center
+   :alt: Diagram of LCL filter and grid impedance
+   :target: .
+
+   LCL filter and inductive-resistive grid impedance.
+
+.. figure:: ../figs/lcl_filter.svg
+   :figclass: invert-colors-dark only-dark
    :width: 100%
    :align: center
    :alt: Diagram of LCL filter and grid impedance

@@ -1,112 +1,82 @@
-"""
-Continuous-time models for electric machine drives.
+"""Continuous-time model for electric machine drives."""
 
-Peak-valued complex space vectors are used.
-
-"""
-from motulator.common.model import Model
+from motulator.common.model._base import Model
+from motulator.common.model._converter import FrequencyConverter, VoltageSourceConverter
+from motulator.drive.model._lc_filter import LCFilter
+from motulator.drive.model._machine import InductionMachine, SynchronousMachine
+from motulator.drive.model._mechanics import (
+    ExternalRotorSpeed,
+    MechanicalSystem,
+    TwoMassMechanicalSystem,
+)
 
 
 # %%
 class Drive(Model):
     """
-    Continuous-time model for machine drives.
-
-    This interconnects the subsystems of a machine drive and provides an
-    interface to the solver.
+    Continuous-time system model for a machine drive.
 
     Parameters
     ----------
+    machine : InductionMachine | SynchronousMachine
+        Electric machine model.
+    mechanics : MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
+        Mechanical system model.
     converter : VoltageSourceConverter | FrequencyConverter
         Converter model.
-    machine : InductionMachine | SynchronousMachine
-        Machine model.
-    mechanics : ExternalRotorSpeed | StiffMechanicalSystem |\
-                TwoMassMechanicalSystem
-        Mechanical subsystem model.
-
-    """
-
-    def __init__(self, converter=None, machine=None, mechanics=None):
-        super().__init__()
-        self.converter = converter
-        self.machine = machine
-        self.mechanics = mechanics
-        self.subsystems = [self.converter, self.machine, self.mechanics]
-
-    def interconnect(self, _):
-        """Interconnect the subsystems."""
-        self.converter.inp.i_cs = self.machine.out.i_ss
-        self.machine.inp.u_ss = self.converter.out.u_cs
-        self.mechanics.inp.tau_M = self.machine.out.tau_M
-        self.machine.inp.w_M = self.mechanics.out.w_M
-
-    def post_process(self):
-        """Post-process the solution."""
-        # Post-processing based on the states
-        super().post_process_states()
-        # Add the input data to the subsystems for post-processing
-        self.converter.data.i_cs = self.machine.data.i_ss
-        self.machine.data.u_ss = self.converter.data.u_cs
-        self.machine.data.w_M = self.mechanics.data.w_M
-        self.mechanics.data.tau_M = self.machine.data.tau_M
-        # Post-processing based on the inputs and the states
-        super().post_process_with_inputs()
-
-
-# %%
-class DriveWithLCFilter(Model):
-    """
-    Machine drive with an output LC filter.
-
-    Parameters
-    ----------
-    converter : VoltageSourceConverter | FrequencyConverter
-        Converter model.
-    machine : InductionMachine | SynchronousMachine
-        Machine model.
-    mechanics : ExternalRotorSpeed | StiffMechanicalSystem |\
-                TwoMassMechanicalSystem
-        Mechanical subsystem model.
-    lc_filter : LCFilter
-        LC-filter model.
+    lc_filter : LCFilter, optional
+        LC filter model. If not given, a direct connection between the converter and
+        machine is used.
+    pwm : bool, optional
+        Enable PWM model, defaults to False.
+    delay : int, optional
+        Computational delay (samples), defaults to 1.
 
     """
 
     def __init__(
-            self,
-            converter=None,
-            machine=None,
-            mechanics=None,
-            lc_filter=None):
-        super().__init__()
-        self.converter = converter
+        self,
+        machine: InductionMachine | SynchronousMachine,
+        mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed,
+        converter: VoltageSourceConverter | FrequencyConverter,
+        lc_filter: LCFilter | None = None,
+        pwm: bool = False,
+        delay: int = 1,
+    ) -> None:
+        super().__init__(pwm, delay)
+
+        # Create subsystems
         self.machine = machine
         self.mechanics = mechanics
-        self.lc_filter = lc_filter
-        self.subsystems = [
-            self.converter, self.machine, self.mechanics, self.lc_filter
-        ]
+        self.converter = converter
+        if lc_filter is not None:
+            self.lc_filter = lc_filter
+        else:
+            self.lc_filter = None
 
-    def interconnect(self, _):
-        """Interconnect the subsystems."""
-        self.converter.inp.i_cs = self.lc_filter.out.i_cs
-        self.lc_filter.inp.i_fs = self.machine.out.i_ss
-        self.lc_filter.inp.u_cs = self.converter.out.u_cs
-        self.machine.inp.u_ss = self.lc_filter.out.u_fs
-        self.machine.inp.w_M = self.mechanics.out.w_M
-        self.mechanics.inp.tau_M = self.machine.out.tau_M
+        # Store references for interconnection
+        self.subsystems = [self.converter, self.machine, self.mechanics]
 
-    def post_process(self):
-        """Post-process the solution."""
-        # Post-processing based on the states
-        super().post_process_states()
-        # Add the input data to the subsystems for post-processing
-        self.converter.data.i_cs = self.lc_filter.data.i_cs
-        self.lc_filter.data.i_fs = self.machine.data.i_ss
-        self.lc_filter.data.u_cs = self.converter.data.u_cs
-        self.machine.data.u_ss = self.lc_filter.data.u_fs
-        self.machine.data.w_M = self.mechanics.data.w_M
-        self.mechanics.data.tau_M = self.machine.data.tau_M
-        # Post-processing based on the inputs and the states
-        super().post_process_with_inputs()
+        # Define connections based on presence of LC filter
+        if self.lc_filter is None:
+            # Direct connections without LC filter
+            self.connections = {
+                (self.converter, "i_c_ab"): (self.machine, "i_s_ab"),
+                (self.machine, "u_s_ab"): (self.converter, "u_c_ab"),
+                (self.machine, "w_M"): (self.mechanics, "w_M"),
+                (self.mechanics, "tau_M"): (self.machine, "tau_M"),
+            }
+        else:
+            # Connections with LC filter
+            self.subsystems.append(self.lc_filter)
+            self.connections = {
+                (self.converter, "i_c_ab"): (self.lc_filter, "i_c_ab"),
+                (self.lc_filter, "i_f_ab"): (self.machine, "i_s_ab"),
+                (self.lc_filter, "u_c_ab"): (self.converter, "u_c_ab"),
+                (self.machine, "u_s_ab"): (self.lc_filter, "u_f_ab"),
+                (self.machine, "w_M"): (self.mechanics, "w_M"),
+                (self.mechanics, "tau_M"): (self.machine, "tau_M"),
+            }
+
+        # Define ZOH inputs separately
+        self.zoh_connections = {(self.converter, "q_c_ab"): "sw_state"}

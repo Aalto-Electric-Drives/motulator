@@ -1,12 +1,21 @@
-"""Common functions and classes for continuous-time system models."""
+"""Model package."""
 
-from motulator.common.model._simulation import (
-    CarrierComparison, Delay, Model, Subsystem, zoh)
+from motulator.common.model._base import (
+    Model,
+    ModelTimeSeries,
+    Subsystem,
+    SubsystemTimeSeries,
+)
+from motulator.common.model._pwm import CarrierComparison
+from motulator.common.model._simulation import Simulation, SimulationResults, SolverCfg
 
 __all__ = [
     "CarrierComparison",
-    "Delay",
     "Model",
+    "ModelTimeSeries",
+    "Simulation",
+    "SolverCfg",
+    "SimulationResults",
     "Subsystem",
-    "zoh",
+    "SubsystemTimeSeries",
 ]

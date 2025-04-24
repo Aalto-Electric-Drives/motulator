@@ -1,16 +1,47 @@
-"""
-Continuous-time model for an output LC filter.
+"""Continuous-time model for an output LC filter."""
 
-The space vector model is implemented in stator coordinates.
+from dataclasses import InitVar, dataclass, field
+from typing import Any
 
-"""
-from types import SimpleNamespace
+import numpy as np
 
-from motulator.common.model import Subsystem
-from motulator.common.utils import complex2abc
+from motulator.common.model import Subsystem, SubsystemTimeSeries
+from motulator.common.utils import complex2abc, empty_array
 
 
 # %%
+@dataclass
+class Inputs:
+    """Input variables."""
+
+    u_c_ab: complex = 0j
+    i_f_ab: complex = 0j
+
+
+@dataclass
+class Outputs:
+    """Output variables for interconnection."""
+
+    i_c_ab: complex
+    u_f_ab: complex
+
+
+@dataclass
+class States:
+    """State variables."""
+
+    i_c_ab: complex = 0j
+    u_f_ab: complex = 0j
+
+
+@dataclass
+class StateHistory:
+    """State history."""
+
+    i_c_ab: list[complex] = field(default_factory=list)
+    u_f_ab: list[complex] = field(default_factory=list)
+
+
 class LCFilter(Subsystem):
     """
     LC-filter model.
@@ -22,38 +53,57 @@ class LCFilter(Subsystem):
     C_f : float
         Filter capacitance (F).
     R_f : float, optional
-        Series resistance (Ω) of the inductor. The default is 0.
+        Series resistance (Ω) of the inductor, defaults to 0.
+
     """
 
-    def __init__(self, L_f, C_f, R_f=0):
-        super().__init__()
-        self.par = SimpleNamespace(
-            L_f=L_f,
-            C_f=C_f,
-            R_f=R_f,
-        )
-        self.state = SimpleNamespace(i_cs=0, u_fs=0)
-        self.sol_states = SimpleNamespace(i_cs=[], u_fs=[])
+    def __init__(self, L_f: float, C_f: float, R_f: float = 0.0) -> None:
+        self.L_f = L_f
+        self.C_f = C_f
+        self.R_f = R_f
+        self.state: States = States()
+        self.inp: Inputs = Inputs()
+        self.out: Outputs = Outputs(self.state.i_c_ab, self.state.u_f_ab)
+        self._history: StateHistory = StateHistory()
 
-    def set_outputs(self, _):
+    def set_outputs(self, t: float) -> None:
         """Set output variables."""
-        state, out = self.state, self.out
-        out.i_cs, out.u_fs = state.i_cs, state.u_fs
+        self.out.i_c_ab = self.state.i_c_ab
+        self.out.u_f_ab = self.state.u_f_ab
 
-    def rhs(self):
+    def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
-        state, inp, par = self.state, self.inp, self.par
-        d_i_cs = (inp.u_cs - state.u_fs - par.R_f*state.i_cs)/par.L_f
-        d_u_fs = (state.i_cs - inp.i_fs)/par.C_f
+        state = self.state
+        inp = self.inp
 
-        return [d_i_cs, d_u_fs]
+        d_i_c_ab = (inp.u_c_ab - state.u_f_ab - self.R_f * state.i_c_ab) / self.L_f
+        d_u_f_ab = (state.i_c_ab - inp.i_f_ab) / self.C_f
 
-    def meas_currents(self):
+        return [d_i_c_ab, d_u_f_ab]
+
+    def meas_currents(self) -> Any:
         """Measure the converter phase currents."""
-        i_c_abc = complex2abc(self.state.i_cs)
-        return i_c_abc
+        return complex2abc(self.out.i_c_ab)
 
-    def meas_capacitor_voltages(self):
+    def meas_capacitor_voltages(self) -> Any:
         """Measure the capacitor phase voltages."""
-        u_f_abc = complex2abc(self.state.u_fs)
-        return u_f_abc
+        return complex2abc(self.out.u_f_ab)
+
+    def create_time_series(self, t: np.ndarray) -> tuple[str, "LCFilterTimeSeries"]:
+        """Create time series from state list."""
+        return "lc_filter", LCFilterTimeSeries(t, self)
+
+
+@dataclass
+class LCFilterTimeSeries(SubsystemTimeSeries):
+    """Continuous-time series."""
+
+    t: InitVar[np.ndarray]
+    subsystem: InitVar[LCFilter]
+    i_c_ab: np.ndarray = field(default_factory=empty_array)
+    u_f_ab: np.ndarray = field(default_factory=empty_array)
+
+    def __post_init__(self, t: np.ndarray, subsystem: LCFilter) -> None:
+        """Compute output time series from the states."""
+        self.i_c_ab = np.array(subsystem._history.i_c_ab)
+        self.u_f_ab = np.array(subsystem._history.u_f_ab)

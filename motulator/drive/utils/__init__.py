@@ -1,27 +1,36 @@
 """This module contains utility functions for machine drives."""
 
-from motulator.drive.utils._helpers import (
-    InductionMachineInvGammaPars, InductionMachinePars, SynchronousMachinePars,
-    TwoMassMechanicalSystemPars)
-from motulator.drive.utils._plots import plot, plot_extra
-from motulator.drive.utils._flux_maps import (
-    import_syre_data, plot_flux_map, plot_flux_vs_current, plot_torque_map)
 from motulator.common.utils._utils import (
-    BaseValues, NominalValues, Sequence, Step)
+    BaseValues,
+    NominalValues,
+    SequenceGenerator,
+    Step,
+)
+from motulator.drive.utils._plots import plot, plot_extra
+from motulator.drive.utils._sm_control_loci import ControlLoci
+from motulator.drive.utils._sm_flux_maps import (
+    MagneticModel,
+    SaturationModelPMSyRM,
+    SaturationModelSyRM,
+    import_syre_data,
+    plot_flux_vs_current,
+    plot_maps,
+)
+from motulator.drive.utils._sm_plot_control_loci import MachineCharacteristics
 
 __all__ = [
     "BaseValues",
+    "ControlLoci",
     "import_syre_data",
-    "InductionMachineInvGammaPars",
-    "InductionMachinePars",
+    "MachineCharacteristics",
+    "MagneticModel",
     "NominalValues",
     "plot",
     "plot_extra",
-    "plot_flux_map",
     "plot_flux_vs_current",
-    "plot_torque_map",
-    "Sequence",
+    "plot_maps",
+    "SaturationModelPMSyRM",
+    "SaturationModelSyRM",
+    "SequenceGenerator",
     "Step",
-    "SynchronousMachinePars",
-    "TwoMassMechanicalSystemPars",
 ]

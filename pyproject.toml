@@ -4,13 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "motulator"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
     "numpy",
     "scipy",
+    "tqdm",
     "matplotlib",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 authors = [
     {name = "Marko Hinkkanen", email = "marko.hinkkanen@aalto.fi"}
 ]
@@ -37,17 +38,18 @@ classifiers = [
 [project.optional-dependencies]
 dev = [
     "ipykernel",
-    "yapf",
-    "pylint",
+    "ruff",
     "toml",
     "pre-commit",
+    "pyright",
 ]
 doc = [
     "numpy",
     "scipy",
     "matplotlib",
+    "tqdm",
     "numpydoc",
-    "sphinx==7.1.2",
+    "sphinx",
     "sphinx-autoapi",
     "sphinx-copybutton",
     "sphinx-gallery",
@@ -59,16 +61,26 @@ doc = [
 Homepage = "https://github.com/Aalto-Electric-Drives/motulator"
 Documentation = "https://Aalto-Electric-Drives.github.io/motulator/"
 
-[tool.yapf]
-based_on_style = "pep8"
-column_limit = 79
-no_spaces_around_selected_binary_operators = "*,/"
-split_before_first_argument = "True"
-coalesce_brackets = "True"
-spaces_before_comment = 2
+[tool.ruff]
+line-length = 88
+target-version = "py312"
 
-[tool.pylint.messages_control]
-disable = [
-    "invalid-name",
-    "too-few-public-methods",
+[tool.ruff.lint]
+select = ["E", "F", "B", "I", "PL"]
+ignore = ["PLR2004"]  # Ignore magic value warnings
+pylint = {max-args = 12}
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+skip-magic-trailing-comma = true
+
+[tool.pyright]
+include = ["motulator", "examples"]
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.pytest_cache",
 ]
+typeCheckingMode = "standard"
