@@ -178,7 +178,7 @@ are nonlinear in the components of the current vector :math:`\boldsymbol{i}_\mat
 MTPA and MTPV Conditions
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The maximum-torque-per-ampere (MTPA) condition of a saturable machine can be compactly presented by means of the auxiliary flux vector [#Var2021]_. Applying the current vector :math:`\boldsymbol{i}_\mathrm{s} = i \mathrm{e}^{\mathrm{j}\gamma}` with a given magnitude :math:`i` in the torque expression :eq:`sm_torque`, the MTPA condition is obtained by setting :math:`\partial \tau_\mathrm{M}/\partial \gamma = 0`, resulting in
+The maximum-torque-per-ampere (MTPA) condition of a saturable machine can be compactly presented by means of the auxiliary flux vector [#Var2022]_. Applying the current vector :math:`\boldsymbol{i}_\mathrm{s} = i \mathrm{e}^{\mathrm{j}\gamma}` with a given magnitude :math:`i` in the torque expression :eq:`sm_torque`, the MTPA condition is obtained by setting :math:`\partial \tau_\mathrm{M}/\partial \gamma = 0`, resulting in
 
 .. math::
     \text{MTPA:} \quad \mathrm{Re} \left\{\boldsymbol{i}_\mathrm{s} \boldsymbol{\psi}_\mathrm{a}^* \right\} = 0
@@ -209,7 +209,7 @@ where :math:`\Gamma_\mathrm{dd} = \partial i_\mathrm{d}/\partial \psi_\mathrm{d}
 The MTPA and MTPV conditions in :eq:`sm_mtpa` and :eq:`sm_mtpv` are realized in the class :class:`motulator.drive.utils.ControlLoci` that provides methods for computing the MTPA, MTPV, and constant current loci for magnetically linear as well as saturated machines. The class :class:`motulator.drive.utils.MachineCharacteristics` provides methods for visualizing these loci. See also the examples :doc:`/drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat`, :doc:`/drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat`, and :doc:`/drive_examples/current_vector/plot_vector_ctrl_pmsyrm_thor_sat`.
 
 .. note::
-    Here, we define the auxiliary vectors according to the conventions used in [#Hin2018]_, which differ from the conventions in [#Var2021]_, i.e., the vectors defined here are 90 degrees rotated as compared to [#Var2021]_.
+    Here, we define the auxiliary vectors according to the conventions used in [#Hin2018]_, which differ from the conventions in [#Var2022]_, i.e., the vectors defined here are 90 degrees rotated as compared to [#Var2022]_.
 
 .. rubric:: References
 
@@ -223,7 +223,7 @@ The MTPA and MTPV conditions in :eq:`sm_mtpa` and :eq:`sm_mtpv` are realized in 
 
 .. [#Lel2024] Lelli, Hinkkanen, Giulii Capponi, "A saturation model based on a simplified equivalent magnetic circuit for permanent magnet machines," Proc. ICEM, 2024, https://doi.org/10.1109/ICEM60801.2024.10700403
 
-.. [#Var2021] Varatharajan, Pellegrino, Armando, Hinkkanen, “Sensorless control of synchronous motor drives: Accurate torque estimation and control under parameter errors,” IEEE J. Emerg. Sel. Topics Power Electron., 2021, https://doi.org/10.1109/JESTPE.2020.3037792
+.. [#Var2022] Varatharajan, Pellegrino, Armando, "Direct flux vector control of synchronous motor drives: Accurate decoupled control with online adaptive maximum torque per ampere and maximum torque per volts evaluation," IEEE Trans. Ind. Electron., 2022, https://doi.org/10.1109/TIE.2021.3060665
 
 .. [#Tii2025a] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2025, https://doi.org/10.1109/TIE.2024.3429650
 

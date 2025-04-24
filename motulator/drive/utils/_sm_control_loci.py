@@ -1,11 +1,4 @@
-"""
-Computation of optimal control loci for synchronous machines.
-
-This contains computation of torque control loci for synchronous machines, including the
-MTPA and MTPV loci. The methods can be used to precompute lookup tables for control and
-to analyze the machine characteristics.
-
-"""
+"""Computation of optimal control loci for synchronous machines."""
 
 from dataclasses import dataclass
 from typing import Any, Callable
@@ -56,10 +49,34 @@ class ControlLoci:
     """
     Compute MTPA and MTPV loci based on the machine parameters.
 
+    This class computes optimal control loci for synchronous machines, including the
+    maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limit
+    loci [#Mor1994]_. The magnetic saturation is taken into account. The methods
+    can be used to precompute lookup tables for control and to analyze the machine
+    characteristics.
+
+    Note
+    ----
+    The MTPA and MTPV conditions are expressed in terms of the auxiliary flux and the
+    auxiliary current, respectively [#Var2022]_, allowing a compact representation of
+    the conditions. Notice that we define these auxiliary vectors 90 degrees rotated as
+    compared to [#Var2022]_, but otherwise the concepts are equivalent.
+
     Parameters
     ----------
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
+
+    References
+    ----------
+    .. [#Mor1994] Morimoto, Sanada, Takeda, "Wide-speed operation of interior permanent
+       magnet synchronous motors with high-performance current regulator," IEEE Trans.
+       Ind. Appl., https://doi.org/10.1109/28.297908
+
+    .. [#Var2022] Varatharajan, Pellegrino, Armando, "Direct flux vector control of
+       synchronous motor drives: Accurate decoupled control with online adaptive maximum
+       torque per ampere and maximum torque per volts evaluation," IEEE Trans. Ind.
+       Electron., 2022, https://doi.org/10.1109/TIE.2021.3060665
 
     """
 
