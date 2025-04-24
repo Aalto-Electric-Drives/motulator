@@ -1,5 +1,5 @@
-Protocol
-========
+Control System Framework
+========================
 
 Main Control Loop
 -----------------

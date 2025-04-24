@@ -1,4 +1,4 @@
-"""Power-synchronization control for grid-connected converters."""
+"""Power-synchronization control for grid converters."""
 
 from cmath import exp
 from dataclasses import dataclass, field
@@ -38,9 +38,9 @@ class Feedbacks:
     p_g: float = 0.0
 
 
-class PowerSynchronizationControl:
+class PowerSynchronizationController:
     """
-    Reference-feedforward power-synchronization control.
+    Reference-feedforward power-synchronization controller.
 
     This implements the reference-feedforward power-synchronization control [#Har2020]_.
 

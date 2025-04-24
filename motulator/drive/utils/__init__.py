@@ -1,4 +1,4 @@
-"""This module contains utility functions for machine drives."""
+"""Utility functions for machine drives."""
 
 from motulator.common.utils._utils import (
     BaseValues,

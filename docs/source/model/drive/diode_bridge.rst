@@ -28,4 +28,4 @@ where :math:`i_\mathrm{L}` is the DC-bus current, :math:`u_\mathrm{di}` is the v
 
    Six-pulse diode bridge rectifier.
 
-The voltage-source converter described in the :doc:`/model/common/converters` document is extended with this diode bridge model in the :class:`motulator.drive.model.FrequencyConverter` class. Examples using the six-pulse diode bridge can be found in :doc:`/drive_examples/vhz/plot_vhz_ctrl_im_2kw` and :doc:`/drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw_diode`.
+The voltage-source converter described in the :doc:`/model/common/converters` document is extended with this diode bridge model in the :class:`motulator.drive.model.FrequencyConverter` class. Examples using the six-pulse diode bridge can be found in :doc:`/drive_examples/vhz/plot_vhz_im_2kw` and :doc:`/drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode`.

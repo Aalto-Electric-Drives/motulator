@@ -50,7 +50,7 @@ ctrl = control.VHzControlSystem(vhz_ctrl)
 
 t_stop = 8
 times = np.array([0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]) * t_stop
-values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0]) * base.w / base.n_p
+values = np.array([0, 0, 1, 1, 0, -1, -1, 0, 0]) * base.w_M
 ctrl.set_speed_ref(utils.SequenceGenerator(times, values))
 
 times = np.array([0, 0.125, 0.125, 0.875, 0.875, 1]) * t_stop

@@ -57,8 +57,8 @@ class FluxObserver:
     the PM-flux linkage. The design is based on [#Hin2018]_ and [#Tuo2018]. The observer
     gain decouples the electrical and mechanical dynamics and allows placing the poles
     of the corresponding linearized estimation error dynamics. The PM-flux linkage can
-    also be estimated [#Tuo2018]_. The observer can also be used in the sensored mode,
-    in which case the control system is fixed to the measured rotor angle. The magnetic
+    also be estimated [#Tuo2018]_. The observer can also be used in sensored mode, in
+    which case the control system is fixed to the measured rotor angle. The magnetic
     saturation is taken into account.
 
     Parameters
