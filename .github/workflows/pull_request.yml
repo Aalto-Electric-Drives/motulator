@@ -4,16 +4,21 @@ on: [pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Easy to use GitHub hosted runner, self hosted runner would require manual configurations
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2 # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
-
-    - uses: ammaraskar/sphinx-action@master
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
       with:
-        build-command: "sphinx-build -b html ./source/ _build"
-        docs-folder: "docs/"
-
+        python-version: '3.12'
+    - name: Install documentation dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .[doc]
+    - name: Build Sphinx documentation
+      run: |
+        sphinx-build -b html docs/source docs/build/html
     - uses: actions/upload-artifact@v4
       with:
         name: DocumentationHTML
-        path: docs/_build
+        path: docs/build/html
