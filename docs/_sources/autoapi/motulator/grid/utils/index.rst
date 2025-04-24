@@ -6,7 +6,7 @@ motulator.grid.utils
 .. autoapi-nested-parse::
 
    
-   This module contains utility functions for grid converters.
+   Utility functions for grid converters.
 
 
 

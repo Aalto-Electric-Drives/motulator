@@ -52,7 +52,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'drive_examples/current_vector/index';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="6.7-kW SyRM" href="plot_vector_ctrl_syrm_7kw.html" />
+    <link rel="next" title="6.7-kW SyRM" href="plot_current_vector_syrm_7kw.html" />
     <link rel="prev" title="5.5-kW PM-SyRM, saturated" href="../flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -175,21 +175,21 @@
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">Current-Vector Control</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_im_2kw.html">2.2-kW induction motor, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_ctrl_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_im_2kw.html">2.2-kW induction motor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_pmsm_2kw.html">2.2-kW PMSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_vhz_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_obs_vhz_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -238,7 +238,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../control/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../control/common/control_system.html">Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/common/control_system.html">Control System Framework</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../control/common/controllers.html">Controllers</a></li>
 </ul>
 </details></li>
@@ -451,24 +451,24 @@ document.write(`
                   
   <section id="current-vector-control">
 <span id="sphx-glr-drive-examples-current-vector"></span><h1>Current-Vector Control<a class="headerlink" href="#current-vector-control" title="Link to this heading">#</a></h1>
-<p>These examples are for current-vector control of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (<a class="reference internal" href="plot_vector_ctrl_im_2kw.html"><span class="doc">2.2-kW induction motor, saturated</span></a>) as well as computation of control lookup tables for synchronous machines (<a class="reference internal" href="plot_vector_ctrl_pmsyrm_thor_sat.html"><span class="doc">5-kW PM-SyRM, flux maps from SyR-e</span></a>).</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM drive."><img alt="" src="../../_images/sphx_glr_plot_vector_ctrl_syrm_7kw_thumb.png" />
-<p><a class="reference internal" href="plot_vector_ctrl_syrm_7kw.html#sphx-glr-drive-examples-current-vector-plot-vector-ctrl-syrm-7kw-py"><span class="std std-ref">6.7-kW SyRM</span></a></p>
+<p>These examples are for current-vector control of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (<a class="reference internal" href="plot_current_vector_im_2kw.html"><span class="doc">2.2-kW induction motor, saturated</span></a>) as well as computation of control lookup tables for synchronous machines (<a class="reference internal" href="plot_current_vector_pmsyrm_thor_sat.html"><span class="doc">5-kW PM-SyRM, flux maps from SyR-e</span></a>).</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM drive."><img alt="" src="../../_images/sphx_glr_plot_current_vector_syrm_7kw_thumb.png" />
+<p><a class="reference internal" href="plot_current_vector_syrm_7kw.html#sphx-glr-drive-examples-current-vector-plot-current-vector-syrm-7kw-py"><span class="std std-ref">6.7-kW SyRM</span></a></p>
   <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier."><img alt="" src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_diode_thumb.png" />
-<p><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw_diode.html#sphx-glr-drive-examples-current-vector-plot-vector-ctrl-pmsm-2kw-diode-py"><span class="std std-ref">2.2-kW PMSM, diode bridge</span></a></p>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier."><img alt="" src="../../_images/sphx_glr_plot_current_vector_pmsm_2kw_diode_thumb.png" />
+<p><a class="reference internal" href="plot_current_vector_pmsm_2kw_diode.html#sphx-glr-drive-examples-current-vector-plot-current-vector-pmsm-2kw-diode-py"><span class="std std-ref">2.2-kW PMSM, diode bridge</span></a></p>
   <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode."><img alt="" src="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_tq_mode_thumb.png" />
-<p><a class="reference internal" href="plot_vector_ctrl_im_2kw_tq_mode.html#sphx-glr-drive-examples-current-vector-plot-vector-ctrl-im-2kw-tq-mode-py"><span class="std std-ref">2.2-kW induction motor, torque-control mode</span></a></p>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode."><img alt="" src="../../_images/sphx_glr_plot_current_vector_im_2kw_tq_mode_thumb.png" />
+<p><a class="reference internal" href="plot_current_vector_im_2kw_tq_mode.html#sphx-glr-drive-examples-current-vector-plot-current-vector-im-2kw-tq-mode-py"><span class="std std-ref">2.2-kW induction motor, torque-control mode</span></a></p>
   <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, torque-control mode</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction motor drive. The magnetic saturation of the machine is also included in the system model, while the control system assumes constant parameters."><img alt="" src="../../_images/sphx_glr_plot_vector_ctrl_im_2kw_thumb.png" />
-<p><a class="reference internal" href="plot_vector_ctrl_im_2kw.html#sphx-glr-drive-examples-current-vector-plot-vector-ctrl-im-2kw-py"><span class="std std-ref">2.2-kW induction motor, saturated</span></a></p>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction motor drive. The magnetic saturation of the machine is also included in the system model, while the control system assumes constant parameters."><img alt="" src="../../_images/sphx_glr_plot_current_vector_im_2kw_thumb.png" />
+<p><a class="reference internal" href="plot_current_vector_im_2kw.html#sphx-glr-drive-examples-current-vector-plot-current-vector-im-2kw-py"><span class="std std-ref">2.2-kW induction motor, saturated</span></a></p>
   <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, saturated</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%."><img alt="" src="../../_images/sphx_glr_plot_vector_ctrl_pmsm_2kw_thumb.png" />
-<p><a class="reference internal" href="plot_vector_ctrl_pmsm_2kw.html#sphx-glr-drive-examples-current-vector-plot-vector-ctrl-pmsm-2kw-py"><span class="std std-ref">2.2-kW PMSM, with PM flux adaptation</span></a></p>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%."><img alt="" src="../../_images/sphx_glr_plot_current_vector_pmsm_2kw_thumb.png" />
+<p><a class="reference internal" href="plot_current_vector_pmsm_2kw.html#sphx-glr-drive-examples-current-vector-plot-current-vector-pmsm-2kw-py"><span class="std std-ref">2.2-kW PMSM, with PM flux adaptation</span></a></p>
   <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, with PM flux adaptation</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a saturated 5-kW permanent- magnet synchronous reluctance motor. The flux maps of this example motor, known as THOR, are from the SyR-e project:"><img alt="" src="../../_images/sphx_glr_plot_vector_ctrl_pmsyrm_thor_sat_thumb.png" />
-<p><a class="reference internal" href="plot_vector_ctrl_pmsyrm_thor_sat.html#sphx-glr-drive-examples-current-vector-plot-vector-ctrl-pmsyrm-thor-sat-py"><span class="std std-ref">5-kW PM-SyRM, flux maps from SyR-e</span></a></p>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a saturated 5-kW permanent- magnet synchronous reluctance motor. The flux maps of this example motor, known as THOR, are from the SyR-e project:"><img alt="" src="../../_images/sphx_glr_plot_current_vector_pmsyrm_thor_sat_thumb.png" />
+<p><a class="reference internal" href="plot_current_vector_pmsyrm_thor_sat.html#sphx-glr-drive-examples-current-vector-plot-current-vector-pmsyrm-thor-sat-py"><span class="std std-ref">5-kW PM-SyRM, flux maps from SyR-e</span></a></p>
   <div class="sphx-glr-thumbnail-title">5-kW PM-SyRM, flux maps from SyR-e</div>
 </div></div><div class="toctree-wrapper compound">
 </div>
@@ -495,7 +495,7 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="plot_vector_ctrl_syrm_7kw.html"
+       href="plot_current_vector_syrm_7kw.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>

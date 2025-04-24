@@ -5,7 +5,7 @@
 V/Hz Control
 ------------
 
-These examples demonstrate observer-based V/Hz control for synchronous machines [#Tii2025aa]_ and induction machines [#Tii2025bb]_. The example :doc:`/drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model. Furthermore, the examples :doc:`/drive_examples/vhz/plot_vhz_ctrl_im_2kw` and :doc:`/drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc` show operation of an induction machine under pure open-loop V/Hz control with a diode front-end rectifier and with an LC filter, respectively.
+These examples demonstrate observer-based V/Hz control for synchronous machines [#Tii2025aa]_ and induction machines [#Tii2025bb]_. The example :doc:`/drive_examples/vhz/plot_obs_vhz_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model. Furthermore, the examples :doc:`/drive_examples/vhz/plot_vhz_im_2kw` and :doc:`/drive_examples/vhz/plot_vhz_im_2kw_lc` show operation of an induction machine under pure open-loop V/Hz control with a diode front-end rectifier and with an LC filter, respectively.
 
 .. rubric:: References
 
@@ -27,10 +27,10 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_im_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_im_2kw_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_ctrl_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_im_2kw.py`
 
 .. raw:: html
 
@@ -44,10 +44,10 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_pmsm_2kw_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_ctrl_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_pmsm_2kw.py`
 
 .. raw:: html
 
@@ -61,10 +61,10 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_vhz_ctrl_im_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_vhz_im_2kw_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_vhz_ctrl_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_vhz_im_2kw.py`
 
 .. raw:: html
 
@@ -78,10 +78,10 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_syrm_7kw_sat_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_syrm_7kw_sat_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_ctrl_syrm_7kw_sat.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_syrm_7kw_sat.py`
 
 .. raw:: html
 
@@ -95,10 +95,10 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_vhz_ctrl_im_2kw_lc_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_vhz_im_2kw_lc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_vhz_ctrl_im_2kw_lc.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_vhz_im_2kw_lc.py`
 
 .. raw:: html
 
@@ -112,10 +112,10 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_ctrl_pmsm_2kw_two_mass_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_pmsm_2kw_two_mass_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_ctrl_pmsm_2kw_two_mass.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_pmsm_2kw_two_mass.py`
 
 .. raw:: html
 
@@ -133,10 +133,10 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 .. toctree::
    :hidden:
 
-   /drive_examples/vhz/plot_obs_vhz_ctrl_im_2kw
-   /drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw
-   /drive_examples/vhz/plot_vhz_ctrl_im_2kw
-   /drive_examples/vhz/plot_obs_vhz_ctrl_syrm_7kw_sat
-   /drive_examples/vhz/plot_vhz_ctrl_im_2kw_lc
-   /drive_examples/vhz/plot_obs_vhz_ctrl_pmsm_2kw_two_mass
+   /drive_examples/vhz/plot_obs_vhz_im_2kw
+   /drive_examples/vhz/plot_obs_vhz_pmsm_2kw
+   /drive_examples/vhz/plot_vhz_im_2kw
+   /drive_examples/vhz/plot_obs_vhz_syrm_7kw_sat
+   /drive_examples/vhz/plot_vhz_im_2kw_lc
+   /drive_examples/vhz/plot_obs_vhz_pmsm_2kw_two_mass
 

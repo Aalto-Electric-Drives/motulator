@@ -1,7 +1,7 @@
 Speed Control
 =============
 
-A speed controller is implemented in the :class:`motulator.drive.control.SpeedController` class, whose base class is :class:`motulator.common.control.PIController`. In the following, the tuning of the speed controller is discussed. The presented approach can be extended to many other control tasks as well.
+A speed controller is implemented in the :class:`motulator.drive.control.im.SpeedController` class, whose base class is :class:`motulator.common.control.PIController`. In the following, the tuning of the speed controller is discussed. The presented approach can be extended to many other control tasks as well.
 
 .. _2dof-pi-controller:
 

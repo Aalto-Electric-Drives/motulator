@@ -19,6 +19,7 @@ Classes
    motulator.drive.control.sm.CurrentController
    motulator.drive.control.sm.CurrentVectorController
    motulator.drive.control.sm.CurrentVectorControllerCfg
+   motulator.drive.control.sm.FluxObserver
    motulator.drive.control.sm.FluxVectorController
    motulator.drive.control.sm.FluxVectorControllerCfg
    motulator.drive.control.sm.ObserverBasedVHzController
@@ -29,6 +30,7 @@ Classes
    motulator.drive.control.sm.SaturatedSynchronousMachinePars
    motulator.drive.control.sm.SignalInjectionController
    motulator.drive.control.sm.SpeedController
+   motulator.drive.control.sm.SpeedFluxObserver
    motulator.drive.control.sm.SynchronousMachinePars
    motulator.drive.control.sm.VHzControlSystem
    motulator.drive.control.sm.VectorControlSystem
@@ -257,6 +259,114 @@ Module Contents
 
    ..
        !! processed by numpydoc !!
+
+.. py:class:: FluxObserver(par, alpha_d, k_o, k_f, sensorless)
+
+   
+   Observer for synchronous machines in estimated rotor coordinates.
+
+   This observer estimates the stator flux linkage, the rotor angle, and (optionally)
+   the PM-flux linkage. The design is based on [#Hin2018]_ and [#Tuo2018]. The observer
+   gain decouples the electrical and mechanical dynamics and allows placing the poles
+   of the corresponding linearized estimation error dynamics. The PM-flux linkage can
+   also be estimated [#Tuo2018]_. The observer can also be used in sensored mode, in
+   which case the control system is fixed to the measured rotor angle. The magnetic
+   saturation is taken into account.
+
+   :param par: Machine model parameters.
+   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :param alpha_d: Rotor-angle estimation bandwidth (rad/s).
+   :type alpha_d: float, optional
+   :param k_o: Observer gain as a function of the rotor angular speed.
+   :type k_o: Callable[[float], float]
+   :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
+   :type k_f: Callable[[float], float], optional
+   :param sensorless: If True, sensorless mode is used.
+   :type sensorless: bool
+
+   .. rubric:: References
+
+   .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
+      sensorless synchronous motor drives: Framework for design and analysis," IEEE
+      Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
+
+   .. [#Tuo2018] Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, "Permanent-magnet flux
+      adaptation for sensorless synchronous motor drives," Proc. IEEE SLED, 2018,
+      https://doi.org/10.1109/SLED.2018.8485899
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(meas, u_s_ab, w_M)
+
+      
+      Compute the feedback signals for the control system.
+
+      :param meas: Measured signals for the control system.
+      :type meas: MeasuredSignals
+      :param u_s_ab: Stator voltage (V) in stator coordinates.
+      :type u_s_ab: complex
+      :param w_M: Rotor speed (mechanical rad/s), either measured or estimated.
+      :type w_M: float, optional
+
+      :returns: **out** -- Estimated feedback signals for the control system.
+      :rtype: ObserverOutputs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s)
+
+      
+      Update the state estimates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: FluxVectorController(par, cfg, sensorless = True, T_s = 0.000125)
 
@@ -1095,6 +1205,92 @@ Module Contents
 
    ..
        !! processed by numpydoc !!
+
+.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f)
+
+   Bases: :py:obj:`FluxObserver`
+
+
+   
+   Observer with speed estimation.
+
+   This observer estimates the rotor speed and the rotor angle. The observer gain
+   decouples the electrical and mechanical dynamics and allows placing the poles of the
+   corresponding linearized estimation error dynamics.
+
+   :param par: Machine model parameters.
+   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :param alpha_o: Speed estimation bandwidth (rad/s).
+   :type alpha_o: float, optional
+   :param k_o: Observer gain as a function of the rotor angular speed.
+   :type k_o: Callable[[float], float], optional
+   :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
+   :type k_f: Callable[[float], float], optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(meas, u_s_ab, w_M=None)
+
+      
+      Compute feedback signals with speed estimation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s)
+
+      
+      Extend the update method to include the speed estimate.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: SynchronousMachinePars
 

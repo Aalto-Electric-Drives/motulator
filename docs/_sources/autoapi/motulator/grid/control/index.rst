@@ -6,7 +6,7 @@ motulator.grid.control
 .. autoapi-nested-parse::
 
    
-   Controllers for grid-connected converters.
+   Controllers for grid converters.
 
 
 
@@ -39,7 +39,7 @@ Classes
    motulator.grid.control.GridConverterControlSystem
    motulator.grid.control.ObserverBasedGridFormingController
    motulator.grid.control.PLL
-   motulator.grid.control.PowerSynchronizationControl
+   motulator.grid.control.PowerSynchronizationController
 
 
 Package Contents
@@ -800,10 +800,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PowerSynchronizationControl(u_nom, w_nom, i_max, R = 0.0, R_a = None, w_b = 2 * pi * 5, T_s = 0.000125)
+.. py:class:: PowerSynchronizationController(u_nom, w_nom, i_max, R = 0.0, R_a = None, w_b = 2 * pi * 5, T_s = 0.000125)
 
    
-   Reference-feedforward power-synchronization control.
+   Reference-feedforward power-synchronization controller.
 
    This implements the reference-feedforward power-synchronization control [#Har2020]_.
 

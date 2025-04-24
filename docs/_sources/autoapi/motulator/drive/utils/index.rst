@@ -6,7 +6,7 @@ motulator.drive.utils
 .. autoapi-nested-parse::
 
    
-   This module contains utility functions for machine drives.
+   Utility functions for machine drives.
 
 
 

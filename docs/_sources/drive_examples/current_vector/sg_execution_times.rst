@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:06.997** total execution time for 6 files **from drive_examples/current_vector**:
+**01:08.522** total execution time for 6 files **from drive_examples/current_vector**:
 
 .. container::
 
@@ -32,21 +32,21 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_pmsyrm_thor_sat.py` (``plot_vector_ctrl_pmsyrm_thor_sat.py``)
-     - 00:31.931
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsyrm_thor_sat.py` (``plot_current_vector_pmsyrm_thor_sat.py``)
+     - 00:32.008
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_pmsm_2kw_diode.py` (``plot_vector_ctrl_pmsm_2kw_diode.py``)
-     - 00:11.744
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py` (``plot_current_vector_pmsm_2kw_diode.py``)
+     - 00:12.253
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_pmsm_2kw.py` (``plot_vector_ctrl_pmsm_2kw.py``)
-     - 00:06.587
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw.py` (``plot_current_vector_pmsm_2kw.py``)
+     - 00:06.960
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_im_2kw_tq_mode.py` (``plot_vector_ctrl_im_2kw_tq_mode.py``)
-     - 00:06.322
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw_tq_mode.py` (``plot_current_vector_im_2kw_tq_mode.py``)
+     - 00:06.588
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_im_2kw.py` (``plot_vector_ctrl_im_2kw.py``)
-     - 00:05.316
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw.py` (``plot_current_vector_im_2kw.py``)
+     - 00:05.370
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_syrm_7kw.py` (``plot_vector_ctrl_syrm_7kw.py``)
-     - 00:05.098
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_syrm_7kw.py` (``plot_current_vector_syrm_7kw.py``)
+     - 00:05.344
      - 0.0

@@ -87,7 +87,7 @@ Configure the control system.
 
 
     # Control configuration parameters
-    inner_ctrl = control.PowerSynchronizationControl(
+    inner_ctrl = control.PowerSynchronizationController(
         u_nom=base.u, w_nom=base.w, i_max=1.3 * base.i, R=0.05 * base.Z, R_a=0.2 * base.Z
     )
     ctrl = control.GridConverterControlSystem(inner_ctrl)
@@ -162,7 +162,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.479 seconds)
+   **Total running time of the script:** (0 minutes 5.604 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_rfpsc_13kva.py:

@@ -5,7 +5,7 @@
 Current-Vector Control
 ----------------------
 
-These examples are for current-vector control of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_vector_ctrl_im_2kw`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_vector_ctrl_pmsyrm_thor_sat`).
+These examples are for current-vector control of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_current_vector_im_2kw`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat`).
 
 
 
@@ -21,10 +21,10 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_vector_ctrl_syrm_7kw_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_syrm_7kw_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_syrm_7kw.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_syrm_7kw.py`
 
 .. raw:: html
 
@@ -38,10 +38,10 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_diode_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsm_2kw_diode_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_pmsm_2kw_diode.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py`
 
 .. raw:: html
 
@@ -55,10 +55,10 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_vector_ctrl_im_2kw_tq_mode_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_im_2kw_tq_mode_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_im_2kw_tq_mode.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw_tq_mode.py`
 
 .. raw:: html
 
@@ -72,10 +72,10 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_vector_ctrl_im_2kw_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_im_2kw_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw.py`
 
 .. raw:: html
 
@@ -89,10 +89,10 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsm_2kw_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw.py`
 
 .. raw:: html
 
@@ -106,10 +106,10 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_vector_ctrl_pmsyrm_thor_sat_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsyrm_thor_sat_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_vector_ctrl_pmsyrm_thor_sat.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsyrm_thor_sat.py`
 
 .. raw:: html
 
@@ -127,10 +127,10 @@ These examples are for current-vector control of induction and synchronous machi
 .. toctree::
    :hidden:
 
-   /drive_examples/current_vector/plot_vector_ctrl_syrm_7kw
-   /drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw_diode
-   /drive_examples/current_vector/plot_vector_ctrl_im_2kw_tq_mode
-   /drive_examples/current_vector/plot_vector_ctrl_im_2kw
-   /drive_examples/current_vector/plot_vector_ctrl_pmsm_2kw
-   /drive_examples/current_vector/plot_vector_ctrl_pmsyrm_thor_sat
+   /drive_examples/current_vector/plot_current_vector_syrm_7kw
+   /drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode
+   /drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode
+   /drive_examples/current_vector/plot_current_vector_im_2kw
+   /drive_examples/current_vector/plot_current_vector_pmsm_2kw
+   /drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat
 
