@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:03.172** total execution time for 3 files **from grid_examples/grid_following**:
+**00:03.152** total execution time for 3 files **from grid_examples/grid_following**:
 
 .. container::
 
@@ -33,11 +33,11 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_grid_examples_grid_following_plot_gfl_lcl_10kva.py` (``plot_gfl_lcl_10kva.py``)
-     - 00:01.091
+     - 00:01.092
      - 0.0
    * - :ref:`sphx_glr_grid_examples_grid_following_plot_gfl_dc_bus_10kva.py` (``plot_gfl_dc_bus_10kva.py``)
-     - 00:01.090
+     - 00:01.078
      - 0.0
    * - :ref:`sphx_glr_grid_examples_grid_following_plot_gfl_10kva.py` (``plot_gfl_10kva.py``)
-     - 00:00.990
+     - 00:00.982
      - 0.0
