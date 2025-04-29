@@ -1,7 +1,7 @@
 Flux-Vector Control
 ===================
 
-Flux vector control directly controls the stator flux magnitude and the electromagnetic torque, which simplifies reference generation especially in the field-weakening region [#Pel2009]_. We use the control law that results from feedback linearization of the flux and torque dynamics [#Awa2019]_. Here, the inclusion of integral action is briefly discussed, as an extension to [#Tii2025a]_. Furthermore, these notes aim to provide a link between the column-vector and complex-vector formulations of the control law. Here, a synchronous machine is considered as an example (see the :ref:`synchronous-machine` document for the model and notation), but the approach is analogous for induction machines.
+Flux vector control directly controls the stator flux magnitude and the electromagnetic torque, which simplifies reference generation especially in the field-weakening region [#Pel2009]_. We use the control law that results from feedback linearization of the flux and torque dynamics [#Awa2019]_. Here, the inclusion of integral action is briefly discussed, as an extension to [#Tii2025a]_, [#Tii2025b]_. Furthermore, these notes aim to provide a link between the column-vector and complex-vector formulations of the control law. Here, a synchronous machine is considered as an example (see the :ref:`synchronous-machine` document for the model and notation), but the approach is analogous for induction machines.
 
 Flux and Torque Dynamics
 ------------------------
@@ -65,3 +65,5 @@ This control law is a variant of [#Awa2019]_, having channel-specific reference-
 .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
 .. [#Tii2025a] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2025, https://doi.org/10.1109/TIE.2024.3429650
+
+.. [#Tii2025b] Tiitinen, Hinkkanen, Harnefors, "Sensorless flux-vector control framework: An extension for induction machines," IEEE Trans. Ind. Electron., 2025, https://doi.org/10.1109/TIE.2025.3559958

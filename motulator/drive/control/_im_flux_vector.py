@@ -293,7 +293,7 @@ class FluxVectorController:
     ----------
     .. [#Tii2025b] Tiitinen, Hinkkanen, Harnefors, "Sensorless flux-vector control
        framework: An extension for induction machines," IEEE Trans. Ind. Electron.,
-       2025, in press
+       2025, https://doi.org/10.1109/TIE.2025.3559958
 
     """
 
