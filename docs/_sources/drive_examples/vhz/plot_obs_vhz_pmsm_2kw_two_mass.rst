@@ -252,7 +252,7 @@ Plot the frequency response from the torque tau_M to the rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.120 seconds)
+   **Total running time of the script:** (0 minutes 4.054 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_obs_vhz_pmsm_2kw_two_mass.py:

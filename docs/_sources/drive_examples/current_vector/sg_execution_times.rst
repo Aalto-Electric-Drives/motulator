@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:07.076** total execution time for 6 files **from drive_examples/current_vector**:
+**01:08.539** total execution time for 6 files **from drive_examples/current_vector**:
 
 .. container::
 
@@ -33,20 +33,20 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsyrm_thor_sat.py` (``plot_current_vector_pmsyrm_thor_sat.py``)
-     - 00:31.934
+     - 00:32.893
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py` (``plot_current_vector_pmsm_2kw_diode.py``)
-     - 00:11.839
+     - 00:12.075
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw.py` (``plot_current_vector_pmsm_2kw.py``)
-     - 00:06.632
+     - 00:06.666
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw_tq_mode.py` (``plot_current_vector_im_2kw_tq_mode.py``)
-     - 00:06.280
+     - 00:06.364
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw.py` (``plot_current_vector_im_2kw.py``)
-     - 00:05.309
+     - 00:05.394
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_syrm_7kw.py` (``plot_current_vector_syrm_7kw.py``)
-     - 00:05.082
+     - 00:05.147
      - 0.0

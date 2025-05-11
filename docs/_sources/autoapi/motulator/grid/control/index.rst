@@ -596,12 +596,12 @@ Package Contents
    :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
    :type k_v: float, optional
    :param alpha_o: Observer gain (rad/s), defaults to 2*pi*50.
-   :type alpha_o: float
+   :type alpha_o: float, optional
    :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
    :type alpha_c: float, optional
    :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
                  `sqrt(2/3)*400`.
-   :type u_nom: float
+   :type u_nom: float, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 
