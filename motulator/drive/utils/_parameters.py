@@ -126,10 +126,10 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         Number of pole pairs.
     R_s : float
         Stator resistance (Ω).
-    i_s_dq_fcn : callable
+    i_s_dq_fcn : Callable[[complex], complex]
         Stator current (A) as a function of the stator flux linkage (Vs). This function
         should be differentiable, if inverse incremental inductances are used.
-    psi_s_dq_fcn : callable, optional
+    psi_s_dq_fcn : Callable[[complex], complex], optional
         Stator flux linkage (Vs) as a function of the stator current (A). This function
         should be differentiable, if incremental inductances are used. Needed only for
         some control methods, not in the system model. If not given, the modified

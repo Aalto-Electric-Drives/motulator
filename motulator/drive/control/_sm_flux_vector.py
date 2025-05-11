@@ -79,7 +79,7 @@ class FluxTorqueController:
         self.gain = Gains(alpha_psi, alpha_tau, alpha_i)
 
     def compute_output(
-        self, psi_s_ref: float, tau_M_ref, fbk: ObserverOutputs
+        self, psi_s_ref: float, tau_M_ref: float, fbk: ObserverOutputs
     ) -> complex:
         """Calculate the voltage reference."""
         par = self.par

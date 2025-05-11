@@ -153,7 +153,8 @@ class CurrentVectorController:
     alpha_i : float, optional
         Integral-action bandwidth (rad/s), defaults to `alpha_c`.
     u_nom : float, optional
-        Nominal grid voltage (V), line-to-neutral peak value, defaults to sqrt(2/3)*400.
+        Nominal grid voltage (V), line-to-neutral peak value, defaults to
+        `sqrt(2/3)*400`.
     w_nom : float, optional
         Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
     alpha_pll : float, optional

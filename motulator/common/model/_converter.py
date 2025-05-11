@@ -127,7 +127,7 @@ class CapacitiveDCBusConverter(VoltageSourceConverter):
     ----------
     u_dc : float
         DC-bus voltage (V).
-    C_dc : float, optional
+    C_dc : float
         DC-bus capacitance (F).
 
     """

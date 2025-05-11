@@ -66,7 +66,7 @@ class InductionMachine(Subsystem):
 
     Parameters
     ----------
-    par : InductionMachinePars
+    par : InductionMachinePars | InductionMachineInvGammaPars
         Machine parameters.
 
     Notes

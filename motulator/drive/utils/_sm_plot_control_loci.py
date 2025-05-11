@@ -41,7 +41,7 @@ class MachineCharacteristics:
 
     Parameters
     ----------
-    par : SynchronousMachinePars
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine parameters.
 
     """

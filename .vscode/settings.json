@@ -51,6 +51,7 @@
         "figsize",
         "finfo",
         "fliplr",
+        "flipud",
         "fontset",
         "fontsize",
         "Gandoy",

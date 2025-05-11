@@ -51,7 +51,7 @@ class MechanicalSystem(Subsystem):
     ----------
     J : float
         Total moment of inertia (kgm²).
-    B_L : float | callable
+    B_L : float | Callable[[float], float]
         Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
         friction, or an arbitrary function of the rotor speed. For example, choosing
         ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque ``k*w_M**2``.
@@ -167,7 +167,7 @@ class TwoMassMechanicalSystem(Subsystem):
         Shaft torsional stiffness (Nm/rad).
     C_S : float
         Shaft torsional damping (Nm/(rad/s)).
-    B_L : float | callable
+    B_L : float | Callable[[float], float]
         Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
         friction, or an arbitrary function of the load speed. For example, choosing
         ``B_L = lambda w_L: k*abs(w_L)`` leads to quadratic load torque ``k*w_L**2``.

@@ -48,10 +48,10 @@ class PhaseLockedLoop:
     ----------
     par : SynchronousMachinePars
         Machine model parameters.
-    w_o : float, optional
-        Natural frequency of the phase-locked loop (rad/s), defaults to 2*pi*40.
+    w_o : float
+        Natural frequency of the phase-locked loop (rad/s).
     U_inj : float, optional
-        Injected voltage amplitude (V), defaults to 250.
+        Injected voltage amplitude (V).
     T_s : float
       Sampling period (s).
 

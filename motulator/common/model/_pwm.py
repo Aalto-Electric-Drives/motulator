@@ -26,7 +26,7 @@ class PWM(Protocol):
         ----------
         T_s : float
             Half carrier period (s), corresponds to sampling period.
-        d_abc : Sequence[float], shape (3,)
+        d_abc : Sequence[float]
             Duty ratios in range [0, 1].
 
         Returns

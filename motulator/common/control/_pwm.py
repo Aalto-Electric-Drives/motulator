@@ -60,7 +60,7 @@ class PWM:
         self._old_u_c_ab = u_c_ab0
 
     @staticmethod
-    def six_step_overmodulation(u_c_ab_ref, u_dc) -> complex:
+    def six_step_overmodulation(u_c_ab_ref: complex, u_dc: float) -> complex:
         """
         Overmodulation up to six-step operation.
 
