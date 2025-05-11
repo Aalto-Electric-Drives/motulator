@@ -78,8 +78,8 @@ class Simulation:
         Discrete-time control system.
     show_progress : bool, optional
         Show progress during simulation, defaults to True.
-    cfg : SimulationCfg, optional
-        Simulation configuration parameters.
+    cfg : SolverCfg, optional
+        Solver configuration parameters.
 
     """
 

@@ -65,7 +65,7 @@ class FluxObserver:
     ----------
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
-    alpha_d : float, optional
+    alpha_d : float
         Rotor-angle estimation bandwidth (rad/s).
     k_o : Callable[[float], float]
         Observer gain as a function of the rotor angular speed.
@@ -245,7 +245,7 @@ def create_sensored_observer(
     k_f: Callable[[float], float] | None = None,
 ) -> FluxObserver:
     """
-    Create a sensored observer.
+    Create a flux observer for a drive equipped with a motion sensor.
 
     Parameters
     ----------
@@ -253,15 +253,20 @@ def create_sensored_observer(
         Machine model parameters.
     alpha_d : float, optional
         Rotor-angle estimation bandwidth (rad/s), defaults to 2*pi*200.
-    k_o : callable, optional
+    k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed, defaults to ``lambda
         w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else
         ``lambda w_m: 2*pi*15``.
-    k_f : callable, optional
+    k_f : Callable[[float], float], optional
         PM-flux estimation gain (V) as a function of the rotor angular speed, defaults
         to zero, ``lambda w_m: 0``. A typical nonzero gain is of the form ``lambda w_m:
         max(k*(abs(w_m) - w_min), 0)``, i.e., zero below the speed `w_min` (rad/s) and
         linearly increasing above that with the slope `k` (Vs).
+
+    Returns
+    -------
+    FluxObserver
+        Flux observer for a sensored drive.
 
     """
     k_o = (lambda w_m: 2 * pi * 15) if k_o is None else k_o
@@ -285,15 +290,20 @@ def create_sensorless_observer(
         Machine model parameters.
     alpha_o : float, optional
         Speed estimation bandwidth (rad/s), defaults to 2*pi*100.
-    k_o : callable, optional
+    k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed, defaults to ``lambda
         w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else
         ``lambda w_m: 2*pi*15``.
-    k_f : callable, optional
+    k_f : Callable[[float], float], optional
         PM-flux estimation gain (V) as a function of the rotor angular speed, default to
         zero, ``lambda w_m: 0``. A typical nonzero gain is of the form ``lambda w_m:
         max(k*(abs(w_m) - w_min), 0)``, i.e., zero below the speed `w_min` (rad/s) and
         linearly increasing above that with the slope `k` (Vs).
+
+    Returns
+    -------
+    SpeedFluxObserver
+        Sensorless observer with speed estimation.
 
     """
     inv_L_s0 = par.inv_incr_ind_mat(par.psi_f)
@@ -319,10 +329,15 @@ def create_vhz_observer(
         Machine model parameters.
     alpha_d : float, optional
         Angle estimation bandwidth (rad/s), defaults to 2*pi*200.
-    k_o : callable, optional
+    k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed, defaults to ``lambda
         w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else
         ``lambda w_m: 2*pi*15``.
+
+    Returns
+    -------
+    FluxObserver
+        Sensorless observer without speed estimation.
 
     """
     inv_L_s0 = par.inv_incr_ind_mat(par.psi_f)

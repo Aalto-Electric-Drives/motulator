@@ -46,8 +46,8 @@ class CurrentController(ComplexPIController):
     ----------
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
-    alpha_c : float, optional
-        Reference-tracking bandwidth (rad/s), defaults to 2*pi*200.
+    alpha_c : float
+        Reference-tracking bandwidth (rad/s).
     alpha_i : float, optional
         Integral-action bandwidth (rad/s), defaults to `alpha_c`.
 

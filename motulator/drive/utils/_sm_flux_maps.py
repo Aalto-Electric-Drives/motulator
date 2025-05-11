@@ -22,7 +22,7 @@ class MagneticModel:
         Complex array of stator current (A).
     psi_s_dq : np.ndarray
         Complex array of stator flux linkage (Vs).
-    lookup_fcn : callable, optional
+    lookup_fcn : Callable[[complex | np.ndarray], complex | np.ndarray], optional
         Linear interpolation function that evaluates the map at arbitrary points. Takes
         complex inputs (d + j*q) and returns interpolated output values. For flux maps,
         maps i_s_dq → psi_s_dq; for current maps, maps psi_s_dq → i_s_dq. The function
@@ -167,12 +167,13 @@ class MagneticModel:
 
             Parameters
             ----------
-            dq_input : complex or ndarray of complex
+            dq_input : complex | np.ndarray
                 Input values in complex form (d + j*q).
 
             Returns
             -------
-            Output value(s) corresponding to the input(s).
+            np.ndarray
+                Output value(s) corresponding to the input(s).
 
             """
             if np.isscalar(dq_input) or isinstance(dq_input, complex):
@@ -454,13 +455,13 @@ def plot_maps(
         default is "flux_map").
     base : BaseValues, optional
         Base values for scaling the maps.
-    x_lims : tuple, optional
+    x_lims : tuple[float, float], optional
         Range for the x-axis as (min, max). If None, the range is determined from the
         data, defaults to None.
-    y_lims : tuple, optional
+    y_lims : tuple[float, float], optional
         Range for the y-axis as (min, max). If None, the range is determined from the
         data, defaults to None.
-    z_lims : tuple, optional
+    z_lims : tuple[float, float], optional
         Range for the z-axis as (min, max). If None, the range is determined from the
         data, defaults to None.
     raw_data : MagneticModel, optional
@@ -599,7 +600,7 @@ def plot_flux_vs_current(
         Flux map data. The current array should be a rectilinear grid.
     base : BaseValues, optional
         Base values for scaling the maps.
-    lims : tuple, optional
+    lims : tuple[float, float], optional
         Range for the x-axis as (min, max). If None, determined from the data.
     latex : bool, optional
         Use LaTeX fonts for the labels, requires a working LaTeX installation.

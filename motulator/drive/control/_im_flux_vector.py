@@ -146,7 +146,7 @@ class FluxTorqueController:
         return u_s_ref, i_s_ref
 
     def update(self, T_s: float, fbk: ObserverOutputs) -> None:
-        """Update the integral state."""
+        """Update the integral states."""
         par, gain = self.par, self.gain
         # Error signal and gains
         e = fbk.u_s - self._v
@@ -275,17 +275,6 @@ class FluxVectorController:
         Flux-vector control configuration.
     sensorless : bool, optional
         If True, sensorless control is used, default to True.
-    T_s : float, optional
-        Sampling period (s), defaults to 125e-6.
-
-    Parameters
-    ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
-        Machine model parameters.
-    cfg : FluxVectorControllerCfg
-        Flux-vector control configuration.
-    sensorless : bool, optional
-        If True, sensorless control is used, defaults to True.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 

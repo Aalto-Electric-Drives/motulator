@@ -119,12 +119,21 @@ class ObserverBasedGridFormingController:
     ----------
     i_max : float
         Maximum current (A), peak value.
+    L : float
+        Total inductance (H).
+    R : float, optional
+        Total series resistance (Ω), defaults to 0.
     R_a : float, optional
         Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
     k_v : float, optional
         Voltage control gain, defaults to `alpha_o/w_nom`.
+    alpha_o : float
+        Observer gain (rad/s), defaults to 2*pi*50.
     alpha_c : float, optional
         Current control bandwidth (rad/s), defaults to 2*pi*400.
+    u_nom : float
+        Nominal grid voltage (V), line-to-neutral peak value, defaults to
+        `sqrt(2/3)*400`.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 

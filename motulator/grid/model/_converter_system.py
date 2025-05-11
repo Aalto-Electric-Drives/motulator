@@ -47,7 +47,7 @@ class GridConverterSystem(Model):
         # Store references for interconnection
         self.subsystems = [self.converter, self.ac_filter, self.ac_source]
 
-        # Direct connections without LC filter
+        # Define connections
         self.connections = {
             (self.converter, "i_c_ab"): (self.ac_filter, "i_c_ab"),
             (self.ac_filter, "u_c_ab"): (self.converter, "u_c_ab"),
