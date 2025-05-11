@@ -456,7 +456,7 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    J : float</span>
 <span class="sd">        Total moment of inertia (kgm²).</span>
-<span class="sd">    B_L : float | callable</span>
+<span class="sd">    B_L : float | Callable[[float], float]</span>
 <span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous</span>
 <span class="sd">        friction, or an arbitrary function of the rotor speed. For example, choosing</span>
 <span class="sd">        ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque ``k*w_M**2``.</span>
@@ -599,7 +599,7 @@ document.write(`
 <span class="sd">        Shaft torsional stiffness (Nm/rad).</span>
 <span class="sd">    C_S : float</span>
 <span class="sd">        Shaft torsional damping (Nm/(rad/s)).</span>
-<span class="sd">    B_L : float | callable</span>
+<span class="sd">    B_L : float | Callable[[float], float]</span>
 <span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous</span>
 <span class="sd">        friction, or an arbitrary function of the load speed. For example, choosing</span>
 <span class="sd">        ``B_L = lambda w_L: k*abs(w_L)`` leads to quadratic load torque ``k*w_L**2``.</span>

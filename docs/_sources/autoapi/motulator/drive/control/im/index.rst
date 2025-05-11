@@ -456,15 +456,6 @@ Module Contents
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 
-   :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-   :param cfg: Flux-vector control configuration.
-   :type cfg: FluxVectorControllerCfg
-   :param sensorless: If True, sensorless control is used, defaults to True.
-   :type sensorless: bool, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
-
    .. rubric:: References
 
    .. [#Tii2025b] Tiitinen, Hinkkanen, Harnefors, "Sensorless flux-vector control

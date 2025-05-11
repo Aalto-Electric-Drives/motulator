@@ -55,7 +55,7 @@ Package Contents
    :param u_dc: DC-bus voltage (V).
    :type u_dc: float
    :param C_dc: DC-bus capacitance (F).
-   :type C_dc: float, optional
+   :type C_dc: float
 
 
 
@@ -638,8 +638,8 @@ Package Contents
    :type ctrl: ControlSystem
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
-   :param cfg: Simulation configuration parameters.
-   :type cfg: SimulationCfg, optional
+   :param cfg: Solver configuration parameters.
+   :type cfg: SolverCfg, optional
 
 
 

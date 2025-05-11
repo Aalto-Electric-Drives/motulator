@@ -373,8 +373,8 @@ Package Contents
    :type ctrl: ControlSystem
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
-   :param cfg: Simulation configuration parameters.
-   :type cfg: SimulationCfg, optional
+   :param cfg: Solver configuration parameters.
+   :type cfg: SolverCfg, optional
 
 
 

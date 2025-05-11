@@ -546,10 +546,10 @@ document.write(`
 <span class="sd">        Number of pole pairs.</span>
 <span class="sd">    R_s : float</span>
 <span class="sd">        Stator resistance (Ω).</span>
-<span class="sd">    i_s_dq_fcn : callable</span>
+<span class="sd">    i_s_dq_fcn : Callable[[complex], complex]</span>
 <span class="sd">        Stator current (A) as a function of the stator flux linkage (Vs). This function</span>
 <span class="sd">        should be differentiable, if inverse incremental inductances are used.</span>
-<span class="sd">    psi_s_dq_fcn : callable, optional</span>
+<span class="sd">    psi_s_dq_fcn : Callable[[complex], complex], optional</span>
 <span class="sd">        Stator flux linkage (Vs) as a function of the stator current (A). This function</span>
 <span class="sd">        should be differentiable, if incremental inductances are used. Needed only for</span>
 <span class="sd">        some control methods, not in the system model. If not given, the modified</span>

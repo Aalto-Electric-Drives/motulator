@@ -549,7 +549,7 @@ document.write(`
         <span class="k">return</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">i_s_ref</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the integral state.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the integral states.&quot;&quot;&quot;</span>
         <span class="n">par</span><span class="p">,</span> <span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain</span>
         <span class="c1"># Error signal and gains</span>
         <span class="n">e</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_v</span>
@@ -689,17 +689,6 @@ document.write(`
 <span class="sd">        Flux-vector control configuration.</span>
 <span class="sd">    sensorless : bool, optional</span>
 <span class="sd">        If True, sensorless control is used, default to True.</span>
-<span class="sd">    T_s : float, optional</span>
-<span class="sd">        Sampling period (s), defaults to 125e-6.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars</span>
-<span class="sd">        Machine model parameters.</span>
-<span class="sd">    cfg : FluxVectorControllerCfg</span>
-<span class="sd">        Flux-vector control configuration.</span>
-<span class="sd">    sensorless : bool, optional</span>
-<span class="sd">        If True, sensorless control is used, defaults to True.</span>
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s), defaults to 125e-6.</span>
 

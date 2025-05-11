@@ -427,7 +427,7 @@ document.write(`
 <span class="sd">        Complex array of stator current (A).</span>
 <span class="sd">    psi_s_dq : np.ndarray</span>
 <span class="sd">        Complex array of stator flux linkage (Vs).</span>
-<span class="sd">    lookup_fcn : callable, optional</span>
+<span class="sd">    lookup_fcn : Callable[[complex | np.ndarray], complex | np.ndarray], optional</span>
 <span class="sd">        Linear interpolation function that evaluates the map at arbitrary points. Takes</span>
 <span class="sd">        complex inputs (d + j*q) and returns interpolated output values. For flux maps,</span>
 <span class="sd">        maps i_s_dq → psi_s_dq; for current maps, maps psi_s_dq → i_s_dq. The function</span>
@@ -583,12 +583,13 @@ document.write(`
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
-<span class="sd">            dq_input : complex or ndarray of complex</span>
+<span class="sd">            dq_input : complex | np.ndarray</span>
 <span class="sd">                Input values in complex form (d + j*q).</span>
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
-<span class="sd">            Output value(s) corresponding to the input(s).</span>
+<span class="sd">            np.ndarray</span>
+<span class="sd">                Output value(s) corresponding to the input(s).</span>
 
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">dq_input</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dq_input</span><span class="p">,</span> <span class="nb">complex</span><span class="p">):</span>
@@ -883,13 +884,13 @@ document.write(`
 <span class="sd">        default is &quot;flux_map&quot;).</span>
 <span class="sd">    base : BaseValues, optional</span>
 <span class="sd">        Base values for scaling the maps.</span>
-<span class="sd">    x_lims : tuple, optional</span>
+<span class="sd">    x_lims : tuple[float, float], optional</span>
 <span class="sd">        Range for the x-axis as (min, max). If None, the range is determined from the</span>
 <span class="sd">        data, defaults to None.</span>
-<span class="sd">    y_lims : tuple, optional</span>
+<span class="sd">    y_lims : tuple[float, float], optional</span>
 <span class="sd">        Range for the y-axis as (min, max). If None, the range is determined from the</span>
 <span class="sd">        data, defaults to None.</span>
-<span class="sd">    z_lims : tuple, optional</span>
+<span class="sd">    z_lims : tuple[float, float], optional</span>
 <span class="sd">        Range for the z-axis as (min, max). If None, the range is determined from the</span>
 <span class="sd">        data, defaults to None.</span>
 <span class="sd">    raw_data : MagneticModel, optional</span>
@@ -1031,7 +1032,7 @@ document.write(`
 <span class="sd">        Flux map data. The current array should be a rectilinear grid.</span>
 <span class="sd">    base : BaseValues, optional</span>
 <span class="sd">        Base values for scaling the maps.</span>
-<span class="sd">    lims : tuple, optional</span>
+<span class="sd">    lims : tuple[float, float], optional</span>
 <span class="sd">        Range for the x-axis as (min, max). If None, determined from the data.</span>
 <span class="sd">    latex : bool, optional</span>
 <span class="sd">        Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>

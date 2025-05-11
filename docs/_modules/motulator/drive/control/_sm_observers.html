@@ -473,7 +473,7 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
-<span class="sd">    alpha_d : float, optional</span>
+<span class="sd">    alpha_d : float</span>
 <span class="sd">        Rotor-angle estimation bandwidth (rad/s).</span>
 <span class="sd">    k_o : Callable[[float], float]</span>
 <span class="sd">        Observer gain as a function of the rotor angular speed.</span>
@@ -669,7 +669,7 @@ document.write(`
     <span class="n">k_f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FluxObserver</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a sensored observer.</span>
+<span class="sd">    Create a flux observer for a drive equipped with a motion sensor.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -677,15 +677,20 @@ document.write(`
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_d : float, optional</span>
 <span class="sd">        Rotor-angle estimation bandwidth (rad/s), defaults to 2*pi*200.</span>
-<span class="sd">    k_o : callable, optional</span>
+<span class="sd">    k_o : Callable[[float], float], optional</span>
 <span class="sd">        Observer gain as a function of the rotor angular speed, defaults to ``lambda</span>
 <span class="sd">        w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else</span>
 <span class="sd">        ``lambda w_m: 2*pi*15``.</span>
-<span class="sd">    k_f : callable, optional</span>
+<span class="sd">    k_f : Callable[[float], float], optional</span>
 <span class="sd">        PM-flux estimation gain (V) as a function of the rotor angular speed, defaults</span>
 <span class="sd">        to zero, ``lambda w_m: 0``. A typical nonzero gain is of the form ``lambda w_m:</span>
 <span class="sd">        max(k*(abs(w_m) - w_min), 0)``, i.e., zero below the speed `w_min` (rad/s) and</span>
 <span class="sd">        linearly increasing above that with the slope `k` (Vs).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FluxObserver</span>
+<span class="sd">        Flux observer for a sensored drive.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">k_o</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">15</span><span class="p">)</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
@@ -709,15 +714,20 @@ document.write(`
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Speed estimation bandwidth (rad/s), defaults to 2*pi*100.</span>
-<span class="sd">    k_o : callable, optional</span>
+<span class="sd">    k_o : Callable[[float], float], optional</span>
 <span class="sd">        Observer gain as a function of the rotor angular speed, defaults to ``lambda</span>
 <span class="sd">        w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else</span>
 <span class="sd">        ``lambda w_m: 2*pi*15``.</span>
-<span class="sd">    k_f : callable, optional</span>
+<span class="sd">    k_f : Callable[[float], float], optional</span>
 <span class="sd">        PM-flux estimation gain (V) as a function of the rotor angular speed, default to</span>
 <span class="sd">        zero, ``lambda w_m: 0``. A typical nonzero gain is of the form ``lambda w_m:</span>
 <span class="sd">        max(k*(abs(w_m) - w_min), 0)``, i.e., zero below the speed `w_min` (rad/s) and</span>
 <span class="sd">        linearly increasing above that with the slope `k` (Vs).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    SpeedFluxObserver</span>
+<span class="sd">        Sensorless observer with speed estimation.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">inv_L_s0</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">inv_incr_ind_mat</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span>
@@ -743,10 +753,15 @@ document.write(`
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_d : float, optional</span>
 <span class="sd">        Angle estimation bandwidth (rad/s), defaults to 2*pi*200.</span>
-<span class="sd">    k_o : callable, optional</span>
+<span class="sd">    k_o : Callable[[float], float], optional</span>
 <span class="sd">        Observer gain as a function of the rotor angular speed, defaults to ``lambda</span>
 <span class="sd">        w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else</span>
 <span class="sd">        ``lambda w_m: 2*pi*15``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FluxObserver</span>
+<span class="sd">        Sensorless observer without speed estimation.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">inv_L_s0</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">inv_incr_ind_mat</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span>

@@ -810,7 +810,7 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 synchronous machines directly from machine parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="../control/sm/index.html#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a>) – Machine parameters.</p>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="../control/sm/index.html#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="../control/sm/index.html#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine parameters.</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -930,7 +930,7 @@ maps i_s_dq → psi_s_dq; for current maps, maps psi_s_dq → i_s_dq. The functi
 extrapolates outside the map range.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>callable, optional</p>
+<dd class="field-odd"><p>Callable[[<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)">complex</a> | np.ndarray], <a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)">complex</a> | np.ndarray], optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1357,7 +1357,7 @@ installation, defaults to False.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><em>MagneticModel</em></a>) – Flux map data. The current array should be a rectilinear grid.</p></li>
 <li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the maps.</p></li>
-<li><p><strong>lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range for the x-axis as (min, max). If None, determined from the data.</p></li>
+<li><p><strong>lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Range for the x-axis as (min, max). If None, determined from the data.</p></li>
 <li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels, requires a working LaTeX installation.</p></li>
 </ul>
 </dd>
@@ -1378,11 +1378,11 @@ installation, defaults to False.</p></li>
 based on the <cite>type</cite> field, which is either “flux_map” or “current_map” (the
 default is “flux_map”).</p></li>
 <li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the maps.</p></li>
-<li><p><strong>x_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range for the x-axis as (min, max). If None, the range is determined from the
+<li><p><strong>x_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Range for the x-axis as (min, max). If None, the range is determined from the
 data, defaults to None.</p></li>
-<li><p><strong>y_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range for the y-axis as (min, max). If None, the range is determined from the
+<li><p><strong>y_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Range for the y-axis as (min, max). If None, the range is determined from the
 data, defaults to None.</p></li>
-<li><p><strong>z_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range for the z-axis as (min, max). If None, the range is determined from the
+<li><p><strong>z_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Range for the z-axis as (min, max). If None, the range is determined from the
 data, defaults to None.</p></li>
 <li><p><strong>raw_data</strong> (<a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><em>MagneticModel</em></a><em>, </em><em>optional</em>) – Flux and current information for comparison..</p></li>
 <li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX

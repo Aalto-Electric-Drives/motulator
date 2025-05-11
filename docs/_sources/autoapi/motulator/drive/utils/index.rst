@@ -404,7 +404,7 @@ Package Contents
    synchronous machines directly from machine parameters.
 
    :param par: Machine parameters.
-   :type par: SynchronousMachinePars
+   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
 
 
 
@@ -579,7 +579,7 @@ Package Contents
       maps i_s_dq → psi_s_dq; for current maps, maps psi_s_dq → i_s_dq. The function
       extrapolates outside the map range.
 
-      :type: callable, optional
+      :type: Callable[[complex | np.ndarray], complex | np.ndarray], optional
 
    .. attribute:: tau_M
 
@@ -1117,7 +1117,7 @@ Package Contents
    :param base: Base values for scaling the maps.
    :type base: BaseValues, optional
    :param lims: Range for the x-axis as (min, max). If None, determined from the data.
-   :type lims: tuple, optional
+   :type lims: tuple[float, float], optional
    :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
    :type latex: bool, optional
 
@@ -1151,13 +1151,13 @@ Package Contents
    :type base: BaseValues, optional
    :param x_lims: Range for the x-axis as (min, max). If None, the range is determined from the
                   data, defaults to None.
-   :type x_lims: tuple, optional
+   :type x_lims: tuple[float, float], optional
    :param y_lims: Range for the y-axis as (min, max). If None, the range is determined from the
                   data, defaults to None.
-   :type y_lims: tuple, optional
+   :type y_lims: tuple[float, float], optional
    :param z_lims: Range for the z-axis as (min, max). If None, the range is determined from the
                   data, defaults to None.
-   :type z_lims: tuple, optional
+   :type z_lims: tuple[float, float], optional
    :param raw_data: Flux and current information for comparison..
    :type raw_data: MagneticModel, optional
    :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX

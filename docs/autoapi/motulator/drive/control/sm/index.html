@@ -626,7 +626,7 @@ and the inductances (or nonlinear flux linkage maps).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Reference-tracking bandwidth (rad/s), defaults to 2*pi*200.</p></li>
+<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Reference-tracking bandwidth (rad/s).</p></li>
 <li><p><strong>alpha_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Integral-action bandwidth (rad/s), defaults to <cite>alpha_c</cite>.</p></li>
 </ul>
 </dd>
@@ -764,7 +764,7 @@ saturation is taken into account.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Rotor-angle estimation bandwidth (rad/s).</p></li>
+<li><p><strong>alpha_d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Rotor-angle estimation bandwidth (rad/s).</p></li>
 <li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – Observer gain as a function of the rotor angular speed.</p></li>
 <li><p><strong>k_f</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – PM-flux estimation gain (V) as a function of the rotor angular speed.</p></li>
 <li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, sensorless mode is used.</p></li>
@@ -1188,9 +1188,9 @@ for the system model and optimal reference generation.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of pole pairs.</p></li>
 <li><p><strong>R_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Stator resistance (Ω).</p></li>
-<li><p><strong>i_s_dq_fcn</strong> (<em>callable</em>) – Stator current (A) as a function of the stator flux linkage (Vs). This function
+<li><p><strong>i_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em>]</em>) – Stator current (A) as a function of the stator flux linkage (Vs). This function
 should be differentiable, if inverse incremental inductances are used.</p></li>
-<li><p><strong>psi_s_dq_fcn</strong> (<em>callable</em><em>, </em><em>optional</em>) – Stator flux linkage (Vs) as a function of the stator current (A). This function
+<li><p><strong>psi_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Stator flux linkage (Vs) as a function of the stator current (A). This function
 should be differentiable, if incremental inductances are used. Needed only for
 some control methods, not in the system model. If not given, the modified
 Powell’s method is used to iteratively compute the flux linkage.</p></li>

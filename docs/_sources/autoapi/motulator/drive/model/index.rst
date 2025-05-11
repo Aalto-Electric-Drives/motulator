@@ -435,7 +435,7 @@ Package Contents
        L_s = L_s(abs(psi_s_ab))
 
    :param par: Machine parameters.
-   :type par: InductionMachinePars
+   :type par: InductionMachinePars | InductionMachineInvGammaPars
 
    .. rubric:: Notes
 
@@ -884,7 +884,7 @@ Package Contents
                friction, or an arbitrary function of the rotor speed. For example, choosing
                ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque ``k*w_M**2``.
                The default is ``B_L = 0``.
-   :type B_L: float | callable
+   :type B_L: float | Callable[[float], float]
 
 
 
@@ -1117,12 +1117,12 @@ Package Contents
    :type R_s: float
    :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). This function
                       should be differentiable, if inverse incremental inductances are used.
-   :type i_s_dq_fcn: callable
+   :type i_s_dq_fcn: Callable[[complex], complex]
    :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A). This function
                         should be differentiable, if incremental inductances are used. Needed only for
                         some control methods, not in the system model. If not given, the modified
                         Powell's method is used to iteratively compute the flux linkage.
-   :type psi_s_dq_fcn: callable, optional
+   :type psi_s_dq_fcn: Callable[[complex], complex], optional
    :param max_iter: Maximum number of iterations for the modified Powell's method, defaults to 20.
                     This is needed only for some control methods (not for the system model) in such
                     a case that `psi_s_dq_fcn` is not given.
@@ -1288,8 +1288,8 @@ Package Contents
    :type ctrl: ControlSystem
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
-   :param cfg: Simulation configuration parameters.
-   :type cfg: SimulationCfg, optional
+   :param cfg: Solver configuration parameters.
+   :type cfg: SolverCfg, optional
 
 
 
@@ -1641,7 +1641,7 @@ Package Contents
                friction, or an arbitrary function of the load speed. For example, choosing
                ``B_L = lambda w_L: k*abs(w_L)`` leads to quadratic load torque ``k*w_L**2``.
                The default is ``B_L = 0``.
-   :type B_L: float | callable
+   :type B_L: float | Callable[[float], float]
 
 
 

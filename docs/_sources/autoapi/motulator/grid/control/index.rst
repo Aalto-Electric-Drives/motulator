@@ -122,7 +122,8 @@ Package Contents
    :type alpha_c: float, optional
    :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_c`.
    :type alpha_i: float, optional
-   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to sqrt(2/3)*400.
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
+                 `sqrt(2/3)*400`.
    :type u_nom: float, optional
    :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
    :type w_nom: float, optional
@@ -586,12 +587,21 @@ Package Contents
 
    :param i_max: Maximum current (A), peak value.
    :type i_max: float
+   :param L: Total inductance (H).
+   :type L: float
+   :param R: Total series resistance (Ω), defaults to 0.
+   :type R: float, optional
    :param R_a: Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
    :type R_a: float, optional
    :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
    :type k_v: float, optional
+   :param alpha_o: Observer gain (rad/s), defaults to 2*pi*50.
+   :type alpha_o: float
    :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
    :type alpha_c: float, optional
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
+                 `sqrt(2/3)*400`.
+   :type u_nom: float
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 

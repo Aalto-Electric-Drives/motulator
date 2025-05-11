@@ -827,7 +827,7 @@ inductance <cite>L_s</cite> can either be constant or a function of the stator f
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine parameters.</p>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><em>InductionMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.InductionMachineInvGammaPars" title="motulator.drive.model.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine parameters.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1072,7 +1072,7 @@ linkage magnitude (Vs).</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Total moment of inertia (kgm²).</p></li>
-<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
+<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
 friction, or an arbitrary function of the rotor speed. For example, choosing
 <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">k*abs(w_M)</span></code> gives the quadratic load torque <code class="docutils literal notranslate"><span class="pre">k*w_M**2</span></code>.
 The default is <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
@@ -1202,9 +1202,9 @@ for the system model and optimal reference generation.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of pole pairs.</p></li>
 <li><p><strong>R_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Stator resistance (Ω).</p></li>
-<li><p><strong>i_s_dq_fcn</strong> (<em>callable</em>) – Stator current (A) as a function of the stator flux linkage (Vs). This function
+<li><p><strong>i_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em>]</em>) – Stator current (A) as a function of the stator flux linkage (Vs). This function
 should be differentiable, if inverse incremental inductances are used.</p></li>
-<li><p><strong>psi_s_dq_fcn</strong> (<em>callable</em><em>, </em><em>optional</em>) – Stator flux linkage (Vs) as a function of the stator current (A). This function
+<li><p><strong>psi_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Stator flux linkage (Vs) as a function of the stator current (A). This function
 should be differentiable, if incremental inductances are used. Needed only for
 some control methods, not in the system model. If not given, the modified
 Powell’s method is used to iteratively compute the flux linkage.</p></li>
@@ -1305,7 +1305,7 @@ a case that <cite>psi_s_dq_fcn</cite> is not given.</p></li>
 <li><p><strong>mdl</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a>) – Continuous-time system model.</p></li>
 <li><p><strong>ctrl</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><em>ControlSystem</em></a>) – Discrete-time control system.</p></li>
 <li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Show progress during simulation, defaults to True.</p></li>
-<li><p><strong>cfg</strong> (<em>SimulationCfg</em><em>, </em><em>optional</em>) – Simulation configuration parameters.</p></li>
+<li><p><strong>cfg</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.SolverCfg" title="motulator.common.model.SolverCfg"><em>SolverCfg</em></a><em>, </em><em>optional</em>) – Solver configuration parameters.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1495,7 +1495,7 @@ nonlinear current map par.i_s_dq (callable).</p>
 <li><p><strong>J_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Load moment of inertia (kgm²).</p></li>
 <li><p><strong>K_S</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Shaft torsional stiffness (Nm/rad).</p></li>
 <li><p><strong>C_S</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Shaft torsional damping (Nm/(rad/s)).</p></li>
-<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>callable</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
+<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
 friction, or an arbitrary function of the load speed. For example, choosing
 <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_L:</span> <span class="pre">k*abs(w_L)</span></code> leads to quadratic load torque <code class="docutils literal notranslate"><span class="pre">k*w_L**2</span></code>.
 The default is <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>

@@ -53,8 +53,8 @@ Module Contents
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-   :param alpha_c: Reference-tracking bandwidth (rad/s), defaults to 2*pi*200.
-   :type alpha_c: float, optional
+   :param alpha_c: Reference-tracking bandwidth (rad/s).
+   :type alpha_c: float
    :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_c`.
    :type alpha_i: float, optional
 
@@ -276,7 +276,7 @@ Module Contents
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param alpha_d: Rotor-angle estimation bandwidth (rad/s).
-   :type alpha_d: float, optional
+   :type alpha_d: float
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float]
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
@@ -937,12 +937,12 @@ Module Contents
    :type R_s: float
    :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). This function
                       should be differentiable, if inverse incremental inductances are used.
-   :type i_s_dq_fcn: callable
+   :type i_s_dq_fcn: Callable[[complex], complex]
    :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A). This function
                         should be differentiable, if incremental inductances are used. Needed only for
                         some control methods, not in the system model. If not given, the modified
                         Powell's method is used to iteratively compute the flux linkage.
-   :type psi_s_dq_fcn: callable, optional
+   :type psi_s_dq_fcn: Callable[[complex], complex], optional
    :param max_iter: Maximum number of iterations for the modified Powell's method, defaults to 20.
                     This is needed only for some control methods (not for the system model) in such
                     a case that `psi_s_dq_fcn` is not given.
