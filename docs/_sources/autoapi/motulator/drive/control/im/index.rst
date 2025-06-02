@@ -451,7 +451,7 @@ Module Contents
    :type par: InductionMachineInvGammaPars
    :param cfg: Flux-vector control configuration.
    :type cfg: FluxVectorControllerCfg
-   :param sensorless: If True, sensorless control is used, default to True.
+   :param sensorless: If True, sensorless control is used, defaults to True.
    :type sensorless: bool, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional

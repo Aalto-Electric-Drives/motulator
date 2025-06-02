@@ -557,7 +557,7 @@ document.write(`
         <span class="p">)</span>
         <span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="n">v_s</span> <span class="o">+</span> <span class="n">k_o1</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_r</span> <span class="o">-</span> <span class="n">v_s</span><span class="p">)</span> <span class="o">+</span> <span class="n">k_o2</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_r</span> <span class="o">-</span> <span class="n">v_s</span><span class="p">)</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">imag</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_s</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="n">den</span> <span class="k">if</span> <span class="n">den</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">w_m</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">w_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">R_R</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">w_r</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_R</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="n">w_m</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_m</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span>
 
@@ -655,8 +655,8 @@ document.write(`
 <span class="sd">    par : InductionMachineInvGammaPars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    k_o : Callable[[float], complex], optional</span>
-<span class="sd">        Observer gain as a function of the rotor angular speed, default to ``lambda w_m:</span>
-<span class="sd">        1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.</span>
+<span class="sd">        Observer gain as a function of the rotor angular speed, defaults to</span>
+<span class="sd">        ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_R</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span>

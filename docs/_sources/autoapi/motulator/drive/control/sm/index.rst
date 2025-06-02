@@ -226,7 +226,7 @@ Module Contents
    :type i_s_max: float
    :param alpha_c: Current-control bandwidth (rad/s), defaults to 2*pi*200.
    :type alpha_c: float, optional
-   :param alpha_i: Current-control integral-action bandwidth (rad/s), default to `alpha_c`.
+   :param alpha_i: Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`.
    :type alpha_i: float, optional
    :param alpha_o: Speed estimation bandwidth (rad/s), defaults to 2*pi*100.
    :type alpha_o: float, optional

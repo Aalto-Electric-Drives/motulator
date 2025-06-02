@@ -111,7 +111,7 @@ Package Contents
                       f : float
                           Frequency (Hz).
       :type nom: NominalValues
-      :param n_p: Number of pole pairs, default to None.
+      :param n_p: Number of pole pairs, defaults to None.
       :type n_p: int | None, optional
 
       :returns: Base values.
