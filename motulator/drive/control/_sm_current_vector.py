@@ -93,7 +93,7 @@ class CurrentVectorControllerCfg:
     alpha_c : float, optional
         Current-control bandwidth (rad/s), defaults to 2*pi*200.
     alpha_i : float, optional
-        Current-control integral-action bandwidth (rad/s), default to `alpha_c`.
+        Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`.
     alpha_o : float, optional
         Speed estimation bandwidth (rad/s), defaults to 2*pi*100.
     k_o : Callable[[float], float], optional

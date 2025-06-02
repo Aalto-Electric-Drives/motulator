@@ -295,8 +295,8 @@ def create_sensorless_observer(
         w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else
         ``lambda w_m: 2*pi*15``.
     k_f : Callable[[float], float], optional
-        PM-flux estimation gain (V) as a function of the rotor angular speed, default to
-        zero, ``lambda w_m: 0``. A typical nonzero gain is of the form ``lambda w_m:
+        PM-flux estimation gain (V) as a function of the rotor angular speed, defaults
+        to zero, ``lambda w_m: 0``. A typical nonzero gain is of the form ``lambda w_m:
         max(k*(abs(w_m) - w_min), 0)``, i.e., zero below the speed `w_min` (rad/s) and
         linearly increasing above that with the slope `k` (Vs).
 

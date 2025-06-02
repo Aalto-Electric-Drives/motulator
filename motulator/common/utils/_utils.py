@@ -248,7 +248,7 @@ class BaseValues:
                 f : float
                     Frequency (Hz).
         n_p : int | None, optional
-            Number of pole pairs, default to None.
+            Number of pole pairs, defaults to None.
 
         Returns
         -------
