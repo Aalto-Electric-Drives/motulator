@@ -274,7 +274,7 @@ class FluxVectorController:
     cfg : FluxVectorControllerCfg
         Flux-vector control configuration.
     sensorless : bool, optional
-        If True, sensorless control is used, default to True.
+        If True, sensorless control is used, defaults to True.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 

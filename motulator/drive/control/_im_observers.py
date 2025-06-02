@@ -150,7 +150,7 @@ class FluxObserver:
         )
         num = (v_s + k_o1 * (v_r - v_s) + k_o2 * (v_r - v_s).conjugate()).imag
         out.w_s = num / den if den > 0 else w_m
-        out.w_r = self.par.R_R * out.i_s.imag / out.psi_R if out.psi_R > 0 else 0
+        out.w_r = par.R_R * out.i_s.imag / out.psi_R if out.psi_R > 0 else 0
         out.w_m = w_m
         out.w_M = w_m / par.n_p
 
@@ -234,8 +234,8 @@ def create_sensored_observer(
     par : InductionMachineInvGammaPars
         Machine model parameters.
     k_o : Callable[[float], complex], optional
-        Observer gain as a function of the rotor angular speed, default to ``lambda w_m:
-        1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
+        Observer gain as a function of the rotor angular speed, defaults to
+        ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
 
     """
     alpha = par.R_R / par.L_M
