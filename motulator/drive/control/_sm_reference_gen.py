@@ -149,7 +149,7 @@ class ReferenceGenerator:
             psi_s = psi_s_ref * exp(1j * delta)
             i_s = complex(self.par.i_s_dq(psi_s))
             tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
-            return tau_M_ref - tau_M
+            return abs(tau_M_ref) - tau_M
 
         if error(delta_range[0]) * error(delta_range[1]) >= 0:
             delta = 0.0

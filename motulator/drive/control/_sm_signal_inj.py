@@ -4,7 +4,6 @@ from cmath import exp, pi
 from dataclasses import dataclass
 
 from motulator.common.utils import wrap
-from motulator.drive.control._base import Measurements
 from motulator.drive.control._sm_current_vector import (
     CurrentVectorController,
     CurrentVectorControllerCfg,
@@ -71,13 +70,13 @@ class PhaseLockedLoop:
         self.par = par
         self.sensorless = True  # For compatibility reasons
 
-    def compute_output(self, meas: Measurements, u_s_ab: complex) -> PLLOutputSignals:
+    def compute_output(self, u_s_ab: complex, i_s_ab: complex) -> PLLOutputSignals:
         """Compute output."""
         out = PLLOutputSignals(theta_m=self.state.theta_m, w_m=self.state.w_m)
         out.w_M = out.w_m / self.par.n_p
 
         # Current and voltage vectors in (estimated) rotor coordinates
-        out.i_s = exp(-1j * out.theta_m) * meas.i_s_ab
+        out.i_s = exp(-1j * out.theta_m) * i_s_ab
         out.u_s = exp(-1j * out.theta_m) * u_s_ab
 
         # Filter the current signal
@@ -164,6 +163,6 @@ class SignalInjectionController(CurrentVectorController):
             self.current_ctrl.compute_output(ref.i_s, fbk.i_s_flt)
             + self.observer.u_sd_inj
         )
-        u_s_ab = exp(1j * fbk.theta_m) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ab, fbk.u_dc, fbk.w_s)
+        u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
         return ref

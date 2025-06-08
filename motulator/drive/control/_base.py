@@ -39,7 +39,7 @@ class ExternalReferences:
 class Measurements:
     """Measured signals."""
 
-    i_s_ab: complex
+    i_c_ab: complex  # Converter current (A) in stationary coordinates
     u_dc: float
     w_M: float | None = None
     theta_M: float | None = None
@@ -76,8 +76,8 @@ class VectorControlSystem(ControlSystem):
     ----------
     vector_ctrl : VectorController
         Vector controller whose input is the torque reference.
-    speed_ctrl : SpeedController, optional
-        Speed controller. If not given, torque-control mode is used.
+    speed_ctrl : SpeedController | PIController | None
+        Speed controller. If not given or None, torque-control mode is used.
 
     """
 
@@ -118,14 +118,18 @@ class VectorControlSystem(ControlSystem):
     def get_measurement(self, mdl: Drive) -> Measurements:
         """Get measurements from sensors."""
         u_dc = mdl.converter.meas_dc_voltage()
-        i_s_ab = abc2complex(mdl.machine.meas_currents())
+        if mdl.lc_filter is not None:
+            i_c_ab = abc2complex(mdl.lc_filter.meas_currents())
+        else:
+            i_c_ab = abc2complex(mdl.machine.meas_currents())
+
         if self.vector_ctrl.sensorless:
             w_M = None
             theta_M = None
         else:
             w_M = mdl.mechanics.meas_speed()
             theta_M = wrap(mdl.mechanics.meas_position())
-        return Measurements(i_s_ab, u_dc, w_M, theta_M)
+        return Measurements(i_c_ab, u_dc, w_M, theta_M)
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""

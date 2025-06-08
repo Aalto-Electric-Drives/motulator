@@ -109,12 +109,17 @@ class Simulation:
         """
         try:
             # Initialize outputs based on initial states
-            self.mdl.set_outputs(0)  # Set t = 0 for initialization
+            self.mdl.set_outputs(0.0)
 
             # Main simulation loop
             progress_bar = None
             if self.show_progress:
-                progress_bar = tqdm(total=t_stop, desc="Simulation", unit="s")
+                progress_bar = tqdm(
+                    total=t_stop,
+                    desc="Simulation",
+                    unit="s",
+                    bar_format="{l_bar}{bar}| {n:.2f}/{total:.2f} {unit}",
+                )
 
             def update_progress() -> None:
                 if progress_bar is not None:

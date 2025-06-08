@@ -266,11 +266,11 @@ class CurrentVectorController:
 
     def get_feedback(self, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""
-        u_s_ab = self.pwm.get_realized_voltage()
+        u_c_ab = self.pwm.get_realized_voltage()
         if self.sensorless:
-            fbk = self.observer.compute_output(meas, u_s_ab)
+            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
         else:
-            fbk = self.observer.compute_output(meas, u_s_ab, meas.w_M)
+            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab, meas.w_M)
         fbk.u_dc = meas.u_dc
         return fbk
 

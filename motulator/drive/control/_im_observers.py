@@ -6,7 +6,6 @@ from math import inf, pi
 from typing import Callable
 
 from motulator.common.utils import wrap
-from motulator.drive.control._base import Measurements
 from motulator.drive.utils._parameters import InductionMachineInvGammaPars
 
 
@@ -91,17 +90,17 @@ class FluxObserver:
         self._work = ObserverWorkspace()
 
     def compute_output(
-        self, meas: Measurements, u_s_ab: complex, w_M: float | None
+        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None
     ) -> ObserverOutputs:
         """
         Compute the feedback signals for the control system.
 
         Parameters
         ----------
-        meas : Measurements
-            Measured signals.
         u_s_ab : complex
             Stator voltage (V) in stator coordinates.
+        i_s_ab : complex
+            Stator current (A) in stator coordinates.
         w_M : float, optional
             Rotor speed (mechanical rad/s), either measured or estimated.
 
@@ -118,7 +117,7 @@ class FluxObserver:
         out = ObserverOutputs(psi_R=self.state.psi_R, theta_s=self.state.theta_s)
 
         # Current and voltage vectors in estimated rotor flux coordinates
-        out.i_s = exp(-1j * out.theta_s) * meas.i_s_ab
+        out.i_s = exp(-1j * out.theta_s) * i_s_ab
         out.u_s = exp(-1j * out.theta_s) * u_s_ab
 
         # Stator flux estimate
@@ -204,11 +203,26 @@ class SpeedFluxObserver(FluxObserver):
         self.alpha_o = alpha_o
 
     def compute_output(
-        self, meas: Measurements, u_s_ab: complex, w_M=None
+        self, u_s_ab: complex, i_s_ab: complex, w_M=None
     ) -> ObserverOutputs:
-        """Compute feedback signals with speed estimation."""
-        w_M = self.state.w_m / self.par.n_p
-        out = super().compute_output(meas, u_s_ab, w_M)
+        """
+        Compute feedback signals with speed estimation.
+
+        Parameters
+        ----------
+        u_s_ab : complex
+            Stator voltage (V) in stator coordinates.
+        i_s_ab : complex
+            Stator current (A) in stator coordinates.
+
+        Returns
+        -------
+        out : ObserverOutputs
+            Estimated feedback signals for the control system, including speed estimate.
+
+        """
+        w_M_est = self.state.w_m / self.par.n_p
+        out = super().compute_output(u_s_ab, i_s_ab, w_M_est)
         self._work.w_r = out.w_r
         return out
 
