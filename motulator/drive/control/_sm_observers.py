@@ -6,7 +6,6 @@ from math import pi
 from typing import Callable
 
 from motulator.common.utils import wrap
-from motulator.drive.control._base import Measurements
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
@@ -103,19 +102,25 @@ class FluxObserver:
         self._work = ObserverWorkspace()
 
     def compute_output(
-        self, meas: Measurements, u_s_ab: complex, w_M: float | None
+        self,
+        u_s_ab: complex,
+        i_s_ab: complex,
+        w_M: float | None,
+        theta_M_meas: float | None = None,
     ) -> ObserverOutputs:
         """
         Compute the feedback signals for the control system.
 
         Parameters
         ----------
-        meas : MeasuredSignals
-            Measured signals for the control system.
         u_s_ab : complex
             Stator voltage (V) in stator coordinates.
-        w_M : float, optional
+        i_s_ab : complex
+            Stator current (A) in stator coordinates.
+        w_M : float
             Rotor speed (mechanical rad/s), either measured or estimated.
+        theta_M_meas : float, optional
+            Measured rotor angle (mechanical rad), used only in sensored mode.
 
         Returns
         -------
@@ -133,13 +138,13 @@ class FluxObserver:
         w_m = par.n_p * w_M
 
         # Get the mechanical angle
-        if self.sensorless or meas.theta_M is None:
+        if self.sensorless or theta_M_meas is None:
             out.theta_m = self.state.theta_m
         else:
-            out.theta_m = par.n_p * meas.theta_M
+            out.theta_m = par.n_p * theta_M_meas
 
         # Current and voltage vectors in (estimated) rotor coordinates
-        out.i_s = exp(-1j * out.theta_m) * meas.i_s_ab
+        out.i_s = exp(-1j * out.theta_m) * i_s_ab
         out.u_s = exp(-1j * out.theta_m) * u_s_ab
 
         # Error term
@@ -191,6 +196,7 @@ class FluxObserver:
         self.par.psi_f += T_s * self._work.d_psi_f
 
 
+# %%
 class SpeedFluxObserver(FluxObserver):
     """
     Observer with speed estimation.
@@ -223,11 +229,30 @@ class SpeedFluxObserver(FluxObserver):
         super().__init__(par, alpha_d, k_o, k_f, True)
 
     def compute_output(
-        self, meas: Measurements, u_s_ab: complex, w_M=None
+        self,
+        u_s_ab: complex,
+        i_s_ab: complex,
+        w_M: float | None = None,
+        theta_M_meas: float | None = None,
     ) -> ObserverOutputs:
-        """Compute feedback signals with speed estimation."""
-        w_M = self.state.w_m / self.par.n_p
-        return super().compute_output(meas, u_s_ab, w_M)
+        """
+        Compute feedback signals with speed estimation.
+
+        Parameters
+        ----------
+        u_s_ab : complex
+            Stator voltage (V) in stator coordinates.
+        i_s_ab : complex
+            Stator current (A) in stator coordinates.
+
+        Returns
+        -------
+        out : ObserverOutputs
+            Estimated feedback signals for the control system.
+
+        """
+        w_M_est = self.state.w_m / self.par.n_p
+        return super().compute_output(u_s_ab, i_s_ab, w_M_est)
 
     def update(self, T_s: float) -> None:
         """Extend the update method to include the speed estimate."""

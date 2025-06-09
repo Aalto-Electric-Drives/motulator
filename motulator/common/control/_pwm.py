@@ -27,7 +27,7 @@ class PWM:
     ----------
     k_comp : float, optional
         Compensation factor for the angular delay effect, defaults to 1.5.
-    u_c_ab0 : float, optional
+    u_c0_ab : float, optional
         Initial voltage (V) in stationary coordinates. This is used to compute the
         realized voltage, defaults to 0.
     overmodulation : Literal["MPE", "MME", "six_step"], optional
@@ -51,16 +51,16 @@ class PWM:
     def __init__(
         self,
         k_comp: float = 1.5,
-        u_c_ab0: complex = 0j,
+        u_c0_ab: complex = 0j,
         overmodulation: Literal["MPE", "MME", "six_step"] = "MPE",
     ) -> None:
         self.k_comp = k_comp
         self.overmodulation = overmodulation
-        self.realized_voltage = u_c_ab0
-        self._old_u_c_ab = u_c_ab0
+        self.realized_voltage = u_c0_ab
+        self._old_u_c_ab = u_c0_ab
 
     @staticmethod
-    def six_step_overmodulation(u_c_ab_ref: complex, u_dc: float) -> complex:
+    def six_step_overmodulation(u_c_ref_ab: complex, u_dc: float) -> complex:
         """
         Overmodulation up to six-step operation.
 
@@ -69,14 +69,14 @@ class PWM:
 
         Parameters
         ----------
-        u_c_ab_ref : complex
+        u_c_ref_ab : complex
             Converter voltage reference (V) in stationary coordinates.
         u_dc : float
             DC-bus voltage (V).
 
         Returns
         -------
-        u_c_ab_ref : complex
+        u_c_ref_ab : complex
             Modified converter voltage reference (V) in stationary coordinates.
 
         References
@@ -87,11 +87,11 @@ class PWM:
 
         """
         # Limited magnitude
-        r = min([abs(u_c_ab_ref), 2 / 3 * u_dc])
+        r = min([abs(u_c_ref_ab), 2 / 3 * u_dc])
 
         if sqrt(3) * r > u_dc:
             # Angle and sector of the reference vector
-            theta = phase(u_c_ab_ref)
+            theta = phase(u_c_ref_ab)
             sector = floor(3 * theta / pi)
 
             # Angle reduced to the first sector (at which sector == 0)
@@ -107,17 +107,17 @@ class PWM:
                 theta0 = pi / 3 - alpha_g
 
             # Modified reference voltage
-            u_c_ab_ref = r * exp(1j * (theta0 + sector * pi / 3))
+            u_c_ref_ab = r * exp(1j * (theta0 + sector * pi / 3))
 
-        return u_c_ab_ref
+        return u_c_ref_ab
 
-    def duty_ratios(self, u_c_ab_ref: complex, u_dc: float) -> list[float]:
+    def duty_ratios(self, u_c_ref_ab: complex, u_dc: float) -> list[float]:
         """
         Compute the duty ratios for three-phase space-vector PWM.
 
         Parameters
         ----------
-        u_c_ab_ref : complex
+        u_c_ref_ab : complex
             Converter voltage reference (V) in stationary coordinates.
         u_dc : float
             DC-bus voltage (V).
@@ -129,7 +129,7 @@ class PWM:
 
         """
         # Phase voltages without the zero-sequence voltage
-        u_abc = complex2abc(u_c_ab_ref)
+        u_abc = complex2abc(u_c_ref_ab)
 
         # Zero-sequence voltage resulting in space-vector PWM
         u_0 = 0.5 * (max(u_abc) + min(u_abc))
@@ -148,7 +148,7 @@ class PWM:
         return d_abc
 
     def compute_output(
-        self, T_s: float, u_c_ab_ref: complex, u_dc: float, w: float
+        self, T_s: float, u_c_ref_ab: complex, u_dc: float, w: float
     ) -> tuple[list[float], complex]:
         """
         Compute the duty ratios and the limited voltage reference.
@@ -157,7 +157,7 @@ class PWM:
         ----------
         T_s : float
             Sampling period (s).
-        u_c_ab_ref : complex
+        u_c_ref_ab : complex
             Converter voltage reference (V) in stationary coordinates.
         u_dc : float
             DC-bus voltage (V).
@@ -175,14 +175,14 @@ class PWM:
         # Advance the angle due to the computational delay (N*T_s) and the ZOH (PWM)
         # delay (0.5*T_s), typically 1.5*T_s*w
         theta_comp = self.k_comp * T_s * w
-        u_c_ab_ref = exp(1j * theta_comp) * u_c_ab_ref
+        u_c_ref_ab = exp(1j * theta_comp) * u_c_ref_ab
 
         # Modify angle in the overmodulation region
         if self.overmodulation == "six_step":
-            u_c_ab_ref = self.six_step_overmodulation(u_c_ab_ref, u_dc)
+            u_c_ref_ab = self.six_step_overmodulation(u_c_ref_ab, u_dc)
 
         # Duty ratios
-        d_abc = self.duty_ratios(u_c_ab_ref, u_dc)
+        d_abc = self.duty_ratios(u_c_ref_ab, u_dc)
 
         # Limited voltage reference
         u_c_ab = abc2complex(d_abc) * u_dc
@@ -208,8 +208,8 @@ class PWM:
         self._old_u_c_ab = u_c_ab
 
     def __call__(
-        self, T_s: float, u_c_ab_ref: complex, u_dc: float, w: float
+        self, T_s: float, u_c_ref_ab: complex, u_dc: float, w: float
     ) -> list[float]:
-        d_abc, u_c_ab = self.compute_output(T_s, u_c_ab_ref, u_dc, w)
+        d_abc, u_c_ab = self.compute_output(T_s, u_c_ref_ab, u_dc, w)
         self.update(u_c_ab)
         return d_abc

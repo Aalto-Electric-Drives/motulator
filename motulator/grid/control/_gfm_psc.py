@@ -120,8 +120,8 @@ class PowerSynchronizationController:
 
         # Voltage reference
         ref.u_c = ref.v_c + self.R_a * (ref.i_c - fbk.i_c) + self.R * fbk.i_c
-        u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
-        ref.d_abc = self.pwm(ref.T_s, u_c_ab_ref, fbk.u_dc, ref.w_c)
+        u_c_ref_ab = exp(1j * fbk.theta_c) * ref.u_c
+        ref.d_abc = self.pwm(ref.T_s, u_c_ref_ab, fbk.u_dc, ref.w_c)
 
         return ref
 

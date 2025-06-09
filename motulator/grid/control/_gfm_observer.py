@@ -155,7 +155,7 @@ class ObserverBasedGridFormingController:
         self,
         i_max: float,
         L: float,
-        R: float = 0,
+        R: float = 0.0,
         R_a: float | None = None,
         k_v: float | None = None,
         alpha_o: float = 2 * pi * 50,
@@ -187,9 +187,9 @@ class ObserverBasedGridFormingController:
         ref = References(T_s=self.T_s, p_g=p_g_ref, v_c=v_c_ref)
 
         # Complex gains for grid-forming mode
-        exp_j_theta = fbk.v_c / abs(fbk.v_c) if abs(fbk.v_c) > 0 else 1
+        exp_j_theta = fbk.v_c / abs(fbk.v_c) if abs(fbk.v_c) > 0.0 else 1.0
         k_p = exp_j_theta * self.R_a / (1.5 * ref.v_c)
-        k_v = exp_j_theta * (1 - 1j * self.k_v)
+        k_v = exp_j_theta * (1.0 - 1j * self.k_v)
 
         # Feedback correction for grid-forming mode
         e_c = k_p * (ref.p_g - fbk.p_g) + k_v * (ref.v_c - abs(fbk.v_c))
@@ -214,7 +214,7 @@ class ObserverBasedGridFormingController:
         """Post-process controller time series."""
         # Convert quantities to converter-output-voltage coordinates
         T = np.where(
-            np.abs(ts.fbk.v_c) > 0, np.conj(ts.fbk.v_c) / np.abs(ts.fbk.v_c), 1
+            np.abs(ts.fbk.v_c) > 0, np.conj(ts.fbk.v_c) / np.abs(ts.fbk.v_c), 1.0
         )
         ts.ref.u_c = T * ts.ref.u_c
         ts.fbk.i_c = T * ts.fbk.i_c
