@@ -509,7 +509,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, u_c_ab0 = 0j, overmodulation = 'MPE')
+.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE')
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -521,9 +521,9 @@ Package Contents
 
    :param k_comp: Compensation factor for the angular delay effect, defaults to 1.5.
    :type k_comp: float, optional
-   :param u_c_ab0: Initial voltage (V) in stationary coordinates. This is used to compute the
+   :param u_c0_ab: Initial voltage (V) in stationary coordinates. This is used to compute the
                    realized voltage, defaults to 0.
-   :type u_c_ab0: float, optional
+   :type u_c0_ab: float, optional
    :param overmodulation: Overmodulation method, defaults to "MPE". Valid options are:
                           - "MPE": minimum phase error
                           - "MME": minimum magnitude error
@@ -557,15 +557,15 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(T_s, u_c_ab_ref, u_dc, w)
+   .. py:method:: compute_output(T_s, u_c_ref_ab, u_dc, w)
 
       
       Compute the duty ratios and the limited voltage reference.
 
       :param T_s: Sampling period (s).
       :type T_s: float
-      :param u_c_ab_ref: Converter voltage reference (V) in stationary coordinates.
-      :type u_c_ab_ref: complex
+      :param u_c_ref_ab: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ref_ab: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
       :param w: Angular speed of synchronous coordinates (rad/s).
@@ -592,13 +592,13 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: duty_ratios(u_c_ab_ref, u_dc)
+   .. py:method:: duty_ratios(u_c_ref_ab, u_dc)
 
       
       Compute the duty ratios for three-phase space-vector PWM.
 
-      :param u_c_ab_ref: Converter voltage reference (V) in stationary coordinates.
-      :type u_c_ab_ref: complex
+      :param u_c_ref_ab: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ref_ab: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
@@ -650,7 +650,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: six_step_overmodulation(u_c_ab_ref, u_dc)
+   .. py:method:: six_step_overmodulation(u_c_ref_ab, u_dc)
       :staticmethod:
 
 
@@ -660,12 +660,12 @@ Package Contents
       This method modifies the angle of the voltage reference vector in the
       overmodulation region such that the six-step operation is reached [#Bol1997]_.
 
-      :param u_c_ab_ref: Converter voltage reference (V) in stationary coordinates.
-      :type u_c_ab_ref: complex
+      :param u_c_ref_ab: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ref_ab: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: **u_c_ab_ref** -- Modified converter voltage reference (V) in stationary coordinates.
+      :returns: **u_c_ref_ab** -- Modified converter voltage reference (V) in stationary coordinates.
       :rtype: complex
 
       .. rubric:: References

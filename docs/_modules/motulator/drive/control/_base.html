@@ -442,7 +442,7 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">Measurements</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Measured signals.&quot;&quot;&quot;</span>
 
-    <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Converter current (A) in stationary coordinates</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">theta_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -481,8 +481,8 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    vector_ctrl : VectorController</span>
 <span class="sd">        Vector controller whose input is the torque reference.</span>
-<span class="sd">    speed_ctrl : SpeedController, optional</span>
-<span class="sd">        Speed controller. If not given, torque-control mode is used.</span>
+<span class="sd">    speed_ctrl : SpeedController | PIController | None</span>
+<span class="sd">        Speed controller. If not given or None, torque-control mode is used.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -531,14 +531,18 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">get_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Drive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Measurements</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get measurements from sensors.&quot;&quot;&quot;</span>
         <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
-        <span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">mdl</span><span class="o">.</span><span class="n">lc_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">lc_filter</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
             <span class="n">w_M</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">theta_M</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">w_M</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>
             <span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_position</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">theta_M</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">theta_M</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="VectorControlSystem.get_feedback">

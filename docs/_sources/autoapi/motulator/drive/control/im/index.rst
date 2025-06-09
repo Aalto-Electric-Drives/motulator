@@ -382,15 +382,15 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(meas, u_s_ab, w_M)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M)
 
       
       Compute the feedback signals for the control system.
 
-      :param meas: Measured signals.
-      :type meas: Measurements
       :param u_s_ab: Stator voltage (V) in stator coordinates.
       :type u_s_ab: complex
+      :param i_s_ab: Stator current (A) in stator coordinates.
+      :type i_s_ab: complex
       :param w_M: Rotor speed (mechanical rad/s), either measured or estimated.
       :type w_M: float, optional
 
@@ -1047,11 +1047,18 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(meas, u_s_ab, w_M=None)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M=None)
 
       
       Compute feedback signals with speed estimation.
 
+      :param u_s_ab: Stator voltage (V) in stator coordinates.
+      :type u_s_ab: complex
+      :param i_s_ab: Stator current (A) in stator coordinates.
+      :type i_s_ab: complex
+
+      :returns: **out** -- Estimated feedback signals for the control system, including speed estimate.
+      :rtype: ObserverOutputs
 
 
 
@@ -1285,8 +1292,8 @@ Module Contents
 
    :param vector_ctrl: Vector controller whose input is the torque reference.
    :type vector_ctrl: VectorController
-   :param speed_ctrl: Speed controller. If not given, torque-control mode is used.
-   :type speed_ctrl: SpeedController, optional
+   :param speed_ctrl: Speed controller. If not given or None, torque-control mode is used.
+   :type speed_ctrl: SpeedController | PIController | None
 
 
 

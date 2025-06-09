@@ -432,7 +432,7 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    k_comp : float, optional</span>
 <span class="sd">        Compensation factor for the angular delay effect, defaults to 1.5.</span>
-<span class="sd">    u_c_ab0 : float, optional</span>
+<span class="sd">    u_c0_ab : float, optional</span>
 <span class="sd">        Initial voltage (V) in stationary coordinates. This is used to compute the</span>
 <span class="sd">        realized voltage, defaults to 0.</span>
 <span class="sd">    overmodulation : Literal[&quot;MPE&quot;, &quot;MME&quot;, &quot;six_step&quot;], optional</span>
@@ -456,18 +456,18 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">k_comp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
-        <span class="n">u_c_ab0</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">u_c0_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span>
         <span class="n">overmodulation</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;MPE&quot;</span><span class="p">,</span> <span class="s2">&quot;MME&quot;</span><span class="p">,</span> <span class="s2">&quot;six_step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;MPE&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_comp</span> <span class="o">=</span> <span class="n">k_comp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overmodulation</span> <span class="o">=</span> <span class="n">overmodulation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span> <span class="o">=</span> <span class="n">u_c_ab0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_old_u_c_ab</span> <span class="o">=</span> <span class="n">u_c_ab0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span> <span class="o">=</span> <span class="n">u_c0_ab</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_old_u_c_ab</span> <span class="o">=</span> <span class="n">u_c0_ab</span>
 
 <div class="viewcode-block" id="PWM.six_step_overmodulation">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.PWM.six_step_overmodulation">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">six_step_overmodulation</span><span class="p">(</span><span class="n">u_c_ab_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">six_step_overmodulation</span><span class="p">(</span><span class="n">u_c_ref_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overmodulation up to six-step operation.</span>
 
@@ -476,14 +476,14 @@ document.write(`
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        u_c_ab_ref : complex</span>
+<span class="sd">        u_c_ref_ab : complex</span>
 <span class="sd">            Converter voltage reference (V) in stationary coordinates.</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            DC-bus voltage (V).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        u_c_ab_ref : complex</span>
+<span class="sd">        u_c_ref_ab : complex</span>
 <span class="sd">            Modified converter voltage reference (V) in stationary coordinates.</span>
 
 <span class="sd">        References</span>
@@ -494,11 +494,11 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Limited magnitude</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">u_c_ab_ref</span><span class="p">),</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">u_dc</span><span class="p">])</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">u_c_ref_ab</span><span class="p">),</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">u_dc</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="n">u_dc</span><span class="p">:</span>
             <span class="c1"># Angle and sector of the reference vector</span>
-            <span class="n">theta</span> <span class="o">=</span> <span class="n">phase</span><span class="p">(</span><span class="n">u_c_ab_ref</span><span class="p">)</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">phase</span><span class="p">(</span><span class="n">u_c_ref_ab</span><span class="p">)</span>
             <span class="n">sector</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">theta</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
 
             <span class="c1"># Angle reduced to the first sector (at which sector == 0)</span>
@@ -514,20 +514,20 @@ document.write(`
                 <span class="n">theta0</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">alpha_g</span>
 
             <span class="c1"># Modified reference voltage</span>
-            <span class="n">u_c_ab_ref</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta0</span> <span class="o">+</span> <span class="n">sector</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="n">u_c_ref_ab</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta0</span> <span class="o">+</span> <span class="n">sector</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">u_c_ab_ref</span></div>
+        <span class="k">return</span> <span class="n">u_c_ref_ab</span></div>
 
 
 <div class="viewcode-block" id="PWM.duty_ratios">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.PWM.duty_ratios">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">duty_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">duty_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ref_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the duty ratios for three-phase space-vector PWM.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        u_c_ab_ref : complex</span>
+<span class="sd">        u_c_ref_ab : complex</span>
 <span class="sd">            Converter voltage reference (V) in stationary coordinates.</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            DC-bus voltage (V).</span>
@@ -539,7 +539,7 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Phase voltages without the zero-sequence voltage</span>
-        <span class="n">u_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_c_ab_ref</span><span class="p">)</span>
+        <span class="n">u_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_c_ref_ab</span><span class="p">)</span>
 
         <span class="c1"># Zero-sequence voltage resulting in space-vector PWM</span>
         <span class="n">u_0</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">u_abc</span><span class="p">)</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="n">u_abc</span><span class="p">))</span>
@@ -561,7 +561,7 @@ document.write(`
 <div class="viewcode-block" id="PWM.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.PWM.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_c_ab_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_c_ref_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the duty ratios and the limited voltage reference.</span>
@@ -570,7 +570,7 @@ document.write(`
 <span class="sd">        ----------</span>
 <span class="sd">        T_s : float</span>
 <span class="sd">            Sampling period (s).</span>
-<span class="sd">        u_c_ab_ref : complex</span>
+<span class="sd">        u_c_ref_ab : complex</span>
 <span class="sd">            Converter voltage reference (V) in stationary coordinates.</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            DC-bus voltage (V).</span>
@@ -588,14 +588,14 @@ document.write(`
         <span class="c1"># Advance the angle due to the computational delay (N*T_s) and the ZOH (PWM)</span>
         <span class="c1"># delay (0.5*T_s), typically 1.5*T_s*w</span>
         <span class="n">theta_comp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_comp</span> <span class="o">*</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">w</span>
-        <span class="n">u_c_ab_ref</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_comp</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab_ref</span>
+        <span class="n">u_c_ref_ab</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_comp</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ref_ab</span>
 
         <span class="c1"># Modify angle in the overmodulation region</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overmodulation</span> <span class="o">==</span> <span class="s2">&quot;six_step&quot;</span><span class="p">:</span>
-            <span class="n">u_c_ab_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">six_step_overmodulation</span><span class="p">(</span><span class="n">u_c_ab_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+            <span class="n">u_c_ref_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">six_step_overmodulation</span><span class="p">(</span><span class="n">u_c_ref_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
 
         <span class="c1"># Duty ratios</span>
-        <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duty_ratios</span><span class="p">(</span><span class="n">u_c_ab_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+        <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duty_ratios</span><span class="p">(</span><span class="n">u_c_ref_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
 
         <span class="c1"># Limited voltage reference</span>
         <span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_dc</span>
@@ -628,9 +628,9 @@ document.write(`
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_c_ab_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_c_ref_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="n">d_abc</span><span class="p">,</span> <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_c_ab_ref</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">d_abc</span><span class="p">,</span> <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_c_ref_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">d_abc</span></div>
 

@@ -577,7 +577,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedGridFormingController(i_max, L, R = 0, R_a = None, k_v = None, alpha_o = 2 * pi * 50, alpha_c = 2 * pi * 400, u_nom = sqrt(2 / 3) * 400, w_nom = 2 * pi * 50, T_s = 0.000125)
+.. py:class:: ObserverBasedGridFormingController(i_max, L, R = 0.0, R_a = None, k_v = None, alpha_o = 2 * pi * 50, alpha_c = 2 * pi * 400, u_nom = sqrt(2 / 3) * 400, w_nom = 2 * pi * 50, T_s = 0.000125)
 
    
    Disturbance-observer-based grid-forming controller.
