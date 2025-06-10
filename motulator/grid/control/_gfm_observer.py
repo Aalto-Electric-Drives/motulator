@@ -68,12 +68,12 @@ class Observer:
         self.w_g: float = w_nom
         self.state = ObserverStates(theta_c=0, u_gp=u_nom)
 
-    def compute_output(self, meas: Measurements, u_c_ab: complex) -> ObserverOutputs:
+    def compute_output(self, u_c_ab: complex, i_c_ab: complex) -> ObserverOutputs:
         """Compute the estimates."""
         out = ObserverOutputs(theta_c=self.state.theta_c)
 
         # Transform the measured values into synchronous coordinates
-        out.i_c = exp(-1j * out.theta_c) * meas.i_c_ab
+        out.i_c = exp(-1j * out.theta_c) * i_c_ab
         out.u_c = exp(-1j * out.theta_c) * u_c_ab
 
         # Estimates for the quasi-static converter voltage and the grid voltage
@@ -176,7 +176,7 @@ class ObserverBasedGridFormingController:
     def get_feedback(self, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""
         u_c_ab = self.pwm.get_realized_voltage()
-        fbk = self.observer.compute_output(meas, u_c_ab)
+        fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
         fbk.u_dc = meas.u_dc
         return fbk
 

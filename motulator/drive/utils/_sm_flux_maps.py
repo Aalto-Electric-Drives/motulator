@@ -122,17 +122,17 @@ class MagneticModel:
 
         # Set default num value based on input data if not provided
         if num is None:
-            num = max(self.i_s_dq.shape)
+            num = int(max(self.i_s_dq.shape))
 
         if invert:
             inp, out = out, inp
             new_type = "current_map" if self.is_flux_map() else "flux_map"
 
         # Auto-determine ranges if not provided
-        psi_d_min = np.max(np.min(inp.real, axis=0))
-        psi_d_max = np.min(np.max(inp.real, axis=0))
-        psi_q_min = np.max(np.min(inp.imag, axis=1))
-        psi_q_max = np.min(np.max(inp.imag, axis=1))
+        psi_d_min = np.max(np.min(np.real(inp), axis=0))
+        psi_d_max = np.min(np.max(np.real(inp), axis=0))
+        psi_q_min = np.max(np.min(np.imag(inp), axis=1))
+        psi_q_max = np.min(np.max(np.imag(inp), axis=1))
 
         if d_range is None:
             d_range = np.linspace(psi_d_min, psi_d_max, num)
@@ -141,14 +141,14 @@ class MagneticModel:
 
         # Interpolate the map
         new_inp = create_grid(d_range, q_range)  # type: ignore
-        points = (inp.real.ravel(), inp.imag.ravel())
-        new_out = griddata(points, out.ravel(), (new_inp.real, new_inp.imag))
+        points = (np.real(inp).ravel(), np.imag(inp).ravel())
+        new_out = griddata(points, out.ravel(), (np.real(new_inp), np.imag(new_inp)))
 
         # Interpolate torque if available
         new_tau_M = None
         if self.tau_M is not None:
             new_tau_M = griddata(
-                points, self.tau_M.ravel(), (new_inp.real, new_inp.imag)
+                points, self.tau_M.ravel(), (np.real(new_inp), np.imag(new_inp))
             )
 
         # Create interpolator
@@ -188,7 +188,7 @@ class MagneticModel:
                 )
                 return complex(interpolator(points)[0])
             # Handle array of complex inputs
-            points = np.column_stack((dq_input.real, dq_input.imag))
+            points = np.column_stack((np.real(dq_input), np.imag(dq_input)))
             return np.array(interpolator(points))
 
         # Arrange data based on map type
@@ -357,25 +357,25 @@ class SaturationModelSyRM(SaturationModelBase):
         """Calculate the stator current for SyRMs."""
         G_d = (
             self.a_d0
-            + self.a_dd * np.abs(psi_s_dq.real) ** self.S
+            + self.a_dd * np.abs(np.real(psi_s_dq)) ** self.S
             + (
                 self.a_dq
                 / (self.V + 2)
-                * np.abs(psi_s_dq.real) ** self.U
-                * np.abs(psi_s_dq.imag) ** (self.V + 2)
+                * np.abs(np.real(psi_s_dq)) ** self.U
+                * np.abs(np.imag(psi_s_dq)) ** (self.V + 2)
             )
         )
         G_q = (
             self.a_q0
-            + self.a_qq * np.abs(psi_s_dq.imag) ** self.T
+            + self.a_qq * np.abs(np.imag(psi_s_dq)) ** self.T
             + (
                 self.a_dq
                 / (self.U + 2)
-                * np.abs(psi_s_dq.real) ** (self.U + 2)
-                * np.abs(psi_s_dq.imag) ** self.V
+                * np.abs(np.real(psi_s_dq)) ** (self.U + 2)
+                * np.abs(np.imag(psi_s_dq)) ** self.V
             )
         )
-        i_s_dq = G_d * psi_s_dq.real + 1j * G_q * psi_s_dq.imag
+        i_s_dq = G_d * np.real(psi_s_dq) + 1j * G_q * np.imag(psi_s_dq)
         return i_s_dq
 
 
@@ -422,13 +422,13 @@ class SaturationModelPMSyRM(SaturationModelSyRM):
         i_s_dq = super().__call__(psi_s_dq)
 
         # Bridge flux
-        psi_b = psi_s_dq.real - self.psi_n
+        psi_b = np.real(psi_s_dq) - self.psi_n
         # State of the bridge saturation depends also on the q-axis flux
-        psi_b_sat = np.sqrt(psi_b**2 + self.k_q * psi_s_dq.imag**2)
+        psi_b_sat = np.sqrt(psi_b**2 + self.k_q * np.imag(psi_s_dq) ** 2)
         # Inverse inductance function for the bridge saturation
         G_b = self.a_b * psi_b_sat**self.W / (1 + self.a_bp * psi_b_sat**self.W)
         # Stator current
-        i_s_dq += G_b * psi_b + 1j * self.k_q * G_b * psi_s_dq.imag
+        i_s_dq += G_b * psi_b + 1j * self.k_q * G_b * np.imag(psi_s_dq)
         return i_s_dq
 
 

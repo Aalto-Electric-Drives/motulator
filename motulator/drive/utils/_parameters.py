@@ -38,7 +38,7 @@ class BaseSynchronousMachinePars(Protocol):
         G_dq = inv_L_s[0, 1]
         G_qq = inv_L_s[1, 1]
         return complex(
-            (G_qq * psi_s_dq.real + 1j * G_dd * psi_s_dq.imag)
+            (G_qq * np.real(psi_s_dq) + 1j * G_dd * np.imag(psi_s_dq))
             - 1j * G_dq * np.conj(psi_s_dq)
             - self.i_s_dq(psi_s_dq)
         )
@@ -52,8 +52,8 @@ class BaseSynchronousMachinePars(Protocol):
         L_qq = L_s[1, 1]
         return complex(
             self.psi_s_dq(i_s_dq)
-            - L_qq * i_s_dq.real
-            - 1j * L_dd * i_s_dq.imag
+            - L_qq * np.real(i_s_dq)
+            - 1j * L_dd * np.imag(i_s_dq)
             + 1j * L_dq * np.conj(i_s_dq)
         )
 
@@ -91,12 +91,16 @@ class SynchronousMachinePars(BaseSynchronousMachinePars):
 
     def i_s_dq(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
         """Current (A) as a function of the flux linkage (Vs)."""
-        i_s_dq = (psi_s_dq.real - self.psi_f) / self.L_d + 1j * psi_s_dq.imag / self.L_q
+        i_s_dq = (np.real(psi_s_dq) - self.psi_f) / self.L_d + 1j * np.imag(
+            psi_s_dq
+        ) / self.L_q
         return i_s_dq
 
     def psi_s_dq(self, i_s_dq: complex | np.ndarray) -> complex | np.ndarray:
         """Flux linkage (Vs) as a function of the stator current (A)."""
-        psi_s_dq = self.L_d * i_s_dq.real + 1j * self.L_q * i_s_dq.imag + self.psi_f
+        psi_s_dq = (
+            self.L_d * np.real(i_s_dq) + 1j * self.L_q * np.imag(i_s_dq) + self.psi_f
+        )
         return psi_s_dq
 
     def inv_incr_ind_mat(self, psi_s_dq: complex | np.ndarray) -> np.ndarray:
@@ -154,7 +158,7 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
 
     def __post_init__(self) -> None:
         psi_f = root_scalar(
-            lambda psi_d: (self.i_s_dq(psi_d)).real, x0=0, method="newton"
+            lambda psi_d: np.real(self.i_s_dq(psi_d)), x0=0, method="newton"
         ).root
         self.psi_f = float(psi_f)
 
@@ -178,9 +182,11 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
 
                 # Apply solver to each element
                 for idx in np.ndindex(i_s_dq.shape):
-                    i_s = i_s_dq[idx]
+                    i_s = complex(i_s_dq[idx])
                     # Initial guess
-                    psi_s_dq_init = L_d * i_s.real + 1j * L_q * i_s.imag + self.psi_f
+                    psi_s_dq_init = (
+                        L_d * np.real(i_s) + 1j * L_q * np.imag(i_s) + self.psi_f
+                    )
                     # Solve for actual flux linkage and store in result array
                     result[idx] = self.solve_psi_s_dq(
                         i_s, psi_s_dq_init, max_iter=self.max_iter
@@ -200,16 +206,16 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     def inv_incr_ind_mat(self, psi_s_dq: complex | np.ndarray) -> np.ndarray:
         """Inverse incremental inductance matrix vs. flux linkage."""
         eps = float(np.finfo(np.float16).eps)
-        G_dd = (self.i_s_dq(psi_s_dq + eps).real - self.i_s_dq(psi_s_dq - eps).real) / (
-            2 * eps
-        )
+        G_dd = (
+            np.real(self.i_s_dq(psi_s_dq + eps)) - np.real(self.i_s_dq(psi_s_dq - eps))
+        ) / (2 * eps)
         G_qq = (
-            self.i_s_dq(psi_s_dq + 1j * eps).imag
-            - self.i_s_dq(psi_s_dq - 1j * eps).imag
+            np.imag(self.i_s_dq(psi_s_dq + 1j * eps))
+            - np.imag(self.i_s_dq(psi_s_dq - 1j * eps))
         ) / (2 * eps)
         G_dq = (
-            self.i_s_dq(psi_s_dq + 1j * eps).real
-            - self.i_s_dq(psi_s_dq - 1j * eps).real
+            np.real(self.i_s_dq(psi_s_dq + 1j * eps))
+            - np.real(self.i_s_dq(psi_s_dq - 1j * eps))
         ) / (2 * eps)
 
         return np.array([[G_dd, G_dq], [G_dq, G_qq]])
@@ -217,16 +223,16 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     def incr_ind_mat(self, i_s_dq: complex | np.ndarray) -> np.ndarray:
         """Incremental inductance matrix vs. current."""
         eps = float(np.finfo(np.float16).eps)
-        L_dd = (self.psi_s_dq(i_s_dq + eps).real - self.psi_s_dq(i_s_dq - eps).real) / (
-            2 * eps
-        )
+        L_dd = (
+            np.real(self.psi_s_dq(i_s_dq + eps)) - np.real(self.psi_s_dq(i_s_dq - eps))
+        ) / (2 * eps)
         L_qq = (
-            self.psi_s_dq(i_s_dq + 1j * eps).imag
-            - self.psi_s_dq(i_s_dq - 1j * eps).imag
+            np.imag(self.psi_s_dq(i_s_dq + 1j * eps))
+            - np.imag(self.psi_s_dq(i_s_dq - 1j * eps))
         ) / (2 * eps)
         L_dq = (
-            self.psi_s_dq(i_s_dq + 1j * eps).real
-            - self.psi_s_dq(i_s_dq - 1j * eps).real
+            np.real(self.psi_s_dq(i_s_dq + 1j * eps))
+            - np.real(self.psi_s_dq(i_s_dq - 1j * eps))
         ) / (2 * eps)
         return np.array([[L_dd, L_dq], [L_dq, L_qq]])
 

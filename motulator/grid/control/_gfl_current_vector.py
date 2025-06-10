@@ -62,19 +62,21 @@ class PLL:
         self.alpha_pll = alpha_pll
         self.state = PLLStates(w_g=w_nom, u_g=u_nom)
 
-    def compute_output(self, meas: Measurements, u_c_ab: complex) -> PLLOutputSignals:
+    def compute_output(
+        self, u_c_ab: complex, i_c_ab: complex, u_g_meas_ab: complex
+    ) -> PLLOutputSignals:
         """Output estimates and coordinate transformed quantities."""
         out = PLLOutputSignals(theta_c=self.state.theta_c, w_g=self.state.w_g)
 
         # Coordinate transformations
-        out.i_c = exp(-1j * out.theta_c) * meas.i_c_ab
+        out.i_c = exp(-1j * out.theta_c) * i_c_ab
         out.u_c = exp(-1j * out.theta_c) * u_c_ab
-        out.u_g_meas = exp(-1j * out.theta_c) * meas.u_g_ab
+        out.u_g_meas = exp(-1j * out.theta_c) * u_g_meas_ab
         # Filtered voltage magnitude
         out.u_g = self.state.u_g
 
         # Error signal
-        out.eps = out.u_g_meas.imag / self.state.u_g if self.state.u_g > 0 else 0
+        out.eps = out.u_g_meas.imag / self.state.u_g if self.state.u_g > 0.0 else 0.0
 
         # Angular speed of the coordinate system
         out.w_c = out.w_g + 2 * self.alpha_pll * out.eps
@@ -184,7 +186,7 @@ class CurrentVectorController:
     def get_feedback(self, meas: Measurements) -> PLLOutputSignals:
         """Get feedback signals."""
         u_c_ab = self.pwm.get_realized_voltage()
-        fbk = self.pll.compute_output(meas, u_c_ab)
+        fbk = self.pll.compute_output(u_c_ab, meas.i_c_ab, meas.u_g_ab)
         fbk.u_dc = meas.u_dc
         return fbk
 
