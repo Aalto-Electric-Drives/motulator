@@ -2,7 +2,7 @@ repos:
 
   # Pip Audit
   - repo: https://github.com/pypa/pip-audit
-    rev: v2.7.3
+    rev: v2.9.0
     hooks:
     - id: pip-audit
       name: pip-audit
@@ -55,7 +55,7 @@ repos:
 
   # Ruff formatter & linter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.5.0  # Use the latest version
+    rev: v0.11.13
     hooks:
     - id: ruff
       args: [--fix]
@@ -65,7 +65,7 @@ repos:
 
   # Pyright
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.398
+    rev: v1.1.401
     hooks:
       - id: pyright
         additional_dependencies: [numpy, scipy, matplotlib, sphinx-gallery]

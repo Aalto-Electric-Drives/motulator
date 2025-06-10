@@ -5,6 +5,7 @@
         "charliermarsh.ruff",
         "streetsidesoftware.code-spell-checker",
         "swyddfa.esbonio",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "tamasfe.even-better-toml"
     ]
 }

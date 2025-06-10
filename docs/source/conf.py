@@ -26,7 +26,7 @@ copyright = "2025, Aalto Electric Drives"
 author = "Aalto Electric Drives"
 
 # The full version, including alpha/beta/rc tags
-release = "0.6.0"
+release = "0.6.1"
 
 # -- General configuration -------------------------------------------------------------
 
