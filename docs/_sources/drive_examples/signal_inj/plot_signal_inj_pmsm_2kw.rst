@@ -192,7 +192,7 @@ Plot also the angles.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 17.004 seconds)
+   **Total running time of the script:** (0 minutes 17.371 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_signal_inj_pmsm_2kw.py:

@@ -186,7 +186,7 @@ quantities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.798 seconds)
+   **Total running time of the script:** (0 minutes 12.156 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py:
