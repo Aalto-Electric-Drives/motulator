@@ -762,7 +762,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(meas, u_c_ab)
+   .. py:method:: compute_output(u_c_ab, i_c_ab, u_g_meas_ab)
 
       
       Output estimates and coordinate transformed quantities.
