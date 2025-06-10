@@ -52,7 +52,7 @@ utils.plot_flux_vs_current(fem_flux_map, base, lims=(-2, 2))
 
 # Create the current map interpolator directly from the FEM data
 points = np.column_stack(
-    (fem_flux_map.psi_s_dq.ravel().real, fem_flux_map.psi_s_dq.ravel().imag)
+    (np.real(fem_flux_map.psi_s_dq.ravel()), np.imag(fem_flux_map.psi_s_dq.ravel()))
 )
 mdl_curr_map = LinearNDInterpolator(points, fem_flux_map.i_s_dq.ravel())
 
@@ -60,7 +60,7 @@ mdl_curr_map = LinearNDInterpolator(points, fem_flux_map.i_s_dq.ravel())
 par = model.SaturatedSynchronousMachinePars(
     n_p=2,
     R_s=0.2,
-    i_s_dq_fcn=lambda psi_s_dq: mdl_curr_map((psi_s_dq.real, psi_s_dq.imag)),
+    i_s_dq_fcn=lambda psi_s_dq: mdl_curr_map((np.real(psi_s_dq), np.imag(psi_s_dq))),
 )
 machine = model.SynchronousMachine(par)
 k = 0.25 * nom.tau / base.w_M**2  # Quadratic load torque profile
