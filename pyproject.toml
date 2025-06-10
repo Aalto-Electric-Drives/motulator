@@ -42,12 +42,9 @@ dev = [
     "toml",
     "pre-commit",
     "pyright",
+    "pip-audit",
 ]
 doc = [
-    "numpy",
-    "scipy",
-    "matplotlib",
-    "tqdm",
     "numpydoc",
     "sphinx",
     "sphinx-autoapi",
