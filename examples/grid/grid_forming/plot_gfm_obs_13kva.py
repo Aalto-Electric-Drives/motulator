@@ -61,4 +61,5 @@ ctrl.set_power_ref(
 
 sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=1.4)
-utils.plot(res, base)
+utils.plot_control_signals(res, base)
+utils.plot_grid_waveforms(res, base)

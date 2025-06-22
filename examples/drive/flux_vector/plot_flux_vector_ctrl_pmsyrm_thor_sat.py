@@ -37,10 +37,11 @@ p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 fem_flux_map = utils.import_syre_data(str(p / "THOR.mat"))
 
 # %%
-# Plot the maps in per-unit values
+# Plot the maps in per-unit values.
 
 # sphinx_gallery_thumbnail_number = 3
-utils.plot_maps(fem_flux_map, base, x_lims=(-2, 2), y_lims=(-2, 2))
+utils.plot_map(fem_flux_map, "d", base, x_lims=(-2, 2), y_lims=(-2, 2))
+utils.plot_map(fem_flux_map, "q", base, x_lims=(-2, 2), y_lims=(-2, 2))
 
 # %%
 # Two-dimensional presentation of flux maps.

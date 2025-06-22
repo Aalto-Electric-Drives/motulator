@@ -3,9 +3,7 @@
 from dataclasses import dataclass
 from typing import Any, Callable
 
-import matplotlib.pyplot as plt
 import numpy as np
-from cycler import cycler
 
 
 # %%
@@ -323,55 +321,3 @@ def clip(value: float, min_value: float, max_value: float) -> float:
 def sign(x: float) -> int:
     """Return the sign of x: -1 for negative, 0 for zero, 1 for positive."""
     return -1 if x < 0 else (1 if x > 0 else 0)
-
-
-# %%
-def set_screen_style() -> None:
-    """Configure matplotlib for screen viewing."""
-    plt.style.use("default")
-    # plt.style.use("dark_background")
-    plt.rcParams.update(
-        {
-            "axes.prop_cycle": cycler("color", ["b", "r", "m", "c"]),
-            "lines.linewidth": 1,
-            "axes.grid": True,
-            "text.usetex": False,
-            "axes3d.grid": True,
-            "figure.constrained_layout.use": True,
-        }
-    )
-
-
-# %%
-def set_latex_style() -> None:
-    """Configure matplotlib for LaTeX documents."""
-    plt.style.use("default")
-    plt.rcParams.update(
-        {
-            "axes.prop_cycle": cycler("color", ["b", "r", "m", "c"]),
-            "lines.linewidth": 1,
-            "axes.grid": True,
-            # "axes.autolimit_mode": "round_numbers",
-            "text.usetex": True,
-            "text.latex.preamble": (r"\usepackage{newtxtext}\usepackage{newtxmath}"),
-            "font.family": "serif",
-            "font.serif": ["Liberation Serif"],
-            "mathtext.fontset": "dejavuserif",
-            "font.size": 8,
-            "axes.labelsize": 8,
-            "legend.fontsize": 8,
-            "xtick.labelsize": 8,
-            "ytick.labelsize": 8,
-            "axes3d.grid": True,
-            "figure.figsize": [3.5, 2.5],
-            # "figure.constrained_layout.use": True,
-            # "savefig.bbox": "tight",
-            # "savefig.pad_inches": 0.01,
-            # Disable automatic adjustment
-            "figure.constrained_layout.use": False,
-            "figure.subplot.left": 0.18,  # Fixed margins
-            "figure.subplot.right": 0.95,
-            "figure.subplot.bottom": 0.18,
-            "figure.subplot.top": 0.95,
-        }
-    )

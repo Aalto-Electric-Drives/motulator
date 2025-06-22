@@ -6,14 +6,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 from cycler import cycler
 
-from motulator.common.utils._utils import BaseValues, set_latex_style, set_screen_style
+from motulator.common.utils._plotting import (
+    save_and_show,
+    set_latex_style,
+    set_screen_style,
+)
+from motulator.common.utils._utils import BaseValues
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
 )
 from motulator.drive.utils._sm_control_loci import ControlLoci
 
+# LaTeX symbol definition for easier configuration. When per-unit values are used,
+# sometimes subscript m is preferred instead of M.
+M = r"\mathrm{M}"
 
+
+# %%
 def _setup_plot(
     i_s_vals: Any, latex: bool, base: BaseValues | None = None
 ) -> tuple[np.ndarray, bool, BaseValues]:
@@ -59,6 +69,8 @@ class MachineCharacteristics:
         base: BaseValues | None = None,
         num: int = 16,
         latex: bool = False,
+        save_path: str | None = None,
+        **savefig_kwargs,
     ) -> None:
         """
         Plot the flux linkage loci.
@@ -74,6 +86,10 @@ class MachineCharacteristics:
             Amount of points to be evaluated, defaults to 16.
         latex : bool, optional
             Use LaTeX fonts for the labels, requires a working LaTeX installation.
+        save_path : str, optional
+            If provided, save the figure to this path.
+        **savefig_kwargs
+            Additional keyword arguments passed to plt.savefig().
 
         """
         i_s_vals, pu_vals, base = _setup_plot(i_s_vals, latex, base)
@@ -147,7 +163,7 @@ class MachineCharacteristics:
             ax.set_xlabel(r"$\psi_\mathrm{d}$ (Vs)")
             ax.set_ylabel(r"$\psi_\mathrm{q}$ (Vs)")
 
-        plt.show()
+        save_and_show(save_path, **savefig_kwargs)
 
     # %%
     def plot_current_loci(
@@ -156,6 +172,8 @@ class MachineCharacteristics:
         base: BaseValues | None = None,
         num: int = 16,
         latex: bool = False,
+        save_path: str | None = None,
+        **savefig_kwargs,
     ) -> None:
         """
         Plot the current loci.
@@ -171,6 +189,10 @@ class MachineCharacteristics:
             Amount of points to be evaluated, defaults to 16.
         latex : bool, optional
             Use LaTeX fonts for the labels, requires a working LaTeX installation.
+        save_path : str, optional
+            If provided, save the figure to this path.
+        **savefig_kwargs
+            Additional keyword arguments passed to plt.savefig().
 
         """
         i_s_vals, pu_vals, base = _setup_plot(i_s_vals, latex, base)
@@ -238,7 +260,7 @@ class MachineCharacteristics:
 
         ax.set_aspect("equal")
 
-        plt.show()
+        save_and_show(save_path, **savefig_kwargs)
 
     # %%
     def plot_flux_vs_torque(
@@ -247,6 +269,8 @@ class MachineCharacteristics:
         base: BaseValues | None = None,
         num: int = 16,
         latex: bool = False,
+        save_path: str | None = None,
+        **savefig_kwargs,
     ) -> None:
         """
         Plot flux magnitude vs. torque characteristics.
@@ -262,6 +286,10 @@ class MachineCharacteristics:
             Amount of points to be evaluated, defaults to 16.
         latex : bool, optional
             Use LaTeX fonts for the labels, requires a working LaTeX installation.
+        save_path : str, optional
+            If provided, save the figure to this path.
+        **savefig_kwargs
+            Additional keyword arguments passed to plt.savefig().
 
         """
         i_s_vals, pu_vals, base = _setup_plot(i_s_vals, latex, base)
@@ -315,16 +343,16 @@ class MachineCharacteristics:
 
         ax.legend()
         if pu_vals:
-            ax.set_xlabel(r"$\tau_\mathrm{M}$ (p.u.)")
+            ax.set_xlabel(rf"$\tau_{M}$ (p.u.)")
             ax.set_ylabel(r"$\psi_\mathrm{s}$ (p.u.)")
         else:
-            ax.set_xlabel(r"$\tau_\mathrm{M}$ (Nm)")
+            ax.set_xlabel(rf"$\tau_{M}$ (Nm)")
             ax.set_ylabel(r"$\psi_\mathrm{s}$ (Vs)")
 
         ax.set_xlim(0, mtpa.tau_M[-1] / base.tau)
         ax.set_ylim(0, abs(mtpa.psi_s_dq[-1]) / base.psi)
 
-        plt.show()
+        save_and_show(save_path, **savefig_kwargs)
 
     # %%
     def plot_current_vs_torque(
@@ -333,6 +361,8 @@ class MachineCharacteristics:
         base: BaseValues | None = None,
         num: int = 16,
         latex: bool = False,
+        save_path: str | None = None,
+        **savefig_kwargs,
     ) -> None:
         """
         Plot current vs. torque characteristics.
@@ -348,6 +378,10 @@ class MachineCharacteristics:
             Amount of points to be evaluated, defaults to 16.
         latex : bool, optional
             Use LaTeX fonts for the labels, requires a working LaTeX installation.
+        save_path : str, optional
+            If provided, save the figure to this path.
+        **savefig_kwargs
+            Additional keyword arguments passed to plt.savefig().
 
         """
         i_s_vals, pu_vals, base = _setup_plot(i_s_vals, latex, base)
@@ -380,8 +414,8 @@ class MachineCharacteristics:
         # MTPV locus
         mtpv_i_s_dq_max = self._loci.compute_mtpv_current(i_s_vals[-1])
         if not np.isnan(mtpv_i_s_dq_max):  # MTPV exists within the current range
-            max_mtpv_psi_s = float(abs(self.par.psi_s_dq(mtpv_i_s_dq_max)))
-            mtpv = self._loci.compute_mtpv_locus(max_mtpv_psi_s, num)
+            mtpv_psi_s_max = float(abs(self.par.psi_s_dq(mtpv_i_s_dq_max)))
+            mtpv = self._loci.compute_mtpv_locus(mtpv_psi_s_max, num)
 
             ax1.plot(
                 mtpv.tau_M / base.tau,
@@ -447,10 +481,10 @@ class MachineCharacteristics:
         if pu_vals:
             ax1.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
             ax2.set_ylabel(r"$i_\mathrm{q}$ (p.u.)")
-            ax2.set_xlabel(r"$\tau_\mathrm{M}$ (p.u.)")
+            ax2.set_xlabel(rf"$\tau_{M}$ (p.u.)")
         else:
             ax1.set_ylabel(r"$i_\mathrm{d}$ (A)")
             ax2.set_ylabel(r"$i_\mathrm{q}$ (A)")
-            ax2.set_xlabel(r"$\tau_\mathrm{M}$ (Nm)")
+            ax2.set_xlabel(rf"$\tau_{M}$ (Nm)")
 
-    plt.show()
+        save_and_show(save_path, **savefig_kwargs)

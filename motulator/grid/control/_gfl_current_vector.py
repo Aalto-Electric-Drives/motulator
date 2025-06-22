@@ -8,7 +8,7 @@ from typing import Sequence
 from motulator.common.control._base import TimeSeries
 from motulator.common.control._controllers import ComplexPIController
 from motulator.common.control._pwm import PWM
-from motulator.common.utils import wrap
+from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
 from motulator.grid.control._controllers import CurrentLimiter
 

@@ -24,6 +24,7 @@
         "autoapi",
         "Awan",
         "axhline",
+        "axlim",
         "Baldor",
         "Blanco",
         "Böcker",
@@ -36,6 +37,7 @@
         "Capecchi",
         "Capponi",
         "Claypool",
+        "cmap",
         "Degner",
         "dejavuserif",
         "docstrings",
@@ -154,11 +156,13 @@
         "vartheta",
         "Verghese",
         "viridis",
+        "xdata",
         "xlabel",
         "xlim",
         "xtick",
         "xticklabels",
         "xticks",
+        "ydata",
         "Yepes",
         "ylabel",
         "ylabels",
@@ -167,6 +171,7 @@
         "yticks",
         "Zigliotto",
         "zlabel",
-        "zlim"
+        "zlim",
+        "zticks"
     ],
 }

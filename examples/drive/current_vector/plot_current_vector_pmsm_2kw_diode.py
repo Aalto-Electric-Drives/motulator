@@ -55,4 +55,5 @@ utils.plot(res, base)
 # Plot also the stator voltage and currents as well as the DC-bus and grid-side
 # quantities.
 
-utils.plot_extra(res, base, t_span=(0.8, 0.825))
+utils.plot_stator_waveforms(res, base, t_lims=(0.8, 0.825))
+utils.plot_dc_bus_waveforms(res, base, t_lims=(0.8, 0.825))

@@ -52,4 +52,5 @@ mdl.converter.set_external_dc_current(lambda t: (t > 0.06) * 10)
 
 sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=0.1)
-utils.plot(res, base)
+utils.plot_control_signals(res, base)
+utils.plot_grid_waveforms(res, base)

@@ -12,7 +12,7 @@ from typing import Any
 import numpy as np
 
 from motulator.common.model import Subsystem, SubsystemTimeSeries
-from motulator.common.utils import complex2abc, empty_array, get_value
+from motulator.common.utils._utils import complex2abc, empty_array, get_value
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,

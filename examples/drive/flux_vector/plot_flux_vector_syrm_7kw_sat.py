@@ -41,8 +41,9 @@ psi_d_range = np.linspace(-1.5 * base.psi, 1.5 * base.psi, 256)
 psi_q_range = np.linspace(-0.5 * base.psi, 0.5 * base.psi, 256)
 flux_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range).invert()
 
-# Plot the flux map
-utils.plot_maps(flux_map, base)
+# Plot the flux maps
+utils.plot_map(flux_map, "d", base)
+utils.plot_map(flux_map, "q", base)
 
 # Parameter estimates
 est_par = control.SaturatedSynchronousMachinePars(
