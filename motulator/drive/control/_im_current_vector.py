@@ -7,7 +7,7 @@ from typing import Callable, Sequence
 
 from motulator.common.control import ComplexPIController
 from motulator.common.control._pwm import PWM
-from motulator.common.utils import clip
+from motulator.common.utils._utils import clip
 from motulator.drive.control._base import Measurements
 from motulator.drive.control._im_observers import (
     ObserverOutputs,

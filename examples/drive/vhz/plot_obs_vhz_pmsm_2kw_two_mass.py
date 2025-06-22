@@ -62,13 +62,13 @@ utils.plot(res, base)
 # %%
 # Plot the load speed and the twist angle.
 
-t_span = (0, 1.2)
+t_lims = (0, 1.2)
 _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
 ax1.plot(res.mdl.t, res.mdl.mechanics.w_M, label=r"$\omega_\mathrm{M}$")
 ax1.plot(res.mdl.t, res.mdl.mechanics.w_L, label=r"$\omega_\mathrm{L}$")
 ax2.plot(res.mdl.t, res.mdl.mechanics.theta_ML * 180 / np.pi)
-ax1.set_xlim(t_span)
-ax2.set_xlim(t_span)
+ax1.set_xlim(t_lims)
+ax2.set_xlim(t_lims)
 ax1.set_xticklabels([])
 ax1.legend()
 ax1.set_ylabel(r"$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)")

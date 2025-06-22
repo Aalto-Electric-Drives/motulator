@@ -7,7 +7,7 @@ from typing import Any, Callable
 import numpy as np
 
 from motulator.common.model import Subsystem, SubsystemTimeSeries
-from motulator.common.utils import empty_array, get_value
+from motulator.common.utils._utils import empty_array, get_value
 
 
 @dataclass

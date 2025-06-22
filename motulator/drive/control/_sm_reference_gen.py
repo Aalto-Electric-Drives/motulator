@@ -5,7 +5,7 @@ from math import inf, sqrt
 
 from scipy.optimize import root_scalar
 
-from motulator.common.utils import clip, sign
+from motulator.common.utils._utils import clip, sign
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,

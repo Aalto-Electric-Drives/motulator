@@ -3,7 +3,7 @@
 from cmath import exp, pi
 from dataclasses import dataclass
 
-from motulator.common.utils import wrap
+from motulator.common.utils._utils import wrap
 from motulator.drive.control._sm_current_vector import (
     CurrentVectorController,
     CurrentVectorControllerCfg,

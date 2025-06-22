@@ -6,7 +6,7 @@ from math import inf, pi, sqrt
 from typing import Callable, Sequence
 
 from motulator.common.control._pwm import PWM
-from motulator.common.utils import sign
+from motulator.common.utils._utils import sign
 from motulator.drive.control._base import Measurements
 from motulator.drive.control._im_observers import (
     ObserverOutputs,

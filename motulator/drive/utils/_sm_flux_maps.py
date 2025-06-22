@@ -1,16 +1,14 @@
-"""Manipulate and plot flux linkage maps of synchronous machines."""
+"""Manipulate flux linkage and current maps of synchronous machines."""
 
 from dataclasses import dataclass
-from typing import Any, Callable, Literal, cast
+from typing import Callable, Literal, cast
 
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator, griddata
 from scipy.io import loadmat
 
-from motulator.common.utils._utils import BaseValues, set_latex_style, set_screen_style
 
-
+# %%
 @dataclass
 class MagneticModel:
     """
@@ -93,10 +91,10 @@ class MagneticModel:
 
         Parameters
         ----------
-        d_range : Any, optional
+        d_range : np.ndarray | None, optional
             Range for the d-axis. If None, the range is determined from the data,
             defaults to None.
-        q_range : Any, optional
+        q_range : np.ndarray | None, optional
             Range for the q-axis. If None, the range is determined from the data,
             defaults to None.
         num : int, optional
@@ -129,15 +127,15 @@ class MagneticModel:
             new_type = "current_map" if self.is_flux_map() else "flux_map"
 
         # Auto-determine ranges if not provided
-        psi_d_min = np.max(np.min(np.real(inp), axis=0))
-        psi_d_max = np.min(np.max(np.real(inp), axis=0))
-        psi_q_min = np.max(np.min(np.imag(inp), axis=1))
-        psi_q_max = np.min(np.max(np.imag(inp), axis=1))
+        d_min = np.max(np.min(np.real(inp), axis=0))
+        d_max = np.min(np.max(np.real(inp), axis=0))
+        q_min = np.max(np.min(np.imag(inp), axis=1))
+        q_max = np.min(np.max(np.imag(inp), axis=1))
 
         if d_range is None:
-            d_range = np.linspace(psi_d_min, psi_d_max, num)
+            d_range = np.linspace(d_min, d_max, num)
         if q_range is None:
-            q_range = np.linspace(psi_q_min, psi_q_max, num)
+            q_range = np.linspace(q_min, q_max, num)
 
         # Interpolate the map
         new_inp = create_grid(d_range, q_range)  # type: ignore
@@ -206,17 +204,20 @@ class MagneticModel:
         )
 
     def invert(
-        self, d_range: Any = None, q_range: Any = None, num: int | None = None
+        self,
+        d_range: np.ndarray | None = None,
+        q_range: np.ndarray | None = None,
+        num: int | None = None,
     ) -> "MagneticModel":
         """
         Invert the map (swap input and output).
 
         Parameters
         ----------
-        d_range : Any, optional
+        d_range : np.ndarray | None, optional
             Range for the d-axis. If None, the range is determined from the data,
             defaults to None.
-        q_range : Any, optional
+        q_range : np.ndarray | None, optional
             Range for the q-axis. If None, the range is determined from the data,
             defaults to None.
         num : int, optional
@@ -430,256 +431,6 @@ class SaturationModelPMSyRM(SaturationModelSyRM):
         # Stator current
         i_s_dq += G_b * psi_b + 1j * self.k_q * G_b * np.imag(psi_s_dq)
         return i_s_dq
-
-
-# %%
-# pyright: reportPrivateImportUsage=false
-def plot_maps(
-    data: MagneticModel,
-    base: BaseValues | None = None,
-    x_lims: tuple[float, float] | None = None,
-    y_lims: tuple[float, float] | None = None,
-    z_lims: tuple[float, float] | None = None,
-    raw_data: MagneticModel | None = None,
-    latex: bool = False,
-) -> None:
-    # ruff: noqa: PLR0912, PLR0913, PLR0915
-    """
-    Plot flux maps and current maps.
-
-    Parameters
-    ----------
-    data : MagneticModel
-        Data containing the flux and current information. The coordinates are selected
-        based on the `type` field, which is either "flux_map" or "current_map" (the
-        default is "flux_map").
-    base : BaseValues, optional
-        Base values for scaling the maps.
-    x_lims : tuple[float, float], optional
-        Range for the x-axis as (min, max). If None, the range is determined from the
-        data, defaults to None.
-    y_lims : tuple[float, float], optional
-        Range for the y-axis as (min, max). If None, the range is determined from the
-        data, defaults to None.
-    z_lims : tuple[float, float], optional
-        Range for the z-axis as (min, max). If None, the range is determined from the
-        data, defaults to None.
-    raw_data : MagneticModel, optional
-        Flux and current information for comparison..
-    latex : bool, optional
-        Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
-        installation, defaults to False.
-
-    """
-    if latex:
-        set_latex_style()
-        width = plt.rcParams["figure.figsize"][0] * 1.4
-        height = plt.rcParams["figure.figsize"][1] * 1.4
-        size = (width, height)
-        plt.rcParams.update({"savefig.pad_inches": 0.3})
-    else:
-        set_screen_style()
-        size = plt.rcParams["figure.figsize"]
-
-    # Check if the base values were given
-    pu_vals = base is not None
-    if base is None:
-        base = BaseValues.unity()
-
-    # Normalize the data
-    i_s_dq = data.i_s_dq / base.i
-    psi_s_dq = data.psi_s_dq / base.psi
-
-    fig1, ax1 = plt.subplots(figsize=size, subplot_kw={"projection": "3d"})
-    fig2, ax2 = plt.subplots(figsize=size, subplot_kw={"projection": "3d"})
-
-    if data.type == "flux_map":
-        x, y, z1, z2 = i_s_dq.real, i_s_dq.imag, psi_s_dq.real, psi_s_dq.imag
-
-        if raw_data is not None:
-            raw_i_s_dq = raw_data.i_s_dq / base.i
-            raw_psi_s_dq = raw_data.psi_s_dq / base.psi
-            ax1.scatter(
-                raw_i_s_dq.real,
-                raw_i_s_dq.imag,
-                raw_psi_s_dq.real,
-                marker=".",
-                color="r",
-            )
-            ax2.scatter(
-                raw_i_s_dq.real,
-                raw_i_s_dq.imag,
-                raw_psi_s_dq.imag,
-                marker=".",
-                color="r",
-            )
-
-        if pu_vals:
-            xlabel = r"$i_\mathrm{d}$ (p.u.)"
-            ylabel = r"$i_\mathrm{q}$ (p.u.)"
-            zlabel1 = r"$\psi_\mathrm{d}$ (p.u.)"
-            zlabel2 = r"$\psi_\mathrm{q}$ (p.u.)"
-        else:
-            xlabel = r"$i_\mathrm{d}$ (A)"
-            ylabel = r"$i_\mathrm{q}$ (A)"
-            zlabel1 = r"$\psi_\mathrm{d}$ (Vs)"
-            zlabel2 = r"$\psi_\mathrm{q}$ (Vs)"
-
-    else:
-        x, y, z1, z2 = psi_s_dq.real, psi_s_dq.imag, i_s_dq.real, i_s_dq.imag
-
-        if raw_data is not None:
-            raw_i_s_dq = raw_data.i_s_dq / base.i
-            raw_psi_s_dq = raw_data.psi_s_dq / base.psi
-            ax1.scatter(
-                raw_psi_s_dq.real,
-                raw_psi_s_dq.imag,
-                raw_i_s_dq.real,
-                marker=".",
-                color="r",
-            )
-            ax2.scatter(
-                raw_psi_s_dq.real,
-                raw_psi_s_dq.imag,
-                raw_i_s_dq.imag,
-                marker=".",
-                color="r",
-            )
-
-        if pu_vals:
-            xlabel = r"$\psi_\mathrm{d}$ (p.u.)"
-            ylabel = r"$\psi_\mathrm{q}$ (p.u.)"
-            zlabel1 = r"$i_\mathrm{d}$ (p.u.)"
-            zlabel2 = r"$i_\mathrm{q}$ (p.u.)"
-        else:
-            xlabel = r"$\psi_\mathrm{d}$ (Vs)"
-            ylabel = r"$\psi_\mathrm{q}$ (Vs)"
-            zlabel1 = r"$i_\mathrm{d}$ (A)"
-            zlabel2 = r"$i_\mathrm{q}$ (A)"
-
-    ax1.plot_surface(  # type: ignore
-        x, y, z1, cmap="viridis", alpha=0.75, axlim_clip=True
-    )
-    ax2.plot_surface(  # type: ignore
-        x, y, z2, cmap="viridis", alpha=0.75, axlim_clip=True
-    )
-
-    ax1.set_xlabel(xlabel)
-    ax1.set_ylabel(ylabel)
-    ax1.set_zlabel(zlabel1)  # type: ignore
-    ax2.set_xlabel(xlabel)
-    ax2.set_ylabel(ylabel)
-    ax2.set_zlabel(zlabel2)  # type: ignore
-
-    if x_lims is not None:
-        ax1.set_xlim(x_lims)
-        ax2.set_xlim(x_lims)
-    if y_lims is not None:
-        ax1.set_ylim(y_lims)
-        ax2.set_ylim(y_lims)
-    if z_lims is not None:
-        ax1.set_zlim(z_lims)  # type: ignore
-        ax2.set_zlim(z_lims)  # type: ignore
-
-    plt.show()
-
-
-# %%
-def plot_flux_vs_current(
-    data: MagneticModel,
-    base: BaseValues | None = None,
-    lims: tuple[float, float] | None = None,
-    latex: bool = False,
-) -> None:
-    """
-    Plot the flux vs. current characteristics.
-
-    Parameters
-    ----------
-    data : MagneticModel
-        Flux map data. The current array should be a rectilinear grid.
-    base : BaseValues, optional
-        Base values for scaling the maps.
-    lims : tuple[float, float], optional
-        Range for the x-axis as (min, max). If None, determined from the data.
-    latex : bool, optional
-        Use LaTeX fonts for the labels, requires a working LaTeX installation.
-
-    """
-    if latex:
-        set_latex_style()
-    else:
-        set_screen_style()
-
-    # Check if the base values were given
-    pu_vals = base is not None
-    if base is None:
-        base = BaseValues.unity()
-
-    # Normalize the data
-    i_s_dq = data.i_s_dq / base.i
-    psi_s_dq = data.psi_s_dq / base.psi
-
-    # Indices corresponding to i_d = 0 and i_q = 0
-    ind_d_0 = np.argmin(np.abs(i_s_dq.real[:, 0]))
-    ind_q_0 = np.argmin(np.abs(i_s_dq.imag[0, :]))
-    # Indices corresponding to min(i_d) and max(i_d)
-    if lims is None:
-        ind_d_min = np.argmin(i_s_dq.real[:, 0])
-        ind_d_max = np.argmax(i_s_dq.real[:, 0])
-    else:
-        ind_d_min = np.argmin(np.abs(i_s_dq.real[:, 0] - lims[0]))
-        ind_d_max = np.argmin(np.abs(i_s_dq.real[:, 0] - lims[1]))
-
-    fig, ax = plt.subplots()
-    ax.plot(
-        i_s_dq.real[:, ind_q_0],
-        psi_s_dq.real[:, ind_q_0],
-        color="r",
-        linestyle="-",
-        label=r"$\psi_\mathrm{d}(i_\mathrm{d}, 0)$",
-    )
-    ax.plot(
-        i_s_dq.real[:, -1],
-        psi_s_dq.real[:, -1],
-        color="r",
-        linestyle="--",
-        label=r"$\psi_\mathrm{d}(i_\mathrm{d}, i_\mathrm{q,max})$",
-    )
-    ax.plot(
-        i_s_dq.imag[ind_d_0, :],
-        psi_s_dq.imag[ind_d_0, :],
-        color="b",
-        linestyle="-",
-        label=r"$\psi_\mathrm{q}(0, i_\mathrm{q})$",
-    )
-    ax.plot(
-        i_s_dq.imag[ind_d_min, :],
-        psi_s_dq.imag[ind_d_min, :],
-        color="b",
-        linestyle=":",
-        label=r"$\psi_\mathrm{q}(i_\mathrm{d,min}, i_\mathrm{q})$",
-    )
-    ax.plot(
-        i_s_dq.imag[ind_d_max, :],
-        psi_s_dq.imag[ind_d_max, :],
-        color="b",
-        linestyle="--",
-        label=r"$\psi_\mathrm{q}(i_\mathrm{d,max}, i_\mathrm{q})$",
-    )
-
-    if lims is not None:
-        ax.set_xlim(lims)
-
-    if pu_vals:
-        ax.set_xlabel(r"$i_\mathrm{d}$, $i_\mathrm{q}$ (p.u.)")
-        ax.set_ylabel(r"$\psi_\mathrm{d}$, $\psi_\mathrm{q}$ (p.u.)")
-    else:
-        ax.set_xlabel(r"$i_\mathrm{d}$, $i_\mathrm{q}$ (A)")
-        ax.set_ylabel(r"$\psi_\mathrm{d}$, $\psi_\mathrm{q}$ (Vs)")
-    ax.legend()
-
-    plt.show()
 
 
 # %%

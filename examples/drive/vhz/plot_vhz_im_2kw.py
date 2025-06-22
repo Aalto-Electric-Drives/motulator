@@ -55,7 +55,9 @@ sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=1.4)
 # sphinx_gallery_thumbnail_number = 2
 utils.plot(res, base)
-utils.plot_extra(res, base, t_span=(1.1, 1.125))
+utils.plot_stator_waveforms(res, base, t_lims=(1.1, 1.125))
+utils.plot_dc_bus_waveforms(res, base, t_lims=(1.1, 1.125))
+
 
 # %%
 # .. note::

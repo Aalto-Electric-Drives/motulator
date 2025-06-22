@@ -5,7 +5,7 @@
 This example simulates a grid-following-controlled converter connected to a strong grid
 through an LCL filter. The control system includes a phase-locked loop (PLL) to
 synchronize with the grid, a current reference generator, and a PI-type current
-controller. The LCL filter dynamics are not taken into account in the control system.
+controller. The LCL-filter dynamics are not taken into account in the control system.
 
 """
 
@@ -53,4 +53,5 @@ res = sim.simulate(t_stop=0.08)
 # %%
 # Plot the results.
 
-utils.plot(res, base)
+utils.plot_control_signals(res, base)
+utils.plot_grid_waveforms(res, base)

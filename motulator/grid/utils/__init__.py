@@ -6,12 +6,17 @@ from motulator.common.utils._utils import (
     SequenceGenerator,
     Step,
 )
-from motulator.grid.utils._plots import plot, plot_voltage_vector
+from motulator.grid.utils._plots import (
+    plot_control_signals,
+    plot_grid_waveforms,
+    plot_voltage_vector,
+)
 
 __all__ = [
     "BaseValues",
     "NominalValues",
-    "plot",
+    "plot_control_signals",
+    "plot_grid_waveforms",
     "plot_voltage_vector",
     "Step",
     "SequenceGenerator",

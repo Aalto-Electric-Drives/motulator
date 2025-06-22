@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from math import pi
 from typing import Callable
 
-from motulator.common.utils import wrap
+from motulator.common.utils._utils import wrap
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,

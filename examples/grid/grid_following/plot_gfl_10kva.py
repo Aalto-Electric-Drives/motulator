@@ -50,7 +50,9 @@ ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 
 sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=0.08)
-utils.plot(res, base, plot_pcc_voltage=False)
+utils.plot_control_signals(res, base)
+utils.plot_grid_waveforms(res, base, plot_pcc_voltage=False)
+
 
 # Uncomment line below to plot locus of the grid voltage space vector
 # utils.plot_voltage_vector(res, base)

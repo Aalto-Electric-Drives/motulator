@@ -14,7 +14,7 @@ from typing import Any, Callable
 import numpy as np
 
 from motulator.common.model._base import Subsystem
-from motulator.common.utils import abc2complex, complex2abc, empty_array
+from motulator.common.utils._utils import abc2complex, complex2abc, empty_array
 
 
 # %%
