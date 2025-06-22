@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.grid.utils &#8212; motulator 0.6.1 documentation</title>
+    <title>motulator.grid.utils &#8212; motulator 0.6.2 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=810a7e51"></script>
+    <script src="../../../../_static/documentation_options.js?v=967efe37"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.1 documentation</p>
+    <p class="title logo__title">motulator 0.6.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -170,13 +170,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
@@ -457,7 +457,8 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_control_signals"><code class="docutils literal notranslate"><span class="pre">plot_control_signals()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_grid_waveforms"><code class="docutils literal notranslate"><span class="pre">plot_grid_waveforms()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_voltage_vector"><code class="docutils literal notranslate"><span class="pre">plot_voltage_vector()</span></code></a></li>
 </ul>
 </li>
@@ -499,10 +500,13 @@ document.write(`
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.plot" title="motulator.grid.utils.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(res, base[, t_span, latex, plot_pcc_voltage])</p></td>
-<td><p>Plot example figures.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_control_signals" title="motulator.grid.utils.plot_control_signals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_control_signals</span></code></a>(res[, base, t_lims, t_ticks, ...])</p></td>
+<td><p>Plot control signals and converter voltages.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_voltage_vector" title="motulator.grid.utils.plot_voltage_vector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_voltage_vector</span></code></a>(res, base)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_grid_waveforms" title="motulator.grid.utils.plot_grid_waveforms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_grid_waveforms</span></code></a>(res[, base, t_lims, t_ticks, ...])</p></td>
+<td><p>Plot grid waveforms and phase angles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_voltage_vector" title="motulator.grid.utils.plot_voltage_vector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_voltage_vector</span></code></a>(res[, base, save_path])</p></td>
 <td><p>Plot locus of the grid voltage vector.</p></td>
 </tr>
 </tbody>
@@ -629,19 +633,51 @@ data points.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="motulator.grid.utils.plot">
-<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_pcc_voltage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_plots.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot" title="Link to this definition">#</a></dt>
-<dd><p>Plot example figures.</p>
+<dt class="sig sig-object py" id="motulator.grid.utils.plot_control_signals">
+<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot_control_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_plots.html#plot_control_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot_control_signals" title="Link to this definition">#</a></dt>
+<dd><p>Plot control signals and converter voltages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>res</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><em>SimulationResults</em></a>) – Should contain the simulated data.</p></li>
+<li><p><strong>res</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><em>SimulationResults</em></a>) – Simulation results.</p></li>
 <li><p><strong>base</strong> (<a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms. If not given, the waveforms are plotted
 in SI units.</p></li>
-<li><p><strong>t_span</strong> (<em>2-tuple</em><em>, </em><em>optional</em>) – Time span. If not given, the whole simulation time is plotted.</p></li>
+<li><p><strong>t_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Time axis limits. If None, uses full time range.</p></li>
+<li><p><strong>t_ticks</strong> (<em>ArrayLike</em><em>, </em><em>optional</em>) – Time axis tick locations.</p></li>
+<li><p><strong>y_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>] </em><em>| </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – y-axis limits for each subplot.</p></li>
+<li><p><strong>y_ticks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><em>ArrayLike</em><em> | </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – y-axis tick locations for each subplot.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
+installation, defaults to False.</p></li>
+<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Path to save the figure. If None, the figure is not saved.</p></li>
+<li><p><strong>**savefig_kwargs</strong> – Additional keyword arguments passed to plt.savefig().</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.grid.utils.plot_grid_waveforms">
+<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot_grid_waveforms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_pcc_voltage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_plots.html#plot_grid_waveforms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot_grid_waveforms" title="Link to this definition">#</a></dt>
+<dd><p>Plot grid waveforms and phase angles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><em>SimulationResults</em></a>) – Simulation results.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms. If not given, the waveforms are plotted
+in SI units.</p></li>
+<li><p><strong>t_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Time axis limits. If None, uses full time range.</p></li>
+<li><p><strong>t_ticks</strong> (<em>ArrayLike</em><em>, </em><em>optional</em>) – Time axis tick locations.</p></li>
+<li><p><strong>y_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>] </em><em>| </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – y-axis limits for each subplot.</p></li>
+<li><p><strong>y_ticks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><em>ArrayLike</em><em> | </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – y-axis tick locations for each subplot.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
+installation, defaults to False.</p></li>
 <li><p><strong>plot_pcc_voltage</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, plot the phase voltage waveforms at the point of common coupling (PCC).
 Otherwise, plot the grid voltage waveforms, defaults to True.</p></li>
-<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Path to save the figure. If None, the figure is not saved.</p></li>
+<li><p><strong>**savefig_kwargs</strong> – Additional keyword arguments passed to plt.savefig().</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -652,13 +688,16 @@ Otherwise, plot the grid voltage waveforms, defaults to True.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="motulator.grid.utils.plot_voltage_vector">
-<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot_voltage_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_plots.html#plot_voltage_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot_voltage_vector" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot_voltage_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_plots.html#plot_voltage_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot_voltage_vector" title="Link to this definition">#</a></dt>
 <dd><p>Plot locus of the grid voltage vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>res</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><em>SimulationResults</em></a>) – Simulation results.</p></li>
-<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms. If not given, the waveforms are plotted
+in SI units.</p></li>
+<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Path to save the figure. If None, the figure is not saved.</p></li>
+<li><p><strong>**savefig_kwargs</strong> – Additional keyword arguments passed to plt.savefig().</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -717,7 +756,8 @@ Otherwise, plot the grid voltage waveforms, defaults to True.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_control_signals"><code class="docutils literal notranslate"><span class="pre">plot_control_signals()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_grid_waveforms"><code class="docutils literal notranslate"><span class="pre">plot_grid_waveforms()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_voltage_vector"><code class="docutils literal notranslate"><span class="pre">plot_voltage_vector()</span></code></a></li>
 </ul>
 </li>

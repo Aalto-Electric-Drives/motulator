@@ -130,14 +130,15 @@ Set the time-dependent reference and disturbance signals.
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-56
+.. GENERATED FROM PYTHON SOURCE LINES 52-57
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
     res = sim.simulate(t_stop=0.1)
-    utils.plot(res, base)
+    utils.plot_control_signals(res, base)
+    utils.plot_grid_waveforms(res, base)
 
 
 
@@ -165,7 +166,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.050 seconds)
+   **Total running time of the script:** (0 minutes 1.058 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_dc_bus_10kva.py:

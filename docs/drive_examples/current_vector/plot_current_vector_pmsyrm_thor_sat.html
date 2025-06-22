@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>5-kW PM-SyRM, flux maps from SyR-e &#8212; motulator 0.6.1 documentation</title>
+    <title>5-kW PM-SyRM, flux maps from SyR-e &#8212; motulator 0.6.2 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=810a7e51"></script>
+    <script src="../../_static/documentation_options.js?v=967efe37"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.1 documentation</p>
+    <p class="title logo__title">motulator 0.6.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -171,13 +171,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Current-Vector Control</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">5-kW PM-SyRM, flux maps from SyR-e</a></li>
@@ -481,7 +481,8 @@ used in a similar manner. The control system takes the saturation into account.<
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the path of the MATLAB file and load the FEM data</span>
 <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="s2">&quot;__file__&quot;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span> <span class="k">else</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.cwd" title="pathlib.Path.cwd" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span></a><span class="p">()</span>
 <span class="n">fem_flux_map</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">import_syre_data</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a> <span class="o">/</span> <span class="s2">&quot;THOR.mat&quot;</span><span class="p">))</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_maps</span><span class="p">(</span><span class="n">fem_flux_map</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">fem_flux_map</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">fem_flux_map</span><span class="p">,</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
@@ -537,7 +538,7 @@ used in a similar manner. The control system takes the saturation into account.<
 <span class="n">utils</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_current_vector_pmsyrm_thor_sat_007.png" srcset="../../_images/sphx_glr_plot_current_vector_pmsyrm_thor_sat_007.png" alt="plot current vector pmsyrm thor sat" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 31.576 seconds)</p>
+<img src="../../_images/sphx_glr_plot_current_vector_pmsyrm_thor_sat_007.png" srcset="../../_images/sphx_glr_plot_current_vector_pmsyrm_thor_sat_007.png" alt="plot current vector pmsyrm thor sat" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 31.721 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-current-vector-pmsyrm-thor-sat-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/907ae300783e3136d06bb342f427fdd2/plot_current_vector_pmsyrm_thor_sat.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_current_vector_pmsyrm_thor_sat.ipynb</span></code></a></p>

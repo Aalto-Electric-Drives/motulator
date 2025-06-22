@@ -43,7 +43,8 @@ Functions
 
 .. autoapisummary::
 
-   motulator.grid.utils.plot
+   motulator.grid.utils.plot_control_signals
+   motulator.grid.utils.plot_grid_waveforms
    motulator.grid.utils.plot_voltage_vector
 
 
@@ -260,21 +261,30 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot(res, base, t_span = None, latex = False, plot_pcc_voltage = True)
+.. py:function:: plot_control_signals(res, base = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
 
    
-   Plot example figures.
+   Plot control signals and converter voltages.
 
-   :param res: Should contain the simulated data.
+   :param res: Simulation results.
    :type res: SimulationResults
    :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
    :type base: BaseValues, optional
-   :param t_span: Time span. If not given, the whole simulation time is plotted.
-   :type t_span: 2-tuple, optional
-   :param plot_pcc_voltage: If True, plot the phase voltage waveforms at the point of common coupling (PCC).
-                            Otherwise, plot the grid voltage waveforms, defaults to True.
-   :type plot_pcc_voltage: bool, optional
+   :param t_lims: Time axis limits. If None, uses full time range.
+   :type t_lims: tuple[float, float], optional
+   :param t_ticks: Time axis tick locations.
+   :type t_ticks: ArrayLike, optional
+   :param y_lims: y-axis limits for each subplot.
+   :type y_lims: list[tuple[float, float] | None], optional
+   :param y_ticks: y-axis tick locations for each subplot.
+   :type y_ticks: list[ArrayLike | None], optional
+   :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
+                 installation, defaults to False.
+   :type latex: bool, optional
+   :param save_path: Path to save the figure. If None, the figure is not saved.
+   :type save_path: str, optional
+   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 
@@ -293,15 +303,64 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_voltage_vector(res, base)
+.. py:function:: plot_grid_waveforms(res, base = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, plot_pcc_voltage = True, save_path = None, **savefig_kwargs)
+
+   
+   Plot grid waveforms and phase angles.
+
+   :param res: Simulation results.
+   :type res: SimulationResults
+   :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
+                in SI units.
+   :type base: BaseValues, optional
+   :param t_lims: Time axis limits. If None, uses full time range.
+   :type t_lims: tuple[float, float], optional
+   :param t_ticks: Time axis tick locations.
+   :type t_ticks: ArrayLike, optional
+   :param y_lims: y-axis limits for each subplot.
+   :type y_lims: list[tuple[float, float] | None], optional
+   :param y_ticks: y-axis tick locations for each subplot.
+   :type y_ticks: list[ArrayLike | None], optional
+   :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
+                 installation, defaults to False.
+   :type latex: bool, optional
+   :param plot_pcc_voltage: If True, plot the phase voltage waveforms at the point of common coupling (PCC).
+                            Otherwise, plot the grid voltage waveforms, defaults to True.
+   :type plot_pcc_voltage: bool, optional
+   :param save_path: Path to save the figure. If None, the figure is not saved.
+   :type save_path: str, optional
+   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: plot_voltage_vector(res, base = None, save_path = None, **savefig_kwargs)
 
    
    Plot locus of the grid voltage vector.
 
    :param res: Simulation results.
    :type res: SimulationResults
-   :param base: Base values for scaling the waveforms.
+   :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
+                in SI units.
    :type base: BaseValues, optional
+   :param save_path: Path to save the figure. If None, the figure is not saved.
+   :type save_path: str, optional
+   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 

@@ -131,7 +131,7 @@ Set the speed reference and the external load torque.
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-60
+.. GENERATED FROM PYTHON SOURCE LINES 53-62
 
 .. code-block:: Python
 
@@ -140,7 +140,9 @@ Create the simulation object, simulate, and plot the results in per-unit values.
     res = sim.simulate(t_stop=1.4)
     # sphinx_gallery_thumbnail_number = 2
     utils.plot(res, base)
-    utils.plot_extra(res, base, t_span=(1.1, 1.125))
+    utils.plot_stator_waveforms(res, base, t_lims=(1.1, 1.125))
+    utils.plot_dc_bus_waveforms(res, base, t_lims=(1.1, 1.125))
+
 
 
 
@@ -173,7 +175,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-72
+.. GENERATED FROM PYTHON SOURCE LINES 63-74
 
 .. note::
    The DC link of this particular example is actually unstable at 1-p.u. speed at the
@@ -190,7 +192,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.582 seconds)
+   **Total running time of the script:** (0 minutes 13.651 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_vhz_im_2kw.py:

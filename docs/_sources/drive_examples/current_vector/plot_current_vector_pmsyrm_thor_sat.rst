@@ -71,7 +71,7 @@ Compute base values based on the nominal values (just for figures).
 
 Load and plot the flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-38
+.. GENERATED FROM PYTHON SOURCE LINES 32-39
 
 .. code-block:: Python
 
@@ -79,7 +79,8 @@ Load and plot the flux maps.
     # Get the path of the MATLAB file and load the FEM data
     p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
     fem_flux_map = utils.import_syre_data(str(p / "THOR.mat"))
-    utils.plot_maps(fem_flux_map, base, x_lims=(-2, 2), y_lims=(-2, 2))
+    utils.plot_map(fem_flux_map, "d", base, x_lims=(-2, 2), y_lims=(-2, 2))
+    utils.plot_map(fem_flux_map, "q", base, x_lims=(-2, 2), y_lims=(-2, 2))
 
 
 
@@ -105,11 +106,11 @@ Load and plot the flux maps.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-50
+.. GENERATED FROM PYTHON SOURCE LINES 41-51
 
 .. code-block:: Python
 
@@ -130,11 +131,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-63
+.. GENERATED FROM PYTHON SOURCE LINES 53-64
 
 .. code-block:: Python
 
@@ -156,11 +157,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-65
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 Plot control characteristics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-74
+.. GENERATED FROM PYTHON SOURCE LINES 66-75
 
 .. code-block:: Python
 
@@ -211,11 +212,11 @@ Plot control characteristics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-76
+.. GENERATED FROM PYTHON SOURCE LINES 76-77
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-80
+.. GENERATED FROM PYTHON SOURCE LINES 77-81
 
 .. code-block:: Python
 
@@ -230,11 +231,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-86
+.. GENERATED FROM PYTHON SOURCE LINES 83-87
 
 .. code-block:: Python
 
@@ -257,7 +258,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 31.576 seconds)
+   **Total running time of the script:** (0 minutes 31.721 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_current_vector_pmsyrm_thor_sat.py:

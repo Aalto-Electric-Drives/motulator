@@ -24,7 +24,7 @@
 This example simulates a grid-following-controlled converter connected to a strong grid
 through an LCL filter. The control system includes a phase-locked loop (PLL) to
 synchronize with the grid, a current reference generator, and a PI-type current
-controller. The LCL filter dynamics are not taken into account in the control system.
+controller. The LCL-filter dynamics are not taken into account in the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-15
 
@@ -146,12 +146,13 @@ Create the simulation object and simulate it.
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-57
+.. GENERATED FROM PYTHON SOURCE LINES 55-58
 
 .. code-block:: Python
 
 
-    utils.plot(res, base)
+    utils.plot_control_signals(res, base)
+    utils.plot_grid_waveforms(res, base)
 
 
 
@@ -179,7 +180,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.055 seconds)
+   **Total running time of the script:** (0 minutes 1.065 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_gfl_lcl_10kva.py:

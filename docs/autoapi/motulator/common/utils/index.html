@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.common.utils &#8212; motulator 0.6.1 documentation</title>
+    <title>motulator.common.utils &#8212; motulator 0.6.2 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=810a7e51"></script>
+    <script src="../../../../_static/documentation_options.js?v=967efe37"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.1 documentation</p>
+    <p class="title logo__title">motulator 0.6.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -171,13 +171,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
@@ -453,12 +453,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.abc2complex"><code class="docutils literal notranslate"><span class="pre">abc2complex()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.clip"><code class="docutils literal notranslate"><span class="pre">clip()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2abc"><code class="docutils literal notranslate"><span class="pre">complex2abc()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.empty_array"><code class="docutils literal notranslate"><span class="pre">empty_array()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.get_value"><code class="docutils literal notranslate"><span class="pre">get_value()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.sign"><code class="docutils literal notranslate"><span class="pre">sign()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.wrap"><code class="docutils literal notranslate"><span class="pre">wrap()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -496,23 +491,8 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.abc2complex" title="motulator.common.utils.abc2complex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc2complex</span></code></a>(u)</p></td>
 <td><p>Transform three-phase quantities to a complex space vector.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.clip" title="motulator.common.utils.clip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clip</span></code></a>(value, min_value, max_value)</p></td>
-<td><p>Clip a value between minimum and maximum.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.complex2abc" title="motulator.common.utils.complex2abc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complex2abc</span></code></a>(u)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.complex2abc" title="motulator.common.utils.complex2abc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complex2abc</span></code></a>(u)</p></td>
 <td><p>Transform a complex space vector to three-phase quantities.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.empty_array" title="motulator.common.utils.empty_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">empty_array</span></code></a>()</p></td>
-<td><p>Return an empty array.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.get_value" title="motulator.common.utils.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value</span></code></a>(u, x)</p></td>
-<td><p>Helper to get the value of an object that is either callable or float.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.sign" title="motulator.common.utils.sign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sign</span></code></a>(x)</p></td>
-<td><p>Return the sign of x: -1 for negative, 0 for zero, 1 for positive.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.wrap" title="motulator.common.utils.wrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap</span></code></a>(theta)</p></td>
-<td><p>Limit the angle into the range [-pi, pi).</p></td>
 </tr>
 </tbody>
 </table>
@@ -577,24 +557,6 @@ data points.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="motulator.common.utils.clip">
-<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">clip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#clip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.clip" title="Link to this definition">#</a></dt>
-<dd><p>Clip a value between minimum and maximum.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
-<li><p><strong>min_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
-<li><p><strong>max_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="motulator.common.utils.complex2abc">
 <span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">complex2abc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#complex2abc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.complex2abc" title="Link to this definition">#</a></dt>
 <dd><p>Transform a complex space vector to three-phase quantities.</p>
@@ -616,68 +578,6 @@ data points.</p>
 <span class="go">array([ 1.       , -0.9330127, -0.0669873])</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="motulator.common.utils.empty_array">
-<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">empty_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#empty_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.empty_array" title="Link to this definition">#</a></dt>
-<dd><p>Return an empty array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="motulator.common.utils.get_value">
-<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.get_value" title="Link to this definition">#</a></dt>
-<dd><p>Helper to get the value of an object that is either callable or float.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>Any</em><em> | </em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Input object.</p></li>
-<li><p><strong>x</strong> (<em>Any</em>) – Argument to the callable object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Values of <cite>u(x)</cite> if callable, otherwise <cite>u</cite>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="motulator.common.utils.sign">
-<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#sign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.sign" title="Link to this definition">#</a></dt>
-<dd><p>Return the sign of x: -1 for negative, 0 for zero, 1 for positive.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="motulator.common.utils.wrap">
-<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#wrap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.wrap" title="Link to this definition">#</a></dt>
-<dd><p>Limit the angle into the range [-pi, pi).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Angle (rad).</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Limited angle.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>
@@ -734,12 +634,7 @@ data points.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.abc2complex"><code class="docutils literal notranslate"><span class="pre">abc2complex()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.clip"><code class="docutils literal notranslate"><span class="pre">clip()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2abc"><code class="docutils literal notranslate"><span class="pre">complex2abc()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.empty_array"><code class="docutils literal notranslate"><span class="pre">empty_array()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.get_value"><code class="docutils literal notranslate"><span class="pre">get_value()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.sign"><code class="docutils literal notranslate"><span class="pre">sign()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.wrap"><code class="docutils literal notranslate"><span class="pre">wrap()</span></code></a></li>
 </ul>
 </li>
 </ul>

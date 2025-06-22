@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.utils._sm_flux_maps &#8212; motulator 0.6.1 documentation</title>
+    <title>motulator.drive.utils._sm_flux_maps &#8212; motulator 0.6.2 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=810a7e51"></script>
+    <script src="../../../../_static/documentation_options.js?v=967efe37"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.1 documentation</p>
+    <p class="title logo__title">motulator 0.6.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -170,13 +170,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
@@ -401,19 +401,17 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for motulator.drive.utils._sm_flux_maps</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Manipulate and plot flux linkage maps of synchronous machines.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Manipulate flux linkage and current maps of synchronous machines.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">cast</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegularGridInterpolator</span><span class="p">,</span> <span class="n">griddata</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadmat</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">set_latex_style</span><span class="p">,</span> <span class="n">set_screen_style</span>
 
-
+<span class="c1"># %%</span>
 <div class="viewcode-block" id="MagneticModel">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel">[docs]</a>
 <span class="nd">@dataclass</span>
@@ -509,10 +507,10 @@ document.write(`
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        d_range : Any, optional</span>
+<span class="sd">        d_range : np.ndarray | None, optional</span>
 <span class="sd">            Range for the d-axis. If None, the range is determined from the data,</span>
 <span class="sd">            defaults to None.</span>
-<span class="sd">        q_range : Any, optional</span>
+<span class="sd">        q_range : np.ndarray | None, optional</span>
 <span class="sd">            Range for the q-axis. If None, the range is determined from the data,</span>
 <span class="sd">            defaults to None.</span>
 <span class="sd">        num : int, optional</span>
@@ -545,15 +543,15 @@ document.write(`
             <span class="n">new_type</span> <span class="o">=</span> <span class="s2">&quot;current_map&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_flux_map</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;flux_map&quot;</span>
 
         <span class="c1"># Auto-determine ranges if not provided</span>
-        <span class="n">psi_d_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-        <span class="n">psi_d_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-        <span class="n">psi_q_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">psi_q_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">d_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">d_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">q_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">q_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">d_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">d_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">psi_d_min</span><span class="p">,</span> <span class="n">psi_d_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+            <span class="n">d_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">d_min</span><span class="p">,</span> <span class="n">d_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">q_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">q_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">psi_q_min</span><span class="p">,</span> <span class="n">psi_q_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+            <span class="n">q_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">q_min</span><span class="p">,</span> <span class="n">q_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
 
         <span class="c1"># Interpolate the map</span>
         <span class="n">new_inp</span> <span class="o">=</span> <span class="n">create_grid</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
@@ -625,17 +623,20 @@ document.write(`
 <div class="viewcode-block" id="MagneticModel.invert">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.invert">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">invert</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">d_range</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">q_range</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">d_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">q_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MagneticModel&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Invert the map (swap input and output).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        d_range : Any, optional</span>
+<span class="sd">        d_range : np.ndarray | None, optional</span>
 <span class="sd">            Range for the d-axis. If None, the range is determined from the data,</span>
 <span class="sd">            defaults to None.</span>
-<span class="sd">        q_range : Any, optional</span>
+<span class="sd">        q_range : np.ndarray | None, optional</span>
 <span class="sd">            Range for the q-axis. If None, the range is determined from the data,</span>
 <span class="sd">            defaults to None.</span>
 <span class="sd">        num : int, optional</span>
@@ -856,262 +857,6 @@ document.write(`
         <span class="c1"># Stator current</span>
         <span class="n">i_s_dq</span> <span class="o">+=</span> <span class="n">G_b</span> <span class="o">*</span> <span class="n">psi_b</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_q</span> <span class="o">*</span> <span class="n">G_b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">i_s_dq</span></div>
-
-
-
-<span class="c1"># %%</span>
-<span class="c1"># pyright: reportPrivateImportUsage=false</span>
-<div class="viewcode-block" id="plot_maps">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_maps">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_maps</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">MagneticModel</span><span class="p">,</span>
-    <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">x_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">y_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">z_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">raw_data</span><span class="p">:</span> <span class="n">MagneticModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="c1"># ruff: noqa: PLR0912, PLR0913, PLR0915</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot flux maps and current maps.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    data : MagneticModel</span>
-<span class="sd">        Data containing the flux and current information. The coordinates are selected</span>
-<span class="sd">        based on the `type` field, which is either &quot;flux_map&quot; or &quot;current_map&quot; (the</span>
-<span class="sd">        default is &quot;flux_map&quot;).</span>
-<span class="sd">    base : BaseValues, optional</span>
-<span class="sd">        Base values for scaling the maps.</span>
-<span class="sd">    x_lims : tuple[float, float], optional</span>
-<span class="sd">        Range for the x-axis as (min, max). If None, the range is determined from the</span>
-<span class="sd">        data, defaults to None.</span>
-<span class="sd">    y_lims : tuple[float, float], optional</span>
-<span class="sd">        Range for the y-axis as (min, max). If None, the range is determined from the</span>
-<span class="sd">        data, defaults to None.</span>
-<span class="sd">    z_lims : tuple[float, float], optional</span>
-<span class="sd">        Range for the z-axis as (min, max). If None, the range is determined from the</span>
-<span class="sd">        data, defaults to None.</span>
-<span class="sd">    raw_data : MagneticModel, optional</span>
-<span class="sd">        Flux and current information for comparison..</span>
-<span class="sd">    latex : bool, optional</span>
-<span class="sd">        Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX</span>
-<span class="sd">        installation, defaults to False.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
-        <span class="n">set_latex_style</span><span class="p">()</span>
-        <span class="n">width</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.4</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.4</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;savefig.pad_inches&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">})</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">set_screen_style</span><span class="p">()</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span>
-
-    <span class="c1"># Check if the base values were given</span>
-    <span class="n">pu_vals</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
-
-    <span class="c1"># Normalize the data</span>
-    <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-    <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
-
-    <span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
-    <span class="n">fig2</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
-
-    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;flux_map&quot;</span><span class="p">:</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span>
-
-        <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-            <span class="n">raw_psi_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                <span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
-                <span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>
-                <span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
-                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                <span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
-                <span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>
-                <span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
-                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)&quot;</span>
-            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)&quot;</span>
-            <span class="n">zlabel1</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)&quot;</span>
-            <span class="n">zlabel2</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)&quot;</span>
-            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)&quot;</span>
-            <span class="n">zlabel1</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (Vs)&quot;</span>
-            <span class="n">zlabel2</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (Vs)&quot;</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span>
-
-        <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-            <span class="n">raw_psi_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                <span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
-                <span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>
-                <span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
-                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                <span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
-                <span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>
-                <span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>
-                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
-                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)&quot;</span>
-            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)&quot;</span>
-            <span class="n">zlabel1</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)&quot;</span>
-            <span class="n">zlabel2</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (Vs)&quot;</span>
-            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (Vs)&quot;</span>
-            <span class="n">zlabel1</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)&quot;</span>
-            <span class="n">zlabel2</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)&quot;</span>
-
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="n">zlabel1</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="n">zlabel2</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-    <span class="k">if</span> <span class="n">x_lims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x_lims</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x_lims</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">y_lims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_lims</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_lims</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">z_lims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="n">z_lims</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="n">z_lims</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
-
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="plot_flux_vs_current">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_flux_vs_current">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_flux_vs_current</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">MagneticModel</span><span class="p">,</span>
-    <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot the flux vs. current characteristics.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    data : MagneticModel</span>
-<span class="sd">        Flux map data. The current array should be a rectilinear grid.</span>
-<span class="sd">    base : BaseValues, optional</span>
-<span class="sd">        Base values for scaling the maps.</span>
-<span class="sd">    lims : tuple[float, float], optional</span>
-<span class="sd">        Range for the x-axis as (min, max). If None, determined from the data.</span>
-<span class="sd">    latex : bool, optional</span>
-<span class="sd">        Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
-        <span class="n">set_latex_style</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">set_screen_style</span><span class="p">()</span>
-
-    <span class="c1"># Check if the base values were given</span>
-    <span class="n">pu_vals</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
-
-    <span class="c1"># Normalize the data</span>
-    <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-    <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
-
-    <span class="c1"># Indices corresponding to i_d = 0 and i_q = 0</span>
-    <span class="n">ind_d_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
-    <span class="n">ind_q_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]))</span>
-    <span class="c1"># Indices corresponding to min(i_d) and max(i_d)</span>
-    <span class="k">if</span> <span class="n">lims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ind_d_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
-        <span class="n">ind_d_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ind_d_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lims</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">ind_d_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lims</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="n">ind_q_0</span><span class="p">],</span>
-        <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="n">ind_q_0</span><span class="p">],</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
-        <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">(i_\mathrm</span><span class="si">{d}</span><span class="s2">, 0)$&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
-        <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">(i_\mathrm</span><span class="si">{d}</span><span class="s2">, i_\mathrm{q,max})$&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="n">ind_d_0</span><span class="p">,</span> <span class="p">:],</span>
-        <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="n">ind_d_0</span><span class="p">,</span> <span class="p">:],</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span>
-        <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">(0, i_\mathrm</span><span class="si">{q}</span><span class="s2">)$&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="n">ind_d_min</span><span class="p">,</span> <span class="p">:],</span>
-        <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="n">ind_d_min</span><span class="p">,</span> <span class="p">:],</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span>
-        <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">(i_\mathrm{d,min}, i_\mathrm</span><span class="si">{q}</span><span class="s2">)$&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="n">ind_d_max</span><span class="p">,</span> <span class="p">:],</span>
-        <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="n">ind_d_max</span><span class="p">,</span> <span class="p">:],</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span>
-        <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">(i_\mathrm{d,max}, i_\mathrm</span><span class="si">{q}</span><span class="s2">)$&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">lims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">lims</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$, $i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$, $\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$, $i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$, $\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (Vs)&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
 

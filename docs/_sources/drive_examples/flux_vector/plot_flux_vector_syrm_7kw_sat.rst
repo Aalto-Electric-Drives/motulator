@@ -90,7 +90,7 @@ Configure the system model.
 
 Configure the control system, including the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-58
+.. GENERATED FROM PYTHON SOURCE LINES 38-59
 
 .. code-block:: Python
 
@@ -100,8 +100,9 @@ Configure the control system, including the saturation model.
     psi_q_range = np.linspace(-0.5 * base.psi, 0.5 * base.psi, 256)
     flux_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range).invert()
 
-    # Plot the flux map
-    utils.plot_maps(flux_map, base)
+    # Plot the flux maps
+    utils.plot_map(flux_map, "d", base)
+    utils.plot_map(flux_map, "q", base)
 
     # Parameter estimates
     est_par = control.SaturatedSynchronousMachinePars(
@@ -138,11 +139,11 @@ Configure the control system, including the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Plot control characteristics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-69
+.. GENERATED FROM PYTHON SOURCE LINES 61-70
 
 .. code-block:: Python
 
@@ -193,11 +194,11 @@ Plot control characteristics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-71
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-75
+.. GENERATED FROM PYTHON SOURCE LINES 72-76
 
 .. code-block:: Python
 
@@ -212,11 +213,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-81
+.. GENERATED FROM PYTHON SOURCE LINES 78-82
 
 .. code-block:: Python
 
@@ -239,7 +240,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.467 seconds)
+   **Total running time of the script:** (0 minutes 22.019 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_flux_vector_syrm_7kw_sat.py:

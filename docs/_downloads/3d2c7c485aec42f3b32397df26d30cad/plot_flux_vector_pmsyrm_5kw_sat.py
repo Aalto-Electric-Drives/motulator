@@ -1,8 +1,8 @@
 """
-5.5-kW PM-SyRM, saturated
+5.6-kW PM-SyRM, saturated
 =========================
 
-This example simulates sensorless stator-flux-vector control of a 5.5-kW PM-SyRM (Baldor
+This example simulates sensorless stator-flux-vector control of a 5.6-kW PM-SyRM (Baldor
 ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data,
 measured using the constant-speed test. The control system is parametrized using the
 algebraic saturation model from [#Lel2024]_, fitted to the measured data. This
@@ -15,7 +15,6 @@ model predictions.
 
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy.io import loadmat
 
@@ -25,7 +24,7 @@ from motulator.drive import model, utils
 # %%
 # Compute base values based on the nominal values (just for figures).
 
-nom = utils.NominalValues(U=370, I=8.8, f=60, P=5.5e3, tau=29.2)
+nom = utils.NominalValues(U=460, I=8.8, f=60, P=5.6e3, tau=29.7)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # %%
@@ -45,7 +44,7 @@ meas_flux_map = utils.MagneticModel(
 
 # Plot the measured data
 # sphinx_gallery_thumbnail_number = 4
-utils.plot_flux_vs_current(meas_flux_map, base, lims=(-1.5, 1.5))
+utils.plot_flux_vs_current(meas_flux_map, base, x_lims=(-1.5, 1.5))
 
 # %%
 # Create a saturation model, which will be used in the control system.
@@ -72,14 +71,33 @@ i_s_dq_fcn = utils.SaturationModelPMSyRM(
 
 # Generate the flux map using the saturation model
 est_curr_map = i_s_dq_fcn.as_magnetic_model(
-    d_range=np.linspace(-0.1, 1.3 * base.psi, 256),
-    q_range=np.linspace(-1.7 * base.psi, 1.7 * base.psi, 256),
+    d_range=np.linspace(-0.1, base.psi, 256),
+    q_range=np.linspace(-1.4 * base.psi, 1.4 * base.psi, 256),
 )
 est_flux_map = est_curr_map.invert()
 
 # Plot the saturation model (surface) and the measured data (points)
-utils.plot_maps(
-    est_flux_map, base, x_lims=(-1.8, 1.8), y_lims=(-2.15, 2.15), raw_data=meas_flux_map
+utils.plot_map(
+    est_flux_map,
+    "d",
+    base,
+    x_lims=(-2, 2),
+    y_lims=(-2, 2),
+    z_lims=(0, 1),
+    x_ticks=[-2, -1, 0, 1, 2],
+    y_ticks=[-2, -1, 0, 1, 2],
+    raw_data=meas_flux_map,
+)
+utils.plot_map(
+    est_flux_map,
+    "q",
+    base,
+    x_lims=(-2, 2),
+    y_lims=(-2, 2),
+    z_lims=(-1.5, 1.5),
+    x_ticks=[-2, -1, 0, 1, 2],
+    y_ticks=[-2, -1, 0, 1, 2],
+    raw_data=meas_flux_map,
 )
 
 # %%
@@ -113,7 +131,6 @@ mc.plot_flux_vs_torque(i_s_vals, base)
 mc.plot_current_vs_torque(i_s_vals, base)
 mc.plot_current_loci(i_s_vals, base)
 mc.plot_flux_loci(i_s_vals, base)
-plt.show()
 
 # %%
 # Set the speed reference and the external load torque.
@@ -125,7 +142,7 @@ mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
 # Create the simulation object, simulate, and plot the results in per-unit values.
 
 sim = model.Simulation(mdl, ctrl)
-res = sim.simulate(t_stop=1.5)
+res = sim.simulate(t_stop=1.4)
 utils.plot(res, base)
 
 # %%

@@ -164,20 +164,20 @@ Plot additional waveforms.
 .. code-block:: Python
 
 
-    t_span = (1.1, 1.125)  # Time span for the zoomed-in plot
+    t_lims = (1.1, 1.125)  # Time span for the zoomed-in plot
 
     # Plot the converter and stator voltages (phase a)
     fig1, (ax1, ax2) = plt.subplots(2, 1)
     ax1.plot(res.mdl.t, res.mdl.converter.u_c_ab.real / base.u, label=r"$u_\mathrm{ca}$")
     ax1.plot(res.mdl.t, res.mdl.machine.u_s_ab.real / base.u, label=r"$u_\mathrm{sa}$")
-    ax1.set_xlim(t_span)
+    ax1.set_xlim(t_lims)
     ax1.legend()
     ax1.set_xticklabels([])
     ax1.set_ylabel("Voltage (p.u.)")
     # Plot the converter and stator currents (phase a)
     ax2.plot(res.mdl.t, res.mdl.converter.i_c_ab.real / base.i, label=r"$i_\mathrm{ca}$")
     ax2.plot(res.mdl.t, res.mdl.machine.i_s_ab.real / base.i, label=r"$i_\mathrm{sa}$")
-    ax2.set_xlim(t_span)
+    ax2.set_xlim(t_lims)
     ax2.legend()
     ax2.set_ylabel("Current (p.u.)")
     ax2.set_xlabel("Time (s)")
@@ -207,7 +207,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.393 seconds)
+   **Total running time of the script:** (0 minutes 7.418 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_vhz_im_2kw_lc.py:

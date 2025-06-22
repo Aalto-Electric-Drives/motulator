@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>6.7-kW SyRM, saturated &#8212; motulator 0.6.1 documentation</title>
+    <title>6.7-kW SyRM, saturated &#8212; motulator 0.6.2 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=810a7e51"></script>
+    <script src="../../_static/documentation_options.js?v=967efe37"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.1 documentation</p>
+    <p class="title logo__title">motulator 0.6.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -171,13 +171,13 @@
 <li class="toctree-l3"><a class="reference internal" href="plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">6.7-kW SyRM, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
@@ -488,8 +488,9 @@ synchronous reluctance motor drive.</p>
 <span class="n">psi_q_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
 <span class="n">flux_map</span> <span class="o">=</span> <span class="n">curr_map</span><span class="o">.</span><span class="n">as_magnetic_model</span><span class="p">(</span><span class="n">psi_d_range</span><span class="p">,</span> <span class="n">psi_q_range</span><span class="p">)</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
 
-<span class="c1"># Plot the flux map</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_maps</span><span class="p">(</span><span class="n">flux_map</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+<span class="c1"># Plot the flux maps</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">flux_map</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">flux_map</span><span class="p">,</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 
 <span class="c1"># Parameter estimates</span>
 <span class="n">est_par</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">SaturatedSynchronousMachinePars</span></a><span class="p">(</span>
@@ -534,7 +535,7 @@ synchronous reluctance motor drive.</p>
 <span class="n">utils</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_flux_vector_syrm_7kw_sat_007.png" srcset="../../_images/sphx_glr_plot_flux_vector_syrm_7kw_sat_007.png" alt="plot flux vector syrm 7kw sat" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 21.467 seconds)</p>
+<img src="../../_images/sphx_glr_plot_flux_vector_syrm_7kw_sat_007.png" srcset="../../_images/sphx_glr_plot_flux_vector_syrm_7kw_sat_007.png" alt="plot flux vector syrm 7kw sat" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 22.019 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-flux-vector-plot-flux-vector-syrm-7kw-sat-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/dd669bf58541b891f93ebc53198c8f97/plot_flux_vector_syrm_7kw_sat.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_flux_vector_syrm_7kw_sat.ipynb</span></code></a></p>

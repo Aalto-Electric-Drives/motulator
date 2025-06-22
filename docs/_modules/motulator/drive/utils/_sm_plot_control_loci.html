@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.utils._sm_plot_control_loci &#8212; motulator 0.6.1 documentation</title>
+    <title>motulator.drive.utils._sm_plot_control_loci &#8212; motulator 0.6.2 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=810a7e51"></script>
+    <script src="../../../../_static/documentation_options.js?v=967efe37"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.1 documentation</p>
+    <p class="title logo__title">motulator 0.6.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -170,13 +170,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
@@ -409,14 +409,24 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cycler</span><span class="w"> </span><span class="kn">import</span> <span class="n">cycler</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">set_latex_style</span><span class="p">,</span> <span class="n">set_screen_style</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">save_and_show</span><span class="p">,</span>
+    <span class="n">set_latex_style</span><span class="p">,</span>
+    <span class="n">set_screen_style</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseValues</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
     <span class="n">SynchronousMachinePars</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._sm_control_loci</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlLoci</span>
 
+<span class="c1"># LaTeX symbol definition for easier configuration. When per-unit values are used,</span>
+<span class="c1"># sometimes subscript m is preferred instead of M.</span>
+<span class="n">M</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\mathrm</span><span class="si">{M}</span><span class="s2">&quot;</span>
 
+
+<span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot</span><span class="p">(</span>
     <span class="n">i_s_vals</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">BaseValues</span><span class="p">]:</span>
@@ -466,6 +476,8 @@ document.write(`
         <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
         <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the flux linkage loci.</span>
@@ -481,6 +493,10 @@ document.write(`
 <span class="sd">            Amount of points to be evaluated, defaults to 16.</span>
 <span class="sd">        latex : bool, optional</span>
 <span class="sd">            Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">        save_path : str, optional</span>
+<span class="sd">            If provided, save the figure to this path.</span>
+<span class="sd">        **savefig_kwargs</span>
+<span class="sd">            Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
@@ -554,7 +570,7 @@ document.write(`
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (Vs)&quot;</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (Vs)&quot;</span><span class="p">)</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+        <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
 
     <span class="c1"># %%</span>
@@ -566,6 +582,8 @@ document.write(`
         <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
         <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the current loci.</span>
@@ -581,6 +599,10 @@ document.write(`
 <span class="sd">            Amount of points to be evaluated, defaults to 16.</span>
 <span class="sd">        latex : bool, optional</span>
 <span class="sd">            Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">        save_path : str, optional</span>
+<span class="sd">            If provided, save the figure to this path.</span>
+<span class="sd">        **savefig_kwargs</span>
+<span class="sd">            Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
@@ -648,7 +670,7 @@ document.write(`
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+        <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
 
     <span class="c1"># %%</span>
@@ -660,6 +682,8 @@ document.write(`
         <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
         <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot flux magnitude vs. torque characteristics.</span>
@@ -675,6 +699,10 @@ document.write(`
 <span class="sd">            Amount of points to be evaluated, defaults to 16.</span>
 <span class="sd">        latex : bool, optional</span>
 <span class="sd">            Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">        save_path : str, optional</span>
+<span class="sd">            If provided, save the figure to this path.</span>
+<span class="sd">        **savefig_kwargs</span>
+<span class="sd">            Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
@@ -728,16 +756,16 @@ document.write(`
 
         <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (Nm)&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$ (Nm)&quot;</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$ (Vs)&quot;</span><span class="p">)</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+        <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
 
     <span class="c1"># %%</span>
@@ -749,6 +777,8 @@ document.write(`
         <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
         <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot current vs. torque characteristics.</span>
@@ -764,6 +794,10 @@ document.write(`
 <span class="sd">            Amount of points to be evaluated, defaults to 16.</span>
 <span class="sd">        latex : bool, optional</span>
 <span class="sd">            Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">        save_path : str, optional</span>
+<span class="sd">            If provided, save the figure to this path.</span>
+<span class="sd">        **savefig_kwargs</span>
+<span class="sd">            Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
@@ -796,8 +830,8 @@ document.write(`
         <span class="c1"># MTPV locus</span>
         <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>  <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">max_mtpv_psi_s</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">max_mtpv_psi_s</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
+            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
 
             <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
                 <span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
@@ -863,14 +897,14 @@ document.write(`
         <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
             <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
             <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
             <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (Nm)&quot;</span><span class="p">)</span></div>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$ (Nm)&quot;</span><span class="p">)</span>
 
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+        <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
+</div>
 
 </pre></div>
 

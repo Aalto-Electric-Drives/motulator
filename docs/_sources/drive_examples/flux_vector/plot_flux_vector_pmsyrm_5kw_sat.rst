@@ -18,10 +18,10 @@
 .. _sphx_glr_drive_examples_flux_vector_plot_flux_vector_pmsyrm_5kw_sat.py:
 
 
-5.5-kW PM-SyRM, saturated
+5.6-kW PM-SyRM, saturated
 =========================
 
-This example simulates sensorless stator-flux-vector control of a 5.5-kW PM-SyRM (Baldor
+This example simulates sensorless stator-flux-vector control of a 5.6-kW PM-SyRM (Baldor
 ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data,
 measured using the constant-speed test. The control system is parametrized using the
 algebraic saturation model from [#Lel2024]_, fitted to the measured data. This
@@ -29,14 +29,13 @@ saturation model can capture the de-saturation phenomenon of thin iron ribs, see
 [#Arm2009]_ for details. For comparison, the measured data is plotted together with the
 model predictions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-25
+.. GENERATED FROM PYTHON SOURCE LINES 15-24
 
 .. code-block:: Python
 
 
     from pathlib import Path
 
-    import matplotlib.pyplot as plt
     import numpy as np
     from scipy.io import loadmat
 
@@ -50,16 +49,16 @@ model predictions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-31
+.. GENERATED FROM PYTHON SOURCE LINES 26-30
 
 .. code-block:: Python
 
 
-    nom = utils.NominalValues(U=370, I=8.8, f=60, P=5.5e3, tau=29.2)
+    nom = utils.NominalValues(U=460, I=8.8, f=60, P=5.6e3, tau=29.7)
     base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 
@@ -69,12 +68,12 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-34
+.. GENERATED FROM PYTHON SOURCE LINES 31-33
 
 Plot the saturation model (surfaces) and the measured flux map data (points). This
 data is used to parametrize the machine model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-50
+.. GENERATED FROM PYTHON SOURCE LINES 33-49
 
 .. code-block:: Python
 
@@ -92,7 +91,7 @@ data is used to parametrize the machine model.
 
     # Plot the measured data
     # sphinx_gallery_thumbnail_number = 4
-    utils.plot_flux_vs_current(meas_flux_map, base, lims=(-1.5, 1.5))
+    utils.plot_flux_vs_current(meas_flux_map, base, x_lims=(-1.5, 1.5))
 
 
 
@@ -106,11 +105,11 @@ data is used to parametrize the machine model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Create a saturation model, which will be used in the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-70
+.. GENERATED FROM PYTHON SOURCE LINES 51-69
 
 .. code-block:: Python
 
@@ -139,25 +138,44 @@ Create a saturation model, which will be used in the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 70-71
 
 Compare the saturation model with the measured data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-85
+.. GENERATED FROM PYTHON SOURCE LINES 71-103
 
 .. code-block:: Python
 
 
     # Generate the flux map using the saturation model
     est_curr_map = i_s_dq_fcn.as_magnetic_model(
-        d_range=np.linspace(-0.1, 1.3 * base.psi, 256),
-        q_range=np.linspace(-1.7 * base.psi, 1.7 * base.psi, 256),
+        d_range=np.linspace(-0.1, base.psi, 256),
+        q_range=np.linspace(-1.4 * base.psi, 1.4 * base.psi, 256),
     )
     est_flux_map = est_curr_map.invert()
 
     # Plot the saturation model (surface) and the measured data (points)
-    utils.plot_maps(
-        est_flux_map, base, x_lims=(-1.8, 1.8), y_lims=(-2.15, 2.15), raw_data=meas_flux_map
+    utils.plot_map(
+        est_flux_map,
+        "d",
+        base,
+        x_lims=(-2, 2),
+        y_lims=(-2, 2),
+        z_lims=(0, 1),
+        x_ticks=[-2, -1, 0, 1, 2],
+        y_ticks=[-2, -1, 0, 1, 2],
+        raw_data=meas_flux_map,
+    )
+    utils.plot_map(
+        est_flux_map,
+        "q",
+        base,
+        x_lims=(-2, 2),
+        y_lims=(-2, 2),
+        z_lims=(-1.5, 1.5),
+        x_ticks=[-2, -1, 0, 1, 2],
+        y_ticks=[-2, -1, 0, 1, 2],
+        raw_data=meas_flux_map,
     )
 
 
@@ -184,11 +202,11 @@ Compare the saturation model with the measured data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+.. GENERATED FROM PYTHON SOURCE LINES 104-105
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-95
+.. GENERATED FROM PYTHON SOURCE LINES 105-113
 
 .. code-block:: Python
 
@@ -207,11 +225,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-97
+.. GENERATED FROM PYTHON SOURCE LINES 114-115
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-107
+.. GENERATED FROM PYTHON SOURCE LINES 115-125
 
 .. code-block:: Python
 
@@ -232,11 +250,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-109
+.. GENERATED FROM PYTHON SOURCE LINES 126-127
 
 Visualize the control loci.
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-118
+.. GENERATED FROM PYTHON SOURCE LINES 127-135
 
 .. code-block:: Python
 
@@ -247,7 +265,6 @@ Visualize the control loci.
     mc.plot_current_vs_torque(i_s_vals, base)
     mc.plot_current_loci(i_s_vals, base)
     mc.plot_flux_loci(i_s_vals, base)
-    plt.show()
 
 
 
@@ -287,11 +304,11 @@ Visualize the control loci.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-120
+.. GENERATED FROM PYTHON SOURCE LINES 136-137
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-124
+.. GENERATED FROM PYTHON SOURCE LINES 137-141
 
 .. code-block:: Python
 
@@ -306,17 +323,17 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-126
+.. GENERATED FROM PYTHON SOURCE LINES 142-143
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-131
+.. GENERATED FROM PYTHON SOURCE LINES 143-148
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    res = sim.simulate(t_stop=1.5)
+    res = sim.simulate(t_stop=1.4)
     utils.plot(res, base)
 
 
@@ -331,7 +348,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-141
+.. GENERATED FROM PYTHON SOURCE LINES 149-158
 
 .. rubric:: References
 
@@ -346,7 +363,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 26.296 seconds)
+   **Total running time of the script:** (0 minutes 25.091 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_flux_vector_pmsyrm_5kw_sat.py:

@@ -139,14 +139,15 @@ Set the references for converter output voltage magnitude and active power.
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-65
+.. GENERATED FROM PYTHON SOURCE LINES 61-66
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
     res = sim.simulate(t_stop=1.4)
-    utils.plot(res, base)
+    utils.plot_control_signals(res, base)
+    utils.plot_grid_waveforms(res, base)
 
 
 
@@ -174,7 +175,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.065 seconds)
+   **Total running time of the script:** (0 minutes 5.084 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_gfm_obs_13kva.py:

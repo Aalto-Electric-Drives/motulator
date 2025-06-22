@@ -50,9 +50,10 @@ Functions
 
    motulator.drive.utils.import_syre_data
    motulator.drive.utils.plot
-   motulator.drive.utils.plot_extra
+   motulator.drive.utils.plot_dc_bus_waveforms
    motulator.drive.utils.plot_flux_vs_current
-   motulator.drive.utils.plot_maps
+   motulator.drive.utils.plot_map
+   motulator.drive.utils.plot_stator_waveforms
 
 
 Package Contents
@@ -423,7 +424,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: plot_current_loci(i_s_vals, base = None, num = 16, latex = False)
+   .. py:method:: plot_current_loci(i_s_vals, base = None, num = 16, latex = False, save_path = None, **savefig_kwargs)
 
       
       Plot the current loci.
@@ -437,6 +438,9 @@ Package Contents
       :type num: int, optional
       :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
       :type latex: bool, optional
+      :param save_path: If provided, save the figure to this path.
+      :type save_path: str, optional
+      :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 
@@ -456,7 +460,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: plot_current_vs_torque(i_s_vals, base = None, num = 16, latex = False)
+   .. py:method:: plot_current_vs_torque(i_s_vals, base = None, num = 16, latex = False, save_path = None, **savefig_kwargs)
 
       
       Plot current vs. torque characteristics.
@@ -470,6 +474,9 @@ Package Contents
       :type num: int, optional
       :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
       :type latex: bool, optional
+      :param save_path: If provided, save the figure to this path.
+      :type save_path: str, optional
+      :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 
@@ -489,7 +496,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: plot_flux_loci(i_s_vals, base = None, num = 16, latex = False)
+   .. py:method:: plot_flux_loci(i_s_vals, base = None, num = 16, latex = False, save_path = None, **savefig_kwargs)
 
       
       Plot the flux linkage loci.
@@ -503,6 +510,9 @@ Package Contents
       :type num: int, optional
       :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
       :type latex: bool, optional
+      :param save_path: If provided, save the figure to this path.
+      :type save_path: str, optional
+      :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 
@@ -522,7 +532,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: plot_flux_vs_torque(i_s_vals, base = None, num = 16, latex = False)
+   .. py:method:: plot_flux_vs_torque(i_s_vals, base = None, num = 16, latex = False, save_path = None, **savefig_kwargs)
 
       
       Plot flux magnitude vs. torque characteristics.
@@ -536,6 +546,9 @@ Package Contents
       :type num: int, optional
       :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
       :type latex: bool, optional
+      :param save_path: If provided, save the figure to this path.
+      :type save_path: str, optional
+      :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 
@@ -617,10 +630,10 @@ Package Contents
 
       :param d_range: Range for the d-axis. If None, the range is determined from the data,
                       defaults to None.
-      :type d_range: Any, optional
+      :type d_range: np.ndarray | None, optional
       :param q_range: Range for the q-axis. If None, the range is determined from the data,
                       defaults to None.
-      :type q_range: Any, optional
+      :type q_range: np.ndarray | None, optional
       :param num: Number of points in each axis. If None, uses the maximum dimension from the
                   original map to preserve resolution, defaults to None.
       :type num: int, optional
@@ -679,10 +692,10 @@ Package Contents
 
       :param d_range: Range for the d-axis. If None, the range is determined from the data,
                       defaults to None.
-      :type d_range: Any, optional
+      :type d_range: np.ndarray | None, optional
       :param q_range: Range for the q-axis. If None, the range is determined from the data,
                       defaults to None.
-      :type q_range: Any, optional
+      :type q_range: np.ndarray | None, optional
       :param num: Number of points in each axis. If None, uses the maximum dimension from the
                   original map to preserve resolution, defaults to None.
       :type num: int, optional
@@ -1043,7 +1056,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot(res, base = None, t_span = None, latex = False)
+.. py:function:: plot(res, base = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
 
    
    Plot example figures.
@@ -1053,11 +1066,20 @@ Package Contents
    :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
    :type base: BaseValues, optional
-   :param t_span: Time span. If not given, the whole simulation time is plotted.
-   :type t_span: 2-tuple, optional
+   :param t_lims: Time axis limits. If None, uses full time range.
+   :type t_lims: tuple[float, float], optional
+   :param t_ticks: Time axis tick locations.
+   :type t_ticks: ArrayLike, optional
+   :param y_lims: y-axis limits for each subplot.
+   :type y_lims: list[tuple[float, float] | None], optional
+   :param y_ticks: y-axis tick locations for each subplot.
+   :type y_ticks: list[ArrayLike | None], optional
    :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
                  installation, defaults to False.
    :type latex: bool, optional
+   :param save_path: Path to save the figure. If None, the figure is not saved.
+   :type save_path: str, optional
+   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 
@@ -1076,19 +1098,28 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_extra(res, base = None, t_span = None, latex = False)
+.. py:function:: plot_dc_bus_waveforms(res, base = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
 
    
-   Plot extra waveforms for a motor drive with a diode bridge.
+   Plot DC bus and grid-side waveforms.
 
    :param res: Should contain the simulated data.
-   :type res: Simulation
+   :type res: SimulationResults
    :param base: Base values for scaling the waveforms.
    :type base: BaseValues, optional
-   :param t_span: Time span, defaults to (0, sim.ctrl.t[-1]).
-   :type t_span: 2-tuple, optional
+   :param t_lims: Time axis limits. If None, uses full time range.
+   :type t_lims: tuple[float, float], optional
+   :param t_ticks: Time axis tick locations.
+   :type t_ticks: ArrayLike, optional
+   :param y_lims: y-axis limits for each subplot.
+   :type y_lims: list[tuple[float, float] | None], optional
+   :param y_ticks: y-axis tick locations for each subplot.
+   :type y_ticks: list[ArrayLike | None], optional
    :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
    :type latex: bool, optional
+   :param save_path: Path to save the figure. If None, the figure is not saved.
+   :type save_path: str, optional
+   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 
@@ -1107,19 +1138,30 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_flux_vs_current(data, base = None, lims = None, latex = False)
+.. py:function:: plot_flux_vs_current(data, base = None, x_lims = None, x_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
 
    
    Plot the flux vs. current characteristics.
 
    :param data: Flux map data. The current array should be a rectilinear grid.
    :type data: MagneticModel
-   :param base: Base values for scaling the maps.
+   :param base: Base values for scaling the maps. If not given, the maps are plotted
+                in SI units.
    :type base: BaseValues, optional
-   :param lims: Range for the x-axis as (min, max). If None, determined from the data.
-   :type lims: tuple[float, float], optional
-   :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
+   :param x_lims: x-axis limits. If None, uses automatic scaling.
+   :type x_lims: tuple[float, float], optional
+   :param x_ticks: x-axis tick locations.
+   :type x_ticks: ArrayLike, optional
+   :param y_lims: y-axis limits. If None, uses automatic scaling.
+   :type y_lims: tuple[float, float], optional
+   :param y_ticks: y-axis tick locations.
+   :type y_ticks: ArrayLike, optional
+   :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
+                 installation, defaults to False.
    :type latex: bool, optional
+   :param save_path: Path to save the figure. If None, the figure is not saved.
+   :type save_path: str, optional
+   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 
@@ -1138,31 +1180,78 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_maps(data, base = None, x_lims = None, y_lims = None, z_lims = None, raw_data = None, latex = False)
+.. py:function:: plot_map(data, component, base = None, x_lims = None, x_ticks = None, y_lims = None, y_ticks = None, z_lims = None, z_ticks = None, raw_data = None, latex = False, save_path = None, **savefig_kwargs)
 
    
-   Plot flux maps and current maps.
+   Plot component (d or q) of flux linkage or current maps.
 
-   :param data: Data containing the flux and current information. The coordinates are selected
-                based on the `type` field, which is either "flux_map" or "current_map" (the
-                default is "flux_map").
+   :param data: Data containing the flux and current information.
    :type data: MagneticModel
-   :param base: Base values for scaling the maps.
+   :param component: Which component to plot: "d" for d-axis, "q" for q-axis.
+   :type component: {"d", "q"}
+   :param base: Base values for scaling the maps. If not given, the maps are plotted
+                in SI units.
    :type base: BaseValues, optional
-   :param x_lims: Range for the x-axis as (min, max). If None, the range is determined from the
-                  data, defaults to None.
+   :param x_lims: x-axis limits. If None, uses automatic scaling.
    :type x_lims: tuple[float, float], optional
-   :param y_lims: Range for the y-axis as (min, max). If None, the range is determined from the
-                  data, defaults to None.
+   :param x_ticks: x-axis tick locations.
+   :type x_ticks: ArrayLike, optional
+   :param y_lims: y-axis limits. If None, uses automatic scaling.
    :type y_lims: tuple[float, float], optional
-   :param z_lims: Range for the z-axis as (min, max). If None, the range is determined from the
-                  data, defaults to None.
+   :param y_ticks: y-axis tick locations.
+   :type y_ticks: ArrayLike, optional
+   :param z_lims: z-axis limits. If None, uses automatic scaling.
    :type z_lims: tuple[float, float], optional
-   :param raw_data: Flux and current information for comparison..
+   :param z_ticks: z-axis tick locations.
+   :type z_ticks: ArrayLike, optional
+   :param raw_data: Raw data for comparison (shown as scatter points).
    :type raw_data: MagneticModel, optional
    :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
                  installation, defaults to False.
    :type latex: bool, optional
+   :param save_path: Path to save the figure. If None, the figure is not saved.
+   :type save_path: str, optional
+   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: plot_stator_waveforms(res, base = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
+
+   
+   Plot stator voltage and current waveforms.
+
+   :param res: Should contain the simulated data.
+   :type res: SimulationResults
+   :param base: Base values for scaling the waveforms.
+   :type base: BaseValues, optional
+   :param t_lims: Time axis limits. If None, uses full time range.
+   :type t_lims: tuple[float, float], optional
+   :param t_ticks: Time axis tick locations.
+   :type t_ticks: ArrayLike, optional
+   :param y_lims: y-axis limits for each subplot.
+   :type y_lims: list[tuple[float, float] | None], optional
+   :param y_ticks: y-axis tick locations for each subplot.
+   :type y_ticks: list[ArrayLike | None], optional
+   :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
+   :type latex: bool, optional
+   :param save_path: Path to save the figure. If None, the figure is not saved.
+   :type save_path: str, optional
+   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
 

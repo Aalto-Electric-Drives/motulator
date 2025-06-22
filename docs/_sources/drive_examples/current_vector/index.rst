@@ -34,23 +34,6 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsm_2kw_diode_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode.">
 
 .. only:: html
@@ -63,6 +46,23 @@ These examples are for current-vector control of induction and synchronous machi
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, torque-control mode</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsm_2kw_diode_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
     </div>
 
 
@@ -128,8 +128,8 @@ These examples are for current-vector control of induction and synchronous machi
    :hidden:
 
    /drive_examples/current_vector/plot_current_vector_syrm_7kw
-   /drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode
    /drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode
+   /drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode
    /drive_examples/current_vector/plot_current_vector_im_2kw
    /drive_examples/current_vector/plot_current_vector_pmsm_2kw
    /drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat

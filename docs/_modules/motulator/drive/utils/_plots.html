@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.utils._plots &#8212; motulator 0.6.1 documentation</title>
+    <title>motulator.drive.utils._plots &#8212; motulator 0.6.2 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=810a7e51"></script>
+    <script src="../../../../_static/documentation_options.js?v=967efe37"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.1 documentation</p>
+    <p class="title logo__title">motulator 0.6.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -170,13 +170,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
@@ -407,28 +407,183 @@ document.write(`
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._simulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationResults</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BaseValues</span><span class="p">,</span>
-    <span class="n">complex2abc</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">configure_axes</span><span class="p">,</span>
+    <span class="n">save_and_show</span><span class="p">,</span>
     <span class="n">set_latex_style</span><span class="p">,</span>
     <span class="n">set_screen_style</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">complex2abc</span>
+
+<span class="c1"># LaTeX symbol definition for easier configuration. When per-unit values are used,</span>
+<span class="c1"># sometimes subscript m is preferred instead of M.</span>
+<span class="n">M</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\mathrm</span><span class="si">{M}</span><span class="s2">&quot;</span>
 
 
+<span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_machine_type</span><span class="p">(</span><span class="n">mdl</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;im&quot;</span><span class="p">,</span> <span class="s2">&quot;sm&quot;</span><span class="p">]:</span>
     <span class="k">return</span> <span class="s2">&quot;im&quot;</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;psi_R_ab&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;sm&quot;</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup plot style and return figure dimensions.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
+        <span class="n">set_latex_style</span><span class="p">()</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">2.2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">set_screen_style</span><span class="p">()</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.8</span>
+
+    <span class="n">width</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span>
+
+
 <span class="c1"># %%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_speeds</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot angular speeds.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;w_M&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_M</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span>
+            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$\omega_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">^\mathrm</span><span class="se">{{</span><span class="s2">ref</span><span class="se">}}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">w_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$\omega_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">w_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$\hat</span><span class="se">{{</span><span class="s2">\omega</span><span class="se">}}</span><span class="s2">_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_torques</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot torques.&quot;&quot;&quot;</span>
+    <span class="c1"># Plot torque reference only if it is nonzero</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
+            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">^\mathrm</span><span class="se">{{</span><span class="s2">ref</span><span class="se">}}</span><span class="s2">$&quot;</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="c1"># Plot torque estimated only if it is nonzero</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$\hat</span><span class="se">{{</span><span class="s2">\tau</span><span class="se">}}</span><span class="s2">_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">&quot;tau_L_tot&quot;</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_tot</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
+            <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{L}</span><span class="s2">^\mathrm</span><span class="si">{tot}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_currents</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot currents.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;i_s&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
+            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$&quot;</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;i_s&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
+            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$&quot;</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_voltages</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot voltages.&quot;&quot;&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat</span><span class="si">{u}</span><span class="s2">_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
+        <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{dc}</span><span class="s2">/\sqrt</span><span class="si">{3}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_flux_linkages</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot flux linkages.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;psi_s&quot;</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
+            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$&quot;</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">_get_machine_type</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sm&quot;</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">psi_s_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">psi_s_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">psi_R_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
+            <span class="s2">&quot;-.&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{R}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="p">,</span> <span class="s2">&quot;psi_s&quot;</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat{\psi}_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="plot">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="n">res</span><span class="p">:</span> <span class="n">SimulationResults</span><span class="p">,</span>
     <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">t_span</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">t_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">t_ticks</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_lims</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_ticks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot example figures.</span>
@@ -440,167 +595,55 @@ document.write(`
 <span class="sd">    base : BaseValues, optional</span>
 <span class="sd">        Base values for scaling the waveforms. If not given, the waveforms are plotted</span>
 <span class="sd">        in SI units.</span>
-<span class="sd">    t_span : 2-tuple, optional</span>
-<span class="sd">        Time span. If not given, the whole simulation time is plotted.</span>
+<span class="sd">    t_lims : tuple[float, float], optional</span>
+<span class="sd">        Time axis limits. If None, uses full time range.</span>
+<span class="sd">    t_ticks : ArrayLike, optional</span>
+<span class="sd">        Time axis tick locations.</span>
+<span class="sd">    y_lims : list[tuple[float, float] | None], optional</span>
+<span class="sd">        y-axis limits for each subplot.</span>
+<span class="sd">    y_ticks : list[ArrayLike | None], optional</span>
+<span class="sd">        y-axis tick locations for each subplot.</span>
 <span class="sd">    latex : bool, optional</span>
 <span class="sd">        Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX</span>
 <span class="sd">        installation, defaults to False.</span>
+<span class="sd">    save_path : str, optional</span>
+<span class="sd">        Path to save the figure. If None, the figure is not saved.</span>
+<span class="sd">    **savefig_kwargs</span>
+<span class="sd">        Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># ruff: noqa: PLR0912</span>
-    <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
-        <span class="n">set_latex_style</span><span class="p">()</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">2.2</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">set_screen_style</span><span class="p">()</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.8</span>
+    <span class="c1"># Setup plot style and dimensions</span>
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
 
-    <span class="n">width</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
-
-    <span class="c1"># For brevity</span>
-    <span class="n">mdl</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span>  <span class="c1"># Continuous-time data</span>
-    <span class="n">ctrl</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span>  <span class="c1"># Discrete-time data</span>
-
-    <span class="c1"># Check if the time span was given</span>
-    <span class="k">if</span> <span class="n">t_span</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="c1"># Check if the base values were given</span>
+    <span class="c1"># Process base values</span>
     <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="c1"># Subplot 1: Angular speeds</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;w_M&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_M</span><span class="p">):</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span>
-            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\omega_\mathrm{M,ref}$&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">w_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\omega_\mathrm</span><span class="si">{M}</span><span class="s2">$&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">w_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat \omega_\mathrm</span><span class="si">{M}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="c1"># Set time limits</span>
+    <span class="k">if</span> <span class="n">t_lims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">t_lims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="c1"># Subplot 2: torques</span>
-    <span class="c1"># Plot torque reference only if it is nonzero</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">):</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm{M,ref}$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$&quot;</span><span class="p">)</span>
-    <span class="c1"># Plot torque estimated only if it is nonzero</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span><span class="p">):</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat{\tau}_\mathrm</span><span class="si">{M}</span><span class="s2">$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">&quot;tau_L_tot&quot;</span><span class="p">):</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">tau_L_tot</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-            <span class="s2">&quot;:&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm{L,tot}$&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="c1"># Create figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">]</span>
 
-    <span class="c1"># Subplot 3: Currents</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;i_s&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="p">):</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm{d,ref}$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;i_s&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="p">):</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm{q,ref}$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span>
-    <span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="c1"># Plot subplots</span>
+    <span class="n">_plot_speeds</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">_plot_torques</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">_plot_currents</span><span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">_plot_voltages</span><span class="p">(</span><span class="n">ax4</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">_plot_flux_linkages</span><span class="p">(</span><span class="n">ax5</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 
-    <span class="c1"># Subplot 4: Voltages</span>
-    <span class="n">ax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span>
-    <span class="p">)</span>
-    <span class="n">ax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-        <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{dc}</span><span class="s2">/\sqrt</span><span class="si">{3}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax4</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
-    <span class="n">ax4</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax4</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
-    <span class="n">ax4</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
-    <span class="n">ax4</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="c1"># Configure all axes</span>
+    <span class="n">configure_axes</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">t_lims</span><span class="p">,</span> <span class="n">t_ticks</span><span class="p">,</span> <span class="n">y_lims</span><span class="p">,</span> <span class="n">y_ticks</span><span class="p">)</span>
 
-    <span class="c1"># Subplot 5: Flux linkages</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;psi_s&quot;</span><span class="p">):</span>
-        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm{s,ref}$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">_get_machine_type</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sm&quot;</span><span class="p">:</span>
-        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">psi_s_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">psi_s_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span>
-        <span class="p">)</span>
-        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">psi_R_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-            <span class="s2">&quot;-.&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{R}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="p">,</span> <span class="s2">&quot;psi_s&quot;</span><span class="p">):</span>
-        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">ax5</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
-    <span class="n">ax5</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax5</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
-    <span class="n">ax5</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+    <span class="c1"># Remove xticklabels for all but the last subplot</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax5</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
 
     <span class="c1"># Add axis labels</span>
     <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
@@ -615,96 +658,114 @@ document.write(`
         <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
         <span class="n">ax4</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
         <span class="n">ax5</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux linkage (Vs)&quot;</span><span class="p">)</span>
-    <span class="n">ax5</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="plot_extra">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_extra">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_extra</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_phase_voltages</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot phase voltages.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">_get_machine_type</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sm&quot;</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_m</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_s</span>
+    <span class="n">u_s_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">u_s_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat</span><span class="si">{u}</span><span class="s2">_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_phase_currents</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot phase currents.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">_get_machine_type</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sm&quot;</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_m</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_s</span>
+    <span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sb}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sc}</span><span class="s2">$&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sa}</span><span class="s2">(k)$&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="plot_stator_waveforms">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_stator_waveforms">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_stator_waveforms</span><span class="p">(</span>
     <span class="n">res</span><span class="p">:</span> <span class="n">SimulationResults</span><span class="p">,</span>
     <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">t_span</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">t_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">t_ticks</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_lims</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_ticks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot extra waveforms for a motor drive with a diode bridge.</span>
+<span class="sd">    Plot stator voltage and current waveforms.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    res : Simulation</span>
+<span class="sd">    res : SimulationResults</span>
 <span class="sd">        Should contain the simulated data.</span>
 <span class="sd">    base : BaseValues, optional</span>
 <span class="sd">        Base values for scaling the waveforms.</span>
-<span class="sd">    t_span : 2-tuple, optional</span>
-<span class="sd">        Time span, defaults to (0, sim.ctrl.t[-1]).</span>
+<span class="sd">    t_lims : tuple[float, float], optional</span>
+<span class="sd">        Time axis limits. If None, uses full time range.</span>
+<span class="sd">    t_ticks : ArrayLike, optional</span>
+<span class="sd">        Time axis tick locations.</span>
+<span class="sd">    y_lims : list[tuple[float, float] | None], optional</span>
+<span class="sd">        y-axis limits for each subplot.</span>
+<span class="sd">    y_ticks : list[ArrayLike | None], optional</span>
+<span class="sd">        y-axis tick locations for each subplot.</span>
 <span class="sd">    latex : bool, optional</span>
 <span class="sd">        Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">    save_path : str, optional</span>
+<span class="sd">        Path to save the figure. If None, the figure is not saved.</span>
+<span class="sd">    **savefig_kwargs</span>
+<span class="sd">        Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># ruff: noqa: PLR0915</span>
+    <span class="c1"># Setup plot style</span>
     <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
         <span class="n">set_latex_style</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">set_screen_style</span><span class="p">()</span>
 
-    <span class="c1"># For brevity</span>
-    <span class="n">mdl</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span>  <span class="c1"># Continuous-time data</span>
-    <span class="n">ctrl</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span>  <span class="c1"># Discrete-time data</span>
-
-    <span class="c1"># Check if the time span was given</span>
-    <span class="k">if</span> <span class="n">t_span</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="c1"># Check if the base values were given</span>
+    <span class="c1"># Process base values</span>
     <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="c1"># Angle of synchronous coordinates</span>
-    <span class="k">if</span> <span class="n">_get_machine_type</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sm&quot;</span><span class="p">:</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_m</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_s</span>
+    <span class="c1"># Set time limits</span>
+    <span class="k">if</span> <span class="n">t_lims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">t_lims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="c1"># Quantities in stator coordinates</span>
-    <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span>
-    <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span>
+    <span class="c1"># Create figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">]</span>
 
-    <span class="n">fig1</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Plot subplots</span>
+    <span class="n">_plot_phase_voltages</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">_plot_phase_currents</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 
-    <span class="c1"># Subplot 1: Voltages</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">u_s_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat u_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="c1"># Configure all axes</span>
+    <span class="n">configure_axes</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">t_lims</span><span class="p">,</span> <span class="n">t_ticks</span><span class="p">,</span> <span class="n">y_lims</span><span class="p">,</span> <span class="n">y_ticks</span><span class="p">)</span>
+
+    <span class="c1"># Remove xticklabels for the first subplot</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-
-    <span class="c1"># Subplot 2: currents</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-        <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sb}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{sc}</span><span class="s2">$&quot;</span><span class="p">],</span>
-    <span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
-        <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat i_\mathrm</span><span class="si">{sa}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
 
     <span class="c1"># Add axis labels</span>
     <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
@@ -713,41 +774,114 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
+
+    <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># %%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_dc_bus_voltages</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot DC bus and grid voltages.&quot;&quot;&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_di</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{di}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{dc}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_g_abc</span><span class="o">.</span><span class="n">T</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_dc_bus_currents</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot DC bus and grid currents.&quot;&quot;&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">i_L</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{L}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">i_dc_int</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{dc}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">i_g_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="plot_dc_bus_waveforms">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_dc_bus_waveforms">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_dc_bus_waveforms</span><span class="p">(</span>
+    <span class="n">res</span><span class="p">:</span> <span class="n">SimulationResults</span><span class="p">,</span>
+    <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">t_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">t_ticks</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_lims</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_ticks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot DC bus and grid-side waveforms.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    res : SimulationResults</span>
+<span class="sd">        Should contain the simulated data.</span>
+<span class="sd">    base : BaseValues, optional</span>
+<span class="sd">        Base values for scaling the waveforms.</span>
+<span class="sd">    t_lims : tuple[float, float], optional</span>
+<span class="sd">        Time axis limits. If None, uses full time range.</span>
+<span class="sd">    t_ticks : ArrayLike, optional</span>
+<span class="sd">        Time axis tick locations.</span>
+<span class="sd">    y_lims : list[tuple[float, float] | None], optional</span>
+<span class="sd">        y-axis limits for each subplot.</span>
+<span class="sd">    y_ticks : list[ArrayLike | None], optional</span>
+<span class="sd">        y-axis tick locations for each subplot.</span>
+<span class="sd">    latex : bool, optional</span>
+<span class="sd">        Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">    save_path : str, optional</span>
+<span class="sd">        Path to save the figure. If None, the figure is not saved.</span>
+<span class="sd">    **savefig_kwargs</span>
+<span class="sd">        Additional keyword arguments passed to plt.savefig().</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if DC bus data exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">&quot;i_L&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DC bus data not available in simulation results.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Setup plot style</span>
+    <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
+        <span class="n">set_latex_style</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">set_screen_style</span><span class="p">()</span>
+
+    <span class="c1"># Process base values</span>
+    <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Set time limits</span>
+    <span class="k">if</span> <span class="n">t_lims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">t_lims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Create figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">]</span>
+
+    <span class="c1"># Plot subplots</span>
+    <span class="n">_plot_dc_bus_voltages</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="n">_plot_dc_bus_currents</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+
+    <span class="c1"># Configure all axes</span>
+    <span class="n">configure_axes</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">t_lims</span><span class="p">,</span> <span class="n">t_ticks</span><span class="p">,</span> <span class="n">y_lims</span><span class="p">,</span> <span class="n">y_ticks</span><span class="p">)</span>
+
+    <span class="c1"># Remove xticklabels for first subplot</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
-    <span class="n">fig1</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
 
-    <span class="c1"># Plots the DC bus and grid-side variables (if exist)</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">&quot;i_L&quot;</span><span class="p">):</span>
-        <span class="n">fig2</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Add axis labels</span>
+    <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (p.u.)&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (p.u.)&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
 
-        <span class="c1"># Subplot 1: Voltages</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_di</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{di}</span><span class="s2">$&quot;</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{dc}</span><span class="s2">$&quot;</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">u_g_abc</span><span class="o">.</span><span class="n">T</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span>
-        <span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-
-        <span class="c1"># Subplot 2: Currents</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">i_L</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{L}</span><span class="s2">$&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">i_dc_int</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{dc}</span><span class="s2">$&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">i_g_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">t_span</span><span class="p">)</span>
-
-        <span class="c1"># Add axis labels</span>
-        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (p.u.)&quot;</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (p.u.)&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
-
-        <span class="n">fig2</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
 </pre></div>
 

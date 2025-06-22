@@ -91,15 +91,16 @@ Load the flux maps.
 
 .. GENERATED FROM PYTHON SOURCE LINES 40-41
 
-Plot the maps in per-unit values
+Plot the maps in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-45
+.. GENERATED FROM PYTHON SOURCE LINES 41-46
 
 .. code-block:: Python
 
 
     # sphinx_gallery_thumbnail_number = 3
-    utils.plot_maps(fem_flux_map, base, x_lims=(-2, 2), y_lims=(-2, 2))
+    utils.plot_map(fem_flux_map, "d", base, x_lims=(-2, 2), y_lims=(-2, 2))
+    utils.plot_map(fem_flux_map, "q", base, x_lims=(-2, 2), y_lims=(-2, 2))
 
 
 
@@ -125,11 +126,11 @@ Plot the maps in per-unit values
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Two-dimensional presentation of flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-50
+.. GENERATED FROM PYTHON SOURCE LINES 48-51
 
 .. code-block:: Python
 
@@ -148,11 +149,11 @@ Two-dimensional presentation of flux maps.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-71
+.. GENERATED FROM PYTHON SOURCE LINES 53-72
 
 .. code-block:: Python
 
@@ -182,11 +183,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-73
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-86
+.. GENERATED FROM PYTHON SOURCE LINES 74-87
 
 .. code-block:: Python
 
@@ -210,11 +211,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-88
+.. GENERATED FROM PYTHON SOURCE LINES 88-89
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-91
+.. GENERATED FROM PYTHON SOURCE LINES 89-92
 
 .. code-block:: Python
 
@@ -228,11 +229,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-93
+.. GENERATED FROM PYTHON SOURCE LINES 93-94
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-97
+.. GENERATED FROM PYTHON SOURCE LINES 94-98
 
 .. code-block:: Python
 
@@ -255,7 +256,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 51.411 seconds)
+   **Total running time of the script:** (0 minutes 51.539 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_flux_vector_ctrl_pmsyrm_thor_sat.py:

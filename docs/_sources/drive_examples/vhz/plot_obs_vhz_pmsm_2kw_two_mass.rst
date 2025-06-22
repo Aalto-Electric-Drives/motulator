@@ -166,13 +166,13 @@ Plot the load speed and the twist angle.
 .. code-block:: Python
 
 
-    t_span = (0, 1.2)
+    t_lims = (0, 1.2)
     _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
     ax1.plot(res.mdl.t, res.mdl.mechanics.w_M, label=r"$\omega_\mathrm{M}$")
     ax1.plot(res.mdl.t, res.mdl.mechanics.w_L, label=r"$\omega_\mathrm{L}$")
     ax2.plot(res.mdl.t, res.mdl.mechanics.theta_ML * 180 / np.pi)
-    ax1.set_xlim(t_span)
-    ax2.set_xlim(t_span)
+    ax1.set_xlim(t_lims)
+    ax2.set_xlim(t_lims)
     ax1.set_xticklabels([])
     ax1.legend()
     ax1.set_ylabel(r"$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)")
@@ -252,7 +252,7 @@ Plot the frequency response from the torque tau_M to the rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.067 seconds)
+   **Total running time of the script:** (0 minutes 4.094 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_obs_vhz_pmsm_2kw_two_mass.py:

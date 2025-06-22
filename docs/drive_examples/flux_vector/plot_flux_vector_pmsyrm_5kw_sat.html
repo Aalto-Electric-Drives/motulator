@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>5.5-kW PM-SyRM, saturated &#8212; motulator 0.6.1 documentation</title>
+    <title>5.6-kW PM-SyRM, saturated &#8212; motulator 0.6.2 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=810a7e51"></script>
+    <script src="../../_static/documentation_options.js?v=967efe37"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.1 documentation</p>
+    <p class="title logo__title">motulator 0.6.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -171,13 +171,13 @@
 <li class="toctree-l3"><a class="reference internal" href="plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">5.5-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">5.6-kW PM-SyRM, saturated</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
@@ -435,7 +435,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>5.5-kW PM-SyRM, saturated</h1>
+    <h1>5.6-kW PM-SyRM, saturated</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -455,8 +455,8 @@ document.write(`
 to download the full example code.</p>
 </div>
 <section class="sphx-glr-example-title" id="kw-pm-syrm-saturated">
-<span id="sphx-glr-drive-examples-flux-vector-plot-flux-vector-pmsyrm-5kw-sat-py"></span><h1>5.5-kW PM-SyRM, saturated<a class="headerlink" href="#kw-pm-syrm-saturated" title="Link to this heading">#</a></h1>
-<p>This example simulates sensorless stator-flux-vector control of a 5.5-kW PM-SyRM (Baldor
+<span id="sphx-glr-drive-examples-flux-vector-plot-flux-vector-pmsyrm-5kw-sat-py"></span><h1>5.6-kW PM-SyRM, saturated<a class="headerlink" href="#kw-pm-syrm-saturated" title="Link to this heading">#</a></h1>
+<p>This example simulates sensorless stator-flux-vector control of a 5.6-kW PM-SyRM (Baldor
 ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data,
 measured using the constant-speed test. The control system is parametrized using the
 algebraic saturation model from <a class="footnote-reference brackets" href="#lel2024" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, fitted to the measured data. This
@@ -465,7 +465,6 @@ saturation model can capture the de-saturation phenomenon of thin iron ribs, see
 model predictions.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadmat</span>
 
@@ -474,7 +473,7 @@ model predictions.</p>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values (just for figures).</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nom</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">NominalValues</span><span class="p">(</span><span class="n">U</span><span class="o">=</span><span class="mi">370</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mf">8.8</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mf">5.5e3</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">29.2</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nom</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">NominalValues</span><span class="p">(</span><span class="n">U</span><span class="o">=</span><span class="mi">460</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mf">8.8</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mf">5.6e3</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">29.7</span><span class="p">)</span>
 <span class="n">base</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">BaseValues</span><span class="o">.</span><span class="n">from_nominal</span><span class="p">(</span><span class="n">nom</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -493,7 +492,7 @@ data is used to parametrize the machine model.</p>
 
 <span class="c1"># Plot the measured data</span>
 <span class="c1"># sphinx_gallery_thumbnail_number = 4</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_flux_vs_current</span><span class="p">(</span><span class="n">meas_flux_map</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_flux_vs_current</span><span class="p">(</span><span class="n">meas_flux_map</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_sat_001.png" srcset="../../_images/sphx_glr_plot_flux_vector_pmsyrm_5kw_sat_001.png" alt="plot flux vector pmsyrm 5kw sat" class = "sphx-glr-single-img"/><p>Create a saturation model, which will be used in the control system.</p>
@@ -518,14 +517,33 @@ data is used to parametrize the machine model.</p>
 <p>Compare the saturation model with the measured data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate the flux map using the saturation model</span>
 <span class="n">est_curr_map</span> <span class="o">=</span> <span class="n">i_s_dq_fcn</span><span class="o">.</span><span class="n">as_magnetic_model</span><span class="p">(</span>
-    <span class="n">d_range</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.3</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
-    <span class="n">q_range</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.7</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mf">1.7</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+    <span class="n">d_range</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+    <span class="n">q_range</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.4</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mf">1.4</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
 <span class="p">)</span>
 <span class="n">est_flux_map</span> <span class="o">=</span> <span class="n">est_curr_map</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
 
 <span class="c1"># Plot the saturation model (surface) and the measured data (points)</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_maps</span><span class="p">(</span>
-    <span class="n">est_flux_map</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">),</span> <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">2.15</span><span class="p">,</span> <span class="mf">2.15</span><span class="p">),</span> <span class="n">raw_data</span><span class="o">=</span><span class="n">meas_flux_map</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span>
+    <span class="n">est_flux_map</span><span class="p">,</span>
+    <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+    <span class="n">base</span><span class="p">,</span>
+    <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">z_lims</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">x_ticks</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">y_ticks</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">raw_data</span><span class="o">=</span><span class="n">meas_flux_map</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span>
+    <span class="n">est_flux_map</span><span class="p">,</span>
+    <span class="s2">&quot;q&quot;</span><span class="p">,</span>
+    <span class="n">base</span><span class="p">,</span>
+    <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">z_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">),</span>
+    <span class="n">x_ticks</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">y_ticks</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">raw_data</span><span class="o">=</span><span class="n">meas_flux_map</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -559,7 +577,6 @@ data is used to parametrize the machine model.</p>
 <span class="n">mc</span><span class="o">.</span><span class="n">plot_current_vs_torque</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">i_s_vals</span></a><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 <span class="n">mc</span><span class="o">.</span><span class="n">plot_current_loci</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">i_s_vals</span></a><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 <span class="n">mc</span><span class="o">.</span><span class="n">plot_flux_loci</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">i_s_vals</span></a><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
@@ -575,7 +592,7 @@ data is used to parametrize the machine model.</p>
 </div>
 <p>Create the simulation object, simulate, and plot the results in per-unit values.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">1.4</span><span class="p">)</span>
 <span class="n">utils</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -594,7 +611,7 @@ and performance analysis of IPM-PMASR motors,” IEEE Trans. Ind. Appl., 2009,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009493">https://doi.org/10.1109/TIA.2008.2009493</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 26.296 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 25.091 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-flux-vector-plot-flux-vector-pmsyrm-5kw-sat-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/52b555173713a8b9fb2d23b856800f0a/plot_flux_vector_pmsyrm_5kw_sat.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_flux_vector_pmsyrm_5kw_sat.ipynb</span></code></a></p>

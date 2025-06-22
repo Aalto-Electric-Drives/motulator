@@ -112,7 +112,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.5-kW PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data, measured using the constant-speed test. The control system is parametrized using the algebraic saturation model from [#Lel2024]_, fitted to the measured data. This saturation model can capture the de-saturation phenomenon of thin iron ribs, see [#Arm2009]_ for details. For comparison, the measured data is plotted together with the model predictions.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.6-kW PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data, measured using the constant-speed test. The control system is parametrized using the algebraic saturation model from [#Lel2024]_, fitted to the measured data. This saturation model can capture the de-saturation phenomenon of thin iron ribs, see [#Arm2009]_ for details. For comparison, the measured data is plotted together with the model predictions.">
 
 .. only:: html
 
@@ -123,7 +123,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">5.5-kW PM-SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, saturated</div>
     </div>
 
 
@@ -165,23 +165,6 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsm_2kw_diode_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode.">
 
 .. only:: html
@@ -194,6 +177,23 @@ These examples are for current-vector control of induction and synchronous machi
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, torque-control mode</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsm_2kw_diode_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
     </div>
 
 

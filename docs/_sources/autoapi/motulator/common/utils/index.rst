@@ -42,12 +42,7 @@ Functions
 .. autoapisummary::
 
    motulator.common.utils.abc2complex
-   motulator.common.utils.clip
    motulator.common.utils.complex2abc
-   motulator.common.utils.empty_array
-   motulator.common.utils.get_value
-   motulator.common.utils.sign
-   motulator.common.utils.wrap
 
 
 Package Contents
@@ -149,29 +144,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: clip(value, min_value, max_value)
-
-   
-   Clip a value between minimum and maximum.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
 .. py:function:: complex2abc(u)
 
    
@@ -189,110 +161,6 @@ Package Contents
    >>> y = complex2abc(1-.5j)
    >>> y
    array([ 1.       , -0.9330127, -0.0669873])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: empty_array()
-
-   
-   Return an empty array.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: get_value(u, x)
-
-   
-   Helper to get the value of an object that is either callable or float.
-
-   :param u: Input object.
-   :type u: Any | Callable[[Any], Any] | None
-   :param x: Argument to the callable object.
-   :type x: Any
-
-   :returns: Values of `u(x)` if callable, otherwise `u`.
-   :rtype: Any
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: sign(x)
-
-   
-   Return the sign of x: -1 for negative, 0 for zero, 1 for positive.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: wrap(theta)
-
-   
-   Limit the angle into the range [-pi, pi).
-
-   :param theta: Angle (rad).
-   :type theta: float
-
-   :returns: Limited angle.
-   :rtype: float
 
 
 

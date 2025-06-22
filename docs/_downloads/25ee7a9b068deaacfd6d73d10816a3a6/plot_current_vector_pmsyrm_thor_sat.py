@@ -33,7 +33,8 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # Get the path of the MATLAB file and load the FEM data
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 fem_flux_map = utils.import_syre_data(str(p / "THOR.mat"))
-utils.plot_maps(fem_flux_map, base, x_lims=(-2, 2), y_lims=(-2, 2))
+utils.plot_map(fem_flux_map, "d", base, x_lims=(-2, 2), y_lims=(-2, 2))
+utils.plot_map(fem_flux_map, "q", base, x_lims=(-2, 2), y_lims=(-2, 2))
 
 # %%
 # Configure the system model.

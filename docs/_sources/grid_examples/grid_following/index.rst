@@ -17,7 +17,7 @@ These examples demonstrate grid-following control. The current controller uses 2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to a strong grid through an LCL filter. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller. The LCL filter dynamics are not taken into account in the control system.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to a strong grid through an LCL filter. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller. The LCL-filter dynamics are not taken into account in the control system.">
 
 .. only:: html
 

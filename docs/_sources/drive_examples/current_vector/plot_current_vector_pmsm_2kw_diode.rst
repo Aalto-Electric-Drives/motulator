@@ -153,12 +153,13 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 Plot also the stator voltage and currents as well as the DC-bus and grid-side
 quantities.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-59
+.. GENERATED FROM PYTHON SOURCE LINES 57-60
 
 .. code-block:: Python
 
 
-    utils.plot_extra(res, base, t_span=(0.8, 0.825))
+    utils.plot_stator_waveforms(res, base, t_lims=(0.8, 0.825))
+    utils.plot_dc_bus_waveforms(res, base, t_lims=(0.8, 0.825))
 
 
 
@@ -186,7 +187,7 @@ quantities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.507 seconds)
+   **Total running time of the script:** (0 minutes 11.746 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py:
