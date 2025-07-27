@@ -205,7 +205,8 @@ class CurrentVectorControllerCfg:
     alpha_i : float, optional
         Current control integral-action bandwidth (rad/s), defaults to `alpha_c`.
     alpha_o : float, optional
-        Speed estimation bandwidth (rad/s), defaults to 2*pi*100.
+        Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
+        2*pi*30, keeping the default speed observer gain the same.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the rotor angular speed.
     w_s_nom : float, optional
@@ -214,6 +215,9 @@ class CurrentVectorControllerCfg:
         Voltage utilization factor, defaults to 0.95.
     k_fw : float, optional
         Field-weakening gain (1/H), defaults to `2*R_R/(w_s_nom*L_sgm**2)`.
+    J : float, optional
+        Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+        used in speed estimation.
 
     """
 
@@ -221,11 +225,19 @@ class CurrentVectorControllerCfg:
     i_s_max: float
     alpha_c = 2 * pi * 200
     alpha_i: float | None = None
-    alpha_o: float = 2 * pi * 100
+    alpha_o: float | None = None
     k_o: Callable[[float], complex] | None = None
     w_s_nom: float = 2 * pi * 50
     k_u: float = 0.95
     k_fw: float = 0.0
+    J: float | None = None
+
+    def __post_init__(self) -> None:
+        """Set alpha_o default based on J value."""
+        if self.alpha_o is None:
+            # To keep the speed observer gain k_w the same
+            alpha = 2 * pi * 60
+            self.alpha_o = alpha if self.J is None else 0.5 * alpha
 
 
 class CurrentVectorController:
@@ -257,8 +269,9 @@ class CurrentVectorController:
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.w_s_nom, cfg.k_u, cfg.k_fw
         )
         self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
+        assert cfg.alpha_o is not None
         if sensorless:
-            self.observer = create_sensorless_observer(par, cfg.alpha_o, cfg.k_o)
+            self.observer = create_sensorless_observer(par, cfg.alpha_o, cfg.k_o, cfg.J)
         else:
             self.observer = create_sensored_observer(par, cfg.k_o)
         self.sensorless = sensorless

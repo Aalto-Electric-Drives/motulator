@@ -70,7 +70,8 @@ converter = model.VoltageSourceConverter(u_dc=310)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system.
+# Configure the control system. Since inertia estimate J is given, the speed observer
+# based on the mechanical model is used.
 
 # Create the flux and current maps for the control system
 curr_map = fem_flux_map.invert()
@@ -79,8 +80,8 @@ curr_map = fem_flux_map.invert()
 # flux linkages are iteratively computed from the currents in this example. You could
 # add the flux maps to the control system by adding `psi_s_dq_fcn=fem_flux_map` below.
 est_par = control.SaturatedSynchronousMachinePars(n_p=2, R_s=0.2, i_s_dq_fcn=curr_map)
-cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i)
-vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=False)
+cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042, alpha_i=0)
+vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
 speed_ctrl = control.SpeedController(J=2 * 0.0042, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 

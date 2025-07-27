@@ -5,10 +5,8 @@
 This example simulates sensorless stator-flux-vector control of a 5.6-kW PM-SyRM (Baldor
 ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data,
 measured using the constant-speed test. The control system is parametrized using the
-algebraic saturation model from [#Lel2024]_, fitted to the measured data. This
-saturation model can capture the de-saturation phenomenon of thin iron ribs, see
-[#Arm2009]_ for details. For comparison, the measured data is plotted together with the
-model predictions.
+algebraic saturation model from [#Lel2024]_, fitted to the measured data. For
+comparison, the measured data is plotted together with the model predictions.
 
 """
 # %%
@@ -71,7 +69,7 @@ i_s_dq_fcn = utils.SaturationModelPMSyRM(
 
 # Generate the flux map using the saturation model
 est_curr_map = i_s_dq_fcn.as_magnetic_model(
-    d_range=np.linspace(-0.1, base.psi, 256),
+    d_range=np.linspace(-0.1 * base.psi, base.psi, 256),
     q_range=np.linspace(-1.4 * base.psi, 1.4 * base.psi, 256),
 )
 est_flux_map = est_curr_map.invert()
@@ -81,22 +79,16 @@ utils.plot_map(
     est_flux_map,
     "d",
     base,
-    x_lims=(-2, 2),
-    y_lims=(-2, 2),
-    z_lims=(0, 1),
-    x_ticks=[-2, -1, 0, 1, 2],
-    y_ticks=[-2, -1, 0, 1, 2],
+    lims={"x": (-2, 2), "y": (-2, 2), "z": (0, 1)},
+    ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
     raw_data=meas_flux_map,
 )
 utils.plot_map(
     est_flux_map,
     "q",
     base,
-    x_lims=(-2, 2),
-    y_lims=(-2, 2),
-    z_lims=(-1.5, 1.5),
-    x_ticks=[-2, -1, 0, 1, 2],
-    y_ticks=[-2, -1, 0, 1, 2],
+    lims={"x": (-2, 2), "y": (-2, 2), "z": (-1.5, 1.5)},
+    ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
     raw_data=meas_flux_map,
 )
 
@@ -111,12 +103,14 @@ converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system.
+# Configure the control system. Since inertia estimate J is given, the speed observer
+# based on the mechanical model is used.
 
 est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.63, i_s_dq_fcn=est_curr_map, psi_s_dq_fcn=est_flux_map
 )
-cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, alpha_o=2 * np.pi * 50)
+cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, J=0.05, alpha_i=0)
+# cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i)
 vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
 speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
@@ -151,7 +145,3 @@ utils.plot(res, base)
 # .. [#Lel2024] Lelli, Hinkkanen, Giulii Capponi, "A saturation model based on a
 #    simplified equivalent magnetic circuit for permanent magnet machines," Proc. ICEM,
 #    2024, https://doi.org/10.1109/ICEM60801.2024.10700403
-#
-# .. [#Arm2009] Armando, Guglielmi, Pellegrino, Pastorelli, Vagati, "Accurate modeling
-#    and performance analysis of IPM-PMASR motors," IEEE Trans. Ind. Appl., 2009,
-#    https://doi.org/10.1109/TIA.2008.2009493

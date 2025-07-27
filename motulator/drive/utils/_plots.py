@@ -1,5 +1,6 @@
 """Example plotting scripts for machine drives."""
 
+from pathlib import Path
 from typing import Any, Literal
 
 import matplotlib.pyplot as plt
@@ -177,7 +178,7 @@ def plot(
     y_lims: list[tuple[float, float] | None] | None = None,
     y_ticks: list[ArrayLike | None] | None = None,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -201,7 +202,7 @@ def plot(
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
         installation, defaults to False.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
@@ -299,7 +300,7 @@ def plot_stator_waveforms(
     y_lims: list[tuple[float, float] | None] | None = None,
     y_ticks: list[ArrayLike | None] | None = None,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -321,7 +322,7 @@ def plot_stator_waveforms(
         y-axis tick locations for each subplot.
     latex : bool, optional
         Use LaTeX fonts for the labels, requires a working LaTeX installation.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
@@ -396,7 +397,7 @@ def plot_dc_bus_waveforms(
     y_lims: list[tuple[float, float] | None] | None = None,
     y_ticks: list[ArrayLike | None] | None = None,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -418,7 +419,7 @@ def plot_dc_bus_waveforms(
         y-axis tick locations for each subplot.
     latex : bool, optional
         Use LaTeX fonts for the labels, requires a working LaTeX installation.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().

@@ -59,7 +59,8 @@ class PLL:
     """
 
     def __init__(self, u_nom: float, w_nom: float, alpha_pll: float) -> None:
-        self.alpha_pll = alpha_pll
+        self.k_p = 2 * alpha_pll
+        self.k_i = alpha_pll**2
         self.state = PLLStates(w_g=w_nom, u_g=u_nom)
 
     def compute_output(
@@ -79,7 +80,7 @@ class PLL:
         out.eps = out.u_g_meas.imag / self.state.u_g if self.state.u_g > 0.0 else 0.0
 
         # Angular speed of the coordinate system
-        out.w_c = out.w_g + 2 * self.alpha_pll * out.eps
+        out.w_c = out.w_g + self.k_p * out.eps
 
         # Powers
         s_g = 1.5 * out.u_g * out.i_c.conjugate()
@@ -92,10 +93,8 @@ class PLL:
         """Update integral states."""
         self.state.theta_c += T_s * out.w_c
         self.state.theta_c = wrap(self.state.theta_c)
-        self.state.w_g += T_s * self.alpha_pll**2 * out.eps
-        self.state.u_g += (
-            2 * T_s * self.alpha_pll * (out.u_g_meas.real - self.state.u_g)
-        )
+        self.state.w_g += T_s * self.k_i * out.eps
+        self.state.u_g += T_s * self.k_p * (out.u_g_meas.real - self.state.u_g)
 
 
 # %%

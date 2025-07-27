@@ -31,11 +31,16 @@ converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system.
+# Configure the control system. Since inertia estimate J is given, the speed observer
+# based on the mechanical model is used.
 
 est_par = par  # Assume the machine model is perfectly known
 cfg = control.FluxVectorControllerCfg(
-    psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, tau_M_max=1.5 * nom.tau
+    psi_s_nom=0.95 * base.psi,
+    i_s_max=1.5 * base.i,
+    tau_M_max=1.5 * nom.tau,
+    J=0.015,  # Inertia estimate enables the speed observer
+    alpha_i=0,  # Integral action is not necessary with the speed observer
 )
 vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)

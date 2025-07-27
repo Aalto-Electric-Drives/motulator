@@ -38,7 +38,9 @@ mdl = model.Drive(machine, mechanics, converter)
 est_par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.4)
 # Gain `k_f` enables the PM-flux disturbance estimation at speeds above 0.2 p.u.
 cfg = control.CurrentVectorControllerCfg(
-    i_s_max=1.5 * base.i, k_f=lambda w_m: max(0.05 * (abs(w_m) - 0.2 * base.w), 0)
+    i_s_max=1.5 * base.i,
+    k_f=lambda w_m: max(0.05 * (abs(w_m) - 0.2 * base.w), 0),
+    alpha_o=2 * pi * 100,
 )
 vector_ctrl = control.CurrentVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)

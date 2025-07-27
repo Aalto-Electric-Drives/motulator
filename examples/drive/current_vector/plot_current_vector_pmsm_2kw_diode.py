@@ -32,7 +32,7 @@ mdl = model.Drive(machine, mechanics, converter, pwm=True)
 # Configure the control system.
 
 est_par = par  # Assume accurate model parameter estimates
-cfg = control.CurrentVectorControllerCfg(i_s_max=1.5 * base.i)
+cfg = control.CurrentVectorControllerCfg(i_s_max=1.5 * base.i, alpha_o=2 * pi * 100)
 vector_ctrl = control.CurrentVectorController(est_par, cfg, T_s=250e-6)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)

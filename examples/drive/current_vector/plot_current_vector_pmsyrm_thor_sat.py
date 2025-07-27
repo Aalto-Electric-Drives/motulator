@@ -33,8 +33,8 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # Get the path of the MATLAB file and load the FEM data
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 fem_flux_map = utils.import_syre_data(str(p / "THOR.mat"))
-utils.plot_map(fem_flux_map, "d", base, x_lims=(-2, 2), y_lims=(-2, 2))
-utils.plot_map(fem_flux_map, "q", base, x_lims=(-2, 2), y_lims=(-2, 2))
+utils.plot_map(fem_flux_map, "d", base, lims={"x": (-2, 2), "y": (-2, 2)})
+utils.plot_map(fem_flux_map, "q", base, lims={"x": (-2, 2), "y": (-2, 2)})
 
 # %%
 # Configure the system model.
@@ -49,14 +49,14 @@ converter = model.VoltageSourceConverter(u_dc=310)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system.
+# Configure the control system. Since inertia estimate J is given, the speed observer
+# based on the mechanical model is used.
 
-# Control system
 est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.2, i_s_dq_fcn=fem_curr_map, psi_s_dq_fcn=fem_flux_map
 )
-cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, alpha_o=2 * pi * 50)
-vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=False)
+cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042)
+vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)
 speed_ctrl = control.SpeedController(J=2 * 0.0042, alpha_s=2 * pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 

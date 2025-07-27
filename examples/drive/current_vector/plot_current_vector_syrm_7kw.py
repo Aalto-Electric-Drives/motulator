@@ -34,7 +34,10 @@ mdl = model.Drive(machine, mechanics, converter)
 
 est_par = par  # Assume accurate model parameter estimates
 cfg = control.CurrentVectorControllerCfg(
-    i_s_max=1.5 * base.i, psi_s_min=0.5 * base.psi, psi_s_max=1.5 * base.psi
+    i_s_max=1.5 * base.i,
+    psi_s_min=0.5 * base.psi,
+    psi_s_max=1.5 * base.psi,
+    alpha_o=2 * pi * 100,
 )
 vector_ctrl = control.CurrentVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)

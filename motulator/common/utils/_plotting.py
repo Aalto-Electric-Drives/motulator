@@ -1,5 +1,7 @@
 """Helper functions for plots."""
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 from cycler import cycler
 from numpy.typing import ArrayLike
@@ -105,13 +107,13 @@ def configure_axes(
 
 
 # %%
-def save_and_show(save_path: str | None = None, **savefig_kwargs) -> None:
+def save_and_show(save_path: str | Path | None = None, **savefig_kwargs) -> None:
     """
     Helper function to optionally save and show plots.
 
     Parameters
     ----------
-    save_path : str | None, optional
+    save_path : str | Path | None, optional
         Path to save the figure. If None, the figure is not saved.
     savefig_kwargs : dict, optional
         Additional keyword arguments for `plt.savefig`.

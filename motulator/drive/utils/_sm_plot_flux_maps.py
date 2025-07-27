@@ -1,5 +1,6 @@
 """Visualize flux linkage and current maps of synchronous machines."""
 
+from pathlib import Path
 from typing import Literal
 
 import matplotlib.pyplot as plt
@@ -68,7 +69,6 @@ def _filter_and_plot_raw_data(
     ax.scatter(x_scatter, y_scatter, z_scatter, marker=".", color="r")
 
 
-# %%
 def _get_labels(data_type: str, component: str, pu_vals: bool) -> tuple[str, str, str]:
     """Get axis labels based on data type, component, and units."""
     if data_type == "flux_map":
@@ -93,14 +93,34 @@ def _get_labels(data_type: str, component: str, pu_vals: bool) -> tuple[str, str
 
 def _configure_3d_axes(
     ax,
-    x_lims: tuple[float, float],
-    y_lims: tuple[float, float],
-    z_lims: tuple[float, float] | None,
-    x_ticks: ArrayLike | None,
-    y_ticks: ArrayLike | None,
-    z_ticks: ArrayLike | None,
-) -> None:
+    data_type: str,
+    i_s_dq: np.ndarray,
+    psi_s_dq: np.ndarray,
+    lims: dict[str, tuple[float, float]] | None = None,
+    ticks: dict[str, ArrayLike] | None = None,
+) -> tuple[tuple[float, float], tuple[float, float]]:
     """Configure 3D axis limits and ticks."""
+    # Extract limits or determine from data
+    x_lims = lims.get("x") if lims else None
+    y_lims = lims.get("y") if lims else None
+    z_lims = lims.get("z") if lims else None
+
+    if x_lims is None:
+        if data_type == "flux_map":
+            i_d_vals = np.real(i_s_dq)
+            x_lims = (np.min(i_d_vals), np.max(i_d_vals))
+        else:
+            psi_d_vals = np.real(psi_s_dq)
+            x_lims = (np.min(psi_d_vals), np.max(psi_d_vals))
+
+    if y_lims is None:
+        if data_type == "flux_map":
+            i_q_vals = np.imag(i_s_dq)
+            y_lims = (np.min(i_q_vals), np.max(i_q_vals))
+        else:
+            psi_q_vals = np.imag(psi_s_dq)
+            y_lims = (np.min(psi_q_vals), np.max(psi_q_vals))
+
     # Set axis limits
     ax.set_xlim(x_lims)
     ax.set_ylim(y_lims)
@@ -108,28 +128,31 @@ def _configure_3d_axes(
         ax.set_zlim(z_lims)  # type: ignore
 
     # Set axis ticks
-    if x_ticks is not None:
-        ax.set_xticks(x_ticks)
-    if y_ticks is not None:
-        ax.set_yticks(y_ticks)
-    if z_ticks is not None:
-        ax.set_zticks(z_ticks)  # type: ignore
+    if ticks is not None:
+        x_ticks = ticks.get("x")
+        y_ticks = ticks.get("y")
+        z_ticks = ticks.get("z")
+
+        if x_ticks is not None:
+            ax.set_xticks(x_ticks)
+        if y_ticks is not None:
+            ax.set_yticks(y_ticks)
+        if z_ticks is not None:
+            ax.set_zticks(z_ticks)  # type: ignore
+
+    return x_lims, y_lims
 
 
-# %%
 def plot_map(
     data: MagneticModel,
     component: Literal["d", "q"],
     base: BaseValues | None = None,
-    x_lims: tuple[float, float] | None = None,
-    x_ticks: ArrayLike | None = None,
-    y_lims: tuple[float, float] | None = None,
-    y_ticks: ArrayLike | None = None,
-    z_lims: tuple[float, float] | None = None,
-    z_ticks: ArrayLike | None = None,
+    lims: dict[str, tuple[float, float]] | None = None,
+    ticks: dict[str, ArrayLike] | None = None,
     raw_data: MagneticModel | None = None,
+    axlim_clip: bool = True,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -144,24 +167,18 @@ def plot_map(
     base : BaseValues, optional
         Base values for scaling the maps. If not given, the maps are plotted
         in SI units.
-    x_lims : tuple[float, float], optional
-        x-axis limits. If None, uses automatic scaling.
-    x_ticks : ArrayLike, optional
-        x-axis tick locations.
-    y_lims : tuple[float, float], optional
-        y-axis limits. If None, uses automatic scaling.
-    y_ticks : ArrayLike, optional
-        y-axis tick locations.
-    z_lims : tuple[float, float], optional
-        z-axis limits. If None, uses automatic scaling.
-    z_ticks : ArrayLike, optional
-        z-axis tick locations.
+    lims : dict[str, tuple[float, float]], optional
+        Axis limits. Keys should be 'x', 'y', 'z'.
+    ticks : dict[str, ArrayLike], optional
+        Axis tick locations. Keys should be 'x', 'y', 'z'.
     raw_data : MagneticModel, optional
         Raw data for comparison (shown as scatter points).
+    axlim_clip : bool, optional
+        Whether to clip the axes limits to the data limits, defaults to True.
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
         installation, defaults to False.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
@@ -177,19 +194,6 @@ def plot_map(
     i_s_dq = data.i_s_dq / base.i
     psi_s_dq = data.psi_s_dq / base.psi
 
-    # If no limits are provided, determine them from the data
-    if x_lims is None:
-        if data.type == "flux_map":
-            x_lims = (np.min(i_s_dq.real), np.max(i_s_dq.real))
-        else:
-            x_lims = (np.min(psi_s_dq.real), np.max(psi_s_dq.real))
-
-    if y_lims is None:
-        if data.type == "flux_map":
-            y_lims = (np.min(i_s_dq.imag), np.max(i_s_dq.imag))
-        else:
-            y_lims = (np.min(psi_s_dq.imag), np.max(psi_s_dq.imag))
-
     # Create figure and axis
     fig, ax = plt.subplots(figsize=size, subplot_kw={"projection": "3d"})
 
@@ -201,23 +205,36 @@ def plot_map(
         x, y = psi_s_dq.real, psi_s_dq.imag
         z = i_s_dq.real if component == "d" else i_s_dq.imag
 
+    # Configure axes (this determines x_lims, y_lims internally)
+    x_lims, y_lims = _configure_3d_axes(ax, data.type, i_s_dq, psi_s_dq, lims, ticks)
+
     # Plot raw data if provided
     if raw_data is not None:
         _filter_and_plot_raw_data(
             ax, raw_data, base, data.type, component, x_lims, y_lims
         )
 
-    # Plot surface and set labels
+    # Plot a transparent surface
     ax.plot_surface(  # type: ignore
-        x, y, z, cmap="viridis", alpha=0.75, axlim_clip=True
+        x, y, z, cmap="viridis", alpha=0.5, axlim_clip=axlim_clip
+    )
+    # Add wireframe on top
+    ax.plot_wireframe(  # type: ignore
+        x, y, z, color="black", linewidth=0.5, alpha=0.5, axlim_clip=axlim_clip
     )
 
     xlabel, ylabel, zlabel = _get_labels(data.type, component, pu_vals)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
-    ax.set_zlabel(zlabel)  # type: ignore
+    ax.zaxis.set_rotate_label(False)  # type: ignore
 
-    _configure_3d_axes(ax, x_lims, y_lims, z_lims, x_ticks, y_ticks, z_ticks)
+    # Set view angle based on component
+    if component == "d":
+        ax.view_init(elev=15, azim=-135)  # type: ignore
+        ax.set_zlabel(zlabel, rotation=90)  # type: ignore
+    else:
+        ax.view_init(elev=15, azim=-45)  # type: ignore
+        ax.set_zlabel(zlabel, rotation=90)  # type: ignore
 
     save_and_show(save_path, **savefig_kwargs)
 
@@ -231,7 +248,7 @@ def plot_flux_vs_current(
     y_lims: tuple[float, float] | None = None,
     y_ticks: ArrayLike | None = None,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -255,7 +272,7 @@ def plot_flux_vs_current(
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
         installation, defaults to False.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
