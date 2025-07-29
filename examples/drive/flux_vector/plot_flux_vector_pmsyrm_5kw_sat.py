@@ -2,11 +2,17 @@
 5.6-kW PM-SyRM, saturated
 =========================
 
-This example simulates sensorless stator-flux-vector control of a 5.6-kW PM-SyRM (Baldor
+This example simulates sensorless flux-vector control of a 5.6-kW PM-SyRM (Baldor
 ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data,
 measured using the constant-speed test. The control system is parametrized using the
 algebraic saturation model from [#Lel2024]_, fitted to the measured data. For
 comparison, the measured data is plotted together with the model predictions.
+
+This example also demonstrates the mechanical-model-based speed observer [#Lor1991]_.
+The lag of the speed estimate in accelerations is avoided, allowing to increase the
+speed-control bandwidth. Using the mechanical-model-based speed observer is particularly
+useful in the case of PM-SyRMs, where the speed-estimation bandwidth otherwise would be
+limited due to the comparatively large q-axis inductance.
 
 """
 # %%
@@ -103,8 +109,10 @@ converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system. Since inertia estimate J is given, the speed observer
-# based on the mechanical model is used.
+# Configure the control system. Since the inertia estimate `J` is provided in
+# `FluxVectorControllerCfg`, the mechanical-model-based speed observer is used. Integral
+# action in flux-vector control is not needed (`alpha_i = 0`) since the speed observer's
+# load-torque disturbance estimation provides integral action.
 
 est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.63, i_s_dq_fcn=est_curr_map, psi_s_dq_fcn=est_flux_map
@@ -145,3 +153,7 @@ utils.plot(res, base)
 # .. [#Lel2024] Lelli, Hinkkanen, Giulii Capponi, "A saturation model based on a
 #    simplified equivalent magnetic circuit for permanent magnet machines," Proc. ICEM,
 #    2024, https://doi.org/10.1109/ICEM60801.2024.10700403
+#
+# .. [#Lor1991] Lorenz, Van Patten, "High-resolution velocity estimation for
+#    all-digital, AC servo drives," IEEE Trans. Ind. Appl., 1991,
+#    https://doi.org/10.1109/28.85485

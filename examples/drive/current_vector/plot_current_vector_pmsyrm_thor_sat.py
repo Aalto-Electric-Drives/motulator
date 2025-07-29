@@ -9,8 +9,12 @@ are from the SyR-e project:
     https://github.com/SyR-e/syre_public
 
 The SyR-e project has been licensed under the Apache License, Version 2.0. We
-acknowledge the developers of the SyR-e project. The flux maps from other sources can be
-used in a similar manner. The control system takes the saturation into account.
+acknowledge the developers of the SyR-e project.
+
+The flux maps from other sources can be used in a similar manner. The control system
+takes the saturation into account. This example also demonstrates the mechanical-model-
+based speed observer [#Lor1991]_. The lag of the speed estimate in accelerations is
+avoided, allowing to increase the speed-control bandwidth.
 
 """
 
@@ -49,8 +53,8 @@ converter = model.VoltageSourceConverter(u_dc=310)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system. Since inertia estimate J is given, the speed observer
-# based on the mechanical model is used.
+# Configure the control system. Since the inertia estimate `J` is provided in
+# `CurrentVectorControllerCfg`, the mechanical-model-based speed observer is used.
 
 est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.2, i_s_dq_fcn=fem_curr_map, psi_s_dq_fcn=fem_flux_map
@@ -84,3 +88,10 @@ mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.4 * nom.tau)
 sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=1.4)
 utils.plot(res, base)
+
+# %%
+# .. rubric:: References
+#
+# .. [#Lor1991] Lorenz, Van Patten, "High-resolution velocity estimation for
+#    all-digital, AC servo drives," IEEE Trans. Ind. Appl., 1991,
+#    https://doi.org/10.1109/28.85485

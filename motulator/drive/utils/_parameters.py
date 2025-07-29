@@ -167,8 +167,7 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         return self.i_s_dq_fcn(psi_s_dq)
 
     def psi_s_dq(self, i_s_dq: complex | np.ndarray) -> complex | np.ndarray:
-        """
-        Flux linkage as a function of the stator current."""
+        """Flux linkage as a function of the stator current."""
         if self.psi_s_dq_fcn is None:
             # For arrays, apply the solver to each element
             if isinstance(i_s_dq, np.ndarray):

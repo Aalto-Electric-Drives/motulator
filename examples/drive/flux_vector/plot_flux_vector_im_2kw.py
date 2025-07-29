@@ -3,6 +3,7 @@
 ======================
 
 This example simulates sensorless flux-vector control of a 2.2-kW induction machine.
+This example also applies the mechanical-model-based speed observer.
 
 """
 
@@ -31,8 +32,10 @@ converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system. Since inertia estimate J is given, the speed observer
-# based on the mechanical model is used.
+# Configure the control system. Since the inertia estimate `J` is provided in
+# `FluxVectorControllerCfg`, the mechanical-model-based speed observer is used. You can
+# disable the mechanical-model-based speed observer by removing the `J` parameter or
+# setting it to `None`.
 
 est_par = par  # Assume the machine model is perfectly known
 cfg = control.FluxVectorControllerCfg(
