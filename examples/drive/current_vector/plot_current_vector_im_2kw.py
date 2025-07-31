@@ -25,7 +25,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # default parameters correspond to the measured data of a 2.2-kW machine.
 
 
-def L_s(psi, L_su=0.34, beta=0.84, S=7) -> float:
+def L_s(psi: float, L_su: float = 0.34, beta: float = 0.84, S: float = 7) -> float:
     """Stator inductance saturation model."""
     return L_su / (1 + (beta * psi) ** S)
 
@@ -50,6 +50,7 @@ mdl = model.Drive(machine, mechanics, converter, pwm=False, delay=1)
 est_par = control.InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
 )
+# est_par = par  # Uncomment this line to use the perfectly known machine model
 cfg = control.CurrentVectorControllerCfg(psi_s_nom=base.psi, i_s_max=1.5 * base.i)
 vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
@@ -63,9 +64,9 @@ ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 ctrl.set_speed_ref(lambda t: (t > 0.2) * 0.5 * base.w_M)
 mdl.mechanics.set_external_load_torque(lambda t: (t > 0.75) * nom.tau)
 
-# No load, field-weakening (uncomment to try)
+# Field-weakening (uncomment to try)
 # ctrl.set_speed_ref(lambda t: (t > 0.2) * 2 * base.w_M)
-# mdl.mechanics.set_external_load_torque(lambda t: 0)
+# mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.5 * nom.tau)
 
 # %%
 # Create the simulation object, simulate, and plot the results in per-unit values.

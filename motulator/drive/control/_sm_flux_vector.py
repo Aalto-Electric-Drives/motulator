@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from math import inf, pi
 from typing import Callable, Sequence
 
+from motulator.common.control._base import TimeSeries
 from motulator.common.control._pwm import PWM
 from motulator.drive.control._base import Measurements
 from motulator.drive.control._sm_observers import (
@@ -278,6 +279,9 @@ class FluxVectorController:
         self.observer.update(ref.T_s)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
 
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""
+
 
 # %%
 @dataclass
@@ -381,3 +385,6 @@ class ObserverBasedVHzController:
         """Update states."""
         self.tau_M_lpf += ref.T_s * self.alpha_f * (fbk.tau_M - self.tau_M_lpf)
         self.observer.update(ref.T_s)
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""

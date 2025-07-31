@@ -5,6 +5,9 @@ from dataclasses import dataclass, field
 from math import inf, pi, sqrt
 from typing import Callable, Sequence
 
+import numpy as np
+
+from motulator.common.control._base import TimeSeries
 from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import sign
 from motulator.drive.control._base import Measurements
@@ -14,7 +17,10 @@ from motulator.drive.control._im_observers import (
     create_sensorless_observer,
     create_vhz_observer,
 )
-from motulator.drive.utils._parameters import InductionMachineInvGammaPars
+from motulator.drive.utils._parameters import (
+    InductionMachineInvGammaPars,
+    InductionMachinePars,
+)
 
 
 # %%
@@ -47,7 +53,7 @@ class FluxTorqueController:
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars
+    par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     alpha_psi : float
         Flux-control bandwidth (rad/s).
@@ -64,7 +70,7 @@ class FluxTorqueController:
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars,
+        par: InductionMachineInvGammaPars | InductionMachinePars,
         alpha_psi: float,
         alpha_tau: float,
         alpha_i: float = 0,
@@ -84,9 +90,9 @@ class FluxTorqueController:
 
     def compute_output(
         self, psi_s_ref: float, tau_M_ref: float, fbk: ObserverOutputs
-    ) -> tuple[complex, complex]:
+    ) -> complex:
         """
-        Calculate the voltage reference, with transparent current limit.
+        Calculate the voltage reference, with transparent current limitation.
 
         Parameters
         ----------
@@ -99,8 +105,8 @@ class FluxTorqueController:
 
         Returns
         -------
-        tuple[complex, complex]
-            Voltage reference (V) and stator current reference (A).
+        complex
+            Voltage reference (V).
 
         """
         par = self.par
@@ -111,12 +117,12 @@ class FluxTorqueController:
             i_a = fbk.psi_R / par.L_sgm
             c_tau = 1.5 * par.n_p * (i_a * fbk.psi_s.conjugate()).real
             # Directions
-            t_psi = 1.5 * par.n_p * abs(fbk.psi_s) * i_a / c_tau if c_tau > 0 else 1
+            t_psi = 1.5 * par.n_p * abs(fbk.psi_s) * i_a / c_tau if c_tau > 0 else 1.0
             t_tau = 1j * fbk.psi_s / c_tau if c_tau > 0 else 0
         else:
             i_a = 0j
-            t_psi = 1
-            t_tau = 0
+            t_psi = 1.0
+            t_tau = 0j
 
         # Error signals
         e_psi = psi_s_ref - abs(fbk.psi_s)
@@ -125,25 +131,15 @@ class FluxTorqueController:
         u_i = self.x_psi * t_psi + self.x_tau * t_tau
         e_v = u_i - gain.alpha_i * (abs(fbk.psi_s) * t_psi + fbk.tau_M * t_tau)
 
-        # Internal current reference for state feedback
-        if gain.alpha_c * par.L_sgm > 0:
-            i_s_ref = fbk.i_s + e_u / (gain.alpha_c * par.L_sgm)
-            if abs(i_s_ref) > self.i_s_max:
-                i_s_ref = self.i_s_max * i_s_ref / abs(i_s_ref)
-            e_up = gain.alpha_c * par.L_sgm * (i_s_ref - fbk.i_s)
-        else:
-            i_s_ref = fbk.i_s
-            e_up = e_u
-
         # Voltage reference
-        v = par.R_s * fbk.i_s + 1j * (fbk.w_m + fbk.w_r) * fbk.psi_s + e_v
-        u_s_ref = v + e_up
+        v = par.R_s * fbk.i_s + 1j * fbk.w_s * fbk.psi_s + e_v
+        u_s_ref = v + e_u
 
         # Workspace variables for the update method
         self._i_a = i_a
         self._v = v
 
-        return u_s_ref, i_s_ref
+        return u_s_ref
 
     def update(self, T_s: float, fbk: ObserverOutputs) -> None:
         """Update the integral states."""
@@ -164,7 +160,7 @@ class ReferenceGenerator:
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars
+    par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     psi_s_nom : float
         Nominal stator flux linkage (Vs).
@@ -181,7 +177,7 @@ class ReferenceGenerator:
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars,
+        par: InductionMachineInvGammaPars | InductionMachinePars,
         psi_s_nom: float,
         i_s_max: float,
         tau_M_max: float = inf,
@@ -196,19 +192,32 @@ class ReferenceGenerator:
         self.k_b = k_b
 
     def compute_output(
-        self, tau_M_ref: float, w_s: float, u_dc: float
+        self, tau_M_ref: float, w_s: float, psi_R: float, u_dc: float
     ) -> tuple[float, float]:
         """Simple field-weakening strategy."""
         par = self.par
+
         # Field-weakening
         u_s_max = self.k_u * u_dc / sqrt(3)
         psi_s_max = u_s_max / abs(w_s) if w_s != 0 else inf
-        psi_s_ref = min(psi_s_max, self.psi_s_nom)
-        # Torque limit
+        # Current limit
+        psi_s_lim = par.L_sgm * self.i_s_max + psi_R
+        # Stator flux reference
+        psi_s_ref = min(psi_s_max, self.psi_s_nom, psi_s_lim)
+
+        # Torque reference limiting
         if par.L_sgm > 0:  # Check to enable open-loop V/Hz control
+            # Breakdown torque limit
             k = self.k_b * par.L_M / (par.L_M + par.L_sgm)
             tau_b = 0.75 * par.n_p * k * psi_s_ref**2 / par.L_sgm
-            tau_M_ref = min(abs(tau_M_ref), self.tau_M_max, tau_b) * sign(tau_M_ref)
+            # Current limit
+            tau_M_lim = (
+                1.5 * par.n_p * psi_R * sqrt(self.i_s_max**2 - (psi_R / par.L_M) ** 2)
+            )
+            # Limited torque reference
+            tau_M_ref = min(abs(tau_M_ref), self.tau_M_max, tau_b, tau_M_lim) * sign(
+                tau_M_ref
+            )
         return psi_s_ref, tau_M_ref
 
 
@@ -275,13 +284,12 @@ class FluxVectorController:
     """
     Flux-vector controller for induction machine drives.
 
-    This class implements a variant of flux-vector control. Rotor coordinates and
-    decoupling between the stator flux and torque channels are used [#Tii2025b]_.
-
+    This class implements a variant of flux-vector control. Decoupling between the
+    stator flux and torque channels is used [#Tii2025b]_.
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars
+    par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     cfg : FluxVectorControllerCfg
         Flux-vector control configuration.
@@ -300,7 +308,7 @@ class FluxVectorController:
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars,
+        par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: FluxVectorControllerCfg,
         sensorless: bool = True,
         T_s: float = 125e-6,
@@ -336,11 +344,9 @@ class FluxVectorController:
         """Compute references."""
         ref = References(T_s=self.T_s, tau_M=tau_M_ref)
         ref.psi_s, ref.tau_M = self.reference_gen.compute_output(
-            ref.tau_M, fbk.w_s, fbk.u_dc
+            ref.tau_M, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
-        ref.u_s, ref.i_s = self.flux_torque_ctrl.compute_output(
-            ref.psi_s, ref.tau_M, fbk
-        )
+        ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         u_s_ref_ab = exp(1j * fbk.theta_s) * ref.u_s
         ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
         return ref
@@ -349,6 +355,16 @@ class FluxVectorController:
         """Update states."""
         self.observer.update(ref.T_s)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""
+        # Transformation to estimated rotor flux coordinates
+        T = np.exp(-1j * np.angle(ts.fbk.psi_R))
+        ts.ref.u_s = T * ts.ref.u_s
+        ts.fbk.i_s = T * ts.fbk.i_s
+        ts.ref.i_s = T * ts.ref.i_s
+        ts.fbk.psi_s = T * ts.fbk.psi_s
+        ts.fbk.psi_R = T * ts.fbk.psi_R
 
 
 # %%
@@ -392,12 +408,12 @@ class ObserverBasedVHzController:
     """
     Observer-based V/Hz controller for induction machine drives.
 
-    This class implements sensorless observer-based V/Hz control. Rotor coordinates and
-    decoupling between the stator flux and torque channels are used [#Tii2025b]_.
+    This class implements sensorless observer-based V/Hz control. Decoupling between
+    the stator flux and torque channels is used [#Tii2025b]_.
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars
+    par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     cfg : ObserverBasedVHzControllerCfg
         Observer-based V/Hz controller configuration.
@@ -408,7 +424,7 @@ class ObserverBasedVHzController:
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars,
+        par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: ObserverBasedVHzControllerCfg,
         T_s: float = 250e-6,
     ) -> None:
@@ -425,7 +441,7 @@ class ObserverBasedVHzController:
         self.T_s = T_s
         # Configurations for pure open-loop V/Hz control
         if par.L_M == inf:
-            self.observer.state.psi_R = cfg.psi_s_nom
+            self.observer.state.psi_s = cfg.psi_s_nom
             self.pwm = PWM(overmodulation="MME")
             self.reference_gen.k_u = inf
 
@@ -441,16 +457,24 @@ class ObserverBasedVHzController:
         ref = References(T_s=self.T_s)
         w_s = fbk.w_m + fbk.w_r
         ref.psi_s, ref.tau_M = self.reference_gen.compute_output(
-            self.tau_M_lpf, w_s, fbk.u_dc
+            self.tau_M_lpf, w_s, abs(fbk.psi_R), fbk.u_dc
         )
-        ref.u_s, ref.i_s = self.flux_torque_ctrl.compute_output(
-            ref.psi_s, ref.tau_M, fbk
-        )
+        ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         u_s_ref_ab = exp(1j * fbk.theta_s) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, w_s)
+        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.tau_M_lpf += ref.T_s * self.alpha_f * (fbk.tau_M - self.tau_M_lpf)
         self.observer.update(ref.T_s)
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""
+        # Transformation to estimated rotor flux coordinates
+        T = np.exp(-1j * np.angle(ts.fbk.psi_R))
+        ts.ref.u_s = T * ts.ref.u_s
+        ts.fbk.i_s = T * ts.fbk.i_s
+        ts.ref.i_s = T * ts.ref.i_s
+        ts.fbk.psi_s = T * ts.fbk.psi_s
+        ts.fbk.psi_R = T * ts.fbk.psi_R

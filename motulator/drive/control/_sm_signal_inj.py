@@ -3,6 +3,7 @@
 from cmath import exp, pi
 from dataclasses import dataclass
 
+from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
 from motulator.drive.control._sm_current_vector import (
     CurrentVectorController,
@@ -166,3 +167,6 @@ class SignalInjectionController(CurrentVectorController):
         u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
         ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
         return ref
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""

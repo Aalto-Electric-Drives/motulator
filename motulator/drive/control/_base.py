@@ -63,6 +63,10 @@ class VectorController[Ref, Fbk](Protocol):
         """Update controller states."""
         ...
 
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller outputs."""
+        ...
+
 
 class VectorControlSystem(ControlSystem):
     """
@@ -160,6 +164,7 @@ class VectorControlSystem(ControlSystem):
     def post_process(self) -> TimeSeries:
         """Extend the post-process method."""
         ts = super().post_process()
+        self.vector_ctrl.post_process(ts)
         return ts
 
 
@@ -179,6 +184,10 @@ class VHzController[Ref, Fbk](Protocol):
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
         """Update controller states."""
+        ...
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller outputs."""
         ...
 
 
@@ -242,4 +251,5 @@ class VHzControlSystem(ControlSystem):
     def post_process(self) -> TimeSeries:
         """Extend the post-process method."""
         ts = super().post_process()
+        self.vhz_ctrl.post_process(ts)
         return ts

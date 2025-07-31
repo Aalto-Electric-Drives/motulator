@@ -6,6 +6,7 @@ from math import inf, pi
 from typing import Callable, Sequence
 
 from motulator.common.control import ComplexPIController
+from motulator.common.control._base import TimeSeries
 from motulator.common.control._pwm import PWM
 from motulator.drive.control._base import Measurements
 from motulator.drive.control._sm_observers import (
@@ -205,3 +206,6 @@ class CurrentVectorController:
         """Update states."""
         self.observer.update(ref.T_s)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_s)
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""

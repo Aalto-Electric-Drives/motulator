@@ -1,11 +1,14 @@
 """Current-vector control methods for induction machine drives."""
 
-from cmath import exp
+from cmath import exp, phase
 from dataclasses import dataclass, field
 from math import pi, sqrt
 from typing import Callable, Sequence
 
+import numpy as np
+
 from motulator.common.control import ComplexPIController
+from motulator.common.control._base import TimeSeries
 from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import clip
 from motulator.drive.control._base import Measurements
@@ -14,7 +17,10 @@ from motulator.drive.control._im_observers import (
     create_sensored_observer,
     create_sensorless_observer,
 )
-from motulator.drive.utils._parameters import InductionMachineInvGammaPars
+from motulator.drive.utils._parameters import (
+    InductionMachineInvGammaPars,
+    InductionMachinePars,
+)
 
 
 # %%
@@ -36,7 +42,7 @@ class CurrentController(ComplexPIController):
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars
+    par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     alpha_c : float, optional
         Reference-tracking bandwidth (rad/s).
@@ -47,7 +53,7 @@ class CurrentController(ComplexPIController):
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars,
+        par: InductionMachineInvGammaPars | InductionMachinePars,
         alpha_c: float,
         alpha_i: float | None = None,
     ) -> None:
@@ -65,11 +71,14 @@ class CurrentReferenceGenerator:
 
     In the base-speed region, the current reference in rotor-flux coordinates is::
 
-        i_s_ref = psi_R_ref/L_M + 1j*tau_M_ref/(1.5*n_p*abs(psi_R))
+        i_s_ref = i_sd_nom + 1j*tau_M_ref/(1.5*n_p*abs(psi_R))
 
-    where `psi_R_ref` is the reference for the rotor flux magnitude and `psi_R` is the
-    estimated rotor flux. The field-weakening operation is based adjusting the flux-
-    producing current component::
+    where `psi_R` is the estimated rotor flux. The nominal flux-producing current
+    component is computed from the nominal stator flux in the no-load condition::
+
+        i_sd_nom = psi_s_nom/(L_M + L_sgm)
+
+    In the field-weakening operation, the flux-producing current component is::
 
         i_s_ref.real = (k_fw/s)*(u_s_max - abs(u_s_ref))
 
@@ -80,14 +89,9 @@ class CurrentReferenceGenerator:
     producing current component `i_s_ref.imag` is limited based on the maximum stator
     current and the breakdown slip.
 
-    The nominal flux-producing current component is computed from the nominal stator
-    flux in the no-load condition::
-
-        i_sd_nom = psi_s_nom/(L_M + L_sgm)
-
     Parameters
     ----------
-    machine_pars : InductionMachineInvGammaPars
+    machine_pars : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     psi_s_nom : float
         Nominal stator flux linkage (Vs).
@@ -110,7 +114,7 @@ class CurrentReferenceGenerator:
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars,
+        par: InductionMachineInvGammaPars | InductionMachinePars,
         psi_s_nom: float,
         i_s_max: float,
         w_s_nom: float,
@@ -145,7 +149,7 @@ class CurrentReferenceGenerator:
         par = self.par  # Unpack
         i_sd_ref = self.i_sd_ref  # Get the state
 
-        def q_axis_current_limit(i_sd_ref, psi_R) -> float:
+        def q_axis_current_limit(i_sd_ref: float, psi_R: float) -> float:
             # Priority given to the d component
             max_i_sq1 = sqrt(self.i_s_max**2 - i_sd_ref**2)
             # Breakdown torque limit
@@ -223,7 +227,7 @@ class CurrentVectorControllerCfg:
 
     psi_s_nom: float
     i_s_max: float
-    alpha_c = 2 * pi * 200
+    alpha_c: float = 2 * pi * 200
     alpha_i: float | None = None
     alpha_o: float | None = None
     k_o: Callable[[float], complex] | None = None
@@ -246,7 +250,7 @@ class CurrentVectorController:
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars
+    par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
         Current-vector controller configuration.
@@ -259,7 +263,7 @@ class CurrentVectorController:
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars,
+        par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: CurrentVectorControllerCfg,
         sensorless: bool = True,
         T_s: float = 125e-6,
@@ -290,7 +294,11 @@ class CurrentVectorController:
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
         ref = References(T_s=self.T_s, tau_M=tau_M_ref)
-        ref.i_s, ref.tau_M = self.reference_gen.compute_output(ref.tau_M, fbk.psi_R)
+        ref.i_s, ref.tau_M = self.reference_gen.compute_output(
+            ref.tau_M, abs(fbk.psi_R)
+        )
+        # Transform the reference to the same coordinates as the feedback
+        ref.i_s = exp(1j * phase(fbk.psi_R)) * ref.i_s
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
         u_s_ref_ab = exp(1j * fbk.theta_s) * ref.u_s
         ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
@@ -301,3 +309,13 @@ class CurrentVectorController:
         self.observer.update(ref.T_s)
         self.reference_gen.update(ref.T_s, ref.u_s, fbk.u_dc)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_s)
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""
+        # Transformation to estimated rotor flux coordinates
+        T = np.exp(-1j * np.angle(ts.fbk.psi_R))
+        ts.ref.u_s = T * ts.ref.u_s
+        ts.fbk.i_s = T * ts.fbk.i_s
+        ts.ref.i_s = T * ts.ref.i_s
+        ts.fbk.psi_s = T * ts.fbk.psi_s
+        ts.fbk.psi_R = T * ts.fbk.psi_R

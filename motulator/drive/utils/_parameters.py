@@ -30,7 +30,7 @@ class BaseSynchronousMachinePars(Protocol):
         """Incremental inductance matrix (H)."""
         ...
 
-    def aux_current(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
+    def aux_current(self, psi_s_dq: complex | np.ndarray) -> complex:
         """Auxiliary current (A) as function of the flux linkage (Vs)."""
         # This form is valid in the saturated case as well
         inv_L_s = self.inv_incr_ind_mat(psi_s_dq)
@@ -43,7 +43,7 @@ class BaseSynchronousMachinePars(Protocol):
             - self.i_s_dq(psi_s_dq)
         )
 
-    def aux_flux(self, i_s_dq: complex | np.ndarray) -> complex | np.ndarray:
+    def aux_flux(self, i_s_dq: complex | np.ndarray) -> complex:
         """Auxiliary flux linkage (Vs) as function of the current (A)."""
         # This form is valid in the saturated case as well
         L_s = self.incr_ind_mat(i_s_dq)
@@ -275,6 +275,13 @@ class InductionMachinePars:
     """
     Γ-model parameters of an induction machine.
 
+    This contains Γ-model parameters of an induction machine. The main-flux saturation
+    saturation can also be modeled by providing a callable `L_s` parameter. For
+    convenience, the class also provides the corresponding inverse-Γ model parameters,
+    which can be used in control systems. If the saturation is modeled, these inverse-Γ
+    parameters depend on the stator flux linkage magnitude `psi_s` that should be
+    updated by calling the `update_psi_s` method.
+
     Parameters
     ----------
     n_p : int
@@ -289,6 +296,23 @@ class InductionMachinePars:
         Stator inductance (H). If callable, it should be a function of the stator flux
         linkage magnitude (Vs).
 
+    Attributes
+    ----------
+    gamma : float
+        Magnetic coupling factor.
+    L_M : float
+        Inverse-Γ magnetizing inductance (H).
+    L_sgm : float
+        Inverse-Γ leakage inductance (H).
+    R_R : float
+        Inverse-Γ rotor resistance (Ω).
+    R_sgm : float
+        Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
+    alpha : float
+        Inverse rotor time constant (rad/s).
+    w_rb : float
+        Breakdown slip angular frequency (rad/s).
+
     """
 
     n_p: int
@@ -296,6 +320,43 @@ class InductionMachinePars:
     R_r: float
     L_ell: float
     L_s: float | Callable[[float], float]
+    psi_s: float = 0.0
+
+    def update_psi_s(self, psi_s: float) -> None:
+        """Update the stator flux linkage magnitude state."""
+        self.psi_s = psi_s
+
+    @property
+    def gamma(self) -> float:
+        if callable(self.L_s):
+            return self.L_s(self.psi_s) / (self.L_s(self.psi_s) + self.L_ell)
+        return self.L_s / (self.L_s + self.L_ell)
+
+    @property
+    def L_M(self) -> float:
+        if callable(self.L_s):
+            return self.gamma * self.L_s(self.psi_s)
+        return self.gamma * self.L_s
+
+    @property
+    def L_sgm(self) -> float:
+        return self.gamma * self.L_ell
+
+    @property
+    def R_R(self) -> float:
+        return self.gamma**2 * self.R_r
+
+    @property
+    def R_sgm(self) -> float:
+        return self.R_s + self.R_R
+
+    @property
+    def alpha(self) -> float:
+        return self.R_R / self.L_M
+
+    @property
+    def w_rb(self) -> float:
+        return self.R_r / self.L_ell if self.L_ell > 0 else 0.0
 
     @classmethod
     def from_inv_gamma_pars(
@@ -328,7 +389,10 @@ class InductionMachinePars:
 @dataclass
 class InductionMachineInvGammaPars:
     """
-    Inverse-Γ model parameters of an induction machine.
+    Constant inverse-Γ model parameters of an induction machine.
+
+    This contains constant inverse-Γ model parameters of an induction machine. To model
+    the main-flux saturation, use the `InductionMachinePars` class instead.
 
     Parameters
     ----------
@@ -343,6 +407,16 @@ class InductionMachineInvGammaPars:
     L_M : float
         Magnetizing inductance (H).
 
+    Attributes
+    ----------
+    R_sgm : float
+        Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
+    alpha : float
+        Inverse rotor time constant (rad/s).
+    w_rb : float
+        Breakdown slip angular frequency (rad/s).
+
+
     """
 
     n_p: int
@@ -350,6 +424,23 @@ class InductionMachineInvGammaPars:
     R_R: float
     L_sgm: float
     L_M: float
+
+    def update_psi_s(self, psi_s: float) -> None:
+        """Update the stator flux linkage magnitude state."""
+        # This method has no effect for constant parameters (no saturation)
+        pass
+
+    @property
+    def R_sgm(self) -> float:
+        return self.R_s + self.R_R
+
+    @property
+    def alpha(self) -> float:
+        return self.R_R / self.L_M
+
+    @property
+    def w_rb(self) -> float:
+        return self.R_R * (1 / self.L_sgm + 1 / self.L_M) if self.L_sgm > 0 else 0.0
 
     @classmethod
     def from_gamma_pars(
