@@ -1,7 +1,7 @@
 Grid-Forming Control
 --------------------
 
-These examples demonstrate grid-forming control. The example :doc:`/grid_examples/grid_forming/plot_gfm_rfpsc_13kva` uses a power-synchronization loop for synchronizing with the grid [#Har2020]_. In :doc:`/grid_examples/grid_forming/plot_gfm_obs_13kva`, disturbance-observer-based control is used [#Nur2024]_.
+These examples demonstrate grid-forming control. The example :doc:`/grid_examples/grid_forming/plot_13kva_rfpsc_gfm` uses a power-synchronization loop for synchronizing with the grid [#Har2020]_. In :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`, disturbance-observer-based control is used [#Nur2024]_.
 
 .. rubric:: References
 

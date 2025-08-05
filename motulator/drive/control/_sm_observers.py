@@ -44,6 +44,7 @@ class ObserverOutputs:
     w_s: float = 0.0
     psi_s: complex = 0j
     tau_M: float = 0.0
+    tau_L: float = 0.0
     theta_m: float = 0.0
     w_m: float = 0.0
     w_M: float = 0.0
@@ -223,7 +224,7 @@ class SpeedFluxObserver(FluxObserver):
     k_f : Callable[[float], float], optional
         PM-flux estimation gain (V) as a function of the rotor angular speed.
     J : float, optional
-        Inertia of the mechanical system (kgm²). Defaults to infinity, which means the
+        Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
 
     References
@@ -280,13 +281,14 @@ class SpeedFluxObserver(FluxObserver):
         """
         w_M_est = self.state.w_m / self.par.n_p
         out = super().compute_output(u_s_ab, i_s_ab, w_M_est)
+        out.tau_L = self.state.tau_L
 
         if self.J is None:
             self._work.d_w_m = self.k_w * self._work.eps_m
             self._work.d_tau_L = 0.0
         else:
             self._work.d_w_m = (
-                self.par.n_p * (out.tau_M - self.state.tau_L) / self.J
+                self.par.n_p * (out.tau_M - out.tau_L) / self.J
                 + self.k_w * self._work.eps_m
             )
             self._work.d_tau_L = -self.k_tau * self._work.eps_m / self.par.n_p
@@ -373,6 +375,7 @@ def create_sensorless_observer(
         Sensorless observer with speed estimation.
 
     """
+    # Poles at zero speed are located s = 0 and s = -2*sigma0
     inv_L_s0 = par.inv_incr_ind_mat(par.psi_f)
     sigma0 = 0.25 * par.R_s * (inv_L_s0[0, 0] + inv_L_s0[1, 1])
 

@@ -46,6 +46,7 @@ class ObserverOutputs:
     psi_s: complex = 0j
     psi_R: complex = 0j
     tau_M: float = 0.0
+    tau_L: float = 0.0
     theta_s: float = 0.0
     w_s: float = 0.0
     w_r: float = 0.0
@@ -206,7 +207,7 @@ class SpeedFluxObserver(FluxObserver):
     alpha_o : float
         Speed estimation pole (rad/s).
     J : float, optional
-        Inertia of the mechanical system (kgm²). Defaults to infinity, which means the
+        Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
 
     """
@@ -251,13 +252,14 @@ class SpeedFluxObserver(FluxObserver):
         """
         w_M_est = self.state.w_m / self.par.n_p
         out = super().compute_output(u_s_ab, i_s_ab, w_M_est)
+        out.tau_L = self.state.tau_L
 
         if self.J is None:
             self._work.d_w_m = self.k_w * self._work.eps
             self._work.d_tau_L = 0.0
         else:
             self._work.d_w_m = (
-                self.par.n_p * (out.tau_M - self.state.tau_L) / self.J
+                self.par.n_p * (out.tau_M - out.tau_L) / self.J
                 + self.k_w * self._work.eps
             )
             self._work.d_tau_L = -self.k_tau * self._work.eps / self.par.n_p

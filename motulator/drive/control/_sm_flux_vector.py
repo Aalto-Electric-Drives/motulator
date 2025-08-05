@@ -32,7 +32,6 @@ class References:
     psi_s: float = 0.0
     u_s: complex = 0j
     i_s: complex = 0j
-    # w_M: float | None = None
 
 
 # %%
