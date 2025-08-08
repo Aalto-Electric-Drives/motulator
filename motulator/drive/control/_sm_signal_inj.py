@@ -73,7 +73,9 @@ class PhaseLockedLoop:
 
     def compute_output(self, u_s_ab: complex, i_s_ab: complex) -> PLLOutputSignals:
         """Compute output."""
-        out = PLLOutputSignals(theta_m=self.state.theta_m, w_m=self.state.w_m)
+        out = PLLOutputSignals(
+            theta_m=self.state.theta_m, theta_c=self.state.theta_m, w_m=self.state.w_m
+        )
         out.w_M = out.w_m / self.par.n_p
 
         # Current and voltage vectors in (estimated) rotor coordinates
@@ -89,8 +91,8 @@ class PhaseLockedLoop:
         self._work.old_i_s = out.i_s
 
         # Coordinate system angular frequency
-        out.w_s = out.w_m + self.k_p * self._work.eps
-        self._work.d_theta_m = out.w_s
+        out.w_c = out.w_m + self.k_p * self._work.eps
+        self._work.d_theta_m = out.w_c
 
         # Error signal
         self._work.eps = (
@@ -164,8 +166,8 @@ class SignalInjectionController(CurrentVectorController):
             self.current_ctrl.compute_output(ref.i_s, fbk.i_s_flt)
             + self.observer.u_sd_inj
         )
-        u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
+        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
         return ref
 
     def post_process(self, ts: TimeSeries) -> None:

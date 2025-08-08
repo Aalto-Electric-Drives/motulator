@@ -347,8 +347,8 @@ class FluxVectorController:
             ref.tau_M, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        u_s_ref_ab = exp(1j * fbk.theta_s) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
+        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
@@ -459,8 +459,8 @@ class ObserverBasedVHzController:
             self.tau_M_lpf, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        u_s_ref_ab = exp(1j * fbk.theta_s) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
+        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:

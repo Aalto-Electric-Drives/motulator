@@ -13,7 +13,7 @@ This document describes continuous-time induction machine models of the {mod}`mo
     :align: center
     :alt: Gamma-model of an induction machine
 
-*Figure 1:* Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, $\Ls = \Ls(\abspsis)$. 
+*Figure 1:* Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, $\Ls = \Ls(\abspsis)$.
 ```
 
 ```{figure} ../figs/im_gamma.svg
@@ -22,7 +22,7 @@ This document describes continuous-time induction machine models of the {mod}`mo
     :align: center
     :alt: Gamma-model of an induction machine
 
-*Figure 1:* Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, $\Ls = \Ls(\abspsis)$. 
+*Figure 1:* Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, $\Ls = \Ls(\abspsis)$.
 ```
 
 In general coordinates rotating at $\omegac$ (see {ref}`coordinate-transformation`), the voltage equations are
@@ -40,8 +40,8 @@ The stator and rotor currents, respectively, are
 
 ```{math}
     :label: im_currents
-        
-    \is &= \frac{\psis - \gamma\psir}{\gamma L_\ell} \\ 
+
+    \is &= \frac{\psis - \gamma\psir}{\gamma L_\ell} \\
     \ir &= \frac{\psir - \psis}{L_\ell}
 ```
 
@@ -50,7 +50,7 @@ where $\Ls$ is the stator inductance, $L_\ell$ is the leakage inductance, and $\
 ```{math}
     :label: gamma_factor
 
-    \gamma = \frac{\Ls}{\Ls + L_\ell}  
+    \gamma = \frac{\Ls}{\Ls + L_\ell}
 ```
 
 The electromagnetic torque is
@@ -118,7 +118,7 @@ If the magnetic saturation is omitted, the inverse-Γ model is mathematically id
 
     \Lsgm = \gamma L_\ell \qquad
     \LM = \gamma\Ls \qquad
-    \RR = \gamma^2 \Rr 
+    \RR = \gamma^2 \Rr
 ```
 
 where $\gamma$ is defined in {eq}`gamma_factor`. Furthermore, the rotor flux linkage $\psiR = \gamma\psir$ and the rotor current $\iR = \ir/\gamma$ are also scaled. Otherwise the equations remain the same as in the Γ model.
@@ -132,10 +132,10 @@ Using the stator flux linkage and the stator current as state variables, the non
 ```{math}
     :label: im_inv_gamma_ss
 
-    \frac{\D \psis}{\D t} &= \us - \Rs\is - \jj\omegac\psis \\ 
-    \Lsgm\frac{\D \is}{\D t} &= \us - (\Rs + \RR + \jj\omegac \Lsgm)\is  
+    \frac{\D \psis}{\D t} &= \us - \Rs\is - \jj\omegac\psis \\
+    \Lsgm\frac{\D \is}{\D t} &= \us - (\Rs + \RR + \jj\omegac \Lsgm)\is
     + \left(\alpha - \jj\omegam\right)\psiR - \boldsymbol{\upepsilon} \\
-    \psiR &= \psis - \Lsgm\is 
+    \psiR &= \psis - \Lsgm\is
 ```
 
 where $\Lsgm$, $\RR$, $\LM$, $\alpha = \RR/\LM$ are nonlinear functions of the stator flux magnitude. Saturation introduces a transient voltage term
@@ -143,7 +143,7 @@ where $\Lsgm$, $\RR$, $\LM$, $\alpha = \RR/\LM$ are nonlinear functions of the s
 ```{math}
     :label: im_inv_gamma_eps
 
-    \boldsymbol{\upepsilon} = \frac{1}{2}\frac{\abspsis}{\gamma(\abspsis)}\frac{\partial\gamma(\abspsis)}{\partial\abspsis} \left[ \us - \Rs\is + \frac{\psis}{\psis^*}(\us^* - \Rs\is^*)\right] 
+    \boldsymbol{\upepsilon} = \frac{1}{2}\frac{\abspsis}{\gamma(\abspsis)}\frac{\partial\gamma(\abspsis)}{\partial\abspsis} \left[ \us - \Rs\is + \frac{\psis}{\psis^*}(\us^* - \Rs\is^*)\right]
 ```
 
 This voltage term only appears during changes in the stator-flux magnitude. When the transient voltage term is included, the inverse-Γ model {eq}`im_inv_gamma_ss` is mathematically identical to the original nonlinear Γ model. However, in control methods, the transient voltage term can typically be neglected.

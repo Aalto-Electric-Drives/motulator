@@ -7,7 +7,7 @@ The space vector transformation is implemented in {func}`motulator.common.utils.
 ```{math}
     :label: space_vector
 
-    \iss = \frac{2}{3}\left(\iA + \iB\e^{\jj 2\pi/3} + \iC\e^{\jj 4\pi/3}\right) 
+    \iss = \frac{2}{3}\left(\iA + \iB\e^{\jj 2\pi/3} + \iC\e^{\jj 4\pi/3}\right)
 ```
 
 where $\iA$, $\iB$, and $\iC$ are the time-varying phase currents. The subscript s denotes stator quantities and the superscript s denotes stationary coordinates. The components are $\iss = i_\upalpha + \jj i_\upbeta$, represented in code as `i_s_ab`.
@@ -31,7 +31,7 @@ Models and controls often use synchronous coordinates aligned with the rotor or 
 ```{math}
     :label: gen_coordinates
 
-    \frac{\D\thetac}{\D t} = \omegac 
+    \frac{\D\thetac}{\D t} = \omegac
 ```
 
 The transformation to these coordinates is

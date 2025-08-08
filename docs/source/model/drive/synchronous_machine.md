@@ -15,7 +15,7 @@ This document describes continuous-time synchronous machine models of the {mod}`
     :align: center
     :alt: Equivalent circuit model of a synchronous machine
 
-*Figure 4:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$. 
+*Figure 4:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$.
 ```
 
 ```{figure} ../figs/sm.svg
@@ -24,7 +24,7 @@ This document describes continuous-time synchronous machine models of the {mod}`
     :align: center
     :alt: Equivalent circuit model of a synchronous machine
 
-*Figure 4:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$. 
+*Figure 4:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$.
 ```
 
 The state equations in rotor coordinates are {cite}`Jah1986`
@@ -42,7 +42,7 @@ where $\us$ is the stator voltage and $\is$ is the stator current. The stator re
     :label: sm_current
 
     \is &= \isfcn(\psis) \\
-    &= \idfcn(\psid, \psiq) + \jj\iqfcn(\psid, \psiq) 
+    &= \idfcn(\psid, \psiq) + \jj\iqfcn(\psid, \psiq)
 ```
 
 where the complex function $\isfcn$ is referred to as a current map. The electromagnetic torque is
@@ -94,7 +94,7 @@ where the complex function $\isfcn$ is referred to as a current map. The electro
 ```
 
 ```{note}
-Due to the spatial harmonics, the stator current $\is = \isfcn(\psis, \thetam)$ and the electromagnetic torque $\tauM = \tauM(\psis,\thetam)$ would also depend on the angle $\thetam$. This effect is typically omitted in dynamic models and not implemented here.  
+Due to the spatial harmonics, the stator current $\is = \isfcn(\psis, \thetam)$ and the electromagnetic torque $\tauM = \tauM(\psis,\thetam)$ would also depend on the angle $\thetam$. This effect is typically omitted in dynamic models and not implemented here.
 ```
 
 ### Linear Magnetic Model
@@ -129,7 +129,7 @@ which is the inverse of the current map, $\psisfcn(\is) = \isfcn^{-1}(\is)$. If 
 See also the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`, {doc}`/drive_examples/flux_vector/plot_7kw_syrm_sat_fvc`, and {doc}`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`.
 
 ```{note}
-The machine model `motulator.drive.model.SynchronousMachine` only needs the current map, while the MTPA computation and some control methods require the flux linkage map. 
+The machine model `motulator.drive.model.SynchronousMachine` only needs the current map, while the MTPA computation and some control methods require the flux linkage map.
 ```
 
 ### MTPV and MTPA Conditions

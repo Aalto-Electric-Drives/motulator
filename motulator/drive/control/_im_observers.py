@@ -18,7 +18,7 @@ class ObserverStates:
     """State estimates."""
 
     psi_s: complex = 0j
-    theta_s: float = 0.0
+    theta_c: float = 0.0
     w_m: float = 0.0
     tau_L: float = 0.0
 
@@ -28,7 +28,7 @@ class ObserverWorkspace:
     """Workspace variables."""
 
     d_psi_s: complex = 0j
-    d_theta_s: float = 0.0
+    d_theta_c: float = 0.0
     d_w_m: float = 0.0
     d_tau_L: float = 0.0
     old_i_s: complex = 0j
@@ -43,15 +43,16 @@ class ObserverOutputs:
     u_dc: float = 0.0
     i_s: complex = 0j
     u_s: complex = 0j
-    psi_s: complex = 0j
-    psi_R: complex = 0j
-    tau_M: float = 0.0
-    tau_L: float = 0.0
-    theta_s: float = 0.0
-    w_s: float = 0.0
-    w_r: float = 0.0
-    w_m: float = 0.0
-    w_M: float = 0.0
+    psi_s: complex = 0j  # Stator flux estimate
+    psi_R: complex = 0j  # Rotor flux estimate
+    tau_M: float = 0.0  # Electromagnetic torque estimate
+    tau_L: float = 0.0  # Load torque estimate
+    w_c: float = 0.0  # Angular speed of the coordinate system
+    theta_c: float = 0.0  # Coordinate system angle
+    w_s: float = 0.0  # Synchronous angular frequency, w_s = w_m + w_r
+    w_r: float = 0.0  # Slip angular frequency
+    w_m: float = 0.0  # Electrical angular speed of the rotor
+    w_M: float = 0.0  # Mechanical angular speed of the rotor
 
 
 class FluxObserver:
@@ -60,8 +61,9 @@ class FluxObserver:
 
     This class implements a reduced-order flux observer for induction machines. The
     observer structure is similar to [#Hin2010]_. The observer operates in synchronous
-    coordinates (but not locked to any particular vector). The main-flux saturation can
-    be taken into account by providing the saturation model via `InductionMachinePars`.
+    coordinates rotating at `w_c` (but not locked to any particular vector). The main-
+    flux saturation can be taken into account by providing the saturation model via
+    `InductionMachinePars`.
 
     Parameters
     ----------
@@ -121,11 +123,11 @@ class FluxObserver:
         par = self.par
 
         # Initialize the output signals
-        out = ObserverOutputs(psi_s=self.state.psi_s, theta_s=self.state.theta_s)
+        out = ObserverOutputs(psi_s=self.state.psi_s, theta_c=self.state.theta_c)
 
         # Current and voltage vectors in estimated rotor coordinates
-        out.i_s = exp(-1j * out.theta_s) * i_s_ab
-        out.u_s = exp(-1j * out.theta_s) * u_s_ab
+        out.i_s = exp(-1j * out.theta_c) * i_s_ab
+        out.u_s = exp(-1j * out.theta_c) * u_s_ab
 
         # Rotor flux estimate
         out.psi_R = out.psi_s - par.L_sgm * self._work.old_i_s
@@ -145,14 +147,15 @@ class FluxObserver:
         prod = out.psi_s * out.psi_R.conjugate()
         out.w_r = par.w_rb * prod.imag / prod.real if prod.real > 0 else 0.0
 
-        # Synchronous angular frequency
-        out.w_s = out.w_m + out.w_r
+        # Angular speed of the coordinate system equals synchronous angular frequency
+        out.w_c = out.w_s = out.w_m + out.w_r
+        # out.w_c = out.w_m  # Use rotor coordinates instead of synchronous coordinates
 
         # Estimation error
         e_o = (
             par.L_sgm * d_i_s
             - out.u_s
-            + (par.R_sgm + 1j * out.w_s * par.L_sgm) * out.i_s
+            + (par.R_sgm + 1j * out.w_c * par.L_sgm) * out.i_s
             - (par.alpha - 1j * out.w_m) * out.psi_R
         )
 
@@ -163,7 +166,7 @@ class FluxObserver:
 
         # Derivative of the stator flux
         v_err = k_o1 * e_o + k_o2 * e_o.conjugate()
-        d_psi_s = out.u_s - par.R_s * out.i_s - 1j * out.w_s * out.psi_s + v_err
+        d_psi_s = out.u_s - par.R_s * out.i_s - 1j * out.w_c * out.psi_s + v_err
 
         # Torque estimate
         if par.L_sgm > 0:
@@ -176,14 +179,14 @@ class FluxObserver:
 
         # Store the derivatives for the update method
         self._work.d_psi_s = d_psi_s
-        self._work.d_theta_s = out.w_s
+        self._work.d_theta_c = out.w_c
 
         return out
 
     def update(self, T_s: float) -> None:
         """Update the state estimates."""
         self.state.psi_s += T_s * self._work.d_psi_s
-        self.state.theta_s = wrap(self.state.theta_s + T_s * self._work.d_theta_s)
+        self.state.theta_c = wrap(self.state.theta_c + T_s * self._work.d_theta_c)
         self._work.T_s = T_s
         # Update the saturation model for the next sampling period
         self.par.update_psi_s(abs(self.state.psi_s))

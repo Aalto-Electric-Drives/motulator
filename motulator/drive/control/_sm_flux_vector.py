@@ -269,8 +269,8 @@ class FluxVectorController:
         # Current references are not used, but they are computed for plotting
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
+        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
@@ -376,8 +376,8 @@ class ObserverBasedVHzController:
         # Current references are not used, but they are computed for plotting
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
+        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:

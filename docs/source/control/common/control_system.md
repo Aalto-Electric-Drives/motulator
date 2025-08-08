@@ -15,7 +15,7 @@ Using this protocol is not compulsory, but it may simplify the implementation of
 
 ## Data Flow and Storage
 
-[Figure 1](fig:overall_system) illustrates the structure and data flow in a typical simulation model. [Figure 2](fig:discrete_control_system) exemplifies an internal structure of a typical control system. The text in italics refers to the default object names used in the software. 
+[Figure 1](fig:overall_system) illustrates the structure and data flow in a typical simulation model. [Figure 2](fig:discrete_control_system) exemplifies an internal structure of a typical control system. The text in italics refers to the default object names used in the software.
 
 In discrete-time control systems, the signals are collected into these key objects during the simulation:
 

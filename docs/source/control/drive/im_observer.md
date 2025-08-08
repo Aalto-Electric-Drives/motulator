@@ -9,8 +9,8 @@ The inverse-Γ model of an induction machine is considered (see {eq}`im_inv_gamm
 ```{math}
     :label: im_model_obs
 
-    \frac{\D \psis}{\D t} &= \us - \Rs\is - \jj\omegac\psis \\ 
-    \Lsgm\frac{\D \is}{\D t} &= \us - (\Rsgm + \jj\omegac \Lsgm)\is  
+    \frac{\D \psis}{\D t} &= \us - \Rs\is - \jj\omegac\psis \\
+    \Lsgm\frac{\D \is}{\D t} &= \us - (\Rsgm + \jj\omegac \Lsgm)\is
     + \left(\alpha - \jj\omegam\right)\psiR \\
     \psiR &= \psis - \Lsgm\is \\
     \tauM &= \frac{3\np}{2}\IM\left\{\is \psis^* \right\}
@@ -25,8 +25,8 @@ A reduced-order observer is implemented in the {class}`motulator.drive.control.i
 ```{math}
     :label: im_obs
 
-    \frac{\D \hatpsis}{\D t} &= \us - \hatRs\is - \jj\omegac\hatpsis + \koa\eo + \kob\eo^* \\ 
-    \hatpsiR &= \hatpsis - \hatLsgm\is 
+    \frac{\D \hatpsis}{\D t} &= \us - \hatRs\is - \jj\omegac\hatpsis + \koa\eo + \kob\eo^* \\
+    \hatpsiR &= \hatpsis - \hatLsgm\is
 ```
 
 where $\koa$ and $\kob$ are complex gains, the estimates are marked with the hat, and $^*$ marks the complex conjugate. The estimation error is
@@ -34,7 +34,7 @@ where $\koa$ and $\kob$ are complex gains, the estimates are marked with the hat
 ```{math}
     :label: im_eo
 
-    \eo = \hatLsgm\frac{\D \is}{\D t} - \us + \left(\hatRsgm + \jj\omegac\hatLsgm\right)\is - \left(\hatalpha - \jj\hatomegam\right)\hatpsiR 
+    \eo = \hatLsgm\frac{\D \is}{\D t} - \us + \left(\hatRsgm + \jj\omegac\hatLsgm\right)\is - \left(\hatalpha - \jj\hatomegam\right)\hatpsiR
 ```
 
 where $\hatomegam$ is the rotor speed estimate. In sensored drives, the speed estimate is replaced with the measured speed, $\hatomegam = \omegam$. In observer-based V/Hz control, the speed estimate is replaced with the (rate-limited) speed reference, $\hatomegam = \omegamref$ {cite}`Tii2025b`. Note that the derivative of the stator current in {eq}`im_eo` is integrated, i.e., the noise is not amplified. The torque estimate is given by
@@ -86,7 +86,7 @@ The closed-loop pole can be arbitrarily placed via the gain $\koa$. The default 
 ```{math}
     :label: k1_sensored
 
-    \koa = 1 + \frac{g |\omegam|}{\hatalpha - \jj\omegam} \qquad 
+    \koa = 1 + \frac{g |\omegam|}{\hatalpha - \jj\omegam} \qquad
     \kob = 0
 ```
 
@@ -114,7 +114,7 @@ With this choice, the linearized estimation-error dynamics in {eq}`tilde_psis` b
     :label: tilde_psis_sensorless
 
     \frac{\D}{\D t} \begin{bmatrix} \Delta\tildepsisd \\ \Delta\tildepsisq \end{bmatrix} = \begin{bmatrix} -2\kd\alpha & -2\kd\omegamo + \omegaso \\ -2\kq\alpha - \omegaso & -2\kq\omegamo
-    \end{bmatrix} 
+    \end{bmatrix}
     \begin{bmatrix} \Delta\tildepsisd \\ \Delta\tildepsisq \end{bmatrix}
 ```
 
@@ -162,7 +162,7 @@ Considering the rotor speed to be a quasi-constant disturbance, the speed can be
 ```{math}
     :label: im_speed_obs_ro
 
-    \frac{\D \hatomegam}{\D t} = \koomega \varepsilon 
+    \frac{\D \hatomegam}{\D t} = \koomega \varepsilon
 ```
 
 This estimator is essentially the same as the conventional slip-relation-based estimator with the first-order low-pass filter {cite}`Hin2010`.
@@ -185,17 +185,17 @@ The flux observer gain {eq}`inherently` decouples the rotor speed estimation fro
 ```{math}
     :label: im_speed_obs_ro_lin
 
-    \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{\koomega}{s + \koomega}  
+    \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{\koomega}{s + \koomega}
 ```
 
-The gain $\koomega = \alphao$ determines the speed-estimation bandwidth.  
+The gain $\koomega = \alphao$ determines the speed-estimation bandwidth.
 
 For the observer {eq}`im_speed_obs`, the linearized estimation dynamics are
 
 ```{math}
     :label: im_speed_obs_lin
 
-    \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{(J/\hat{J})s^2 + \koomega s + \kotau/\hat{J}}{s^2 + \koomega s + \kotau/\hat{J}}  
+    \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{(J/\hat{J})s^2 + \koomega s + \kotau/\hat{J}}{s^2 + \koomega s + \kotau/\hat{J}}
 ```
 
 where the stiff mechanical model is assumed in the derivation. The critically damped design is obtained by setting $\koomega = 2\alphao$ and $\kotau = \alphao^2 \hat{J}$, where $\alphao$ is the desired pole location.

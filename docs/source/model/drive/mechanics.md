@@ -7,7 +7,7 @@ The model of a stiff mechanical system is provided in the class {class}`motulato
 ```{math}
 :label: mech_stiff
 
-J\frac{\D\omegaM}{\D t} = \tauM - \tauLtot 
+J\frac{\D\omegaM}{\D t} = \tauM - \tauLtot
 ```
 
 where $\omegaM$ is the mechanical angular speed of the rotor, $\tauM$ is the electromagnetic torque, and $J$ is the total moment of inertia. The total load torque is
@@ -18,7 +18,7 @@ where $\omegaM$ is the mechanical angular speed of the rotor, $\tauM$ is the ele
 \tauLtot = \BL\omegaM + \tauL
 ```
 
-where $\tauL = \tauL(t)$ is an external load torque as a function of time and $\BL$ is the friction coefficient. [Figure 1](fig:mech_block) shows the corresponding block diagram. 
+where $\tauL = \tauL(t)$ is an external load torque as a function of time and $\BL$ is the friction coefficient. [Figure 1](fig:mech_block) shows the corresponding block diagram.
 
 A constant friction coefficient $\BL$ models viscous friction that appears, e.g., due to laminar fluid flow in bearings. The friction coefficient is allowed to depend on the rotor speed, $\BL = \BL(\omegaM)$. As an example, the quadratic load torque profile is achieved choosing $\BL = k|\omegaM|$, where $k$ is a constant. The quadratic load torque appears, e.g., in pumps and fans as well as in vehicles moving at higher speeds due to air resistance.
 
@@ -69,7 +69,7 @@ where $\omegaL$ is the angular speed of the load, $\thetaML = \thetaM - \thetaL$
     \tauS = \KS\thetaML + \CS(\omegaM - \omegaL)
 ```
 
-where $\KS$ is the torsional stiffness of the shaft, and $\CS$ is the torsional damping of the shaft. [Figure 2](fig:two_mass_block) shows the block diagram of the system. 
+where $\KS$ is the torsional stiffness of the shaft, and $\CS$ is the torsional damping of the shaft. [Figure 2](fig:two_mass_block) shows the block diagram of the system.
 
 See the {doc}`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz` example.
 
@@ -94,6 +94,6 @@ See the {doc}`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz` example.
 
 ## Externally Specified Rotor Speed
 
-It is also possible to omit the mechanical dynamics and directly specify the actual rotor speed $\omegaM$ as a function of time, see the class {class}`motulator.drive.model.ExternalRotorSpeed`. This feature is typically needed when torque-control mode is studied. 
+It is also possible to omit the mechanical dynamics and directly specify the actual rotor speed $\omegaM$ as a function of time, see the class {class}`motulator.drive.model.ExternalRotorSpeed`. This feature is typically needed when torque-control mode is studied.
 
 See the example {doc}`/drive_examples/current_vector/plot_2kw_im_cvc_tq`.

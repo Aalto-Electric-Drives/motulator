@@ -48,7 +48,7 @@ where $\omegac$ is the angular speed of the coordinate system, $\eo$ is the esti
 ```{math}
     :label: sm_eo
 
-    \eo = \hatpsisfcn(\is') - \hatpsis 
+    \eo = \hatpsisfcn(\is') - \hatpsis
 ```
 
 where $\hatpsisfcn$ is the flux map estimate. This observer structure is used in the {class}`motulator.drive.control.sm.FluxObserver` class.
@@ -84,7 +84,7 @@ To decouple the flux estimation from the rotor angle, the gains of {eq}`sm_obs` 
 ```{math}
     :label: k1k2_sensorless
 
-    \koa = \sigma \qquad 
+    \koa = \sigma \qquad
     \kob = \frac{\sigma\hatpsiaux}{\hatpsiaux^*}
 ```
 
@@ -113,7 +113,7 @@ Considering the rotor speed to be a quasi-constant disturbance, the speed can be
 ```{math}
     :label: sm_speed_obs_ro
 
-    \frac{\D \hatomegam}{\D t} = \koomega \varepsilon 
+    \frac{\D \hatomegam}{\D t} = \koomega \varepsilon
 ```
 
 To avoid the lag in the speed estimate, the speed can be estimated based on the mechanical model and considering the load torque as a disturbance (see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`). This approach results in the speed observer

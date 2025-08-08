@@ -133,11 +133,11 @@ The gain selection analogous to {eq}`complex_vector_gains` becomes
 ```{math}
     :label: sm_gains
 
-    \kP = \alphac + \alphai \qquad 
-    \kI = \alphac\alphai \qquad 
+    \kP = \alphac + \alphai \qquad
+    \kI = \alphac\alphai \qquad
     \kT = \alphac
 ```
 
 Assume accurate flux map estimate and perfect alignment of the controller coordinate system with the rotor coordinate system. Using {eq}`sm_model` and {eq}`cc_flux`, the closed-loop system can be shown to be analogous to the induction machine case.
 
-This control design corresponds to the implementation in the {class}`motulator.drive.control.sm.CurrentController` class. 
+This control design corresponds to the implementation in the {class}`motulator.drive.control.sm.CurrentController` class.

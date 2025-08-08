@@ -198,14 +198,14 @@ class CurrentVectorController:
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
-        u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
+        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s)
-        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_s)
+        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""

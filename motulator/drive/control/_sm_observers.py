@@ -41,14 +41,15 @@ class ObserverOutputs:
     u_dc: float = 0.0
     i_s: complex = 0j
     u_s: complex = 0j
-    w_s: float = 0.0
     psi_s: complex = 0j
-    tau_M: float = 0.0
-    tau_L: float = 0.0
-    theta_m: float = 0.0
-    w_m: float = 0.0
-    w_M: float = 0.0
-    psi_f: float = 0.0
+    tau_M: float = 0.0  # Electromagnetic torque estimate
+    tau_L: float = 0.0  # Load torque estimate
+    w_c: float = 0.0  # Angular speed of the coordinate system
+    theta_c: float = 0.0  # Coordinate system angle
+    theta_m: float = 0.0  # Electrical rotor angle
+    w_m: float = 0.0  # Electrical angular rotor speed
+    w_M: float = 0.0  # Mechanical angular rotor speed
+    psi_f: float = 0.0  # PM-flux linkage estimate
 
 
 # %%
@@ -141,11 +142,11 @@ class FluxObserver:
             raise ValueError
         w_m = par.n_p * w_M
 
-        # Get the mechanical angle
+        # Coordinate system angle equals the electrical rotor angle (or its estimate)
         if self.sensorless or theta_M_meas is None:
-            out.theta_m = self.state.theta_m
+            out.theta_c = out.theta_m = self.state.theta_m
         else:
-            out.theta_m = par.n_p * theta_M_meas
+            out.theta_c = out.theta_m = par.n_p * theta_M_meas
 
         # Current and voltage vectors in (estimated) rotor coordinates
         out.i_s = exp(-1j * out.theta_m) * i_s_ab
@@ -167,7 +168,7 @@ class FluxObserver:
             eps_m = -(e / psi_a).imag if psi_a != 0 else 0
 
             # Angular speed of the coordinate system
-            out.w_s = w_m + self.k_theta * eps_m
+            out.w_c = w_m + self.k_theta * eps_m
             out.w_m = w_m
 
             # Error term for the PM-flux estimation
@@ -175,7 +176,7 @@ class FluxObserver:
         else:
             # Sensored mode assumes measured rotor coordinates
             k_o1, k_o2 = self.k_o(w_m), 0
-            out.w_s = w_m
+            out.w_c = w_m
             out.w_m = w_m
             eps_m = 0
             eps_f = 0
@@ -185,10 +186,10 @@ class FluxObserver:
         out.w_M = out.w_m / par.n_p
 
         # Compute and store the time derivatives for the update method
-        v = out.u_s - par.R_s * out.i_s - 1j * out.w_s * out.psi_s
+        v = out.u_s - par.R_s * out.i_s - 1j * out.w_c * out.psi_s
         self._work.d_psi_s = v + k_o1 * e + k_o2 * e.conjugate()
         self._work.d_psi_f = self.k_f(w_m) * eps_f
-        self._work.d_theta_m = out.w_s
+        self._work.d_theta_m = out.w_c
         self._work.eps_m = eps_m
 
         return out
