@@ -54,7 +54,7 @@ control/grid/index
 :maxdepth: 1
 
 API <autoapi/motulator/index>
-Bibliography <references>
+bibliography
 ```
 
 ```{rubric} Acknowledgement

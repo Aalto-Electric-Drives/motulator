@@ -455,9 +455,8 @@ class ObserverBasedVHzController:
     def compute_output(self, fbk: ObserverOutputs) -> References:
         """Compute references."""
         ref = References(T_s=self.T_s)
-        w_s = fbk.w_m + fbk.w_r
         ref.psi_s, ref.tau_M = self.reference_gen.compute_output(
-            self.tau_M_lpf, w_s, abs(fbk.psi_R), fbk.u_dc
+            self.tau_M_lpf, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         u_s_ref_ab = exp(1j * fbk.theta_s) * ref.u_s
