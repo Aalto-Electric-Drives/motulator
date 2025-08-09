@@ -1,17 +1,15 @@
 """Current-vector control methods for induction machine drives."""
 
 from cmath import exp, phase
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import pi, sqrt
-from typing import Callable, Sequence
+from typing import Callable
 
 import numpy as np
 
 from motulator.common.control import ComplexPIController
 from motulator.common.control._base import TimeSeries
-from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import clip
-from motulator.drive.control._base import Measurements
 from motulator.drive.control._im_observers import (
     ObserverOutputs,
     create_sensored_observer,
@@ -29,9 +27,9 @@ class References:
     """Reference signals for current-vector control."""
 
     T_s: float = 0.0
-    d_abc: Sequence[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     tau_M: float = 0.0
     u_s: complex = 0j
+    u_s_ab: complex = 0j
     i_s: complex = 0j
 
 
@@ -268,7 +266,6 @@ class CurrentVectorController:
         sensorless: bool = True,
         T_s: float = 125e-6,
     ) -> None:
-        self.pwm = PWM()
         self.reference_gen = CurrentReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.w_s_nom, cfg.k_u, cfg.k_fw
         )
@@ -281,14 +278,14 @@ class CurrentVectorController:
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(self, meas: Measurements) -> ObserverOutputs:
+    def get_feedback(
+        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
+    ) -> ObserverOutputs:
         """Get the feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
         if self.sensorless:
-            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
+            fbk = self.observer.compute_output(u_s_ab, i_s_ab)
         else:
-            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab, meas.w_M)
-        fbk.u_dc = meas.u_dc
+            fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M)
         return fbk
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
@@ -300,8 +297,7 @@ class CurrentVectorController:
         # Transform the reference to the same coordinates as the feedback
         ref.i_s = exp(1j * phase(fbk.psi_R)) * ref.i_s
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
-        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
+        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:

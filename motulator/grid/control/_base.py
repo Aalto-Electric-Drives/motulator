@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Callable, Protocol, Sequence
 
 from motulator.common.control._base import ControlSystem, TimeSeries
+from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import abc2complex, get_value
 from motulator.grid.control._controllers import DCBusVoltageController
 from motulator.grid.model import GridConverterSystem
@@ -13,7 +14,8 @@ from motulator.grid.model import GridConverterSystem
 class Feedbacks(Protocol):
     """Protocol defining the required fields for feedback signals."""
 
-    u_dc: float
+    w_c: float  # Angular speed of the coordinate system (rad/s)
+    u_dc: float  # DC-bus voltage (V)
 
 
 class References(Protocol):
@@ -45,10 +47,10 @@ class Measurements:
 
 
 # %%
-class GridFormingController[Ref: References, Fbk: Feedbacks](Protocol):
+class GridFormingController[Ref, Fbk](Protocol):
     """Protocol defining the interface for grid-forming controllers."""
 
-    def get_feedback(self, meas: Measurements) -> Fbk:
+    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
         """Get feedback signals from measurements."""
         ...
 
@@ -68,7 +70,7 @@ class GridFormingController[Ref: References, Fbk: Feedbacks](Protocol):
 class GridFollowingController[Ref, Fbk](Protocol):
     """Protocol defining the interface for grid-following controllers."""
 
-    def get_feedback(self, meas: Measurements) -> Fbk:
+    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
         """Get feedback signals from measurements."""
         ...
 
@@ -108,6 +110,7 @@ class GridConverterControlSystem(ControlSystem):
         dc_bus_voltage_ctrl: DCBusVoltageController | None = None,
     ) -> None:
         super().__init__()
+        self.pwm = PWM()
         self.inner_ctrl = inner_ctrl
         self.dc_bus_voltage_ctrl = dc_bus_voltage_ctrl
         self.ext_ref: ExternalReferences = ExternalReferences()
@@ -169,7 +172,10 @@ class GridConverterControlSystem(ControlSystem):
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
-        return self.inner_ctrl.get_feedback(meas)
+        u_c_ab = self.pwm.get_realized_voltage()
+        fbk = self.inner_ctrl.get_feedback(u_c_ab, meas)
+        fbk.u_dc = meas.u_dc
+        return fbk
 
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller outputs based on feedback."""
@@ -184,30 +190,29 @@ class GridConverterControlSystem(ControlSystem):
             v_c_ref = get_value(self.ext_ref.v_c, self.t)
             p_g_ref = get_value(self.ext_ref.p_g, self.t)
             ref = self.inner_ctrl.compute_output(p_g_ref, v_c_ref, fbk)
-            return ref
-        if is_gfm and is_dc_bus_ctrl and self.dc_bus_voltage_ctrl:
+        elif is_gfm and is_dc_bus_ctrl and self.dc_bus_voltage_ctrl:
             # Grid-forming DC-bus voltage control mode
             v_c_ref = get_value(self.ext_ref.v_c, self.t)
             u_dc_ref = get_value(self.ext_ref.u_dc, self.t)
             p_g_ref = self.dc_bus_voltage_ctrl.compute_output(u_dc_ref, fbk.u_dc)
             ref = self.inner_ctrl.compute_output(p_g_ref, v_c_ref, fbk)
             ref.u_dc = u_dc_ref
-            return ref
-        if is_gfl and is_power_ctrl:
+        elif is_gfl and is_power_ctrl:
             # Grid-following power control mode
             q_g_ref = get_value(self.ext_ref.q_g, self.t)
             p_g_ref = get_value(self.ext_ref.p_g, self.t)
             ref = self.inner_ctrl.compute_output(p_g_ref, q_g_ref, fbk)
-            return ref
-        if is_gfl and is_dc_bus_ctrl and self.dc_bus_voltage_ctrl:
+        elif is_gfl and is_dc_bus_ctrl and self.dc_bus_voltage_ctrl:
             # Grid-following DC-bus voltage control mode
             q_g_ref = get_value(self.ext_ref.q_g, self.t)
             u_dc_ref = get_value(self.ext_ref.u_dc, self.t)
             p_g_ref = self.dc_bus_voltage_ctrl.compute_output(u_dc_ref, fbk.u_dc)
             ref = self.inner_ctrl.compute_output(p_g_ref, q_g_ref, fbk)
             ref.u_dc = u_dc_ref
-            return ref
-        raise ValueError
+        else:
+            raise ValueError
+        ref.d_abc = self.pwm(ref.T_s, ref.u_c_ab, fbk.u_dc, fbk.w_c)
+        return ref
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""

@@ -1,12 +1,10 @@
 """Power-synchronization control for grid converters."""
 
 from cmath import exp
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import pi
-from typing import Sequence
 
 from motulator.common.control._base import TimeSeries
-from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
 from motulator.grid.control._controllers import CurrentLimiter
@@ -18,8 +16,8 @@ class References:
     """Reference signals for power-synchronization control."""
 
     T_s: float = 0.0
-    d_abc: Sequence[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     u_c: complex = 0j
+    u_c_ab: complex = 0j
     i_c: complex = 0j
     v_c: float = 0.0
     p_g: float = 0.0
@@ -31,11 +29,11 @@ class References:
 class Feedbacks:
     """Feedback signals for the control system."""
 
-    u_dc: float = 0.0
     i_c: complex = 0j
     u_c: complex = 0j
-    theta_c: float = 0.0
     p_g: float = 0.0
+    theta_c: float = 0.0  # Angle of the coordinate system (rad)
+    w_c: float = 0.0  # Angular speed of the coordinate system (rad/s)
 
 
 class PowerSynchronizationController:
@@ -79,7 +77,6 @@ class PowerSynchronizationController:
         w_b: float = 2 * pi * 5,
         T_s: float = 125e-6,
     ) -> None:
-        self.pwm = PWM()
         self.theta_c: float = 0.0
         self.i_c_flt: complex = 0j
         self.current_limiter = CurrentLimiter(i_max)
@@ -90,12 +87,11 @@ class PowerSynchronizationController:
         self.k_p_psc = w_nom * self.R_a / (1.5 * u_nom**2)
         self.T_s = T_s
 
-    def get_feedback(self, meas: Measurements) -> Feedbacks:
+    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Feedbacks:
         """Get the feedback signals."""
-        out = Feedbacks(u_dc=meas.u_dc, theta_c=self.theta_c)
+        out = Feedbacks(theta_c=self.theta_c)
 
         # Transform the measured values into synchronous coordinates
-        u_c_ab = self.pwm.get_realized_voltage()
         out.i_c = exp(-1j * out.theta_c) * meas.i_c_ab
         out.u_c = exp(-1j * out.theta_c) * u_c_ab
 
@@ -111,7 +107,7 @@ class PowerSynchronizationController:
         ref = References(T_s=self.T_s, v_c=v_c_ref, p_g=p_g_ref)
 
         # Power droop
-        ref.w_c = self.w_nom + self.k_p_psc * (ref.p_g - fbk.p_g)
+        fbk.w_c = ref.w_c = self.w_nom + self.k_p_psc * (ref.p_g - fbk.p_g)
 
         # Optionally, use of reference feedforward for d-axis current
         ref.i_c = ref.p_g / (1.5 * ref.v_c) + 1j * self.i_c_flt.imag
@@ -120,8 +116,7 @@ class PowerSynchronizationController:
 
         # Voltage reference
         ref.u_c = ref.v_c + self.R_a * (ref.i_c - fbk.i_c) + self.R * fbk.i_c
-        u_c_ref_ab = exp(1j * fbk.theta_c) * ref.u_c
-        ref.d_abc = self.pwm(ref.T_s, u_c_ref_ab, fbk.u_dc, ref.w_c)
+        ref.u_c_ab = exp(1j * fbk.theta_c) * ref.u_c
 
         return ref
 

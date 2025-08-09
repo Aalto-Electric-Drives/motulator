@@ -1,16 +1,14 @@
 """Flux-vector control of induction machine drives."""
 
 from cmath import exp
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import inf, pi, sqrt
-from typing import Callable, Sequence
+from typing import Callable, Literal
 
 import numpy as np
 
 from motulator.common.control._base import TimeSeries
-from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import sign
-from motulator.drive.control._base import Measurements
 from motulator.drive.control._im_observers import (
     ObserverOutputs,
     create_sensored_observer,
@@ -29,10 +27,10 @@ class References:
     """Reference signals for flux-vector control."""
 
     T_s: float = 0.0
-    d_abc: Sequence[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     tau_M: float = 0.0
     psi_s: float = 0.0
     u_s: complex = 0j
+    u_s_ab: complex = 0j
     i_s: complex = 0j
 
 
@@ -313,7 +311,6 @@ class FluxVectorController:
         sensorless: bool = True,
         T_s: float = 125e-6,
     ) -> None:
-        self.pwm = PWM()
         self.reference_gen = ReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.tau_M_max, cfg.k_u, cfg.k_b
         )
@@ -330,14 +327,14 @@ class FluxVectorController:
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(self, meas: Measurements) -> ObserverOutputs:
+    def get_feedback(
+        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
+    ) -> ObserverOutputs:
         """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
         if self.sensorless:
-            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
+            fbk = self.observer.compute_output(u_s_ab, i_s_ab)
         else:
-            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab, meas.w_M)
-        fbk.u_dc = meas.u_dc
+            fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M)
         return fbk
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
@@ -347,8 +344,7 @@ class FluxVectorController:
             ref.tau_M, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
+        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
@@ -428,7 +424,7 @@ class ObserverBasedVHzController:
         cfg: ObserverBasedVHzControllerCfg,
         T_s: float = 250e-6,
     ) -> None:
-        self.pwm = PWM()
+        self.pwm_mode: Literal["MPE", "MME", "six_step"] = "MME"
         self.reference_gen = ReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, inf, cfg.k_u, cfg.k_b
         )
@@ -442,14 +438,13 @@ class ObserverBasedVHzController:
         # Configurations for pure open-loop V/Hz control
         if par.L_M == inf:
             self.observer.state.psi_s = cfg.psi_s_nom
-            self.pwm = PWM(overmodulation="MME")
             self.reference_gen.k_u = inf
 
-    def get_feedback(self, w_M_ref: float, meas: Measurements) -> ObserverOutputs:
+    def get_feedback(
+        self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float
+    ) -> ObserverOutputs:
         """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
-        fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab, w_M_ref)
-        fbk.u_dc = meas.u_dc
+        fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M_ref)
         return fbk
 
     def compute_output(self, fbk: ObserverOutputs) -> References:
@@ -459,8 +454,7 @@ class ObserverBasedVHzController:
             self.tau_M_lpf, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
+        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:

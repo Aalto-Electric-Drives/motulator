@@ -1,14 +1,12 @@
 """Current-vector control methods for synchronous machine drives."""
 
 from cmath import exp
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import inf, pi
-from typing import Callable, Sequence
+from typing import Callable
 
 from motulator.common.control import ComplexPIController
 from motulator.common.control._base import TimeSeries
-from motulator.common.control._pwm import PWM
-from motulator.drive.control._base import Measurements
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
     create_sensored_observer,
@@ -27,10 +25,10 @@ class References:
     """Reference signals."""
 
     T_s: float = 0.0
-    d_abc: Sequence[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     tau_M: float = 0.0
     psi_s: float = 0.0
     i_s: complex = 0j
+    u_s_ab: complex = 0j
     u_s: complex = 0j
 
 
@@ -161,7 +159,6 @@ class CurrentVectorController:
         sensorless: bool = True,
         T_s: float = 125e-6,
     ) -> None:
-        self.pwm = PWM()
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
         )
@@ -178,16 +175,14 @@ class CurrentVectorController:
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(self, meas: Measurements) -> ObserverOutputs:
+    def get_feedback(
+        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
+    ) -> ObserverOutputs:
         """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
         if self.observer.sensorless:
-            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
+            fbk = self.observer.compute_output(u_s_ab, i_s_ab)
         else:
-            fbk = self.observer.compute_output(
-                u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M
-            )
-        fbk.u_dc = meas.u_dc
+            fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M, theta_M)
         return fbk
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
@@ -198,8 +193,7 @@ class CurrentVectorController:
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
-        u_s_ref_ab = exp(1j * fbk.theta_c) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_c)
+        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
