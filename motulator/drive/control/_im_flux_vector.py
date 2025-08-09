@@ -1,6 +1,5 @@
 """Flux-vector control of induction machine drives."""
 
-from cmath import exp
 from dataclasses import dataclass
 from math import inf, pi, sqrt
 from typing import Callable, Literal
@@ -30,7 +29,6 @@ class References:
     tau_M: float = 0.0
     psi_s: float = 0.0
     u_s: complex = 0j
-    u_s_ab: complex = 0j
     i_s: complex = 0j
 
 
@@ -319,23 +317,23 @@ class FluxVectorController:
         self.flux_torque_ctrl = FluxTorqueController(
             par, alpha_psi, cfg.alpha_tau, alpha_i, cfg.alpha_c, cfg.i_s_max
         )
-        assert cfg.alpha_o is not None
         if sensorless:
+            assert cfg.alpha_o is not None
             self.observer = create_sensorless_observer(par, cfg.alpha_o, cfg.k_o, cfg.J)
         else:
             self.observer = create_sensored_observer(par, cfg.k_o)
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(
+    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
+        """Get feedback signals without motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab)
+
+    def get_sensored_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
     ) -> ObserverOutputs:
-        """Get feedback signals."""
-        if self.sensorless:
-            fbk = self.observer.compute_output(u_s_ab, i_s_ab)
-        else:
-            fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M)
-        return fbk
+        """Get the feedback signals with motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab, w_M)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
@@ -344,7 +342,6 @@ class FluxVectorController:
             ref.tau_M, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
@@ -454,7 +451,6 @@ class ObserverBasedVHzController:
             self.tau_M_lpf, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:

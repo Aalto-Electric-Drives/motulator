@@ -17,7 +17,6 @@ class References:
 
     T_s: float = 0.0
     u_c: complex = 0j
-    u_c_ab: complex = 0j
     i_c: complex = 0j
     v_c: float = 0.0
     p_g: float = 0.0
@@ -116,8 +115,6 @@ class PowerSynchronizationController:
 
         # Voltage reference
         ref.u_c = ref.v_c + self.R_a * (ref.i_c - fbk.i_c) + self.R * fbk.i_c
-        ref.u_c_ab = exp(1j * fbk.theta_c) * ref.u_c
-
         return ref
 
     def update(self, ref: References, fbk: Feedbacks) -> None:

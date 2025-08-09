@@ -1,5 +1,6 @@
 """Base control systems for machine drives."""
 
+from cmath import exp
 from dataclasses import dataclass
 from math import inf
 from typing import Callable, Literal, Protocol, Sequence
@@ -18,6 +19,7 @@ class Feedbacks(Protocol):
 
     w_M: float  # Mechanical angular speed (rad/s)
     w_c: float  # Angular speed of the coordinate system (rad/s)
+    theta_c: float  # Angular position of the coordinate system (rad)
     u_dc: float  # DC-bus voltage (V)
 
 
@@ -53,10 +55,14 @@ class VectorController[Ref, Fbk](Protocol):
 
     sensorless: bool
 
-    def get_feedback(
+    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> Fbk:
+        """Get feedback signals from measurements without motion sensors."""
+        ...
+
+    def get_sensored_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
     ) -> Fbk:
-        """Get feedback signals from measurements."""
+        """Get feedback signals from measurements with motion sensors."""
         ...
 
     def compute_output(self, tau_M_ref: float, fbk: Fbk) -> Ref:
@@ -143,7 +149,12 @@ class VectorControlSystem(ControlSystem):
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         u_c_ab = self.pwm.get_realized_voltage()
-        fbk = self.vector_ctrl.get_feedback(u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M)
+        if self.vector_ctrl.sensorless:
+            fbk = self.vector_ctrl.get_feedback(u_c_ab, meas.i_c_ab)
+        else:
+            fbk = self.vector_ctrl.get_sensored_feedback(
+                u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M
+            )
         fbk.u_dc = meas.u_dc
         return fbk
 
@@ -160,7 +171,8 @@ class VectorControlSystem(ControlSystem):
         else:
             raise ValueError
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
-        ref.d_abc = self.pwm(ref.T_s, ref.u_s_ab, fbk.u_dc, fbk.w_c)
+        u_s_ab_ref = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
         ref.w_M = w_M_ref  # Store the speed reference for later use
         return ref
 
@@ -255,7 +267,8 @@ class VHzControlSystem(ControlSystem):
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller output based on feedback."""
         ref = self.vhz_ctrl.compute_output(fbk)
-        ref.d_abc = self.pwm(ref.T_s, ref.u_s_ab, fbk.u_dc, fbk.w_c)
+        u_s_ab_ref = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
         ref.w_M = self._w_M_ref  # Store the speed reference for later use
         return ref
 

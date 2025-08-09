@@ -166,7 +166,6 @@ class SignalInjectionController(CurrentVectorController):
             self.current_ctrl.compute_output(ref.i_s, fbk.i_s_flt)
             + self.observer.u_sd_inj
         )
-        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def post_process(self, ts: TimeSeries) -> None:

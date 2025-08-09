@@ -270,23 +270,23 @@ class CurrentVectorController:
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.w_s_nom, cfg.k_u, cfg.k_fw
         )
         self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
-        assert cfg.alpha_o is not None
         if sensorless:
+            assert cfg.alpha_o is not None
             self.observer = create_sensorless_observer(par, cfg.alpha_o, cfg.k_o, cfg.J)
         else:
             self.observer = create_sensored_observer(par, cfg.k_o)
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(
+    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
+        """Get the feedback signals with motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab)
+
+    def get_sensored_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
     ) -> ObserverOutputs:
-        """Get the feedback signals."""
-        if self.sensorless:
-            fbk = self.observer.compute_output(u_s_ab, i_s_ab)
-        else:
-            fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M)
-        return fbk
+        """Get the feedback signals with motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab, w_M)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""

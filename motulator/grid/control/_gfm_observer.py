@@ -101,7 +101,6 @@ class References:
     T_s: float = 0.0
     p_g: float = 0.0
     u_c: complex = 0j
-    u_c_ab: complex = 0j
     i_c: complex = 0j
     v_c: float = 0.0
     u_dc: float | None = None
@@ -197,8 +196,6 @@ class ObserverBasedGridFormingController:
 
         # Voltage reference
         ref.u_c = e_c + fbk.v_c + self.observer.R * fbk.i_c
-        ref.u_c_ab = exp(1j * fbk.theta_c) * ref.u_c
-
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:

@@ -1,5 +1,6 @@
 """Base control system for grid converters."""
 
+from cmath import exp
 from dataclasses import dataclass
 from typing import Callable, Protocol, Sequence
 
@@ -15,6 +16,7 @@ class Feedbacks(Protocol):
     """Protocol defining the required fields for feedback signals."""
 
     w_c: float  # Angular speed of the coordinate system (rad/s)
+    theta_c: float  # Angular position of the coordinate system (rad)
     u_dc: float  # DC-bus voltage (V)
 
 
@@ -211,7 +213,8 @@ class GridConverterControlSystem(ControlSystem):
             ref.u_dc = u_dc_ref
         else:
             raise ValueError
-        ref.d_abc = self.pwm(ref.T_s, ref.u_c_ab, fbk.u_dc, fbk.w_c)
+        u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
+        ref.d_abc = self.pwm(ref.T_s, u_c_ab_ref, fbk.u_dc, fbk.w_c)
         return ref
 
     def update(self, ref: References, fbk: Feedbacks) -> None:

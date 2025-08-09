@@ -129,7 +129,6 @@ class References:
 
     T_s: float = 0.0
     u_c: complex = 0j
-    u_c_ab: complex = 0j
     i_c: complex = 0j
     p_g: float = 0.0
     q_g: float = 0.0
@@ -195,8 +194,6 @@ class CurrentVectorController:
 
         # Compute the reference voltage
         ref.u_c = self.current_ctrl.compute_output(ref.i_c, fbk.i_c, fbk.u_g)
-        ref.u_c_ab = exp(1j * fbk.theta_c) * ref.u_c
-
         return ref
 
     def update(self, ref: References, fbk: PLLOutputSignals) -> None:

@@ -1,6 +1,5 @@
 """Current-vector control methods for synchronous machine drives."""
 
-from cmath import exp
 from dataclasses import dataclass
 from math import inf, pi
 from typing import Callable
@@ -28,7 +27,6 @@ class References:
     tau_M: float = 0.0
     psi_s: float = 0.0
     i_s: complex = 0j
-    u_s_ab: complex = 0j
     u_s: complex = 0j
 
 
@@ -175,15 +173,15 @@ class CurrentVectorController:
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(
+    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
+        """Get feedback signals without motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab)
+
+    def get_sensored_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
     ) -> ObserverOutputs:
-        """Get feedback signals."""
-        if self.observer.sensorless:
-            fbk = self.observer.compute_output(u_s_ab, i_s_ab)
-        else:
-            fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M, theta_M)
-        return fbk
+        """Get the feedback signals with motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab, w_M, theta_M)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
@@ -193,7 +191,6 @@ class CurrentVectorController:
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
-        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
