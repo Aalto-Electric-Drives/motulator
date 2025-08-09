@@ -29,7 +29,6 @@ class References:
     T_s: float = 0.0
     tau_M: float = 0.0
     u_s: complex = 0j
-    u_s_ab: complex = 0j
     i_s: complex = 0j
 
 
@@ -297,7 +296,6 @@ class CurrentVectorController:
         # Transform the reference to the same coordinates as the feedback
         ref.i_s = exp(1j * phase(fbk.psi_R)) * ref.i_s
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
-        ref.u_s_ab = exp(1j * fbk.theta_c) * ref.u_s
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
