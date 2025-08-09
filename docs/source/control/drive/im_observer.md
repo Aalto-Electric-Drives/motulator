@@ -7,8 +7,9 @@ Observers estimate the internal state of induction machines. For drives with spe
 The inverse-Γ model of an induction machine is considered (see {eq}`im_inv_gamma_ss` in {doc}`/model/drive/induction_machine`). In a coordinate system rotating at the angular speed $\omegac$, the dynamics can be expressed as
 
 ```{math}
-    :label: im_model_obs
-
+---
+label: im_model_obs
+---
     \frac{\D \psis}{\D t} &= \us - \Rs\is - \jj\omegac\psis \\
     \Lsgm\frac{\D \is}{\D t} &= \us - (\Rsgm + \jj\omegac \Lsgm)\is
     + \left(\alpha - \jj\omegam\right)\psiR \\
@@ -23,8 +24,9 @@ where $\alpha = \RR/\LM$ and $\Rsgm = \Rs + \RR$.
 A reduced-order observer is implemented in the {class}`motulator.drive.control.im.FluxObserver` class. Based on {eq}`im_model_obs`, the observer is formulated as
 
 ```{math}
-    :label: im_obs
-
+---
+label: im_obs
+---
     \frac{\D \hatpsis}{\D t} &= \us - \hatRs\is - \jj\omegac\hatpsis + \koa\eo + \kob\eo^* \\
     \hatpsiR &= \hatpsis - \hatLsgm\is
 ```
@@ -32,16 +34,18 @@ A reduced-order observer is implemented in the {class}`motulator.drive.control.i
 where $\koa$ and $\kob$ are complex gains, the estimates are marked with the hat, and $^*$ marks the complex conjugate. The estimation error is
 
 ```{math}
-    :label: im_eo
-
+---
+label: im_eo
+---
     \eo = \hatLsgm\frac{\D \is}{\D t} - \us + \left(\hatRsgm + \jj\omegac\hatLsgm\right)\is - \left(\hatalpha - \jj\hatomegam\right)\hatpsiR
 ```
 
 where $\hatomegam$ is the rotor speed estimate. In sensored drives, the speed estimate is replaced with the measured speed, $\hatomegam = \omegam$. In observer-based V/Hz control, the speed estimate is replaced with the (rate-limited) speed reference, $\hatomegam = \omegamref$ {cite}`Tii2025b`. Note that the derivative of the stator current in {eq}`im_eo` is integrated, i.e., the noise is not amplified. The torque estimate is given by
 
 ```{math}
-    :label: im_obs_tauM
-
+---
+label: im_obs_tauM
+---
     \hattauM = \frac{3\np}{2}\IM\left\{\is \hatpsis^* \right\}
 ```
 
@@ -56,16 +60,18 @@ Real-valued column vectors and the corresponding $2\times 2$ gain matrix were us
 The estimation-error dynamics are obtained by subtracting {eq}`im_obs` from {eq}`im_model_obs`. The resulting system is linearized for analysis and gain selection purposes. Assuming accurate parameter estimates, linearized estimation-error dynamics are {cite}`Hin2010`
 
 ```{math}
-    :label: tilde_psis
-
+---
+label: tilde_psis
+---
     \frac{\D \Delta\tildepsis}{\D t} = -\koa \Delta \eo - \kob \Delta \eo^* - \jj\omegaso \Delta\tildepsis
 ```
 
 where $\Delta$ marks the small-signal quantities, the subscript 0 marks the operating-point quantities, $\tildepsis = \psis - \hatpsis$ is the estimation error, and $\omegaso$ is the stator angular frequency. The linearized estimation error is
 
 ```{math}
-    :label: eo_lin
-
+---
+label: eo_lin
+---
     \Delta\eo = \left(\alpha - \jj\omegamo \right)\Delta\tildepsis - \jj\psiRo\Delta\tildeomegam
 ```
 
@@ -76,16 +82,18 @@ Notice that the rotor flux estimation error is $\Delta\tildepsiR = \Delta\tildep
 In sensored drives, $\Delta\tildeomegam = 0$ holds and $\kob = 0$ is used. Under these assumptions, the estimation-error dynamics {eq}`tilde_psis` reduce to {cite}`Ver1988`
 
 ```{math}
-    :label: im_tilde_psis_sensored
-
+---
+label: im_tilde_psis_sensored
+---
     \frac{\D \Delta\tildepsis}{\D t} = -\left[\koa \left(\alpha - \jj\omegamo \right) + \jj\omegaso \right]\Delta\tildepsis
 ```
 
 The closed-loop pole can be arbitrarily placed via the gain $\koa$. The default gains for sensored drives are
 
 ```{math}
-    :label: k1_sensored
-
+---
+label: k1_sensored
+---
     \koa = 1 + \frac{g |\omegam|}{\hatalpha - \jj\omegam} \qquad
     \kob = 0
 ```
@@ -103,16 +111,18 @@ As a special case, $\koa = 0$ yields the voltage model. As another special case,
 In sensorless drives, the rotor speed estimate $\hatomegam$ is canceled out from the observer equations by choosing {cite}`Hin2010`
 
 ```{math}
-    :label: inherently
-
+---
+label: inherently
+---
     \kob = \frac{\hatpsiR}{\hatpsiR^*} \koa
 ```
 
 With this choice, the linearized estimation-error dynamics in {eq}`tilde_psis` become
 
 ```{math}
-    :label: tilde_psis_sensorless
-
+---
+label: tilde_psis_sensorless
+---
     \frac{\D}{\D t} \begin{bmatrix} \Delta\tildepsisd \\ \Delta\tildepsisq \end{bmatrix} = \begin{bmatrix} -2\kd\alpha & -2\kd\omegamo + \omegaso \\ -2\kq\alpha - \omegaso & -2\kq\omegamo
     \end{bmatrix}
     \begin{bmatrix} \Delta\tildepsisd \\ \Delta\tildepsisq \end{bmatrix}
@@ -121,29 +131,32 @@ With this choice, the linearized estimation-error dynamics in {eq}`tilde_psis` b
 where the gain components correspond to $\koa = \kd + \jj \kq$. The attenuation $\sigma$ can be assigned by choosing
 
 ```{math}
-    :label: k1_sensorless
-
+---
+label: k1_sensorless
+---
     \koa = \frac{\sigma}{\hat \alpha - \jj\hatomegam}
 ```
 
 results in the characteristic polynomial $D(s) = s^2 + 2\sigma s + \omegaso^2$. In the default tuning, the attenuation is scheduled as $\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|$, where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero stator frequency $\omegaso = 0$, the poles are located at $s = 0$ and $s = -\alpha$, which allows stable magnetizing and starting the machine. [Figure 1](fig:poles) shows the corresponding pole placement example.
 
 ```{figure} ../figs/poles.svg
-    :name: fig:poles
-    :class: only-light
-    :width: 100%
-    :align: center
-    :alt: Pole placement example in sensorless drives
-
+---
+name: fig:poles
+class: only-light
+width: 100%
+align: center
+alt: Pole placement example in sensorless drives
+---
 *Figure 1:* Default pole placement in the sensorless observer.
 ```
 
 ```{figure} ../figs/poles.svg
-    :class: invert-colors-dark only-dark
-    :width: 100%
-    :align: center
-    :alt: Pole placement example in sensorless drives
-
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Pole placement example in sensorless drives
+---
 *Figure 1:* Default pole placement in the sensorless observer.
 ```
 
@@ -152,16 +165,18 @@ results in the characteristic polynomial $D(s) = s^2 + 2\sigma s + \omegaso^2$. 
 The flux observer {eq}`im_obs` is extended with the speed observer in the {class}`motulator.drive.control.im.SpeedFluxObserver` class. The speed-estimation error signal $\varepsilon$ is extracted as
 
 ```{math}
-    :label: im_obs_eps
-
+---
+label: im_obs_eps
+---
     \varepsilon = -\IM\left\{ \frac{\eo}{\hatpsiR} \right\}
 ```
 
 Considering the rotor speed to be a quasi-constant disturbance, the speed can be estimated as {cite}`Har2001`
 
 ```{math}
-    :label: im_speed_obs_ro
-
+---
+label: im_speed_obs_ro
+---
     \frac{\D \hatomegam}{\D t} = \koomega \varepsilon
 ```
 
@@ -170,8 +185,9 @@ This estimator is essentially the same as the conventional slip-relation-based e
 To avoid the lag in the speed estimate, the speed can be estimated based on the mechanical model and considering the load torque as a quasi-constant disturbance (see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`). This approach results in the speed observer
 
 ```{math}
-    :label: im_speed_obs
-
+---
+label: im_speed_obs
+---
     \frac{\D \hatomegam}{\D t} &= \frac{\np}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
     \frac{\D\hattauL}{\D t} &= -\frac{\kotau}{\np} \varepsilon
 ```
@@ -183,8 +199,9 @@ where $\hattauL$ is the load torque estimate and $\koomega$ and $\kotau$ are the
 The flux observer gain {eq}`inherently` decouples the rotor speed estimation from the flux estimation. Therefore, the speed estimation dynamics can be analyzed separately. The estimator {eq}`im_speed_obs_ro` results in the first-order estimation dynamics
 
 ```{math}
-    :label: im_speed_obs_ro_lin
-
+---
+label: im_speed_obs_ro_lin
+---
     \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{\koomega}{s + \koomega}
 ```
 
@@ -193,8 +210,9 @@ The gain $\koomega = \alphao$ determines the speed-estimation bandwidth.
 For the observer {eq}`im_speed_obs`, the linearized estimation dynamics are
 
 ```{math}
-    :label: im_speed_obs_lin
-
+---
+label: im_speed_obs_lin
+---
     \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{(J/\hat{J})s^2 + \koomega s + \kotau/\hat{J}}{s^2 + \koomega s + \kotau/\hat{J}}
 ```
 

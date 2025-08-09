@@ -7,8 +7,9 @@ In these notes, disturbance-observer-based grid-forming control is discussed {ci
 First, the system is modeled in general coordinates, whose angle with respect to the stationary coordinates is $\thetac$ and the angular speed is $\omegac = \D\thetac/\D t$. The dynamics of the inductor current $\ic$ and the grid voltage $\ug$ are modeled as
 
 ```{math}
-:label: system_model1
-
+---
+label: system_model1
+---
 L\frac{\D \ic}{\D t} &= \uc - \ug - \jj\omegac L \ic \\
 \frac{\D\ug}{\D t} &= \jj(\omegag - \omegac)\ug
 ```
@@ -16,16 +17,18 @@ L\frac{\D \ic}{\D t} &= \uc - \ug - \jj\omegac L \ic \\
 where $L$ is the inductance and $\omegag$ is the grid angular frequency. The grid voltage $\ug$ is modeled as a disturbance; this same disturbance model for the grid voltage is also used in the development of {doc}`/control/grid/pll`. The active power fed to the grid is nonlinear in the state variables
 
 ```{math}
-:label: power1
-
+---
+label: power1
+---
 \pg = \frac{3}{2}\RE\{\ug\ic^*\}
 ```
 
 For the purpose of grid-forming control, we may define the quasi-static converter voltage as an output variable as a function of the state variables,
 
 ```{math}
-:label: quasi_static_converter_voltage
-
+---
+label: quasi_static_converter_voltage
+---
 \vc = \ug + \jj\omegag L \ic
 ```
 
@@ -40,8 +43,9 @@ The control system consists of a disturbance observer and a control law. The dis
 Based on {eq}`system_model1`--{eq}`quasi_static_converter_voltage`, a disturbance observer for the grid voltage can be formed {cite}`Nur2024,Kuk2021,Fra1997`
 
 ```{math}
-:label: disturbance_observer_gfm
-
+---
+label: disturbance_observer_gfm
+---
 \frac{\D \hatug}{\D t} &= \jj (\hatomegag - \omegac)\hatug + \alphao\left(\uc - \hat L \frac{\D \ic}{\D t} - \jj \omegac \hat L \ic - \hatug \right) \\
 \hatvc &= \hatug + \jj\hatomegag \hat L \ic \\
 \hatpg &= \frac{3}{2}\RE\{\hatvc\ic^*\}
@@ -58,16 +62,18 @@ A conventional phase-locked loop (PLL) can be expressed in the same disturbance 
 A nonlinear state feedback law is used
 
 ```{math}
-:label: control_law_gfm
-
+---
+label: control_law_gfm
+---
 \ucref = \hatvc + \kP (\pgref - \hatpg) + \kV (\vcref - \hatabsvc)
 ```
 
 where $\pgref$ is the active power reference, $\vcref$ is the converter voltage magnitude reference, and $\hatabsvc = |\hatvc|$ is the magnitude. The complex gains for the active-power and converter-voltage-magnitude channels, respectively, are selected as
 
 ```{math}
-:label: gain_selection_gfm
-
+---
+label: gain_selection_gfm
+---
 \kP = \frac{R_\mathrm{a}}{v_\mathrm{c,ref}} \frac{\hatvc}{\hatabsvc} \qquad
 \kV = (1 - \jj k_\mathrm{v}) \frac{\hatvc}{\hatabsvc}
 ```
@@ -79,8 +85,9 @@ where the gains $R_\mathrm{a} = 0.2$ p.u. and $k_\mathrm{v} = \alphao/\omegag$ c
 To avoid the derivate on the right-hand side of {eq}`disturbance_observer_gfm`, a new state variable $\hatug' = \hatug + \alphao \hat L \ic$ can be introduced {cite}`Fra1997`. Furthermore, the coordinate system for the implementation can be chosen freely. The simplest choice is to use the nominal grid frequency as the coordinate system frequency, $\omegac = \hatomegag$. Using these design choices, the whole control system consisting of the disturbance observer {eq}`disturbance_observer_gfm` and the control law {eq}`control_law_gfm` in the state-space form reduces to {cite}`Nur2024`
 
 ```{math}
-:label: control_system_gfm
-
+---
+label: control_system_gfm
+---
 \frac{\D \hatug'}{\D t} &= \alphao (\ucref - \hatvc) \\
 \hatvc &= \hatug' - (\alphao - \jj\hatomegag) \hat L \ic \\
 \hatpg &= \frac{3}{2}\RE\{\hatvc\ic^*\} \\

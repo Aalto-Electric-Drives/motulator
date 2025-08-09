@@ -3,8 +3,9 @@
 A model for an ideal three-phase source is implemented in the {class}`motulator.grid.model.ThreePhaseSource` class. Typically, this model is used to represent the grid voltage source. The voltage space vector is calculated as a combination of a positive-sequence component and (optionally) a negative-sequence components as
 
 ```{math}
-:label: grid_voltage_vector
-
+---
+label: grid_voltage_vector
+---
 \frac{\D\thetag}{\D t} &= \omegag \\
 \egs &= e_\mathrm{g+}\e^{\jj(\thetag + \phi_+)} + e_\mathrm{g-}\e^{-\jj(\thetag + \phi_-)}
 ```

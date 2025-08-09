@@ -9,8 +9,9 @@ A speed controller is implemented in the {class}`motulator.drive.control.im.Spee
 Even if controllers operate in the discrete-time domain, they are often designed and analyzed in the continuous-time domain. The state-space form of a simple 2DOF PI speed controller is given by {cite}`Hin2024`
 
 ```{math}
-    :label: speed_ctrl
-
+---
+label: speed_ctrl
+---
     \frac{\D \tau_\mathrm{i}}{\D t} &= \ki\left(\omegaMref - \omegaM\right) \\
     \tauMref &= \kt\omegaMref - \kp\omegaM + \tau_\mathrm{i}
 ```
@@ -22,16 +23,18 @@ where $\omegaM$ is the measured (or estimated) mechanical angular speed of the r
 For simplicity, let us assume ideal torque control ($\tauM = \tauMref$) and a stiff mechanical system
 
 ```{math}
-    :label: stiff_mech
-
+---
+label: stiff_mech
+---
     J\frac{\D\omegaM}{\D t} = \tauM - \tauL
 ```
 
 where $\tauM$ is the electromagnetic torque, $\tauL$ is the load torque, and $J$ is the total moment of inertia. In the Laplace domain, the closed-loop system resulting from {eq}`speed_ctrl` and {eq}`stiff_mech` is given by
 
 ```{math}
-    :label: speed_ctrl_closed_loop_system
-
+---
+label: speed_ctrl_closed_loop_system
+---
     \omegaM(s) = \frac{\kt s + \ki}{J s^2 + \kp s + \ki} \omegaMref(s) - \frac{s}{J s^2 + \kp s + \ki} \tauL(s)
 ```
 
@@ -42,8 +45,9 @@ where it can be seen that the gain $\kt$ allows to place the reference-tracking 
 The gain selection {cite}`Har2013`
 
 ```{math}
-    :label: speed_ctrl_gain_selection
-
+---
+label: speed_ctrl_gain_selection
+---
     \kt = \alphas \hat{J} \qquad
     \kp = (\alphas + \alphai) \hat{J} \qquad
     \ki = \alphas\alphai \hat{J}
@@ -52,8 +56,9 @@ The gain selection {cite}`Har2013`
 results in
 
 ```{math}
-    :label: speed_ctrl_closed_loop_system2
-
+---
+label: speed_ctrl_closed_loop_system2
+---
     \omegaM(s) = \frac{\alphas}{s + \alphas} \omegaMref(s) - \frac{s}{J (s + \alphas)(s + \alphai)} \tauL(s)
 ```
 

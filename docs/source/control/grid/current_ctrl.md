@@ -11,8 +11,9 @@ This controller design assumes an L filter, but it can also be applied with LCL 
 The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design {cite}`Har1998` and the complex-vector design {cite}`Bri1999`. Here, only the complex-vector design is considered, see {ref}`complex-vector-2dof-pi-controller`, which is compatible with the {class}`motulator.common.control.ComplexPIController` base class. The controller can be expressed in a state-space form as
 
 ```{math}
-:label: grid_cc
-
+---
+label: grid_cc
+---
 \frac{\D \mathbf{u}_\mathrm{i}}{\D t} &= (\kI + \jj\omegac\kT )\left(\icref - \ic\right) \\
 \ucref &= \kT\icref - \kP\ic + \mathbf{u}_\mathrm{i}
 ```
@@ -24,32 +25,36 @@ where $\ucref$ is the output of the controller, i.e., the converter voltage refe
 Consider the grid model in synchronous coordinates
 
 ```{math}
-:label: L_filt_sync
-
+---
+label: L_filt_sync
+---
 L\frac{\D\ic}{\D t} = \uc - \ug - \jj \omegac L \ic
 ```
 
 where $\uc$ is the converter output voltage, $\ug$ is the grid (or PCC) voltage, and $L$ is the inductance. Ideal converter voltage production is assumed, $\uc = \ucref$. Using {eq}`grid_cc` and {eq}`L_filt_sync`, the closed-loop system in the Laplace domain becomes
 
 ```{math}
-:label: closed_loop_current_control_grid
-
+---
+label: closed_loop_current_control_grid
+---
 \ic = \mathbf{G}_\mathrm{c}(s)\icref - \mathbf{Y}_\mathrm{c}(s)\ug
 ```
 
 The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is
 
 ```{math}
-:label: Gc_grid
-
+---
+label: Gc_grid
+---
 \mathbf{G}_\mathrm{c}(s) = \frac{(s + \jj\omegac) \kT + \kI }{L s^2 + (\kP + \jj\omegac L) s + \kI + \jj\omegac \kT}
 ```
 
 whose zero can be placed by means of the reference-feedforward gain $\kT$. The disturbance rejection depends on the closed-loop admittance
 
 ```{math}
-:label: Yc_grid
-
+---
+label: Yc_grid
+---
 \mathbf{Y}_\mathrm{c}(s) = \frac{s}{L s^2 + (\kP + \jj\omegac L) s + \kI + \jj\omegac \kT}
 ```
 
@@ -58,8 +63,9 @@ whose zero can be placed by means of the reference-feedforward gain $\kT$. The d
 Consider the gains
 
 ```{math}
-:label: grid_cc_gain_selection
-
+---
+label: grid_cc_gain_selection
+---
 \kP = (\alphac + \alphai) \hat L \qquad
 \kI = \alphac \alphai \hat L \qquad
 \kT = \alphac \hat L
@@ -68,8 +74,9 @@ Consider the gains
 where $\alpha_\mathrm{s}$ is the closed-loop reference-tracking bandwidth, $\alphai$ is the integral action bandwidth, and $\hat L$ is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Gc_grid` and {eq}`Yc_grid` reduce to
 
 ```{math}
-:label: Gc_Yc_grid
-
+---
+label: Gc_Yc_grid
+---
 \mathbf{G}_\mathrm{c}(s) = \frac{\alphac}{s + \alphac} \qquad
 \mathbf{Y}_\mathrm{c}(s) = \frac{s}{L (s + \alphac)(s + \alphai + \jj\omegac)}
 ```
@@ -79,8 +86,9 @@ It can be seen that this design results in the first-order reference-tracking dy
 The converter output voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is
 
 ```{math}
-:label: limited_voltage_grid
-
+---
+label: limited_voltage_grid
+---
 \ucreflim = \mathrm{sat}(\ucref)
 ```
 

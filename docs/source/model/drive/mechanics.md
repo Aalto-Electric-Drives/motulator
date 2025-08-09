@@ -5,16 +5,18 @@
 The model of a stiff mechanical system is provided in the class {class}`motulator.drive.model.MechanicalSystem`. The dynamics are governed by
 
 ```{math}
-:label: mech_stiff
-
+---
+label: mech_stiff
+---
 J\frac{\D\omegaM}{\D t} = \tauM - \tauLtot
 ```
 
 where $\omegaM$ is the mechanical angular speed of the rotor, $\tauM$ is the electromagnetic torque, and $J$ is the total moment of inertia. The total load torque is
 
 ```{math}
-:label: total_load_torque
-
+---
+label: total_load_torque
+---
 \tauLtot = \BL\omegaM + \tauL
 ```
 
@@ -25,27 +27,30 @@ A constant friction coefficient $\BL$ models viscous friction that appears, e.g.
 The mechanical angle $\thetaM$ of the rotor is related to the mechanical angular speed as
 
 ```{math}
-    :label: mech_angle
-
+---
+label: mech_angle
+---
     \frac{\D\thetaM}{\D t} = \omegaM
 ```
 
 ```{figure} ../figs/mech_block.svg
-    :name: fig:mech_block
-    :class: only-light
-    :width: 100%
-    :align: center
-    :alt: Block diagram of a stiff mechanical system.
-
+---
+name: fig:mech_block
+class: only-light
+width: 100%
+align: center
+alt: Block diagram of a stiff mechanical system.
+---
 *Figure 1:* Block diagram of a stiff mechanical system.
 ```
 
 ```{figure} ../figs/mech_block.svg
-    :class: invert-colors-dark only-dark
-    :width: 100%
-    :align: center
-    :alt: Block diagram of a stiff mechanical system.
-
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Block diagram of a stiff mechanical system.
+---
 *Figure 1:* Block diagram of a stiff mechanical system.
 ```
 
@@ -54,8 +59,9 @@ The mechanical angle $\thetaM$ of the rotor is related to the mechanical angular
 A two-mass mechanical system is modeled in the {class}`motulator.drive.model.TwoMassMechanicalSystem` class. The dynamimcs are governed by
 
 ```{math}
-    :label: mech_two_mass
-
+---
+label: mech_two_mass
+---
     \JM\frac{\D\omegaM}{\D t} &= \tauM - \tauS \\
     \JL\frac{\D\omegaL}{\D t} &= \tauS - \tauL \\
     \frac{\D\thetaML}{\D t} &= \omegaM - \omegaL
@@ -64,8 +70,9 @@ A two-mass mechanical system is modeled in the {class}`motulator.drive.model.Two
 where $\omegaL$ is the angular speed of the load, $\thetaML = \thetaM - \thetaL$ is the twist angle, $\JM$ is the moment of inertia of the machine, and $\JL$ is the moment of inertia of the load. The shaft torque is
 
 ```{math}
-    :label: shaft_torque
-
+---
+label: shaft_torque
+---
     \tauS = \KS\thetaML + \CS(\omegaM - \omegaL)
 ```
 
@@ -74,21 +81,23 @@ where $\KS$ is the torsional stiffness of the shaft, and $\CS$ is the torsional 
 See the {doc}`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz` example.
 
 ```{figure} ../figs/two_mass_block.svg
-    :name: fig:two_mass_block
-    :class: only-light
-    :width: 100%
-    :align: center
-    :alt: Block diagram of a two-mass mechanical system.
-
+---
+name: fig:two_mass_block
+class: only-light
+width: 100%
+align: center
+alt: Block diagram of a two-mass mechanical system.
+---
 *Figure 2:* Block diagram of a two-mass mechanical system.
 ```
 
 ```{figure} ../figs/two_mass_block.svg
-    :class: invert-colors-dark only-dark
-    :width: 100%
-    :align: center
-    :alt: Block diagram of a two-mass mechanical system.
-
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Block diagram of a two-mass mechanical system.
+---
 *Figure 2:* Block diagram of a two-mass mechanical system.
 ```
 

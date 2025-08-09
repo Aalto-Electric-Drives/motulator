@@ -11,8 +11,9 @@ A 2DOF PI current controller for induction machines is available in the {class}`
 The inverse-Γ model of an induction machine is considered (see {eq}`im_inv_gamma_ss` in {doc}`/model/drive/induction_machine`). The rotor flux linkage $\psiR$ and the rotor speed $\omegam$ change slowly as compared to the stator current. Consequently, it suffices to consider the stator current dynamics
 
 ```{math}
-    :label: im_current
-
+---
+label: im_current
+---
     \Lsgm \frac{\D \is}{\D t} = \us - (\Rsgm + \jj \omegac\Lsgm)\is - \es
 ```
 
@@ -23,8 +24,9 @@ where $\Rsgm = \Rs + \RR$ is the total resistance and $\omegac$ is the angular s
 The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design {cite}`Har1998` and the complex-vector design {cite}`Bri1999`. Here, only the complex-vector design is considered, see {ref}`complex-vector-2dof-pi-controller`, which is compatible with the {class}`motulator.common.control.ComplexPIController` base class. The controller can be expressed in a state-space form as
 
 ```{math}
-    :label: cc
-
+---
+label: cc
+---
     \frac{\D \uI}{\D t} &= (\kI + \jj\omegac\kT )\left(\isref - \is\right) \\
     \usref &= \kT\isref - \kP\is + \uI
 ```
@@ -40,24 +42,27 @@ where $\usref$ is the stator voltage reference, $\isref$ is the stator current r
 Here, ideal voltage production is assumed, $\us = \usref$. Using {eq}`im_current` and {eq}`cc`, the closed-loop system in the Laplace domain becomes
 
 ```{math}
-    :label: closed_loop_current_control
-
+---
+label: closed_loop_current_control
+---
     \is = \mathbf{G}_\mathrm{c}(s)\isref - \mathbf{Y}_\mathrm{c}(s)\es
 ```
 
 The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is
 
 ```{math}
-    :label: Gc
-
+---
+label: Gc
+---
     \mathbf{G}_\mathrm{c}(s) = \frac{(s + \jj\omegac) \kT + \kI }{\Lsgm s^2 + (\Rsgm + \jj\omegac \Lsgm + \kP) s + \kI + \jj\omegac \kT}
 ```
 
 whose zero can be placed by means of the reference-feedforward gain $\kT$. The disturbance rejection depends on the closed-loop admittance
 
 ```{math}
-    :label: Yc
-
+---
+label: Yc
+---
     \mathbf{Y}_\mathrm{c}(s) = \frac{s}{\Lsgm s^2 + (\Rsgm + \jj\omegac \Lsgm + \kP) s + \kI + \jj\omegac \kT}
 ```
 
@@ -66,8 +71,9 @@ whose zero can be placed by means of the reference-feedforward gain $\kT$. The d
 Consider the gains
 
 ```{math}
-    :label: complex_vector_gains
-
+---
+label: complex_vector_gains
+---
     \kP = (\alphac + \alphai) \hatLsgm - \hatRsgm \qquad
     \kI = \alphac\alphai\hatLsgm \qquad
     \kT = \alphac \hatLsgm
@@ -76,8 +82,9 @@ Consider the gains
 where $\alphac$ is the closed-loop reference-tracking bandwidth and $\alphai$ is the integral action bandwidth. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Yc` and {eq}`Gc` reduce to
 
 ```{math}
-    :label: Gc_Yc
-
+---
+label: Gc_Yc
+---
     \mathbf{G}_\mathrm{c}(s) = \frac{\alphac}{s + \alphac} \qquad
     \mathbf{Y}_\mathrm{c}(s) = \frac{s}{\Lsgm (s + \alphac)(s + \alphai + \jj\omegac)}
 ```
@@ -87,8 +94,9 @@ It can be seen that this design results in the first-order reference-tracking dy
 This gain selection is used in the {class}`motulator.drive.control.im.CurrentController` class. The stator voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is
 
 ```{math}
-    :label: limited_voltage
-
+---
+label: limited_voltage
+---
     \usreflim = \mathrm{sat}(\usref)
 ```
 
@@ -101,8 +109,9 @@ where $\mathrm{sat}(\cdot)$ is the saturation function. The limited voltage is o
 Consider the synchronous machine model in rotor coordinates rotating at $\omegam$,
 
 ```{math}
-    :label: sm_model
-
+---
+label: sm_model
+---
     \frac{\D\psis}{\D t} &= \us - \Rs\is - \jj\omegam\psis \\
     \psis &= \psisfcn(\is)
 ```
@@ -116,8 +125,9 @@ A 2DOF PI controller for synchronous machines is available in the {class}`motula
 Both the reference current and the actual current are transformed using the same flux linkage map $\hatpsisfcn(\is)$. The controller can be expressed in a state-space form as
 
 ```{math}
-    :label: cc_flux
-
+---
+label: cc_flux
+---
     \frac{\D \uI}{\D t} &= (\kI + \jj\omegac\kT )\left[\hatpsisfcn(\isref) - \hatpsisfcn(\is)\right] \\
     \usref &= \kT\hatpsisfcn(\isref) - \kP\hatpsisfcn(\is) + \uI
 ```
@@ -131,8 +141,9 @@ The control law {eq}`cc_flux` omits the effect of the stator resistance for simp
 The gain selection analogous to {eq}`complex_vector_gains` becomes
 
 ```{math}
-    :label: sm_gains
-
+---
+label: sm_gains
+---
     \kP = \alphac + \alphai \qquad
     \kI = \alphac\alphai \qquad
     \kT = \alphac

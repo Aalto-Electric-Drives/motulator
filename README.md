@@ -1,31 +1,33 @@
 # *motulator:* Motor Drive and Grid Converter Simulator in Python
+
 [![DOI](https://zenodo.org/badge/377399301.svg)](https://zenodo.org/doi/10.5281/zenodo.10223090)
 [![Build Status](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml/badge.svg)](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml)
 [![License](https://img.shields.io/github/license/mashape/apistatus)](https://github.com/Aalto-Electric-Drives/motulator/blob/main/LICENSE)
 [![PyPI version shields.io](https://img.shields.io/pypi/v/motulator.svg)](https://pypi.org/project/motulator/)
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 
-Introduction
-------------
+## Introduction
+
 This open-source software includes simulation models and controllers for electric machine drives and grid converter systems. The machine models include an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. Various subsystem models are provided for modeling grid converter systems, such as an LCL filter connected to an inductive-resistive grid.
 
 The system models are simulated in the continuous-time domain while the control algorithms run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from scipy.integrate.solve_ivp. Various control algorithms are provided as examples. The documentation is available here:
 
 https://aalto-electric-drives.github.io/motulator/
 
-Installation
-------------
+## Installation
+
 This software can be installed using pip:
 
 ```bash
 pip install motulator
 ```
+
 Alternatively, the repository can be cloned:
 
 https://aalto-electric-drives.github.io/motulator/installation.html
 
-Usage
------
+## Usage
+
 The system models, controllers, reference sequences etc. are easy to configure. As a starting point, example scripts and Jupyter notebooks can be downloaded here:
 
 https://aalto-electric-drives.github.io/motulator/drive_examples/index.html
@@ -34,17 +36,20 @@ https://aalto-electric-drives.github.io/motulator/grid_examples/index.html
 
 New system models and controllers can be developed using the existing ones as templates.
 
-Contributing
-------------
+## Contributing
+
 If you would like to help us develop *motulator*, see these [guidelines](https://aalto-electric-drives.github.io/motulator/contributing.html) first.
 
-Contributors
-------------
+## Contributors
+
 Thanks go to these wonderful people:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
 <!-- prettier-ignore-start -->
+
 <!-- markdownlint-disable -->
+
 <table>
   <tbody>
     <tr>
@@ -77,12 +82,13 @@ Thanks go to these wonderful people:
 </table>
 
 <!-- markdownlint-restore -->
+
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
-Acknowledgement
----------------
+## Acknowledgement
+
 This project has been sponsored by ABB Oy and by the Research Council of Finland *Centre of Excellence in High-Speed Electromechanical Energy Conversion Systems*. The example control methods included in this repository are based on published algorithms (available in textbooks and scientific articles). They do not present any proprietary control software.

@@ -3,21 +3,23 @@
 Machine drives and grid converter systems are sampled-data systems, consisting of a continuous-time system and a discrete-time control system as well as the interfaces between them {cite}`Fra1997,Bus2015`. [Figure 1](fig:system) shows a generic example system. The same architecture is used in *motulator*: the continuous-time system model is simulated in the continuous-time domain while the discrete-time control system runs in the discrete-time domain. The default solver is the explicit Runge-Kutta method of order 5(4) from [scipy.integrate.solve_ivp](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html).
 
 ```{figure} ../figs/system.svg
-    :name: fig:system
-    :class: only-light
-    :width: 100%
-    :align: center
-    :alt: Block diagram of a sampled-data system
-
+---
+name: fig:system
+class: only-light
+width: 100%
+align: center
+alt: Block diagram of a sampled-data system
+---
 *Figure 1:* Block diagram of a sampled-data system. Discrete signals and systems are shown in blue. Continuous signals and systems are shown in red.
 ```
 
 ```{figure} ../figs/system.svg
-    :class: invert-colors-dark only-dark
-    :width: 100%
-    :align: center
-    :alt: Block diagram of a sampled-data system
-
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Block diagram of a sampled-data system
+---
 *Figure 1:* Block diagram of a sampled-data system. Discrete signals and systems are shown in blue. Continuous signals and systems are shown in red.
 ```
 

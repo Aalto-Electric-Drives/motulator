@@ -36,10 +36,10 @@ If you have found bugs or have feature requests, please submit them to the [issu
 When contributing code, please follow this workflow:
 
 1. Create a new [issue](https://guides.github.com/features/issues/) to discuss your proposal before starting.
-2. Create your own fork and clone the repository to your local machine.
-3. Commit and push your changes to your fork.
-4. Run `pre-commit run --all-files` to ensure that your code is properly formatted.
-5. When your code is finished, create a pull request.
+1. Create your own fork and clone the repository to your local machine.
+1. Commit and push your changes to your fork.
+1. Run `pre-commit run --all-files` to ensure that your code is properly formatted.
+1. When your code is finished, create a pull request.
 
 Once a pull request has been created, it will be reviewed, and changes might be suggested, which you can make by simply adding new commits to your branch. After the successful review, we will merge your changes into the main repository.
 

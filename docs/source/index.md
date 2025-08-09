@@ -5,54 +5,59 @@ This open-source software includes simulation models and control methods for ele
 The system models are simulated in the continuous-time domain while the control methods run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from [scipy.integrate.solve_ivp](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html). A number of control methods are provided as examples. The example methods aim to be simple yet feasible.
 
 ```{toctree}
-:titlesonly:
-:caption: Getting Started
-:name: getting_started
-:maxdepth: 1
-
+---
+titlesonly:
+caption: Getting Started
+name: getting_started
+maxdepth: 1
+---
 installation
 usage
 contributing
 ```
 
 ```{toctree}
-:titlesonly:
-:caption: Examples
-:name: examples
-:maxdepth: 1
-
+---
+titlesonly:
+caption: Examples
+name: examples
+maxdepth: 1
+---
 drive_examples/index
 grid_examples/index
 ```
 
 ```{toctree}
-:titlesonly:
-:caption: System Models
-:name: models
-:maxdepth: 1
-
+---
+titlesonly:
+caption: System Models
+name: models
+maxdepth: 1
+---
 model/common/index
 model/drive/index
 model/grid/index
 ```
 
 ```{toctree}
-:titlesonly:
-:caption: Control Methods
-:name: controllers
-:maxdepth: 1
-
+---
+titlesonly:
+caption: Control Methods
+name: controllers
+maxdepth: 1
+---
 control/common/index
 control/drive/index
 control/grid/index
 ```
 
 ```{toctree}
-:titlesonly:
-:caption: Reference
-:name: reference
-:maxdepth: 1
-
+---
+titlesonly:
+caption: Reference
+name: reference
+maxdepth: 1
+---
 API <autoapi/motulator/index>
 bibliography
 ```

@@ -9,8 +9,9 @@ This document describes an observer design implemented in the {class}`motulator.
 The synchronous machine model in rotor coordinates rotating at $\omegam$ is
 
 ```{math}
-    :label: sm_model_obs
-
+---
+label: sm_model_obs
+---
     \frac{\D\psis}{\D t} &= \us - \Rs\is - \jj\omegam\psis \\
     \frac{\D\thetam}{\D t} &= \omegam \\
     \is &= \isfcn(\psis) \\
@@ -24,8 +25,9 @@ where $\isfcn$ is the current map (see {ref}`synchronous_machine`). If the magne
 The control system operates in estimated rotor coordinates, aligned at the rotor angle estimate $\hatthetam$. In these coordinates, the measured current and the realized voltage (obtained from the PWM algorithm), respectively, are
 
 ```{math}
-    :label: is_prime
-
+---
+label: is_prime
+---
     \is' = \iss \e^{-\jj\hatthetam} \qquad
     \us' = \us \e^{-\jj\hatthetam}
 ```
@@ -37,8 +39,9 @@ Due to the estimation error $\tildethetam = \thetam - \hatthetam$, the current $
 Based on {eq}`sm_model_obs`, a nonlinear state observer is formulated as
 
 ```{math}
-    :label: sm_obs
-
+---
+label: sm_obs
+---
     \frac{\D \hatpsis}{\D t} &= \us' - \hatRs\is' - \jj\omegac\hatpsis + \koa \eo + \kob \eo^* \\
     \frac{\D\hatthetam}{\D t} &= \hatomegam - \kotheta \IM\left\{ \frac{\eo}{\psiaux} \right\} = \omegac
 ```
@@ -46,8 +49,9 @@ Based on {eq}`sm_model_obs`, a nonlinear state observer is formulated as
 where $\omegac$ is the angular speed of the coordinate system, $\eo$ is the estimation error, $\koa$, $\kob$, and $\kotheta$ are observer gains, the estimates are marked with the hat, and $^*$ marks the complex conjugate. The flux estimation error is
 
 ```{math}
-    :label: sm_eo
-
+---
+label: sm_eo
+---
     \eo = \hatpsisfcn(\is') - \hatpsis
 ```
 
@@ -68,8 +72,9 @@ Real-valued column vectors and the corresponding $2\times 2$ gain matrix were us
 In sensored case, $\tildethetam = 0$ holds and $\kob = 0$ is used. Therefore, using {eq}`sm_model_obs` and {eq}`sm_obs`, the linearized estimation-error dynamics become
 
 ```{math}
-    :label: sm_tilde_psis_sensored
-
+---
+label: sm_tilde_psis_sensored
+---
     \frac{\D \Delta\tildepsis}{\D t} = -(\koa + \jj\omegamo)\Delta\tildepsis
 ```
 
@@ -82,17 +87,19 @@ The analysis of the sensorless case resembles that of induction machines, see {r
 To decouple the flux estimation from the rotor angle, the gains of {eq}`sm_obs` have to be of the form
 
 ```{math}
-    :label: k1k2_sensorless
-
+---
+label: k1k2_sensorless
+---
     \koa = \sigma \qquad
     \kob = \frac{\sigma\hatpsiaux}{\hatpsiaux^*}
 ```
 
-where $\hatpsiaux = \hatpsiaux(\is')$ is the estimate of the auxiliary flux [see {eq}`sm_mtpa_aux` in {ref}`synchronous_machine`] and $\sigma$ is the attenuation, i.e., the resulting characteristic polynomial is $D(s) = s^2 + 2\sigma s + \omegamo^2$. By default, the attenuation in sensorless drives is scheduled as
+where $\hatpsiaux = \hatpsiaux(\is')$ is the estimate of the auxiliary flux \[see {eq}`sm_mtpa_aux` in {ref}`synchronous_machine`\] and $\sigma$ is the attenuation, i.e., the resulting characteristic polynomial is $D(s) = s^2 + 2\sigma s + \omegamo^2$. By default, the attenuation in sensorless drives is scheduled as
 
 ```{math}
-    :label: sigma_sensorless
-
+---
+label: sigma_sensorless
+---
     \sigma = \frac{\beta}{2} + \zeta_\infty |\hatomegam |
 ```
 
@@ -103,24 +110,27 @@ where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero speed,
 The flux observer {eq}`sm_obs` is extended with the speed observer in the {class}`motulator.drive.control.sm.SpeedFluxObserver` class. The angle-estimation error signal $\varepsilon$ is extracted as
 
 ```{math}
-    :label: sm_obs_eps
-
+---
+label: sm_obs_eps
+---
     \varepsilon = -\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}
 ```
 
 Considering the rotor speed to be a quasi-constant disturbance, the speed can be estimated as {cite}`Hin2018`
 
 ```{math}
-    :label: sm_speed_obs_ro
-
+---
+label: sm_speed_obs_ro
+---
     \frac{\D \hatomegam}{\D t} = \koomega \varepsilon
 ```
 
 To avoid the lag in the speed estimate, the speed can be estimated based on the mechanical model and considering the load torque as a disturbance (see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`). This approach results in the speed observer
 
 ```{math}
-    :label: sm_speed_obs
-
+---
+label: sm_speed_obs
+---
     \frac{\D \hatomegam}{\D t} &= \frac{\np}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
     \frac{\D\hattauL}{\D t} &= -\frac{\kotau}{\np} \varepsilon
 ```
@@ -132,8 +142,9 @@ where $\hattauL$ is the load torque estimate and $\koomega$ and $\kotau$ are the
 The flux observer design decouples the speed and position estimation from the flux estimation. Therefore, the speed estimation dynamics can be analyzed separately. The estimator {eq}`sm_speed_obs_ro` results in the second-order estimation dynamics
 
 ```{math}
-    :label: sm_speed_obs_ro_lin
-
+---
+label: sm_speed_obs_ro_lin
+---
     \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{\alphao^2}{(s + \alphao)^2}
 ```
 
@@ -142,8 +153,9 @@ The critically damped design is obtained by setting $\kotheta = 2\alphao$ and $\
 For the observer {eq}`sm_speed_obs`, the linearized estimation dynamics are
 
 ```{math}
-    :label: sm_speed_obs_lin
-
+---
+label: sm_speed_obs_lin
+---
     \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} =
     \frac{(J/\hat{J}) s^3 + (J/\hat{J}) \kotheta s^2 + \koomega s + \kotau/\hat{J}}{s^3 + \kotheta s^2 + \koomega s + \kotau/\hat{J}}
 ```

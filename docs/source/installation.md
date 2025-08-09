@@ -37,16 +37,20 @@ For developers and advanced users, we recommend cloning the repository from GitH
 Several powerful open-source IDEs are available for Python. The following instructions are for [VS Code](https://code.visualstudio.com):
 
 1. Install VS Code, Python, and `git` on your computer. Install also the recommended Python extensions in VS Code.
-2. Clone the project (or fork it first and then clone your fork) using the command:
+
+1. Clone the project (or fork it first and then clone your fork) using the command:
 
    ```bash
    git clone https://github.com/Aalto-Electric-Drives/motulator
    ```
 
    This will create a folder called *motulator* in your current directory.
-3. Launch VS Code from the cloned project's root directory on the command line (or choose the proper directory after launching VS Code).
-4. [Create a virtual environment](https://code.visualstudio.com/docs/python/environments) in the workspace.
-5. Enable installation of optional dependencies from `pyproject.toml` (selecting at least `dev` is recommended). Alternatively, for installing the project with its core dependencies, you may run the command `pip install .` in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run `pip install .[dev,doc]`).
+
+1. Launch VS Code from the cloned project's root directory on the command line (or choose the proper directory after launching VS Code).
+
+1. [Create a virtual environment](https://code.visualstudio.com/docs/python/environments) in the workspace.
+
+1. Enable installation of optional dependencies from `pyproject.toml` (selecting at least `dev` is recommended). Alternatively, for installing the project with its core dependencies, you may run the command `pip install .` in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run `pip install .[dev,doc]`).
 
 After completing the above steps, the virtual environment can be found in the `.venv` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the `dev` dependencies, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code).
 

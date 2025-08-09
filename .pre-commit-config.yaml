@@ -71,3 +71,15 @@ repos:
         additional_dependencies: [numpy, scipy, matplotlib, tqdm, sphinx-gallery]
         args:
         - --venvpath=./.venv
+
+  # MyST Markdown formatter
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.22
+    hooks:
+      - id: mdformat
+        name: mdformat (MyST)
+        additional_dependencies:
+          - mdformat-myst
+        types_or: [markdown]
+        # Example args:
+        # args: ["--wrap", "88"]

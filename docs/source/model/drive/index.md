@@ -1,8 +1,9 @@
 # Drives
 
 ```{toctree}
-:maxdepth: 2
-
+---
+maxdepth: 2
+---
 induction_machine
 synchronous_machine
 mechanics

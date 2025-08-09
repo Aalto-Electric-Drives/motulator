@@ -1,9 +1,10 @@
 # Common
 
 ```{toctree}
-:titlesonly:
-:maxdepth: 2
-
+---
+titlesonly:
+maxdepth: 2
+---
 control_system
 controllers
 ```

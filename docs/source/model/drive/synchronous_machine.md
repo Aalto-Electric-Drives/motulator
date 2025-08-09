@@ -9,29 +9,32 @@ This document describes continuous-time synchronous machine models of the {mod}`
 [Figure 4](fig:sm) shows the space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The model is implemented in the {class}`motulator.drive.model.SynchronousMachine` class. The synchronous machine model can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs).
 
 ```{figure} ../figs/sm.svg
-    :name: fig:sm
-    :class: only-light
-    :width: 100%
-    :align: center
-    :alt: Equivalent circuit model of a synchronous machine
-
+---
+name: fig:sm
+class: only-light
+width: 100%
+align: center
+alt: Equivalent circuit model of a synchronous machine
+---
 *Figure 4:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$.
 ```
 
 ```{figure} ../figs/sm.svg
-    :class: invert-colors-dark only-dark
-    :width: 100%
-    :align: center
-    :alt: Equivalent circuit model of a synchronous machine
-
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Equivalent circuit model of a synchronous machine
+---
 *Figure 4:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$.
 ```
 
 The state equations in rotor coordinates are {cite}`Jah1986`
 
 ```{math}
-    :label: sm_states
-
+---
+label: sm_states
+---
     \frac{\D\psis}{\D t} &= \us - \Rs\is - \jj\omegam\psis \\
     \frac{\D\thetam}{\D t} &= \omegam
 ```
@@ -39,8 +42,9 @@ The state equations in rotor coordinates are {cite}`Jah1986`
 where $\us$ is the stator voltage and $\is$ is the stator current. The stator resistance is denoted by $\Rs$. The rotor angular speed is $\omegam = \np \omegaM$, where $\omegaM$ is the mechanical angular speed of the rotor and $\np$ is the number of pole pairs. The current $\is = \id + \jj \iq$ depends on the flux linkage $\psis = \psid + \jj \psiq$ as
 
 ```{math}
-    :label: sm_current
-
+---
+label: sm_current
+---
     \is &= \isfcn(\psis) \\
     &= \idfcn(\psid, \psiq) + \jj\iqfcn(\psid, \psiq)
 ```
@@ -48,48 +52,53 @@ where $\us$ is the stator voltage and $\is$ is the stator current. The stator re
 where the complex function $\isfcn$ is referred to as a current map. The electromagnetic torque is
 
 ```{math}
-    :label: sm_torque
-
+---
+label: sm_torque
+---
     \tauM = \frac{3 \np}{2}\IM\left\{\is\psis^*\right\}
 ```
 
 [Figure 5](fig:sm_block_rot) shows the block diagram of the machine model in rotor coordinates. The magnetic model includes the current map and the torque equation. Since the machine is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in [Figure 6](fig:sm_block_stat).
 
 ```{figure} ../figs/sm_block_rot.svg
-    :name: fig:sm_block_rot
-    :class: only-light
-    :width: 100%
-    :align: center
-    :alt: Synchronous machine model
-
+---
+name: fig:sm_block_rot
+class: only-light
+width: 100%
+align: center
+alt: Synchronous machine model
+---
 *Figure 4:* Block diagram of the machine model in rotor coordinates. The magnetic model includes the flux equation (or, optionally, saturation characteristics) and the torque equation.
 ```
 
 ```{figure} ../figs/sm_block_rot.svg
-    :class: invert-colors-dark only-dark
-    :width: 100%
-    :align: center
-    :alt: Synchronous machine model
-
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Synchronous machine model
+---
 *Figure 4:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`. Since the spatial harmonics are omitted, the current $\is$ and the torque $\tauM$ do not depend on the angle $\thetam$.
 ```
 
 ```{figure} ../figs/sm_block_stat.svg
-    :name: fig:sm_block_stat
-    :class: only-light
-    :width: 100%
-    :align: center
-    :alt: Synchronous machine model seen from stator coordinates
-
+---
+name: fig:sm_block_stat
+class: only-light
+width: 100%
+align: center
+alt: Synchronous machine model seen from stator coordinates
+---
 *Figure 5:* Synchronous machine model seen from stator coordinates.
 ```
 
 ```{figure} ../figs/sm_block_stat.svg
-    :class: invert-colors-dark only-dark
-    :width: 100%
-    :align: center
-    :alt: Synchronous machine model seen from stator coordinates
-
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Synchronous machine model seen from stator coordinates
+---
 *Figure 5:* Synchronous machine model seen from stator coordinates.
 ```
 
@@ -102,8 +111,9 @@ Due to the spatial harmonics, the stator current $\is = \isfcn(\psis, \thetam)$ 
 The linear magnetic model is parametrized using the {class}`motulator.drive.model.SynchronousMachinePars` class. In this case, the current is
 
 ```{math}
-    :label: sm_current_linear
-
+---
+label: sm_current_linear
+---
     \is = \frac{\psid - \psif}{\Ld} + \jj\frac{\psiq}{\Lq}
 ```
 
@@ -118,8 +128,9 @@ Nonlinear magnetic models are parametrized using the {class}`motulator.drive.mod
 The current maps {eq}`sm_current` are typically modeled either as lookup tables or explicit functions {cite}`Hin2017,Lel2024`. The magnetic model can be presented as a flux linkage map
 
 ```{math}
-    :label: sm_flux_linkage_map
-
+---
+label: sm_flux_linkage_map
+---
     \psis &= \psisfcn(\is) \\
     &= \psidfcn(\id, \iq) + \jj\psiqfcn(\id, \iq)
 ```
@@ -139,16 +150,18 @@ The maximum-torque-per-volt (MTPV) and maximum-torque-per-ampere (MTPA) conditio
 Consider the MTPV condition as an example. Applying the flux linkage vector $\psis = \abspsis \e^{\jj\delta}$ with a given magnitude $\abspsis$ in the torque expression {eq}`sm_torque`, the MTPV condition is obtained by setting $\partial \tauM/\partial \delta = 0$. This results in
 
 ```{math}
-    :label: sm_mtpv
-
+---
+label: sm_mtpv
+---
     \text{MTPV:} \quad \RE\left\{\iaux\psis^* \right\} = 0
 ```
 
 where the auxiliary current vector is
 
 ```{math}
-    :label: sm_mtpv_aux
-
+---
+label: sm_mtpv_aux
+---
     \iaux(\psis) = -\is + \Gqq \psid + \jj \Gdd \psiq - \jj \Gdq \psis^*
 ```
 
@@ -157,16 +170,18 @@ The current $\is$ as well as the incremental inverse inductances $\Gdd = \partia
 The MTPA condition is obtained in a similar manner, resulting in
 
 ```{math}
-    :label: sm_mtpa
-
+---
+label: sm_mtpa
+---
     \text{MTPA:} \quad \RE\left\{\psiaux\is^* \right\} = 0
 ```
 
 where the auxiliary flux vector is
 
 ```{math}
-    :label: sm_mtpa_aux
-
+---
+label: sm_mtpa_aux
+---
     \psiaux(\is) = \psis - \Lqq \id - \jj \Ldd \iq + \jj \Ldq \is^*
 ```
 
