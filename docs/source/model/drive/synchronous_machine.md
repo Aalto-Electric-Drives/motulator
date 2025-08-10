@@ -6,7 +6,7 @@ This document describes continuous-time synchronous machine models of the {mod}`
 
 ## Synchronous Machine Model
 
-[Figure 4](fig:sm) shows the space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The model is implemented in the {class}`motulator.drive.model.SynchronousMachine` class. The synchronous machine model can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs).
+[Figure 1](fig:sm) shows the space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The model is implemented in the {class}`motulator.drive.model.SynchronousMachine` class. The synchronous machine model can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs).
 
 ```{figure} ../figs/sm.svg
 ---
@@ -16,7 +16,7 @@ width: 100%
 align: center
 alt: Equivalent circuit model of a synchronous machine
 ---
-*Figure 4:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$.
+*Figure 1:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$.
 ```
 
 ```{figure} ../figs/sm.svg
@@ -26,7 +26,7 @@ width: 100%
 align: center
 alt: Equivalent circuit model of a synchronous machine
 ---
-*Figure 4:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$.
+*Figure 1:* Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map $\is = \isfcn(\psis)$.
 ```
 
 The state equations in rotor coordinates are {cite}`Jah1986`
@@ -58,7 +58,7 @@ label: sm_torque
     \tauM = \frac{3 \np}{2}\IM\left\{\is\psis^*\right\}
 ```
 
-[Figure 5](fig:sm_block_rot) shows the block diagram of the machine model in rotor coordinates. The magnetic model includes the current map and the torque equation. Since the machine is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in [Figure 6](fig:sm_block_stat).
+[Figure 2](fig:sm_block_rot) shows the block diagram of the machine model in rotor coordinates. The magnetic model includes the current map and the torque equation. Since the machine is fed and observed from stator coordinates, the quantities are transformed accordingly, as shown in [Figure 3](fig:sm_block_stat).
 
 ```{figure} ../figs/sm_block_rot.svg
 ---
@@ -68,7 +68,7 @@ width: 100%
 align: center
 alt: Synchronous machine model
 ---
-*Figure 4:* Block diagram of the machine model in rotor coordinates. The magnetic model includes the flux equation (or, optionally, saturation characteristics) and the torque equation.
+*Figure 2:* Block diagram of the machine model in rotor coordinates. The magnetic model includes the flux equation (or, optionally, saturation characteristics) and the torque equation.
 ```
 
 ```{figure} ../figs/sm_block_rot.svg
@@ -78,7 +78,7 @@ width: 100%
 align: center
 alt: Synchronous machine model
 ---
-*Figure 4:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`. Since the spatial harmonics are omitted, the current $\is$ and the torque $\tauM$ do not depend on the angle $\thetam$.
+*Figure 2:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`. Since the spatial harmonics are omitted, the current $\is$ and the torque $\tauM$ do not depend on the angle $\thetam$.
 ```
 
 ```{figure} ../figs/sm_block_stat.svg
@@ -89,7 +89,7 @@ width: 100%
 align: center
 alt: Synchronous machine model seen from stator coordinates
 ---
-*Figure 5:* Synchronous machine model seen from stator coordinates.
+*Figure 3:* Synchronous machine model seen from stator coordinates.
 ```
 
 ```{figure} ../figs/sm_block_stat.svg
@@ -99,7 +99,7 @@ width: 100%
 align: center
 alt: Synchronous machine model seen from stator coordinates
 ---
-*Figure 5:* Synchronous machine model seen from stator coordinates.
+*Figure 3:* Synchronous machine model seen from stator coordinates.
 ```
 
 ```{note}
@@ -143,7 +143,7 @@ See also the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`
 The machine model `motulator.drive.model.SynchronousMachine` only needs the current map, while the MTPA computation and some control methods require the flux linkage map.
 ```
 
-### MTPV and MTPA Conditions
+## MTPV and MTPA Conditions
 
 The maximum-torque-per-volt (MTPV) and maximum-torque-per-ampere (MTPA) conditions for saturable machines can be compactly presented by means of the auxiliary current and flux vectors {cite}`Var2022`. In addition to optimal reference generation, these vectors are useful in flux-vector control and sensorless observers {cite}`Tii2025a`. The {class}`motulator.drive.model.SaturatedSynchronousMachinePars` class contains methods for computing these vectors from the given magnetic model.
 
@@ -192,3 +192,17 @@ The conditions in {eq}`sm_mtpv` and {eq}`sm_mtpa` are realized in the class {cla
 ```{note}
 The auxiliary vectors follow {cite}`Hin2018` conventions and are rotated 90° relative to {cite}`Var2022`.
 ```
+
+## Flux and Torque Dynamics
+
+From the machine model {eq}`sm_states`--{eq}`sm_torque`, the stator flux and torque dynamics can be written as {cite}`Tii2025a`
+
+```{math}
+---
+label: sm_flux_torque
+---
+    \frac{\D \abspsis}{\D t} &= \frac{1}{\abspsis} \RE \{\left(\us - \Rs \is - \jj\omegam\psis\right) \psis^* \} \\
+    \frac{\D\tauM}{\D t} &= \frac{3 \np}{2} \IM \{ \left(\us - \Rs \is - \jj\omegam\psis \right) \iaux^*\}
+```
+
+where $\abspsis = |\psis|$ is the flux magnitude. These dynamics are valid also for saturated machines, when the auxiliary current $\iaux$ is defined according to {eq}`sm_mtpv_aux`.

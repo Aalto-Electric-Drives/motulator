@@ -18,7 +18,7 @@ label: speed_ctrl
 
 where $\omegaM$ is the measured (or estimated) mechanical angular speed of the rotor, $\omegaMref$ is the reference angular speed, and $\tau_\mathrm{i}$ is the integral state. Furthermore, $\kt$ is the reference feedforward gain, $\kp$ is the proportional gain, and $\ki$ is the integral gain. Setting $\kt = \kp$ results in the standard PI controller. This 2DOF PI controller can also be understood as a state feedback controller with integral action and reference feedforward {cite}`Fra1997`.
 
-## Closed-Loop System
+## Closed-Loop System Analysis
 
 For simplicity, let us assume ideal torque control ($\tauM = \tauMref$) and a stiff mechanical system
 

@@ -17,10 +17,10 @@ from motulator.drive.model._drive import Drive
 class Feedbacks(Protocol):
     """Protocol defining the required fields for feedback signals."""
 
-    w_M: float  # Mechanical angular speed (rad/s)
-    w_c: float  # Angular speed of the coordinate system (rad/s)
-    theta_c: float  # Angular position of the coordinate system (rad)
-    u_dc: float  # DC-bus voltage (V)
+    w_M: float  # Mechanical angular speed
+    w_c: float  # Angular speed of the coordinate system
+    theta_c: float  # Angular position of the coordinate system
+    u_dc: float  # DC-bus voltage
 
 
 class References(Protocol):
@@ -28,7 +28,9 @@ class References(Protocol):
 
     T_s: float  # Sampling period (s) for the next control step
     d_abc: Sequence[float]  # Duty ratios for three-phase PWM
-    tau_M: float | None  # Torque reference (Nm)
+    tau_M: float | None  # Torque reference
+    u_s: complex  # Stator voltage reference (controller coordinates)
+    w_M: float | None  # Mechanical speed
 
 
 @dataclass
@@ -43,10 +45,10 @@ class ExternalReferences:
 class Measurements:
     """Measured signals."""
 
-    i_c_ab: complex  # Converter current (A) in stationary coordinates
+    i_c_ab: complex  # Converter current in stationary coordinates
     u_dc: float
     w_M: float | None = None
-    theta_M: float | None = None  # Mechanical angular position (rad)
+    theta_M: float | None = None  # Mechanical angular position
 
 
 # %%
@@ -195,7 +197,7 @@ class VHzController[Ref, Fbk](Protocol):
     """Protocol defining the interface for V/Hz controllers."""
 
     T_s: float
-    pwm_mode: Literal["MPE", "MME", "six_step"] = "MPE"
+    pwm_mode: Literal["MPE", "MME", "six_step"]
 
     def get_feedback(self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float) -> Fbk:
         """Get feedback signals from measurements."""

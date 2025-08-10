@@ -25,7 +25,7 @@ p_\mathrm{c}^\mathrm{ref} = -\kp (\Wdcref - \hatWdc) - \int \ki (\Wdcref - \hatW
 
 where $\kp$ is the proportional gain and $\ki$ is the integral gain. The negative signs appear since the positive converter output power decreases the DC-bus capacitor energy, see {eq}`capacitor`.
 
-## Closed-Loop System
+## Closed-Loop System Analysis
 
 For simplicity, the capacitance estimate being accurate, $\hatCdc = \Cdc$. Furthermore, the converter is assumed to be lossless and its output power control ideal. The DC-bus energy balance is
 

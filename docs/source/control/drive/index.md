@@ -10,6 +10,5 @@ maxdepth: 2
 speed_ctrl
 current_ctrl
 flux_vector_ctrl
-im_observer
-sm_observer
+observers
 ```

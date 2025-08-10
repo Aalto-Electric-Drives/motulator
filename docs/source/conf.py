@@ -26,7 +26,7 @@ copyright = "2025, Aalto Electric Drives"
 author = "Aalto Electric Drives"
 
 # The full version, including alpha/beta/rc tags
-release = "0.6.5"
+release = "0.7.0"
 
 # -- General configuration -------------------------------------------------------------
 
@@ -167,16 +167,17 @@ mathjax3_config = {
             "omegaMref": "\\omega_\\mathrm{M}^\\mathrm{ref}",
             "omegamref": "\\omega_\\mathrm{m}^\\mathrm{ref}",
             "omegaL": "\\omega_\\mathrm{L}",
-            "omegak": "\\omega_\\mathrm{k}",
             "omegas": "\\omega_\\mathrm{s}",
+            "hatomegas": "\\hat{\\omega}_\\mathrm{s}",
+            "hatomegar": "\\hat{\\omega}_\\mathrm{r}",
             "omegaso": "\\omega_\\mathrm{s0}",
             "omegar": "\\omega_\\mathrm{r}",
+            "omegarb": "\\omega_\\mathrm{rb}",
             "omegaro": "\\omega_\\mathrm{r0}",
             "thetam": "\\vartheta_\\mathrm{m}",
             "thetaM": "\\vartheta_\\mathrm{M}",
             "thetaL": "\\vartheta_\\mathrm{L}",
             "thetaML": "\\vartheta_\\mathrm{ML}",
-            "thetak": "\\vartheta_\\mathrm{k}",
             "tauM": "\\tau_\\mathrm{M}",
             "hattauM": "\\hat{\\tau}_\\mathrm{M}",
             "hattauL": "\\hat{\\tau}_\\mathrm{L}",

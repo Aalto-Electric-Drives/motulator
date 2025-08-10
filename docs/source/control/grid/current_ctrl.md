@@ -14,13 +14,13 @@ The design of synchronous-frame 2DOF PI current control is considered in the con
 ---
 label: grid_cc
 ---
-\frac{\D \mathbf{u}_\mathrm{i}}{\D t} &= (\kI + \jj\omegac\kT )\left(\icref - \ic\right) \\
-\ucref &= \kT\icref - \kP\ic + \mathbf{u}_\mathrm{i}
+    \frac{\D \mathbf{u}_\mathrm{i}}{\D t} &= (\kI + \jj\omegac\kT )\left(\icref - \ic\right) \\
+    \ucref &= \kT\icref - \kP\ic + \mathbf{u}_\mathrm{i}
 ```
 
-where $\ucref$ is the output of the controller, i.e., the converter voltage reference, $\ic$ is the measured converter current, $\icref$ is the converter current reference, $\mathbf{u}_\mathrm{i}$ is the integral state, and $\omegac$ is the angular speed of the coordinate system. Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain.
+where $\ucref$ is the output of the controller, i.e., the converter voltage reference, $\ic$ is the measured converter current, $\icref$ is the converter current reference, $\mathbf{u}_\mathrm{i}$ is the integral state, and $\omegac = \hatomegag$ is the angular speed of the coordinate system. Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain.
 
-## Closed-Loop System
+## Closed-Loop System Analysis
 
 Consider the grid model in synchronous coordinates
 
@@ -28,34 +28,34 @@ Consider the grid model in synchronous coordinates
 ---
 label: L_filt_sync
 ---
-L\frac{\D\ic}{\D t} = \uc - \ug - \jj \omegac L \ic
+    L\frac{\D\ic}{\D t} = \uc - \ug - \jj \omegac L \ic
 ```
 
-where $\uc$ is the converter output voltage, $\ug$ is the grid (or PCC) voltage, and $L$ is the inductance. Ideal converter voltage production is assumed, $\uc = \ucref$. Using {eq}`grid_cc` and {eq}`L_filt_sync`, the closed-loop system in the Laplace domain becomes
+where $\uc$ is the converter output voltage, $\ug$ is the grid (or PCC) voltage, and $L$ is the inductance. Ideal converter voltage production $\uc = \ucref$ and accurate parameter estimates are assumed. Using {eq}`grid_cc` and {eq}`L_filt_sync`, the closed-loop system in the Laplace domain becomes
 
 ```{math}
 ---
 label: closed_loop_current_control_grid
 ---
-\ic = \mathbf{G}_\mathrm{c}(s)\icref - \mathbf{Y}_\mathrm{c}(s)\ug
+    \ic(s) = \mathbf{G}_\mathrm{c}(s)\icref(s) - \mathbf{Y}_\mathrm{c}(s)\ug(s)
 ```
 
-The closed-loop poles can be arbitrarily placed by means of the gains. The reference-tracking transfer function is
+The reference-tracking transfer function is
 
 ```{math}
 ---
 label: Gc_grid
 ---
-\mathbf{G}_\mathrm{c}(s) = \frac{(s + \jj\omegac) \kT + \kI }{L s^2 + (\kP + \jj\omegac L) s + \kI + \jj\omegac \kT}
+    \mathbf{G}_\mathrm{c}(s) = \frac{(s + \jj\omegag) \kT + \kI }{L s^2 + (\kP + \jj\omegag L) s + \kI + \jj\omegag \kT}
 ```
 
-whose zero can be placed by means of the reference-feedforward gain $\kT$. The disturbance rejection depends on the closed-loop admittance
+where the closed-loop poles can be arbitrarily placed by means of the gains. The zero can be placed by means of the reference-feedforward gain $\kT$. The disturbance rejection depends on the closed-loop admittance
 
 ```{math}
 ---
 label: Yc_grid
 ---
-\mathbf{Y}_\mathrm{c}(s) = \frac{s}{L s^2 + (\kP + \jj\omegac L) s + \kI + \jj\omegac \kT}
+    \mathbf{Y}_\mathrm{c}(s) = \frac{s}{L s^2 + (\kP + \jj\omegag L) s + \kI + \jj\omegag \kT}
 ```
 
 ## Gain Selection
@@ -66,9 +66,9 @@ Consider the gains
 ---
 label: grid_cc_gain_selection
 ---
-\kP = (\alphac + \alphai) \hat L \qquad
-\kI = \alphac \alphai \hat L \qquad
-\kT = \alphac \hat L
+    \kP = (\alphac + \alphai) \hat L \qquad
+    \kI = \alphac \alphai \hat L \qquad
+    \kT = \alphac \hat L
 ```
 
 where $\alpha_\mathrm{s}$ is the closed-loop reference-tracking bandwidth, $\alphai$ is the integral action bandwidth, and $\hat L$ is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Gc_grid` and {eq}`Yc_grid` reduce to
@@ -77,11 +77,11 @@ where $\alpha_\mathrm{s}$ is the closed-loop reference-tracking bandwidth, $\alp
 ---
 label: Gc_Yc_grid
 ---
-\mathbf{G}_\mathrm{c}(s) = \frac{\alphac}{s + \alphac} \qquad
-\mathbf{Y}_\mathrm{c}(s) = \frac{s}{L (s + \alphac)(s + \alphai + \jj\omegac)}
+    \mathbf{G}_\mathrm{c}(s) = \frac{\alphac}{s + \alphac} \qquad
+    \mathbf{Y}_\mathrm{c}(s) = \frac{s}{L (s + \alphac)(s + \alphai + \jj\omegag)}
 ```
 
-It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at $s = -\alphac$ and another pole at $s= -\alphai - \jj\omegac$. This gain selection is used in the {class}`motulator.grid.control.CurrentController` class.
+It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at $s = -\alphac$ and another pole at $s= -\alphai - \jj\omegag$. This gain selection is used in the {class}`motulator.grid.control.CurrentController` class.
 
 The converter output voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is
 
@@ -89,7 +89,7 @@ The converter output voltage is limited in practice due to the limited DC-bus vo
 ---
 label: limited_voltage_grid
 ---
-\ucreflim = \mathrm{sat}(\ucref)
+    \ucreflim = \mathrm{sat}(\ucref)
 ```
 
 where $\mathrm{sat}(\cdot)$ is the saturation function. The limited voltage can be obtained from a pulse-width modulation (PWM) algorithm (see the {class}`motulator.common.control.PWM` class). The anti-windup of the integrator is included in the implementation of the {class}`motulator.common.control.ComplexPIController` base class.

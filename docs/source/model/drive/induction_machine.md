@@ -2,6 +2,8 @@
 
 This document describes continuous-time induction machine models of the {mod}`motulator.drive.model` package.
 
+(induction_machine)=
+
 ## Induction Machine Γ Model
 
 [Figure 1](fig:im_gamma) shows the Γ-equivalent circuit model of an induction machine. We apply it as the base model, as it readily extends to include magnetic saturation {cite}`Sle1989`. The model is implemented in {class}`motulator.drive.model.InductionMachine` class.
@@ -31,7 +33,7 @@ In general coordinates rotating at $\omegac$ (see {ref}`coordinate-transformatio
 
 ```{math}
 ---
-label: im_voltage
+label: im_voltages
 ---
     \frac{\D\psis}{\D t} &= \us - \Rs\is - \jj\omegac\psis \\
     \frac{\D\psir}{\D t} &= -\Rr\ir - \jj(\omegac - \omegam)\psir
@@ -160,3 +162,31 @@ label: im_inv_gamma_eps
 ```
 
 This voltage term only appears during changes in the stator-flux magnitude. When the transient voltage term is included, the inverse-Γ model {eq}`im_inv_gamma_ss` is mathematically identical to the original nonlinear Γ model. However, in control methods, the transient voltage term can typically be neglected.
+
+## Flux and Torque Dynamics
+
+Using the machine model {eq}`im_voltages`--{eq}`im_torque`, the flux and torque dynamics can be written as {cite}`Tii2025b`
+
+```{math}
+---
+label: im_flux_torque
+---
+    \frac{\D \abspsis}{\D t} &= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psis^*\} \\
+    \frac{\D\tauM}{\D t} &= \frac{3 \np}{2 L_\ell} \IM \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psir^*\} \\
+    \omegar &= \frac{\omegarb \IM\{\psis\psir^*\}}{\RE\{\psis\psir^*\}}  
+
+```
+
+where $\abspsis = |\psis|$ is the flux magnitude, $\omegarb = \Rr/L_\ell$ is the breakdown angular slip frequency, and $\omegar$ is the slip angular frequency. These dynamics are valid also for saturated machines where $\Ls = \Ls(\abspsis)$, and they are also independent of the coordinate system. In this documentation, the sum of the electrical angular speed and the slip angular frequency
+
+```{math}
+---
+label: im_omegas
+---
+    \omegas = \omegam + \omegar 
+
+```
+
+is referred to as the stator angular frequency, with this definition being agnostic to the coordinate system and defined also in transient states.
+
+The flux and torque dynamics can be easily transformed to the inverse-Γ form by substituting $\psir = \psiR/\gamma$, $L_\ell = \Lsgm/\gamma$, and $\Rr = \RR/\gamma^2$. Compare also to {eq}`sm_flux_torque` in the {ref}`synchronous_machine` document.

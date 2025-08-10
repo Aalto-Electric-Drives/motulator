@@ -72,7 +72,7 @@ label: frequency_tracking_polar
 
 It can be noticed that the disturbance observer with the frequency tracking equals the conventional frequency-adaptive PLL {cite}`Kau1997`, with the additional feature of low-pass filtering the PCC voltage magnitude. The low-pass filtered PCC voltage can be used as a feedforward term in current control {cite}`Har2021`.
 
-## Linearized Closed-Loop System
+## Closed-Loop System Analysis
 
 The estimation-error dynamics are analyzed by means of linearization. Using the PCC voltage as an example, the small-signal deviation about the operating point is denoted by $\Delta \ug = \ug - \ugo$, where $\ugo$ is the operating-point quantity. From {eq}`disturbance`--{eq}`frequency_tracking`, the linearized model for the estimation-error dynamics is obtained as
 
