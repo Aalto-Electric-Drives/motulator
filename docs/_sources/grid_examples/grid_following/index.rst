@@ -5,7 +5,7 @@
 Grid-Following Control
 ----------------------
 
-These examples demonstrate grid-following control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass filtered grid voltage.
+These examples demonstrate grid-following (GFL) control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass-filtered grid voltage.
 
 
 
@@ -17,52 +17,52 @@ These examples demonstrate grid-following control. The current controller uses 2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to a strong grid through an LCL filter. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller. The LCL-filter dynamics are not taken into account in the control system.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to a strong grid through an LCL filter. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller. The LCL-filter dynamics are not taken into account in the control system.">
 
 .. only:: html
 
-  .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_gfl_lcl_10kva_thumb.png
+  .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_lcl_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_gfl_lcl_10kva.py`
+  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_lcl_gfl.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">10-kVA converter, LCL filter</div>
+      <div class="sphx-glr-thumbnail-title">10-kVA, LCL filter, GFL</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to a strong grid and regulating the DC-bus voltage. The control system includes a DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to an L filter and a strong grid. The DC-bus dynamics are modeled. The control system includes a DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller.">
 
 .. only:: html
 
-  .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_gfl_dc_bus_10kva_thumb.png
+  .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_dc_bus_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_gfl_dc_bus_10kva.py`
+  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_dc_bus_gfl.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">10-kVA converter, DC-bus voltage</div>
+      <div class="sphx-glr-thumbnail-title">10-kVA, DC bus, GFL</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a grid-following-controlled converter connected to an L filter and a strong grid. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-based current controller.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to an L filter and a strong grid. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-based current controller.">
 
 .. only:: html
 
-  .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_gfl_10kva_thumb.png
+  .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_gfl_10kva.py`
+  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_gfl.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">10-kVA converter</div>
+      <div class="sphx-glr-thumbnail-title">10-kVA, GFL</div>
     </div>
 
 
@@ -76,7 +76,7 @@ These examples demonstrate grid-following control. The current controller uses 2
 .. toctree::
    :hidden:
 
-   /grid_examples/grid_following/plot_gfl_lcl_10kva
-   /grid_examples/grid_following/plot_gfl_dc_bus_10kva
-   /grid_examples/grid_following/plot_gfl_10kva
+   /grid_examples/grid_following/plot_10kva_lcl_gfl
+   /grid_examples/grid_following/plot_10kva_dc_bus_gfl
+   /grid_examples/grid_following/plot_10kva_gfl
 

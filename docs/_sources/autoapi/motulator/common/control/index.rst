@@ -51,13 +51,13 @@ Package Contents
    This implements a discrete-time 2DOF synchronous-frame complex-vector PI controller
    [#Bri2000]_. The continuous-time counterpart of the controller is::
 
-       u = k_t*i_ref - k_p*i + (k_i + 1j*w*k_t)/s*(i_ref - i) + u_ff
+       u = k_t*i_ref - k_p*i + (k_i + 1j*w_c*k_t)/s*(i_ref - i) + u_ff
 
    where `u` is the controller output, `i_ref` is the reference signal, `i` is the
-   feedback signal, `w` is the angular speed of synchronous coordinates, `u_ff` is the
-   feedforward signal, and `1/s` refers to integration. The 1DOF version is obtained by
-   setting ``k_t = k_p``. The integrator anti-windup is implemented based on the
-   realized controller output.
+   feedback signal, `w_c` is the angular speed of synchronous coordinates, `u_ff` is
+   the feedforward signal, and `1/s` refers to integration. The 1DOF version is
+   obtained by setting ``k_t = k_p``. The integrator anti-windup is implemented based
+   on the realized controller output.
 
    :param k_p: Proportional gain.
    :type k_p: float
@@ -126,7 +126,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s, u, w)
+   .. py:method:: update(T_s, u, w_c)
 
       
       Update the integral state.
@@ -135,8 +135,8 @@ Package Contents
       :type T_s: float
       :param u: Realized (limited) controller output.
       :type u: complex
-      :param w: Angular speed of the reference frame (rad/s).
-      :type w: float
+      :param w_c: Angular speed of the reference frame (rad/s).
+      :type w_c: float
 
 
 

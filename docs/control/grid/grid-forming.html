@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Disturbance-Observer-Based Grid-Forming Control &#8212; motulator 0.6.2 documentation</title>
+    <title>Disturbance-Observer-Based Grid-Forming Control &#8212; motulator 0.7.0 documentation</title>
   
   
   
@@ -43,13 +43,14 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=967efe37"></script>
+    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/upgreek"]}, "tex": {"packages": {"[+]": ["upgreek"]}, "macros": {"jj": "\\mathrm{j}", "e": "\\mathrm{e}", "D": "\\mathrm{d}", "IM": "\\mathrm{Im}", "RE": "\\mathrm{Re}", "T": "\\intercal", "uc": "\\mathbf{u}_\\mathrm{c}", "ucref": "\\mathbf{u}_\\mathrm{c}^\\mathrm{ref}", "ucreflim": "\\bar{\\mathbf{u}}_\\mathrm{c}^\\mathrm{ref}", "ucs": "\\mathbf{u}_\\mathrm{c}^\\mathrm{s}", "ic": "\\mathbf{i}_\\mathrm{c}", "icref": "\\mathbf{i}_\\mathrm{c}^\\mathrm{ref}", "ics": "\\mathbf{i}_\\mathrm{c}^\\mathrm{s}", "qc": "\\mathbf{q}_\\mathrm{c}", "qcs": "\\mathbf{q}_\\mathrm{c}^\\mathrm{s}", "dc": "\\mathbf{d}_\\mathrm{c}", "dcs": "\\mathbf{d}_\\mathrm{c}^\\mathrm{s}", "us": "\\mathbf{u}_\\mathrm{s}", "uss": "\\mathbf{u}_\\mathrm{s}^\\mathrm{s}", "usref": "\\mathbf{u}_\\mathrm{s}^\\mathrm{ref}", "usreflim": "\\bar{\\mathbf{u}}_\\mathrm{s}^\\mathrm{ref}", "is": "\\mathbf{i}_\\mathrm{s}", "isref": "\\mathbf{i}_\\mathrm{s}^\\mathrm{ref}", "iss": "\\mathbf{i}_\\mathrm{s}^\\mathrm{s}", "ir": "\\mathbf{i}_\\mathrm{r}", "irs": "\\mathbf{i}_\\mathrm{r}^\\mathrm{s}", "iR": "\\mathbf{i}_\\mathrm{R}", "psis": "\\boldsymbol{\\uppsi}_\\mathrm{s}", "psisref": "\\boldsymbol{\\uppsi}_\\mathrm{s}^\\mathrm{ref}", "hatpsis": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{s}", "psiss": "\\boldsymbol{\\uppsi}_\\mathrm{s}^\\mathrm{s}", "tildepsis": "\\tilde{\\boldsymbol{\\uppsi}}_\\mathrm{s}", "tildepsiR": "\\tilde{\\boldsymbol{\\uppsi}}_\\mathrm{R}", "psir": "\\boldsymbol{\\uppsi}_\\mathrm{r}", "psirs": "\\boldsymbol{\\uppsi}_\\mathrm{r}^\\mathrm{s}", "psiR": "\\boldsymbol{\\uppsi}_\\mathrm{R}", "psiRo": "\\boldsymbol{\\uppsi}_\\mathrm{R0}", "hatpsiR": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{R}", "psiaux": "\\boldsymbol{\\uppsi}_\\mathrm{a}", "hatpsiaux": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{a}", "iaux": "\\mathbf{i}_\\mathrm{a}", "hatiaux": "\\hat{\\mathbf{i}}_\\mathrm{a}", "es": "\\mathbf{e}_\\mathrm{s}", "ec": "\\mathbf{e}_\\mathrm{c}", "eo": "\\mathbf{e}_\\mathrm{o}", "isfcn": "\\mathbf{g}", "idfcn": "g_\\mathrm{d}", "iqfcn": "g_\\mathrm{q}", "psisfcn": "\\mathbf{f}", "hatpsisfcn": "\\hat{\\mathbf{f}}", "psidfcn": "f_\\mathrm{d}", "psiqfcn": "f_\\mathrm{q}", "abspsis": "\\psi_\\mathrm{s}", "abspsisref": "\\psi_\\mathrm{s}^\\mathrm{ref}", "hatabspsis": "\\hat{\\psi}_\\mathrm{s}", "hatabspsiR": "\\hat{\\psi}_\\mathrm{R}", "psif": "\\psi_\\mathrm{f}", "absis": "i_\\mathrm{s}", "psid": "\\psi_\\mathrm{d}", "psiq": "\\psi_\\mathrm{q}", "id": "i_\\mathrm{d}", "iq": "i_\\mathrm{q}", "tildepsisd": "\\tilde{\\psi}_\\mathrm{sd}", "tildepsisq": "\\tilde{\\psi}_\\mathrm{sq}", "Rs": "R_\\mathrm{s}", "Rr": "R_\\mathrm{r}", "Ls": "L_\\mathrm{s}", "Lsgm": "L_\\upsigma", "Rsgm": "R_\\upsigma", "LM": "L_\\mathrm{M}", "RR": "R_\\mathrm{R}", "Ld": "L_\\mathrm{d}", "Lq": "L_\\mathrm{q}", "Ldd": "L_\\mathrm{dd}", "Lqq": "L_\\mathrm{qq}", "Ldq": "L_\\mathrm{dq}", "Gdd": "\\varGamma_\\mathrm{dd}", "Gqq": "\\varGamma_\\mathrm{qq}", "Gdq": "\\varGamma_\\mathrm{dq}", "omegam": "\\omega_\\mathrm{m}", "omegamo": "\\omega_\\mathrm{m0}", "tildeomegam": "\\tilde{\\omega}_\\mathrm{m}", "omegaM": "\\omega_\\mathrm{M}", "omegaMref": "\\omega_\\mathrm{M}^\\mathrm{ref}", "omegamref": "\\omega_\\mathrm{m}^\\mathrm{ref}", "omegaL": "\\omega_\\mathrm{L}", "omegas": "\\omega_\\mathrm{s}", "hatomegas": "\\hat{\\omega}_\\mathrm{s}", "hatomegar": "\\hat{\\omega}_\\mathrm{r}", "omegaso": "\\omega_\\mathrm{s0}", "omegar": "\\omega_\\mathrm{r}", "omegarb": "\\omega_\\mathrm{rb}", "omegaro": "\\omega_\\mathrm{r0}", "thetam": "\\vartheta_\\mathrm{m}", "thetaM": "\\vartheta_\\mathrm{M}", "thetaL": "\\vartheta_\\mathrm{L}", "thetaML": "\\vartheta_\\mathrm{ML}", "tauM": "\\tau_\\mathrm{M}", "hattauM": "\\hat{\\tau}_\\mathrm{M}", "hattauL": "\\hat{\\tau}_\\mathrm{L}", "tauMref": "\\tau_\\mathrm{M}^\\mathrm{ref}", "tauL": "\\tau_\\mathrm{L}", "tauLtot": "\\tau_\\mathrm{L,tot}", "tauS": "\\tau_\\mathrm{S}", "np": "n_\\mathrm{p}", "JM": "J_\\mathrm{M}", "JL": "J_\\mathrm{L}", "BL": "B_\\mathrm{L}", "CS": "C_\\mathrm{S}", "KS": "K_\\mathrm{S}", "Ts": "T_\\mathrm{s}", "Tsw": "T_\\mathrm{sw}", "ismax": "i_\\mathrm{s}^\\mathrm{max}", "dA": "d_\\mathrm{a}", "dB": "d_\\mathrm{b}", "dC": "d_\\mathrm{c}", "qA": "q_\\mathrm{a}", "qB": "q_\\mathrm{b}", "qC": "q_\\mathrm{c}", "udc": "u_\\mathrm{dc}", "udcref": "u_\\mathrm{dc}^\\mathrm{ref}", "idc": "i_\\mathrm{dc}", "udi": "u_\\mathrm{di}", "iL": "i_\\mathrm{L}", "Cdc": "C_\\mathrm{dc}", "hatCdc": "\\hat{C}_\\mathrm{dc}", "Ldc": "L_\\mathrm{dc}", "iA": "i_\\mathrm{a}", "iB": "i_\\mathrm{b}", "iC": "i_\\mathrm{c}", "uAn": "u_\\mathrm{an}", "uBn": "u_\\mathrm{bn}", "uCn": "u_\\mathrm{cn}", "uAN": "u_\\mathrm{aN}", "uBN": "u_\\mathrm{bN}", "uCN": "u_\\mathrm{cN}", "Cf": "C_\\mathrm{f}", "Lf": "L_\\mathrm{f}", "Rf": "R_\\mathrm{f}", "Lg": "L_\\mathrm{g}", "Rg": "R_\\mathrm{g}", "Lt": "L_\\mathrm{t}", "Rt": "R_\\mathrm{t}", "Lfc": "L_\\mathrm{fc}", "Rfc": "R_\\mathrm{fc}", "Lfg": "L_\\mathrm{fg}", "Rfg": "R_\\mathrm{fg}", "ug": "\\mathbf{u}_\\mathrm{g}", "ugo": "\\mathbf{u}_\\mathrm{g0}", "tildeug": "\\tilde{\\mathbf{u}}_\\mathrm{g}", "absug": "u_\\mathrm{g}", "hatabsug": "\\hat{u}_\\mathrm{g}", "hatug": "\\hat{\\mathbf{u}}_\\mathrm{g}", "ugs": "\\mathbf{u}_\\mathrm{g}^\\mathrm{s}", "ig": "\\mathbf{i}_\\mathrm{g}", "igs": "\\mathbf{i}_\\mathrm{g}^\\mathrm{s}", "eg": "\\mathbf{e}_\\mathrm{g}", "egs": "\\mathbf{e}_\\mathrm{g}^\\mathrm{s}", "uf": "\\mathbf{u}_\\mathrm{f}", "ufs": "\\mathbf{u}_\\mathrm{f}^\\mathrm{s}", "vc": "\\mathbf{v}_\\mathrm{c}", "hatvc": "\\hat{\\mathbf{v}}_\\mathrm{c}", "omegag": "\\omega_\\mathrm{g}", "hatomegag": "\\hat{\\omega}_\\mathrm{g}", "thetac": "\\vartheta_\\mathrm{c}", "thetag": "\\vartheta_\\mathrm{g}", "hatthetag": "\\hat{\\vartheta}_\\mathrm{g}", "omegac": "\\omega_\\mathrm{c}", "Wdc": "W_\\mathrm{dc}", "hatWdc": "\\hat{W}_\\mathrm{dc}", "Wdcref": "W_\\mathrm{dc}^\\mathrm{ref}", "pg": "p_\\mathrm{g}", "hatpg": "\\hat{p}_\\mathrm{g}", "pgref": "p_\\mathrm{g}^\\mathrm{ref}", "vcref": "v_\\mathrm{c}^\\mathrm{ref}", "hatabsvc": "\\hat{v}_\\mathrm{c}", "kt": "k_\\mathrm{t}", "kp": "k_\\mathrm{p}", "ki": "k_\\mathrm{i}", "alphai": "\\alpha_\\mathrm{i}", "ui": "u_\\mathrm{i}", "uff": "u_\\mathrm{ff}", "kd": "k_\\mathrm{d}", "kq": "k_\\mathrm{q}", "kotheta": "k_{\\mathrm{o}\\upvartheta}", "koomega": "k_{\\mathrm{o}\\upomega}", "kotau": "k_{\\mathrm{o}\\uptau}", "kT": "\\mathbf{k}_\\mathrm{t}", "kP": "\\mathbf{k}_\\mathrm{p}", "kI": "\\mathbf{k}_\\mathrm{i}", "uI": "\\mathbf{u}_\\mathrm{i}", "uFF": "\\mathbf{u}_\\mathrm{ff}", "kV": "\\mathbf{k}_\\mathrm{v}", "koa": "\\mathbf{k}_\\mathrm{o1}", "kob": "\\mathbf{k}_\\mathrm{o2}", "alphac": "\\alpha_\\mathrm{c}", "alphas": "\\alpha_\\mathrm{s}", "alphao": "\\alpha_\\mathrm{o}", "alphadc": "\\alpha_\\mathrm{dc}", "alphapll": "\\alpha_\\mathrm{pll}", "hatomegam": "\\hat{\\omega}_\\mathrm{m}", "hatthetam": "\\hat{\\vartheta}_\\mathrm{m}", "tildethetam": "\\tilde{\\vartheta}_\\mathrm{m}", "hatRs": "\\hat{R}_\\mathrm{s}", "hatRR": "\\hat{R}_\\mathrm{R}", "hatLs": "\\hat{L}_\\mathrm{s}", "hatLM": "\\hat{L}_\\mathrm{M}", "hatalpha": "\\hat{\\alpha}", "hatLsgm": "\\hat{L}_\\sigma", "hatRsgm": "\\hat{R}_\\sigma", "hatLd": "\\hat{L}_\\mathrm{d}", "hatLq": "\\hat{L}_\\mathrm{q}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'control/grid/grid-forming';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -142,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -168,48 +169,48 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
 </ul>
 </details></li>
 </ul>
@@ -224,7 +225,8 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../model/drive/machines.html">Electric Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/induction_machine.html">Induction Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/synchronous_machine.html">Synchronous Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/ac_filter.html">Output LC Filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
@@ -248,6 +250,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../drive/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/observers.html">Observers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drive/reference_gen.html">Reference Generation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Grid Converters</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -258,9 +261,9 @@
 </ul>
 </details></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/control/index.html">motulator.common.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/model/index.html">motulator.common.model</a></li>
@@ -285,6 +288,7 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -354,7 +358,7 @@
       
       
       
-      <li><a href="../../_sources/control/grid/grid-forming.rst" target="_blank"
+      <li><a href="../../_sources/control/grid/grid-forming.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -364,7 +368,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.rst</span>
+<span class="btn__text-container">.md</span>
 </a>
 </li>
       
@@ -466,81 +470,60 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="disturbance-observer-based-grid-forming-control">
+  <section class="tex2jax_ignore mathjax_ignore" id="disturbance-observer-based-grid-forming-control">
 <h1>Disturbance-Observer-Based Grid-Forming Control<a class="headerlink" href="#disturbance-observer-based-grid-forming-control" title="Link to this heading">#</a></h1>
-<p>In these notes, disturbance-observer-based grid-forming control is discussed <a class="footnote-reference brackets" href="#nur2024" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. This control method is available in the <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController" title="motulator.grid.control.ObserverBasedGridFormingController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.ObserverBasedGridFormingController</span></code></a> class. As can be realized by comparing the examples <a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html"><span class="doc">12.5-kVA converter, RFPSC</span></a> and <a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_obs_13kva.html"><span class="doc">12.5-kVA converter, disturbance observer</span></a>, the observer-based grid-forming control can be configured to behave practically identically with reference-feedforward power-synchronization control (PSC) <a class="footnote-reference brackets" href="#har2020" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Compared to reference-feedforward PSC, disturbance-observer-based grid-forming control is easier to analyze and extend with different operating modes (including grid-following and transparent current-control modes). The order of these two control methods is the same and their computational complexity is comparable.</p>
+<p>In these notes, disturbance-observer-based grid-forming control is discussed <span id="id1">[<a class="reference internal" href="../../bibliography.html#id34" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>. This control method is available in the <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController" title="motulator.grid.control.ObserverBasedGridFormingController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.ObserverBasedGridFormingController</span></code></a> class. As can be realized by comparing examples <a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html"><span class="doc">12.5-kVA, RFPSC-GFM</span></a> and <a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm.html"><span class="doc">12.5-kVA, DO-GFM</span></a>, the observer-based grid-forming control can be configured to behave practically identically with reference-feedforward power-synchronization control (PSC) <span id="id2">[<a class="reference internal" href="../../bibliography.html#id16" title="Harnefors, Rahman, Hinkkanen, and Routimo. Reference-feedforward power-synchronization control. IEEE Trans. Power Electron., 2020. doi:10.1109/TPEL.2020.2970991.">Harnefors <em>et al.</em>, 2020</a>]</span>. Compared to reference-feedforward PSC, disturbance-observer-based grid-forming control is easier to analyze and extend with different operating modes (including grid-following and transparent current-control modes). The order of these two control methods is the same and their computational complexity is comparable.</p>
 <section id="system-model">
 <h2>System Model<a class="headerlink" href="#system-model" title="Link to this heading">#</a></h2>
-<p>First, the system is modeled in general coordinates, whose angle with respect to the stationary coordinates is <span class="math notranslate nohighlight">\(\vartheta_\mathrm{c}\)</span> and the angular speed is <span class="math notranslate nohighlight">\(\omega_\mathrm{c} = \mathrm{d}\vartheta_\mathrm{c}/\mathrm{d} t\)</span>. The dynamics of the inductor current <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{c}\)</span> and the grid voltage <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{g}\)</span> are modeled as</p>
+<p>First, the system is modeled in general coordinates, whose angle with respect to the stationary coordinates is <span class="math notranslate nohighlight">\(\thetac\)</span> and the angular speed is <span class="math notranslate nohighlight">\(\omegac = \D\thetac/\D t\)</span>. The dynamics of the inductor current <span class="math notranslate nohighlight">\(\ic\)</span> and the grid voltage <span class="math notranslate nohighlight">\(\ug\)</span> are modeled as</p>
 <div class="math notranslate nohighlight" id="equation-system-model1">
-<span class="eqno">(1)<a class="headerlink" href="#equation-system-model1" title="Link to this equation">#</a></span>\[\begin{split}L\frac{\mathrm{d} \boldsymbol{i}_\mathrm{c}}{\mathrm{d} t} &amp;= \boldsymbol{u}_\mathrm{c} - \boldsymbol{u}_\mathrm{g} - \mathrm{j}\omega_\mathrm{c} L \boldsymbol{i}_\mathrm{c} \\
-\frac{\mathrm{d}\boldsymbol{u}_\mathrm{g}}{\mathrm{d} t} &amp;= \mathrm{j}(\omega_\mathrm{g} - \omega_\mathrm{c})\boldsymbol{u}_\mathrm{g}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(L\)</span> is the inductance and <span class="math notranslate nohighlight">\(\omega_\mathrm{g}\)</span> is the grid angular frequency. The grid voltage <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{g}\)</span> is modeled as a disturbance; this same disturbance model for the grid voltage is also used in the development of <a class="reference internal" href="pll.html"><span class="doc">Phase-Locked Loop</span></a>. The active power fed to the grid is nonlinear in the state variables</p>
+<span class="eqno">(1)<a class="headerlink" href="#equation-system-model1" title="Link to this equation">#</a></span>\[\begin{split}L\frac{\D \ic}{\D t} &amp;= \uc - \ug - \jj\omegac L \ic \\
+\frac{\D\ug}{\D t} &amp;= \jj(\omegag - \omegac)\ug\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(L\)</span> is the inductance and <span class="math notranslate nohighlight">\(\omegag\)</span> is the grid angular frequency. The grid voltage <span class="math notranslate nohighlight">\(\ug\)</span> is modeled as a disturbance; this same disturbance model for the grid voltage is also used in the development of <a class="reference internal" href="pll.html"><span class="doc">Phase-Locked Loop</span></a>. The active power fed to the grid is nonlinear in the state variables</p>
 <div class="math notranslate nohighlight" id="equation-power1">
-<span class="eqno">(2)<a class="headerlink" href="#equation-power1" title="Link to this equation">#</a></span>\[p_\mathrm{g} = \frac{3}{2}\mathrm{Re}\{\boldsymbol{u}_\mathrm{g}\boldsymbol{i}_\mathrm{c}^*\}\]</div>
+<span class="eqno">(2)<a class="headerlink" href="#equation-power1" title="Link to this equation">#</a></span>\[\pg = \frac{3}{2}\RE\{\ug\ic^*\}\]</div>
 <p>For the purpose of grid-forming control, we may define the quasi-static converter voltage as an output variable as a function of the state variables,</p>
 <div class="math notranslate nohighlight" id="equation-quasi-static-converter-voltage">
-<span class="eqno">(3)<a class="headerlink" href="#equation-quasi-static-converter-voltage" title="Link to this equation">#</a></span>\[\boldsymbol{v}_\mathrm{c} = \boldsymbol{u}_\mathrm{g} + \mathrm{j}\omega_\mathrm{g} L \boldsymbol{i}_\mathrm{c}\]</div>
-<p>This voltage is controllable (unlike the grid voltage which is the disturbance) and it equals the converter output voltage <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{c}\)</span> in the steady state. The disturbance-observer-based PSC regulates the voltage magnitude <span class="math notranslate nohighlight">\(|\boldsymbol{v}_\mathrm{c}|\)</span> and the power <span class="math notranslate nohighlight">\(p_\mathrm{g}\)</span> fed to grid.</p>
+<span class="eqno">(3)<a class="headerlink" href="#equation-quasi-static-converter-voltage" title="Link to this equation">#</a></span>\[\vc = \ug + \jj\omegag L \ic\]</div>
+<p>This voltage is controllable (unlike the grid voltage which is the disturbance) and it equals the converter output voltage <span class="math notranslate nohighlight">\(\uc\)</span> in the steady state. The disturbance-observer-based PSC regulates the voltage magnitude <span class="math notranslate nohighlight">\(|\vc|\)</span> and the power <span class="math notranslate nohighlight">\(p_\mathrm{g}\)</span> fed to grid.</p>
 </section>
 <section id="control-system">
 <h2>Control System<a class="headerlink" href="#control-system" title="Link to this heading">#</a></h2>
-<p>The control system consists of a disturbance observer and a control law. The disturbance observer estimates the quasi-static converter voltage and the power fed to the grid. The control law generates the converter voltage reference based on the estimated grid voltage and power. The disturbance observer also provides the integral action for the control law. This control structure allows seamless switching between grid-forming and grid-following modes <a class="footnote-reference brackets" href="#nur2024" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. For simplicity, only the grid-forming mode is considered in the following.</p>
+<p>The control system consists of a disturbance observer and a control law. The disturbance observer estimates the quasi-static converter voltage and the power fed to the grid. The control law generates the converter voltage reference based on the estimated grid voltage and power. The disturbance observer also provides the integral action for the control law. This control structure allows seamless switching between grid-forming and grid-following modes <span id="id3">[<a class="reference internal" href="../../bibliography.html#id34" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>. For simplicity, only the grid-forming mode is considered in the following.</p>
 <section id="disturbance-observer">
 <h3>Disturbance Observer<a class="headerlink" href="#disturbance-observer" title="Link to this heading">#</a></h3>
-<p>Based on <a class="reference internal" href="#equation-system-model1">(1)</a>–<a class="reference internal" href="#equation-quasi-static-converter-voltage">(3)</a>, a disturbance observer for the grid voltage can be formed <a class="footnote-reference brackets" href="#nur2024" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#kuk2021" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#fra1997" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p>
+<p>Based on <a class="reference internal" href="#equation-system-model1">(1)</a>–<a class="reference internal" href="#equation-quasi-static-converter-voltage">(3)</a>, a disturbance observer for the grid voltage can be formed <span id="id4">[<a class="reference internal" href="../../bibliography.html#id11" title="Franklin, Powell, and Workman. Digital Control of Dynamic Systems. Addison-Wesley, Menlo Park, CA, USA, 1997.">Franklin <em>et al.</em>, 1997</a>, <a class="reference internal" href="../../bibliography.html#id30" title="Kukkola, Routimo, Hinkkanen, and Harnefors. A voltage-sensorless controller for grid converters. In IEEE PES ISGT Europe. 2021. doi:10.1109/ISGTEurope52324.2021.9640206.">Kukkola <em>et al.</em>, 2021</a>, <a class="reference internal" href="../../bibliography.html#id34" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-disturbance-observer-gfm">
-<span class="eqno">(4)<a class="headerlink" href="#equation-disturbance-observer-gfm" title="Link to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \hat{\boldsymbol{u}}_\mathrm{g}}{\mathrm{d} t} &amp;= \mathrm{j} (\hat{\omega}_\mathrm{g} - \omega_\mathrm{c})\hat{\boldsymbol{u}}_\mathrm{g} + \alpha_\mathrm{o}\left(\boldsymbol{u}_\mathrm{c} - \hat L \frac{\mathrm{d} \boldsymbol{i}_\mathrm{c}}{\mathrm{d} t} - \mathrm{j} \omega_\mathrm{c} \hat L \boldsymbol{i}_\mathrm{c} - \hat{\boldsymbol{u}}_\mathrm{g} \right) \\
-\hat{\boldsymbol{v}}_\mathrm{c} &amp;= \hat{\boldsymbol{u}}_\mathrm{g} + \mathrm{j}\hat{\omega}_\mathrm{g} \hat L \boldsymbol{i}_\mathrm{c} \\
-\hat p_\mathrm{g} &amp;= \frac{3}{2}\mathrm{Re}\{\hat{\boldsymbol{v}}_\mathrm{c}\boldsymbol{i}_\mathrm{c}^*\}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat \omega_\mathrm{g}\)</span> is the nominal grid angular frequency and estimates are marked with hat.</p>
+<span class="eqno">(4)<a class="headerlink" href="#equation-disturbance-observer-gfm" title="Link to this equation">#</a></span>\[\begin{split}\frac{\D \hatug}{\D t} &amp;= \jj (\hatomegag - \omegac)\hatug + \alphao\left(\uc - \hat L \frac{\D \ic}{\D t} - \jj \omegac \hat L \ic - \hatug \right) \\
+\hatvc &amp;= \hatug + \jj\hatomegag \hat L \ic \\
+\hatpg &amp;= \frac{3}{2}\RE\{\hatvc\ic^*\}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hatomegag\)</span> is the nominal grid angular frequency and estimates are marked with hat.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>A conventional phase-locked loop (PLL) can be expressed in the same disturbance observer framework, see the <a class="reference internal" href="pll.html"><span class="doc">Phase-Locked Loop</span></a> notes. It can be realized that the measured grid voltage <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{g}\)</span> used in the conventional PLL is replaced by its converter-voltage-based estimate <span class="math notranslate nohighlight">\(\boldsymbol{u}_\mathrm{c} - \hat L (\mathrm{d} \boldsymbol{i}_\mathrm{c}/\mathrm{d} t) - \mathrm{j} \omega_\mathrm{c} \hat L \boldsymbol{i}_\mathrm{c}\)</span> in the disturbance observer <a class="reference internal" href="#equation-disturbance-observer-gfm">(4)</a>.</p>
+<p>A conventional phase-locked loop (PLL) can be expressed in the same disturbance observer framework, see the <a class="reference internal" href="pll.html"><span class="doc">Phase-Locked Loop</span></a> notes. It can be realized that the measured grid voltage <span class="math notranslate nohighlight">\(\ug\)</span> used in the conventional PLL is replaced by its converter-voltage-based estimate <span class="math notranslate nohighlight">\(\uc - \hat L (\D \ic/\D t) - \jj \omegac \hat L \ic\)</span> in the disturbance observer <a class="reference internal" href="#equation-disturbance-observer-gfm">(4)</a>.</p>
 </div>
 </section>
 <section id="control-law">
 <h3>Control Law<a class="headerlink" href="#control-law" title="Link to this heading">#</a></h3>
 <p>A nonlinear state feedback law is used</p>
 <div class="math notranslate nohighlight" id="equation-control-law-gfm">
-<span class="eqno">(5)<a class="headerlink" href="#equation-control-law-gfm" title="Link to this equation">#</a></span>\[\boldsymbol{u}_\mathrm{c,ref} = \hat{\boldsymbol{v}}_\mathrm{c} + \boldsymbol{k}_\mathrm{p} (p_\mathrm{g,ref} - \hat p_\mathrm{g}) + \boldsymbol{k}_\mathrm{v} (v_\mathrm{c,ref} - |\hat{\boldsymbol{v}}_\mathrm{c}|)\]</div>
-<p>where <span class="math notranslate nohighlight">\(p_\mathrm{g,ref}\)</span> is the active power reference, <span class="math notranslate nohighlight">\(v_\mathrm{c,ref}\)</span> is the converter voltage magnitude reference, and <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{p}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{k}_\mathrm{v}\)</span> are the complex gains for the active-power and converter-voltage-magnitude channels, respectively. To ensure robust operation, similar to the reference-feedforward PSC, the complex gains can be selected as</p>
+<span class="eqno">(5)<a class="headerlink" href="#equation-control-law-gfm" title="Link to this equation">#</a></span>\[\ucref = \hatvc + \kP (\pgref - \hatpg) + \kV (\vcref - \hatabsvc)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\pgref\)</span> is the active power reference, <span class="math notranslate nohighlight">\(\vcref\)</span> is the converter voltage magnitude reference, and <span class="math notranslate nohighlight">\(\hatabsvc = |\hatvc|\)</span> is the magnitude. The complex gains for the active-power and converter-voltage-magnitude channels, respectively, are selected as</p>
 <div class="math notranslate nohighlight" id="equation-gain-selection-gfm">
-<span class="eqno">(6)<a class="headerlink" href="#equation-gain-selection-gfm" title="Link to this equation">#</a></span>\[\boldsymbol{k}_\mathrm{p} = \frac{R_\mathrm{a}}{v_\mathrm{c,ref}} \frac{\hat{\boldsymbol{v}}_\mathrm{c}}{|\hat{\boldsymbol{v}}_\mathrm{c}|} \qquad
-\boldsymbol{k}_\mathrm{v} = (1 - \mathrm{j} k_\mathrm{v}) \frac{\hat{\boldsymbol{v}}_\mathrm{c}}{|\hat{\boldsymbol{v}}_\mathrm{c}|}\]</div>
-<p>where the gains <span class="math notranslate nohighlight">\(R_\mathrm{a} = 0.2\)</span> p.u. and <span class="math notranslate nohighlight">\(k_\mathrm{v} = \alpha_\mathrm{o}/\omega_\mathrm{g}\)</span> can be used.</p>
+<span class="eqno">(6)<a class="headerlink" href="#equation-gain-selection-gfm" title="Link to this equation">#</a></span>\[\kP = \frac{R_\mathrm{a}}{v_\mathrm{c,ref}} \frac{\hatvc}{\hatabsvc} \qquad
+\kV = (1 - \jj k_\mathrm{v}) \frac{\hatvc}{\hatabsvc}\]</div>
+<p>where the gains <span class="math notranslate nohighlight">\(R_\mathrm{a} = 0.2\)</span> p.u. and <span class="math notranslate nohighlight">\(k_\mathrm{v} = \alphao/\omegag\)</span> can be used.</p>
 </section>
 <section id="implementation-aspects">
 <h3>Implementation Aspects<a class="headerlink" href="#implementation-aspects" title="Link to this heading">#</a></h3>
-<p>To avoid the derivate on the right-hand side of <a class="reference internal" href="#equation-disturbance-observer-gfm">(4)</a>, a new state variable <span class="math notranslate nohighlight">\(\hat{\boldsymbol{u}}_\mathrm{g}' = \hat{\boldsymbol{u}}_\mathrm{g} + \alpha_\mathrm{o} \hat L \boldsymbol{i}_\mathrm{c}\)</span> can be introduced <a class="footnote-reference brackets" href="#fra1997" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. Furthermore, the coordinate system for the implementation can be chosen freely. The simplest choice is to use the nominal grid frequency as the coordinate system frequency, <span class="math notranslate nohighlight">\(\omega_\mathrm{c} = \hat \omega_\mathrm{g}\)</span>. Using these design choices, the whole control system consisting of the disturbance observer <a class="reference internal" href="#equation-disturbance-observer-gfm">(4)</a> and the control law <a class="reference internal" href="#equation-control-law-gfm">(5)</a> in the state-space form reduces to <a class="footnote-reference brackets" href="#nur2024" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+<p>To avoid the derivate on the right-hand side of <a class="reference internal" href="#equation-disturbance-observer-gfm">(4)</a>, a new state variable <span class="math notranslate nohighlight">\(\hatug' = \hatug + \alphao \hat L \ic\)</span> can be introduced <span id="id5">[<a class="reference internal" href="../../bibliography.html#id11" title="Franklin, Powell, and Workman. Digital Control of Dynamic Systems. Addison-Wesley, Menlo Park, CA, USA, 1997.">Franklin <em>et al.</em>, 1997</a>]</span>. Furthermore, the coordinate system for the implementation can be chosen freely. The simplest choice is to use the nominal grid frequency as the coordinate system frequency, <span class="math notranslate nohighlight">\(\omegac = \hatomegag\)</span>. Using these design choices, the whole control system consisting of the disturbance observer <a class="reference internal" href="#equation-disturbance-observer-gfm">(4)</a> and the control law <a class="reference internal" href="#equation-control-law-gfm">(5)</a> in the state-space form reduces to <span id="id6">[<a class="reference internal" href="../../bibliography.html#id34" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-control-system-gfm">
-<span class="eqno">(7)<a class="headerlink" href="#equation-control-system-gfm" title="Link to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \hat{\boldsymbol{u}}'_\mathrm{g}}{\mathrm{d} t} &amp;= \alpha_\mathrm{o} (\boldsymbol{u}_\mathrm{c,ref} - \hat{\boldsymbol{v}}_\mathrm{c} ) \\
-\hat{\boldsymbol{v}}_\mathrm{c} &amp;= \hat{\boldsymbol{u}}_\mathrm{g}' - (\alpha_\mathrm{o} - \mathrm{j}\hat{\omega}_\mathrm{g}) \hat L \boldsymbol{i}_\mathrm{c} \\
-\hat p_\mathrm{g} &amp;= \frac{3}{2}\mathrm{Re}\{\hat{\boldsymbol{v}}_\mathrm{c}\boldsymbol{i}_\mathrm{c}^*\} \\
-\boldsymbol{u}_\mathrm{c,ref} &amp;= \hat{\boldsymbol{v}}_\mathrm{c} + \boldsymbol{k}_\mathrm{p} (p_\mathrm{g,ref} - \hat p_\mathrm{g}) + \boldsymbol{k}_\mathrm{v} (v_\mathrm{c,ref} - |\hat{\boldsymbol{v}}_\mathrm{c}|)\end{split}\]</div>
-<p>where the gains can be selected according to <a class="reference internal" href="#equation-gain-selection-gfm">(6)</a> and the converter voltage appearing in the observer has been replaced with its reference. Various control modes could be easily incorporated into the control system <a class="reference internal" href="#equation-control-system-gfm">(7)</a>, simply by changing the feedback correction terms of the control law <a class="footnote-reference brackets" href="#nur2024" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The switching between the modes is seamless since the control law does not have memory, but the integral action is provided by the disturbance observer (in addition to synchronization).</p>
-<p>The control system implemented in the <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController" title="motulator.grid.control.ObserverBasedGridFormingController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.ObserverBasedGridFormingController</span></code></a> class corresponds to <a class="reference internal" href="#equation-control-system-gfm">(7)</a>. In the example implementation, a transparent current-control mode is implemented. In the grid-forming mode, the observer bandwidth <span class="math notranslate nohighlight">\(\alpha_\mathrm{o} = 1\)</span> p.u. can be used. Furthermore, the inductance estimate can be set close to the lowest expected inductance value, e.g., <span class="math notranslate nohighlight">\(\hat L = 0.15\)</span> p.u. Using this configuration, the robust performance from strong grids to very weak grids can be achieved. This grid-forming control method can also be used with LCL filters, similarly to reference-feedforward PSC.</p>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="nur2024" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id3">2</a>,<a role="doc-backlink" href="#id4">3</a>,<a role="doc-backlink" href="#id8">4</a>,<a role="doc-backlink" href="#id9">5</a>)</span>
-<p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming converter control based on a disturbance observer, “IEEE Trans. Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
-</aside>
-<aside class="footnote brackets" id="har2020" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
-<p>Harnefors, Rahman, Hinkkanen, Routimo, “Reference-feedforward power-synchronization control,” IEEE Trans. Power Electron., 2020, <a class="reference external" href="https://doi.org/10.1109/TPEL.2020.2970991">https://doi.org/10.1109/TPEL.2020.2970991</a></p>
-</aside>
-<aside class="footnote brackets" id="kuk2021" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">3</a><span class="fn-bracket">]</span></span>
-<p>Kukkola, Routimo, Hinkkanen, Harnefors, “A voltage-sensorless controller for grid converters,” IEEE PES ISGT Europe, 2021, <a class="reference external" href="https://doi.org/10.1109/ISGTEurope52324.2021.9640206">https://doi.org/10.1109/ISGTEurope52324.2021.9640206</a></p>
-</aside>
-<aside class="footnote brackets" id="fra1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
-<p>Franklin, Powell, Workman, “Digital Control of Dynamic Systems,” 3rd ed., Menlo Park, CA: Addison-Wesley, 1997</p>
-</aside>
-</aside>
+<span class="eqno">(7)<a class="headerlink" href="#equation-control-system-gfm" title="Link to this equation">#</a></span>\[\begin{split}\frac{\D \hatug'}{\D t} &amp;= \alphao (\ucref - \hatvc) \\
+\hatvc &amp;= \hatug' - (\alphao - \jj\hatomegag) \hat L \ic \\
+\hatpg &amp;= \frac{3}{2}\RE\{\hatvc\ic^*\} \\
+\ucref &amp;= \hatvc + \kP (\pgref - \hatpg) + \kV (\vcref - \hatabsvc)\end{split}\]</div>
+<p>where the gains can be selected according to <a class="reference internal" href="#equation-gain-selection-gfm">(6)</a> and the converter voltage appearing in the observer has been replaced with its reference. Various control modes could be easily incorporated into the control system <a class="reference internal" href="#equation-control-system-gfm">(7)</a>, simply by changing the feedback correction terms of the control law <span id="id7">[<a class="reference internal" href="../../bibliography.html#id34" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>. The switching between the modes is seamless since the control law does not have memory, but the integral action is provided by the disturbance observer (in addition to synchronization).</p>
+<p>The control system implemented in the <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController" title="motulator.grid.control.ObserverBasedGridFormingController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.ObserverBasedGridFormingController</span></code></a> class corresponds to <a class="reference internal" href="#equation-control-system-gfm">(7)</a>. In the example implementation, a transparent current-control mode is implemented. In the grid-forming mode, the observer bandwidth <span class="math notranslate nohighlight">\(\alphao = 1\)</span> p.u. can be used. Furthermore, the inductance estimate can be set close to the lowest expected inductance value, e.g., <span class="math notranslate nohighlight">\(\hat L = 0.15\)</span> p.u. Using this configuration, the robust performance from strong grids to very weak grids can be achieved. This grid-forming control method can also be used with LCL filters, similarly to reference-feedforward PSC.</p>
 </section>
 </section>
 </section>

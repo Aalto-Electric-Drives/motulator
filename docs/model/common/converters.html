@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Voltage-Source Converter &#8212; motulator 0.6.2 documentation</title>
+    <title>Voltage-Source Converter &#8212; motulator 0.7.0 documentation</title>
   
   
   
@@ -43,13 +43,14 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=967efe37"></script>
+    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/upgreek"]}, "tex": {"packages": {"[+]": ["upgreek"]}, "macros": {"jj": "\\mathrm{j}", "e": "\\mathrm{e}", "D": "\\mathrm{d}", "IM": "\\mathrm{Im}", "RE": "\\mathrm{Re}", "T": "\\intercal", "uc": "\\mathbf{u}_\\mathrm{c}", "ucref": "\\mathbf{u}_\\mathrm{c}^\\mathrm{ref}", "ucreflim": "\\bar{\\mathbf{u}}_\\mathrm{c}^\\mathrm{ref}", "ucs": "\\mathbf{u}_\\mathrm{c}^\\mathrm{s}", "ic": "\\mathbf{i}_\\mathrm{c}", "icref": "\\mathbf{i}_\\mathrm{c}^\\mathrm{ref}", "ics": "\\mathbf{i}_\\mathrm{c}^\\mathrm{s}", "qc": "\\mathbf{q}_\\mathrm{c}", "qcs": "\\mathbf{q}_\\mathrm{c}^\\mathrm{s}", "dc": "\\mathbf{d}_\\mathrm{c}", "dcs": "\\mathbf{d}_\\mathrm{c}^\\mathrm{s}", "us": "\\mathbf{u}_\\mathrm{s}", "uss": "\\mathbf{u}_\\mathrm{s}^\\mathrm{s}", "usref": "\\mathbf{u}_\\mathrm{s}^\\mathrm{ref}", "usreflim": "\\bar{\\mathbf{u}}_\\mathrm{s}^\\mathrm{ref}", "is": "\\mathbf{i}_\\mathrm{s}", "isref": "\\mathbf{i}_\\mathrm{s}^\\mathrm{ref}", "iss": "\\mathbf{i}_\\mathrm{s}^\\mathrm{s}", "ir": "\\mathbf{i}_\\mathrm{r}", "irs": "\\mathbf{i}_\\mathrm{r}^\\mathrm{s}", "iR": "\\mathbf{i}_\\mathrm{R}", "psis": "\\boldsymbol{\\uppsi}_\\mathrm{s}", "psisref": "\\boldsymbol{\\uppsi}_\\mathrm{s}^\\mathrm{ref}", "hatpsis": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{s}", "psiss": "\\boldsymbol{\\uppsi}_\\mathrm{s}^\\mathrm{s}", "tildepsis": "\\tilde{\\boldsymbol{\\uppsi}}_\\mathrm{s}", "tildepsiR": "\\tilde{\\boldsymbol{\\uppsi}}_\\mathrm{R}", "psir": "\\boldsymbol{\\uppsi}_\\mathrm{r}", "psirs": "\\boldsymbol{\\uppsi}_\\mathrm{r}^\\mathrm{s}", "psiR": "\\boldsymbol{\\uppsi}_\\mathrm{R}", "psiRo": "\\boldsymbol{\\uppsi}_\\mathrm{R0}", "hatpsiR": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{R}", "psiaux": "\\boldsymbol{\\uppsi}_\\mathrm{a}", "hatpsiaux": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{a}", "iaux": "\\mathbf{i}_\\mathrm{a}", "hatiaux": "\\hat{\\mathbf{i}}_\\mathrm{a}", "es": "\\mathbf{e}_\\mathrm{s}", "ec": "\\mathbf{e}_\\mathrm{c}", "eo": "\\mathbf{e}_\\mathrm{o}", "isfcn": "\\mathbf{g}", "idfcn": "g_\\mathrm{d}", "iqfcn": "g_\\mathrm{q}", "psisfcn": "\\mathbf{f}", "hatpsisfcn": "\\hat{\\mathbf{f}}", "psidfcn": "f_\\mathrm{d}", "psiqfcn": "f_\\mathrm{q}", "abspsis": "\\psi_\\mathrm{s}", "abspsisref": "\\psi_\\mathrm{s}^\\mathrm{ref}", "hatabspsis": "\\hat{\\psi}_\\mathrm{s}", "hatabspsiR": "\\hat{\\psi}_\\mathrm{R}", "psif": "\\psi_\\mathrm{f}", "absis": "i_\\mathrm{s}", "psid": "\\psi_\\mathrm{d}", "psiq": "\\psi_\\mathrm{q}", "id": "i_\\mathrm{d}", "iq": "i_\\mathrm{q}", "tildepsisd": "\\tilde{\\psi}_\\mathrm{sd}", "tildepsisq": "\\tilde{\\psi}_\\mathrm{sq}", "Rs": "R_\\mathrm{s}", "Rr": "R_\\mathrm{r}", "Ls": "L_\\mathrm{s}", "Lsgm": "L_\\upsigma", "Rsgm": "R_\\upsigma", "LM": "L_\\mathrm{M}", "RR": "R_\\mathrm{R}", "Ld": "L_\\mathrm{d}", "Lq": "L_\\mathrm{q}", "Ldd": "L_\\mathrm{dd}", "Lqq": "L_\\mathrm{qq}", "Ldq": "L_\\mathrm{dq}", "Gdd": "\\varGamma_\\mathrm{dd}", "Gqq": "\\varGamma_\\mathrm{qq}", "Gdq": "\\varGamma_\\mathrm{dq}", "omegam": "\\omega_\\mathrm{m}", "omegamo": "\\omega_\\mathrm{m0}", "tildeomegam": "\\tilde{\\omega}_\\mathrm{m}", "omegaM": "\\omega_\\mathrm{M}", "omegaMref": "\\omega_\\mathrm{M}^\\mathrm{ref}", "omegamref": "\\omega_\\mathrm{m}^\\mathrm{ref}", "omegaL": "\\omega_\\mathrm{L}", "omegas": "\\omega_\\mathrm{s}", "hatomegas": "\\hat{\\omega}_\\mathrm{s}", "hatomegar": "\\hat{\\omega}_\\mathrm{r}", "omegaso": "\\omega_\\mathrm{s0}", "omegar": "\\omega_\\mathrm{r}", "omegarb": "\\omega_\\mathrm{rb}", "omegaro": "\\omega_\\mathrm{r0}", "thetam": "\\vartheta_\\mathrm{m}", "thetaM": "\\vartheta_\\mathrm{M}", "thetaL": "\\vartheta_\\mathrm{L}", "thetaML": "\\vartheta_\\mathrm{ML}", "tauM": "\\tau_\\mathrm{M}", "hattauM": "\\hat{\\tau}_\\mathrm{M}", "hattauL": "\\hat{\\tau}_\\mathrm{L}", "tauMref": "\\tau_\\mathrm{M}^\\mathrm{ref}", "tauL": "\\tau_\\mathrm{L}", "tauLtot": "\\tau_\\mathrm{L,tot}", "tauS": "\\tau_\\mathrm{S}", "np": "n_\\mathrm{p}", "JM": "J_\\mathrm{M}", "JL": "J_\\mathrm{L}", "BL": "B_\\mathrm{L}", "CS": "C_\\mathrm{S}", "KS": "K_\\mathrm{S}", "Ts": "T_\\mathrm{s}", "Tsw": "T_\\mathrm{sw}", "ismax": "i_\\mathrm{s}^\\mathrm{max}", "dA": "d_\\mathrm{a}", "dB": "d_\\mathrm{b}", "dC": "d_\\mathrm{c}", "qA": "q_\\mathrm{a}", "qB": "q_\\mathrm{b}", "qC": "q_\\mathrm{c}", "udc": "u_\\mathrm{dc}", "udcref": "u_\\mathrm{dc}^\\mathrm{ref}", "idc": "i_\\mathrm{dc}", "udi": "u_\\mathrm{di}", "iL": "i_\\mathrm{L}", "Cdc": "C_\\mathrm{dc}", "hatCdc": "\\hat{C}_\\mathrm{dc}", "Ldc": "L_\\mathrm{dc}", "iA": "i_\\mathrm{a}", "iB": "i_\\mathrm{b}", "iC": "i_\\mathrm{c}", "uAn": "u_\\mathrm{an}", "uBn": "u_\\mathrm{bn}", "uCn": "u_\\mathrm{cn}", "uAN": "u_\\mathrm{aN}", "uBN": "u_\\mathrm{bN}", "uCN": "u_\\mathrm{cN}", "Cf": "C_\\mathrm{f}", "Lf": "L_\\mathrm{f}", "Rf": "R_\\mathrm{f}", "Lg": "L_\\mathrm{g}", "Rg": "R_\\mathrm{g}", "Lt": "L_\\mathrm{t}", "Rt": "R_\\mathrm{t}", "Lfc": "L_\\mathrm{fc}", "Rfc": "R_\\mathrm{fc}", "Lfg": "L_\\mathrm{fg}", "Rfg": "R_\\mathrm{fg}", "ug": "\\mathbf{u}_\\mathrm{g}", "ugo": "\\mathbf{u}_\\mathrm{g0}", "tildeug": "\\tilde{\\mathbf{u}}_\\mathrm{g}", "absug": "u_\\mathrm{g}", "hatabsug": "\\hat{u}_\\mathrm{g}", "hatug": "\\hat{\\mathbf{u}}_\\mathrm{g}", "ugs": "\\mathbf{u}_\\mathrm{g}^\\mathrm{s}", "ig": "\\mathbf{i}_\\mathrm{g}", "igs": "\\mathbf{i}_\\mathrm{g}^\\mathrm{s}", "eg": "\\mathbf{e}_\\mathrm{g}", "egs": "\\mathbf{e}_\\mathrm{g}^\\mathrm{s}", "uf": "\\mathbf{u}_\\mathrm{f}", "ufs": "\\mathbf{u}_\\mathrm{f}^\\mathrm{s}", "vc": "\\mathbf{v}_\\mathrm{c}", "hatvc": "\\hat{\\mathbf{v}}_\\mathrm{c}", "omegag": "\\omega_\\mathrm{g}", "hatomegag": "\\hat{\\omega}_\\mathrm{g}", "thetac": "\\vartheta_\\mathrm{c}", "thetag": "\\vartheta_\\mathrm{g}", "hatthetag": "\\hat{\\vartheta}_\\mathrm{g}", "omegac": "\\omega_\\mathrm{c}", "Wdc": "W_\\mathrm{dc}", "hatWdc": "\\hat{W}_\\mathrm{dc}", "Wdcref": "W_\\mathrm{dc}^\\mathrm{ref}", "pg": "p_\\mathrm{g}", "hatpg": "\\hat{p}_\\mathrm{g}", "pgref": "p_\\mathrm{g}^\\mathrm{ref}", "vcref": "v_\\mathrm{c}^\\mathrm{ref}", "hatabsvc": "\\hat{v}_\\mathrm{c}", "kt": "k_\\mathrm{t}", "kp": "k_\\mathrm{p}", "ki": "k_\\mathrm{i}", "alphai": "\\alpha_\\mathrm{i}", "ui": "u_\\mathrm{i}", "uff": "u_\\mathrm{ff}", "kd": "k_\\mathrm{d}", "kq": "k_\\mathrm{q}", "kotheta": "k_{\\mathrm{o}\\upvartheta}", "koomega": "k_{\\mathrm{o}\\upomega}", "kotau": "k_{\\mathrm{o}\\uptau}", "kT": "\\mathbf{k}_\\mathrm{t}", "kP": "\\mathbf{k}_\\mathrm{p}", "kI": "\\mathbf{k}_\\mathrm{i}", "uI": "\\mathbf{u}_\\mathrm{i}", "uFF": "\\mathbf{u}_\\mathrm{ff}", "kV": "\\mathbf{k}_\\mathrm{v}", "koa": "\\mathbf{k}_\\mathrm{o1}", "kob": "\\mathbf{k}_\\mathrm{o2}", "alphac": "\\alpha_\\mathrm{c}", "alphas": "\\alpha_\\mathrm{s}", "alphao": "\\alpha_\\mathrm{o}", "alphadc": "\\alpha_\\mathrm{dc}", "alphapll": "\\alpha_\\mathrm{pll}", "hatomegam": "\\hat{\\omega}_\\mathrm{m}", "hatthetam": "\\hat{\\vartheta}_\\mathrm{m}", "tildethetam": "\\tilde{\\vartheta}_\\mathrm{m}", "hatRs": "\\hat{R}_\\mathrm{s}", "hatRR": "\\hat{R}_\\mathrm{R}", "hatLs": "\\hat{L}_\\mathrm{s}", "hatLM": "\\hat{L}_\\mathrm{M}", "hatalpha": "\\hat{\\alpha}", "hatLsgm": "\\hat{L}_\\sigma", "hatRsgm": "\\hat{R}_\\sigma", "hatLd": "\\hat{L}_\\mathrm{d}", "hatLq": "\\hat{L}_\\mathrm{q}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'model/common/converters';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -142,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -168,48 +169,48 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
 </ul>
 </details></li>
 </ul>
@@ -224,7 +225,8 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../drive/machines.html">Electric Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drive/induction_machine.html">Induction Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drive/synchronous_machine.html">Synchronous Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/ac_filter.html">Output LC Filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
@@ -248,6 +250,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../control/drive/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../control/drive/observers.html">Observers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/reference_gen.html">Reference Generation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../control/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -258,9 +261,9 @@
 </ul>
 </details></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/control/index.html">motulator.common.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/model/index.html">motulator.common.model</a></li>
@@ -285,6 +288,7 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -354,7 +358,7 @@
       
       
       
-      <li><a href="../../_sources/model/common/converters.rst" target="_blank"
+      <li><a href="../../_sources/model/common/converters.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -364,7 +368,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.rst</span>
+<span class="btn__text-container">.md</span>
 </a>
 </li>
       
@@ -462,97 +466,82 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="voltage-source-converter">
+  <section class="tex2jax_ignore mathjax_ignore" id="voltage-source-converter">
 <h1>Voltage-Source Converter<a class="headerlink" href="#voltage-source-converter" title="Link to this heading">#</a></h1>
 <section id="model">
 <h2>Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
-<p>The figure below shows a three-phase two-level voltage-source converter, where <span class="math notranslate nohighlight">\(u_\mathrm{dc}\)</span> is the DC-bus voltage, <span class="math notranslate nohighlight">\(i_\mathrm{dc}\)</span> is the external DC current, and <span class="math notranslate nohighlight">\(C_\mathrm{dc}\)</span> is the DC-bus capacitance. This converter can operate both as an inverter and a rectifier, depending on the direction of the power flow.</p>
-<figure class="only-light align-center" id="id3">
-<a class="reference external image-reference" href="."><img alt="Three-phase two-level voltage-source converter" src="../../_images/inverter.svg" style="width: 100%;" />
+<p><a class="reference internal" href="#fig-inverter"><span class="std std-ref">Figure 1</span></a> shows a three-phase two-level voltage-source converter, where <span class="math notranslate nohighlight">\(\udc\)</span> is the DC-bus voltage, <span class="math notranslate nohighlight">\(\idc\)</span> is the external DC current, and <span class="math notranslate nohighlight">\(\Cdc\)</span> is the DC-bus capacitance. The converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. This model is provided in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.VoltageSourceConverter</span></code></a> class. It can be extended with a diode bridge model, see <a class="reference internal" href="../drive/diode_bridge.html"><span class="doc">Six-Pulse Diode Bridge</span></a>.</p>
+<figure class="align-center" id="fig-inverter">
+<a class="only-light reference internal image-reference" href="../../_images/inverter.svg"><img alt="Three-phase two-level voltage-source converter" class="only-light" src="../../_images/inverter.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Three-phase two-level voltage-source converter. The negative potential of the DC bus is marked with N and the output terminals with a, b, and c.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 1:</em> Three-phase two-level voltage-source converter. The negative potential of the DC bus is marked with N and the output terminals with a, b, and c.</span><a class="headerlink" href="#fig-inverter" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="invert-colors-dark only-dark align-center" id="id4">
-<a class="reference external image-reference" href="."><img alt="Three-phase two-level voltage-source converter" src="../../_images/inverter.svg" style="width: 100%;" />
+<figure class="align-center" id="id2">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/inverter.svg"><img alt="Three-phase two-level voltage-source converter" class="invert-colors-dark only-dark" src="../../_images/inverter.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Three-phase two-level voltage-source converter. The negative potential of the DC bus is marked with N and the output terminals with a, b, and c.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 1:</em> Three-phase two-level voltage-source converter. The negative potential of the DC bus is marked with N and the output terminals with a, b, and c.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Assuming ideal transistors and diodes, the converter can be modeled with the equivalent circuit shown in the figure below, in which the legs are modeled as bi-positional switches. Each changeover switch is connected to either negative or positive potential of the DC bus, and the switching phenomena are assumed to be infinitely fast. The state of each switch is defined using the switching state, which, using phase <span class="math notranslate nohighlight">\(a\)</span> as an example, is <span class="math notranslate nohighlight">\(q_\mathrm{a} = 0\)</span> when the switch is connected to the negative potential and
-<span class="math notranslate nohighlight">\(q_\mathrm{a} = 1\)</span> when the switch is connected to the positive potential.</p>
-<figure class="only-light align-center" id="id5">
-<a class="reference external image-reference" href="."><img alt="Voltage-source converter and carrier comparison" src="../../_images/pwm_inverter.svg" style="width: 100%;" />
+<p>Assuming ideal transistors and diodes, the converter can be modeled with the equivalent circuit shown in <a class="reference internal" href="#fig-pwm-inverter"><span class="std std-ref">Figure 2</span></a>, in which the legs are modeled as bi-positional switches. Each changeover switch is connected to either negative or positive potential of the DC bus, and the switching phenomena are assumed to be infinitely fast. The state of each switch is defined using the switching state, which, using phase <span class="math notranslate nohighlight">\(a\)</span> as an example, is <span class="math notranslate nohighlight">\(\qA = 0\)</span> when the switch is connected to the negative potential and <span class="math notranslate nohighlight">\(\qA = 1\)</span> when the switch is connected to the positive potential.</p>
+<figure class="align-center" id="fig-pwm-inverter">
+<a class="only-light reference internal image-reference" href="../../_images/pwm_inverter.svg"><img alt="Voltage-source converter and carrier comparison" class="only-light" src="../../_images/pwm_inverter.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Equivalent circuit of a three-phase voltage-source converter, connected to a generic three-phase load. The neutral point of the load is marked with n. In this example, the positions of the bi-positional switches correspond to the instantaneous switching states <span class="math notranslate nohighlight">\(q_\mathrm{a} = 1\)</span>, <span class="math notranslate nohighlight">\(q_\mathrm{b} = 0\)</span>, and <span class="math notranslate nohighlight">\(q_\mathrm{c}=0\)</span>.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 2:</em> Equivalent circuit of a three-phase voltage-source converter, connected to a generic three-phase load. The neutral point of the load is marked with n. In this example, the positions of the bi-positional switches correspond to the instantaneous switching states <span class="math notranslate nohighlight">\(\qA = 1\)</span>, <span class="math notranslate nohighlight">\(\qB = 0\)</span>, and <span class="math notranslate nohighlight">\(\qC = 0\)</span>.</span><a class="headerlink" href="#fig-pwm-inverter" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="invert-colors-dark only-dark align-center" id="id6">
-<a class="reference external image-reference" href="."><img alt="Voltage-source converter and carrier comparison" src="../../_images/pwm_inverter.svg" style="width: 100%;" />
+<figure class="align-center" id="id3">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/pwm_inverter.svg"><img alt="Voltage-source converter and carrier comparison" class="invert-colors-dark only-dark" src="../../_images/pwm_inverter.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Equivalent circuit of a three-phase voltage-source converter, connected to a generic three-phase load. The neutral point of the load is marked with n. In this example, the positions of the bi-positional switches correspond to the instantaneous switching states <span class="math notranslate nohighlight">\(q_\mathrm{a} = 1\)</span>, <span class="math notranslate nohighlight">\(q_\mathrm{b} = 0\)</span>, and <span class="math notranslate nohighlight">\(q_\mathrm{c}=0\)</span>.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 2:</em> Equivalent circuit of a three-phase voltage-source converter, connected to a generic three-phase load. The neutral point of the load is marked with n. In this example, the positions of the bi-positional switches correspond to the instantaneous switching states <span class="math notranslate nohighlight">\(\qA = 1\)</span>, <span class="math notranslate nohighlight">\(\qB = 0\)</span>, and <span class="math notranslate nohighlight">\(\qC = 0\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, if the DC bus is fed from an external current source <span class="math notranslate nohighlight">\(i_\mathrm{dc}\)</span>, the DC-bus dynamics are modeled as</p>
+<p>By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, if the DC bus is fed from an external current source <span class="math notranslate nohighlight">\(\idc\)</span>, the DC-bus dynamics are modeled as</p>
 <div class="math notranslate nohighlight" id="equation-dc-bus-model">
-<span class="eqno">(1)<a class="headerlink" href="#equation-dc-bus-model" title="Link to this equation">#</a></span>\[C_\mathrm{dc}\frac{\mathrm{d}u_\mathrm{dc}}{\mathrm{d} t} = i_\mathrm{dc} - i'_\mathrm{dc}\]</div>
-<p>where the converter-side DC current depends on the phase currents <span class="math notranslate nohighlight">\(i_\mathrm{a}\)</span>, <span class="math notranslate nohighlight">\(i_\mathrm{b}\)</span>, and <span class="math notranslate nohighlight">\(i_\mathrm{c}\)</span> as</p>
+<span class="eqno">(1)<a class="headerlink" href="#equation-dc-bus-model" title="Link to this equation">#</a></span>\[    \Cdc \frac{\D \udc}{\D t} = \idc - \idc'\]</div>
+<p>where the converter-side DC current depends on the phase currents <span class="math notranslate nohighlight">\(\iA\)</span>, <span class="math notranslate nohighlight">\(\iB\)</span>, and <span class="math notranslate nohighlight">\(\iC\)</span> as</p>
 <div class="math notranslate nohighlight" id="equation-dc-current">
-<span class="eqno">(2)<a class="headerlink" href="#equation-dc-current" title="Link to this equation">#</a></span>\[i'_\mathrm{dc} = q_\mathrm{a} i_\mathrm{a} + q_\mathrm{b} i_\mathrm{b} + q_\mathrm{c} i_\mathrm{c}\]</div>
-<p>The voltage-source converter model is provided in the class <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.VoltageSourceConverter</span></code></a>. This model can be extended with a diode bridge model, see <a class="reference internal" href="../drive/diode_bridge.html"><span class="doc">Six-Pulse Diode Bridge</span></a>.</p>
+<span class="eqno">(2)<a class="headerlink" href="#equation-dc-current" title="Link to this equation">#</a></span>\[    \idc' = \qA \iA + \qB \iB + \qC \iC\]</div>
 </section>
 <section id="carrier-comparison">
 <h2>Carrier Comparison<a class="headerlink" href="#carrier-comparison" title="Link to this heading">#</a></h2>
-<p>In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals <span class="math notranslate nohighlight">\(q_\mathrm{a}\)</span>, <span class="math notranslate nohighlight">\(q_\mathrm{b}\)</span>, and <span class="math notranslate nohighlight">\(q_\mathrm{c}\)</span> from duty ratios <span class="math notranslate nohighlight">\(d_\mathrm{a}\)</span>, <span class="math notranslate nohighlight">\(d_\mathrm{b}\)</span>, and <span class="math notranslate nohighlight">\(d_\mathrm{c}\)</span>. The duty ratios are continuous signals in the range [0, 1] while the switching states are either 0 or 1.</p>
-<p>The figure below shows the principle of carrier comparison. The logic shown in the figure is implemented in the class <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.CarrierComparison" title="motulator.common.model.CarrierComparison"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.CarrierComparison</span></code></a>, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations.</p>
-<figure class="only-light align-center" id="id7">
-<a class="reference external image-reference" href="."><img alt="Carrier comparison" src="../../_images/carrier_comparison.svg" style="width: 100%;" />
+<p>In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals <span class="math notranslate nohighlight">\(\qA\)</span>, <span class="math notranslate nohighlight">\(\qB\)</span>, and <span class="math notranslate nohighlight">\(\qC\)</span> from duty ratios <span class="math notranslate nohighlight">\(\dA\)</span>, <span class="math notranslate nohighlight">\(\dB\)</span>, and <span class="math notranslate nohighlight">\(\dC\)</span>. The duty ratios are continuous signals in the range [0, 1] while the switching states are either 0 or 1.</p>
+<p><a class="reference internal" href="#fig-carrier-comparison"><span class="std std-ref">Figure 3</span></a> shows the principle of carrier comparison. The logic shown in the figure is implemented in the <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.CarrierComparison" title="motulator.common.model.CarrierComparison"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.CarrierComparison</span></code></a> class, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations. The sampling period <span class="math notranslate nohighlight">\(\Ts\)</span> is returned by the control method, and it does not need to be constant.</p>
+<figure class="align-center" id="fig-carrier-comparison">
+<a class="only-light reference internal image-reference" href="../../_images/carrier_comparison.svg"><img alt="Carrier comparison" class="only-light" src="../../_images/carrier_comparison.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Carrier comparison. The duty ratios are <span class="math notranslate nohighlight">\(d_\mathrm{a}\)</span>, <span class="math notranslate nohighlight">\(d_\mathrm{b}\)</span>, and <span class="math notranslate nohighlight">\(d_\mathrm{c}\)</span> are constant over the sampling period <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> (or, optionally, over the the switching period <span class="math notranslate nohighlight">\(T_\mathrm{sw} = 2T_\mathrm{s}\)</span>). The carrier signal is the same for all three phases and varies between 0 and 1.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 3:</em> Carrier comparison. The duty ratios <span class="math notranslate nohighlight">\(\dA\)</span>, <span class="math notranslate nohighlight">\(\dB\)</span>, and <span class="math notranslate nohighlight">\(\dC\)</span> are constant over the sampling period <span class="math notranslate nohighlight">\(\Ts\)</span> (or, optionally, over the switching period <span class="math notranslate nohighlight">\(\Tsw = 2\Ts\)</span>). The carrier signal is the same for all three phases and varies between 0 and 1.</span><a class="headerlink" href="#fig-carrier-comparison" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="invert-colors-dark only-dark align-center" id="id8">
-<a class="reference external image-reference" href="."><img alt="Carrier comparison" src="../../_images/carrier_comparison.svg" style="width: 100%;" />
+<figure class="align-center" id="id4">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/carrier_comparison.svg"><img alt="Carrier comparison" class="invert-colors-dark only-dark" src="../../_images/carrier_comparison.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Carrier comparison. The duty ratios are <span class="math notranslate nohighlight">\(d_\mathrm{a}\)</span>, <span class="math notranslate nohighlight">\(d_\mathrm{b}\)</span>, and <span class="math notranslate nohighlight">\(d_\mathrm{c}\)</span> are constant over the sampling period <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> (or, optionally, over the the switching period <span class="math notranslate nohighlight">\(T_\mathrm{sw} = 2T_\mathrm{s}\)</span>). The carrier signal is the same for all three phases and varies between 0 and 1.</span><a class="headerlink" href="#id8" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 3:</em> Carrier comparison. The duty ratios <span class="math notranslate nohighlight">\(\dA\)</span>, <span class="math notranslate nohighlight">\(\dB\)</span>, and <span class="math notranslate nohighlight">\(\dC\)</span> are constant over the sampling period <span class="math notranslate nohighlight">\(\Ts\)</span> (or, optionally, over the switching period <span class="math notranslate nohighlight">\(\Tsw = 2\Ts\)</span>). The carrier signal is the same for all three phases and varies between 0 and 1.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The zero-sequence voltage does not affect the phase currents if the neutral of the load is not connected. Therefore, the reference potential of the phase voltages can be freely chosen when computing the space vector of the converter output voltage. The converter voltage vector in stationary coordinates is</p>
 <div class="math notranslate nohighlight" id="equation-carrier-comparison">
-<span class="eqno">(3)<a class="headerlink" href="#equation-carrier-comparison" title="Link to this equation">#</a></span>\[\begin{split}\boldsymbol{u}_\mathrm{c}^\mathrm{s} &amp;= \frac{2}{3}\left(u_\mathrm{an} + u_\mathrm{bn}\mathrm{e}^{\mathrm{j}2\pi/3} + u_\mathrm{cn}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
-     &amp;= \frac{2}{3}\left(u_\mathrm{aN} + u_\mathrm{bN}\mathrm{e}^{\mathrm{j} 2\pi/3} + u_\mathrm{cN}\mathrm{e}^{\mathrm{j} 4\pi/3}\right) \\
-&amp;= \underbrace{\frac{2}{3}\left(q_\mathrm{a} + q_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + q_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{q}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{q}_\mathrm{c}^\mathrm{s}\)</span> is the switching-state space vector.</p>
+<span class="eqno">(3)<a class="headerlink" href="#equation-carrier-comparison" title="Link to this equation">#</a></span>\[\begin{split}\ucs &amp;= \frac{2}{3}\left(\uAn + \uBn\e^{\jj 2\pi/3} + \uCn\e^{\jj 4\pi/3}\right) \\
+&amp;= \frac{2}{3}\left(\uAN + \uBN\e^{\jj 2\pi/3} + \uCN\e^{\jj 4\pi/3}\right) \\
+&amp;= \underbrace{\frac{2}{3}\left(\qA + \qB\e^{\jj 2\pi/3} + \qC\e^{\jj 4\pi/3}\right)}_{\qcs}\udc\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\qcs\)</span> is the switching-state space vector.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.PWM</span></code></a>) and discontinuous PWM methods <a class="footnote-reference brackets" href="#hol1994" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#hav1999" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
-<p>The sampling period <span class="math notranslate nohighlight">\(T_\mathrm{s}\)</span> is returned by the control method, and it does not need to be constant.</p>
-<p>If the zero sequence is of interest, it could be easily added to the converter model.</p>
+<p>The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.PWM</span></code></a>) and discontinuous PWM <span id="id1">[<a class="reference internal" href="../../bibliography.html#id18" title="Hava, Kerkman, and Lipo. Simple analytical and graphical methods for carrier-based PWM-VSI drives. IEEE Trans. Ind. Appl., 1999. doi:10.1109/63.737592.">Hava <em>et al.</em>, 1999</a>, <a class="reference internal" href="../../bibliography.html#id23" title="Holtz. Pulsewidth modulation for electronic power conversion. Proc. IEEE, 1994. doi:10.1109/5.301684.">Holtz, 1994</a>]</span>.</p>
 </div>
 </section>
 <section id="switching-cycle-averaging">
 <h2>Switching-Cycle Averaging<a class="headerlink" href="#switching-cycle-averaging" title="Link to this heading">#</a></h2>
 <p>If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with zero-order hold (ZOH) of the duty ratios. In this case, the output voltage vector is</p>
 <div class="math notranslate nohighlight" id="equation-switching-cycle-averaging">
-<span class="eqno">(4)<a class="headerlink" href="#equation-switching-cycle-averaging" title="Link to this equation">#</a></span>\[\boldsymbol{u}_\mathrm{c}^\mathrm{s} = \underbrace{\frac{2}{3}\left(d_\mathrm{a} + d_\mathrm{b}\mathrm{e}^{\mathrm{j} 2\pi/3} + d_\mathrm{c}\mathrm{e}^{\mathrm{j} 4\pi/3}\right)}_{\boldsymbol{d}_\mathrm{c}^\mathrm{s}}u_\mathrm{dc}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{d}_\mathrm{c}^\mathrm{s}\)</span> is the duty ratio space vector. This ZOH is the default option in most <a class="reference internal" href="../../drive_examples/index.html"><span class="doc">Drive Examples</span></a> and <a class="reference internal" href="../../grid_examples/index.html"><span class="doc">Grid Examples</span></a>. .</p>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="hol1994" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Holtz, “Pulsewidth modulation for electronic power conversion,” Proc. IEEE, 1994, <a class="reference external" href="https://doi.org/10.1109/5.301684">https://doi.org/10.1109/5.301684</a></p>
-</aside>
-<aside class="footnote brackets" id="hav1999" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
-<p>Hava, Kerkman, Lipo, “Simple analytical and graphical methods for carrier-based PWM-VSI drives,” IEEE Trans. Ind. Appl., 1999, <a class="reference external" href="https://doi.org/10.1109/63.737592">https://doi.org/10.1109/63.737592</a></p>
-</aside>
-</aside>
+<span class="eqno">(4)<a class="headerlink" href="#equation-switching-cycle-averaging" title="Link to this equation">#</a></span>\[    \ucs = \underbrace{\frac{2}{3}\left(\dA + \dB\e^{\jj 2\pi/3} + \dC\e^{\jj 4\pi/3}\right)}_{\dcs}\udc\]</div>
+<p>where <span class="math notranslate nohighlight">\(\dcs\)</span> is the duty ratio space vector. This ZOH is the default option in most <a class="reference internal" href="../../drive_examples/index.html"><span class="doc">Drives</span></a> and <a class="reference internal" href="../../grid_examples/index.html"><span class="doc">Grid Converters</span></a> examples.</p>
 </section>
 </section>
 

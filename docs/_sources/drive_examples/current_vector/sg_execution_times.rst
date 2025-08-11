@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:06.647** total execution time for 6 files **from drive_examples/current_vector**:
+**01:12.179** total execution time for 6 files **from drive_examples/current_vector**:
 
 .. container::
 
@@ -32,21 +32,21 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsyrm_thor_sat.py` (``plot_current_vector_pmsyrm_thor_sat.py``)
-     - 00:31.721
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py` (``plot_5kw_pmsyrm_thor_sat_cvc.py``)
+     - 00:37.484
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py` (``plot_current_vector_pmsm_2kw_diode.py``)
-     - 00:11.746
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py` (``plot_2kw_ipmsm_diode_cvc.py``)
+     - 00:11.639
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw.py` (``plot_current_vector_pmsm_2kw.py``)
-     - 00:06.654
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py` (``plot_2kw_ipmsm_cvc_adapt.py``)
+     - 00:06.643
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw_tq_mode.py` (``plot_current_vector_im_2kw_tq_mode.py``)
-     - 00:06.215
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_cvc_tq.py` (``plot_2kw_im_cvc_tq.py``)
+     - 00:06.192
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw.py` (``plot_current_vector_im_2kw.py``)
-     - 00:05.183
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_sat_cvc.py` (``plot_2kw_im_sat_cvc.py``)
+     - 00:05.126
      - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_syrm_7kw.py` (``plot_current_vector_syrm_7kw.py``)
-     - 00:05.128
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_7kw_syrm_cvc.py` (``plot_7kw_syrm_cvc.py``)
+     - 00:05.096
      - 0.0

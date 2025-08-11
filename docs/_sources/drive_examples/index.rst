@@ -22,7 +22,7 @@ A collection of example scripts for machine drives.
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control.
+These examples demonstrate flux-vector control (FVC) of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control.
 
 .. rubric:: References
 
@@ -44,86 +44,86 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive.">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_ipmsm_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, FVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a 2.2-kW induction machine.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW induction machine (IM) drive. The magnetic saturation is included in the machine model and taken into account in the control system. This example also applies the mechanical-model-based speed observer.">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_im_2kw_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_im_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_im_sat_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW saturated IM, FVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a saturated 6.7-kW synchronous reluctance motor drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a saturated 6.7-kW synchronous reluctance machine (SyRM) drive.">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_syrm_7kw_sat_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_7kw_syrm_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_syrm_7kw_sat.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW saturated SyRM, FVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a saturated 5-kW permanent- magnet synchronous reluctance motor. The flux maps of this example motor, known as THOR, are from the SyR-e project:">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_ctrl_pmsyrm_thor_sat_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_ctrl_pmsyrm_thor_sat.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">5-kW PM-SyRM, flux maps from SyR-e</div>
+      <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, FVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.6-kW PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data, measured using the constant-speed test. The control system is parametrized using the algebraic saturation model from [#Lel2024]_, fitted to the measured data. This saturation model can capture the de-saturation phenomenon of thin iron ribs, see [#Arm2009]_ for details. For comparison, the measured data is plotted together with the model predictions.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data, measured using the constant-speed test.">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_pmsyrm_5kw_sat_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_6kw_pmsyrm_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_pmsyrm_5kw_sat.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">5.6-kW saturated PM-SyRM, FVC</div>
     </div>
 
 
@@ -136,7 +136,7 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 Current-Vector Control
 ----------------------
 
-These examples are for current-vector control of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_current_vector_im_2kw`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat`).
+These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`).
 
 
 
@@ -148,103 +148,103 @@ These examples are for current-vector control of induction and synchronous machi
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 6.7-kW SyRM drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 6.7-kW synchronous reluctance machine (SyRM) drive.">
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_syrm_7kw_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_7kw_syrm_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_syrm_7kw.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_7kw_syrm_cvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, CVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control of a 2.2-kW induction motor drive in torque-control mode.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control (CVC) of a 2.2-kW induction motor (IM) drive in torque-control mode.">
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_im_2kw_tq_mode_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_cvc_tq_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw_tq_mode.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_cvc_tq.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, torque-control mode</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, CVC, torque-control mode</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive, equipped with a diode bridge rectifier.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive, equipped with a diode bridge rectifier.">
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsm_2kw_diode_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_diode_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw_diode.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, diode bridge</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, diode bridge, CVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW induction motor drive. The magnetic saturation of the machine is also included in the system model, while the control system assumes constant parameters.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_im_2kw_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, saturated</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, CVC, PM-flux adaptation</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a 2.2-kW PMSM drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_sat_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_sat_cvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, with PM flux adaptation</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW saturated IM, CVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control of a saturated 5-kW permanent- magnet synchronous reluctance motor. The flux maps of this example motor, known as THOR, are from the SyR-e project:">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_current_vector_pmsyrm_thor_sat_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_current_vector_pmsyrm_thor_sat.py`
+  :ref:`sphx_glr_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">5-kW PM-SyRM, flux maps from SyR-e</div>
+      <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, CVC</div>
     </div>
 
 
@@ -257,7 +257,7 @@ These examples are for current-vector control of induction and synchronous machi
 V/Hz Control
 ------------
 
-These examples demonstrate observer-based V/Hz control for synchronous machines [#Tii2025aa]_ and induction machines [#Tii2025bb]_. The example :doc:`/drive_examples/vhz/plot_obs_vhz_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model. Furthermore, the examples :doc:`/drive_examples/vhz/plot_vhz_im_2kw` and :doc:`/drive_examples/vhz/plot_vhz_im_2kw_lc` show operation of an induction machine under pure open-loop V/Hz control with a diode front-end rectifier and with an LC filter, respectively.
+These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous machines [#Tii2025aa]_ and induction machines [#Tii2025bb]_. The example :doc:`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz` demonstrates the use of a two-mass mechanics model. Furthermore, the examples :doc:`/drive_examples/vhz/plot_2kw_im_diode_vhz` and :doc:`/drive_examples/vhz/plot_2kw_im_lc_vhz` show operation of an induction machine under pure open-loop V/Hz control with a diode front-end rectifier and with an LC filter, respectively.
 
 .. rubric:: References
 
@@ -275,103 +275,103 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW induction motor.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW induction machine (IM).">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_im_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_ovhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, O-V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_ipmsm_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_ovhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, O-V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The control system is configured as pure open-loop V/Hz control.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM) drive. A diode bridge, stiff three-phase grid, and a DC link is modeled.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_vhz_im_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_diode_vhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_vhz_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_diode_vhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, diode bridge</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, diode bridge, V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a saturated 6.7-kW synchronous reluctance motor drive. The control method uses constant inductances.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 6.7-kW synchronous reluctance machine (SyRM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_syrm_7kw_sat_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_7kw_syrm_sat_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_syrm_7kw_sat.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_7kw_syrm_sat_ovhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW saturated SyRM, O-V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine drive equipped with an output LC filter.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine (IM) drive equipped with an output LC filter.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_vhz_im_2kw_lc_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_lc_vhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_vhz_im_2kw_lc.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_lc_vhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, LC filter</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, LC filter, V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The mechanical subsystem is modeled as a two-mass system. The resonance frequency of the mechanics is around 85 Hz. The mechanical parameters correspond to [#Saa2015]_, except that the torsional damping is set to a smaller value in this example.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The mechanical subsystem is modeled as a two-mass system. The resonance frequency of the mechanics is around 85 Hz. The mechanical parameters correspond to [#Saa2015]_, except that the torsional damping is set to a smaller value in this example.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_pmsm_2kw_two_mass_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_ipmsm_2mass_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_pmsm_2kw_two_mass.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, 2-mass mechanics</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</div>
     </div>
 
 
@@ -400,35 +400,35 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive. Square-wave signal injection is used with a simple phase-locked loop.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. Square-wave signal injection with a simple phase-locked loop is used.">
 
 .. only:: html
 
-  .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_signal_inj_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_2kw_ipmsm_signal_inj_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_signal_inj_plot_signal_inj_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_signal_inj_plot_2kw_ipmsm_signal_inj.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, signal injection</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 6.7-kW SyRM drive. Square-wave signal injection is used with a simple phase-locked loop.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 6.7-kW synchronous reluctance machine (SyRM) drive. Square-wave signal injection with a simple phase-locked loop is used.">
 
 .. only:: html
 
-  .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_signal_inj_syrm_7kw_thumb.png
+  .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_7kw_syrm_signal_inj_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_signal_inj_plot_signal_inj_syrm_7kw.py`
+  :ref:`sphx_glr_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, signal injection</div>
     </div>
 
 

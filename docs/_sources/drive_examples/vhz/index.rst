@@ -5,7 +5,7 @@
 V/Hz Control
 ------------
 
-These examples demonstrate observer-based V/Hz control for synchronous machines [#Tii2025aa]_ and induction machines [#Tii2025bb]_. The example :doc:`/drive_examples/vhz/plot_obs_vhz_pmsm_2kw_two_mass` demonstrates the use of a two-mass mechanics model. Furthermore, the examples :doc:`/drive_examples/vhz/plot_vhz_im_2kw` and :doc:`/drive_examples/vhz/plot_vhz_im_2kw_lc` show operation of an induction machine under pure open-loop V/Hz control with a diode front-end rectifier and with an LC filter, respectively.
+These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous machines [#Tii2025aa]_ and induction machines [#Tii2025bb]_. The example :doc:`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz` demonstrates the use of a two-mass mechanics model. Furthermore, the examples :doc:`/drive_examples/vhz/plot_2kw_im_diode_vhz` and :doc:`/drive_examples/vhz/plot_2kw_im_lc_vhz` show operation of an induction machine under pure open-loop V/Hz control with a diode front-end rectifier and with an LC filter, respectively.
 
 .. rubric:: References
 
@@ -23,103 +23,103 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW induction motor.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW induction machine (IM).">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_im_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_ovhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, O-V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_ipmsm_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_ovhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, O-V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A diode bridge, stiff three-phase grid, and a DC link is modeled. The control system is configured as pure open-loop V/Hz control.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM) drive. A diode bridge, stiff three-phase grid, and a DC link is modeled.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_vhz_im_2kw_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_diode_vhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_vhz_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_diode_vhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, diode bridge</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, diode bridge, V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a saturated 6.7-kW synchronous reluctance motor drive. The control method uses constant inductances.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 6.7-kW synchronous reluctance machine (SyRM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_syrm_7kw_sat_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_7kw_syrm_sat_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_syrm_7kw_sat.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_7kw_syrm_sat_ovhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW saturated SyRM, O-V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine drive equipped with an output LC filter.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine (IM) drive equipped with an output LC filter.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_vhz_im_2kw_lc_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_lc_vhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_vhz_im_2kw_lc.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_lc_vhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor, LC filter</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, LC filter, V/Hz control</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz control of a 2.2-kW PMSM drive. The mechanical subsystem is modeled as a two-mass system. The resonance frequency of the mechanics is around 85 Hz. The mechanical parameters correspond to [#Saa2015]_, except that the torsional damping is set to a smaller value in this example.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The mechanical subsystem is modeled as a two-mass system. The resonance frequency of the mechanics is around 85 Hz. The mechanical parameters correspond to [#Saa2015]_, except that the torsional damping is set to a smaller value in this example.">
 
 .. only:: html
 
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_obs_vhz_pmsm_2kw_two_mass_thumb.png
+  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_ipmsm_2mass_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_obs_vhz_pmsm_2kw_two_mass.py`
+  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM, 2-mass mechanics</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</div>
     </div>
 
 
@@ -133,10 +133,10 @@ These examples demonstrate observer-based V/Hz control for synchronous machines 
 .. toctree::
    :hidden:
 
-   /drive_examples/vhz/plot_obs_vhz_im_2kw
-   /drive_examples/vhz/plot_obs_vhz_pmsm_2kw
-   /drive_examples/vhz/plot_vhz_im_2kw
-   /drive_examples/vhz/plot_obs_vhz_syrm_7kw_sat
-   /drive_examples/vhz/plot_vhz_im_2kw_lc
-   /drive_examples/vhz/plot_obs_vhz_pmsm_2kw_two_mass
+   /drive_examples/vhz/plot_2kw_im_ovhz
+   /drive_examples/vhz/plot_2kw_ipmsm_ovhz
+   /drive_examples/vhz/plot_2kw_im_diode_vhz
+   /drive_examples/vhz/plot_7kw_syrm_sat_ovhz
+   /drive_examples/vhz/plot_2kw_im_lc_vhz
+   /drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz
 

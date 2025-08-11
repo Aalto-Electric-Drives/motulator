@@ -283,7 +283,7 @@ Package Contents
                  installation, defaults to False.
    :type latex: bool, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str, optional
+   :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -328,7 +328,7 @@ Package Contents
                             Otherwise, plot the grid voltage waveforms, defaults to True.
    :type plot_pcc_voltage: bool, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str, optional
+   :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -359,7 +359,7 @@ Package Contents
                 in SI units.
    :type base: BaseValues, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str, optional
+   :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Flux-Vector Control &#8212; motulator 0.6.2 documentation</title>
+    <title>Flux-Vector Control &#8212; motulator 0.7.0 documentation</title>
   
   
   
@@ -43,17 +43,18 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=967efe37"></script>
+    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/upgreek"]}, "tex": {"packages": {"[+]": ["upgreek"]}, "macros": {"jj": "\\mathrm{j}", "e": "\\mathrm{e}", "D": "\\mathrm{d}", "IM": "\\mathrm{Im}", "RE": "\\mathrm{Re}", "T": "\\intercal", "uc": "\\mathbf{u}_\\mathrm{c}", "ucref": "\\mathbf{u}_\\mathrm{c}^\\mathrm{ref}", "ucreflim": "\\bar{\\mathbf{u}}_\\mathrm{c}^\\mathrm{ref}", "ucs": "\\mathbf{u}_\\mathrm{c}^\\mathrm{s}", "ic": "\\mathbf{i}_\\mathrm{c}", "icref": "\\mathbf{i}_\\mathrm{c}^\\mathrm{ref}", "ics": "\\mathbf{i}_\\mathrm{c}^\\mathrm{s}", "qc": "\\mathbf{q}_\\mathrm{c}", "qcs": "\\mathbf{q}_\\mathrm{c}^\\mathrm{s}", "dc": "\\mathbf{d}_\\mathrm{c}", "dcs": "\\mathbf{d}_\\mathrm{c}^\\mathrm{s}", "us": "\\mathbf{u}_\\mathrm{s}", "uss": "\\mathbf{u}_\\mathrm{s}^\\mathrm{s}", "usref": "\\mathbf{u}_\\mathrm{s}^\\mathrm{ref}", "usreflim": "\\bar{\\mathbf{u}}_\\mathrm{s}^\\mathrm{ref}", "is": "\\mathbf{i}_\\mathrm{s}", "isref": "\\mathbf{i}_\\mathrm{s}^\\mathrm{ref}", "iss": "\\mathbf{i}_\\mathrm{s}^\\mathrm{s}", "ir": "\\mathbf{i}_\\mathrm{r}", "irs": "\\mathbf{i}_\\mathrm{r}^\\mathrm{s}", "iR": "\\mathbf{i}_\\mathrm{R}", "psis": "\\boldsymbol{\\uppsi}_\\mathrm{s}", "psisref": "\\boldsymbol{\\uppsi}_\\mathrm{s}^\\mathrm{ref}", "hatpsis": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{s}", "psiss": "\\boldsymbol{\\uppsi}_\\mathrm{s}^\\mathrm{s}", "tildepsis": "\\tilde{\\boldsymbol{\\uppsi}}_\\mathrm{s}", "tildepsiR": "\\tilde{\\boldsymbol{\\uppsi}}_\\mathrm{R}", "psir": "\\boldsymbol{\\uppsi}_\\mathrm{r}", "psirs": "\\boldsymbol{\\uppsi}_\\mathrm{r}^\\mathrm{s}", "psiR": "\\boldsymbol{\\uppsi}_\\mathrm{R}", "psiRo": "\\boldsymbol{\\uppsi}_\\mathrm{R0}", "hatpsiR": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{R}", "psiaux": "\\boldsymbol{\\uppsi}_\\mathrm{a}", "hatpsiaux": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{a}", "iaux": "\\mathbf{i}_\\mathrm{a}", "hatiaux": "\\hat{\\mathbf{i}}_\\mathrm{a}", "es": "\\mathbf{e}_\\mathrm{s}", "ec": "\\mathbf{e}_\\mathrm{c}", "eo": "\\mathbf{e}_\\mathrm{o}", "isfcn": "\\mathbf{g}", "idfcn": "g_\\mathrm{d}", "iqfcn": "g_\\mathrm{q}", "psisfcn": "\\mathbf{f}", "hatpsisfcn": "\\hat{\\mathbf{f}}", "psidfcn": "f_\\mathrm{d}", "psiqfcn": "f_\\mathrm{q}", "abspsis": "\\psi_\\mathrm{s}", "abspsisref": "\\psi_\\mathrm{s}^\\mathrm{ref}", "hatabspsis": "\\hat{\\psi}_\\mathrm{s}", "hatabspsiR": "\\hat{\\psi}_\\mathrm{R}", "psif": "\\psi_\\mathrm{f}", "absis": "i_\\mathrm{s}", "psid": "\\psi_\\mathrm{d}", "psiq": "\\psi_\\mathrm{q}", "id": "i_\\mathrm{d}", "iq": "i_\\mathrm{q}", "tildepsisd": "\\tilde{\\psi}_\\mathrm{sd}", "tildepsisq": "\\tilde{\\psi}_\\mathrm{sq}", "Rs": "R_\\mathrm{s}", "Rr": "R_\\mathrm{r}", "Ls": "L_\\mathrm{s}", "Lsgm": "L_\\upsigma", "Rsgm": "R_\\upsigma", "LM": "L_\\mathrm{M}", "RR": "R_\\mathrm{R}", "Ld": "L_\\mathrm{d}", "Lq": "L_\\mathrm{q}", "Ldd": "L_\\mathrm{dd}", "Lqq": "L_\\mathrm{qq}", "Ldq": "L_\\mathrm{dq}", "Gdd": "\\varGamma_\\mathrm{dd}", "Gqq": "\\varGamma_\\mathrm{qq}", "Gdq": "\\varGamma_\\mathrm{dq}", "omegam": "\\omega_\\mathrm{m}", "omegamo": "\\omega_\\mathrm{m0}", "tildeomegam": "\\tilde{\\omega}_\\mathrm{m}", "omegaM": "\\omega_\\mathrm{M}", "omegaMref": "\\omega_\\mathrm{M}^\\mathrm{ref}", "omegamref": "\\omega_\\mathrm{m}^\\mathrm{ref}", "omegaL": "\\omega_\\mathrm{L}", "omegas": "\\omega_\\mathrm{s}", "hatomegas": "\\hat{\\omega}_\\mathrm{s}", "hatomegar": "\\hat{\\omega}_\\mathrm{r}", "omegaso": "\\omega_\\mathrm{s0}", "omegar": "\\omega_\\mathrm{r}", "omegarb": "\\omega_\\mathrm{rb}", "omegaro": "\\omega_\\mathrm{r0}", "thetam": "\\vartheta_\\mathrm{m}", "thetaM": "\\vartheta_\\mathrm{M}", "thetaL": "\\vartheta_\\mathrm{L}", "thetaML": "\\vartheta_\\mathrm{ML}", "tauM": "\\tau_\\mathrm{M}", "hattauM": "\\hat{\\tau}_\\mathrm{M}", "hattauL": "\\hat{\\tau}_\\mathrm{L}", "tauMref": "\\tau_\\mathrm{M}^\\mathrm{ref}", "tauL": "\\tau_\\mathrm{L}", "tauLtot": "\\tau_\\mathrm{L,tot}", "tauS": "\\tau_\\mathrm{S}", "np": "n_\\mathrm{p}", "JM": "J_\\mathrm{M}", "JL": "J_\\mathrm{L}", "BL": "B_\\mathrm{L}", "CS": "C_\\mathrm{S}", "KS": "K_\\mathrm{S}", "Ts": "T_\\mathrm{s}", "Tsw": "T_\\mathrm{sw}", "ismax": "i_\\mathrm{s}^\\mathrm{max}", "dA": "d_\\mathrm{a}", "dB": "d_\\mathrm{b}", "dC": "d_\\mathrm{c}", "qA": "q_\\mathrm{a}", "qB": "q_\\mathrm{b}", "qC": "q_\\mathrm{c}", "udc": "u_\\mathrm{dc}", "udcref": "u_\\mathrm{dc}^\\mathrm{ref}", "idc": "i_\\mathrm{dc}", "udi": "u_\\mathrm{di}", "iL": "i_\\mathrm{L}", "Cdc": "C_\\mathrm{dc}", "hatCdc": "\\hat{C}_\\mathrm{dc}", "Ldc": "L_\\mathrm{dc}", "iA": "i_\\mathrm{a}", "iB": "i_\\mathrm{b}", "iC": "i_\\mathrm{c}", "uAn": "u_\\mathrm{an}", "uBn": "u_\\mathrm{bn}", "uCn": "u_\\mathrm{cn}", "uAN": "u_\\mathrm{aN}", "uBN": "u_\\mathrm{bN}", "uCN": "u_\\mathrm{cN}", "Cf": "C_\\mathrm{f}", "Lf": "L_\\mathrm{f}", "Rf": "R_\\mathrm{f}", "Lg": "L_\\mathrm{g}", "Rg": "R_\\mathrm{g}", "Lt": "L_\\mathrm{t}", "Rt": "R_\\mathrm{t}", "Lfc": "L_\\mathrm{fc}", "Rfc": "R_\\mathrm{fc}", "Lfg": "L_\\mathrm{fg}", "Rfg": "R_\\mathrm{fg}", "ug": "\\mathbf{u}_\\mathrm{g}", "ugo": "\\mathbf{u}_\\mathrm{g0}", "tildeug": "\\tilde{\\mathbf{u}}_\\mathrm{g}", "absug": "u_\\mathrm{g}", "hatabsug": "\\hat{u}_\\mathrm{g}", "hatug": "\\hat{\\mathbf{u}}_\\mathrm{g}", "ugs": "\\mathbf{u}_\\mathrm{g}^\\mathrm{s}", "ig": "\\mathbf{i}_\\mathrm{g}", "igs": "\\mathbf{i}_\\mathrm{g}^\\mathrm{s}", "eg": "\\mathbf{e}_\\mathrm{g}", "egs": "\\mathbf{e}_\\mathrm{g}^\\mathrm{s}", "uf": "\\mathbf{u}_\\mathrm{f}", "ufs": "\\mathbf{u}_\\mathrm{f}^\\mathrm{s}", "vc": "\\mathbf{v}_\\mathrm{c}", "hatvc": "\\hat{\\mathbf{v}}_\\mathrm{c}", "omegag": "\\omega_\\mathrm{g}", "hatomegag": "\\hat{\\omega}_\\mathrm{g}", "thetac": "\\vartheta_\\mathrm{c}", "thetag": "\\vartheta_\\mathrm{g}", "hatthetag": "\\hat{\\vartheta}_\\mathrm{g}", "omegac": "\\omega_\\mathrm{c}", "Wdc": "W_\\mathrm{dc}", "hatWdc": "\\hat{W}_\\mathrm{dc}", "Wdcref": "W_\\mathrm{dc}^\\mathrm{ref}", "pg": "p_\\mathrm{g}", "hatpg": "\\hat{p}_\\mathrm{g}", "pgref": "p_\\mathrm{g}^\\mathrm{ref}", "vcref": "v_\\mathrm{c}^\\mathrm{ref}", "hatabsvc": "\\hat{v}_\\mathrm{c}", "kt": "k_\\mathrm{t}", "kp": "k_\\mathrm{p}", "ki": "k_\\mathrm{i}", "alphai": "\\alpha_\\mathrm{i}", "ui": "u_\\mathrm{i}", "uff": "u_\\mathrm{ff}", "kd": "k_\\mathrm{d}", "kq": "k_\\mathrm{q}", "kotheta": "k_{\\mathrm{o}\\upvartheta}", "koomega": "k_{\\mathrm{o}\\upomega}", "kotau": "k_{\\mathrm{o}\\uptau}", "kT": "\\mathbf{k}_\\mathrm{t}", "kP": "\\mathbf{k}_\\mathrm{p}", "kI": "\\mathbf{k}_\\mathrm{i}", "uI": "\\mathbf{u}_\\mathrm{i}", "uFF": "\\mathbf{u}_\\mathrm{ff}", "kV": "\\mathbf{k}_\\mathrm{v}", "koa": "\\mathbf{k}_\\mathrm{o1}", "kob": "\\mathbf{k}_\\mathrm{o2}", "alphac": "\\alpha_\\mathrm{c}", "alphas": "\\alpha_\\mathrm{s}", "alphao": "\\alpha_\\mathrm{o}", "alphadc": "\\alpha_\\mathrm{dc}", "alphapll": "\\alpha_\\mathrm{pll}", "hatomegam": "\\hat{\\omega}_\\mathrm{m}", "hatthetam": "\\hat{\\vartheta}_\\mathrm{m}", "tildethetam": "\\tilde{\\vartheta}_\\mathrm{m}", "hatRs": "\\hat{R}_\\mathrm{s}", "hatRR": "\\hat{R}_\\mathrm{R}", "hatLs": "\\hat{L}_\\mathrm{s}", "hatLM": "\\hat{L}_\\mathrm{M}", "hatalpha": "\\hat{\\alpha}", "hatLsgm": "\\hat{L}_\\sigma", "hatRsgm": "\\hat{R}_\\sigma", "hatLd": "\\hat{L}_\\mathrm{d}", "hatLq": "\\hat{L}_\\mathrm{q}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'control/drive/flux_vector_ctrl';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Observer Design" href="observers.html" />
+    <link rel="next" title="Observers" href="observers.html" />
     <link rel="prev" title="Current Control" href="current_ctrl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -142,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.6.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -168,48 +169,48 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat.html">5.6-kW PM-SyRM, saturated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_syrm_7kw.html">6.7-kW SyRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_im_2kw_tq_mode.html">2.2-kW induction motor, torque-control mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsm_2kw_diode.html">2.2-kW PMSM, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_im_2kw.html">2.2-kW induction motor, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsm_2kw.html">2.2-kW PMSM, with PM flux adaptation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_current_vector_pmsyrm_thor_sat.html">5-kW PM-SyRM, flux maps from SyR-e</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_im_2kw.html">2.2-kW induction motor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_im_2kw.html">2.2-kW induction motor, diode bridge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_syrm_7kw_sat.html">6.7-kW SyRM, saturated</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_vhz_im_2kw_lc.html">2.2-kW induction motor, LC filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_obs_vhz_pmsm_2kw_two_mass.html">2.2-kW PMSM, 2-mass mechanics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_signal_inj_pmsm_2kw.html">2.2-kW PMSM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_signal_inj_syrm_7kw.html">6.7-kW SyRM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_lcl_10kva.html">10-kVA converter, LCL filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_dc_bus_10kva.html">10-kVA converter, DC-bus voltage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_gfl_10kva.html">10-kVA converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_rfpsc_13kva.html">12.5-kVA converter, RFPSC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_gfm_obs_13kva.html">12.5-kVA converter, disturbance observer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
 </ul>
 </details></li>
 </ul>
@@ -224,7 +225,8 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../model/drive/machines.html">Electric Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/induction_machine.html">Induction Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/synchronous_machine.html">Synchronous Machines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/mechanics.html">Mechanics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/ac_filter.html">Output LC Filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
@@ -248,6 +250,7 @@
 <li class="toctree-l2"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Flux-Vector Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observers.html">Observers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_gen.html">Reference Generation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -258,9 +261,9 @@
 </ul>
 </details></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Class Reference</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/control/index.html">motulator.common.control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/model/index.html">motulator.common.model</a></li>
@@ -285,6 +288,7 @@
 </details></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -354,7 +358,7 @@
       
       
       
-      <li><a href="../../_sources/control/drive/flux_vector_ctrl.rst" target="_blank"
+      <li><a href="../../_sources/control/drive/flux_vector_ctrl.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -364,7 +368,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.rst</span>
+<span class="btn__text-container">.md</span>
 </a>
 </li>
       
@@ -448,8 +452,17 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proportional-control">Proportional Control</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-induction-machines">For Induction Machines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proportional-control-law">Proportional Control Law</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system-analysis">Closed-Loop System Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-synchronous-machines">For Synchronous Machines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Flux and Torque Dynamics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Proportional Control Law</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inclusion-of-integral-action">Inclusion of Integral Action</a></li>
 </ul>
             </nav>
@@ -462,64 +475,75 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="flux-vector-control">
+  <section class="tex2jax_ignore mathjax_ignore" id="flux-vector-control">
 <h1>Flux-Vector Control<a class="headerlink" href="#flux-vector-control" title="Link to this heading">#</a></h1>
-<p>Flux vector control directly controls the stator flux magnitude and the electromagnetic torque, which simplifies reference generation especially in the field-weakening region <a class="footnote-reference brackets" href="#pel2009" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. We use the control law that results from feedback linearization of the flux and torque dynamics <a class="footnote-reference brackets" href="#awa2019" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Here, the inclusion of integral action is briefly discussed, as an extension to <a class="footnote-reference brackets" href="#tii2025a" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#tii2025b" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. Furthermore, these notes aim to provide a link between the column-vector and complex-vector formulations of the control law. Here, a synchronous machine is considered as an example (see the <a class="reference internal" href="../../model/drive/machines.html#synchronous-machine"><span class="std std-ref">Synchronous Machine</span></a> document for the model and notation), but the approach is analogous for induction machines.</p>
+<p>Flux-vector control directly controls the stator flux magnitude and the electromagnetic torque, which simplifies reference generation especially in the field-weakening region <span id="id1">[<a class="reference internal" href="../../bibliography.html#id35" title="Pellegrino, Armando, and Guglielmi. Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region. IEEE Trans. Ind. Appl., 2009. doi:10.1109/TIA.2009.2027167.">Pellegrino <em>et al.</em>, 2009</a>]</span>. We use the control law that results from feedback linearization of the flux and torque dynamics <span id="id2">[<a class="reference internal" href="../../bibliography.html#id5" title="Awan, Hinkkanen, Bojoi, and Pellegrino. Stator-flux-oriented control of synchronous motors: a systematic design procedure. IEEE Trans. Ind. Appl., 2019. doi:10.1109/TIA.2019.2927316.">Awan <em>et al.</em>, 2019</a>]</span>.</p>
+<section id="for-induction-machines">
+<h2>For Induction Machines<a class="headerlink" href="#for-induction-machines" title="Link to this heading">#</a></h2>
 <section id="flux-and-torque-dynamics">
-<h2>Flux and Torque Dynamics<a class="headerlink" href="#flux-and-torque-dynamics" title="Link to this heading">#</a></h2>
-<p>From the machine model, the flux and torque dynamics can be written as</p>
-<div class="math notranslate nohighlight" id="equation-flux-torque">
-<span class="eqno">(1)<a class="headerlink" href="#equation-flux-torque" title="Link to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} \psi_\mathrm{s}}{\mathrm{d} t} &amp;= \frac{1}{|\boldsymbol{\psi}_\mathrm{s}|} \mathrm{Re} \{\left(\boldsymbol{u}_\mathrm{s} - R_\mathrm{s} \boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s}\right) \boldsymbol{\psi}_\mathrm{s}^* \} \\
-\frac{\mathrm{d}\tau_\mathrm{M}}{\mathrm{d} t} &amp;= \frac{3 n_\mathrm{p}}{2} \mathrm{Im} \{ \left(\boldsymbol{u}_\mathrm{s} - R_\mathrm{s} \boldsymbol{i}_\mathrm{s} - \mathrm{j}\omega_\mathrm{m}\boldsymbol{\psi}_\mathrm{s} \right) \boldsymbol{i}_\mathrm{a}^*\}\end{split}\]</div>
-<p>These expressions are valid also for saturated machines, when the auxiliary current <span class="math notranslate nohighlight">\(\boldsymbol{i}_\mathrm{a}\)</span> is defined according to <a class="reference internal" href="../../model/drive/machines.html#equation-sm-mtpv-aux">(11)</a> in the <a class="reference internal" href="../../model/drive/machines.html#synchronous-machine"><span class="std std-ref">Synchronous Machine</span></a> document.</p>
+<h3>Flux and Torque Dynamics<a class="headerlink" href="#flux-and-torque-dynamics" title="Link to this heading">#</a></h3>
+<p>Using the machine model [see <a class="reference internal" href="../../model/drive/induction_machine.html#equation-im-flux-torque">(8)</a> in <a class="reference internal" href="../../model/drive/induction_machine.html#induction-machine"><span class="std std-ref">Induction Machine Γ Model</span></a>], the flux and torque dynamics can be expressed as</p>
+<div class="math notranslate nohighlight" id="equation-im-flux-torque-fvc">
+<span class="eqno">(1)<a class="headerlink" href="#equation-im-flux-torque-fvc" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \abspsis}{\D t} &amp;= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj\omegas\psis\right] \psis^*\} \\
+    \frac{\D\tauM}{\D t} &amp;= \frac{3 \np}{2 L_\sigma} \IM \{\left[\us - \Rs \is - \jj\omegas\psis\right] \psiR^*\}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> is the flux magnitude. The stator angular frequency is defined by <span class="math notranslate nohighlight">\(\omegas = \omegam + \omegar\)</span>, where <span class="math notranslate nohighlight">\(\omegam\)</span> is the rotor angular speed. The slip angular frequency is</p>
+<div class="math notranslate nohighlight" id="equation-omegar-fvc">
+<span class="eqno">(2)<a class="headerlink" href="#equation-omegar-fvc" title="Link to this equation">#</a></span>\[    \omegar = \frac{\omegarb \IM\{\psis\psiR^*\}}{\RE\{\psis\psiR^*\}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omegarb = \Rr/L_\ell = [(\LM + \Lsgm)/(\LM\Lsgm)]\RR\)</span> is the breakdown angular slip frequency. Note that the above expressions are independent of the coordinate system. Furthermore, they hold also for saturated machines, where <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>.</p>
 </section>
-<section id="proportional-control">
-<h2>Proportional Control<a class="headerlink" href="#proportional-control" title="Link to this heading">#</a></h2>
-<p>Consider proportional control of the form, resulting from the feedback linearization, <a class="footnote-reference brackets" href="#tii2025a" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
-<div class="math notranslate nohighlight" id="equation-flux-vector-control-usref">
-<span class="eqno">(2)<a class="headerlink" href="#equation-flux-vector-control-usref" title="Link to this equation">#</a></span>\[\boldsymbol{u}_\mathrm{s,ref} = \hat R_\mathrm{s} \boldsymbol{i}_\mathrm{s} + \mathrm{j}\omega_\mathrm{m} \hat{\boldsymbol{\psi}}_\mathrm{s} + e_\psi \boldsymbol{t}_{\psi} + e_\tau\boldsymbol{t}_{\tau}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat R_\mathrm{s}\)</span> is the stator resistance estimate, <span class="math notranslate nohighlight">\(\hat{\boldsymbol{\psi}}_\mathrm{s}\)</span> is the estimated flux vector, and <span class="math notranslate nohighlight">\(e_\psi = \alpha_\psi(\psi_\mathrm{s,ref} - |\hat{\boldsymbol{\psi}}_\mathrm{s}|)\)</span> and <span class="math notranslate nohighlight">\(e_\tau = \alpha_\tau(\tau_\mathrm{M,ref} - \hat{\tau}_\mathrm{M})\)</span> are the control errors in the flux and torque, respectively, scaled by the respective bandwidths. The complex quantities <span class="math notranslate nohighlight">\(\boldsymbol{t}_{\psi}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{t}_{\tau}\)</span> are the direction vectors.</p>
-<div class="math notranslate nohighlight" id="equation-flux-vector-control-dir">
-<span class="eqno">(3)<a class="headerlink" href="#equation-flux-vector-control-dir" title="Link to this equation">#</a></span>\[\boldsymbol{t}_{\psi} = \frac{ |\hat{\boldsymbol{\psi}}_\mathrm{s}|}{ \mathrm{Re}\{\hat{\boldsymbol{\psi}}_\mathrm{s}\hat{i}_\mathrm{a}^*\}}\hat{i}_\mathrm{a} \qquad
-    \boldsymbol{t}_{\tau} = \frac{2}{3 n_\mathrm{p} \mathrm{Re}\{\hat{\boldsymbol{\psi}}_\mathrm{s}\hat{i}_\mathrm{a}^*\}}\mathrm{j}\hat{\boldsymbol{\psi}}_\mathrm{s}\]</div>
-<p>Notice that <span class="math notranslate nohighlight">\(\mathrm{Re}\{\hat{\boldsymbol{\psi}}_\mathrm{s}\hat{i}_\mathrm{a}^*\} &gt; 0\)</span> in the whole feasible operating region.</p>
-<p>Assuming accurate estimates, linearization of the closed-loop system consisting of <a class="reference internal" href="#equation-flux-torque">(1)</a>–<a class="reference internal" href="#equation-flux-vector-control-dir">(3)</a> results in</p>
-<div class="math notranslate nohighlight" id="equation-flux-vector-control-closed-lin">
-<span class="eqno">(4)<a class="headerlink" href="#equation-flux-vector-control-closed-lin" title="Link to this equation">#</a></span>\[\frac{\mathrm{d}\Delta \psi_\mathrm{s}}{\mathrm{d} t} = \alpha_\psi (\Delta \psi_\mathrm{s,ref} - \Delta \psi_\mathrm{s} ) \qquad
-    \frac{\mathrm{d}\Delta\tau_\mathrm{M}}{\mathrm{d} t} = \alpha_\tau(\Delta\tau_\mathrm{M,ref} - \Delta \tau_\mathrm{M})\]</div>
-<p>These closed-loop small-signal dynamics are valid also for saturated machines, if the auxiliary current is estimated based on <a class="reference internal" href="../../model/drive/machines.html#equation-sm-mtpv-aux">(11)</a>.</p>
+<section id="proportional-control-law">
+<h3>Proportional Control Law<a class="headerlink" href="#proportional-control-law" title="Link to this heading">#</a></h3>
+<p>Based on <a class="reference internal" href="#equation-im-flux-torque-fvc">(1)</a>, the proportional control law can be derived <span id="id3">[<a class="reference internal" href="../../bibliography.html#id43" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<div class="math notranslate nohighlight" id="equation-im-flux-vector-control-usref">
+<span class="eqno">(3)<a class="headerlink" href="#equation-im-flux-vector-control-usref" title="Link to this equation">#</a></span>\[    \usref = \hatRs \is + \jj\hatomegas \hatpsis + e_\uppsi \mathbf{t}_\uppsi + e_\uptau \mathbf{t}_\uptau\]</div>
+<p>where <span class="math notranslate nohighlight">\(e_\uppsi = \alpha_\uppsi(\abspsisref - \hatabspsis)\)</span> and <span class="math notranslate nohighlight">\(e_\uptau = \alpha_\uptau(\tauMref - \hattauM)\)</span> are the bandwidth-scaled control errors of the stator flux linkage and torque, respectively, and the estimates are marked with the hat. The complex quantities <span class="math notranslate nohighlight">\(\mathbf{t}_\uppsi\)</span> and <span class="math notranslate nohighlight">\(\mathbf{t}_\uptau\)</span> are the direction vectors:</p>
+<div class="math notranslate nohighlight" id="equation-im-flux-vector-control-dir">
+<span class="eqno">(4)<a class="headerlink" href="#equation-im-flux-vector-control-dir" title="Link to this equation">#</a></span>\[    \mathbf{t}_\uppsi = \frac{ \hatabspsis}{ \RE\{\hatpsiR\hatpsis^*\}}\hatpsiR \qquad
+    \mathbf{t}_\uptau = \frac{2\Lsgm}{3 \np \RE\{\hatpsiR\hatpsis^*\}}\jj\hatpsis\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(\RE\{\hatpsiR\hatpsis^*\} &gt; 0\)</span> holds in the whole feasible operating region.</p>
+</section>
+<section id="closed-loop-system-analysis">
+<h3>Closed-Loop System Analysis<a class="headerlink" href="#closed-loop-system-analysis" title="Link to this heading">#</a></h3>
+<p>Assuming accurate estimates, linearization of the closed-loop system consisting of <a class="reference internal" href="#equation-im-flux-torque-fvc">(1)</a>–<a class="reference internal" href="#equation-im-flux-vector-control-dir">(4)</a> results in</p>
+<div class="math notranslate nohighlight" id="equation-im-flux-vector-control-closed-lin">
+<span class="eqno">(5)<a class="headerlink" href="#equation-im-flux-vector-control-closed-lin" title="Link to this equation">#</a></span>\[    \frac{\D\Delta\abspsis}{\D t} = \alpha_\uppsi (\Delta \abspsisref - \Delta \abspsis) \qquad
+    \frac{\D\Delta\tauM}{\D t} = \alpha_\uptau (\Delta\tauMref - \Delta \tauM)\]</div>
+<p>These closed-loop small-signal dynamics are valid also for saturated machines, if the flux observer takes the magnetic saturation into account. Furthermore, the dynamics hold also for sensorless drives, if the decoupling observer gains are used, see the <a class="reference internal" href="observers.html#im-obs-sensorless"><span class="std std-ref">Sensorless Drives</span></a> document and <span id="id4">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: an extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
+</section>
+</section>
+<section id="for-synchronous-machines">
+<h2>For Synchronous Machines<a class="headerlink" href="#for-synchronous-machines" title="Link to this heading">#</a></h2>
+<p>The flux-vector control for synchronous machines is analogous to the induction machine case. Only the differences are highlighted here.</p>
+<section id="id5">
+<h3>Flux and Torque Dynamics<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>Using the machine model [see <a class="reference internal" href="../../model/drive/synchronous_machine.html#equation-sm-mtpv-aux">(7)</a> and <a class="reference internal" href="../../model/drive/synchronous_machine.html#equation-sm-flux-torque">(10)</a> in <a class="reference internal" href="../../model/drive/synchronous_machine.html#synchronous-machine"><span class="std std-ref">Synchronous Machine Model</span></a>], the flux and torque dynamics can be expressed as</p>
+<div class="math notranslate nohighlight" id="equation-flux-torque">
+<span class="eqno">(6)<a class="headerlink" href="#equation-flux-torque" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \abspsis}{\D t} &amp;= \frac{1}{\abspsis} \RE \{\left(\us - \Rs \is - \jj\omegam\psis\right) \psis^* \} \\
+    \frac{\D\tauM}{\D t} &amp;= \frac{3 \np}{2} \IM \{ \left(\us - \Rs \is - \jj\omegam\psis \right) \iaux^*\}\end{split}\]</div>
+<p>These expressions are valid also for saturated machines.</p>
+</section>
+<section id="id6">
+<h3>Proportional Control Law<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>The proportional control law is <span id="id7">[<a class="reference internal" href="../../bibliography.html#id43" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<div class="math notranslate nohighlight" id="equation-sm-flux-vector-control-usref">
+<span class="eqno">(7)<a class="headerlink" href="#equation-sm-flux-vector-control-usref" title="Link to this equation">#</a></span>\[    \usref = \hatRs \is + \jj\hatomegam \hatpsis + e_\uppsi \mathbf{t}_\uppsi + e_\uptau \mathbf{t}_\uptau\]</div>
+<p>where <span class="math notranslate nohighlight">\(e_\uppsi = \alpha_\uppsi(\abspsisref - \hatabspsis)\)</span> and <span class="math notranslate nohighlight">\(e_\uptau = \alpha_\uptau(\tauMref - \hattauM)\)</span>, and the estimates are marked with the hat. The complex direction vectors are</p>
+<div class="math notranslate nohighlight" id="equation-sm-flux-vector-control-dir">
+<span class="eqno">(8)<a class="headerlink" href="#equation-sm-flux-vector-control-dir" title="Link to this equation">#</a></span>\[    \mathbf{t}_\uppsi = \frac{ \hatabspsis}{ \RE\{\hatiaux\hatpsis^*\}}\hatiaux \qquad
+    \mathbf{t}_\uptau = \frac{2}{3 \np \RE\{\hatiaux\hatpsis^*\}}\jj\hatpsis\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(\RE\{\hatiaux\hatpsis^*\} &gt; 0\)</span> holds in the whole feasible operating region. The closed-loop small-signal dynamics in <a class="reference internal" href="#equation-im-flux-vector-control-closed-lin">(5)</a> are valid also for synchronous machines (including saturated machines, if the flux observer takes the magnetic saturation into account). Furthermore, the dynamics hold also for sensorless drives, if the decoupling observer gains are used, see the <a class="reference internal" href="observers.html#sm-obs-sensorless"><span class="std std-ref">Sensorless Drives</span></a> document and <span id="id8">[<a class="reference internal" href="../../bibliography.html#id43" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
+</section>
 </section>
 <section id="inclusion-of-integral-action">
 <h2>Inclusion of Integral Action<a class="headerlink" href="#inclusion-of-integral-action" title="Link to this heading">#</a></h2>
-<p>Consider a 2DOF PI control law consisting of <a class="reference internal" href="#equation-flux-vector-control-usref">(2)</a> and <a class="reference internal" href="#equation-flux-vector-control-dir">(3)</a> and the following integral states and control error terms,</p>
+<p>Optionally, the above control laws <a class="reference internal" href="#equation-im-flux-vector-control-usref">(3)</a> and <a class="reference internal" href="#equation-im-flux-vector-control-dir">(4)</a> as well as <a class="reference internal" href="#equation-sm-flux-vector-control-usref">(7)</a> and <a class="reference internal" href="#equation-sm-flux-vector-control-dir">(8)</a> can be extended with integral action. 2DOF PI control is achieved using the following integral states and control error terms,</p>
 <div class="math notranslate nohighlight" id="equation-flux-vector-control-2dof">
-<span class="eqno">(5)<a class="headerlink" href="#equation-flux-vector-control-2dof" title="Link to this equation">#</a></span>\[\begin{split}\frac{\mathrm{d} x_\psi}{\mathrm{d} t} &amp;= \alpha_\psi\alpha_\mathrm{i}(\psi_\mathrm{s,ref} - |\hat{\boldsymbol{\psi}}_\mathrm{s}|) \\
-    \frac{\mathrm{d} x_\tau}{\mathrm{d} t} &amp;= \alpha_\tau\alpha_\mathrm{i}(\tau_\mathrm{M,ref} - \hat{\tau}_\mathrm{M}) \\
-    e_\psi &amp;= \alpha_\psi(\psi_\mathrm{s,ref} - |\hat{\boldsymbol{\psi}}_\mathrm{s}|) + x_\psi - \alpha_\mathrm{i} |\hat{\boldsymbol{\psi}}_\mathrm{s}| \\
-e_\tau &amp;= \alpha_\tau(\tau_\mathrm{M,ref} - \hat{\tau}_\mathrm{M}) + x_\tau - \alpha_\mathrm{i} \hat{\tau}_\mathrm{M}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\alpha_\psi\)</span> and <span class="math notranslate nohighlight">\(\alpha_\tau\)</span> are the reference-tracking bandwidths, <span class="math notranslate nohighlight">\(\alpha_\psi\)</span> and <span class="math notranslate nohighlight">\(\alpha_\tau\)</span> are the integral states, and <span class="math notranslate nohighlight">\(\alpha_\mathrm{i}\)</span> is the integral action bandwidth. It can be shown that the resulting linearized closed-loop reference-following dynamics remain the same as  <a class="reference internal" href="#equation-flux-vector-control-closed-lin">(4)</a>. However, in this case, both the flux and torque dynamics have additional pole at <span class="math notranslate nohighlight">\(s = - \alpha_\mathrm{i}\)</span> resulting from the integral action. The integral action pole is canceled from reference-tracking dynamics (see the <a class="reference internal" href="speed_ctrl.html#dof-pi-controller"><span class="std std-ref">2DOF PI Controller</span></a> document).</p>
-<p>This control law is a variant of <a class="footnote-reference brackets" href="#awa2019" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, having channel-specific reference-tracking bandwidths. It has been implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorController" title="motulator.drive.control.sm.FluxVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.FluxVectorController</span></code></a> and <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorController" title="motulator.drive.control.im.FluxVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.FluxVectorController</span></code></a> classes for synchronous and induction machines, respectively. The disturbance observer structure is used in the implementation to avoid the need for anti-windup mechanism (see the <a class="reference internal" href="../common/controllers.html#disturbance-observer-structure"><span class="std std-ref">Disturbance-Observer Structure</span></a> document).</p>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="pel2009" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Pellegrino, Armando, Guglielmi, “Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region,” IEEE Trans. Ind. Appl., 2009, <a class="reference external" href="https://doi.org/10.1109/TIA.2009.2027167">https://doi.org/10.1109/TIA.2009.2027167</a></p>
-</aside>
-<aside class="footnote brackets" id="awa2019" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id6">2</a>)</span>
-<p>Awan, Hinkkanen, Bojoi, Pellegrino, “Stator-flux-oriented control of synchronous motors: A systematic design procedure,” IEEE Trans. Ind. Appl., 2019, <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2927316">https://doi.org/10.1109/TIA.2019.2927316</a></p>
-</aside>
-<aside class="footnote brackets" id="tii2025a" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
-<p>Tiitinen, Hinkkanen, Harnefors, “Design framework for sensorless control of synchronous machine drives,” IEEE Trans. Ind. Electron., 2025, <a class="reference external" href="https://doi.org/10.1109/TIE.2024.3429650">https://doi.org/10.1109/TIE.2024.3429650</a></p>
-</aside>
-<aside class="footnote brackets" id="tii2025b" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
-<p>Tiitinen, Hinkkanen, Harnefors, “Sensorless flux-vector control framework: An extension for induction machines,” IEEE Trans. Ind. Electron., 2025, <a class="reference external" href="https://doi.org/10.1109/TIE.2025.3559958">https://doi.org/10.1109/TIE.2025.3559958</a></p>
-</aside>
-</aside>
+<span class="eqno">(9)<a class="headerlink" href="#equation-flux-vector-control-2dof" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D x_\uppsi}{\D t} &amp;= \alpha_\uppsi\alphai(\abspsisref - \hatabspsis) \\
+    \frac{\D x_\uptau}{\D t} &amp;= \alpha_\uptau\alphai(\tauMref - \hattauM) \\
+    e_\uppsi &amp;= \alpha_\uppsi(\abspsisref - \hatabspsis) + x_\uppsi - \alphai \hatabspsis \\
+    e_\uptau &amp;= \alpha_\uptau(\tauMref - \hattauM) + x_\uptau - \alphai \hattauM\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_\uppsi\)</span> and <span class="math notranslate nohighlight">\(x_\uptau\)</span> are the integral states, <span class="math notranslate nohighlight">\(\alpha_\uppsi\)</span> and <span class="math notranslate nohighlight">\(\alpha_\uptau\)</span> are the reference-tracking bandwidths, and <span class="math notranslate nohighlight">\(\alphai\)</span> is the integral action bandwidth. It can be shown that the resulting linearized closed-loop reference-following dynamics remain the same as with the proportional control law. However, in this case, both the flux and torque dynamics have additional pole at <span class="math notranslate nohighlight">\(s = -\alphai\)</span> resulting from the integral action. The integral action pole is canceled from reference-tracking dynamics (see the <a class="reference internal" href="speed_ctrl.html#dof-pi-controller"><span class="std std-ref">2DOF PI Controller</span></a> document).</p>
+<p>This 2DOF PI control law is a variant of <span id="id9">[<a class="reference internal" href="../../bibliography.html#id5" title="Awan, Hinkkanen, Bojoi, and Pellegrino. Stator-flux-oriented control of synchronous motors: a systematic design procedure. IEEE Trans. Ind. Appl., 2019. doi:10.1109/TIA.2019.2927316.">Awan <em>et al.</em>, 2019</a>]</span>, having channel-specific reference-tracking bandwidths. It has been implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorController" title="motulator.drive.control.im.FluxVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.FluxVectorController</span></code></a> and <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorController" title="motulator.drive.control.sm.FluxVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.FluxVectorController</span></code></a> classes for induction and synchronous machines, respectively. The disturbance observer structure is used in the implementation to avoid the need for anti-windup mechanism (see the <a class="reference internal" href="../common/controllers.html#disturbance-observer-structure"><span class="std std-ref">Disturbance-Observer Structure</span></a> document).</p>
 </section>
 </section>
 
@@ -548,7 +572,7 @@ e_\tau &amp;= \alpha_\tau(\tau_\mathrm{M,ref} - \hat{\tau}_\mathrm{M}) + x_\tau 
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Observer Design</p>
+        <p class="prev-next-title">Observers</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -568,8 +592,17 @@ e_\tau &amp;= \alpha_\tau(\tau_\mathrm{M,ref} - \hat{\tau}_\mathrm{M}) + x_\tau 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proportional-control">Proportional Control</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-induction-machines">For Induction Machines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proportional-control-law">Proportional Control Law</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-loop-system-analysis">Closed-Loop System Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-synchronous-machines">For Synchronous Machines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Flux and Torque Dynamics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Proportional Control Law</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inclusion-of-integral-action">Inclusion of Integral Action</a></li>
 </ul>
   </nav></div>

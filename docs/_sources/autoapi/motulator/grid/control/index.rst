@@ -173,7 +173,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(meas)
+   .. py:method:: get_feedback(u_c_ab, meas)
 
       
       Get feedback signals.
@@ -658,7 +658,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(meas)
+   .. py:method:: get_feedback(u_c_ab, meas)
 
       
       Get the feedback signals.
@@ -879,7 +879,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(meas)
+   .. py:method:: get_feedback(u_c_ab, meas)
 
       
       Get the feedback signals.

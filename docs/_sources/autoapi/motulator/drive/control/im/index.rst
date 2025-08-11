@@ -46,7 +46,7 @@ Module Contents
    Current controller for induction machines.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param alpha_c: Reference-tracking bandwidth (rad/s).
    :type alpha_c: float, optional
    :param alpha_i: Integral action bandwidth (rad/s), defaults to `alpha_c`.
@@ -76,11 +76,14 @@ Module Contents
 
    In the base-speed region, the current reference in rotor-flux coordinates is::
 
-       i_s_ref = psi_R_ref/L_M + 1j*tau_M_ref/(1.5*n_p*abs(psi_R))
+       i_s_ref = i_sd_nom + 1j*tau_M_ref/(1.5*n_p*abs(psi_R))
 
-   where `psi_R_ref` is the reference for the rotor flux magnitude and `psi_R` is the
-   estimated rotor flux. The field-weakening operation is based adjusting the flux-
-   producing current component::
+   where `psi_R` is the estimated rotor flux. The nominal flux-producing current
+   component is computed from the nominal stator flux in the no-load condition::
+
+       i_sd_nom = psi_s_nom/(L_M + L_sgm)
+
+   In the field-weakening operation, the flux-producing current component is::
 
        i_s_ref.real = (k_fw/s)*(u_s_max - abs(u_s_ref))
 
@@ -91,13 +94,8 @@ Module Contents
    producing current component `i_s_ref.imag` is limited based on the maximum stator
    current and the breakdown slip.
 
-   The nominal flux-producing current component is computed from the nominal stator
-   flux in the no-load condition::
-
-       i_sd_nom = psi_s_nom/(L_M + L_sgm)
-
    :param machine_pars: Machine model parameters.
-   :type machine_pars: InductionMachineInvGammaPars
+   :type machine_pars: InductionMachineInvGammaPars | InductionMachinePars
    :param psi_s_nom: Nominal stator flux linkage (Vs).
    :type psi_s_nom: float
    :param i_s_max: Maximum stator current (A).
@@ -199,7 +197,7 @@ Module Contents
    Current-vector controller for induction machine drives.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param cfg: Current-vector controller configuration.
    :type cfg: CurrentVectorControllerCfg
    :param sensorless: If True, sensorless control is used, defaults to True.
@@ -248,10 +246,58 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(meas)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab)
 
       
-      Get the feedback signals.
+      Get the feedback signals with motion sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_sensored_feedback(u_s_ab, i_s_ab, w_M, theta_M)
+
+      
+      Get the feedback signals with motion sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
 
 
 
@@ -309,7 +355,8 @@ Module Contents
    :type alpha_c: float, optional
    :param alpha_i: Current control integral-action bandwidth (rad/s), defaults to `alpha_c`.
    :type alpha_i: float, optional
-   :param alpha_o: Speed estimation bandwidth (rad/s), defaults to 2*pi*100.
+   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
+                   2*pi*30, keeping the default speed observer gain the same.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
@@ -319,6 +366,9 @@ Module Contents
    :type k_u: float, optional
    :param k_fw: Field-weakening gain (1/H), defaults to `2*R_R/(w_s_nom*L_sgm**2)`.
    :type k_fw: float, optional
+   :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+             used in speed estimation.
+   :type J: float, optional
 
 
 
@@ -340,17 +390,19 @@ Module Contents
 .. py:class:: FluxObserver(par, k_o1, k_o2)
 
    
-   Reduced-order flux observer operating in estimated rotor flux coordinates.
+   Reduced-order flux observer.
 
    This class implements a reduced-order flux observer for induction machines. The
-   observer structure is similar to [#Hin2010]_. The observer operates in estimated
-   rotor flux coordinates.
+   observer structure is similar to [#Hin2010]_. The observer operates in synchronous
+   coordinates rotating at `w_c` (but not locked to any particular vector). The main-
+   flux saturation can be taken into account by providing the saturation model via
+   `InductionMachinePars`.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
-   :param k_o1: Observer gains as functions of the rotor angular speed.
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :param k_o1: Observer gains as functions of the electrical angular speed of the rotor.
    :type k_o1: Callable[[float], complex]
-   :param k_o2: Observer gains as functions of the rotor angular speed.
+   :param k_o2: Observer gains as functions of the electrical angular speed of the rotor.
    :type k_o2: Callable[[float], complex]
 
    .. rubric:: Notes
@@ -444,11 +496,11 @@ Module Contents
    
    Flux-vector controller for induction machine drives.
 
-   This class implements a variant of flux-vector control. Rotor coordinates and
-   decoupling between the stator flux and torque channels are used [#Tii2025b]_.
+   This class implements a variant of flux-vector control. Decoupling between the
+   stator flux and torque channels is used [#Tii2025b]_.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param cfg: Flux-vector control configuration.
    :type cfg: FluxVectorControllerCfg
    :param sensorless: If True, sensorless control is used, defaults to True.
@@ -503,10 +555,58 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(meas)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab)
 
       
-      Get feedback signals.
+      Get feedback signals without motion sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_sensored_feedback(u_s_ab, i_s_ab, w_M, theta_M)
+
+      
+      Get the feedback signals with motion sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
 
 
 
@@ -566,7 +666,8 @@ Module Contents
    :type alpha_psi: float, optional
    :param alpha_i: Integral action bandwidth (rad/s), defaults to `alpha_tau`.
    :type alpha_i: float, optional
-   :param alpha_o: Speed estimation bandwidth (rad/s), defaults to 2*pi*50.
+   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
+                   2*pi*30, keeping the default speed observer gain the same.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
@@ -578,6 +679,9 @@ Module Contents
    :type k_u: float, optional
    :param k_b: Breakdown torque margin, defaults to 0.9.
    :type k_b: float, optional
+   :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+             used in speed estimation.
+   :type J: float, optional
 
 
 
@@ -599,7 +703,10 @@ Module Contents
 .. py:class:: InductionMachineInvGammaPars
 
    
-   Inverse-Γ model parameters of an induction machine.
+   Constant inverse-Γ model parameters of an induction machine.
+
+   This contains constant inverse-Γ model parameters of an induction machine. To model
+   the main-flux saturation, use the `InductionMachinePars` class instead.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -611,6 +718,24 @@ Module Contents
    :type L_sgm: float
    :param L_M: Magnetizing inductance (H).
    :type L_M: float
+
+   .. attribute:: R_sgm
+
+      Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
+
+      :type: float
+
+   .. attribute:: alpha
+
+      Inverse rotor time constant (rad/s).
+
+      :type: float
+
+   .. attribute:: w_rb
+
+      Breakdown slip angular frequency (rad/s).
+
+      :type: float
 
 
 
@@ -662,16 +787,40 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: update_psi_s(psi_s)
+
+      
+      Update the stator flux linkage magnitude state.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: ObserverBasedVHzController(par, cfg, T_s = 0.00025)
 
    
    Observer-based V/Hz controller for induction machine drives.
 
-   This class implements sensorless observer-based V/Hz control. Rotor coordinates and
-   decoupling between the stator flux and torque channels are used [#Tii2025b]_.
+   This class implements sensorless observer-based V/Hz control. Decoupling between
+   the stator flux and torque channels is used [#Tii2025b]_.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param cfg: Observer-based V/Hz controller configuration.
    :type cfg: ObserverBasedVHzControllerCfg
    :param T_s: Sampling period (s), defaults to 250e-6.
@@ -718,10 +867,34 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(w_M_ref, meas)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_ref)
 
       
       Get feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
 
 
 
@@ -919,7 +1092,7 @@ Module Contents
    Reference generator for flux-vector control.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param psi_s_nom: Nominal stator flux linkage (Vs).
    :type psi_s_nom: float
    :param i_s_max: Maximum stator current (A).
@@ -948,7 +1121,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(tau_M_ref, w_s, u_dc)
+   .. py:method:: compute_output(tau_M_ref, w_s, psi_R, u_dc)
 
       
       Simple field-weakening strategy.
@@ -1009,7 +1182,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedFluxObserver(par, k_o1, k_o2, alpha_o)
+.. py:class:: SpeedFluxObserver(par, k_o1, k_o2, alpha_o, J = None)
 
    Bases: :py:obj:`FluxObserver`
 
@@ -1018,17 +1191,20 @@ Module Contents
    Observer with speed estimation.
 
    This class implements a reduced-order flux observer for induction machines with
-   speed estimation. The observer structure is similar to [#Hin2010]_. The observer
-   operates in estimated rotor flux coordinates.
+   speed estimation. If the inertia of the mechanical system is provided, the observer
+   also estimates the load torque, to avoid the lag in the speed estimate.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars
-   :param k_o1: Observer gains as functions of the rotor angular speed.
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :param k_o1: Observer gains as functions of the electrical angular speed of the rotor.
    :type k_o1: Callable[[float], complex]
-   :param k_o2: Observer gains as functions of the rotor angular speed.
+   :param k_o2: Observer gains as functions of the electrical angular speed of the rotor.
    :type k_o2: Callable[[float], complex]
-   :param alpha_o: Speed estimation bandwidth (rad/s).
+   :param alpha_o: Speed estimation pole (rad/s).
    :type alpha_o: float
+   :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
+             mechanical system model is not used.
+   :type J: float, optional
 
 
 

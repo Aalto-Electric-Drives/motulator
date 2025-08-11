@@ -439,7 +439,7 @@ Package Contents
       :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
       :type latex: bool, optional
       :param save_path: If provided, save the figure to this path.
-      :type save_path: str, optional
+      :type save_path: str | Path, optional
       :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -475,7 +475,7 @@ Package Contents
       :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
       :type latex: bool, optional
       :param save_path: If provided, save the figure to this path.
-      :type save_path: str, optional
+      :type save_path: str | Path, optional
       :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -511,7 +511,7 @@ Package Contents
       :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
       :type latex: bool, optional
       :param save_path: If provided, save the figure to this path.
-      :type save_path: str, optional
+      :type save_path: str | Path, optional
       :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -547,7 +547,7 @@ Package Contents
       :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
       :type latex: bool, optional
       :param save_path: If provided, save the figure to this path.
-      :type save_path: str, optional
+      :type save_path: str | Path, optional
       :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -1078,7 +1078,7 @@ Package Contents
                  installation, defaults to False.
    :type latex: bool, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str, optional
+   :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -1118,7 +1118,7 @@ Package Contents
    :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
    :type latex: bool, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str, optional
+   :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -1160,7 +1160,7 @@ Package Contents
                  installation, defaults to False.
    :type latex: bool, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str, optional
+   :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -1180,7 +1180,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_map(data, component, base = None, x_lims = None, x_ticks = None, y_lims = None, y_ticks = None, z_lims = None, z_ticks = None, raw_data = None, latex = False, save_path = None, **savefig_kwargs)
+.. py:function:: plot_map(data, component, base = None, lims = None, ticks = None, raw_data = None, axlim_clip = True, latex = False, save_path = None, **savefig_kwargs)
 
    
    Plot component (d or q) of flux linkage or current maps.
@@ -1192,25 +1192,19 @@ Package Contents
    :param base: Base values for scaling the maps. If not given, the maps are plotted
                 in SI units.
    :type base: BaseValues, optional
-   :param x_lims: x-axis limits. If None, uses automatic scaling.
-   :type x_lims: tuple[float, float], optional
-   :param x_ticks: x-axis tick locations.
-   :type x_ticks: ArrayLike, optional
-   :param y_lims: y-axis limits. If None, uses automatic scaling.
-   :type y_lims: tuple[float, float], optional
-   :param y_ticks: y-axis tick locations.
-   :type y_ticks: ArrayLike, optional
-   :param z_lims: z-axis limits. If None, uses automatic scaling.
-   :type z_lims: tuple[float, float], optional
-   :param z_ticks: z-axis tick locations.
-   :type z_ticks: ArrayLike, optional
+   :param lims: Axis limits. Keys should be 'x', 'y', 'z'.
+   :type lims: dict[str, tuple[float, float]], optional
+   :param ticks: Axis tick locations. Keys should be 'x', 'y', 'z'.
+   :type ticks: dict[str, ArrayLike], optional
    :param raw_data: Raw data for comparison (shown as scatter points).
    :type raw_data: MagneticModel, optional
+   :param axlim_clip: Whether to clip the axes limits to the data limits, defaults to True.
+   :type axlim_clip: bool, optional
    :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
                  installation, defaults to False.
    :type latex: bool, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str, optional
+   :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 
@@ -1250,7 +1244,7 @@ Package Contents
    :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
    :type latex: bool, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str, optional
+   :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
 
 

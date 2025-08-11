@@ -588,7 +588,10 @@ Package Contents
 .. py:class:: InductionMachineInvGammaPars
 
    
-   Inverse-Γ model parameters of an induction machine.
+   Constant inverse-Γ model parameters of an induction machine.
+
+   This contains constant inverse-Γ model parameters of an induction machine. To model
+   the main-flux saturation, use the `InductionMachinePars` class instead.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -600,6 +603,24 @@ Package Contents
    :type L_sgm: float
    :param L_M: Magnetizing inductance (H).
    :type L_M: float
+
+   .. attribute:: R_sgm
+
+      Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
+
+      :type: float
+
+   .. attribute:: alpha
+
+      Inverse rotor time constant (rad/s).
+
+      :type: float
+
+   .. attribute:: w_rb
+
+      Breakdown slip angular frequency (rad/s).
+
+      :type: float
 
 
 
@@ -651,10 +672,41 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: update_psi_s(psi_s)
+
+      
+      Update the stator flux linkage magnitude state.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: InductionMachinePars
 
    
    Γ-model parameters of an induction machine.
+
+   This contains Γ-model parameters of an induction machine. The main-flux saturation
+   saturation can also be modeled by providing a callable `L_s` parameter. For
+   convenience, the class also provides the corresponding inverse-Γ model parameters,
+   which can be used in control systems. If the saturation is modeled, these inverse-Γ
+   parameters depend on the stator flux linkage magnitude `psi_s` that should be
+   updated by calling the `update_psi_s` method.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -667,6 +719,48 @@ Package Contents
    :param L_s: Stator inductance (H). If callable, it should be a function of the stator flux
                linkage magnitude (Vs).
    :type L_s: float | Callable[[float], float]
+
+   .. attribute:: gamma
+
+      Magnetic coupling factor.
+
+      :type: float
+
+   .. attribute:: L_M
+
+      Inverse-Γ magnetizing inductance (H).
+
+      :type: float
+
+   .. attribute:: L_sgm
+
+      Inverse-Γ leakage inductance (H).
+
+      :type: float
+
+   .. attribute:: R_R
+
+      Inverse-Γ rotor resistance (Ω).
+
+      :type: float
+
+   .. attribute:: R_sgm
+
+      Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
+
+      :type: float
+
+   .. attribute:: alpha
+
+      Inverse rotor time constant (rad/s).
+
+      :type: float
+
+   .. attribute:: w_rb
+
+      Breakdown slip angular frequency (rad/s).
+
+      :type: float
 
 
 
@@ -699,6 +793,30 @@ Package Contents
 
       :returns: Γ model parameters.
       :rtype: InductionMachinePars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update_psi_s(psi_s)
+
+      
+      Update the stator flux linkage magnitude state.
+
 
 
 

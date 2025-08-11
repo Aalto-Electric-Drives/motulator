@@ -1,0 +1,696 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Induction Machines &#8212; motulator 0.7.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=ebd526be" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/upgreek"]}, "tex": {"packages": {"[+]": ["upgreek"]}, "macros": {"jj": "\\mathrm{j}", "e": "\\mathrm{e}", "D": "\\mathrm{d}", "IM": "\\mathrm{Im}", "RE": "\\mathrm{Re}", "T": "\\intercal", "uc": "\\mathbf{u}_\\mathrm{c}", "ucref": "\\mathbf{u}_\\mathrm{c}^\\mathrm{ref}", "ucreflim": "\\bar{\\mathbf{u}}_\\mathrm{c}^\\mathrm{ref}", "ucs": "\\mathbf{u}_\\mathrm{c}^\\mathrm{s}", "ic": "\\mathbf{i}_\\mathrm{c}", "icref": "\\mathbf{i}_\\mathrm{c}^\\mathrm{ref}", "ics": "\\mathbf{i}_\\mathrm{c}^\\mathrm{s}", "qc": "\\mathbf{q}_\\mathrm{c}", "qcs": "\\mathbf{q}_\\mathrm{c}^\\mathrm{s}", "dc": "\\mathbf{d}_\\mathrm{c}", "dcs": "\\mathbf{d}_\\mathrm{c}^\\mathrm{s}", "us": "\\mathbf{u}_\\mathrm{s}", "uss": "\\mathbf{u}_\\mathrm{s}^\\mathrm{s}", "usref": "\\mathbf{u}_\\mathrm{s}^\\mathrm{ref}", "usreflim": "\\bar{\\mathbf{u}}_\\mathrm{s}^\\mathrm{ref}", "is": "\\mathbf{i}_\\mathrm{s}", "isref": "\\mathbf{i}_\\mathrm{s}^\\mathrm{ref}", "iss": "\\mathbf{i}_\\mathrm{s}^\\mathrm{s}", "ir": "\\mathbf{i}_\\mathrm{r}", "irs": "\\mathbf{i}_\\mathrm{r}^\\mathrm{s}", "iR": "\\mathbf{i}_\\mathrm{R}", "psis": "\\boldsymbol{\\uppsi}_\\mathrm{s}", "psisref": "\\boldsymbol{\\uppsi}_\\mathrm{s}^\\mathrm{ref}", "hatpsis": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{s}", "psiss": "\\boldsymbol{\\uppsi}_\\mathrm{s}^\\mathrm{s}", "tildepsis": "\\tilde{\\boldsymbol{\\uppsi}}_\\mathrm{s}", "tildepsiR": "\\tilde{\\boldsymbol{\\uppsi}}_\\mathrm{R}", "psir": "\\boldsymbol{\\uppsi}_\\mathrm{r}", "psirs": "\\boldsymbol{\\uppsi}_\\mathrm{r}^\\mathrm{s}", "psiR": "\\boldsymbol{\\uppsi}_\\mathrm{R}", "psiRo": "\\boldsymbol{\\uppsi}_\\mathrm{R0}", "hatpsiR": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{R}", "psiaux": "\\boldsymbol{\\uppsi}_\\mathrm{a}", "hatpsiaux": "\\hat{\\boldsymbol{\\uppsi}}_\\mathrm{a}", "iaux": "\\mathbf{i}_\\mathrm{a}", "hatiaux": "\\hat{\\mathbf{i}}_\\mathrm{a}", "es": "\\mathbf{e}_\\mathrm{s}", "ec": "\\mathbf{e}_\\mathrm{c}", "eo": "\\mathbf{e}_\\mathrm{o}", "isfcn": "\\mathbf{g}", "idfcn": "g_\\mathrm{d}", "iqfcn": "g_\\mathrm{q}", "psisfcn": "\\mathbf{f}", "hatpsisfcn": "\\hat{\\mathbf{f}}", "psidfcn": "f_\\mathrm{d}", "psiqfcn": "f_\\mathrm{q}", "abspsis": "\\psi_\\mathrm{s}", "abspsisref": "\\psi_\\mathrm{s}^\\mathrm{ref}", "hatabspsis": "\\hat{\\psi}_\\mathrm{s}", "hatabspsiR": "\\hat{\\psi}_\\mathrm{R}", "psif": "\\psi_\\mathrm{f}", "absis": "i_\\mathrm{s}", "psid": "\\psi_\\mathrm{d}", "psiq": "\\psi_\\mathrm{q}", "id": "i_\\mathrm{d}", "iq": "i_\\mathrm{q}", "tildepsisd": "\\tilde{\\psi}_\\mathrm{sd}", "tildepsisq": "\\tilde{\\psi}_\\mathrm{sq}", "Rs": "R_\\mathrm{s}", "Rr": "R_\\mathrm{r}", "Ls": "L_\\mathrm{s}", "Lsgm": "L_\\upsigma", "Rsgm": "R_\\upsigma", "LM": "L_\\mathrm{M}", "RR": "R_\\mathrm{R}", "Ld": "L_\\mathrm{d}", "Lq": "L_\\mathrm{q}", "Ldd": "L_\\mathrm{dd}", "Lqq": "L_\\mathrm{qq}", "Ldq": "L_\\mathrm{dq}", "Gdd": "\\varGamma_\\mathrm{dd}", "Gqq": "\\varGamma_\\mathrm{qq}", "Gdq": "\\varGamma_\\mathrm{dq}", "omegam": "\\omega_\\mathrm{m}", "omegamo": "\\omega_\\mathrm{m0}", "tildeomegam": "\\tilde{\\omega}_\\mathrm{m}", "omegaM": "\\omega_\\mathrm{M}", "omegaMref": "\\omega_\\mathrm{M}^\\mathrm{ref}", "omegamref": "\\omega_\\mathrm{m}^\\mathrm{ref}", "omegaL": "\\omega_\\mathrm{L}", "omegas": "\\omega_\\mathrm{s}", "hatomegas": "\\hat{\\omega}_\\mathrm{s}", "hatomegar": "\\hat{\\omega}_\\mathrm{r}", "omegaso": "\\omega_\\mathrm{s0}", "omegar": "\\omega_\\mathrm{r}", "omegarb": "\\omega_\\mathrm{rb}", "omegaro": "\\omega_\\mathrm{r0}", "thetam": "\\vartheta_\\mathrm{m}", "thetaM": "\\vartheta_\\mathrm{M}", "thetaL": "\\vartheta_\\mathrm{L}", "thetaML": "\\vartheta_\\mathrm{ML}", "tauM": "\\tau_\\mathrm{M}", "hattauM": "\\hat{\\tau}_\\mathrm{M}", "hattauL": "\\hat{\\tau}_\\mathrm{L}", "tauMref": "\\tau_\\mathrm{M}^\\mathrm{ref}", "tauL": "\\tau_\\mathrm{L}", "tauLtot": "\\tau_\\mathrm{L,tot}", "tauS": "\\tau_\\mathrm{S}", "np": "n_\\mathrm{p}", "JM": "J_\\mathrm{M}", "JL": "J_\\mathrm{L}", "BL": "B_\\mathrm{L}", "CS": "C_\\mathrm{S}", "KS": "K_\\mathrm{S}", "Ts": "T_\\mathrm{s}", "Tsw": "T_\\mathrm{sw}", "ismax": "i_\\mathrm{s}^\\mathrm{max}", "dA": "d_\\mathrm{a}", "dB": "d_\\mathrm{b}", "dC": "d_\\mathrm{c}", "qA": "q_\\mathrm{a}", "qB": "q_\\mathrm{b}", "qC": "q_\\mathrm{c}", "udc": "u_\\mathrm{dc}", "udcref": "u_\\mathrm{dc}^\\mathrm{ref}", "idc": "i_\\mathrm{dc}", "udi": "u_\\mathrm{di}", "iL": "i_\\mathrm{L}", "Cdc": "C_\\mathrm{dc}", "hatCdc": "\\hat{C}_\\mathrm{dc}", "Ldc": "L_\\mathrm{dc}", "iA": "i_\\mathrm{a}", "iB": "i_\\mathrm{b}", "iC": "i_\\mathrm{c}", "uAn": "u_\\mathrm{an}", "uBn": "u_\\mathrm{bn}", "uCn": "u_\\mathrm{cn}", "uAN": "u_\\mathrm{aN}", "uBN": "u_\\mathrm{bN}", "uCN": "u_\\mathrm{cN}", "Cf": "C_\\mathrm{f}", "Lf": "L_\\mathrm{f}", "Rf": "R_\\mathrm{f}", "Lg": "L_\\mathrm{g}", "Rg": "R_\\mathrm{g}", "Lt": "L_\\mathrm{t}", "Rt": "R_\\mathrm{t}", "Lfc": "L_\\mathrm{fc}", "Rfc": "R_\\mathrm{fc}", "Lfg": "L_\\mathrm{fg}", "Rfg": "R_\\mathrm{fg}", "ug": "\\mathbf{u}_\\mathrm{g}", "ugo": "\\mathbf{u}_\\mathrm{g0}", "tildeug": "\\tilde{\\mathbf{u}}_\\mathrm{g}", "absug": "u_\\mathrm{g}", "hatabsug": "\\hat{u}_\\mathrm{g}", "hatug": "\\hat{\\mathbf{u}}_\\mathrm{g}", "ugs": "\\mathbf{u}_\\mathrm{g}^\\mathrm{s}", "ig": "\\mathbf{i}_\\mathrm{g}", "igs": "\\mathbf{i}_\\mathrm{g}^\\mathrm{s}", "eg": "\\mathbf{e}_\\mathrm{g}", "egs": "\\mathbf{e}_\\mathrm{g}^\\mathrm{s}", "uf": "\\mathbf{u}_\\mathrm{f}", "ufs": "\\mathbf{u}_\\mathrm{f}^\\mathrm{s}", "vc": "\\mathbf{v}_\\mathrm{c}", "hatvc": "\\hat{\\mathbf{v}}_\\mathrm{c}", "omegag": "\\omega_\\mathrm{g}", "hatomegag": "\\hat{\\omega}_\\mathrm{g}", "thetac": "\\vartheta_\\mathrm{c}", "thetag": "\\vartheta_\\mathrm{g}", "hatthetag": "\\hat{\\vartheta}_\\mathrm{g}", "omegac": "\\omega_\\mathrm{c}", "Wdc": "W_\\mathrm{dc}", "hatWdc": "\\hat{W}_\\mathrm{dc}", "Wdcref": "W_\\mathrm{dc}^\\mathrm{ref}", "pg": "p_\\mathrm{g}", "hatpg": "\\hat{p}_\\mathrm{g}", "pgref": "p_\\mathrm{g}^\\mathrm{ref}", "vcref": "v_\\mathrm{c}^\\mathrm{ref}", "hatabsvc": "\\hat{v}_\\mathrm{c}", "kt": "k_\\mathrm{t}", "kp": "k_\\mathrm{p}", "ki": "k_\\mathrm{i}", "alphai": "\\alpha_\\mathrm{i}", "ui": "u_\\mathrm{i}", "uff": "u_\\mathrm{ff}", "kd": "k_\\mathrm{d}", "kq": "k_\\mathrm{q}", "kotheta": "k_{\\mathrm{o}\\upvartheta}", "koomega": "k_{\\mathrm{o}\\upomega}", "kotau": "k_{\\mathrm{o}\\uptau}", "kT": "\\mathbf{k}_\\mathrm{t}", "kP": "\\mathbf{k}_\\mathrm{p}", "kI": "\\mathbf{k}_\\mathrm{i}", "uI": "\\mathbf{u}_\\mathrm{i}", "uFF": "\\mathbf{u}_\\mathrm{ff}", "kV": "\\mathbf{k}_\\mathrm{v}", "koa": "\\mathbf{k}_\\mathrm{o1}", "kob": "\\mathbf{k}_\\mathrm{o2}", "alphac": "\\alpha_\\mathrm{c}", "alphas": "\\alpha_\\mathrm{s}", "alphao": "\\alpha_\\mathrm{o}", "alphadc": "\\alpha_\\mathrm{dc}", "alphapll": "\\alpha_\\mathrm{pll}", "hatomegam": "\\hat{\\omega}_\\mathrm{m}", "hatthetam": "\\hat{\\vartheta}_\\mathrm{m}", "tildethetam": "\\tilde{\\vartheta}_\\mathrm{m}", "hatRs": "\\hat{R}_\\mathrm{s}", "hatRR": "\\hat{R}_\\mathrm{R}", "hatLs": "\\hat{L}_\\mathrm{s}", "hatLM": "\\hat{L}_\\mathrm{M}", "hatalpha": "\\hat{\\alpha}", "hatLsgm": "\\hat{L}_\\sigma", "hatRsgm": "\\hat{R}_\\sigma", "hatLd": "\\hat{L}_\\mathrm{d}", "hatLq": "\\hat{L}_\\mathrm{q}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'model/drive/induction_machine';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Synchronous Machines" href="synchronous_machine.html" />
+    <link rel="prev" title="Drives" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">motulator 0.7.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../common/sampled_data.html">Sampled-Data Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../common/space_vectors.html">Space Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../common/converters.html">Voltage-Source Converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Drives</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Induction Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="synchronous_machine.html">Synchronous Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mechanics.html">Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diode_bridge.html">Six-Pulse Diode Bridge</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grid/grid_volt_source.html">Three-Phase Source</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../control/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../control/common/control_system.html">Control System Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/common/controllers.html">Controllers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../control/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/observers.html">Observers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/reference_gen.html">Reference Generation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../control/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/control/index.html">motulator.common.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/model/index.html">motulator.common.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/utils/index.html">motulator.common.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/index.html">motulator.drive</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/control/index.html">motulator.drive.control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html">motulator.drive.control.im</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/grid/index.html">motulator.grid</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/control/index.html">motulator.grid.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/model/index.html">motulator.grid.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/utils/index.html">motulator.grid.utils</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aalto-Electric-Drives/motulator" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/model/drive/induction_machine.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Induction Machines</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-model">Induction Machine Γ Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-inverse-model">Induction Machine Inverse-Γ Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-magnetic-model">Linear Magnetic Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-model-with-main-flux-saturation">Inverse-Γ Model With Main-Flux Saturation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="induction-machines">
+<h1>Induction Machines<a class="headerlink" href="#induction-machines" title="Link to this heading">#</a></h1>
+<p>This document describes continuous-time induction machine models of the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#module-motulator.drive.model" title="motulator.drive.model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.drive.model</span></code></a> package.</p>
+<section id="induction-machine-model">
+<span id="induction-machine"></span><h2>Induction Machine Γ Model<a class="headerlink" href="#induction-machine-model" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#fig-im-gamma"><span class="std std-ref">Figure 1</span></a> shows the Γ-equivalent circuit model of an induction machine. We apply it as the base model, as it readily extends to include magnetic saturation <span id="id1">[<a class="reference internal" href="../../bibliography.html#id42" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The model is implemented in <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class.</p>
+<figure class="align-center" id="fig-im-gamma">
+<a class="only-light reference internal image-reference" href="../../_images/im_gamma.svg"><img alt="Gamma-model of an induction machine" class="only-light" src="../../_images/im_gamma.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 1:</em> Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>.</span><a class="headerlink" href="#fig-im-gamma" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id5">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_gamma.svg"><img alt="Gamma-model of an induction machine" class="invert-colors-dark only-dark" src="../../_images/im_gamma.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 1:</em> Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In general coordinates rotating at <span class="math notranslate nohighlight">\(\omegac\)</span> (see <a class="reference internal" href="../common/space_vectors.html#coordinate-transformation"><span class="std std-ref">Coordinate Transformation</span></a>), the voltage equations are</p>
+<div class="math notranslate nohighlight" id="equation-im-voltages">
+<span class="eqno">(1)<a class="headerlink" href="#equation-im-voltages" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D\psis}{\D t} &amp;= \us - \Rs\is - \jj\omegac\psis \\
+    \frac{\D\psir}{\D t} &amp;= -\Rr\ir - \jj(\omegac - \omegam)\psir\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\us\)</span> is the stator voltage, <span class="math notranslate nohighlight">\(\is\)</span> is the stator current, <span class="math notranslate nohighlight">\(\psis\)</span> is the stator flux linkage, and <span class="math notranslate nohighlight">\(\Rs\)</span> is the stator resistance. The rotor quantities are defined similarly. The electrical angular speed of the rotor is <span class="math notranslate nohighlight">\(\omegam = \np \omegaM\)</span>, where <span class="math notranslate nohighlight">\(\omegaM\)</span> is the mechanical angular speed of the rotor and <span class="math notranslate nohighlight">\(\np\)</span> is the number of pole pairs.</p>
+<p>The stator and rotor currents, respectively, are</p>
+<div class="math notranslate nohighlight" id="equation-im-currents">
+<span class="eqno">(2)<a class="headerlink" href="#equation-im-currents" title="Link to this equation">#</a></span>\[\begin{split}    \is &amp;= \frac{\psis - \gamma\psir}{\gamma L_\ell} \\
+    \ir &amp;= \frac{\psir - \psis}{L_\ell}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Ls\)</span> is the stator inductance, <span class="math notranslate nohighlight">\(L_\ell\)</span> is the leakage inductance, and <span class="math notranslate nohighlight">\(\gamma\)</span> is the magnetic coupling factor</p>
+<div class="math notranslate nohighlight" id="equation-gamma-factor">
+<span class="eqno">(3)<a class="headerlink" href="#equation-gamma-factor" title="Link to this equation">#</a></span>\[    \gamma = \frac{\Ls}{\Ls + L_\ell}\]</div>
+<p>The electromagnetic torque is</p>
+<div class="math notranslate nohighlight" id="equation-im-torque">
+<span class="eqno">(4)<a class="headerlink" href="#equation-im-torque" title="Link to this equation">#</a></span>\[    \tauM = \frac{3\np}{2}\IM \left\{\is \psis^* \right\}\]</div>
+<p>where the star operator denotes the complex conjugate. <a class="reference internal" href="#fig-im-block"><span class="std std-ref">Figure 2</span></a> shows the block diagram of the model in stator coordinates.</p>
+<figure class="align-center" id="fig-im-block">
+<a class="only-light reference internal image-reference" href="../../_images/im_block.svg"><img alt="Block diagram of an induction machine model" class="only-light" src="../../_images/im_block.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the induction machine model. The magnetic model includes the flux equations (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#fig-im-block" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id6">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_block.svg"><img alt="Block diagram of an induction machine model" class="invert-colors-dark only-dark" src="../../_images/im_block.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the machine model. The magnetic model includes the flux equations (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The main-flux saturation is modeled using a nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span> where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> <span id="id2">[<a class="reference internal" href="../../bibliography.html#id37" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>, <a class="reference internal" href="../../bibliography.html#id42" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The saturable stator inductance can be unambiguously characterized using simple no-load tests. It also properly takes into account the effect of the load variations on the saturation state. Notice that the nonlinear stator inductance only appears in <a class="reference internal" href="#equation-gamma-factor">(3)</a>.</p>
+<p>The Γ model in stator coordinates (<span class="math notranslate nohighlight">\(\omegac = 0\)</span>) is implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class. Its parameters are defined in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class, which accepts nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>. See also examples <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html"><span class="doc">2.2-kW saturated IM, CVC</span></a> and <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a>.</p>
+</section>
+<section id="induction-machine-inverse-model">
+<h2>Induction Machine Inverse-Γ Model<a class="headerlink" href="#induction-machine-inverse-model" title="Link to this heading">#</a></h2>
+<section id="linear-magnetic-model">
+<h3>Linear Magnetic Model<a class="headerlink" href="#linear-magnetic-model" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="#fig-im-inv-gamma"><span class="std std-ref">Figure 3</span></a> shows the inverse-Γ model of an induction machine. This model is commonly used in control applications for more straightforward implementation. Constant parameters are defined using <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars" title="motulator.drive.model.InductionMachineInvGammaPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachineInvGammaPars</span></code></a> and can be used both in control methods and to parametrize the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> model.</p>
+<figure class="align-center" id="fig-im-inv-gamma">
+<a class="only-light reference internal image-reference" href="../../_images/im_inv_gamma.svg"><img alt="Inverse-Gamma model of an induction machine" class="only-light" src="../../_images/im_inv_gamma.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine.</span><a class="headerlink" href="#fig-im-inv-gamma" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id7">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_inv_gamma.svg"><img alt="Inverse-Gamma model of an induction machine" class="invert-colors-dark only-dark" src="../../_images/im_inv_gamma.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>If the magnetic saturation is omitted, the inverse-Γ model is mathematically identical to the Γ model <span id="id3">[<a class="reference internal" href="../../bibliography.html#id42" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The parameters can be transformed as</p>
+<div class="math notranslate nohighlight" id="equation-gamma-to-inv-gamma">
+<span class="eqno">(5)<a class="headerlink" href="#equation-gamma-to-inv-gamma" title="Link to this equation">#</a></span>\[    \Lsgm = \gamma L_\ell \qquad
+    \LM = \gamma\Ls \qquad
+    \RR = \gamma^2 \Rr\]</div>
+<p>where <span class="math notranslate nohighlight">\(\gamma\)</span> is defined in <a class="reference internal" href="#equation-gamma-factor">(3)</a>. Furthermore, the rotor flux linkage <span class="math notranslate nohighlight">\(\psiR = \gamma\psir\)</span> and the rotor current <span class="math notranslate nohighlight">\(\iR = \ir/\gamma\)</span> are also scaled. Otherwise the equations remain the same as in the Γ model.</p>
+</section>
+<section id="inverse-model-with-main-flux-saturation">
+<h3>Inverse-Γ Model With Main-Flux Saturation<a class="headerlink" href="#inverse-model-with-main-flux-saturation" title="Link to this heading">#</a></h3>
+<p>While the inverse-Γ model is convenient for control, incorporating magnetic saturation directly into it is challenging. A more practical approach is to map the saturation effects from the Γ model using the factor <span class="math notranslate nohighlight">\(\gamma\)</span> in <a class="reference internal" href="#equation-gamma-factor">(3)</a>. As a result, the inverse-Γ model parameters become flux-dependent: <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>. The <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class handles the conversion from the Γ parameters to the inverse-Γ parameters, enabling saturation-aware control methods (see example <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a>).</p>
+<p>Using the stator flux linkage and the stator current as state variables, the nonlinear state-space form becomes</p>
+<div class="math notranslate nohighlight" id="equation-im-inv-gamma-ss">
+<span class="eqno">(6)<a class="headerlink" href="#equation-im-inv-gamma-ss" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \psis}{\D t} &amp;= \us - \Rs\is - \jj\omegac\psis \\
+    \Lsgm\frac{\D \is}{\D t} &amp;= \us - (\Rs + \RR + \jj\omegac \Lsgm)\is
+    + \left(\alpha - \jj\omegam\right)\psiR - \boldsymbol{\upepsilon} \\
+    \psiR &amp;= \psis - \Lsgm\is\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Lsgm\)</span>, <span class="math notranslate nohighlight">\(\RR\)</span>, <span class="math notranslate nohighlight">\(\LM\)</span>, <span class="math notranslate nohighlight">\(\alpha = \RR/\LM\)</span> are nonlinear functions of the stator flux magnitude. Saturation introduces a transient voltage term</p>
+<div class="math notranslate nohighlight" id="equation-im-inv-gamma-eps">
+<span class="eqno">(7)<a class="headerlink" href="#equation-im-inv-gamma-eps" title="Link to this equation">#</a></span>\[    \boldsymbol{\upepsilon} = \frac{1}{2}\frac{\abspsis}{\gamma(\abspsis)}\frac{\partial\gamma(\abspsis)}{\partial\abspsis} \left[ \us - \Rs\is + \frac{\psis}{\psis^*}(\us^* - \Rs\is^*)\right]\]</div>
+<p>This voltage term only appears during changes in the stator-flux magnitude. When the transient voltage term is included, the inverse-Γ model <a class="reference internal" href="#equation-im-inv-gamma-ss">(6)</a> is mathematically identical to the original nonlinear Γ model. However, in control methods, the transient voltage term can typically be neglected.</p>
+</section>
+</section>
+<section id="flux-and-torque-dynamics">
+<h2>Flux and Torque Dynamics<a class="headerlink" href="#flux-and-torque-dynamics" title="Link to this heading">#</a></h2>
+<p>Using the machine model <a class="reference internal" href="#equation-im-voltages">(1)</a>–<a class="reference internal" href="#equation-im-torque">(4)</a>, the flux and torque dynamics can be written as <span id="id4">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: an extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<div class="math notranslate nohighlight" id="equation-im-flux-torque">
+<span class="eqno">(8)<a class="headerlink" href="#equation-im-flux-torque" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \abspsis}{\D t} &amp;= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psis^*\} \\
+    \frac{\D\tauM}{\D t} &amp;= \frac{3 \np}{2 L_\ell} \IM \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psir^*\} \\
+    \omegar &amp;= \frac{\omegarb \IM\{\psis\psir^*\}}{\RE\{\psis\psir^*\}}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> is the flux magnitude, <span class="math notranslate nohighlight">\(\omegarb = \Rr/L_\ell\)</span> is the breakdown angular slip frequency, and <span class="math notranslate nohighlight">\(\omegar\)</span> is the slip angular frequency. These dynamics are valid also for saturated machines where <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>, and they are also independent of the coordinate system. In this documentation, the sum of the electrical angular speed and the slip angular frequency</p>
+<div class="math notranslate nohighlight" id="equation-im-omegas">
+<span class="eqno">(9)<a class="headerlink" href="#equation-im-omegas" title="Link to this equation">#</a></span>\[    \omegas = \omegam + \omegar\]</div>
+<p>is referred to as the stator angular frequency, with this definition being agnostic to the coordinate system and defined also in transient states.</p>
+<p>The flux and torque dynamics can be easily transformed to the inverse-Γ form by substituting <span class="math notranslate nohighlight">\(\psir = \psiR/\gamma\)</span>, <span class="math notranslate nohighlight">\(L_\ell = \Lsgm/\gamma\)</span>, and <span class="math notranslate nohighlight">\(\Rr = \RR/\gamma^2\)</span>. Compare also to <a class="reference internal" href="synchronous_machine.html#equation-sm-flux-torque">(10)</a> in the <a class="reference internal" href="synchronous_machine.html#synchronous-machine"><span class="std std-ref">Synchronous Machine Model</span></a> document.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Substituting <span class="math notranslate nohighlight">\(\omegar = \omegarb\)</span> in <a class="reference internal" href="#equation-im-flux-torque">(8)</a> yields the breakdown condition <span class="math notranslate nohighlight">\(\IM\{\psis\psir^*\} = \RE\{\psis\psir^*\}\)</span>. Applying this condition in <a class="reference internal" href="#equation-im-voltages">(1)</a>–<a class="reference internal" href="#equation-im-torque">(4)</a> and assuming the steady state results in the breakdown torque expression</p>
+<div class="amsmath math notranslate nohighlight" id="equation-a1e798f8-730c-4c21-a87d-ca15cfd4e6d4">
+<span class="eqno">(10)<a class="headerlink" href="#equation-a1e798f8-730c-4c21-a87d-ca15cfd4e6d4" title="Permalink to this equation">#</a></span>\[\begin{equation}
+    \tau_\mathrm{b} = \frac{3\np}{2} \frac{\abspsis^2}{2 L_\ell}
+\end{equation}\]</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Drives</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="synchronous_machine.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Synchronous Machines</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-model">Induction Machine Γ Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-inverse-model">Induction Machine Inverse-Γ Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-magnetic-model">Linear Magnetic Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-model-with-main-flux-saturation">Inverse-Γ Model With Main-Flux Saturation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aalto Electric Drives
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Aalto Electric Drives.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

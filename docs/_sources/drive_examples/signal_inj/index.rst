@@ -21,35 +21,35 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW PMSM drive. Square-wave signal injection is used with a simple phase-locked loop.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. Square-wave signal injection with a simple phase-locked loop is used.">
 
 .. only:: html
 
-  .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_signal_inj_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_2kw_ipmsm_signal_inj_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_signal_inj_plot_signal_inj_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_signal_inj_plot_2kw_ipmsm_signal_inj.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, signal injection</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 6.7-kW SyRM drive. Square-wave signal injection is used with a simple phase-locked loop.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 6.7-kW synchronous reluctance machine (SyRM) drive. Square-wave signal injection with a simple phase-locked loop is used.">
 
 .. only:: html
 
-  .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_signal_inj_syrm_7kw_thumb.png
+  .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_7kw_syrm_signal_inj_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_signal_inj_plot_signal_inj_syrm_7kw.py`
+  :ref:`sphx_glr_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, signal injection</div>
     </div>
 
 
@@ -63,6 +63,6 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 .. toctree::
    :hidden:
 
-   /drive_examples/signal_inj/plot_signal_inj_pmsm_2kw
-   /drive_examples/signal_inj/plot_signal_inj_syrm_7kw
+   /drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj
+   /drive_examples/signal_inj/plot_7kw_syrm_signal_inj
 

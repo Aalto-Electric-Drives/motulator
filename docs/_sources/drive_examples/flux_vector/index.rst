@@ -5,7 +5,7 @@
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control.
+These examples demonstrate flux-vector control (FVC) of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control.
 
 .. rubric:: References
 
@@ -27,86 +27,86 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a 2.2-kW PMSM drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive.">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_pmsm_2kw_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_pmsm_2kw.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_ipmsm_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW PMSM</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, FVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a 2.2-kW induction machine.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW induction machine (IM) drive. The magnetic saturation is included in the machine model and taken into account in the control system. This example also applies the mechanical-model-based speed observer.">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_im_2kw_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_im_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_im_2kw.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_im_sat_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW induction motor</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW saturated IM, FVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a saturated 6.7-kW synchronous reluctance motor drive.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a saturated 6.7-kW synchronous reluctance machine (SyRM) drive.">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_syrm_7kw_sat_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_7kw_syrm_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_syrm_7kw_sat.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW saturated SyRM, FVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control of a saturated 5-kW permanent- magnet synchronous reluctance motor. The flux maps of this example motor, known as THOR, are from the SyR-e project:">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_ctrl_pmsyrm_thor_sat_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_ctrl_pmsyrm_thor_sat.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">5-kW PM-SyRM, flux maps from SyR-e</div>
+      <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, FVC</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless stator-flux-vector control of a 5.6-kW PM-SyRM (Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data, measured using the constant-speed test. The control system is parametrized using the algebraic saturation model from [#Lel2024]_, fitted to the measured data. This saturation model can capture the de-saturation phenomenon of thin iron ribs, see [#Arm2009]_ for details. For comparison, the measured data is plotted together with the model predictions.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data, measured using the constant-speed test.">
 
 .. only:: html
 
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_flux_vector_pmsyrm_5kw_sat_thumb.png
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_6kw_pmsyrm_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_flux_vector_pmsyrm_5kw_sat.py`
+  :ref:`sphx_glr_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, saturated</div>
+      <div class="sphx-glr-thumbnail-title">5.6-kW saturated PM-SyRM, FVC</div>
     </div>
 
 
@@ -120,9 +120,9 @@ These examples demonstrate flux-vector control of electric machine drives [#Pel2
 .. toctree::
    :hidden:
 
-   /drive_examples/flux_vector/plot_flux_vector_pmsm_2kw
-   /drive_examples/flux_vector/plot_flux_vector_im_2kw
-   /drive_examples/flux_vector/plot_flux_vector_syrm_7kw_sat
-   /drive_examples/flux_vector/plot_flux_vector_ctrl_pmsyrm_thor_sat
-   /drive_examples/flux_vector/plot_flux_vector_pmsyrm_5kw_sat
+   /drive_examples/flux_vector/plot_2kw_ipmsm_fvc
+   /drive_examples/flux_vector/plot_2kw_im_sat_fvc
+   /drive_examples/flux_vector/plot_7kw_syrm_sat_fvc
+   /drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc
+   /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc
 

@@ -169,10 +169,58 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(meas)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab)
 
       
-      Get feedback signals.
+      Get feedback signals without motion sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_sensored_feedback(u_s_ab, i_s_ab, w_M, theta_M)
+
+      
+      Get the feedback signals with motion sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
 
 
 
@@ -228,7 +276,8 @@ Module Contents
    :type alpha_c: float, optional
    :param alpha_i: Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`.
    :type alpha_i: float, optional
-   :param alpha_o: Speed estimation bandwidth (rad/s), defaults to 2*pi*100.
+   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
+                   2*pi*50/3, keeping the default speed observer gain the same.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float], optional
@@ -242,6 +291,9 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 0.9.
    :type k_mtpv: float, optional
+   :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+             used in speed estimation.
+   :type J: float, optional
 
 
 
@@ -260,7 +312,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: FluxObserver(par, alpha_d, k_o, k_f, sensorless)
+.. py:class:: FluxObserver(par, k_theta, k_o, k_f, sensorless)
 
    
    Observer for synchronous machines in estimated rotor coordinates.
@@ -275,8 +327,8 @@ Module Contents
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-   :param alpha_d: Rotor-angle estimation bandwidth (rad/s).
-   :type alpha_d: float
+   :param k_theta: Rotor angle estimation gain (rad/s).
+   :type k_theta: float
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float]
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
@@ -446,10 +498,58 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(meas)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab)
 
       
-      Get feedback signals.
+      Get feedback signals without motion sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_sensored_feedback(u_s_ab, i_s_ab, w_M, theta_M)
+
+      
+      Get the feedback signals with motion sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
 
 
 
@@ -507,7 +607,8 @@ Module Contents
    :type alpha_psi: float, optional
    :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_tau`.
    :type alpha_i: float, optional
-   :param alpha_o: Speed estimation bandwidth (rad/s), defaults to 2*pi*50.
+   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
+                   2*pi*50/3, keeping the default speed observer gain the same.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float], optional
@@ -521,6 +622,9 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 0.9.
    :type k_mtpv: float, optional
+   :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+             used in speed estimation.
+   :type J: float, optional
 
 
 
@@ -595,10 +699,34 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(w_M_ref, meas)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_ref)
 
       
       Get feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
 
 
 
@@ -654,10 +782,10 @@ Module Contents
    :type alpha_psi: float, optional
    :param alpha_tau: Torque-control bandwidth (rad/s), defaults to 2*pi*20.
    :type alpha_tau: float, optional
-   :param alpha_d: Rotor-angle estimation bandwidth (rad/s), defaults to 2*pi*200.
-   :type alpha_d: float, optional
    :param alpha_f: Filter bandwidth (rad/s), defaults to 2*pi*1.
    :type alpha_f: float, optional
+   :param alpha_o: Angle estimation pole (rad/s), defaults to 2*pi*200.
+   :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
@@ -1099,7 +1227,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SignalInjectionController(par, cfg, w_o = 2 * pi * 40, U_inj = 250, T_s = 0.000125)
+.. py:class:: SignalInjectionController(par, cfg, alpha_o = 2 * pi * 40, U_inj = 250, T_s = 0.000125)
 
    Bases: :py:obj:`motulator.drive.control._sm_current_vector.CurrentVectorController`
 
@@ -1113,22 +1241,22 @@ Module Contents
    based observer. The effects of magnetic saturation are not compensated for in this
    version.
 
+   :param par: Machine model parameters.
+   :type par: SynchronousMachinePars
+   :param cfg: Current-vector control configuration.
+   :type cfg: CurrentVectorControllerCfg
+   :param alpha_o: Pole location (rad/s) of the phase-locked loop, defaults to 2*pi*40.
+   :type alpha_o: float, optional
+   :param U_inj: Injected voltage amplitude (V), defaults to 250.
+   :type U_inj: float, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
+
    .. rubric:: References
 
    .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection sensorless
       method in IPMSM," IEEE Trans. Ind. Appl., 2012,
       https://doi.org/10.1109/TIA.2012.2210175
-
-   :param par: Machine model parameters.
-   :type par: SynchronousMachinePars
-   :param cfg: Current-vector control configuration.
-   :type cfg: CurrentVectorControllerCfg
-   :param w_o: Natural frequency of the phase-locked loop (rad/s), defaults to 2*pi*40.
-   :type w_o: float, optional
-   :param U_inj: Injected voltage amplitude (V), defaults to 250.
-   :type U_inj: float, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
 
 
 
@@ -1151,6 +1279,30 @@ Module Contents
 
       
       Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
 
 
 
@@ -1208,26 +1360,37 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f)
+.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f, J = None)
 
    Bases: :py:obj:`FluxObserver`
 
 
    
-   Observer with speed estimation.
+   Observer with load torque and speed estimation.
 
    This observer estimates the rotor speed and the rotor angle. The observer gain
    decouples the electrical and mechanical dynamics and allows placing the poles of the
-   corresponding linearized estimation error dynamics.
+   corresponding linearized estimation error dynamics. If the inertia of the
+   mechanical system is provided, the observer also estimates the load torque, which
+   avoids lag in the speed estimate during accelerations [#Lor1991]_.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-   :param alpha_o: Speed estimation bandwidth (rad/s).
+   :param alpha_o: Speed-estimation pole location (rad/s).
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float], optional
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
    :type k_f: Callable[[float], float], optional
+   :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
+             mechanical system model is not used.
+   :type J: float, optional
+
+   .. rubric:: References
+
+   .. [#Lor1991] Lorenz, Van Patten, "High-resolution velocity estimation for
+      all-digital, AC servo drives," IEEE Trans. Ind. Appl., 1991,
+      https://doi.org/10.1109/28.85485
 
 
 
