@@ -20,7 +20,7 @@ where $\hatabspsiR$ is the rotor flux magnitude estimate and $\ismax$ is the max
 ---
 label: im_bd_lim
 ---
-    \tau_\mathrm{M}^\mathrm{b} = \frac{3\np}{2} \frac{(\abspsisref)^2}{2\hat{L}_\ell} 
+    \tau_\mathrm{M}^\mathrm{b} = \frac{3\np}{2} \frac{(\abspsisref)^2}{2\hat{L}_\ell}
 ```
 
 where the leakage inductance estimate can be expressed by means of the inverse-Γ parameters as $\hat L_\ell = [(\hatLM + \hatLsgm)/\hatLM]\hatLsgm$.
@@ -35,7 +35,7 @@ width: 100%
 align: center
 alt: Reference generation for induction machines
 ---
-*Figure 1:* Reference generation for induction machines, including field weakening, current limitation (CL), and breakdown torque limitation. The limited torque reference is denoted by $\overline{\tau}_\mathrm{M}^\mathrm{ref}$ and the rated stator flux by $\psi_\mathrm{s}^\mathrm{nom}$. The parameter $k_\mathrm{u}$ is the voltage utilization factor. 
+*Figure 1:* Reference generation for induction machines, including field weakening, current limitation (CL), and breakdown torque limitation. The limited torque reference is denoted by $\overline{\tau}_\mathrm{M}^\mathrm{ref}$ and the rated stator flux by $\psi_\mathrm{s}^\mathrm{nom}$. The parameter $k_\mathrm{u}$ is the voltage utilization factor.
 ```
 
 ```{figure} ../figs/im_ref_gen.svg
@@ -45,7 +45,7 @@ width: 100%
 align: center
 alt: Reference generation for induction machines
 ---
-*Figure 1:* Reference generation for induction machines, including field weakening, current limitation (CL), and breakdown torque limitation.  The limited torque reference is denoted by $\overline{\tau}_\mathrm{M}^\mathrm{ref}$ and the rated stator flux by $\psi_\mathrm{s}^\mathrm{nom}$. The parameter $k_\mathrm{u}$ is the voltage utilization factor. 
+*Figure 1:* Reference generation for induction machines, including field weakening, current limitation (CL), and breakdown torque limitation.  The limited torque reference is denoted by $\overline{\tau}_\mathrm{M}^\mathrm{ref}$ and the rated stator flux by $\psi_\mathrm{s}^\mathrm{nom}$. The parameter $k_\mathrm{u}$ is the voltage utilization factor.
 ```
 
 ## For Synchronous Machines
@@ -62,7 +62,7 @@ width: 100%
 align: center
 alt: Reference generation for synchronous machines
 ---
-*Figure 2:* Optimal reference generation for synchronous machines, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL). These are single-dimensional lookup tables, see the example in [Figure 2](fig:flux_vs_torque). Two-dimensional transformation to the current reference is needed only in the case of current-vector control. 
+*Figure 2:* Optimal reference generation for synchronous machines, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL). These are single-dimensional lookup tables, see the example in [Figure 2](fig:flux_vs_torque). Two-dimensional transformation to the current reference is needed only in the case of current-vector control.
 ```
 
 ```{figure} ../figs/sm_ref_gen.svg
@@ -72,7 +72,7 @@ width: 100%
 align: center
 alt: Reference generation for synchronous machines
 ---
-*Figure 2:* Optimal reference generation for synchronous machines, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL). These are single-dimensional lookup tables, see the example in [Figure 3](fig:flux_vs_torque). Two-dimensional transformation to the current reference is needed only in the case of current-vector control. 
+*Figure 2:* Optimal reference generation for synchronous machines, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL). These are single-dimensional lookup tables, see the example in [Figure 3](fig:flux_vs_torque). Two-dimensional transformation to the current reference is needed only in the case of current-vector control.
 ```
 
 ```{figure} ../figs/flux_vs_torque.svg
@@ -83,7 +83,7 @@ width: 100%
 align: center
 alt: Example of optimal reference characteristics
 ---
-*Figure 3:* Example of optimal reference characteristics for a 5.6-kW PM-SyRM. 
+*Figure 3:* Example of optimal reference characteristics for a 5.6-kW PM-SyRM.
 ```
 
 ```{figure} ../figs/flux_vs_torque.svg
@@ -93,5 +93,5 @@ width: 100%
 align: center
 alt: Example of optimal reference characteristics
 ---
-*Figure 3:* Example of optimal reference characteristics for a 5.6-kW PM-SyRM. 
+*Figure 3:* Example of optimal reference characteristics for a 5.6-kW PM-SyRM.
 ```
