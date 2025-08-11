@@ -56,7 +56,7 @@ alt: Block diagram of a stiff mechanical system.
 
 ## Two-Mass Mechanical System
 
-A two-mass mechanical system is modeled in the {class}`motulator.drive.model.TwoMassMechanicalSystem` class. The dynamimcs are governed by
+A two-mass mechanical system is modeled in the {class}`motulator.drive.model.TwoMassMechanicalSystem` class. The dynamics are governed by {cite}`Saa2015`
 
 ```{math}
 ---

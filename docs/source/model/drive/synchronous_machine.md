@@ -123,9 +123,9 @@ where $\Ld$ is the d-axis inductance, $\Lq$ is the q-axis inductance, and $\psif
 
 ### Saturation Models
 
-Nonlinear magnetic models are parametrized using the {class}`motulator.drive.model.SaturatedSynchronousMachinePars` class. Methods for manipulating and plotting the magnetic models are provided in the classes {class}`motulator.drive.utils.MagneticModel`, {func}`motulator.drive.utils.plot_map`, and {func}`motulator.drive.utils.plot_flux_vs_current`.
+Nonlinear magnetic models are parametrized using the {class}`motulator.drive.model.SaturatedSynchronousMachinePars` class. The term _magnetic model_ refers to the complete magnetic characterization of the machine. This characterization can be represented in two equivalent ways: as current maps or as flux linkage maps. These two representations are mathematically inverse to each other but describe the same physical relationship.
 
-The current maps {eq}`sm_current` are typically modeled either as lookup tables or explicit functions {cite}`Hin2017,Lel2024`. The magnetic model can be presented as a flux linkage map
+The magnetic model can be obtained through experimental measurements {cite}`Arm2013` or finite-element method analysis. Regardless of the source, these models can be implemented as the current map $\is = \isfcn(\psis)$ or as its inverse, the flux linkage map
 
 ```{math}
 ---
@@ -133,15 +133,16 @@ label: sm_flux_linkage_map
 ---
     \psis &= \psisfcn(\is) \\
     &= \psidfcn(\id, \iq) + \jj\psiqfcn(\id, \iq)
+
 ```
 
-which is the inverse of the current map, $\psisfcn(\is) = \isfcn^{-1}(\is)$. If the magnetic model is lossless and physically feasible, it can be numerically inverted, see the {func}`motulator.drive.utils.MagneticModel.invert` method.
+In practice, these maps are typically realized as lookup tables or explicit mathematical functions, see, e.g., {cite}`Hin2017,Lel2024`.
+
+Methods for manipulating and plotting the magnetic models are provided in the classes {class}`motulator.drive.utils.MagneticModel`, {func}`motulator.drive.utils.plot_map`, and {func}`motulator.drive.utils.plot_flux_vs_current`. If the magnetic model is lossless and physically feasible, it can be numerically inverted between the two representations, see the {func}`motulator.drive.utils.MagneticModel.invert` method.
 
 See also the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`, {doc}`/drive_examples/flux_vector/plot_7kw_syrm_sat_fvc`, and {doc}`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`.
 
-```{note}
-The machine model `motulator.drive.model.SynchronousMachine` only needs the current map, while the MTPA computation and some control methods require the flux linkage map.
-```
+(mtpa_mtpv)=
 
 ## MTPV and MTPA Conditions
 

@@ -33,6 +33,17 @@ label: cc
 
 where $\usref$ is the stator voltage reference, $\isref$ is the stator current reference, and $\uI$ is the integral state. Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain.
 
+The converter voltage is limited due to the limited DC-bus voltage. The realized voltage (limited voltage reference) is obtained from the pulse-width modulation (PWM) algorithm,
+
+```{math}
+---
+label: limited_voltage
+---
+    \usreflim = \mathrm{sat}(\usref)
+```
+
+where $\mathrm{sat}(\cdot)$ is the saturation function, containing digital delay compensation {cite}`Bae2003`. The {class}`motulator.common.control.ComplexPIController` base class implements the anti-windup of the integrator based on the realized voltage.
+
 %```{note}
 %The gain definitions used in {eq}`cc` differ from {cite}`Hin2024`, where a more general controller structure is considered.
 %```
@@ -89,18 +100,7 @@ label: Gc_Yc
     \mathbf{Y}_\mathrm{c}(s) = \frac{s}{\Lsgm (s + \alphac)(s + \alphai + \jj\omegaso)}
 ```
 
-It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at $s = -\alphac$, while another pole moves with the angular frequency of the coordinate system, $s= -\alphai - \jj\omegaso$. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole. Notice that $\hatRsgm = 0$ can be used in practice in {eq}`complex_vector_gains`.
-
-This gain selection is used in the {class}`motulator.drive.control.im.CurrentController` class. The stator voltage is limited in practice due to the limited DC-bus voltage of the converter. Consequently, the realized (limited) voltage reference is
-
-```{math}
----
-label: limited_voltage
----
-    \usreflim = \mathrm{sat}(\usref)
-```
-
-where $\mathrm{sat}(\cdot)$ is the saturation function. The limited voltage is obtained from the pulse-width modulation (PWM) algorithm (see the {class}`motulator.common.control.PWM` class). The anti-windup of the integrator is included in the implementation of the {class}`motulator.common.control.ComplexPIController` base class.
+It can be seen that this design results in the first-order reference-tracking dynamics. Furthermore, one pole is placed at the real axis at $s = -\alphac$, while another pole moves with the angular frequency of the coordinate system, $s= -\alphai - \jj\omegaso$. The complex-vector design tends to be slightly more robust to parameter errors than the IMC design since the other closed-loop pole approximately corresponds to the open-loop pole. Notice that $\hatRsgm = 0$ can be used in practice in {eq}`complex_vector_gains`. This gain selection is used in the {class}`motulator.drive.control.im.CurrentController` class.
 
 ## For Synchronous Machines
 
@@ -154,7 +154,10 @@ label: sm_gains
 Using {eq}`sm_model`--{eq}`sm_gains`, the closed-loop in the Laplace domain become
 
 ```{math}
-    \frac{\Delta\psis(s)}{\Delta \psisref(s)} = \frac{\alphac(s + \alphai + \jj\omegamo)}{(s + \alphac)(s + \alphai + \jj\omegamo)} 
+---
+label: sm_closed_loop
+---
+    \frac{\Delta\psis(s)}{\Delta \psisref(s)} = \frac{\alphac(s + \alphai + \jj\omegamo)}{(s + \alphac)(s + \alphai + \jj\omegamo)}
     = \frac{\alphac}{s + \alphac}
 ```
 

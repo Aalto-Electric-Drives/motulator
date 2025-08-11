@@ -109,7 +109,7 @@ class FluxTorqueController:
         gain = self.gain
 
         # Auxiliary current and torque-production factor
-        if par.L_sgm > 0:  # Check to enable open-loop V/Hz control
+        if par.L_sgm > 0:  # L_sgm = 0 in open-loop V/Hz control
             i_a = fbk.psi_R / par.L_sgm
             c_tau = 1.5 * par.n_p * (i_a * fbk.psi_s.conjugate()).real
             # Directions
@@ -197,21 +197,24 @@ class ReferenceGenerator:
         u_s_max = self.k_u * u_dc / sqrt(3)
         psi_s_max = u_s_max / abs(w_s) if w_s != 0 else inf
         # Current limit
-        psi_s_lim = par.L_sgm * self.i_s_max + psi_R
+        psi_s_cl = par.L_sgm * self.i_s_max + psi_R
+        # psi_s_cl = sqrt(
+        #     (1 + 2 * par.L_sgm / par.L_M) * psi_R**2 + (par.L_sgm * self.i_s_max) ** 2
+        # )
         # Stator flux reference
-        psi_s_ref = min(psi_s_max, self.psi_s_nom, psi_s_lim)
+        psi_s_ref = min(psi_s_max, self.psi_s_nom, psi_s_cl)
 
         # Torque reference limiting
-        if par.L_sgm > 0:  # Check to enable open-loop V/Hz control
+        if par.L_sgm > 0:  # L_sgm = 0 in open-loop V/Hz control
             # Breakdown torque limit
             k = self.k_b * par.L_M / (par.L_M + par.L_sgm)
             tau_b = 0.75 * par.n_p * k * psi_s_ref**2 / par.L_sgm
             # Current limit
-            tau_M_lim = (
+            tau_M_cl = (
                 1.5 * par.n_p * psi_R * sqrt(self.i_s_max**2 - (psi_R / par.L_M) ** 2)
             )
             # Limited torque reference
-            tau_M_ref = min(abs(tau_M_ref), self.tau_M_max, tau_b, tau_M_lim) * sign(
+            tau_M_ref = min(abs(tau_M_ref), self.tau_M_max, tau_b, tau_M_cl) * sign(
                 tau_M_ref
             )
         return psi_s_ref, tau_M_ref

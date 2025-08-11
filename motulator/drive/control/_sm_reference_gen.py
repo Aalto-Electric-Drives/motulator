@@ -82,13 +82,13 @@ class ReferenceGenerator:
 
         # MTPV limit
         mtpv = loci.compute_mtpv_locus(abs(mtpa.psi_s_dq[-1]))
-        self.mtpv_psi_s = mtpv.psi_s_dq_vs_psi_s_abs
+        self.psi_s_mtpv = mtpv.psi_s_dq_vs_psi_s_abs
 
         # Current limit
         gamma1 = phase(loci.compute_mtpv_current(i_s_max))
         gamma2 = phase(mtpa.i_s_dq[-1])
-        lim = loci.compute_const_current_locus(i_s_max, (gamma1, gamma2))
-        self.lim_i_s = lim.i_s_dq_vs_psi_s_abs
+        cl = loci.compute_const_current_locus(i_s_max, (gamma1, gamma2))
+        self.i_s_cl = cl.i_s_dq_vs_psi_s_abs
 
     def _get_mtpa_flux(self, tau_M_ref: float) -> complex:
         """Get the maximum-torque-per-ampere (MTPA) flux linkage."""
@@ -98,14 +98,14 @@ class ReferenceGenerator:
 
     def _get_mtpv_flux_and_torque(self, psi_s_ref: float) -> tuple[complex, float]:
         """Get the maximum-torque-per-volt (MTPV) references."""
-        psi_s = self.mtpv_psi_s(psi_s_ref)
+        psi_s = self.psi_s_mtpv(psi_s_ref)
         i_s = complex(self.par.i_s_dq(psi_s))
         tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
         return psi_s, tau_M
 
     def _get_current_limit_torque(self, psi_s_ref: float) -> float:
         """Get torque corresponding to the current limit."""
-        i_s = self.lim_i_s(psi_s_ref)
+        i_s = self.i_s_cl(psi_s_ref)
         psi_s = complex(self.par.psi_s_dq(i_s))
         tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
         return tau_M
@@ -121,29 +121,29 @@ class ReferenceGenerator:
     ) -> tuple[float, float]:
         """Compute the flux and torque reference signals."""
         # MTPA flux
-        mtpa_psi_s = self._get_mtpa_flux(tau_M_ref)
-        psi_s_ref = clip(abs(mtpa_psi_s), *self.psi_s_limits)
+        psi_s_mtpa = self._get_mtpa_flux(tau_M_ref)
+        psi_s_ref = clip(abs(psi_s_mtpa), *self.psi_s_limits)
 
         # Maximum flux (field weakening)
         psi_s_max = self._get_max_flux(w_m, u_dc)
         psi_s_ref = min(psi_s_ref, psi_s_max)
 
         # MTPV limit
-        mtpv_psi_s, mtpv_tau_M = self._get_mtpv_flux_and_torque(psi_s_ref)
-        tau_M_ref = min(self.k_mtpv * mtpv_tau_M, abs(tau_M_ref)) * sign(tau_M_ref)
+        psi_s_mtpv, tau_M_mtpv = self._get_mtpv_flux_and_torque(psi_s_ref)
+        tau_M_ref = min(self.k_mtpv * tau_M_mtpv, abs(tau_M_ref)) * sign(tau_M_ref)
 
         # Current limit
-        lim_tau_M = self._get_current_limit_torque(psi_s_ref)
-        tau_M_ref = min(lim_tau_M, abs(tau_M_ref)) * sign(tau_M_ref)
+        tau_M_cl = self._get_current_limit_torque(psi_s_ref)
+        tau_M_ref = min(tau_M_cl, abs(tau_M_ref)) * sign(tau_M_ref)
 
         # Store for the current reference computation
-        self._mtpv_psi_s = mtpv_psi_s
+        self._psi_s_mtpv = psi_s_mtpv
 
         return psi_s_ref, tau_M_ref
 
     def compute_current_ref(self, psi_s_ref: float, tau_M_ref: float) -> complex:
         """Compute the current reference."""
-        delta_range = (0, phase(self._mtpv_psi_s))
+        delta_range = (0, phase(self._psi_s_mtpv))
 
         def error(delta: float) -> float:
             psi_s = psi_s_ref * exp(1j * delta)

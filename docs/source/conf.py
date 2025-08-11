@@ -134,6 +134,7 @@ mathjax3_config = {
             "abspsis": "\\psi_\\mathrm{s}",
             "abspsisref": "\\psi_\\mathrm{s}^\\mathrm{ref}",
             "hatabspsis": "\\hat{\\psi}_\\mathrm{s}",
+            "hatabspsiR": "\\hat{\\psi}_\\mathrm{R}",
             "psif": "\\psi_\\mathrm{f}",
             "absis": "i_\\mathrm{s}",
             # Components
@@ -194,6 +195,7 @@ mathjax3_config = {
             # Other common symbols
             "Ts": "T_\\mathrm{s}",
             "Tsw": "T_\\mathrm{sw}",
+            "ismax": "i_\\mathrm{s}^\\mathrm{max}",
             # Converter quantities
             "dA": "d_\\mathrm{a}",
             "dB": "d_\\mathrm{b}",
@@ -296,6 +298,7 @@ mathjax3_config = {
             "hatRs": "\\hat{R}_\\mathrm{s}",
             "hatRR": "\\hat{R}_\\mathrm{R}",
             "hatLs": "\\hat{L}_\\mathrm{s}",
+            "hatLM": "\\hat{L}_\\mathrm{M}",
             "hatalpha": "\\hat{\\alpha}",
             "hatLsgm": "\\hat{L}_\\sigma",
             "hatRsgm": "\\hat{R}_\\sigma",

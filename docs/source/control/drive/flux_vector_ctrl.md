@@ -6,14 +6,14 @@ Flux-vector control directly controls the stator flux magnitude and the electrom
 
 ### Flux and Torque Dynamics
 
-Using the machine model [see {eq}`im_flux_torque` in {ref}`induction_machine`], the flux and torque dynamics can be expressed as
+Using the machine model \[see {eq}`im_flux_torque` in {ref}`induction_machine`\], the flux and torque dynamics can be expressed as
 
 ```{math}
 ---
 label: im_flux_torque_fvc
 ---
     \frac{\D \abspsis}{\D t} &= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj\omegas\psis\right] \psis^*\} \\
-    \frac{\D\tauM}{\D t} &= \frac{3 \np}{2 L_\sigma} \IM \{\left[\us - \Rs \is - \jj\omegas\psis\right] \psiR^*\} 
+    \frac{\D\tauM}{\D t} &= \frac{3 \np}{2 L_\sigma} \IM \{\left[\us - \Rs \is - \jj\omegas\psis\right] \psiR^*\}
 
 ```
 
@@ -23,7 +23,7 @@ where $\abspsis = |\psis|$ is the flux magnitude. The stator angular frequency i
 ---
 label: omegar_fvc
 ---
-    \omegar = \frac{\omegarb \IM\{\psis\psiR^*\}}{\RE\{\psis\psiR^*\}}  
+    \omegar = \frac{\omegarb \IM\{\psis\psiR^*\}}{\RE\{\psis\psiR^*\}}
 
 ```
 
@@ -72,7 +72,7 @@ The flux-vector control for synchronous machines is analogous to the induction m
 
 ### Flux and Torque Dynamics
 
-Using the machine model [see {eq}`sm_mtpv_aux` and {eq}`sm_flux_torque` in {ref}`synchronous_machine`], the flux and torque dynamics can be expressed as
+Using the machine model \[see {eq}`sm_mtpv_aux` and {eq}`sm_flux_torque` in {ref}`synchronous_machine`\], the flux and torque dynamics can be expressed as
 
 ```{math}
 ---

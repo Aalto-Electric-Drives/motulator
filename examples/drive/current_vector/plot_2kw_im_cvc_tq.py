@@ -34,7 +34,6 @@ mdl = model.Drive(machine, mechanics, converter)
 # %%
 # Configure the control system.
 
-
 est_par = control.InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
 )

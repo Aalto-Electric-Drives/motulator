@@ -11,4 +11,5 @@ speed_ctrl
 current_ctrl
 flux_vector_ctrl
 observers
+reference_gen
 ```

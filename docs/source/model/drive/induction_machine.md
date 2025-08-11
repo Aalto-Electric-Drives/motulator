@@ -173,7 +173,7 @@ label: im_flux_torque
 ---
     \frac{\D \abspsis}{\D t} &= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psis^*\} \\
     \frac{\D\tauM}{\D t} &= \frac{3 \np}{2 L_\ell} \IM \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psir^*\} \\
-    \omegar &= \frac{\omegarb \IM\{\psis\psir^*\}}{\RE\{\psis\psir^*\}}  
+    \omegar &= \frac{\omegarb \IM\{\psis\psir^*\}}{\RE\{\psis\psir^*\}}
 
 ```
 
@@ -183,10 +183,18 @@ where $\abspsis = |\psis|$ is the flux magnitude, $\omegarb = \Rr/L_\ell$ is the
 ---
 label: im_omegas
 ---
-    \omegas = \omegam + \omegar 
+    \omegas = \omegam + \omegar
 
 ```
 
 is referred to as the stator angular frequency, with this definition being agnostic to the coordinate system and defined also in transient states.
 
 The flux and torque dynamics can be easily transformed to the inverse-Γ form by substituting $\psir = \psiR/\gamma$, $L_\ell = \Lsgm/\gamma$, and $\Rr = \RR/\gamma^2$. Compare also to {eq}`sm_flux_torque` in the {ref}`synchronous_machine` document.
+
+```{note}
+Substituting $\omegar = \omegarb$ in {eq}`im_flux_torque` yields the breakdown condition $\IM\{\psis\psir^*\} = \RE\{\psis\psir^*\}$. Applying this condition in {eq}`im_voltages`--{eq}`im_torque` and assuming the steady state results in the breakdown torque expression
+
+\begin{equation}
+    \tau_\mathrm{b} = \frac{3\np}{2} \frac{\abspsis^2}{2 L_\ell}
+\end{equation}
+```

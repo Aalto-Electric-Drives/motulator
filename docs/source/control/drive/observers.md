@@ -35,7 +35,7 @@ label: im_obs
     \hatpsiR &= \hatpsis - \hatLsgm\is
 ```
 
-where $\koa$ and $\kob$ are complex gains, the estimates are marked with the hat, and $^*$ marks the complex conjugate. The estimation error is
+where $\us$ is the realized voltage estimate obtained from the PWM algorithm, $\koa$ and $\kob$ are complex gains, the estimates are marked with the hat, and $^*$ marks the complex conjugate. The estimation error is
 
 ```{math}
 ---
@@ -56,7 +56,7 @@ label: im_obs_tauM
 The magnetic saturation $\hatLs = \hatLs(\hatabspsis)$ can be taken into account using the {class}`motulator.drive.model.InductionMachinePars` class.
 
 ```{note}
-The angular speed $\omegac$ of the controller coordinate system can be arbitrarily selected. In the {class}`motulator.drive.control.im.FluxObserver` class, it is set to $\omegac = \hatomegam + \hatomegar$, which allows simple discretization since the DC quantities are estimated in the steady state. Estimated rotor coordinates $\omegac = \hatomegam$ could also be used, while using $\omegac = 0$ would require a more complex discretization. 
+The angular speed $\omegac$ of the controller coordinate system can be arbitrarily selected. In the {class}`motulator.drive.control.im.FluxObserver` class, it is set to $\omegac = \hatomegam + \hatomegar$, which allows simple discretization since the DC quantities are estimated in the steady state. Estimated rotor coordinates $\omegac = \hatomegam$ could also be used, while using $\omegac = 0$ would require a more complex discretization.
 ```
 
 ```{note}
@@ -281,7 +281,7 @@ label: sm_eo
     \eo = \hatpsisfcn(\is') - \hatpsis
 ```
 
-where $\hatpsisfcn$ is the flux map estimate. This observer structure is used in the {class}`motulator.drive.control.sm.FluxObserver` class.
+where $\hatpsisfcn$ is the flux map estimate. This observer structure is used in the {class}`motulator.drive.control.sm.FluxObserver` class. The implementation also contains optional PM-flux adaptation {cite}`Tuo2018`, see the {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt` example.
 
 ```{note}
 Since the current is measured, the observer is fundamentally corrected by means of the current estimation error. However, due to the saliency and magnetic saturation, the current estimation error is convenient to map (or scale in the case of linear magnetics) to the flux linkage error.
