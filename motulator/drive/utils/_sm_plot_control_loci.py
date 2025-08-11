@@ -1,5 +1,6 @@
 """Visualize optimal control loci of synchronous machines."""
 
+from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -69,7 +70,7 @@ class MachineCharacteristics:
         base: BaseValues | None = None,
         num: int = 16,
         latex: bool = False,
-        save_path: str | None = None,
+        save_path: str | Path | None = None,
         **savefig_kwargs,
     ) -> None:
         """
@@ -86,7 +87,7 @@ class MachineCharacteristics:
             Amount of points to be evaluated, defaults to 16.
         latex : bool, optional
             Use LaTeX fonts for the labels, requires a working LaTeX installation.
-        save_path : str, optional
+        save_path : str | Path, optional
             If provided, save the figure to this path.
         **savefig_kwargs
             Additional keyword arguments passed to plt.savefig().
@@ -172,7 +173,7 @@ class MachineCharacteristics:
         base: BaseValues | None = None,
         num: int = 16,
         latex: bool = False,
-        save_path: str | None = None,
+        save_path: str | Path | None = None,
         **savefig_kwargs,
     ) -> None:
         """
@@ -189,7 +190,7 @@ class MachineCharacteristics:
             Amount of points to be evaluated, defaults to 16.
         latex : bool, optional
             Use LaTeX fonts for the labels, requires a working LaTeX installation.
-        save_path : str, optional
+        save_path : str | Path, optional
             If provided, save the figure to this path.
         **savefig_kwargs
             Additional keyword arguments passed to plt.savefig().
@@ -269,7 +270,7 @@ class MachineCharacteristics:
         base: BaseValues | None = None,
         num: int = 16,
         latex: bool = False,
-        save_path: str | None = None,
+        save_path: str | Path | None = None,
         **savefig_kwargs,
     ) -> None:
         """
@@ -286,7 +287,7 @@ class MachineCharacteristics:
             Amount of points to be evaluated, defaults to 16.
         latex : bool, optional
             Use LaTeX fonts for the labels, requires a working LaTeX installation.
-        save_path : str, optional
+        save_path : str | Path, optional
             If provided, save the figure to this path.
         **savefig_kwargs
             Additional keyword arguments passed to plt.savefig().
@@ -361,7 +362,7 @@ class MachineCharacteristics:
         base: BaseValues | None = None,
         num: int = 16,
         latex: bool = False,
-        save_path: str | None = None,
+        save_path: str | Path | None = None,
         **savefig_kwargs,
     ) -> None:
         """
@@ -378,7 +379,7 @@ class MachineCharacteristics:
             Amount of points to be evaluated, defaults to 16.
         latex : bool, optional
             Use LaTeX fonts for the labels, requires a working LaTeX installation.
-        save_path : str, optional
+        save_path : str | Path, optional
             If provided, save the figure to this path.
         **savefig_kwargs
             Additional keyword arguments passed to plt.savefig().

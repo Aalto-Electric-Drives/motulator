@@ -55,7 +55,7 @@ repos:
 
   # Ruff formatter & linter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.13
+    rev: v0.12.8
     hooks:
     - id: ruff
       args: [--fix]
@@ -65,9 +65,21 @@ repos:
 
   # Pyright
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.401
+    rev: v1.1.403
     hooks:
       - id: pyright
         additional_dependencies: [numpy, scipy, matplotlib, tqdm, sphinx-gallery]
         args:
         - --venvpath=./.venv
+
+  # MyST Markdown formatter
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.22
+    hooks:
+      - id: mdformat
+        name: mdformat (MyST)
+        additional_dependencies:
+          - mdformat-myst
+        types_or: [markdown]
+        # Example args:
+        # args: ["--wrap", "88"]

@@ -97,13 +97,13 @@ class ComplexPIController:
     This implements a discrete-time 2DOF synchronous-frame complex-vector PI controller
     [#Bri2000]_. The continuous-time counterpart of the controller is::
 
-        u = k_t*i_ref - k_p*i + (k_i + 1j*w*k_t)/s*(i_ref - i) + u_ff
+        u = k_t*i_ref - k_p*i + (k_i + 1j*w_c*k_t)/s*(i_ref - i) + u_ff
 
     where `u` is the controller output, `i_ref` is the reference signal, `i` is the
-    feedback signal, `w` is the angular speed of synchronous coordinates, `u_ff` is the
-    feedforward signal, and `1/s` refers to integration. The 1DOF version is obtained by
-    setting ``k_t = k_p``. The integrator anti-windup is implemented based on the
-    realized controller output.
+    feedback signal, `w_c` is the angular speed of synchronous coordinates, `u_ff` is
+    the feedforward signal, and `1/s` refers to integration. The 1DOF version is
+    obtained by setting ``k_t = k_p``. The integrator anti-windup is implemented based
+    on the realized controller output.
 
     Parameters
     ----------
@@ -157,7 +157,7 @@ class ComplexPIController:
         u = self.k_t * (i_ref - i) + self.v
         return u
 
-    def update(self, T_s: float, u: complex, w: float) -> None:
+    def update(self, T_s: float, u: complex, w_c: float) -> None:
         """
         Update the integral state.
 
@@ -167,11 +167,11 @@ class ComplexPIController:
             Sampling period (s).
         u : complex
             Realized (limited) controller output.
-        w : float
+        w_c : float
             Angular speed of the reference frame (rad/s).
 
         """
-        self.u_i += T_s * (self.alpha_i + 1j * w) * (u - self.v)
+        self.u_i += T_s * (self.alpha_i + 1j * w_c) * (u - self.v)
 
 
 # %%

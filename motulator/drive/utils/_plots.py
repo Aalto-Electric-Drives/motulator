@@ -1,6 +1,6 @@
 """Example plotting scripts for machine drives."""
 
-from typing import Any, Literal
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,10 +21,6 @@ M = r"\mathrm{M}"
 
 
 # %%
-def _get_machine_type(mdl: Any) -> Literal["im", "sm"]:
-    return "im" if hasattr(mdl.machine, "psi_R_ab") else "sm"
-
-
 def _setup_plot(latex: bool) -> tuple[float, float]:
     """Setup plot style and return figure dimensions."""
     if latex:
@@ -143,14 +139,9 @@ def _plot_flux_linkages(ax, ctrl, mdl, base: BaseValues) -> None:
             label=r"$\psi_\mathrm{s}^\mathrm{ref}$",
             ds="steps-post",
         )
-    if _get_machine_type(mdl) == "sm":
-        ax.plot(
-            mdl.t, np.abs(mdl.machine.psi_s_ab) / base.psi, label=r"$\psi_\mathrm{s}$"
-        )
-    else:
-        ax.plot(
-            mdl.t, np.abs(mdl.machine.psi_s_ab) / base.psi, label=r"$\psi_\mathrm{s}$"
-        )
+    ax.plot(mdl.t, np.abs(mdl.machine.psi_s_ab) / base.psi, label=r"$\psi_\mathrm{s}$")
+
+    if hasattr(mdl.machine, "psi_R_ab"):
         ax.plot(
             mdl.t,
             np.abs(mdl.machine.psi_R_ab) / base.psi,
@@ -177,7 +168,7 @@ def plot(
     y_lims: list[tuple[float, float] | None] | None = None,
     y_ticks: list[ArrayLike | None] | None = None,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -201,7 +192,7 @@ def plot(
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
         installation, defaults to False.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
@@ -261,11 +252,7 @@ def plot(
 # %%
 def _plot_phase_voltages(ax, mdl, ctrl, base: BaseValues) -> None:
     """Plot phase voltages."""
-    if _get_machine_type(mdl) == "sm":
-        theta = ctrl.fbk.theta_m
-    else:
-        theta = ctrl.fbk.theta_s
-    u_s_ab = np.exp(1j * theta) * ctrl.fbk.u_s
+    u_s_ab = np.exp(1j * ctrl.fbk.theta_c) * ctrl.fbk.u_s
 
     ax.plot(mdl.t, mdl.machine.u_s_ab.real / base.u, label=r"$u_\mathrm{sa}$")
     ax.plot(
@@ -276,11 +263,7 @@ def _plot_phase_voltages(ax, mdl, ctrl, base: BaseValues) -> None:
 
 def _plot_phase_currents(ax, mdl, ctrl, base: BaseValues) -> None:
     """Plot phase currents."""
-    if _get_machine_type(mdl) == "sm":
-        theta = ctrl.fbk.theta_m
-    else:
-        theta = ctrl.fbk.theta_s
-    i_s_ab = np.exp(1j * theta) * ctrl.fbk.i_s
+    i_s_ab = np.exp(1j * ctrl.fbk.theta_c) * ctrl.fbk.i_s
 
     ax.plot(
         mdl.t,
@@ -299,7 +282,7 @@ def plot_stator_waveforms(
     y_lims: list[tuple[float, float] | None] | None = None,
     y_ticks: list[ArrayLike | None] | None = None,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -321,7 +304,7 @@ def plot_stator_waveforms(
         y-axis tick locations for each subplot.
     latex : bool, optional
         Use LaTeX fonts for the labels, requires a working LaTeX installation.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
@@ -396,7 +379,7 @@ def plot_dc_bus_waveforms(
     y_lims: list[tuple[float, float] | None] | None = None,
     y_ticks: list[ArrayLike | None] | None = None,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -418,7 +401,7 @@ def plot_dc_bus_waveforms(
         y-axis tick locations for each subplot.
     latex : bool, optional
         Use LaTeX fonts for the labels, requires a working LaTeX installation.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().

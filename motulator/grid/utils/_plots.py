@@ -1,5 +1,7 @@
 """Example plotting scripts for grid converters."""
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import ArrayLike
@@ -143,7 +145,7 @@ def plot_control_signals(
     y_lims: list[tuple[float, float] | None] | None = None,
     y_ticks: list[ArrayLike | None] | None = None,
     latex: bool = False,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -167,7 +169,7 @@ def plot_control_signals(
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
         installation, defaults to False.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
@@ -275,7 +277,7 @@ def plot_grid_waveforms(
     y_ticks: list[ArrayLike | None] | None = None,
     latex: bool = False,
     plot_pcc_voltage: bool = True,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -302,7 +304,7 @@ def plot_grid_waveforms(
     plot_pcc_voltage : bool, optional
         If True, plot the phase voltage waveforms at the point of common coupling (PCC).
         Otherwise, plot the grid voltage waveforms, defaults to True.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
@@ -356,7 +358,7 @@ def plot_grid_waveforms(
 def plot_voltage_vector(
     res: SimulationResults,
     base: BaseValues | None = None,
-    save_path: str | None = None,
+    save_path: str | Path | None = None,
     **savefig_kwargs,
 ) -> None:
     """
@@ -369,7 +371,7 @@ def plot_voltage_vector(
     base : BaseValues, optional
         Base values for scaling the waveforms. If not given, the waveforms are plotted
         in SI units.
-    save_path : str, optional
+    save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().

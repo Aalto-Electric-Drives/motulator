@@ -1,11 +1,13 @@
 """Base control systems for machine drives."""
 
+from cmath import exp
 from dataclasses import dataclass
 from math import inf
-from typing import Callable, Protocol, Sequence
+from typing import Callable, Literal, Protocol, Sequence
 
 from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._controllers import PIController, RateLimiter
+from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import abc2complex, wrap
 from motulator.drive.control._controllers import SpeedController
 from motulator.drive.model._drive import Drive
@@ -15,16 +17,20 @@ from motulator.drive.model._drive import Drive
 class Feedbacks(Protocol):
     """Protocol defining the required fields for feedback signals."""
 
-    w_M: float
+    w_M: float  # Mechanical angular speed
+    w_c: float  # Angular speed of the coordinate system
+    theta_c: float  # Angular position of the coordinate system
+    u_dc: float  # DC-bus voltage
 
 
 class References(Protocol):
     """Protocol defining the required fields for reference signals."""
 
-    T_s: float
-    d_abc: Sequence[float]
-    tau_M: float | None
-    w_M: float | None
+    T_s: float  # Sampling period (s) for the next control step
+    d_abc: Sequence[float]  # Duty ratios for three-phase PWM
+    tau_M: float | None  # Torque reference
+    u_s: complex  # Stator voltage reference (controller coordinates)
+    w_M: float | None  # Mechanical speed
 
 
 @dataclass
@@ -39,10 +45,10 @@ class ExternalReferences:
 class Measurements:
     """Measured signals."""
 
-    i_c_ab: complex  # Converter current (A) in stationary coordinates
+    i_c_ab: complex  # Converter current in stationary coordinates
     u_dc: float
     w_M: float | None = None
-    theta_M: float | None = None
+    theta_M: float | None = None  # Mechanical angular position
 
 
 # %%
@@ -51,8 +57,14 @@ class VectorController[Ref, Fbk](Protocol):
 
     sensorless: bool
 
-    def get_feedback(self, meas: Measurements) -> Fbk:
-        """Get feedback signals from measurements."""
+    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> Fbk:
+        """Get feedback signals from measurements without motion sensors."""
+        ...
+
+    def get_sensored_feedback(
+        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
+    ) -> Fbk:
+        """Get feedback signals from measurements with motion sensors."""
         ...
 
     def compute_output(self, tau_M_ref: float, fbk: Fbk) -> Ref:
@@ -61,6 +73,10 @@ class VectorController[Ref, Fbk](Protocol):
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
         """Update controller states."""
+        ...
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller outputs."""
         ...
 
 
@@ -87,6 +103,7 @@ class VectorControlSystem(ControlSystem):
         speed_ctrl: SpeedController | PIController | None = None,
     ) -> None:
         super().__init__()
+        self.pwm = PWM()
         self.vector_ctrl = vector_ctrl
         self.speed_ctrl = speed_ctrl
         self.ext_ref = ExternalReferences()
@@ -133,22 +150,33 @@ class VectorControlSystem(ControlSystem):
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
-        return self.vector_ctrl.get_feedback(meas)
+        u_c_ab = self.pwm.get_realized_voltage()
+        if self.vector_ctrl.sensorless:
+            fbk = self.vector_ctrl.get_feedback(u_c_ab, meas.i_c_ab)
+        else:
+            fbk = self.vector_ctrl.get_sensored_feedback(
+                u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M
+            )
+        fbk.u_dc = meas.u_dc
+        return fbk
 
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller output based on feedback."""
-        if self.speed_ctrl and self.ext_ref.w_M is not None:  # Speed-control mode
+        # Speed-control mode
+        if self.speed_ctrl and self.ext_ref.w_M is not None:
             w_M_ref = self.ext_ref.w_M(self.t)
             tau_M_ref = self.speed_ctrl.compute_output(w_M_ref, fbk.w_M)
-            ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
-            ref.w_M = w_M_ref
-            return ref
-        if self.ext_ref.tau_M is not None:  # Torque-control mode
+        # Torque-control mode
+        elif self.ext_ref.tau_M is not None:
+            w_M_ref = None
             tau_M_ref = self.ext_ref.tau_M(self.t)
-            ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
-            ref.w_M = None
-            return ref
-        raise ValueError
+        else:
+            raise ValueError
+        ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
+        u_s_ab_ref = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
+        ref.w_M = w_M_ref  # Store the speed reference for later use
+        return ref
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""
@@ -160,6 +188,7 @@ class VectorControlSystem(ControlSystem):
     def post_process(self) -> TimeSeries:
         """Extend the post-process method."""
         ts = super().post_process()
+        self.vector_ctrl.post_process(ts)
         return ts
 
 
@@ -168,8 +197,9 @@ class VHzController[Ref, Fbk](Protocol):
     """Protocol defining the interface for V/Hz controllers."""
 
     T_s: float
+    pwm_mode: Literal["MPE", "MME", "six_step"]
 
-    def get_feedback(self, w_M_ref: float, meas: Measurements) -> Fbk:
+    def get_feedback(self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float) -> Fbk:
         """Get feedback signals from measurements."""
         ...
 
@@ -179,6 +209,10 @@ class VHzController[Ref, Fbk](Protocol):
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
         """Update controller states."""
+        ...
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller outputs."""
         ...
 
 
@@ -198,6 +232,7 @@ class VHzControlSystem(ControlSystem):
     def __init__(self, vhz_ctrl: VHzController, slew_rate: float = inf) -> None:
         super().__init__()
         self.vhz_ctrl = vhz_ctrl
+        self.pwm = PWM(overmodulation=self.vhz_ctrl.pwm_mode)
         self.rate_limiter = RateLimiter(slew_rate)
         self.ext_ref = ExternalReferences()
         self._w_M_ref: float = 0  # For storing ramp-limited speed reference
@@ -223,15 +258,20 @@ class VHzControlSystem(ControlSystem):
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         if self.ext_ref.w_M is not None:
+            u_c_ab = self.pwm.get_realized_voltage()
             w_M_ref = self.ext_ref.w_M(self.t)
             self._w_M_ref = self.rate_limiter(self.vhz_ctrl.T_s, w_M_ref)
-            return self.vhz_ctrl.get_feedback(self._w_M_ref, meas)
+            fbk = self.vhz_ctrl.get_feedback(u_c_ab, meas.i_c_ab, self._w_M_ref)
+            fbk.u_dc = meas.u_dc
+            return fbk
         raise ValueError
 
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller output based on feedback."""
         ref = self.vhz_ctrl.compute_output(fbk)
-        ref.w_M = self._w_M_ref
+        u_s_ab_ref = exp(1j * fbk.theta_c) * ref.u_s
+        ref.d_abc = self.pwm(ref.T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
+        ref.w_M = self._w_M_ref  # Store the speed reference for later use
         return ref
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
@@ -242,4 +282,5 @@ class VHzControlSystem(ControlSystem):
     def post_process(self) -> TimeSeries:
         """Extend the post-process method."""
         ts = super().post_process()
+        self.vhz_ctrl.post_process(ts)
         return ts

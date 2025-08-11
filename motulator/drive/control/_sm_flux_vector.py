@@ -1,12 +1,10 @@
 """Flux-vector control of synchronous machine drives."""
 
-from cmath import exp
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import inf, pi
-from typing import Callable, Sequence
+from typing import Callable, Literal
 
-from motulator.common.control._pwm import PWM
-from motulator.drive.control._base import Measurements
+from motulator.common.control._base import TimeSeries
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
     create_sensored_observer,
@@ -26,12 +24,10 @@ class References:
     """Reference signals for flux-vector control."""
 
     T_s: float = 0.0
-    d_abc: Sequence[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     tau_M: float = 0.0
     psi_s: float = 0.0
     u_s: complex = 0j
     i_s: complex = 0j
-    w_M: float | None = None
 
 
 # %%
@@ -140,7 +136,8 @@ class FluxVectorControllerCfg:
     alpha_i : float, optional
         Integral-action bandwidth (rad/s), defaults to `alpha_tau`.
     alpha_o : float, optional
-        Speed estimation bandwidth (rad/s), defaults to 2*pi*50.
+        Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
+        2*pi*50/3, keeping the default speed observer gain the same.
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed.
     k_f : Callable[[float], float], optional
@@ -153,6 +150,9 @@ class FluxVectorControllerCfg:
         Voltage utilization factor, defaults to 0.9.
     k_mtpv : float, optional
         MTPV margin, defaults to 0.9.
+    J : float, optional
+        Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+        used in speed estimation.
 
     """
 
@@ -160,13 +160,21 @@ class FluxVectorControllerCfg:
     alpha_tau: float = 2 * pi * 100
     alpha_psi: float | None = None
     alpha_i: float | None = None
-    alpha_o: float = 2 * pi * 50
+    alpha_o: float | None = None
     k_o: Callable[[float], float] | None = None
     k_f: Callable[[float], float] | None = None
     psi_s_min: float | None = None
     psi_s_max: float = inf
     k_u: float = 0.9
     k_mtpv: float = 0.9
+    J: float | None = None
+
+    def __post_init__(self) -> None:
+        """Set alpha_o default based on J value."""
+        if self.alpha_o is None:
+            # To keep the speed observer gain k_w the same
+            alpha = 2 * pi * 50
+            self.alpha_o = alpha if self.J is None else alpha / 3.0
 
 
 # %%
@@ -215,7 +223,6 @@ class FluxVectorController:
         sensorless: bool = True,
         T_s: float = 125e-6,
     ) -> None:
-        self.pwm = PWM()
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
         )
@@ -224,9 +231,10 @@ class FluxVectorController:
         self.flux_torque_ctrl = FluxTorqueController(
             par, alpha_psi, cfg.alpha_tau, alpha_i
         )
+        assert cfg.alpha_o is not None
         if sensorless:
             self.observer = create_sensorless_observer(
-                par, cfg.alpha_o, cfg.k_o, cfg.k_f
+                par, cfg.alpha_o, cfg.k_o, cfg.k_f, cfg.J
             )
         else:
             self.observer = create_sensored_observer(
@@ -235,17 +243,15 @@ class FluxVectorController:
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(self, meas: Measurements) -> ObserverOutputs:
-        """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
-        if self.observer.sensorless:
-            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
-        else:
-            fbk = self.observer.compute_output(
-                u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M
-            )
-        fbk.u_dc = meas.u_dc
-        return fbk
+    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
+        """Get feedback signals without motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab)
+
+    def get_sensored_feedback(
+        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
+    ) -> ObserverOutputs:
+        """Get the feedback signals with motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab, w_M, theta_M)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
@@ -256,14 +262,15 @@ class FluxVectorController:
         # Current references are not used, but they are computed for plotting
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""
 
 
 # %%
@@ -280,10 +287,10 @@ class ObserverBasedVHzControllerCfg:
         Flux-control bandwidth (rad/s), defaults to 2*pi*100.
     alpha_tau : float, optional
         Torque-control bandwidth (rad/s), defaults to 2*pi*20.
-    alpha_d : float, optional
-        Rotor-angle estimation bandwidth (rad/s), defaults to 2*pi*200.
     alpha_f : float, optional
         Filter bandwidth (rad/s), defaults to 2*pi*1.
+    alpha_o : float, optional
+        Angle estimation pole (rad/s), defaults to 2*pi*200.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the rotor angular speed.
     k_u : float, optional
@@ -300,8 +307,8 @@ class ObserverBasedVHzControllerCfg:
     i_s_max: float
     alpha_psi: float = 2 * pi * 100
     alpha_tau: float = 2 * pi * 20
-    alpha_d: float = 2 * pi * 200
     alpha_f: float = 2 * pi * 1
+    alpha_o: float = 2 * pi * 200
     k_o: Callable[[float], float] | None = None
     k_u: float = 0.9
     k_mtpv: float = 0.9
@@ -333,22 +340,22 @@ class ObserverBasedVHzController:
         cfg: ObserverBasedVHzControllerCfg,
         T_s: float = 250e-6,
     ) -> None:
-        self.pwm = PWM()
+        self.pwm_mode: Literal["MPE", "MME", "six_step"] = "MME"
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
         )
         self.flux_torque_ctrl = FluxTorqueController(par, cfg.alpha_psi, cfg.alpha_tau)
-        self.observer = create_vhz_observer(par, cfg.alpha_d, cfg.k_o)
+        self.observer = create_vhz_observer(par, cfg.alpha_o, cfg.k_o)
         self.alpha_f: float = cfg.alpha_f
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
         self.n_p = par.n_p
         self.T_s = T_s
 
-    def get_feedback(self, w_M_ref: float, meas: Measurements) -> ObserverOutputs:
+    def get_feedback(
+        self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float
+    ) -> ObserverOutputs:
         """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
-        fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab, w_M_ref)
-        fbk.u_dc = meas.u_dc
+        fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M_ref)
         return fbk
 
     def compute_output(self, fbk: ObserverOutputs) -> References:
@@ -360,11 +367,12 @@ class ObserverBasedVHzController:
         # Current references are not used, but they are computed for plotting
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.tau_M_lpf += ref.T_s * self.alpha_f * (fbk.tau_M - self.tau_M_lpf)
         self.observer.update(ref.T_s)
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""

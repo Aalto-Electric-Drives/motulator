@@ -1,14 +1,12 @@
 """Disturbance-observer-based grid-forming control."""
 
-from cmath import exp
-from dataclasses import dataclass, field
+from cmath import exp, phase
+from dataclasses import dataclass
 from math import pi, sqrt
-from typing import Sequence
 
 import numpy as np
 
 from motulator.common.control._base import TimeSeries
-from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
 from motulator.grid.control._controllers import CurrentLimiter
@@ -27,14 +25,14 @@ class ObserverStates:
 class ObserverOutputs:
     """Feedback signals for the control system."""
 
-    u_dc: float = 0.0
     i_c: complex = 0j
     u_c: complex = 0j
     v_c: complex = 0j
     u_g: complex = 0j
-    theta_c: float = 0.0
     p_g: float = 0.0
     q_g: float = 0.0
+    theta_c: float = 0.0  # Angle of the coordinate system (rad)
+    w_c: float = 0.0  # Angular speed of the coordinate system (rad/s)
 
 
 class Observer:
@@ -80,6 +78,7 @@ class Observer:
         u_gp = self.state.u_gp
         out.v_c = u_gp - (self.alpha_o - 1j * self.w_g) * self.L * out.i_c
         out.u_g = u_gp - self.alpha_o * self.L * out.i_c
+        out.w_c = self.w_g
 
         # Active and reactive powers
         s_g = 1.5 * out.u_g * out.i_c.conjugate()
@@ -100,7 +99,6 @@ class References:
     """Reference signals for observer-based grid-forming control."""
 
     T_s: float = 0.0
-    d_abc: Sequence[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     p_g: float = 0.0
     u_c: complex = 0j
     i_c: complex = 0j
@@ -164,7 +162,6 @@ class ObserverBasedGridFormingController:
         w_nom: float = 2 * pi * 50,
         T_s: float = 125e-6,
     ) -> None:
-        self.pwm = PWM()
         self.observer = Observer(u_nom=u_nom, w_nom=w_nom, L=L, R=R, alpha_o=alpha_o)
         self.current_limiter = CurrentLimiter(i_max)
         # Initialize gains
@@ -173,11 +170,9 @@ class ObserverBasedGridFormingController:
         self.k_c = alpha_c * L  # Current control gain
         self.T_s: float = T_s
 
-    def get_feedback(self, meas: Measurements) -> ObserverOutputs:
+    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
         fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
-        fbk.u_dc = meas.u_dc
         return fbk
 
     def compute_output(
@@ -187,7 +182,7 @@ class ObserverBasedGridFormingController:
         ref = References(T_s=self.T_s, p_g=p_g_ref, v_c=v_c_ref)
 
         # Complex gains for grid-forming mode
-        exp_j_theta = fbk.v_c / abs(fbk.v_c) if abs(fbk.v_c) > 0.0 else 1.0
+        exp_j_theta = exp(1j * phase(fbk.v_c))
         k_p = exp_j_theta * self.R_a / (1.5 * ref.v_c)
         k_v = exp_j_theta * (1.0 - 1j * self.k_v)
 
@@ -201,9 +196,6 @@ class ObserverBasedGridFormingController:
 
         # Voltage reference
         ref.u_c = e_c + fbk.v_c + self.observer.R * fbk.i_c
-        u_c_ref_ab = exp(1j * fbk.theta_c) * ref.u_c
-        ref.d_abc = self.pwm(ref.T_s, u_c_ref_ab, fbk.u_dc, self.observer.w_g)
-
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
@@ -213,9 +205,7 @@ class ObserverBasedGridFormingController:
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
         # Convert quantities to converter-output-voltage coordinates
-        T = np.where(
-            np.abs(ts.fbk.v_c) > 0, np.conj(ts.fbk.v_c) / np.abs(ts.fbk.v_c), 1.0
-        )
+        T = np.exp(-1j * np.angle(ts.fbk.v_c))
         ts.ref.u_c = T * ts.ref.u_c
         ts.fbk.i_c = T * ts.fbk.i_c
         ts.ref.i_c = T * ts.ref.i_c

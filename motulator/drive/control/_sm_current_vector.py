@@ -1,13 +1,11 @@
 """Current-vector control methods for synchronous machine drives."""
 
-from cmath import exp
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import inf, pi
-from typing import Callable, Sequence
+from typing import Callable
 
 from motulator.common.control import ComplexPIController
-from motulator.common.control._pwm import PWM
-from motulator.drive.control._base import Measurements
+from motulator.common.control._base import TimeSeries
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
     create_sensored_observer,
@@ -26,7 +24,6 @@ class References:
     """Reference signals."""
 
     T_s: float = 0.0
-    d_abc: Sequence[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     tau_M: float = 0.0
     psi_s: float = 0.0
     i_s: complex = 0j
@@ -95,7 +92,8 @@ class CurrentVectorControllerCfg:
     alpha_i : float, optional
         Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`.
     alpha_o : float, optional
-        Speed estimation bandwidth (rad/s), defaults to 2*pi*100.
+        Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
+        2*pi*50/3, keeping the default speed observer gain the same.
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed.
     k_f : Callable[[float], float], optional
@@ -108,19 +106,30 @@ class CurrentVectorControllerCfg:
         Voltage utilization factor, defaults to 0.9.
     k_mtpv : float, optional
         MTPV margin, defaults to 0.9.
+    J : float, optional
+        Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+        used in speed estimation.
 
     """
 
     i_s_max: float
     alpha_c: float = 2 * pi * 200
     alpha_i: float | None = None
-    alpha_o: float = 2 * pi * 100
+    alpha_o: float | None = None
     k_o: Callable[[float], float] | None = None
     k_f: Callable[[float], float] | None = None
     psi_s_min: float | None = None
     psi_s_max: float = inf
     k_u: float = 0.9
     k_mtpv: float = 0.9
+    J: float | None = None
+
+    def __post_init__(self) -> None:
+        """Set alpha_o default based on J value."""
+        if self.alpha_o is None:
+            # To keep the speed observer gain k_w the same
+            alpha = 2 * pi * 50
+            self.alpha_o = alpha if self.J is None else alpha / 3.0
 
 
 # %%
@@ -148,14 +157,14 @@ class CurrentVectorController:
         sensorless: bool = True,
         T_s: float = 125e-6,
     ) -> None:
-        self.pwm = PWM()
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
         )
         self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
+        assert cfg.alpha_o is not None
         if sensorless:
             self.observer = create_sensorless_observer(
-                par, cfg.alpha_o, cfg.k_o, cfg.k_f
+                par, cfg.alpha_o, cfg.k_o, cfg.k_f, cfg.J
             )
         else:
             self.observer = create_sensored_observer(
@@ -164,17 +173,15 @@ class CurrentVectorController:
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(self, meas: Measurements) -> ObserverOutputs:
-        """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
-        if self.observer.sensorless:
-            fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
-        else:
-            fbk = self.observer.compute_output(
-                u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M
-            )
-        fbk.u_dc = meas.u_dc
-        return fbk
+    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
+        """Get feedback signals without motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab)
+
+    def get_sensored_feedback(
+        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
+    ) -> ObserverOutputs:
+        """Get the feedback signals with motion sensors."""
+        return self.observer.compute_output(u_s_ab, i_s_ab, w_M, theta_M)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
@@ -184,11 +191,12 @@ class CurrentVectorController:
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
-        u_s_ref_ab = exp(1j * fbk.theta_m) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ref_ab, fbk.u_dc, fbk.w_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s)
-        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_s)
+        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
+
+    def post_process(self, ts: TimeSeries) -> None:
+        """Post-process controller time series."""

@@ -1,13 +1,11 @@
 """Grid-following control methods."""
 
 from cmath import exp
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import pi, sqrt
-from typing import Sequence
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.control._controllers import ComplexPIController
-from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
 from motulator.grid.control._controllers import CurrentLimiter
@@ -27,7 +25,6 @@ class PLLStates:
 class PLLOutputSignals:
     """Feedback signals for the control system."""
 
-    u_dc: float = 0.0
     i_c: complex = 0j
     u_c: complex = 0j
     u_g: float = 0.0  # Filtered
@@ -59,7 +56,8 @@ class PLL:
     """
 
     def __init__(self, u_nom: float, w_nom: float, alpha_pll: float) -> None:
-        self.alpha_pll = alpha_pll
+        self.k_p = 2 * alpha_pll
+        self.k_i = alpha_pll**2
         self.state = PLLStates(w_g=w_nom, u_g=u_nom)
 
     def compute_output(
@@ -79,7 +77,7 @@ class PLL:
         out.eps = out.u_g_meas.imag / self.state.u_g if self.state.u_g > 0.0 else 0.0
 
         # Angular speed of the coordinate system
-        out.w_c = out.w_g + 2 * self.alpha_pll * out.eps
+        out.w_c = out.w_g + self.k_p * out.eps
 
         # Powers
         s_g = 1.5 * out.u_g * out.i_c.conjugate()
@@ -92,10 +90,8 @@ class PLL:
         """Update integral states."""
         self.state.theta_c += T_s * out.w_c
         self.state.theta_c = wrap(self.state.theta_c)
-        self.state.w_g += T_s * self.alpha_pll**2 * out.eps
-        self.state.u_g += (
-            2 * T_s * self.alpha_pll * (out.u_g_meas.real - self.state.u_g)
-        )
+        self.state.w_g += T_s * self.k_i * out.eps
+        self.state.u_g += T_s * self.k_p * (out.u_g_meas.real - self.state.u_g)
 
 
 # %%
@@ -132,7 +128,6 @@ class References:
     """Reference signals for grid-following control."""
 
     T_s: float = 0.0
-    d_abc: Sequence[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     u_c: complex = 0j
     i_c: complex = 0j
     p_g: float = 0.0
@@ -177,17 +172,14 @@ class CurrentVectorController:
         alpha_pll: float = 2 * pi * 20,
         T_s: float = 125e-6,
     ) -> None:
-        self.pwm = PWM()
         self.current_ctrl = CurrentController(L, alpha_c, alpha_i)
         self.pll = PLL(u_nom, w_nom, alpha_pll)
         self.current_limiter = CurrentLimiter(i_max)
         self.T_s = T_s
 
-    def get_feedback(self, meas: Measurements) -> PLLOutputSignals:
+    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> PLLOutputSignals:
         """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
         fbk = self.pll.compute_output(u_c_ab, meas.i_c_ab, meas.u_g_ab)
-        fbk.u_dc = meas.u_dc
         return fbk
 
     def compute_output(
@@ -202,9 +194,6 @@ class CurrentVectorController:
 
         # Compute the reference voltage
         ref.u_c = self.current_ctrl.compute_output(ref.i_c, fbk.i_c, fbk.u_g)
-        u_c_ref_ab = exp(1j * fbk.theta_c) * ref.u_c
-        ref.d_abc = self.pwm(ref.T_s, u_c_ref_ab, fbk.u_dc, fbk.w_c)
-
         return ref
 
     def update(self, ref: References, fbk: PLLOutputSignals) -> None:
