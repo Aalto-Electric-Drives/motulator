@@ -476,7 +476,7 @@ document.write(`
     \tau_\mathrm{M}^\mathrm{cl} &amp;= \frac{3\np}{2} \hatabspsiR \sqrt{(\ismax)^2 - \left(\frac{\hatabspsiR}{\hatLM}\right)^2}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\hatabspsiR\)</span> is the rotor flux magnitude estimate and <span class="math notranslate nohighlight">\(\ismax\)</span> is the maximum current. The breakdown torque limit is</p>
 <div class="math notranslate nohighlight" id="equation-im-bd-lim">
-<span class="eqno">(2)<a class="headerlink" href="#equation-im-bd-lim" title="Link to this equation">#</a></span>\[    \tau_\mathrm{M}^\mathrm{b} = \frac{3\np}{2} \frac{(\abspsisref)^2}{2\hat{L}_\ell} \]</div>
+<span class="eqno">(2)<a class="headerlink" href="#equation-im-bd-lim" title="Link to this equation">#</a></span>\[    \tau_\mathrm{M}^\mathrm{b} = \frac{3\np}{2} \frac{(\abspsisref)^2}{2\hat{L}_\ell}\]</div>
 <p>where the leakage inductance estimate can be expressed by means of the inverse-Γ parameters as <span class="math notranslate nohighlight">\(\hat L_\ell = [(\hatLM + \hatLsgm)/\hatLM]\hatLsgm\)</span>.</p>
 <p>This reference generation is used in the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorController" title="motulator.drive.control.im.FluxVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.FluxVectorController</span></code></a> class, which implements flux-vector control for induction machines. See also the <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a> example.</p>
 <figure class="align-center" id="fig-im-ref-gen">
