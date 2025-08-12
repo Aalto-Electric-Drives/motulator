@@ -608,9 +608,6 @@ document.write(`
         <span class="n">psi_s_max</span> <span class="o">=</span> <span class="n">u_s_max</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_s</span><span class="p">)</span> <span class="k">if</span> <span class="n">w_s</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">inf</span>
         <span class="c1"># Current limit</span>
         <span class="n">psi_s_cl</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span> <span class="o">+</span> <span class="n">psi_R</span>
-        <span class="c1"># psi_s_cl = sqrt(</span>
-        <span class="c1">#     (1 + 2 * par.L_sgm / par.L_M) * psi_R**2 + (par.L_sgm * self.i_s_max) ** 2</span>
-        <span class="c1"># )</span>
         <span class="c1"># Stator flux reference</span>
         <span class="n">psi_s_ref</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">psi_s_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_nom</span><span class="p">,</span> <span class="n">psi_s_cl</span><span class="p">)</span>
 
@@ -622,6 +619,8 @@ document.write(`
             <span class="c1"># Current limit</span>
             <span class="n">tau_M_cl</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">psi_R</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="n">psi_R</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">psi_R</span> <span class="o">&lt;</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span>
+                <span class="k">else</span> <span class="mi">0</span>
             <span class="p">)</span>
             <span class="c1"># Limited torque reference</span>
             <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_max</span><span class="p">,</span> <span class="n">tau_b</span><span class="p">,</span> <span class="n">tau_M_cl</span><span class="p">)</span> <span class="o">*</span> <span class="n">sign</span><span class="p">(</span>
