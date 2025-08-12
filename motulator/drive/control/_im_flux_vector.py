@@ -198,9 +198,6 @@ class ReferenceGenerator:
         psi_s_max = u_s_max / abs(w_s) if w_s != 0 else inf
         # Current limit
         psi_s_cl = par.L_sgm * self.i_s_max + psi_R
-        # psi_s_cl = sqrt(
-        #     (1 + 2 * par.L_sgm / par.L_M) * psi_R**2 + (par.L_sgm * self.i_s_max) ** 2
-        # )
         # Stator flux reference
         psi_s_ref = min(psi_s_max, self.psi_s_nom, psi_s_cl)
 
@@ -212,6 +209,8 @@ class ReferenceGenerator:
             # Current limit
             tau_M_cl = (
                 1.5 * par.n_p * psi_R * sqrt(self.i_s_max**2 - (psi_R / par.L_M) ** 2)
+                if psi_R < par.L_M * self.i_s_max
+                else 0
             )
             # Limited torque reference
             tau_M_ref = min(abs(tau_M_ref), self.tau_M_max, tau_b, tau_M_cl) * sign(
