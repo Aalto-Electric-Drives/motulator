@@ -171,7 +171,7 @@ class VectorControlSystem(ControlSystem):
             w_M_ref = None
             tau_M_ref = self.ext_ref.tau_M(self.t)
         else:
-            raise ValueError
+            raise ValueError("Either speed or torque reference must be set")
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
         u_s_ab_ref = exp(1j * fbk.theta_c) * ref.u_s
         ref.d_abc = self.pwm(ref.T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
@@ -264,7 +264,7 @@ class VHzControlSystem(ControlSystem):
             fbk = self.vhz_ctrl.get_feedback(u_c_ab, meas.i_c_ab, self._w_M_ref)
             fbk.u_dc = meas.u_dc
             return fbk
-        raise ValueError
+        raise ValueError("Speed reference must be set")
 
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller output based on feedback."""

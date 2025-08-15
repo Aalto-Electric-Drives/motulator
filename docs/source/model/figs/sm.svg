@@ -45,9 +45,9 @@
      showgrid="true"
      inkscape:current-layer="layer2"
      inkscape:document-units="px"
-     inkscape:cy="92.73089"
+     inkscape:cy="93.017095"
      inkscape:cx="225.53068"
-     inkscape:zoom="1.7469907"
+     inkscape:zoom="3.4939814"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      objecttolerance="10"
@@ -667,5 +667,13 @@
         </g>
       </g>
     </g>
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1"
+       d="m 215,120 h -5 l 10,-40 h -5"
+       id="path7"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="im_gamma.pdf"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
   </g>
 </svg>

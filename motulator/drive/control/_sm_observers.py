@@ -139,7 +139,7 @@ class FluxObserver:
 
         # Get the rotor speed
         if w_M is None:
-            raise ValueError
+            raise ValueError("Either measured or estimated speed must be provided")
         w_m = par.n_p * w_M
 
         # Coordinate system angle equals the electrical rotor angle (or its estimate)

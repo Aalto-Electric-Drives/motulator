@@ -301,7 +301,7 @@ def get_value(u: Any | Callable[[Any], Any] | None, x: Any) -> Any:
 
     """
     if u is None:
-        raise ValueError
+        raise ValueError("Input value cannot be None")
     return u(x) if callable(u) else u
 
 

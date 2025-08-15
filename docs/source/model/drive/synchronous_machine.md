@@ -136,7 +136,7 @@ label: sm_flux_linkage_map
 
 ```
 
-In practice, these maps are typically realized as lookup tables or explicit mathematical functions, see, e.g., {cite}`Hin2017,Lel2024`.
+In practice, these maps can be realized as lookup tables, explicit mathematical functions {cite}`Hin2017,Woo2023,Lel2024`, or neural networks {cite}`Lee2025`.
 
 Methods for manipulating and plotting the magnetic models are provided in the classes {class}`motulator.drive.utils.MagneticModel`, {func}`motulator.drive.utils.plot_map`, and {func}`motulator.drive.utils.plot_flux_vs_current`. If the magnetic model is lossless and physically feasible, it can be numerically inverted between the two representations, see the {func}`motulator.drive.utils.MagneticModel.invert` method.
 

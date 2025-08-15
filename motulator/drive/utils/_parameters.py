@@ -118,11 +118,11 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     """
     Parameters of a saturated synchronous machine.
 
-    The saturation model is specified as as a current map (current as a function of the
+    The saturation model is specified as a current map (current as a function of the
     flux linkage). Optionally, to be used only in control systems, a flux map (flux
     linkage as a function of the current) can be provided. For convenience, this class
     also provides the incremental inductance matrix and its inverse, which can be used
-    for the system model and optimal reference generation.
+    in control systems and optimal reference generation.
 
     Parameters
     ----------
@@ -130,77 +130,67 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         Number of pole pairs.
     R_s : float
         Stator resistance (Ω).
-    i_s_dq_fcn : Callable[[complex], complex]
+    i_s_dq_fcn : Callable[[complex], complex], optional
         Stator current (A) as a function of the stator flux linkage (Vs). This function
-        should be differentiable, if inverse incremental inductances are used.
+        should be differentiable, if inverse incremental inductances are used. Needed
+        in the system model and in some control methods.
     psi_s_dq_fcn : Callable[[complex], complex], optional
         Stator flux linkage (Vs) as a function of the stator current (A). This function
         should be differentiable, if incremental inductances are used. Needed only for
-        some control methods, not in the system model. If not given, the modified
-        Powell's method is used to iteratively compute the flux linkage.
-    max_iter : int, optional
-        Maximum number of iterations for the modified Powell's method, defaults to 20.
-        This is needed only for some control methods (not for the system model) in such
-        a case that `psi_s_dq_fcn` is not given.
+        some control methods, not in the system model.
     kind : str, optional
         Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
         "rel" (reluctance).
+    max_iter : int, optional
+        Maximum number of iterations, defaults to None. Value around 20 typically
+        suffices. Note that the iterative method is intended for development purposes.
+
+    Notes
+    -----
+    The class allows providing either `i_s_dq_fcn` or `psi_s_dq_fcn`. If only one of
+    them is provided and `max_iter` is given, the other one is computed iteratively.
+    This feature is intended for development purposes. It can be used in control
+    systems, but iteration increases the simulations time and may not be computationally
+    practical in real-time control.
 
     """
 
     n_p: int
     R_s: float
-    i_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray]
+    i_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None
     psi_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None
     kind: Literal["pm", "rel"] = "pm"
-    max_iter: int = 20
     psi_f: float = field(init=False, default=0.0)
+    max_iter: int | None = None
 
     def __post_init__(self) -> None:
-        psi_f = root_scalar(
-            lambda psi_d: np.real(self.i_s_dq(psi_d)), x0=0, method="newton"
-        ).root
-        self.psi_f = float(psi_f)
+        if self.i_s_dq_fcn is not None:
+            psi_f = root_scalar(
+                lambda psi_d: np.real(self.i_s_dq(psi_d)), x0=0, method="newton"
+            ).root
+            self.psi_f = float(psi_f)
+        elif self.psi_s_dq_fcn is not None:
+            self.psi_f = complex(self.psi_s_dq_fcn(0j)).real
+        else:
+            raise ValueError("Either i_s_dq_fcn or psi_s_dq_fcn must be provided")
 
     def i_s_dq(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
         """Current as a function of the flux linkage."""
-        return self.i_s_dq_fcn(psi_s_dq)
+        if self.i_s_dq_fcn is not None:
+            return self.i_s_dq_fcn(psi_s_dq)
+        elif self.psi_s_dq_fcn is not None and self.max_iter is not None:
+            return self._solve_inverse(psi_s_dq, self._solve_current_single)
+        else:
+            raise ValueError("Either i_s_dq_fcn or psi_s_dq_fcn must be provided")
 
     def psi_s_dq(self, i_s_dq: complex | np.ndarray) -> complex | np.ndarray:
         """Flux linkage as a function of the stator current."""
-        if self.psi_s_dq_fcn is None:
-            # For arrays, apply the solver to each element
-            if isinstance(i_s_dq, np.ndarray):
-                # Initialize result array with same shape as input
-                result = np.zeros_like(i_s_dq, dtype=complex)
-
-                # Inductances for initial guesses
-                G = self.inv_incr_ind_mat(self.psi_f)
-                L_d = 1 / G[0, 0]
-                L_q = 1 / G[1, 1]
-
-                # Apply solver to each element
-                for idx in np.ndindex(i_s_dq.shape):
-                    i_s = complex(i_s_dq[idx])
-                    # Initial guess
-                    psi_s_dq_init = (
-                        L_d * np.real(i_s) + 1j * L_q * np.imag(i_s) + self.psi_f
-                    )
-                    # Solve for actual flux linkage and store in result array
-                    result[idx] = self.solve_psi_s_dq(
-                        i_s, psi_s_dq_init, max_iter=self.max_iter
-                    )
-                return result
-
-            # For a single complex value
-            G = self.inv_incr_ind_mat(self.psi_f)
-            L_d = 1 / G[0, 0]
-            L_q = 1 / G[1, 1]
-            psi_s_dq_init = L_d * i_s_dq.real + 1j * L_q * i_s_dq.imag + self.psi_f
-            return self.solve_psi_s_dq(i_s_dq, psi_s_dq_init, max_iter=self.max_iter)
-
-        # Use the provided function if available
-        return self.psi_s_dq_fcn(i_s_dq)
+        if self.psi_s_dq_fcn is not None:
+            return self.psi_s_dq_fcn(i_s_dq)
+        elif self.i_s_dq_fcn is not None and self.max_iter is not None:
+            return self._solve_inverse(i_s_dq, self._solve_flux_single)
+        else:
+            raise ValueError("Either i_s_dq_fcn or psi_s_dq_fcn must be provided")
 
     def inv_incr_ind_mat(self, psi_s_dq: complex | np.ndarray) -> np.ndarray:
         """Inverse incremental inductance matrix vs. flux linkage."""
@@ -235,36 +225,74 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         ) / (2 * eps)
         return np.array([[L_dd, L_dq], [L_dq, L_qq]])
 
-    def solve_psi_s_dq(
-        self, i_s_dq_target: complex, psi_s_dq_init: complex, max_iter: int
+    def _solve_inverse(
+        self,
+        input_val: complex | np.ndarray,
+        solve_single: Callable[[complex], complex],
+    ) -> complex | np.ndarray:
+        """Handle both array and scalar inputs for iterative solving."""
+        if isinstance(input_val, np.ndarray):
+            result = np.zeros_like(input_val, dtype=complex)
+            for idx in np.ndindex(input_val.shape):
+                result[idx] = solve_single(complex(input_val[idx]))
+            return result
+        else:
+            return solve_single(input_val)
+
+    def _solve_current_single(self, psi_s_dq: complex) -> complex:
+        """Solve for current given flux linkage."""
+        if self.psi_s_dq_fcn is None:
+            raise ValueError("psi_s_dq_fcn must be provided")
+        # Initial guess using incremental inductance at zero current
+        L = self.incr_ind_mat(0j)
+        G_d = 1 / L[0, 0]
+        G_q = 1 / L[1, 1]
+        i_s_dq_init = G_d * (psi_s_dq.real - self.psi_f) + 1j * G_q * psi_s_dq.imag
+        return self._solve_x(psi_s_dq, self.psi_s_dq_fcn, i_s_dq_init)
+
+    def _solve_flux_single(self, i_s_dq: complex) -> complex:
+        """Solve for flux linkage given current."""
+        if self.i_s_dq_fcn is None:
+            raise ValueError("i_s_dq_fcn must be provided")
+        # Initial guess using inverse incremental inductance at psi_f
+        G = self.inv_incr_ind_mat(self.psi_f)
+        L_d = 1 / G[0, 0]
+        L_q = 1 / G[1, 1]
+        psi_s_dq_init = L_d * i_s_dq.real + 1j * L_q * i_s_dq.imag + self.psi_f
+        return self._solve_x(i_s_dq, self.i_s_dq_fcn, psi_s_dq_init)
+
+    def _solve_x(
+        self,
+        y: complex,
+        f: Callable[[complex | np.ndarray], complex | np.ndarray],
+        x_init: complex,
     ) -> complex:
         """
-        Solve for flux linkage given target current, accounting for cross-saturation.
+        Solve for x in y = f(x).
 
         Parameters
         ----------
-        i_s_dq_target : complex
-            Target stator current (A)
-        psi_s_dq_init : complex
-            Initial guess for flux linkage (Vs).
-        max_iter : int
-            Maximum number of iterations.
+        y : complex
+            Target quantity.
+        f : Callable[[complex], complex]
+            Function that maps x to y.
+        x_init : complex
+            Initial guess.
 
         Returns
         -------
         complex
-            Stator flux linkage (Vs) that produces the target current.
+            x that produces y.
 
         """
 
         def error_fcn(x) -> list[float]:
-            # x = [psi_d, psi_q]
-            psi_s = complex(x[0], x[1])
-            i_s = complex(self.i_s_dq(psi_s))
-            return [i_s.real - i_s_dq_target.real, i_s.imag - i_s_dq_target.imag]
+            x = complex(x[0], x[1])
+            y_eval = complex(f(x))
+            return [y_eval.real - y.real, y_eval.imag - y.imag]
 
-        x0 = [psi_s_dq_init.real, psi_s_dq_init.imag]
-        result = root(error_fcn, x0, method="hybr", options={"maxfev": max_iter})
+        x0 = [x_init.real, x_init.imag]
+        result = root(error_fcn, x0, method="hybr", options={"maxfev": self.max_iter})
 
         return complex(result.x[0], result.x[1])
 
@@ -463,7 +491,7 @@ class InductionMachineInvGammaPars:
 
         """
         if callable(par.L_s):
-            raise ValueError
+            raise ValueError("L_s must be constant for this transformation")
         g = par.L_s / (par.L_s + par.L_ell)
         R_R = g**2 * par.R_r
         L_sgm = g * par.L_ell
