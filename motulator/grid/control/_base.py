@@ -212,7 +212,7 @@ class GridConverterControlSystem(ControlSystem):
             ref = self.inner_ctrl.compute_output(p_g_ref, q_g_ref, fbk)
             ref.u_dc = u_dc_ref
         else:
-            raise ValueError
+            raise ValueError("No valid control mode configuration detected")
         u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
         ref.d_abc = self.pwm(ref.T_s, u_c_ab_ref, fbk.u_dc, fbk.w_c)
         return ref

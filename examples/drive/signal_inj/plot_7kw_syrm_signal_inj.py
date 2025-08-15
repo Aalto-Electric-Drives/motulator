@@ -1,10 +1,11 @@
 """
-6.7-kW SyRM, signal injection
-=============================
+6.7-kW saturated SyRM, signal injection
+=======================================
 
-This example simulates sensorless vector control of a 6.7-kW synchronous reluctance
-machine (SyRM) drive. Square-wave signal injection with a simple phase-locked loop is
-used.
+This example simulates sensorless vector control of a saturated 6.7-kW synchronous
+reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop
+is used. Cross-saturation errors are compensated for using flux maps. Square-wave
+signal injection with a simple phase-locked loop is used.
 
 """
 
@@ -24,8 +25,12 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # %%
 # Configure the system model.
 
-par = model.SynchronousMachinePars(
-    n_p=2, R_s=0.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, kind="rel"
+# Use analytical saturation model
+curr_map = utils.SaturationModelSyRM(
+    a_d0=17.4, a_dd=373, S=5, a_q0=52.1, a_qq=658, T=1, a_dq=1120, U=1, V=0
+)
+par = model.SaturatedSynchronousMachinePars(
+    n_p=2, R_s=0.54, i_s_dq_fcn=curr_map, kind="rel"
 )
 machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.015)
@@ -35,7 +40,16 @@ mdl = model.Drive(machine, mechanics, converter)
 # %%
 # Configure the control system.
 
-est_par = par  # Assume accurate model parameter estimates
+# Compute rectilinear current and flux maps
+psi_d_range = np.linspace(-1.5 * base.psi, 1.5 * base.psi, 32)
+psi_q_range = np.linspace(-0.5 * base.psi, 0.5 * base.psi, 32)
+curr_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range)
+flux_map = curr_map.invert()
+
+# Parameter estimates, stator resistance not needed
+est_par = model.SaturatedSynchronousMachinePars(
+    n_p=2, R_s=0, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map, kind="rel"
+)
 cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, psi_s_min=0.5 * base.psi)
 vector_ctrl = control.SignalInjectionController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)

@@ -139,7 +139,7 @@ class FluxObserver:
 
         # Mechanical and electrical angular speeds of the rotor
         if w_M is None:
-            raise ValueError
+            raise ValueError("Either measured or estimated speed must be provided")
         out.w_M = w_M
         out.w_m = par.n_p * w_M
 

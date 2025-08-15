@@ -110,7 +110,7 @@ width: 100%
 align: center
 alt: Inverse-Gamma model of an induction machine
 ---
-*Figure 3:* Inverse-Γ model of an induction machine.
+*Figure 3:* Inverse-Γ model of an induction machine. If main-flux saturation is included, the parameters become nonlinear functions of the stator flux magnitude, $\Lsgm(\abspsis)$, $\RR(\abspsis)$, and $\LM(\abspsis)$.
 ```
 
 ```{figure} ../figs/im_inv_gamma.svg
@@ -120,7 +120,7 @@ width: 100%
 align: center
 alt: Inverse-Gamma model of an induction machine
 ---
-*Figure 3:* Inverse-Γ model of an induction machine.
+*Figure 3:* Inverse-Γ model of an induction machine. If main-flux saturation is included, the parameters become nonlinear functions of the stator flux magnitude, $\Lsgm(\abspsis)$, $\RR(\abspsis)$, and $\LM(\abspsis)$.
 ```
 
 If the magnetic saturation is omitted, the inverse-Γ model is mathematically identical to the Γ model {cite}`Sle1989`. The parameters can be transformed as

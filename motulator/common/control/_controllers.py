@@ -20,12 +20,6 @@ class PIController:
     The standard PI controller is obtained by choosing ``k_t = k_p``. The integrator
     anti-windup is implemented based on the realized controller output.
 
-    Notes
-    -----
-    This controller can be used, e.g., as a speed controller. In this case, `y`
-    corresponds to the rotor angular speed `w_M` and `u` to the torque reference
-    `tau_M_ref`.
-
     Parameters
     ----------
     k_p : float
@@ -36,6 +30,12 @@ class PIController:
         Reference-feedforward gain, defaults to `k_p`.
     u_max : float, optional
         Maximum controller output, defaults to `inf`.
+
+    Notes
+    -----
+    This controller can be used, e.g., as a speed controller. In this case, `y`
+    corresponds to the rotor angular speed `w_M` and `u` to the torque reference
+    `tau_M_ref`.
 
     """
 

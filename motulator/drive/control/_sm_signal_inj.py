@@ -11,17 +11,13 @@ from motulator.drive.control._sm_current_vector import (
     References,
 )
 from motulator.drive.control._sm_observers import ObserverOutputs
-from motulator.drive.utils._parameters import SynchronousMachinePars
+from motulator.drive.utils._parameters import (
+    SaturatedSynchronousMachinePars,
+    SynchronousMachinePars,
+)
 
 
 # %%
-@dataclass
-class PLLOutputSignals(ObserverOutputs):
-    """Feedback signals for signal-injection control."""
-
-    i_s_flt: complex = 0j
-
-
 @dataclass
 class PLLStates:
     """State estimates."""
@@ -36,8 +32,8 @@ class PLLWorkspace:
 
     eps: float = 0.0
     d_theta_m: float = 0.0
-    old_i_s: complex = 0j
-    older_i_s: complex = 0j
+    old_psi_sq: float = 0
+    older_psi_sq: float = 0
 
 
 class PhaseLockedLoop:
@@ -46,7 +42,7 @@ class PhaseLockedLoop:
 
     Parameters
     ----------
-    par : SynchronousMachinePars
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
     alpha_o : float
         Pole location (rad/s).
@@ -58,22 +54,47 @@ class PhaseLockedLoop:
     """
 
     def __init__(
-        self, par: SynchronousMachinePars, alpha_o: float, U_inj: float, T_s: float
+        self,
+        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        alpha_o: float,
+        U_inj: float,
+        T_s: float,
     ) -> None:
         self.T_s = T_s
         self.k_p = 2 * alpha_o
         self.k_i = alpha_o**2
+        # Constant error gain based on the unsaturated inductances
         L_s = par.incr_ind_mat(0j)
-        self.k = 0.5 * L_s[0, 0] * L_s[1, 1] / (L_s[1, 1] - L_s[0, 0])  # Error gain
+        self.k = 0.5 * L_s[0, 0] / (L_s[1, 1] - L_s[0, 0])
         self.u_sd_inj = U_inj
         self.state = PLLStates()
         self._work = PLLWorkspace()
         self.par = par
         self.sensorless = True  # For compatibility reasons
 
-    def compute_output(self, u_s_ab: complex, i_s_ab: complex) -> PLLOutputSignals:
+    def _compute_demodulation_error(self, i_s: complex) -> float:
+        """Compute demodulation error signal based on flux-mapped q-axis current."""
+        # Apply the flux map to get q-axis flux linkage
+        psi_sq = complex(self.par.psi_s_dq(i_s)).imag
+
+        # Compute second derivative using finite differences
+        d_psi_sq = psi_sq - 2.0 * self._work.old_psi_sq + self._work.older_psi_sq
+
+        # Compute error signal if injection is active
+        if abs(self.u_sd_inj) > 0:
+            eps = self.k * d_psi_sq / (self.u_sd_inj * self.T_s)
+        else:
+            eps = 0
+
+        # Update stored values for next iteration
+        self._work.older_psi_sq = self._work.old_psi_sq
+        self._work.old_psi_sq = psi_sq
+
+        return eps
+
+    def compute_output(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
         """Compute output."""
-        out = PLLOutputSignals(
+        out = ObserverOutputs(
             theta_m=self.state.theta_m, theta_c=self.state.theta_m, w_m=self.state.w_m
         )
         out.w_M = out.w_m / self.par.n_p
@@ -82,24 +103,13 @@ class PhaseLockedLoop:
         out.i_s = exp(-1j * out.theta_m) * i_s_ab
         out.u_s = exp(-1j * out.theta_m) * u_s_ab
 
-        # Filter the current signal
-        out.i_s_flt = 0.5 * (out.i_s + self._work.old_i_s)
-        d_i_sq = (out.i_s - 2 * self._work.old_i_s + self._work.older_i_s).imag
-
-        # Internal variables, not needed elsewhere, safe to update here
-        self._work.older_i_s = self._work.old_i_s
-        self._work.old_i_s = out.i_s
+        # Demodulation (based on flux-mapped q-current to avoid cross-saturation error)
+        eps = self._compute_demodulation_error(out.i_s)
+        self._work.eps = eps  # Store for the update method
 
         # Coordinate system angular frequency
-        out.w_c = out.w_m + self.k_p * self._work.eps
+        out.w_c = out.w_m + self.k_p * eps
         self._work.d_theta_m = out.w_c
-
-        # Error signal
-        self._work.eps = (
-            self.k * d_i_sq / (self.u_sd_inj * self.T_s)
-            if abs(self.u_sd_inj) > 0
-            else 0
-        )
 
         return out
 
@@ -117,14 +127,13 @@ class SignalInjectionController(CurrentVectorController):
     Sensorless controller with signal injection for synchronous machine drives.
 
     This class implements a square-wave signal injection for low-speed operation
-    according to [#Kim2012]_. A simple phase-locked loop is used to track the rotor
-    position. For a wider speed range, signal injection could be combined to a model-
-    based observer. The effects of magnetic saturation are not compensated for in this
-    version.
+    according to [#Kim2012]_. Cross-saturation errors are compensated for using flux
+    maps [#You2018]_. A simple phase-locked loop is used to track the rotor position.
+    For wider speed range, signal injection could be combined to a model-based observer.
 
     Parameters
     ----------
-    par : SynchronousMachinePars
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
         Current-vector control configuration.
@@ -141,11 +150,16 @@ class SignalInjectionController(CurrentVectorController):
        method in IPMSM," IEEE Trans. Ind. Appl., 2012,
        https://doi.org/10.1109/TIA.2012.2210175
 
+    .. [#You2018] Yousefi-Talouki, Pescetto, Pellegrino, Boldea, "Combined active flux
+       and high-frequency injection methods for sensorless direct-flux vector control of
+       synchronous reluctance machines," IEEE Trans. Power Electron., 2018,
+       https://doi.org/10.1109/TPEL.2017.2697209
+
     """
 
     def __init__(
         self,
-        par: SynchronousMachinePars,
+        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: CurrentVectorControllerCfg,
         alpha_o: float = 2 * pi * 40,
         U_inj: float = 250,
@@ -155,16 +169,13 @@ class SignalInjectionController(CurrentVectorController):
         self.observer = PhaseLockedLoop(par, alpha_o, U_inj, T_s)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
-        if not isinstance(fbk, PLLOutputSignals):
-            raise TypeError
         ref = References(T_s=self.T_s, tau_M=tau_M_ref)
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = (
-            self.current_ctrl.compute_output(ref.i_s, fbk.i_s_flt)
-            + self.observer.u_sd_inj
+            self.current_ctrl.compute_output(ref.i_s, fbk.i_s) + self.observer.u_sd_inj
         )
         return ref
 

@@ -62,7 +62,7 @@ class MagneticModel:
 
         """
         if self.lookup_fcn is None:
-            raise ValueError
+            raise ValueError("Lookup table function is missing")
         return self.lookup_fcn(input_dq)
 
     def is_flux_map(self) -> bool:
