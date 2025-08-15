@@ -5,11 +5,13 @@
 Signal Injection
 ----------------
 
-These examples demonstrate a square-wave signal injection for low-speed operation based on [#Kim2012]_. A phase-locked loop is used to track the rotor position. For a wider speed range, signal injection could be combined to a model-based observer. The effects of magnetic saturation are not compensated for in this version.
+These examples demonstrate a square-wave signal injection for low-speed operation based on [#Kim2012]_. Cross-saturation errors are compensated for using flux maps [#You2018]_. A phase-locked loop is used to track the rotor position. For a wider speed range, signal injection could be combined to a model-based observer.
 
 .. rubric:: References
 
 .. [#Kim2012] Kim, Ha, Sul, "PWM switching frequency signal injection sensorless method in IPMSM," IEEE Trans. Ind. Appl., 2012, https://doi.org/10.1109/TIA.2012.2210175
+
+.. [#You2018] Yousefi-Talouki, Pescetto, Pellegrino, Boldea, "Combined active flux and high-frequency injection methods for sensorless direct-flux vector control of synchronous reluctance machines," IEEE Trans. Power Electron., 2018, https://doi.org/10.1109/TPEL.2017.2697209
 
 
 
@@ -38,7 +40,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a 6.7-kW synchronous reluctance machine (SyRM) drive. Square-wave signal injection with a simple phase-locked loop is used.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a saturated 6.7-kW synchronous reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop is used. Cross-saturation errors are compensated for using flux maps. Square-wave signal injection with a simple phase-locked loop is used.">
 
 .. only:: html
 
@@ -49,7 +51,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, signal injection</div>
+      <div class="sphx-glr-thumbnail-title">6.7-kW saturated SyRM, signal injection</div>
     </div>
 
 

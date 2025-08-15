@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Mechanics &#8212; motulator 0.7.0 documentation</title>
+    <title>Mechanics &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -196,7 +196,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,7 +498,7 @@ document.write(`
 </section>
 <section id="two-mass-mechanical-system">
 <h2>Two-Mass Mechanical System<a class="headerlink" href="#two-mass-mechanical-system" title="Link to this heading">#</a></h2>
-<p>A two-mass mechanical system is modeled in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.TwoMassMechanicalSystem</span></code></a> class. The dynamics are governed by <span id="id1">[<a class="reference internal" href="../../bibliography.html#id39" title="Saarakkala and Hinkkanen. Identification of two-mass mechanical systems using torque excitation: design and experimental evaluation. IEEE Trans. Ind. Appl., 2015. doi:10.1109/TIA.2015.2416128.">Saarakkala and Hinkkanen, 2015</a>]</span></p>
+<p>A two-mass mechanical system is modeled in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.TwoMassMechanicalSystem</span></code></a> class. The dynamics are governed by <span id="id1">[<a class="reference internal" href="../../bibliography.html#id40" title="Saarakkala and Hinkkanen. Identification of two-mass mechanical systems using torque excitation: design and experimental evaluation. IEEE Trans. Ind. Appl., 2015. doi:10.1109/TIA.2015.2416128.">Saarakkala and Hinkkanen, 2015</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-mech-two-mass">
 <span class="eqno">(4)<a class="headerlink" href="#equation-mech-two-mass" title="Link to this equation">#</a></span>\[\begin{split}    \JM\frac{\D\omegaM}{\D t} &amp;= \tauM - \tauS \\
     \JL\frac{\D\omegaL}{\D t} &amp;= \tauS - \tauL \\

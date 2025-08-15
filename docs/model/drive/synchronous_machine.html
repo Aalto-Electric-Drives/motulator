@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Synchronous Machines &#8212; motulator 0.7.0 documentation</title>
+    <title>Synchronous Machines &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -196,7 +196,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -483,11 +483,11 @@ document.write(`
 <p><span class="caption-text"><em>Figure 1:</em> Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map <span class="math notranslate nohighlight">\(\is = \isfcn(\psis)\)</span>.</span><a class="headerlink" href="#fig-sm" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id9">
+<figure class="align-center" id="id10">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/sm.svg"><img alt="Equivalent circuit model of a synchronous machine" class="invert-colors-dark only-dark" src="../../_images/sm.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 1:</em> Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map <span class="math notranslate nohighlight">\(\is = \isfcn(\psis)\)</span>.</span><a class="headerlink" href="#id9" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 1:</em> Space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The nonlinear stator inductance is defined by the current map <span class="math notranslate nohighlight">\(\is = \isfcn(\psis)\)</span>.</span><a class="headerlink" href="#id10" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The state equations in rotor coordinates are <span id="id1">[<a class="reference internal" href="../../bibliography.html#id25" title="Jahns, Kliman, and Neumann. Interior permanent-magnet synchronous motors for adjustable-speed drives. IEEE Trans. Ind. Appl., 1986. doi:10.1109/TIA.1986.4504786.">Jahns <em>et al.</em>, 1986</a>]</span></p>
@@ -509,11 +509,11 @@ document.write(`
 <p><span class="caption-text"><em>Figure 2:</em> Block diagram of the machine model in rotor coordinates. The magnetic model includes the flux equation (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#fig-sm-block-rot" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id10">
+<figure class="align-center" id="id11">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/sm_block_rot.svg"><img alt="Synchronous machine model" class="invert-colors-dark only-dark" src="../../_images/sm_block_rot.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes <a class="reference internal" href="#equation-sm-current">(2)</a> and <a class="reference internal" href="#equation-sm-torque">(3)</a>. Since the spatial harmonics are omitted, the current <span class="math notranslate nohighlight">\(\is\)</span> and the torque <span class="math notranslate nohighlight">\(\tauM\)</span> do not depend on the angle <span class="math notranslate nohighlight">\(\thetam\)</span>.</span><a class="headerlink" href="#id10" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes <a class="reference internal" href="#equation-sm-current">(2)</a> and <a class="reference internal" href="#equation-sm-torque">(3)</a>. Since the spatial harmonics are omitted, the current <span class="math notranslate nohighlight">\(\is\)</span> and the torque <span class="math notranslate nohighlight">\(\tauM\)</span> do not depend on the angle <span class="math notranslate nohighlight">\(\thetam\)</span>.</span><a class="headerlink" href="#id11" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="fig-sm-block-stat">
@@ -523,11 +523,11 @@ document.write(`
 <p><span class="caption-text"><em>Figure 3:</em> Synchronous machine model seen from stator coordinates.</span><a class="headerlink" href="#fig-sm-block-stat" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id11">
+<figure class="align-center" id="id12">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/sm_block_stat.svg"><img alt="Synchronous machine model seen from stator coordinates" class="invert-colors-dark only-dark" src="../../_images/sm_block_stat.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 3:</em> Synchronous machine model seen from stator coordinates.</span><a class="headerlink" href="#id11" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 3:</em> Synchronous machine model seen from stator coordinates.</span><a class="headerlink" href="#id12" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="admonition note">
@@ -548,14 +548,14 @@ document.write(`
 <div class="math notranslate nohighlight" id="equation-sm-flux-linkage-map">
 <span class="eqno">(5)<a class="headerlink" href="#equation-sm-flux-linkage-map" title="Link to this equation">#</a></span>\[\begin{split}    \psis &amp;= \psisfcn(\is) \\
     &amp;= \psidfcn(\id, \iq) + \jj\psiqfcn(\id, \iq)\end{split}\]</div>
-<p>In practice, these maps are typically realized as lookup tables or explicit mathematical functions, see, e.g., <span id="id3">[<a class="reference internal" href="../../bibliography.html#id20" title="Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, and Bojoi. Sensorless self-commissioning of synchronous reluctance motors at standstill without rotor locking. IEEE Trans. Ind. Appl., 2017. doi:10.1109/TIA.2016.2644624.">Hinkkanen <em>et al.</em>, 2017</a>, <a class="reference internal" href="../../bibliography.html#id31" title="Lelli, Hinkkanen, and Giulii Capponi. A saturation model based on a simplified equivalent magnetic circuit for permanent magnet machines. In Proc. ICEM. 2024. doi:10.1109/ICEM60801.2024.10700403.">Lelli <em>et al.</em>, 2024</a>]</span>.</p>
+<p>In practice, these maps can be realized as lookup tables, explicit mathematical functions <span id="id3">[<a class="reference internal" href="../../bibliography.html#id20" title="Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, and Bojoi. Sensorless self-commissioning of synchronous reluctance motors at standstill without rotor locking. IEEE Trans. Ind. Appl., 2017. doi:10.1109/TIA.2016.2644624.">Hinkkanen <em>et al.</em>, 2017</a>, <a class="reference internal" href="../../bibliography.html#id32" title="Lelli, Hinkkanen, and Giulii Capponi. A saturation model based on a simplified equivalent magnetic circuit for permanent magnet machines. In Proc. ICEM. 2024. doi:10.1109/ICEM60801.2024.10700403.">Lelli <em>et al.</em>, 2024</a>, <a class="reference internal" href="../../bibliography.html#id49" title="Woo, Park, Choi, Lee, and Yoon. Flux saturation model including cross saturation for synchronous reluctance machines and its identification method at standstill. IEEE Trans. Ind. Electron., 2023. doi:10.1109/TIE.2022.3174233.">Woo <em>et al.</em>, 2023</a>]</span>, or neural networks <span id="id4">[<a class="reference internal" href="../../bibliography.html#id31" title="Lee, Lee, Lee, Jin, and Yoon. Estimation of flux saturation model for SynRMs using artificial neural network. IEEE Trans. Ind. Appl., 2025. doi:10.1109/TIA.2025.3532412.">Lee <em>et al.</em>, 2025</a>]</span>.</p>
 <p>Methods for manipulating and plotting the magnetic models are provided in the classes <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.utils.MagneticModel</span></code></a>, <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_map" title="motulator.drive.utils.plot_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.plot_map()</span></code></a>, and <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_flux_vs_current" title="motulator.drive.utils.plot_flux_vs_current"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.plot_flux_vs_current()</span></code></a>. If the magnetic model is lossless and physically feasible, it can be numerically inverted between the two representations, see the <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.invert" title="motulator.drive.utils.MagneticModel.invert"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.MagneticModel.invert()</span></code></a> method.</p>
 <p>See also the examples <a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html"><span class="doc">5.6-kW saturated PM-SyRM, FVC</span></a>, <a class="reference internal" href="../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html"><span class="doc">6.7-kW saturated SyRM, FVC</span></a>, and <a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html"><span class="doc">5.1-kW saturated PM-SyRM, CVC</span></a>.</p>
 </section>
 </section>
 <section id="mtpv-and-mtpa-conditions">
 <span id="mtpa-mtpv"></span><h2>MTPV and MTPA Conditions<a class="headerlink" href="#mtpv-and-mtpa-conditions" title="Link to this heading">#</a></h2>
-<p>The maximum-torque-per-volt (MTPV) and maximum-torque-per-ampere (MTPA) conditions for saturable machines can be compactly presented by means of the auxiliary current and flux vectors <span id="id4">[<a class="reference internal" href="../../bibliography.html#id46" title="Varatharajan, Pellegrino, and Armando. Direct flux vector control of synchronous motor drives: accurate decoupled control with online adaptive maximum torque per ampere and maximum torque per volts evaluation. IEEE Trans. Ind. Electron., 2022. doi:10.1109/TIE.2021.3060665.">Varatharajan <em>et al.</em>, 2022</a>]</span>. In addition to optimal reference generation, these vectors are useful in flux-vector control and sensorless observers <span id="id5">[<a class="reference internal" href="../../bibliography.html#id43" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span>. The <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedSynchronousMachinePars" title="motulator.drive.model.SaturatedSynchronousMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.SaturatedSynchronousMachinePars</span></code></a> class contains methods for computing these vectors from the given magnetic model.</p>
+<p>The maximum-torque-per-volt (MTPV) and maximum-torque-per-ampere (MTPA) conditions for saturable machines can be compactly presented by means of the auxiliary current and flux vectors <span id="id5">[<a class="reference internal" href="../../bibliography.html#id47" title="Varatharajan, Pellegrino, and Armando. Direct flux vector control of synchronous motor drives: accurate decoupled control with online adaptive maximum torque per ampere and maximum torque per volts evaluation. IEEE Trans. Ind. Electron., 2022. doi:10.1109/TIE.2021.3060665.">Varatharajan <em>et al.</em>, 2022</a>]</span>. In addition to optimal reference generation, these vectors are useful in flux-vector control and sensorless observers <span id="id6">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span>. The <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedSynchronousMachinePars" title="motulator.drive.model.SaturatedSynchronousMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.SaturatedSynchronousMachinePars</span></code></a> class contains methods for computing these vectors from the given magnetic model.</p>
 <p>Consider the MTPV condition as an example. Applying the flux linkage vector <span class="math notranslate nohighlight">\(\psis = \abspsis \e^{\jj\delta}\)</span> with a given magnitude <span class="math notranslate nohighlight">\(\abspsis\)</span> in the torque expression <a class="reference internal" href="#equation-sm-torque">(3)</a>, the MTPV condition is obtained by setting <span class="math notranslate nohighlight">\(\partial \tauM/\partial \delta = 0\)</span>. This results in</p>
 <div class="math notranslate nohighlight" id="equation-sm-mtpv">
 <span class="eqno">(6)<a class="headerlink" href="#equation-sm-mtpv" title="Link to this equation">#</a></span>\[    \text{MTPV:} \quad \RE\left\{\iaux\psis^* \right\} = 0\]</div>
@@ -573,12 +573,12 @@ document.write(`
 <p>The conditions in <a class="reference internal" href="#equation-sm-mtpv">(6)</a> and <a class="reference internal" href="#equation-sm-mtpa">(8)</a> are realized in the class <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci" title="motulator.drive.utils.ControlLoci"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.utils.ControlLoci</span></code></a> that provides methods for computing the MTPA, MTPV, and constant current loci for magnetically linear as well as saturated machines. The class <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MachineCharacteristics" title="motulator.drive.utils.MachineCharacteristics"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.utils.MachineCharacteristics</span></code></a> provides methods for visualizing these loci. See also the examples <a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html"><span class="doc">5.6-kW saturated PM-SyRM, FVC</span></a>, <a class="reference internal" href="../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html"><span class="doc">6.7-kW saturated SyRM, FVC</span></a>, and <a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html"><span class="doc">5.1-kW saturated PM-SyRM, CVC</span></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The auxiliary vectors follow <span id="id6">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span> conventions and are rotated 90° relative to <span id="id7">[<a class="reference internal" href="../../bibliography.html#id46" title="Varatharajan, Pellegrino, and Armando. Direct flux vector control of synchronous motor drives: accurate decoupled control with online adaptive maximum torque per ampere and maximum torque per volts evaluation. IEEE Trans. Ind. Electron., 2022. doi:10.1109/TIE.2021.3060665.">Varatharajan <em>et al.</em>, 2022</a>]</span>.</p>
+<p>The auxiliary vectors follow <span id="id7">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span> conventions and are rotated 90° relative to <span id="id8">[<a class="reference internal" href="../../bibliography.html#id47" title="Varatharajan, Pellegrino, and Armando. Direct flux vector control of synchronous motor drives: accurate decoupled control with online adaptive maximum torque per ampere and maximum torque per volts evaluation. IEEE Trans. Ind. Electron., 2022. doi:10.1109/TIE.2021.3060665.">Varatharajan <em>et al.</em>, 2022</a>]</span>.</p>
 </div>
 </section>
 <section id="flux-and-torque-dynamics">
 <h2>Flux and Torque Dynamics<a class="headerlink" href="#flux-and-torque-dynamics" title="Link to this heading">#</a></h2>
-<p>From the machine model <a class="reference internal" href="#equation-sm-states">(1)</a>–<a class="reference internal" href="#equation-sm-torque">(3)</a>, the stator flux and torque dynamics can be written as <span id="id8">[<a class="reference internal" href="../../bibliography.html#id43" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<p>From the machine model <a class="reference internal" href="#equation-sm-states">(1)</a>–<a class="reference internal" href="#equation-sm-torque">(3)</a>, the stator flux and torque dynamics can be written as <span id="id9">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-sm-flux-torque">
 <span class="eqno">(10)<a class="headerlink" href="#equation-sm-flux-torque" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \abspsis}{\D t} &amp;= \frac{1}{\abspsis} \RE \{\left(\us - \Rs \is - \jj\omegam\psis\right) \psis^* \} \\
     \frac{\D\tauM}{\D t} &amp;= \frac{3 \np}{2} \IM \{ \left(\us - \Rs \is - \jj\omegam\psis \right) \iaux^*\}\end{split}\]</div>

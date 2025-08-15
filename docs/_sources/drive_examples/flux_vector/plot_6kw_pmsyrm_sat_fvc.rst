@@ -232,7 +232,7 @@ Configure the control system. Since the inertia estimate `J` is provided in
 action in flux-vector control is not needed (`alpha_i = 0`) since the speed observer's
 load-torque disturbance estimation provides integral action.
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-129
+.. GENERATED FROM PYTHON SOURCE LINES 118-128
 
 .. code-block:: Python
 
@@ -241,7 +241,6 @@ load-torque disturbance estimation provides integral action.
         n_p=2, R_s=0.63, i_s_dq_fcn=est_curr_map, psi_s_dq_fcn=est_flux_map
     )
     cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, J=0.05, alpha_i=0)
-    # cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i)
     vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
     speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
@@ -254,11 +253,11 @@ load-torque disturbance estimation provides integral action.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-131
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
 Visualize the control loci.
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-139
+.. GENERATED FROM PYTHON SOURCE LINES 130-138
 
 .. code-block:: Python
 
@@ -308,11 +307,11 @@ Visualize the control loci.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-141
+.. GENERATED FROM PYTHON SOURCE LINES 139-140
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-145
+.. GENERATED FROM PYTHON SOURCE LINES 140-144
 
 .. code-block:: Python
 
@@ -327,11 +326,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-147
+.. GENERATED FROM PYTHON SOURCE LINES 145-146
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-152
+.. GENERATED FROM PYTHON SOURCE LINES 146-151
 
 .. code-block:: Python
 
@@ -352,7 +351,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-162
+.. GENERATED FROM PYTHON SOURCE LINES 152-161
 
 .. rubric:: References
 
@@ -367,7 +366,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 25.753 seconds)
+   **Total running time of the script:** (0 minutes 26.058 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:

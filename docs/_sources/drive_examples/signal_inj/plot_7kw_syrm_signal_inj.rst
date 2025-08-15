@@ -18,14 +18,15 @@
 .. _sphx_glr_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py:
 
 
-6.7-kW SyRM, signal injection
-=============================
+6.7-kW saturated SyRM, signal injection
+=======================================
 
-This example simulates sensorless vector control of a 6.7-kW synchronous reluctance
-machine (SyRM) drive. Square-wave signal injection with a simple phase-locked loop is
-used.
+This example simulates sensorless vector control of a saturated 6.7-kW synchronous
+reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop
+is used. Cross-saturation errors are compensated for using flux maps. Square-wave
+signal injection with a simple phase-locked loop is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-18
+.. GENERATED FROM PYTHON SOURCE LINES 13-19
 
 .. code-block:: Python
 
@@ -42,11 +43,11 @@ used.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-20
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-24
+.. GENERATED FROM PYTHON SOURCE LINES 21-25
 
 .. code-block:: Python
 
@@ -61,17 +62,21 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-35
+.. GENERATED FROM PYTHON SOURCE LINES 27-40
 
 .. code-block:: Python
 
 
-    par = model.SynchronousMachinePars(
-        n_p=2, R_s=0.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, kind="rel"
+    # Use analytical saturation model
+    curr_map = utils.SaturationModelSyRM(
+        a_d0=17.4, a_dd=373, S=5, a_q0=52.1, a_qq=658, T=1, a_dq=1120, U=1, V=0
+    )
+    par = model.SaturatedSynchronousMachinePars(
+        n_p=2, R_s=0.54, i_s_dq_fcn=curr_map, kind="rel"
     )
     machine = model.SynchronousMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
@@ -85,16 +90,25 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-44
+.. GENERATED FROM PYTHON SOURCE LINES 42-58
 
 .. code-block:: Python
 
 
-    est_par = par  # Assume accurate model parameter estimates
+    # Compute rectilinear current and flux maps
+    psi_d_range = np.linspace(-1.5 * base.psi, 1.5 * base.psi, 32)
+    psi_q_range = np.linspace(-0.5 * base.psi, 0.5 * base.psi, 32)
+    curr_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range)
+    flux_map = curr_map.invert()
+
+    # Parameter estimates, stator resistance not needed
+    est_par = model.SaturatedSynchronousMachinePars(
+        n_p=2, R_s=0, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map, kind="rel"
+    )
     cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, psi_s_min=0.5 * base.psi)
     vector_ctrl = control.SignalInjectionController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
@@ -107,11 +121,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-56
+.. GENERATED FROM PYTHON SOURCE LINES 60-70
 
 .. code-block:: Python
 
@@ -132,11 +146,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-58
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-63
+.. GENERATED FROM PYTHON SOURCE LINES 72-77
 
 .. code-block:: Python
 
@@ -157,11 +171,11 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-65
+.. GENERATED FROM PYTHON SOURCE LINES 78-79
 
 Plot also the angles.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-79
+.. GENERATED FROM PYTHON SOURCE LINES 79-93
 
 .. code-block:: Python
 
@@ -194,7 +208,7 @@ Plot also the angles.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 17.177 seconds)
+   **Total running time of the script:** (0 minutes 33.907 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py:

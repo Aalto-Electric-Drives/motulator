@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.common.control &#8212; motulator 0.7.0 documentation</title>
+    <title>motulator.common.control &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -194,7 +194,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -752,10 +752,6 @@ counterpart is:</p>
 feedback signal, <cite>u_ff</cite> is the feedforward signal, and <cite>1/s</cite> refers to integration.
 The standard PI controller is obtained by choosing <code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator
 anti-windup is implemented based on the realized controller output.</p>
-<p class="rubric">Notes</p>
-<p>This controller can be used, e.g., as a speed controller. In this case, <cite>y</cite>
-corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to the torque reference
-<cite>tau_M_ref</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -766,6 +762,10 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This controller can be used, e.g., as a speed controller. In this case, <cite>y</cite>
+corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to the torque reference
+<cite>tau_M_ref</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.PIController.compute_output">
 <span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#PIController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PIController.compute_output" title="Link to this definition">#</a></dt>

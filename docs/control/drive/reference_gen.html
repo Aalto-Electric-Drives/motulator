@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reference Generation &#8212; motulator 0.7.0 documentation</title>
+    <title>Reference Generation &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -196,7 +196,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -496,7 +496,7 @@ document.write(`
 </section>
 <section id="for-synchronous-machines">
 <h2>For Synchronous Machines<a class="headerlink" href="#for-synchronous-machines" title="Link to this heading">#</a></h2>
-<p>For synchronous machines, the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ReferenceGenerator" title="motulator.drive.control.sm.ReferenceGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.ReferenceGenerator</span></code></a> class implements the optimal reference generation that can be used both with current-vector control and flux-vector control. <a class="reference internal" href="#fig-sm-ref-gen"><span class="std std-ref">Figure 2</span></a> illustrates this method, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL) <span id="id1">[<a class="reference internal" href="../../bibliography.html#id3" title="Awan, Song, Saarakkala, and Hinkkanen. Optimal torque control of saturated synchronous motors: plug-and-play method. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2862410.">Awan <em>et al.</em>, 2018</a>, <a class="reference internal" href="../../bibliography.html#id33" title="Meyer and Böcker. Optimum control for interior permanent magnet synchronous motors (ipmsm) in constant torque and flux weakening range. In Proc. EPE-PEMC. 2006. doi:10.1109/EPEPEMC.2006.4778413.">Meyer and Böcker, 2006</a>]</span>. <a class="reference internal" href="#fig-flux-vs-torque"><span class="std std-ref">Figure 3</span></a> shows an example of the optimal reference characteristics for a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). See also the <a class="reference internal" href="../../model/drive/synchronous_machine.html#mtpa-mtpv"><span class="std std-ref">MTPV and MTPA Conditions</span></a> document and the <a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html"><span class="doc">5.6-kW saturated PM-SyRM, FVC</span></a> example for more details.</p>
+<p>For synchronous machines, the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ReferenceGenerator" title="motulator.drive.control.sm.ReferenceGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.ReferenceGenerator</span></code></a> class implements the optimal reference generation that can be used both with current-vector control and flux-vector control. <a class="reference internal" href="#fig-sm-ref-gen"><span class="std std-ref">Figure 2</span></a> illustrates this method, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL) <span id="id1">[<a class="reference internal" href="../../bibliography.html#id3" title="Awan, Song, Saarakkala, and Hinkkanen. Optimal torque control of saturated synchronous motors: plug-and-play method. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2862410.">Awan <em>et al.</em>, 2018</a>, <a class="reference internal" href="../../bibliography.html#id34" title="Meyer and Böcker. Optimum control for interior permanent magnet synchronous motors (ipmsm) in constant torque and flux weakening range. In Proc. EPE-PEMC. 2006. doi:10.1109/EPEPEMC.2006.4778413.">Meyer and Böcker, 2006</a>]</span>. <a class="reference internal" href="#fig-flux-vs-torque"><span class="std std-ref">Figure 3</span></a> shows an example of the optimal reference characteristics for a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). See also the <a class="reference internal" href="../../model/drive/synchronous_machine.html#mtpa-mtpv"><span class="std std-ref">MTPV and MTPA Conditions</span></a> document and the <a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html"><span class="doc">5.6-kW saturated PM-SyRM, FVC</span></a> example for more details.</p>
 <p>Note that the reference generation of flux-vector control is simpler than that of current-vector control, since the two-dimensional transformation to the current reference is avoided. For simplicity, we compute this transformation to the current vector using the root-finding method, while other approaches such as a two-dimensional lookup table could be used.</p>
 <figure class="align-center" id="fig-sm-ref-gen">
 <a class="only-light reference internal image-reference" href="../../_images/sm_ref_gen.svg"><img alt="Reference generation for synchronous machines" class="only-light" src="../../_images/sm_ref_gen.svg" style="width: 100%;" />

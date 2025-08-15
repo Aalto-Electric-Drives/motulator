@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Phase-Locked Loop &#8212; motulator 0.7.0 documentation</title>
+    <title>Phase-Locked Loop &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -196,7 +196,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -469,7 +469,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="phase-locked-loop">
 <h1>Phase-Locked Loop<a class="headerlink" href="#phase-locked-loop" title="Link to this heading">#</a></h1>
-<p>A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid <span id="id1">[<a class="reference internal" href="../../bibliography.html#id27" title="Kaura and Blasko. Operation of a phase locked loop system under distorted utility conditions. IEEE Trans. Ind. Appl., 1997. doi:10.1109/28.567077.">Kaura and Blasko, 1997</a>]</span>. Here, we represent the PLL using the disturbance observer structure <span id="id2">[<a class="reference internal" href="../../bibliography.html#id11" title="Franklin, Powell, and Workman. Digital Control of Dynamic Systems. Addison-Wesley, Menlo Park, CA, USA, 1997.">Franklin <em>et al.</em>, 1997</a>]</span>, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see <span id="id3">[<a class="reference internal" href="../../bibliography.html#id34" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>.</p>
+<p>A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid <span id="id1">[<a class="reference internal" href="../../bibliography.html#id27" title="Kaura and Blasko. Operation of a phase locked loop system under distorted utility conditions. IEEE Trans. Ind. Appl., 1997. doi:10.1109/28.567077.">Kaura and Blasko, 1997</a>]</span>. Here, we represent the PLL using the disturbance observer structure <span id="id2">[<a class="reference internal" href="../../bibliography.html#id11" title="Franklin, Powell, and Workman. Digital Control of Dynamic Systems. Addison-Wesley, Menlo Park, CA, USA, 1997.">Franklin <em>et al.</em>, 1997</a>]</span>, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see <span id="id3">[<a class="reference internal" href="../../bibliography.html#id35" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>.</p>
 <section id="disturbance-model">
 <h2>Disturbance Model<a class="headerlink" href="#disturbance-model" title="Link to this heading">#</a></h2>
 <p>Consider the positive-sequence voltage at the point of common coupling (PCC) in general coordinates, rotating at the angular speed <span class="math notranslate nohighlight">\(\omegac\)</span>. The dynamics of the PCC voltage <span class="math notranslate nohighlight">\(\ug\)</span> can be modeled using a disturbance model as</p>
@@ -479,8 +479,8 @@ document.write(`
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The disturbance model in <a class="reference internal" href="#equation-disturbance">(1)</a> can be equivalently expressed in polar form as</p>
-<div class="amsmath math notranslate nohighlight" id="equation-4c49039c-9af8-4a52-8d82-42232c214320">
-<span class="eqno">(2)<a class="headerlink" href="#equation-4c49039c-9af8-4a52-8d82-42232c214320" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-6d3b8ed2-ee35-4f0e-8177-112508c21e58">
+<span class="eqno">(2)<a class="headerlink" href="#equation-6d3b8ed2-ee35-4f0e-8177-112508c21e58" title="Permalink to this equation">#</a></span>\[\begin{align}
 \frac{\D \absug}{\D t} &amp;= 0 \\
 \frac{\D \delta_\mathrm{g}}{\D t} &amp;= \omegag - \omegac \\
 \ug &amp;= \absug \e^{\jj\delta_\mathrm{g}}

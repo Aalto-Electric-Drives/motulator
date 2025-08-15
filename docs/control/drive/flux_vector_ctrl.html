@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Flux-Vector Control &#8212; motulator 0.7.0 documentation</title>
+    <title>Flux-Vector Control &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -196,7 +196,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -477,7 +477,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="flux-vector-control">
 <h1>Flux-Vector Control<a class="headerlink" href="#flux-vector-control" title="Link to this heading">#</a></h1>
-<p>Flux-vector control directly controls the stator flux magnitude and the electromagnetic torque, which simplifies reference generation especially in the field-weakening region <span id="id1">[<a class="reference internal" href="../../bibliography.html#id35" title="Pellegrino, Armando, and Guglielmi. Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region. IEEE Trans. Ind. Appl., 2009. doi:10.1109/TIA.2009.2027167.">Pellegrino <em>et al.</em>, 2009</a>]</span>. We use the control law that results from feedback linearization of the flux and torque dynamics <span id="id2">[<a class="reference internal" href="../../bibliography.html#id5" title="Awan, Hinkkanen, Bojoi, and Pellegrino. Stator-flux-oriented control of synchronous motors: a systematic design procedure. IEEE Trans. Ind. Appl., 2019. doi:10.1109/TIA.2019.2927316.">Awan <em>et al.</em>, 2019</a>]</span>.</p>
+<p>Flux-vector control directly controls the stator flux magnitude and the electromagnetic torque, which simplifies reference generation especially in the field-weakening region <span id="id1">[<a class="reference internal" href="../../bibliography.html#id36" title="Pellegrino, Armando, and Guglielmi. Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region. IEEE Trans. Ind. Appl., 2009. doi:10.1109/TIA.2009.2027167.">Pellegrino <em>et al.</em>, 2009</a>]</span>. We use the control law that results from feedback linearization of the flux and torque dynamics <span id="id2">[<a class="reference internal" href="../../bibliography.html#id5" title="Awan, Hinkkanen, Bojoi, and Pellegrino. Stator-flux-oriented control of synchronous motors: a systematic design procedure. IEEE Trans. Ind. Appl., 2019. doi:10.1109/TIA.2019.2927316.">Awan <em>et al.</em>, 2019</a>]</span>.</p>
 <section id="for-induction-machines">
 <h2>For Induction Machines<a class="headerlink" href="#for-induction-machines" title="Link to this heading">#</a></h2>
 <section id="flux-and-torque-dynamics">
@@ -493,7 +493,7 @@ document.write(`
 </section>
 <section id="proportional-control-law">
 <h3>Proportional Control Law<a class="headerlink" href="#proportional-control-law" title="Link to this heading">#</a></h3>
-<p>Based on <a class="reference internal" href="#equation-im-flux-torque-fvc">(1)</a>, the proportional control law can be derived <span id="id3">[<a class="reference internal" href="../../bibliography.html#id43" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<p>Based on <a class="reference internal" href="#equation-im-flux-torque-fvc">(1)</a>, the proportional control law can be derived <span id="id3">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-im-flux-vector-control-usref">
 <span class="eqno">(3)<a class="headerlink" href="#equation-im-flux-vector-control-usref" title="Link to this equation">#</a></span>\[    \usref = \hatRs \is + \jj\hatomegas \hatpsis + e_\uppsi \mathbf{t}_\uppsi + e_\uptau \mathbf{t}_\uptau\]</div>
 <p>where <span class="math notranslate nohighlight">\(e_\uppsi = \alpha_\uppsi(\abspsisref - \hatabspsis)\)</span> and <span class="math notranslate nohighlight">\(e_\uptau = \alpha_\uptau(\tauMref - \hattauM)\)</span> are the bandwidth-scaled control errors of the stator flux linkage and torque, respectively, and the estimates are marked with the hat. The complex quantities <span class="math notranslate nohighlight">\(\mathbf{t}_\uppsi\)</span> and <span class="math notranslate nohighlight">\(\mathbf{t}_\uptau\)</span> are the direction vectors:</p>
@@ -508,7 +508,7 @@ document.write(`
 <div class="math notranslate nohighlight" id="equation-im-flux-vector-control-closed-lin">
 <span class="eqno">(5)<a class="headerlink" href="#equation-im-flux-vector-control-closed-lin" title="Link to this equation">#</a></span>\[    \frac{\D\Delta\abspsis}{\D t} = \alpha_\uppsi (\Delta \abspsisref - \Delta \abspsis) \qquad
     \frac{\D\Delta\tauM}{\D t} = \alpha_\uptau (\Delta\tauMref - \Delta \tauM)\]</div>
-<p>These closed-loop small-signal dynamics are valid also for saturated machines, if the flux observer takes the magnetic saturation into account. Furthermore, the dynamics hold also for sensorless drives, if the decoupling observer gains are used, see the <a class="reference internal" href="observers.html#im-obs-sensorless"><span class="std std-ref">Sensorless Drives</span></a> document and <span id="id4">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: an extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
+<p>These closed-loop small-signal dynamics are valid also for saturated machines, if the flux observer takes the magnetic saturation into account. Furthermore, the dynamics hold also for sensorless drives, if the decoupling observer gains are used, see the <a class="reference internal" href="observers.html#im-obs-sensorless"><span class="std std-ref">Sensorless Drives</span></a> document and <span id="id4">[<a class="reference internal" href="../../bibliography.html#id45" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: an extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
 </section>
 </section>
 <section id="for-synchronous-machines">
@@ -524,14 +524,14 @@ document.write(`
 </section>
 <section id="id6">
 <h3>Proportional Control Law<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
-<p>The proportional control law is <span id="id7">[<a class="reference internal" href="../../bibliography.html#id43" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<p>The proportional control law is <span id="id7">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-sm-flux-vector-control-usref">
 <span class="eqno">(7)<a class="headerlink" href="#equation-sm-flux-vector-control-usref" title="Link to this equation">#</a></span>\[    \usref = \hatRs \is + \jj\hatomegam \hatpsis + e_\uppsi \mathbf{t}_\uppsi + e_\uptau \mathbf{t}_\uptau\]</div>
 <p>where <span class="math notranslate nohighlight">\(e_\uppsi = \alpha_\uppsi(\abspsisref - \hatabspsis)\)</span> and <span class="math notranslate nohighlight">\(e_\uptau = \alpha_\uptau(\tauMref - \hattauM)\)</span>, and the estimates are marked with the hat. The complex direction vectors are</p>
 <div class="math notranslate nohighlight" id="equation-sm-flux-vector-control-dir">
 <span class="eqno">(8)<a class="headerlink" href="#equation-sm-flux-vector-control-dir" title="Link to this equation">#</a></span>\[    \mathbf{t}_\uppsi = \frac{ \hatabspsis}{ \RE\{\hatiaux\hatpsis^*\}}\hatiaux \qquad
     \mathbf{t}_\uptau = \frac{2}{3 \np \RE\{\hatiaux\hatpsis^*\}}\jj\hatpsis\]</div>
-<p>Note that <span class="math notranslate nohighlight">\(\RE\{\hatiaux\hatpsis^*\} &gt; 0\)</span> holds in the whole feasible operating region. The closed-loop small-signal dynamics in <a class="reference internal" href="#equation-im-flux-vector-control-closed-lin">(5)</a> are valid also for synchronous machines (including saturated machines, if the flux observer takes the magnetic saturation into account). Furthermore, the dynamics hold also for sensorless drives, if the decoupling observer gains are used, see the <a class="reference internal" href="observers.html#sm-obs-sensorless"><span class="std std-ref">Sensorless Drives</span></a> document and <span id="id8">[<a class="reference internal" href="../../bibliography.html#id43" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
+<p>Note that <span class="math notranslate nohighlight">\(\RE\{\hatiaux\hatpsis^*\} &gt; 0\)</span> holds in the whole feasible operating region. The closed-loop small-signal dynamics in <a class="reference internal" href="#equation-im-flux-vector-control-closed-lin">(5)</a> are valid also for synchronous machines (including saturated machines, if the flux observer takes the magnetic saturation into account). Furthermore, the dynamics hold also for sensorless drives, if the decoupling observer gains are used, see the <a class="reference internal" href="observers.html#sm-obs-sensorless"><span class="std std-ref">Sensorless Drives</span></a> document and <span id="id8">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
 </section>
 </section>
 <section id="inclusion-of-integral-action">

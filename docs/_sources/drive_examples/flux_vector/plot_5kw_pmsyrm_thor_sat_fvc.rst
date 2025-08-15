@@ -190,19 +190,16 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-92
+.. GENERATED FROM PYTHON SOURCE LINES 77-89
 
 .. code-block:: Python
 
 
     # Create the flux and current maps for the control system
-    curr_map = fem_flux_map.invert()
-
-    # In this example, the flux maps are not given to the control system. Therefore, the
-    # flux linkages are iteratively computed from the currents in this example. You could
-    # add the flux maps to the control system by adding `psi_s_dq_fcn=fem_flux_map` below.
-    est_par = control.SaturatedSynchronousMachinePars(n_p=2, R_s=0.2, i_s_dq_fcn=curr_map)
-
+    fem_curr_map = fem_flux_map.invert()
+    est_par = control.SaturatedSynchronousMachinePars(
+        n_p=2, R_s=0.2, i_s_dq_fcn=fem_curr_map, psi_s_dq_fcn=fem_flux_map
+    )
     # Since the inertia `J` is provided, the mechanical-model-based speed observer is used
     cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042, alpha_i=0)
     vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
@@ -216,11 +213,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-94
+.. GENERATED FROM PYTHON SOURCE LINES 90-91
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-97
+.. GENERATED FROM PYTHON SOURCE LINES 91-94
 
 .. code-block:: Python
 
@@ -234,11 +231,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-99
+.. GENERATED FROM PYTHON SOURCE LINES 95-96
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-103
+.. GENERATED FROM PYTHON SOURCE LINES 96-100
 
 .. code-block:: Python
 
@@ -261,7 +258,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 44.642 seconds)
+   **Total running time of the script:** (0 minutes 30.075 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py:

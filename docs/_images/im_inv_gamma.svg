@@ -45,7 +45,7 @@
      showgrid="true"
      inkscape:current-layer="layer2"
      inkscape:document-units="px"
-     inkscape:cy="97.141691"
+     inkscape:cy="97.546448"
      inkscape:cx="163.11709"
      inkscape:zoom="2.4706179"
      inkscape:pageshadow="2"
@@ -995,28 +995,7 @@
        style="stroke-width:0">
       <defs
          id="defs777"
-         style="stroke-width:0">
-        <g
-           id="g7762"
-           style="stroke-width:0">
-          <g
-             id="g8937"
-             style="stroke-width:0">
-            <path
-               d="m 5.015625,-1.609375 -0.1875,-0.046875 c -0.3125,0.640625 -0.546875,0.921875 -0.9375,1.125 -0.3125,0.15625 -0.6875,0.203125 -1.484375,0.203125 -0.671875,0 -0.890625,-0.0625 -0.890625,-0.296875 0,-0.078125 0.03125,-0.265625 0.09375,-0.453125 l 1.09375,-3.96875 c 0.140625,-0.453125 0.375,-0.625 0.90625,-0.671875 v -0.140625 h -2.4375 v 0.140625 c 0.5625,0.0625 0.6875,0.125 0.6875,0.390625 0,0.140625 -0.03125,0.3125 -0.09375,0.5625 L 0.65625,-0.8125 C 0.5,-0.28125 0.4375,-0.234375 -0.078125,-0.140625 V 0 H 4.5 Z m 0,0"
-               id="path4534"
-               style="stroke-width:0" />
-          </g>
-          <g
-             id="g3898"
-             style="stroke-width:0">
-            <path
-               d="M 3.40625,-2.40625 V -2.953125 H 1.578125 c -0.75,0 -1.390625,0.46875 -1.390625,1.53125 0,0.78125 0.640625,1.484375 1.390625,1.484375 0.84375,0 1.5,-0.640625 1.5,-1.296875 C 3.078125,-1.953125 2.5625,-1.9375 2.25,-2.40625 Z M 2.484375,-1.125 c 0,0.5 -0.25,1 -0.765625,1 -0.46875,0 -0.9375,-0.65625 -0.9375,-1.421875 0,-0.734375 0.640625,-0.859375 1.015625,-0.859375 0.375,0.15625 0.6875,0.75 0.6875,1.28125 z m 0,0"
-               id="path1422"
-               style="stroke-width:0" />
-          </g>
-        </g>
-      </defs>
+         style="stroke-width:0" />
       <g
          fill="#000000"
          fill-opacity="1"
@@ -1050,5 +1029,23 @@
         </g>
       </g>
     </g>
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1"
+       d="m 460,115 h -5 l 10,-40 h -5"
+       id="path7"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="im_gamma.pdf"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1"
+       d="m 445,65 v 5 L 405,60 v 5"
+       id="path7-3"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1"
+       d="m 515,65 v 5 L 475,60 v 5"
+       id="path1"
+       sodipodi:nodetypes="cccc" />
   </g>
 </svg>

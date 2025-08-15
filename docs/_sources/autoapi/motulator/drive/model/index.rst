@@ -1223,31 +1223,38 @@ Package Contents
    
    Parameters of a saturated synchronous machine.
 
-   The saturation model is specified as as a current map (current as a function of the
+   The saturation model is specified as a current map (current as a function of the
    flux linkage). Optionally, to be used only in control systems, a flux map (flux
    linkage as a function of the current) can be provided. For convenience, this class
    also provides the incremental inductance matrix and its inverse, which can be used
-   for the system model and optimal reference generation.
+   in control systems and optimal reference generation.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
    :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). This function
-                      should be differentiable, if inverse incremental inductances are used.
-   :type i_s_dq_fcn: Callable[[complex], complex]
+                      should be differentiable, if inverse incremental inductances are used. Needed
+                      in the system model and in some control methods.
+   :type i_s_dq_fcn: Callable[[complex], complex], optional
    :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A). This function
                         should be differentiable, if incremental inductances are used. Needed only for
-                        some control methods, not in the system model. If not given, the modified
-                        Powell's method is used to iteratively compute the flux linkage.
+                        some control methods, not in the system model.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
-   :param max_iter: Maximum number of iterations for the modified Powell's method, defaults to 20.
-                    This is needed only for some control methods (not for the system model) in such
-                    a case that `psi_s_dq_fcn` is not given.
-   :type max_iter: int, optional
    :param kind: Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
                 "rel" (reluctance).
    :type kind: str, optional
+   :param max_iter: Maximum number of iterations, defaults to None. Value around 20 typically
+                    suffices. Note that the iterative method is intended for development purposes.
+   :type max_iter: int, optional
+
+   .. rubric:: Notes
+
+   The class allows providing either `i_s_dq_fcn` or `psi_s_dq_fcn`. If only one of
+   them is provided and `max_iter` is given, the other one is computed iteratively.
+   This feature is intended for development purposes. It can be used in control
+   systems, but iteration increases the simulations time and may not be computationally
+   practical in real-time control.
 
 
 
@@ -1343,39 +1350,6 @@ Package Contents
       
       Flux linkage as a function of the stator current.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: solve_psi_s_dq(i_s_dq_target, psi_s_dq_init, max_iter)
-
-      
-      Solve for flux linkage given target current, accounting for cross-saturation.
-
-      :param i_s_dq_target: Target stator current (A)
-      :type i_s_dq_target: complex
-      :param psi_s_dq_init: Initial guess for flux linkage (Vs).
-      :type psi_s_dq_init: complex
-      :param max_iter: Maximum number of iterations.
-      :type max_iter: int
-
-      :returns: Stator flux linkage (Vs) that produces the target current.
-      :rtype: complex
 
 
 

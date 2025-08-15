@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>5.6-kW saturated PM-SyRM, FVC &#8212; motulator 0.7.0 documentation</title>
+    <title>5.6-kW saturated PM-SyRM, FVC &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -194,7 +194,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -569,7 +569,6 @@ load-torque disturbance estimation provides integral action.</p>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">0.63</span><span class="p">,</span> <span class="n">i_s_dq_fcn</span><span class="o">=</span><span class="n">est_curr_map</span><span class="p">,</span> <span class="n">psi_s_dq_fcn</span><span class="o">=</span><span class="n">est_flux_map</span>
 <span class="p">)</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">FluxVectorControllerCfg</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">alpha_i</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="c1"># cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i)</span>
 <span class="n">vector_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">FluxVectorController</span><span class="p">(</span><span class="n">est_par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedController</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">alpha_s</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">VectorControlSystem</span></a><span class="p">(</span><span class="n">vector_ctrl</span><span class="p">,</span> <span class="n">speed_ctrl</span><span class="p">)</span>
@@ -616,7 +615,7 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <a class="reference external" href="https://doi.org/10.1109/28.85485">https://doi.org/10.1109/28.85485</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 25.753 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 26.058 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-flux-vector-plot-6kw-pmsyrm-sat-fvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/c96122ab6bb6895821bf1f02385c8e8c/plot_6kw_pmsyrm_sat_fvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_6kw_pmsyrm_sat_fvc.ipynb</span></code></a></p>

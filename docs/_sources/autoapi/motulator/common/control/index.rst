@@ -416,12 +416,6 @@ Package Contents
    The standard PI controller is obtained by choosing ``k_t = k_p``. The integrator
    anti-windup is implemented based on the realized controller output.
 
-   .. rubric:: Notes
-
-   This controller can be used, e.g., as a speed controller. In this case, `y`
-   corresponds to the rotor angular speed `w_M` and `u` to the torque reference
-   `tau_M_ref`.
-
    :param k_p: Proportional gain.
    :type k_p: float
    :param k_i: Integral gain.
@@ -430,6 +424,12 @@ Package Contents
    :type k_t: float, optional
    :param u_max: Maximum controller output, defaults to `inf`.
    :type u_max: float, optional
+
+   .. rubric:: Notes
+
+   This controller can be used, e.g., as a speed controller. In this case, `y`
+   corresponds to the rotor angular speed `w_M` and `u` to the torque reference
+   `tau_M_ref`.
 
 
 

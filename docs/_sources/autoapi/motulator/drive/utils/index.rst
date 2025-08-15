@@ -186,15 +186,15 @@ Package Contents
    can be used to precompute lookup tables for control and to analyze the machine
    characteristics.
 
-   .. note::
-
-      The MTPA and MTPV conditions are expressed in terms of the auxiliary flux and the
-      auxiliary current, respectively [#Var2022]_, allowing a compact representation of
-      the conditions. Notice that we define these auxiliary vectors 90 degrees rotated as
-      compared to [#Var2022]_, but otherwise the concepts are equivalent.
-
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+
+   .. rubric:: Notes
+
+   The MTPA and MTPV conditions are expressed in terms of the auxiliary flux and the
+   auxiliary current, respectively [#Var2022]_, allowing a compact representation of
+   the conditions. Notice that we define these auxiliary vectors 90 degrees rotated as
+   compared to [#Var2022]_, but otherwise the concepts are equivalent.
 
    .. rubric:: References
 

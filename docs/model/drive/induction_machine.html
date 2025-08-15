@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Induction Machines &#8212; motulator 0.7.0 documentation</title>
+    <title>Induction Machines &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -196,7 +196,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -475,7 +475,7 @@ document.write(`
 <p>This document describes continuous-time induction machine models of the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#module-motulator.drive.model" title="motulator.drive.model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.drive.model</span></code></a> package.</p>
 <section id="induction-machine-model">
 <span id="induction-machine"></span><h2>Induction Machine Γ Model<a class="headerlink" href="#induction-machine-model" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="#fig-im-gamma"><span class="std std-ref">Figure 1</span></a> shows the Γ-equivalent circuit model of an induction machine. We apply it as the base model, as it readily extends to include magnetic saturation <span id="id1">[<a class="reference internal" href="../../bibliography.html#id42" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The model is implemented in <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class.</p>
+<p><a class="reference internal" href="#fig-im-gamma"><span class="std std-ref">Figure 1</span></a> shows the Γ-equivalent circuit model of an induction machine. We apply it as the base model, as it readily extends to include magnetic saturation <span id="id1">[<a class="reference internal" href="../../bibliography.html#id43" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The model is implemented in <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class.</p>
 <figure class="align-center" id="fig-im-gamma">
 <a class="only-light reference internal image-reference" href="../../_images/im_gamma.svg"><img alt="Gamma-model of an induction machine" class="only-light" src="../../_images/im_gamma.svg" style="width: 100%;" />
 </a>
@@ -520,7 +520,7 @@ document.write(`
 <p><span class="caption-text"><em>Figure 2:</em> Block diagram of the machine model. The magnetic model includes the flux equations (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The main-flux saturation is modeled using a nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span> where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> <span id="id2">[<a class="reference internal" href="../../bibliography.html#id37" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>, <a class="reference internal" href="../../bibliography.html#id42" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The saturable stator inductance can be unambiguously characterized using simple no-load tests. It also properly takes into account the effect of the load variations on the saturation state. Notice that the nonlinear stator inductance only appears in <a class="reference internal" href="#equation-gamma-factor">(3)</a>.</p>
+<p>The main-flux saturation is modeled using a nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span> where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> <span id="id2">[<a class="reference internal" href="../../bibliography.html#id38" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>, <a class="reference internal" href="../../bibliography.html#id43" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The saturable stator inductance can be unambiguously characterized using simple no-load tests. It also properly takes into account the effect of the load variations on the saturation state. Notice that the nonlinear stator inductance only appears in <a class="reference internal" href="#equation-gamma-factor">(3)</a>.</p>
 <p>The Γ model in stator coordinates (<span class="math notranslate nohighlight">\(\omegac = 0\)</span>) is implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class. Its parameters are defined in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class, which accepts nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>. See also examples <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html"><span class="doc">2.2-kW saturated IM, CVC</span></a> and <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a>.</p>
 </section>
 <section id="induction-machine-inverse-model">
@@ -532,17 +532,17 @@ document.write(`
 <a class="only-light reference internal image-reference" href="../../_images/im_inv_gamma.svg"><img alt="Inverse-Gamma model of an induction machine" class="only-light" src="../../_images/im_inv_gamma.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine.</span><a class="headerlink" href="#fig-im-inv-gamma" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine. If main-flux saturation is included, the parameters become nonlinear functions of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>.</span><a class="headerlink" href="#fig-im-inv-gamma" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id7">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_inv_gamma.svg"><img alt="Inverse-Gamma model of an induction machine" class="invert-colors-dark only-dark" src="../../_images/im_inv_gamma.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine. If main-flux saturation is included, the parameters become nonlinear functions of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>If the magnetic saturation is omitted, the inverse-Γ model is mathematically identical to the Γ model <span id="id3">[<a class="reference internal" href="../../bibliography.html#id42" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The parameters can be transformed as</p>
+<p>If the magnetic saturation is omitted, the inverse-Γ model is mathematically identical to the Γ model <span id="id3">[<a class="reference internal" href="../../bibliography.html#id43" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The parameters can be transformed as</p>
 <div class="math notranslate nohighlight" id="equation-gamma-to-inv-gamma">
 <span class="eqno">(5)<a class="headerlink" href="#equation-gamma-to-inv-gamma" title="Link to this equation">#</a></span>\[    \Lsgm = \gamma L_\ell \qquad
     \LM = \gamma\Ls \qquad
@@ -566,7 +566,7 @@ document.write(`
 </section>
 <section id="flux-and-torque-dynamics">
 <h2>Flux and Torque Dynamics<a class="headerlink" href="#flux-and-torque-dynamics" title="Link to this heading">#</a></h2>
-<p>Using the machine model <a class="reference internal" href="#equation-im-voltages">(1)</a>–<a class="reference internal" href="#equation-im-torque">(4)</a>, the flux and torque dynamics can be written as <span id="id4">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: an extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<p>Using the machine model <a class="reference internal" href="#equation-im-voltages">(1)</a>–<a class="reference internal" href="#equation-im-torque">(4)</a>, the flux and torque dynamics can be written as <span id="id4">[<a class="reference internal" href="../../bibliography.html#id45" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: an extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-im-flux-torque">
 <span class="eqno">(8)<a class="headerlink" href="#equation-im-flux-torque" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \abspsis}{\D t} &amp;= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psis^*\} \\
     \frac{\D\tauM}{\D t} &amp;= \frac{3 \np}{2 L_\ell} \IM \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psir^*\} \\
@@ -579,8 +579,8 @@ document.write(`
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Substituting <span class="math notranslate nohighlight">\(\omegar = \omegarb\)</span> in <a class="reference internal" href="#equation-im-flux-torque">(8)</a> yields the breakdown condition <span class="math notranslate nohighlight">\(\IM\{\psis\psir^*\} = \RE\{\psis\psir^*\}\)</span>. Applying this condition in <a class="reference internal" href="#equation-im-voltages">(1)</a>–<a class="reference internal" href="#equation-im-torque">(4)</a> and assuming the steady state results in the breakdown torque expression</p>
-<div class="amsmath math notranslate nohighlight" id="equation-eb5b038d-e4d9-4feb-ba92-6d9fbb846fc3">
-<span class="eqno">(10)<a class="headerlink" href="#equation-eb5b038d-e4d9-4feb-ba92-6d9fbb846fc3" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-5327c597-6582-4ebe-b1ab-65875db0ae4e">
+<span class="eqno">(10)<a class="headerlink" href="#equation-5327c597-6582-4ebe-b1ab-65875db0ae4e" title="Permalink to this equation">#</a></span>\[\begin{equation}
     \tau_\mathrm{b} = \frac{3\np}{2} \frac{\abspsis^2}{2 L_\ell}
 \end{equation}\]</div>
 </div>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Current Control &#8212; motulator 0.7.0 documentation</title>
+    <title>Current Control &#8212; motulator 0.7.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c62cc9a0"></script>
+    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -143,7 +143,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.0 documentation</p>
+    <p class="title logo__title">motulator 0.7.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -196,7 +196,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW SyRM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
 </ul>
 </details></li>
 </ul>
@@ -471,7 +471,7 @@ document.write(`
 <p>Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control can be used in grid converters <span id="id1">[<a class="reference internal" href="../../bibliography.html#id15" title="Harnefors, Yepes, Vidal, and Doval-Gandoy. Passivity-based controller design of grid-connected VSCs for prevention of electrical resonance instability. IEEE Trans. Ind. Electron., 2015. doi:10.1109/TIE.2014.2336632.">Harnefors <em>et al.</em>, 2015</a>]</span>. This control structure allows to compensate for the cross-coupling originating from rotating coordinates as well as to improve disturbance rejection. A 2DOF PI current controller is available in the <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentController" title="motulator.grid.control.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.CurrentController</span></code></a> class, whose base class is <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This controller design assumes an L filter, but it can also be applied with LCL filters (see the <a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html"><span class="doc">10-kVA, LCL filter, GFL</span></a> example). If LCL-resonance damping and very low sampling frequencies are needed, the controller could be designed directly in the discrete-time domain taking the LCL filter dynamics into account <span id="id2">[<a class="reference internal" href="../../bibliography.html#id38" title="Rahman, Pirsto, Kukkola, Hinkkanen, Pérez-Estévez, and Doval-Gandoy. Equivalence of the integrator-based and disturbance-observer-based state-space current controllers for grid converters. IEEE Trans. Ind. Electron., 2021. doi:10.1109/TIE.2020.2988194.">Rahman <em>et al.</em>, 2021</a>]</span>.</p>
+<p>This controller design assumes an L filter, but it can also be applied with LCL filters (see the <a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html"><span class="doc">10-kVA, LCL filter, GFL</span></a> example). If LCL-resonance damping and very low sampling frequencies are needed, the controller could be designed directly in the discrete-time domain taking the LCL filter dynamics into account <span id="id2">[<a class="reference internal" href="../../bibliography.html#id39" title="Rahman, Pirsto, Kukkola, Hinkkanen, Pérez-Estévez, and Doval-Gandoy. Equivalence of the integrator-based and disturbance-observer-based state-space current controllers for grid converters. IEEE Trans. Ind. Electron., 2021. doi:10.1109/TIE.2020.2988194.">Rahman <em>et al.</em>, 2021</a>]</span>.</p>
 </div>
 <section id="dof-pi-controller">
 <h2>2DOF PI Controller<a class="headerlink" href="#dof-pi-controller" title="Link to this heading">#</a></h2>
