@@ -195,7 +195,7 @@ class CurrentVectorController:
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
-        self.observer.update(ref.T_s)
+        self.observer.update(ref.T_s, fbk)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
 
     def post_process(self, ts: TimeSeries) -> None:
