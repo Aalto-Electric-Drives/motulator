@@ -398,7 +398,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s)
+   .. py:method:: update(T_s, out)
 
       
       Update the state estimates.
@@ -1418,7 +1418,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s)
+   .. py:method:: update(T_s, out)
 
       
       Extend the update method to include the speed estimate.

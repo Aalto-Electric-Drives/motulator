@@ -423,42 +423,31 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">ObserverStates</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;State estimates.&quot;&quot;&quot;</span>
 
-    <span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
-    <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">tau_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ObserverWorkspace</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Workspace variables.&quot;&quot;&quot;</span>
-
-    <span class="n">d_psi_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
-    <span class="n">d_theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">d_w_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">d_tau_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">old_i_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
-    <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator flux linkage</span>
+    <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angle of the controller coordinate system</span>
+    <span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Electrical rotor angle</span>
+    <span class="n">tau_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Load torque</span>
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ObserverOutputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Feedback signals for the control system.&quot;&quot;&quot;</span>
 
-    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
-    <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># DC-bus voltage</span>
+    <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator current</span>
+    <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator voltage</span>
     <span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator flux estimate</span>
     <span class="n">psi_R</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Rotor flux estimate</span>
     <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Electromagnetic torque estimate</span>
     <span class="n">tau_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Load torque estimate</span>
     <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angular speed of the coordinate system</span>
-    <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Coordinate system angle</span>
     <span class="n">w_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Synchronous angular frequency, w_s = w_m + w_r</span>
     <span class="n">w_r</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Slip angular frequency</span>
     <span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Electrical angular speed of the rotor</span>
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Mechanical angular speed of the rotor</span>
+    <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Coordinate system angle</span>
+    <span class="n">e_o</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Estimation error</span>
+    <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Rotor speed estimation error signal</span>
 
 
 <div class="viewcode-block" id="FluxObserver">
@@ -501,10 +490,11 @@ document.write(`
         <span class="n">k_o2</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_old_i_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">ObserverStates</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_o1</span> <span class="o">=</span> <span class="n">k_o1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_o2</span> <span class="o">=</span> <span class="n">k_o2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">ObserverStates</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_work</span> <span class="o">=</span> <span class="n">ObserverWorkspace</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxObserver.compute_output">[docs]</a>
@@ -539,19 +529,14 @@ document.write(`
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
         <span class="n">out</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
 
-        <span class="c1"># Rotor flux estimate</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">old_i_s</span>
-
-        <span class="c1"># Derivative of the stator current</span>
-        <span class="n">T_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">T_s</span>
-        <span class="n">d_i_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">old_i_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">T_s</span> <span class="k">if</span> <span class="n">T_s</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">old_i_s</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>  <span class="c1"># Update the old value, safe to do here</span>
-
         <span class="c1"># Mechanical and electrical angular speeds of the rotor</span>
         <span class="k">if</span> <span class="n">w_M</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either measured or estimated speed must be provided&quot;</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">w_M</span>
+
+        <span class="c1"># Rotor flux estimate</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_i_s</span>
 
         <span class="c1"># Slip angular frequency</span>
         <span class="n">prod</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
@@ -562,21 +547,13 @@ document.write(`
         <span class="c1"># out.w_c = out.w_m  # Use rotor coordinates instead of synchronous coordinates</span>
 
         <span class="c1"># Estimation error</span>
-        <span class="n">e_o</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">d_i_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_i_s</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">*</span> <span class="n">d_i_s</span>
             <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">u_s</span>
             <span class="o">+</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R_sgm</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span><span class="p">)</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
             <span class="o">-</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span>
         <span class="p">)</span>
-
-        <span class="c1"># Observer gains</span>
-        <span class="n">k_o1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o1</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span>
-        <span class="n">proj</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-        <span class="n">k_o2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o2</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">proj</span>  <span class="c1"># Inherently sensorless observer gain</span>
-
-        <span class="c1"># Derivative of the stator flux</span>
-        <span class="n">v_err</span> <span class="o">=</span> <span class="n">k_o1</span> <span class="o">*</span> <span class="n">e_o</span> <span class="o">+</span> <span class="n">k_o2</span> <span class="o">*</span> <span class="n">e_o</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
-        <span class="n">d_psi_s</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">u_s</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+</span> <span class="n">v_err</span>
 
         <span class="c1"># Torque estimate</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -585,24 +562,34 @@ document.write(`
             <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># Speed estimation error for the speed observer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">e_o</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-
-        <span class="c1"># Store the derivatives for the update method</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_psi_s</span> <span class="o">=</span> <span class="n">d_psi_s</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_theta_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
 
         <span class="k">return</span> <span class="n">out</span></div>
 
 
 <div class="viewcode-block" id="FluxObserver.update">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxObserver.update">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the state estimates.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_psi_s</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_theta_c</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">T_s</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
+
+        <span class="c1"># Observer gains</span>
+        <span class="n">k_o1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o1</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span>
+        <span class="n">proj</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">k_o2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o2</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">proj</span>  <span class="c1"># Inherently sensorless observer gain</span>
+
+        <span class="c1"># Update the states</span>
+        <span class="n">v_err</span> <span class="o">=</span> <span class="n">k_o1</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">+</span> <span class="n">k_o2</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">e_o</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
+        <span class="n">d_psi_s</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">u_s</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+</span> <span class="n">v_err</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">d_psi_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
+
         <span class="c1"># Update the saturation model for the next sampling period</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">update_psi_s</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">update_psi_s</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s</span><span class="p">))</span>
+
+        <span class="c1"># Update the sampling period and the old current value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">=</span> <span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_old_i_s</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span></div>
 </div>
 
 
@@ -676,26 +663,25 @@ document.write(`
         <span class="n">out</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M_est</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">tau_L</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">eps</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_tau_L</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_w_m</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span>
-                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">eps</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_tau_L</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k_tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">eps</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span>
-
         <span class="k">return</span> <span class="n">out</span></div>
 
 
 <div class="viewcode-block" id="SpeedFluxObserver.update">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedFluxObserver.update">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extend the update method to include the speed estimate.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">T_s</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_w_m</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work</span><span class="o">.</span><span class="n">d_tau_L</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+
+        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d_w_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_w</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
+            <span class="n">d_tau_L</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d_w_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_w</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
+            <span class="n">d_tau_L</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k_tau</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">d_w_m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">d_tau_L</span></div>
 </div>
 
 
