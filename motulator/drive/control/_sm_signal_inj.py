@@ -22,18 +22,8 @@ from motulator.drive.utils._parameters import (
 class PLLStates:
     """State estimates."""
 
-    theta_m: float = 0.0
-    w_m: float = 0.0
-
-
-@dataclass
-class PLLWorkspace:
-    """Workspace variables."""
-
-    eps: float = 0.0
-    d_theta_m: float = 0.0
-    old_psi_sq: float = 0
-    older_psi_sq: float = 0
+    theta_m: float = 0.0  # Electrical rotor angle
+    w_m: float = 0.0  # Electrical angular speed of the rotor
 
 
 class PhaseLockedLoop:
@@ -60,15 +50,17 @@ class PhaseLockedLoop:
         U_inj: float,
         T_s: float,
     ) -> None:
-        self.T_s = T_s
+        self._T_s = T_s
         self.k_p = 2 * alpha_o
         self.k_i = alpha_o**2
         # Constant error gain based on the unsaturated inductances
         L_s = par.incr_ind_mat(0j)
         self.k = 0.5 * L_s[0, 0] / (L_s[1, 1] - L_s[0, 0])
+        self.U_inj = U_inj
         self.u_sd_inj = U_inj
         self.state = PLLStates()
-        self._work = PLLWorkspace()
+        self._old_psi_sq: float = 0.0
+        self._older_psi_sq: float = 0.0
         self.par = par
         self.sensorless = True  # For compatibility reasons
 
@@ -78,17 +70,17 @@ class PhaseLockedLoop:
         psi_sq = complex(self.par.psi_s_dq(i_s)).imag
 
         # Compute second derivative using finite differences
-        d_psi_sq = psi_sq - 2.0 * self._work.old_psi_sq + self._work.older_psi_sq
+        d_psi_sq = psi_sq - 2.0 * self._old_psi_sq + self._older_psi_sq
 
         # Compute error signal if injection is active
         if abs(self.u_sd_inj) > 0:
-            eps = self.k * d_psi_sq / (self.u_sd_inj * self.T_s)
+            eps = self.k * d_psi_sq / (self.u_sd_inj * self._T_s)
         else:
-            eps = 0
+            eps = 0.0
 
-        # Update stored values for next iteration
-        self._work.older_psi_sq = self._work.old_psi_sq
-        self._work.old_psi_sq = psi_sq
+        # Update stored values for the next sampling period
+        self._older_psi_sq = self._old_psi_sq
+        self._old_psi_sq = psi_sq
 
         return eps
 
@@ -104,21 +96,19 @@ class PhaseLockedLoop:
         out.u_s = exp(-1j * out.theta_m) * u_s_ab
 
         # Demodulation (based on flux-mapped q-current to avoid cross-saturation error)
-        eps = self._compute_demodulation_error(out.i_s)
-        self._work.eps = eps  # Store for the update method
+        out.eps = self._compute_demodulation_error(out.i_s)
 
         # Coordinate system angular frequency
-        out.w_c = out.w_m + self.k_p * eps
-        self._work.d_theta_m = out.w_c
+        out.w_c = out.w_m + self.k_p * out.eps
 
         return out
 
-    def update(self, T_s: float) -> None:
+    def update(self, T_s: float, out: ObserverOutputs) -> None:
         """Update the states."""
-        self.state.theta_m = wrap(self.state.theta_m + T_s * self._work.d_theta_m)
-        self.state.w_m += T_s * self.k_i * self._work.eps
-        self.u_sd_inj = -self.u_sd_inj  # Reverse the d-axis injection voltage
-        self.T_s = T_s
+        self.state.theta_m = wrap(self.state.theta_m + T_s * out.w_c)
+        self.state.w_m += T_s * self.k_i * out.eps
+        self.u_sd_inj = (-1 if self.u_sd_inj > 0 else 1) * self.U_inj
+        self._T_s = T_s
 
 
 # %%

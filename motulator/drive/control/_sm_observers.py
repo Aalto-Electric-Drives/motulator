@@ -16,39 +16,31 @@ from motulator.drive.utils._parameters import (
 class ObserverStates:
     """State estimates."""
 
-    theta_m: float = 0.0
-    w_m: float = 0.0
-    psi_s: complex = 0j
-    tau_L: float = 0.0
-
-
-@dataclass
-class ObserverWorkspace:
-    """Workspace variables."""
-
-    d_psi_s: complex = 0j
-    d_theta_m: float = 0.0
-    d_psi_f: float = 0.0
-    d_w_m: float = 0.0
-    d_tau_L: float = 0.0
-    eps_m: float = 0.0
+    theta_m: float = 0.0  # Electrical rotor angle
+    w_m: float = 0.0  # Electrical rotor speed
+    psi_s: complex = 0j  # Stator flux linkage
+    tau_L: float = 0.0  # Load torque
 
 
 @dataclass
 class ObserverOutputs:
     """Feedback signals for the control system."""
 
-    u_dc: float = 0.0
-    i_s: complex = 0j
-    u_s: complex = 0j
-    psi_s: complex = 0j
+    u_dc: float = 0.0  # DC-bus voltage
+    i_s: complex = 0j  # Stator current
+    u_s: complex = 0j  # Stator voltage
+    psi_s: complex = 0j  # Stator flux linkage
+    e_o: complex = 0j  # Flux estimation error signal
+    eps: float = 0  # Position estimation error signal
+    eps_f: float = 0  # PM-flux error signal
+    psi_a: complex = 0j  # Auxiliary flux linkage
     tau_M: float = 0.0  # Electromagnetic torque estimate
     tau_L: float = 0.0  # Load torque estimate
     w_c: float = 0.0  # Angular speed of the coordinate system
-    theta_c: float = 0.0  # Coordinate system angle
-    theta_m: float = 0.0  # Electrical rotor angle
     w_m: float = 0.0  # Electrical angular rotor speed
     w_M: float = 0.0  # Mechanical angular rotor speed
+    theta_c: float = 0.0  # Coordinate system angle
+    theta_m: float = 0.0  # Electrical rotor angle
     psi_f: float = 0.0  # PM-flux linkage estimate
 
 
@@ -104,7 +96,6 @@ class FluxObserver:
         self.k_f = k_f
         self.sensorless = sensorless
         self.state = ObserverStates(theta_m=0.0, w_m=0.0, psi_s=complex(par.psi_f))
-        self._work = ObserverWorkspace()
 
     def compute_output(
         self,
@@ -140,7 +131,8 @@ class FluxObserver:
         # Get the rotor speed
         if w_M is None:
             raise ValueError("Either measured or estimated speed must be provided")
-        w_m = par.n_p * w_M
+        out.w_M = w_M
+        out.w_m = par.n_p * w_M
 
         # Coordinate system angle equals the electrical rotor angle (or its estimate)
         if self.sensorless or theta_M_meas is None:
@@ -152,55 +144,47 @@ class FluxObserver:
         out.i_s = exp(-1j * out.theta_m) * i_s_ab
         out.u_s = exp(-1j * out.theta_m) * u_s_ab
 
-        # Error term
-        e = complex(par.psi_s_dq(out.i_s)) - out.psi_s
+        # Auxiliary flux
+        out.psi_a = complex(par.aux_flux(out.i_s))
+
+        # Flux estimation error
+        out.e_o = complex(par.psi_s_dq(out.i_s)) - out.psi_s
 
         # Observer gains and error terms
         if self.sensorless:
-            # Auxiliary flux
-            psi_a = complex(par.aux_flux(out.i_s))
-
-            # Observer gains
-            k_o1 = self.k_o(w_m)
-            k_o2 = k_o1 * psi_a / psi_a.conjugate() if psi_a != 0 else k_o1
-
-            # Error term for the rotor angle estimation
-            eps_m = -(e / psi_a).imag if psi_a != 0 else 0
+            # Error signals for the rotor angle and PM flux estimation
+            ratio = out.e_o / out.psi_a if out.psi_a != 0.0 else 0.0
+            out.eps = -ratio.imag
+            out.eps_f = -ratio.real
 
             # Angular speed of the coordinate system
-            out.w_c = w_m + self.k_theta * eps_m
-            out.w_m = w_m
-
-            # Error term for the PM-flux estimation
-            eps_f = -(e / psi_a).real if psi_a != 0 else 0
+            out.w_c = out.w_m + self.k_theta * out.eps
         else:
             # Sensored mode assumes measured rotor coordinates
-            k_o1, k_o2 = self.k_o(w_m), 0
-            out.w_c = w_m
-            out.w_m = w_m
-            eps_m = 0
-            eps_f = 0
+            out.eps = out.eps_f = 0
+            out.w_c = out.w_m
 
         # Torque estimate
         out.tau_M = 1.5 * par.n_p * (out.i_s * out.psi_s.conjugate()).imag
-        out.w_M = out.w_m / par.n_p
-
-        # Compute and store the time derivatives for the update method
-        v = out.u_s - par.R_s * out.i_s - 1j * out.w_c * out.psi_s
-        self._work.d_psi_s = v + k_o1 * e + k_o2 * e.conjugate()
-        self._work.d_psi_f = self.k_f(w_m) * eps_f
-        self._work.d_theta_m = out.w_c
-        self._work.eps_m = eps_m
 
         return out
 
-    def update(self, T_s: float) -> None:
+    def update(self, T_s: float, out: ObserverOutputs) -> None:
         """Update the state estimates."""
+        par = self.par
+
+        # Observer gains
+        if self.sensorless:
+            k_o1 = self.k_o(out.w_m)
+            k_o2 = k_o1 * out.psi_a / out.psi_a.conjugate() if out.psi_a != 0 else k_o1
+        else:
+            k_o1, k_o2 = self.k_o(out.w_m), 0
+
         # Update the state estimates
-        self.state.psi_s += T_s * self._work.d_psi_s
-        self.state.theta_m = wrap(self.state.theta_m + T_s * self._work.d_theta_m)
-        # Update also the PM-fux parameter estimate
-        self.par.psi_f += T_s * self._work.d_psi_f
+        v = out.u_s - par.R_s * out.i_s - 1j * out.w_c * out.psi_s
+        self.state.psi_s += T_s * (v + k_o1 * out.e_o + k_o2 * out.e_o.conjugate())
+        self.state.theta_m = wrap(self.state.theta_m + T_s * out.w_c)
+        self.par.psi_f += T_s * (self.k_f(out.w_m) * out.eps_f)
 
 
 # %%
@@ -283,24 +267,20 @@ class SpeedFluxObserver(FluxObserver):
         w_M_est = self.state.w_m / self.par.n_p
         out = super().compute_output(u_s_ab, i_s_ab, w_M_est)
         out.tau_L = self.state.tau_L
-
-        if self.J is None:
-            self._work.d_w_m = self.k_w * self._work.eps_m
-            self._work.d_tau_L = 0.0
-        else:
-            self._work.d_w_m = (
-                self.par.n_p * (out.tau_M - out.tau_L) / self.J
-                + self.k_w * self._work.eps_m
-            )
-            self._work.d_tau_L = -self.k_tau * self._work.eps_m / self.par.n_p
-
         return out
 
-    def update(self, T_s: float) -> None:
+    def update(self, T_s: float, out: ObserverOutputs) -> None:
         """Extend the update method to include the speed estimate."""
-        super().update(T_s)
-        self.state.w_m += T_s * self._work.d_w_m
-        self.state.tau_L += T_s * self._work.d_tau_L
+        super().update(T_s, out)
+        par = self.par
+        if self.J is None:
+            d_w_m = self.k_w * out.eps
+            d_tau_L = 0.0
+        else:
+            d_w_m = par.n_p * (out.tau_M - out.tau_L) / self.J + self.k_w * out.eps
+            d_tau_L = -self.k_tau * out.eps / par.n_p
+        self.state.w_m += T_s * d_w_m
+        self.state.tau_L += T_s * d_tau_L
 
 
 # %%

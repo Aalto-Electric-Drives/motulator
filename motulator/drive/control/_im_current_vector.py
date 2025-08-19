@@ -300,7 +300,7 @@ class CurrentVectorController:
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
-        self.observer.update(ref.T_s)
+        self.observer.update(ref.T_s, fbk)
         self.reference_gen.update(ref.T_s, ref.u_s, fbk.u_dc)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
 

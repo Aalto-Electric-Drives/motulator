@@ -266,7 +266,7 @@ class FluxVectorController:
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
-        self.observer.update(ref.T_s)
+        self.observer.update(ref.T_s, fbk)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
 
     def post_process(self, ts: TimeSeries) -> None:
@@ -372,7 +372,7 @@ class ObserverBasedVHzController:
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.tau_M_lpf += ref.T_s * self.alpha_f * (fbk.tau_M - self.tau_M_lpf)
-        self.observer.update(ref.T_s)
+        self.observer.update(ref.T_s, fbk)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
