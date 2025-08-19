@@ -56,6 +56,7 @@ class PhaseLockedLoop:
         # Constant error gain based on the unsaturated inductances
         L_s = par.incr_ind_mat(0j)
         self.k = 0.5 * L_s[0, 0] / (L_s[1, 1] - L_s[0, 0])
+        self.U_inj = U_inj
         self.u_sd_inj = U_inj
         self.state = PLLStates()
         self._old_psi_sq: float = 0.0
@@ -106,7 +107,7 @@ class PhaseLockedLoop:
         """Update the states."""
         self.state.theta_m = wrap(self.state.theta_m + T_s * out.w_c)
         self.state.w_m += T_s * self.k_i * out.eps
-        self.u_sd_inj = -self.u_sd_inj  # Reverse the d-axis injection voltage
+        self.u_sd_inj = (-1 if self.u_sd_inj > 0 else 1) * self.U_inj
         self._T_s = T_s
 
 
