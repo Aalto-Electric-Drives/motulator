@@ -124,6 +124,7 @@ class FluxObserver:
         # Get the rotor speed
         if w_M is None:
             raise ValueError("Either measured or estimated speed must be provided")
+        out.w_M = w_M
         out.w_m = par.n_p * w_M
 
         # Coordinate system angle equals the electrical rotor angle (or its estimate)
@@ -238,7 +239,7 @@ class SpeedFluxObserver:
         """Compute the feedback signals for the control system."""
         w_M, tau_L = self.speed_observer.compute_output()
         out = self.flux_observer.compute_output(u_s_ab, i_s_ab, w_M)
-        out.w_M, out.tau_L = w_M, tau_L
+        out.tau_L = tau_L
         return out
 
     def update(self, T_s: float, out: ObserverOutputs) -> None:
