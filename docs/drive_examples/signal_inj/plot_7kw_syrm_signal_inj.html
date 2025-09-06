@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>6.7-kW saturated SyRM, signal injection &#8212; motulator 0.7.1 documentation</title>
+    <title>6.7-kW saturated SyRM, signal injection &#8212; motulator 0.7.2 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=7dd04bbd"></script>
+    <script src="../../_static/documentation_options.js?v=6aa4cbdb"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.1 documentation</p>
+    <p class="title logo__title">motulator 0.7.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -500,7 +500,9 @@ signal injection with a simple phase-locked loop is used.</p>
 <span class="n">est_par</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">SaturatedSynchronousMachinePars</span></a><span class="p">(</span>
     <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_dq_fcn</span><span class="o">=</span><span class="n">curr_map</span><span class="p">,</span> <span class="n">psi_s_dq_fcn</span><span class="o">=</span><span class="n">flux_map</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;rel&quot;</span>
 <span class="p">)</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorControllerCfg</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">psi_s_min</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorControllerCfg</span><span class="p">(</span>
+    <span class="n">i_s_max</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">psi_s_min</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">40</span>
+<span class="p">)</span>
 <span class="n">vector_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SignalInjectionController</span><span class="p">(</span><span class="n">est_par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
 <span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedController</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">alpha_s</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">VectorControlSystem</span></a><span class="p">(</span><span class="n">vector_ctrl</span><span class="p">,</span> <span class="n">speed_ctrl</span><span class="p">)</span>
@@ -539,7 +541,7 @@ signal injection with a simple phase-locked loop is used.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_7kw_syrm_signal_inj_002.png" srcset="../../_images/sphx_glr_plot_7kw_syrm_signal_inj_002.png" alt="plot 7kw syrm signal inj" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 33.902 seconds)</p>
+<img src="../../_images/sphx_glr_plot_7kw_syrm_signal_inj_002.png" srcset="../../_images/sphx_glr_plot_7kw_syrm_signal_inj_002.png" alt="plot 7kw syrm signal inj" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 36.099 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-signal-inj-plot-7kw-syrm-signal-inj-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/f4746a45ac71566daf54f1038dd5be4d/plot_7kw_syrm_signal_inj.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_7kw_syrm_signal_inj.ipynb</span></code></a></p>

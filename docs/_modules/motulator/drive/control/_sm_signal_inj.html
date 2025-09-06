@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._sm_signal_inj &#8212; motulator 0.7.1 documentation</title>
+    <title>motulator.drive.control._sm_signal_inj &#8212; motulator 0.7.2 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=7dd04bbd"></script>
+    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.1 documentation</p>
+    <p class="title logo__title">motulator 0.7.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -406,11 +406,11 @@ document.write(`
   <h1>Source code for motulator.drive.control._sm_signal_inj</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Sensorless control with signal injection for synchronous machine drives.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">pi</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeedObserver</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._sm_current_vector</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CurrentVectorController</span><span class="p">,</span>
     <span class="n">CurrentVectorControllerCfg</span><span class="p">,</span>
@@ -424,17 +424,9 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">PLLStates</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;State estimates.&quot;&quot;&quot;</span>
-
-    <span class="n">theta_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Electrical rotor angle</span>
-    <span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Electrical angular speed of the rotor</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PhaseLockedLoop</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SignalInjectionObserver</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Simple phase-locked loop for rotor-position estimation.</span>
+<span class="sd">    Signal injection observer for synchronous machine drives.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -446,6 +438,8 @@ document.write(`
 <span class="sd">        Injected voltage amplitude (V).</span>
 <span class="sd">    T_s : float</span>
 <span class="sd">      Sampling period (s).</span>
+<span class="sd">    J : float | None, optional</span>
+<span class="sd">        Inertia (kgm²), if not None, a speed observer is used.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -455,24 +449,36 @@ document.write(`
         <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">U_inj</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">=</span> <span class="n">T_s</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">alpha_o</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_i</span> <span class="o">=</span> <span class="n">alpha_o</span><span class="o">**</span><span class="mi">2</span>
+        <span class="c1"># Configure observer gains for critically damped dynamics</span>
+        <span class="k">if</span> <span class="n">J</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">alpha_o</span>
+            <span class="n">k_w</span> <span class="o">=</span> <span class="n">alpha_o</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">k_tau</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">alpha_o</span>
+            <span class="n">k_w</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">alpha_o</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">k_tau</span> <span class="o">=</span> <span class="n">J</span> <span class="o">*</span> <span class="n">alpha_o</span><span class="o">**</span><span class="mi">3</span>
+
+        <span class="c1"># Create speed observer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span> <span class="o">=</span> <span class="n">SpeedObserver</span><span class="p">(</span><span class="n">k_w</span><span class="p">,</span> <span class="n">k_tau</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+        <span class="c1"># State</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="c1"># Constant error gain based on the unsaturated inductances</span>
         <span class="n">L_s</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">U_inj</span> <span class="o">=</span> <span class="n">U_inj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span> <span class="o">=</span> <span class="n">U_inj</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">PLLStates</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_old_psi_sq</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_older_psi_sq</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># For compatibility reasons</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_demodulation_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute demodulation error signal based on flux-mapped q-axis current.&quot;&quot;&quot;</span>
-        <span class="c1"># Apply the flux map to get q-axis flux linkage</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute mechanical position error signal.&quot;&quot;&quot;</span>
+        <span class="c1"># Apply the flux map to compensate the cross saturation</span>
         <span class="n">psi_sq</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s</span><span class="p">))</span><span class="o">.</span><span class="n">imag</span>
 
         <span class="c1"># Compute second derivative using finite differences</span>
@@ -490,29 +496,41 @@ document.write(`
 
         <span class="k">return</span> <span class="n">eps</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">theta_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute output.&quot;&quot;&quot;</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">(</span>
-            <span class="n">theta_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="n">theta_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_m</span><span class="p">,</span> <span class="n">w_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_m</span>
-        <span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span>
+        <span class="c1"># Unpack and initialize the output signals</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">()</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">()</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_M</span>
 
         <span class="c1"># Current and voltage vectors in (estimated) rotor coordinates</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
         <span class="n">out</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
 
-        <span class="c1"># Demodulation (based on flux-mapped q-current to avoid cross-saturation error)</span>
+        <span class="c1"># Compute the mechanical position error signal</span>
         <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_demodulation_error</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">)</span>
 
         <span class="c1"># Coordinate system angular frequency</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
+
+        <span class="c1"># Torque estimate based on the measured current and the flux map</span>
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">*</span> <span class="n">psi_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">imag</span>
 
         <span class="k">return</span> <span class="n">out</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the states.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_i</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">U_inj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">=</span> <span class="n">T_s</span>
 
@@ -526,8 +544,9 @@ document.write(`
 
 <span class="sd">    This class implements a square-wave signal injection for low-speed operation</span>
 <span class="sd">    according to [#Kim2012]_. Cross-saturation errors are compensated for using flux</span>
-<span class="sd">    maps [#You2018]_. A simple phase-locked loop is used to track the rotor position.</span>
-<span class="sd">    For wider speed range, signal injection could be combined to a model-based observer.</span>
+<span class="sd">    maps [#You2018]_. If the inertia of the mechanical system is provided, the speed is</span>
+<span class="sd">    estimated using the speed observer based on the mechanical model [#Kim2003]_,</span>
+<span class="sd">    otherwise the phase-locked loop is used.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -535,8 +554,6 @@ document.write(`
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    cfg : CurrentVectorControllerCfg</span>
 <span class="sd">        Current-vector control configuration.</span>
-<span class="sd">    alpha_o : float, optional</span>
-<span class="sd">        Pole location (rad/s) of the phase-locked loop, defaults to 2*pi*40.</span>
 <span class="sd">    U_inj : float, optional</span>
 <span class="sd">        Injected voltage amplitude (V), defaults to 250.</span>
 <span class="sd">    T_s : float, optional</span>
@@ -553,18 +570,22 @@ document.write(`
 <span class="sd">       synchronous reluctance machines,&quot; IEEE Trans. Power Electron., 2018,</span>
 <span class="sd">       https://doi.org/10.1109/TPEL.2017.2697209</span>
 
+<span class="sd">    .. [#Kim2003] Kim, Harke, Lorenz, &quot;Sensorless control of interior permanent-magnet</span>
+<span class="sd">       machine drives with zero-phase lag position estimation,&quot; IEEE Trans. Ind. Appl.,</span>
+<span class="sd">       2003, https://doi.org/10.1109/TIA.2003.818966</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
         <span class="n">cfg</span><span class="p">:</span> <span class="n">CurrentVectorControllerCfg</span><span class="p">,</span>
-        <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">40</span><span class="p">,</span>
         <span class="n">U_inj</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">250</span><span class="p">,</span>
         <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">T_s</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">PhaseLockedLoop</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="p">,</span> <span class="n">U_inj</span><span class="p">,</span> <span class="n">T_s</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">SignalInjectionObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span> <span class="n">U_inj</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">J</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SignalInjectionController.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SignalInjectionController.compute_output">[docs]</a>

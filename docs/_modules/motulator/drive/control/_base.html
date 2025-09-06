@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._base &#8212; motulator 0.7.1 documentation</title>
+    <title>motulator.drive.control._base &#8212; motulator 0.7.2 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=7dd04bbd"></script>
+    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.1 documentation</p>
+    <p class="title logo__title">motulator 0.7.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -415,7 +415,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span><span class="p">,</span> <span class="n">RateLimiter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">PWM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">wrap</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeedController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeedController</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">Drive</span>
 
 
@@ -463,14 +463,14 @@ document.write(`
 
     <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback signals from measurements without motion sensors.&quot;&quot;&quot;</span>
-        <span class="o">...</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_sensored_feedback</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">theta_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">w_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">theta_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback signals from measurements with motion sensors.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback signals from measurements.&quot;&quot;&quot;</span>
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ref</span><span class="p">:</span>
@@ -570,12 +570,7 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback signals.&quot;&quot;&quot;</span>
         <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
-            <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">get_sensored_feedback</span><span class="p">(</span>
-                <span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">theta_M</span>
-            <span class="p">)</span>
+        <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">theta_M</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>
         <span class="k">return</span> <span class="n">fbk</span></div>
 

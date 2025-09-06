@@ -30,6 +30,7 @@ Classes
    motulator.drive.control.im.ReferenceGenerator
    motulator.drive.control.im.SpeedController
    motulator.drive.control.im.SpeedFluxObserver
+   motulator.drive.control.im.SpeedObserver
    motulator.drive.control.im.VHzControlSystem
    motulator.drive.control.im.VectorControlSystem
 
@@ -246,34 +247,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, i_s_ab)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
-      Get the feedback signals with motion sensors.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_sensored_feedback(u_s_ab, i_s_ab, w_M, theta_M)
-
-      
-      Get the feedback signals with motion sensors.
+      Get the feedback signals.
 
 
 
@@ -555,34 +532,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, i_s_ab)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
-      Get feedback signals without motion sensors.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_sensored_feedback(u_s_ab, i_s_ab, w_M, theta_M)
-
-      
-      Get the feedback signals with motion sensors.
+      Get the feedback signals.
 
 
 
@@ -1184,11 +1137,8 @@ Module Contents
 
 .. py:class:: SpeedFluxObserver(par, k_o1, k_o2, alpha_o, J = None)
 
-   Bases: :py:obj:`FluxObserver`
-
-
    
-   Observer with speed estimation.
+   Flux observer with speed estimation.
 
    This class implements a reduced-order flux observer for induction machines with
    speed estimation. If the inertia of the mechanical system is provided, the observer
@@ -1223,7 +1173,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M=None)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M_meas)
 
       
       Compute feedback signals with speed estimation.
@@ -1257,8 +1207,105 @@ Module Contents
    .. py:method:: update(T_s, out)
 
       
-      Extend the update method to include the speed estimate.
+      Update state observers.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SpeedObserver(k_w, k_tau, J)
+
+   
+   Speed observer.
+
+   This observer estimates the mechanical rotor speed based on the mechanical system
+   model and the error signal. If the inertia of the mechanical system is provided, the
+   load torque is als estimated, avoiding lag in the speed estimate [#Lor1991]_.
+
+   :param k_w: Speed-estimation gain (rad/s or (rad/s)² for induction machines or for
+               synchronous machines, respectively).
+   :type k_w: float
+   :param k_tau: Load-torque estimation gain (Nm or Nm/s for induction machines or for
+                 synchronous machines, respectively).
+   :type k_tau: float
+   :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the load
+             torque estimation is not used.
+   :type J: float | None, optional
+
+   .. rubric:: References
+
+   .. [#Lor1991] Lorenz, Van Patten, "High-resolution velocity estimation for
+      all-digital, AC servo drives," IEEE Trans. Ind. Appl., 1991,
+      https://doi.org/10.1109/28.85485
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output()
+
+      
+      Compute outputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, eps, tau_M = 0.0)
+
+      
+      Update mechanical state estimates.
+
+      :param T_s: Sample time (s).
+      :type T_s: float
+      :param eps: Estimation error signal: mechanical speed (rad/s) or mechanical position
+                  (rad) for induction machines or synchronous machines, respectively.
+      :type eps: float
+      :param tau_M: Electromagnetic torque estimate (Nm).
+      :type tau_M: float, optional
 
 
 

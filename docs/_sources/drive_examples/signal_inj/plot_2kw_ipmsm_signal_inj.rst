@@ -93,7 +93,7 @@ Configure the control system.
 
 
     est_par = par  # Assume accurate model parameter estimates
-    cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i)
+    cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, alpha_o=2 * np.pi * 40)
     vector_ctrl = control.SignalInjectionController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
@@ -193,7 +193,7 @@ Plot also the angles.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 17.163 seconds)
+   **Total running time of the script:** (0 minutes 17.557 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_2kw_ipmsm_signal_inj.py:

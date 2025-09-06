@@ -31,6 +31,7 @@ Classes
    motulator.drive.control.sm.SignalInjectionController
    motulator.drive.control.sm.SpeedController
    motulator.drive.control.sm.SpeedFluxObserver
+   motulator.drive.control.sm.SpeedObserver
    motulator.drive.control.sm.SynchronousMachinePars
    motulator.drive.control.sm.VHzControlSystem
    motulator.drive.control.sm.VectorControlSystem
@@ -169,34 +170,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, i_s_ab)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
-      Get feedback signals without motion sensors.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_sensored_feedback(u_s_ab, i_s_ab, w_M, theta_M)
-
-      
-      Get the feedback signals with motion sensors.
+      Get the feedback signals.
 
 
 
@@ -372,9 +349,9 @@ Module Contents
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
-      :param w_M: Rotor speed (mechanical rad/s), either measured or estimated.
+      :param w_M: Mechanical rotor speed (rad/s), either measured or estimated.
       :type w_M: float
-      :param theta_M_meas: Measured rotor angle (mechanical rad), used only in sensored mode.
+      :param theta_M_meas: Measured mechanical rotor angle (rad), used only in sensored mode.
       :type theta_M_meas: float, optional
 
       :returns: **out** -- Estimated feedback signals for the control system.
@@ -498,31 +475,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, i_s_ab)
-
-      
-      Get feedback signals without motion sensors.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_sensored_feedback(u_s_ab, i_s_ab, w_M, theta_M)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
       Get the feedback signals with motion sensors.
@@ -1201,7 +1154,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SignalInjectionController(par, cfg, alpha_o = 2 * pi * 40, U_inj = 250, T_s = 0.000125)
+.. py:class:: SignalInjectionController(par, cfg, U_inj = 250, T_s = 0.000125)
 
    Bases: :py:obj:`motulator.drive.control._sm_current_vector.CurrentVectorController`
 
@@ -1211,15 +1164,14 @@ Module Contents
 
    This class implements a square-wave signal injection for low-speed operation
    according to [#Kim2012]_. Cross-saturation errors are compensated for using flux
-   maps [#You2018]_. A simple phase-locked loop is used to track the rotor position.
-   For wider speed range, signal injection could be combined to a model-based observer.
+   maps [#You2018]_. If the inertia of the mechanical system is provided, the speed is
+   estimated using the speed observer based on the mechanical model [#Kim2003]_,
+   otherwise the phase-locked loop is used.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param cfg: Current-vector control configuration.
    :type cfg: CurrentVectorControllerCfg
-   :param alpha_o: Pole location (rad/s) of the phase-locked loop, defaults to 2*pi*40.
-   :type alpha_o: float, optional
    :param U_inj: Injected voltage amplitude (V), defaults to 250.
    :type U_inj: float, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
@@ -1235,6 +1187,10 @@ Module Contents
       and high-frequency injection methods for sensorless direct-flux vector control of
       synchronous reluctance machines," IEEE Trans. Power Electron., 2018,
       https://doi.org/10.1109/TPEL.2017.2697209
+
+   .. [#Kim2003] Kim, Harke, Lorenz, "Sensorless control of interior permanent-magnet
+      machine drives with zero-phase lag position estimation," IEEE Trans. Ind. Appl.,
+      2003, https://doi.org/10.1109/TIA.2003.818966
 
 
 
@@ -1340,17 +1296,14 @@ Module Contents
 
 .. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f, J = None)
 
-   Bases: :py:obj:`FluxObserver`
-
-
    
-   Observer with load torque and speed estimation.
+   Flux observer with speed estimation.
 
-   This observer estimates the rotor speed and the rotor angle. The observer gain
-   decouples the electrical and mechanical dynamics and allows placing the poles of the
-   corresponding linearized estimation error dynamics. If the inertia of the
-   mechanical system is provided, the observer also estimates the load torque, which
-   avoids lag in the speed estimate during accelerations [#Lor1991]_.
+   This observer estimates the stator flux linkage, the rotor angle, and rotor speed.
+   The observer gain decouples the electrical and mechanical dynamics and allows
+   placing the poles of the corresponding linearized estimation error dynamics. If the
+   inertia of the mechanical system is provided, the observer also estimates the load
+   torque, to avoid the lag in the speed estimate.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -1363,6 +1316,90 @@ Module Contents
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
              mechanical system model is not used.
    :type J: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M_meas = None, theta_M_meas = None)
+
+      
+      Compute the feedback signals for the control system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, out)
+
+      
+      Update the state estimates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SpeedObserver(k_w, k_tau, J)
+
+   
+   Speed observer.
+
+   This observer estimates the mechanical rotor speed based on the mechanical system
+   model and the error signal. If the inertia of the mechanical system is provided, the
+   load torque is als estimated, avoiding lag in the speed estimate [#Lor1991]_.
+
+   :param k_w: Speed-estimation gain (rad/s or (rad/s)² for induction machines or for
+               synchronous machines, respectively).
+   :type k_w: float
+   :param k_tau: Load-torque estimation gain (Nm or Nm/s for induction machines or for
+                 synchronous machines, respectively).
+   :type k_tau: float
+   :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the load
+             torque estimation is not used.
+   :type J: float | None, optional
 
    .. rubric:: References
 
@@ -1387,18 +1424,11 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M = None, theta_M_meas = None)
+   .. py:method:: compute_output()
 
       
-      Compute feedback signals with speed estimation.
+      Compute outputs.
 
-      :param u_s_ab: Stator voltage (V) in stator coordinates.
-      :type u_s_ab: complex
-      :param i_s_ab: Stator current (A) in stator coordinates.
-      :type i_s_ab: complex
-
-      :returns: **out** -- Estimated feedback signals for the control system.
-      :rtype: ObserverOutputs
 
 
 
@@ -1418,11 +1448,18 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s, out)
+   .. py:method:: update(T_s, eps, tau_M = 0.0)
 
       
-      Extend the update method to include the speed estimate.
+      Update mechanical state estimates.
 
+      :param T_s: Sample time (s).
+      :type T_s: float
+      :param eps: Estimation error signal: mechanical speed (rad/s) or mechanical position
+                  (rad) for induction machines or synchronous machines, respectively.
+      :type eps: float
+      :param tau_M: Electromagnetic torque estimate (Nm).
+      :type tau_M: float, optional
 
 
 

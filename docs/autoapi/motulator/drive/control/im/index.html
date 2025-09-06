@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.control.im &#8212; motulator 0.7.1 documentation</title>
+    <title>motulator.drive.control.im &#8212; motulator 0.7.2 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../../_static/documentation_options.js?v=7dd04bbd"></script>
+    <script src="../../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.1 documentation</p>
+    <p class="title logo__title">motulator 0.7.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -461,7 +461,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.get_sensored_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_sensored_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
 </ul>
@@ -475,7 +474,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController"><code class="docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_feedback()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.get_sensored_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_sensored_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.update"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.update()</span></code></a></li>
 </ul>
@@ -510,6 +508,11 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedObserver"><code class="docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedObserver.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedObserver.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem</span></code></a><ul class="nav section-nav flex-column">
@@ -591,12 +594,15 @@ document.write(`
 <td><p>2DOF PI speed controller.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.SpeedFluxObserver" title="motulator.drive.control.im.SpeedFluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a></p></td>
-<td><p>Observer with speed estimation.</p></td>
+<td><p>Flux observer with speed estimation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.VHzControlSystem" title="motulator.drive.control.im.VHzControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VHzControlSystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.SpeedObserver" title="motulator.drive.control.im.SpeedObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a></p></td>
+<td><p>Speed observer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.VHzControlSystem" title="motulator.drive.control.im.VHzControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VHzControlSystem</span></code></a></p></td>
 <td><p>V/Hz control system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.VectorControlSystem" title="motulator.drive.control.im.VectorControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorControlSystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.VectorControlSystem" title="motulator.drive.control.im.VectorControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorControlSystem</span></code></a></p></td>
 <td><p>Vector control system.</p></td>
 </tr>
 </tbody>
@@ -739,32 +745,15 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.CurrentVectorController.get_feedback">
-<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController.get_feedback" title="Link to this definition">#</a></dt>
-<dd><p>Get the feedback signals with motion sensors.</p>
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get the feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._im_observers.ObserverOutputs</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.im.CurrentVectorController.get_sensored_feedback">
-<span class="sig-name descname"><span class="pre">get_sensored_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController.get_sensored_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController.get_sensored_feedback" title="Link to this definition">#</a></dt>
-<dd><p>Get the feedback signals with motion sensors.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
-<li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
-<li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>theta_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -946,32 +935,15 @@ framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.FluxVectorController.get_feedback">
-<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#FluxVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorController.get_feedback" title="Link to this definition">#</a></dt>
-<dd><p>Get feedback signals without motion sensors.</p>
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#FluxVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorController.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get the feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._im_observers.ObserverOutputs</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.im.FluxVectorController.get_sensored_feedback">
-<span class="sig-name descname"><span class="pre">get_sensored_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#FluxVectorController.get_sensored_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorController.get_sensored_feedback" title="Link to this definition">#</a></dt>
-<dd><p>Get the feedback signals with motion sensors.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
-<li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>)</p></li>
-<li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>theta_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1338,7 +1310,7 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.SpeedController">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">SpeedController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_controllers.html#SpeedController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedController" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">SpeedController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_common.html#SpeedController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedController" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._controllers.PIController</span></code></p>
 <p>2DOF PI speed controller.</p>
 <p>This is an interface for a speed controller. The gains are initialized based on the
@@ -1358,8 +1330,7 @@ desired closed-loop bandwidth and the rotor inertia estimate.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.SpeedFluxObserver">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">SpeedFluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.drive.control.im.FluxObserver" title="motulator.drive.control.im.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p>
-<p>Observer with speed estimation.</p>
+<dd><p>Flux observer with speed estimation.</p>
 <p>This class implements a reduced-order flux observer for induction machines with
 speed estimation. If the inertia of the mechanical system is provided, the observer
 also estimates the load torque, to avoid the lag in the speed estimate.</p>
@@ -1377,13 +1348,14 @@ mechanical system model is not used.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.SpeedFluxObserver.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute feedback signals with speed estimation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
+<li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1398,12 +1370,72 @@ mechanical system model is not used.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.SpeedFluxObserver.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver.update" title="Link to this definition">#</a></dt>
-<dd><p>Extend the update method to include the speed estimate.</p>
+<dd><p>Update state observers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
 <li><p><strong>out</strong> (<a class="reference internal" href="../sm/index.html#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.control.im.SpeedObserver">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">SpeedObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_common.html#SpeedObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedObserver" title="Link to this definition">#</a></dt>
+<dd><p>Speed observer.</p>
+<p>This observer estimates the mechanical rotor speed based on the mechanical system
+model and the error signal. If the inertia of the mechanical system is provided, the
+load torque is als estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k_w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Speed-estimation gain (rad/s or (rad/s)² for induction machines or for
+synchronous machines, respectively).</p></li>
+<li><p><strong>k_tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Load-torque estimation gain (Nm or Nm/s for induction machines or for
+synchronous machines, respectively).</p></li>
+<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Inertia of the mechanical system (kgm²). Defaults to None, which means the load
+torque estimation is not used.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="lor1991" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
+<p>Lorenz, Van Patten, “High-resolution velocity estimation for
+all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
+<a class="reference external" href="https://doi.org/10.1109/28.85485">https://doi.org/10.1109/28.85485</a></p>
+</aside>
+</aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.SpeedObserver.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_common.html#SpeedObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedObserver.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.SpeedObserver.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_common.html#SpeedObserver.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedObserver.update" title="Link to this definition">#</a></dt>
+<dd><p>Update mechanical state estimates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Sample time (s).</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Estimation error signal: mechanical speed (rad/s) or mechanical position
+(rad) for induction machines or synchronous machines, respectively.</p></li>
+<li><p><strong>tau_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Electromagnetic torque estimate (Nm).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1688,7 +1720,6 @@ and flux-vector control).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.get_sensored_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_sensored_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
 </ul>
@@ -1702,7 +1733,6 @@ and flux-vector control).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController"><code class="docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_feedback()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.get_sensored_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_sensored_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.update"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.update()</span></code></a></li>
 </ul>
@@ -1737,6 +1767,11 @@ and flux-vector control).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedObserver"><code class="docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedObserver.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedObserver.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem</span></code></a><ul class="nav section-nav flex-column">

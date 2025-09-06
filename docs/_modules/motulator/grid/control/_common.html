@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._controllers &#8212; motulator 0.7.1 documentation</title>
+    <title>motulator.grid.control._common &#8212; motulator 0.7.2 documentation</title>
   
   
   
@@ -42,13 +42,13 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=7dd04bbd"></script>
+    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/motulator/drive/control/_controllers';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/motulator/grid/control/_common';</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.1 documentation</p>
+    <p class="title logo__title">motulator 0.7.2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -403,8 +403,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for motulator.drive.control._controllers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Common control functions and classes for machine drives.&quot;&quot;&quot;</span>
+  <h1>Source code for motulator.grid.control._common</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Common control functions and classes.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 
@@ -412,40 +412,75 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<div class="viewcode-block" id="SpeedController">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.SpeedController">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SpeedController</span><span class="p">(</span><span class="n">PIController</span><span class="p">):</span>
+<div class="viewcode-block" id="DCBusVoltageController">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DCBusVoltageController</span><span class="p">(</span><span class="n">PIController</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    2DOF PI speed controller.</span>
+<span class="sd">    DC-bus voltage PI controller.</span>
 
-<span class="sd">    This is an interface for a speed controller. The gains are initialized based on the</span>
-<span class="sd">    desired closed-loop bandwidth and the rotor inertia estimate.</span>
+<span class="sd">    This controller regulates the energy stored in the DC-bus capacitor (scaled square</span>
+<span class="sd">    of the DC-bus voltage) in order to have a linear closed-loop system [#Hur2001]_.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    J : float</span>
-<span class="sd">        Total inertia of the rotor (kgm²).</span>
-<span class="sd">    alpha_s : float</span>
-<span class="sd">        Reference-tracking bandwidth (rad/s).</span>
-<span class="sd">    alpha_i : float, optional</span>
-<span class="sd">        Integral action bandwidth (rad/s), defaults to `alpha_s`.</span>
-<span class="sd">    tau_M_max : float, optional</span>
-<span class="sd">        Maximum motor torque (Nm), defaults to `inf`.</span>
+<span class="sd">    C_dc : float</span>
+<span class="sd">        DC-bus capacitance (F).</span>
+<span class="sd">    alpha_dc : float</span>
+<span class="sd">        Approximate closed-loop bandwidth (rad/s).</span>
+<span class="sd">    p_max : float, optional</span>
+<span class="sd">        Limit for the maximum converter power (W), defaults to `inf`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [#Hur2001] Hur, Jung, Nam, &quot;A fast dynamic DC-link power-balancing scheme for a</span>
+<span class="sd">       PWM converter-inverter system,&quot; IEEE Trans. Ind. Electron., 2001,</span>
+<span class="sd">       https://doi.org/10.1109/41.937412</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">J</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">alpha_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">alpha_i</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">tau_M_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">alpha_i</span> <span class="o">=</span> <span class="n">alpha_s</span> <span class="k">if</span> <span class="n">alpha_i</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">alpha_i</span>
-        <span class="n">k_p</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha_s</span> <span class="o">+</span> <span class="n">alpha_i</span><span class="p">)</span> <span class="o">*</span> <span class="n">J</span>
-        <span class="n">k_i</span> <span class="o">=</span> <span class="n">alpha_s</span> <span class="o">*</span> <span class="n">alpha_i</span> <span class="o">*</span> <span class="n">J</span>
-        <span class="n">k_t</span> <span class="o">=</span> <span class="n">alpha_s</span> <span class="o">*</span> <span class="n">J</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k_p</span><span class="p">,</span> <span class="n">k_i</span><span class="p">,</span> <span class="n">k_t</span><span class="p">,</span> <span class="n">tau_M_max</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">k_p</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">alpha_dc</span>
+        <span class="n">k_i</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">alpha_dc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">k_t</span> <span class="o">=</span> <span class="n">k_p</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k_p</span><span class="p">,</span> <span class="n">k_i</span><span class="p">,</span> <span class="n">k_t</span><span class="p">,</span> <span class="n">p_max</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
+
+<div class="viewcode-block" id="DCBusVoltageController.compute_output">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController.compute_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_ff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">W_dc_ref</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">*</span> <span class="n">y_ref</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># y_ref = u_dc_ref</span>
+        <span class="n">W_dc</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># y = u_dc</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">W_dc_ref</span><span class="p">,</span> <span class="n">W_dc</span><span class="p">,</span> <span class="n">u_ff</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="CurrentLimiter">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentLimiter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CurrentLimiter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Limit the amplitude of the input signal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    i_max : float</span>
+<span class="sd">        Maximum current (A).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    complex</span>
+<span class="sd">        Limited signal.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span> <span class="o">=</span> <span class="n">i_max</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">i</span></div>
 
 </pre></div>
 

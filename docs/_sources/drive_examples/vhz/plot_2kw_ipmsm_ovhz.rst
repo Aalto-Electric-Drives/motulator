@@ -155,7 +155,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 20.639 seconds)
+   **Total running time of the script:** (0 minutes 20.716 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_ipmsm_ovhz.py:

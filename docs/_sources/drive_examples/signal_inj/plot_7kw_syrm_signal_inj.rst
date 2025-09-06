@@ -94,7 +94,7 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-58
+.. GENERATED FROM PYTHON SOURCE LINES 42-60
 
 .. code-block:: Python
 
@@ -109,7 +109,9 @@ Configure the control system.
     est_par = model.SaturatedSynchronousMachinePars(
         n_p=2, R_s=0, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map, kind="rel"
     )
-    cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, psi_s_min=0.5 * base.psi)
+    cfg = control.CurrentVectorControllerCfg(
+        i_s_max=2 * base.i, psi_s_min=0.5 * base.psi, alpha_o=2 * np.pi * 40
+    )
     vector_ctrl = control.SignalInjectionController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
@@ -121,11 +123,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-70
+.. GENERATED FROM PYTHON SOURCE LINES 62-72
 
 .. code-block:: Python
 
@@ -146,11 +148,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-77
+.. GENERATED FROM PYTHON SOURCE LINES 74-79
 
 .. code-block:: Python
 
@@ -171,11 +173,11 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-79
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
 Plot also the angles.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-93
+.. GENERATED FROM PYTHON SOURCE LINES 81-95
 
 .. code-block:: Python
 
@@ -208,7 +210,7 @@ Plot also the angles.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 33.902 seconds)
+   **Total running time of the script:** (0 minutes 36.099 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py:

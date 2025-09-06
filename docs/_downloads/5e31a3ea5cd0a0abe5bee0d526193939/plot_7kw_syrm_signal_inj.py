@@ -50,7 +50,9 @@ flux_map = curr_map.invert()
 est_par = model.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map, kind="rel"
 )
-cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, psi_s_min=0.5 * base.psi)
+cfg = control.CurrentVectorControllerCfg(
+    i_s_max=2 * base.i, psi_s_min=0.5 * base.psi, alpha_o=2 * np.pi * 40
+)
 vector_ctrl = control.SignalInjectionController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
