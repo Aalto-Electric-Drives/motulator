@@ -1,11 +1,7 @@
 """Controls for synchronous machine drives."""
 
-from motulator.drive.control._base import (
-    PIController,
-    SpeedController,
-    VectorControlSystem,
-    VHzControlSystem,
-)
+from motulator.drive.control._base import VectorControlSystem, VHzControlSystem
+from motulator.drive.control._common import PIController, SpeedController, SpeedObserver
 from motulator.drive.control._sm_current_vector import (
     CurrentController,
     CurrentVectorController,
@@ -47,5 +43,6 @@ __all__ = [
     "SaturatedSynchronousMachinePars",
     "SignalInjectionController",
     "SpeedController",
+    "SpeedObserver",
     "SynchronousMachinePars",
 ]

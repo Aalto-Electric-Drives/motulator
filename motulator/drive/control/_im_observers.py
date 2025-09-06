@@ -6,6 +6,7 @@ from math import inf, pi
 from typing import Callable
 
 from motulator.common.utils._utils import wrap
+from motulator.drive.control._common import SpeedObserver
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
@@ -13,16 +14,6 @@ from motulator.drive.utils._parameters import (
 
 
 # %%
-@dataclass
-class ObserverStates:
-    """State estimates."""
-
-    psi_s: complex = 0j  # Stator flux linkage
-    theta_c: float = 0.0  # Angle of the controller coordinate system
-    w_m: float = 0.0  # Electrical rotor angle
-    tau_L: float = 0.0  # Load torque
-
-
 @dataclass
 class ObserverOutputs:
     """Feedback signals for the control system."""
@@ -41,9 +32,10 @@ class ObserverOutputs:
     w_M: float = 0.0  # Mechanical angular speed of the rotor
     theta_c: float = 0.0  # Coordinate system angle
     e_o: complex = 0j  # Estimation error
-    eps: float = 0.0  # Rotor speed estimation error signal
+    eps: float = 0.0  # Mechanical rotor speed estimation error signal
 
 
+# %%
 class FluxObserver:
     """
     Reduced-order flux observer.
@@ -82,11 +74,14 @@ class FluxObserver:
         k_o2: Callable[[float], complex],
     ) -> None:
         self.par = par
-        self._T_s: float = 0.0
-        self._old_i_s: complex = 0j
-        self.state = ObserverStates()
         self.k_o1 = k_o1
         self.k_o2 = k_o2
+        # States
+        self.psi_s: complex = 0j
+        self.theta_c: float = 0.0
+        # Other memory variables
+        self._T_s: float = 0.0
+        self._old_i_s: complex = 0j
 
     def compute_output(
         self, u_s_ab: complex, i_s_ab: complex, w_M: float | None
@@ -113,7 +108,7 @@ class FluxObserver:
         par = self.par
 
         # Initialize the output signals
-        out = ObserverOutputs(psi_s=self.state.psi_s, theta_c=self.state.theta_c)
+        out = ObserverOutputs(psi_s=self.psi_s, theta_c=self.theta_c)
 
         # Current and voltage vectors in estimated rotor coordinates
         out.i_s = exp(-1j * out.theta_c) * i_s_ab
@@ -151,8 +146,8 @@ class FluxObserver:
         else:  # Disable torque estimation in pure open-loop V/Hz control mode
             out.tau_M = 0
 
-        # Speed estimation error for the speed observer
-        out.eps = -(out.e_o / out.psi_R).imag if abs(out.psi_R) > 0 else 0.0
+        # Mechanical speed estimation error for the speed observer
+        out.eps = -(out.e_o / out.psi_R).imag / par.n_p if abs(out.psi_R) > 0 else 0.0
 
         return out
 
@@ -168,11 +163,11 @@ class FluxObserver:
         # Update the states
         v_err = k_o1 * out.e_o + k_o2 * out.e_o.conjugate()
         d_psi_s = out.u_s - par.R_s * out.i_s - 1j * out.w_c * out.psi_s + v_err
-        self.state.psi_s += T_s * d_psi_s
-        self.state.theta_c = wrap(self.state.theta_c + T_s * out.w_c)
+        self.psi_s += T_s * d_psi_s
+        self.theta_c = wrap(self.theta_c + T_s * out.w_c)
 
         # Update the saturation model for the next sampling period
-        self.par.update_psi_s(abs(self.state.psi_s))
+        self.par.update_psi_s(abs(self.psi_s))
 
         # Update the sampling period and the old current value
         self._T_s = T_s
@@ -180,9 +175,9 @@ class FluxObserver:
 
 
 # %%
-class SpeedFluxObserver(FluxObserver):
+class SpeedFluxObserver:
     """
-    Observer with speed estimation.
+    Flux observer with speed estimation.
 
     This class implements a reduced-order flux observer for induction machines with
     speed estimation. If the inertia of the mechanical system is provided, the observer
@@ -210,19 +205,20 @@ class SpeedFluxObserver(FluxObserver):
         alpha_o: float,
         J: float | None = None,
     ) -> None:
-        # Critically damped dynamics
-        self.J = J
-        if self.J is None:
-            self.k_w = alpha_o
-            self.k_tau = 0.0
+        # Configure observer gains for critically damped dynamics
+        if J is None:
+            k_w = alpha_o
+            k_tau = 0.0
         else:
-            self.k_w = 2 * alpha_o
-            self.k_tau = self.J * alpha_o**2
+            k_w = 2 * alpha_o
+            k_tau = J * alpha_o**2
 
-        super().__init__(par, k_o1, k_o2)
+        # Create component observers
+        self.speed_observer = SpeedObserver(k_w, k_tau, J)
+        self.flux_observer = FluxObserver(par, k_o1, k_o2)
 
     def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, w_M=None
+        self, u_s_ab: complex, i_s_ab: complex, w_M_meas: float | None
     ) -> ObserverOutputs:
         """
         Compute feedback signals with speed estimation.
@@ -240,26 +236,15 @@ class SpeedFluxObserver(FluxObserver):
             Estimated feedback signals for the control system, including speed estimate.
 
         """
-        w_M_est = self.state.w_m / self.par.n_p
-        out = super().compute_output(u_s_ab, i_s_ab, w_M_est)
-        out.tau_L = self.state.tau_L
-
+        w_M, tau_L = self.speed_observer.compute_output()
+        out = self.flux_observer.compute_output(u_s_ab, i_s_ab, w_M)
+        out.tau_L = tau_L
         return out
 
     def update(self, T_s: float, out: ObserverOutputs) -> None:
-        """Extend the update method to include the speed estimate."""
-        super().update(T_s, out)
-
-        par = self.par
-        if self.J is None:
-            d_w_m = self.k_w * out.eps
-            d_tau_L = 0.0
-        else:
-            d_w_m = par.n_p * (out.tau_M - out.tau_L) / self.J + self.k_w * out.eps
-            d_tau_L = -self.k_tau * out.eps / par.n_p
-
-        self.state.w_m += T_s * d_w_m
-        self.state.tau_L += T_s * d_tau_L
+        """Update state observers."""
+        self.flux_observer.update(T_s, out)
+        self.speed_observer.update(T_s, out.eps, out.tau_M)
 
 
 # %%
@@ -280,6 +265,11 @@ def create_sensored_observer(
         Observer gain as a function of the electrical angular speed of the rotor,
         defaults to ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
 
+    Returns
+    -------
+    FluxObserver
+        Sensored flux observer.
+
     """
 
     def default_k_o(w_m: float) -> complex:
@@ -297,7 +287,7 @@ def create_sensorless_observer(
     J: float | None = None,
 ) -> SpeedFluxObserver:
     """
-    Create a sensorless observer with speed estimation.
+    Create a sensorless flux observer with speed estimation.
 
     The observer gains are ``k_o1 = k_o`` and ``k_o2 = k_o``.
 
@@ -313,6 +303,11 @@ def create_sensorless_observer(
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
+
+    Returns
+    -------
+    SpeedFluxObserver
+        Sensorless flux observer with speed estimation.
 
     """
 
@@ -344,6 +339,11 @@ def create_vhz_observer(
         Observer gain as a function of the electrical angular speed of the rotor,
         defaults to ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)``
         (except for the case ``L_M = inf``, where ``k_o1 = 1`` and ``k_o2 = 0``).
+
+    Returns
+    -------
+    FluxObserver
+        Sensorless flux observer without speed estimation.
 
     """
     if par.L_M == inf:  # Pure open-loop V/Hz control

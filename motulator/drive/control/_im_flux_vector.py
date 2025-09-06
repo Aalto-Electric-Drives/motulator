@@ -327,15 +327,15 @@ class FluxVectorController:
         self.sensorless = sensorless
         self.T_s = T_s
 
-    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
-        """Get feedback signals without motion sensors."""
-        return self.observer.compute_output(u_s_ab, i_s_ab)
-
-    def get_sensored_feedback(
-        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
+    def get_feedback(
+        self,
+        u_s_ab: complex,
+        i_s_ab: complex,
+        w_M_meas: float | None,
+        theta_M_meas: float | None,
     ) -> ObserverOutputs:
-        """Get the feedback signals with motion sensors."""
-        return self.observer.compute_output(u_s_ab, i_s_ab, w_M)
+        """Get the feedback signals."""
+        return self.observer.compute_output(u_s_ab, i_s_ab, w_M_meas)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
@@ -436,7 +436,7 @@ class ObserverBasedVHzController:
         self.T_s = T_s
         # Configurations for pure open-loop V/Hz control
         if par.L_M == inf:
-            self.observer.state.psi_s = cfg.psi_s_nom
+            self.observer.psi_s = cfg.psi_s_nom
             self.reference_gen.k_u = inf
 
     def get_feedback(

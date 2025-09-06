@@ -34,7 +34,7 @@ mdl = model.Drive(machine, mechanics, converter)
 # Configure the control system.
 
 est_par = par  # Assume accurate model parameter estimates
-cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i)
+cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, alpha_o=2 * np.pi * 40)
 vector_ctrl = control.SignalInjectionController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)

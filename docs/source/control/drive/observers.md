@@ -56,7 +56,7 @@ label: im_obs_tauM
 The magnetic saturation $\hatLs = \hatLs(\hatabspsis)$ can be taken into account using the {class}`motulator.drive.model.InductionMachinePars` class.
 
 ```{note}
-The angular speed $\omegac$ of the controller coordinate system can be arbitrarily selected. In the {class}`motulator.drive.control.im.FluxObserver` class, it is set to $\omegac = \hatomegam + \hatomegar$, which allows simple discretization since the DC quantities are estimated in the steady state. Estimated rotor coordinates $\omegac = \hatomegam$ could also be used, while using $\omegac = 0$ would require a more complex discretization.
+The angular speed $\omegac$ of the controller coordinate system can be arbitrarily selected. In the {class}`motulator.drive.control.im.FluxObserver` class, it is set to $\omegac = \hatomegam + \hatomegar$, which allows simple discretization since the DC quantities are estimated in the steady state. Estimated rotor coordinates $\omegac = \hatomegam$ could also be used, but using $\omegac = 0$ would require a more complex discretization.
 ```
 
 ```{note}
@@ -145,7 +145,7 @@ label: k1_sensorless
     \koa = \frac{\sigma}{\hat \alpha - \jj\hatomegam}
 ```
 
-results in the characteristic polynomial $D(s) = s^2 + 2\sigma s + \omegaso^2$. In the default tuning, the attenuation is scheduled as $\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|$, where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero stator frequency $\omegaso = 0$, the poles are located at $s = 0$ and $s = -\alpha$, which allows stable magnetizing and starting the machine. [Figure 1](fig:poles) shows the corresponding pole placement example.
+which results in the characteristic polynomial $D(s) = s^2 + 2\sigma s + \omegaso^2$. In the default tuning, the attenuation is scheduled as $\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|$, where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero stator frequency $\omegaso = 0$, the poles are located at $s = 0$ and $s = -\alpha$, which allows stable magnetizing and starting the machine. [Figure 1](fig:poles) shows the corresponding pole placement example.
 
 ```{figure} ../figs/poles.svg
 ---
@@ -170,13 +170,13 @@ alt: Pole placement example in sensorless drives
 
 ### Speed Observer
 
-The flux observer {eq}`im_obs` is extended with the speed observer in the {class}`motulator.drive.control.im.SpeedFluxObserver` class. The speed-estimation error signal $\varepsilon$ is extracted as
+The speed observer is implemented in the {class}`motulator.drive.control.im.SpeedObserver` class. The flux observer {eq}`im_obs` is extended with the speed observer in the {class}`motulator.drive.control.im.SpeedFluxObserver` class. The estimation error signal $\varepsilon$ for the mechanical rotor speed is extracted as
 
 ```{math}
 ---
 label: im_obs_eps
 ---
-    \varepsilon = -\IM\left\{ \frac{\eo}{\hatpsiR} \right\}
+    \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiR} \right\}
 ```
 
 Considering the rotor speed to be a quasi-constant disturbance, the speed can be estimated as {cite}`Har2001`
@@ -185,10 +185,10 @@ Considering the rotor speed to be a quasi-constant disturbance, the speed can be
 ---
 label: im_speed_obs_ro
 ---
-    \frac{\D \hatomegam}{\D t} = \koomega \varepsilon
+    \frac{\D \hatomegaM}{\D t} = \koomega \varepsilon
 ```
 
-This estimator is essentially the same as the conventional slip-relation-based estimator with the first-order low-pass filter {cite}`Hin2010`.
+where $\hatomegaM = \hatomegam/\np$ is the mechanical rotor speed estimate and $\koomega$ is the observer gain. This estimator is essentially the same as the conventional slip-relation-based estimator with the first-order low-pass filter {cite}`Hin2010`.
 
 To avoid the lag in the speed estimate, the speed can be estimated based on the mechanical model and considering the load torque as a quasi-constant disturbance (see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`). This approach results in the speed observer
 
@@ -196,8 +196,8 @@ To avoid the lag in the speed estimate, the speed can be estimated based on the 
 ---
 label: im_speed_obs
 ---
-    \frac{\D \hatomegam}{\D t} &= \frac{\np}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
-    \frac{\D\hattauL}{\D t} &= -\frac{\kotau}{\np} \varepsilon
+    \frac{\D \hatomegaM}{\D t} &= \frac{1}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
+    \frac{\D\hattauL}{\D t} &= -\kotau\varepsilon
 ```
 
 where $\hattauL$ is the load torque estimate and $\koomega$ and $\kotau$ are the observer gains. This observer is analogous to the speed observer in {cite}`Lor1991`. Note that setting $\hat{J} = \infty$ and $\kotau = 0$ yields the estimator {eq}`im_speed_obs_ro`; clearly, the inertia estimate $\hat{J}$ can be safely overestimated.
@@ -210,7 +210,7 @@ The flux observer gain {eq}`inherently` decouples the rotor speed estimation fro
 ---
 label: im_speed_obs_ro_lin
 ---
-    \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{\koomega}{s + \koomega}
+    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\koomega}{s + \koomega}
 ```
 
 The gain $\koomega = \alphao$ determines the speed-estimation bandwidth.
@@ -221,7 +221,7 @@ For the observer {eq}`im_speed_obs`, the linearized estimation dynamics are
 ---
 label: im_speed_obs_lin
 ---
-    \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{(J/\hat{J})s^2 + \koomega s + \kotau/\hat{J}}{s^2 + \koomega s + \kotau/\hat{J}}
+    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{(J/\hat{J})s^2 + \koomega s + \kotau/\hat{J}}{s^2 + \koomega s + \kotau/\hat{J}}
 ```
 
 where the stiff mechanical model is assumed in the derivation. The critically damped design is obtained by setting $\koomega = 2\alphao$ and $\kotau = \alphao^2 \hat{J}$, where $\alphao$ is the desired pole location.
@@ -272,7 +272,7 @@ label: sm_obs
     \frac{\D\hatthetam}{\D t} &= \hatomegam - \kotheta \IM\left\{ \frac{\eo}{\psiaux} \right\} = \omegac
 ```
 
-where $\omegac$ is the angular speed of the coordinate system, $\eo$ is the estimation error, $\koa$, $\kob$, and $\kotheta$ are observer gains, the estimates are marked with the hat, and $^*$ marks the complex conjugate. The flux estimation error is
+where $\us'$ is the realized voltage estimate obtained from the PWM algorithm, $\omegac$ is the angular speed of the coordinate system, $\eo$ is the estimation error, $\koa$, $\kob$, and $\kotheta$ are observer gains, the estimates are marked with the hat, and $^*$ marks the complex conjugate. The flux estimation error is
 
 ```{math}
 ---
@@ -335,13 +335,13 @@ where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero speed,
 
 ### Speed Observer
 
-The flux observer {eq}`sm_obs` is extended with the speed observer in the {class}`motulator.drive.control.sm.SpeedFluxObserver` class. The angle-estimation error signal $\varepsilon$ is extracted as
+The speed observer is implemented in the {class}`motulator.drive.control.sm.SpeedObserver` class. The flux observer {eq}`sm_obs` is extended with the speed observer in the {class}`motulator.drive.control.sm.SpeedFluxObserver` class. The estimation error signal $\varepsilon$ for the mechanical rotor position is extracted as
 
 ```{math}
 ---
 label: sm_obs_eps
 ---
-    \varepsilon = -\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}
+    \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}
 ```
 
 Considering the rotor speed to be a quasi-constant disturbance, the speed can be estimated as {cite}`Hin2018`
@@ -350,7 +350,7 @@ Considering the rotor speed to be a quasi-constant disturbance, the speed can be
 ---
 label: sm_speed_obs_ro
 ---
-    \frac{\D \hatomegam}{\D t} = \koomega \varepsilon
+    \frac{\D \hatomegaM}{\D t} = \koomega \varepsilon
 ```
 
 To avoid the lag in the speed estimate, the speed can be estimated based on the mechanical model and considering the load torque as a disturbance (see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`). This approach results in the speed observer
@@ -359,8 +359,8 @@ To avoid the lag in the speed estimate, the speed can be estimated based on the 
 ---
 label: sm_speed_obs
 ---
-    \frac{\D \hatomegam}{\D t} &= \frac{\np}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
-    \frac{\D\hattauL}{\D t} &= -\frac{\kotau}{\np} \varepsilon
+    \frac{\D \hatomegaM}{\D t} &= \frac{1}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
+    \frac{\D\hattauL}{\D t} &= -\kotau \varepsilon
 ```
 
 where $\hattauL$ is the load torque estimate and $\koomega$ and $\kotau$ are the observer gains. Note that setting $\hat{J} = \infty$ and $\kotau = 0$ yields the estimator {eq}`im_speed_obs_ro`; clearly, the inertia estimate $\hat{J}$ can be safely overestimated. Originally {eq}`sm_speed_obs` was used in servo drives with incremental encoders {cite}`Lor1991` and signal-injection methods {cite}`Kim2003`.
@@ -373,7 +373,7 @@ The flux observer design decouples the speed and position estimation from the fl
 ---
 label: sm_speed_obs_ro_lin
 ---
-    \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} = \frac{\alphao^2}{(s + \alphao)^2}
+    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\alphao^2}{(s + \alphao)^2}
 ```
 
 The critically damped design is obtained by setting $\kotheta = 2\alphao$ and $\koomega = \alphao^2$, where $\alphao$ is the desired pole location. The inertia estimate is avoided, but the lag limits achievable speed-control bandwidth {cite}`Tii2025a`.
@@ -384,7 +384,7 @@ For the observer {eq}`sm_speed_obs`, the linearized estimation dynamics are
 ---
 label: sm_speed_obs_lin
 ---
-    \frac{\Delta\hatomegam(s)}{\Delta\omegam(s)} =
+    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} =
     \frac{(J/\hat{J}) s^3 + (J/\hat{J}) \kotheta s^2 + \koomega s + \kotau/\hat{J}}{s^3 + \kotheta s^2 + \koomega s + \kotau/\hat{J}}
 ```
 

@@ -9,7 +9,7 @@ from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._controllers import PIController, RateLimiter
 from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import abc2complex, wrap
-from motulator.drive.control._controllers import SpeedController
+from motulator.drive.control._common import SpeedController
 from motulator.drive.model._drive import Drive
 
 
@@ -57,14 +57,14 @@ class VectorController[Ref, Fbk](Protocol):
 
     sensorless: bool
 
-    def get_feedback(self, u_s_ab: complex, i_s_ab: complex) -> Fbk:
-        """Get feedback signals from measurements without motion sensors."""
-        ...
-
-    def get_sensored_feedback(
-        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None, theta_M: float | None
+    def get_feedback(
+        self,
+        u_s_ab: complex,
+        i_s_ab: complex,
+        w_M_meas: float | None,
+        theta_M_meas: float | None,
     ) -> Fbk:
-        """Get feedback signals from measurements with motion sensors."""
+        """Get feedback signals from measurements."""
         ...
 
     def compute_output(self, tau_M_ref: float, fbk: Fbk) -> Ref:
@@ -151,12 +151,7 @@ class VectorControlSystem(ControlSystem):
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         u_c_ab = self.pwm.get_realized_voltage()
-        if self.vector_ctrl.sensorless:
-            fbk = self.vector_ctrl.get_feedback(u_c_ab, meas.i_c_ab)
-        else:
-            fbk = self.vector_ctrl.get_sensored_feedback(
-                u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M
-            )
+        fbk = self.vector_ctrl.get_feedback(u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M)
         fbk.u_dc = meas.u_dc
         return fbk
 

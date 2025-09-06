@@ -7,7 +7,7 @@ from typing import Callable, Protocol, Sequence
 from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import abc2complex, get_value
-from motulator.grid.control._controllers import DCBusVoltageController
+from motulator.grid.control._common import DCBusVoltageController
 from motulator.grid.model import GridConverterSystem
 
 
