@@ -26,7 +26,7 @@ copyright = "2025, Aalto Electric Drives"
 author = "Aalto Electric Drives"
 
 # The full version, including alpha/beta/rc tags
-release = "0.7.1"
+release = "0.7.2"
 
 # -- General configuration -------------------------------------------------------------
 
@@ -171,6 +171,7 @@ mathjax3_config = {
             "omegas": "\\omega_\\mathrm{s}",
             "hatomegas": "\\hat{\\omega}_\\mathrm{s}",
             "hatomegar": "\\hat{\\omega}_\\mathrm{r}",
+            "hatomegaM": "\\hat{\\omega}_\\mathrm{M}",
             "omegaso": "\\omega_\\mathrm{s0}",
             "omegar": "\\omega_\\mathrm{r}",
             "omegarb": "\\omega_\\mathrm{rb}",

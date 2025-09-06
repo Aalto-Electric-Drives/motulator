@@ -13,7 +13,7 @@ repos:
 
   # Generic
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
         name: fix end of files
@@ -33,7 +33,7 @@ repos:
 
   # TOML
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-toml
         name: check toml
@@ -44,7 +44,7 @@ repos:
 
   # YAML
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-yaml
         name: check yaml
@@ -55,7 +55,7 @@ repos:
 
   # Ruff formatter & linter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.8
+    rev: v0.12.12
     hooks:
     - id: ruff
       args: [--fix]
@@ -65,7 +65,7 @@ repos:
 
   # Pyright
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.403
+    rev: v1.1.405
     hooks:
       - id: pyright
         additional_dependencies: [numpy, scipy, matplotlib, tqdm, sphinx-gallery]
