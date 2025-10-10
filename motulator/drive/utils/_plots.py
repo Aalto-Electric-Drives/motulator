@@ -213,7 +213,9 @@ def plot(
         t_lims = (0, res.mdl.t[-1])
 
     # Create figure
-    fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, figsize=(width, height))
+    fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(
+        5, 1, figsize=(width, height), sharex=True
+    )
     axes = [ax1, ax2, ax3, ax4, ax5]
 
     # Plot subplots
@@ -225,11 +227,6 @@ def plot(
 
     # Configure all axes
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
-
-    # Remove xticklabels for all but the last subplot
-    for ax in axes[:-1]:
-        ax.set_xticklabels([])
-    ax5.set_xlabel("Time (s)")
 
     # Add axis labels
     if pu_vals:
@@ -245,6 +242,7 @@ def plot(
         ax4.set_ylabel("Voltage (V)")
         ax5.set_ylabel("Flux linkage (Vs)")
     fig.align_ylabels()
+    axes[-1].set_xlabel("Time (s)")
 
     save_and_show(save_path, **savefig_kwargs)
 
@@ -328,7 +326,7 @@ def plot_stator_waveforms(
         t_lims = (0, res.mdl.t[-1])
 
     # Create figure
-    fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
     axes = [ax1, ax2]
 
     # Plot subplots
@@ -338,10 +336,6 @@ def plot_stator_waveforms(
     # Configure all axes
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
 
-    # Remove xticklabels for the first subplot
-    ax1.set_xticklabels([])
-    ax2.set_xlabel("Time (s)")
-
     # Add axis labels
     if pu_vals:
         ax1.set_ylabel("Voltage (p.u.)")
@@ -350,6 +344,7 @@ def plot_stator_waveforms(
         ax1.set_ylabel("Voltage (V)")
         ax2.set_ylabel("Current (A)")
     fig.align_ylabels()
+    axes[-1].set_xlabel("Time (s)")
 
     save_and_show(save_path, **savefig_kwargs)
 
@@ -430,7 +425,7 @@ def plot_dc_bus_waveforms(
         t_lims = (0, res.mdl.t[-1])
 
     # Create figure
-    fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
     axes = [ax1, ax2]
 
     # Plot subplots
@@ -440,10 +435,6 @@ def plot_dc_bus_waveforms(
     # Configure all axes
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
 
-    # Remove xticklabels for first subplot
-    ax1.set_xticklabels([])
-    ax2.set_xlabel("Time (s)")
-
     # Add axis labels
     if pu_vals:
         ax1.set_ylabel("Voltage (p.u.)")
@@ -452,5 +443,6 @@ def plot_dc_bus_waveforms(
         ax1.set_ylabel("Voltage (V)")
         ax2.set_ylabel("Current (A)")
     fig.align_ylabels()
+    axes[-1].set_xlabel("Time (s)")
 
     save_and_show(save_path, **savefig_kwargs)
