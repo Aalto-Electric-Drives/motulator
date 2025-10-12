@@ -295,7 +295,7 @@ class MachineCharacteristics:
         """
         i_s_vals, pu_vals, base = _setup_plot(i_s_vals, latex, base)
 
-        fig, ax = plt.subplots(1, 1)
+        fig, ax = plt.subplots()
 
         # MTPA locus
         mtpa = self._loci.compute_mtpa_locus(i_s_vals[-1], num)
@@ -389,9 +389,9 @@ class MachineCharacteristics:
         if latex:
             width = plt.rcParams["figure.figsize"][0]
             height = plt.rcParams["figure.figsize"][1] * 1.6
-            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(width, height))
+            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(width, height), sharex=True)
         else:
-            fig, (ax1, ax2) = plt.subplots(2, 1)
+            fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
 
         # MTPA locus
         mtpa = self._loci.compute_mtpa_locus(i_s_vals[-1], num)
@@ -452,6 +452,7 @@ class MachineCharacteristics:
             i_pu = i_s_abs / base.i
             value = int(i_pu) if i_pu.is_integer() else f"{i_pu:.1f}"
             label = rf"$i_\mathrm{{s}}=$ {value} {label_unit}"
+
             ax1.plot(
                 const_current.tau_M / base.tau,
                 const_current.i_s_dq.real / base.i,

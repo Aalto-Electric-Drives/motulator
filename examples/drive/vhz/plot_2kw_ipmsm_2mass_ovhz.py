@@ -64,13 +64,12 @@ utils.plot(res, base)
 # Plot the load speed and the twist angle.
 
 t_lims = (0, 1.2)
-_, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
+_, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5), sharex=True)
 ax1.plot(res.mdl.t, res.mdl.mechanics.w_M, label=r"$\omega_\mathrm{M}$")
 ax1.plot(res.mdl.t, res.mdl.mechanics.w_L, label=r"$\omega_\mathrm{L}$")
 ax2.plot(res.mdl.t, res.mdl.mechanics.theta_ML * 180 / np.pi)
 ax1.set_xlim(t_lims)
 ax2.set_xlim(t_lims)
-ax1.set_xticklabels([])
 ax1.legend()
 ax1.set_ylabel(r"$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)")
 ax2.set_ylabel(r"$\vartheta_\mathrm{ML}$ (deg)")
@@ -94,9 +93,8 @@ B = J_L * s**2 + C_S * s + K_S
 A = s * (J_M * J_L * s**2 + (J_M + J_L) * C_S * s + (J_M + J_L) * K_S)
 G = B / A
 # Plot figure
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5), sharex=True)
 ax1.loglog(w / (2 * np.pi), np.abs(G))
-ax1.set_xticklabels([])
 ax2.semilogx(w / (2 * np.pi), np.angle(G) * 180 / np.pi)
 ax1.set_xlim(f_span)
 ax2.set_xlim(f_span)
