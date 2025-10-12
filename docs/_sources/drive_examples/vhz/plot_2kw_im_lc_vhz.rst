@@ -159,7 +159,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 Plot additional waveforms.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-84
+.. GENERATED FROM PYTHON SOURCE LINES 63-83
 
 .. code-block:: Python
 
@@ -167,12 +167,11 @@ Plot additional waveforms.
     t_lims = (1.1, 1.125)  # Time span for the zoomed-in plot
 
     # Plot the converter and stator voltages (phase a)
-    fig1, (ax1, ax2) = plt.subplots(2, 1)
+    fig1, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
     ax1.plot(res.mdl.t, res.mdl.converter.u_c_ab.real / base.u, label=r"$u_\mathrm{ca}$")
     ax1.plot(res.mdl.t, res.mdl.machine.u_s_ab.real / base.u, label=r"$u_\mathrm{sa}$")
     ax1.set_xlim(t_lims)
     ax1.legend()
-    ax1.set_xticklabels([])
     ax1.set_ylabel("Voltage (p.u.)")
     # Plot the converter and stator currents (phase a)
     ax2.plot(res.mdl.t, res.mdl.converter.i_c_ab.real / base.i, label=r"$i_\mathrm{ca}$")
@@ -196,7 +195,7 @@ Plot additional waveforms.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-90
+.. GENERATED FROM PYTHON SOURCE LINES 84-89
 
 .. rubric:: References
 
@@ -207,7 +206,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.304 seconds)
+   **Total running time of the script:** (0 minutes 7.429 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_lc_vhz.py:

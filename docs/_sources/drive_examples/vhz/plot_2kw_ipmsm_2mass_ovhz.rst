@@ -162,19 +162,18 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 Plot the load speed and the twist angle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-80
+.. GENERATED FROM PYTHON SOURCE LINES 65-79
 
 .. code-block:: Python
 
 
     t_lims = (0, 1.2)
-    _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
+    _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5), sharex=True)
     ax1.plot(res.mdl.t, res.mdl.mechanics.w_M, label=r"$\omega_\mathrm{M}$")
     ax1.plot(res.mdl.t, res.mdl.mechanics.w_L, label=r"$\omega_\mathrm{L}$")
     ax2.plot(res.mdl.t, res.mdl.mechanics.theta_ML * 180 / np.pi)
     ax1.set_xlim(t_lims)
     ax2.set_xlim(t_lims)
-    ax1.set_xticklabels([])
     ax1.legend()
     ax1.set_ylabel(r"$\omega_\mathrm{M}$, $\omega_\mathrm{L}$ (rad/s)")
     ax2.set_ylabel(r"$\vartheta_\mathrm{ML}$ (deg)")
@@ -193,11 +192,11 @@ Plot the load speed and the twist angle.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
 Plot the frequency response from the torque tau_M to the rotor speed w_M.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-111
+.. GENERATED FROM PYTHON SOURCE LINES 81-109
 
 .. code-block:: Python
 
@@ -216,9 +215,8 @@ Plot the frequency response from the torque tau_M to the rotor speed w_M.
     A = s * (J_M * J_L * s**2 + (J_M + J_L) * C_S * s + (J_M + J_L) * K_S)
     G = B / A
     # Plot figure
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5), sharex=True)
     ax1.loglog(w / (2 * np.pi), np.abs(G))
-    ax1.set_xticklabels([])
     ax2.semilogx(w / (2 * np.pi), np.angle(G) * 180 / np.pi)
     ax1.set_xlim(f_span)
     ax2.set_xlim(f_span)
@@ -242,7 +240,7 @@ Plot the frequency response from the torque tau_M to the rotor speed w_M.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-117
+.. GENERATED FROM PYTHON SOURCE LINES 110-115
 
 .. rubric:: References
 
@@ -253,7 +251,7 @@ Plot the frequency response from the torque tau_M to the rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.115 seconds)
+   **Total running time of the script:** (0 minutes 4.155 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py:

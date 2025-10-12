@@ -64,12 +64,11 @@ utils.plot(res, base)
 t_lims = (1.1, 1.125)  # Time span for the zoomed-in plot
 
 # Plot the converter and stator voltages (phase a)
-fig1, (ax1, ax2) = plt.subplots(2, 1)
+fig1, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
 ax1.plot(res.mdl.t, res.mdl.converter.u_c_ab.real / base.u, label=r"$u_\mathrm{ca}$")
 ax1.plot(res.mdl.t, res.mdl.machine.u_s_ab.real / base.u, label=r"$u_\mathrm{sa}$")
 ax1.set_xlim(t_lims)
 ax1.legend()
-ax1.set_xticklabels([])
 ax1.set_ylabel("Voltage (p.u.)")
 # Plot the converter and stator currents (phase a)
 ax2.plot(res.mdl.t, res.mdl.converter.i_c_ab.real / base.i, label=r"$i_\mathrm{ca}$")
