@@ -8,6 +8,7 @@ repos:
       name: pip-audit
       description: "Audits Python environments and dependency trees for known vulnerabilities"
       entry: pip-audit
+      args: [--ignore-vuln, GHSA-4xh5-x5gv-qwph]  # pip version 25.2 is the latest available, but has this vulnerability
       pass_filenames: false
       language: python
 
@@ -55,7 +56,7 @@ repos:
 
   # Ruff formatter & linter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.12
+    rev: v0.14.0
     hooks:
     - id: ruff
       args: [--fix]
@@ -65,7 +66,7 @@ repos:
 
   # Pyright
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.405
+    rev: v1.1.406
     hooks:
       - id: pyright
         additional_dependencies: [numpy, scipy, matplotlib, tqdm, sphinx-gallery]

@@ -332,11 +332,6 @@ def plot_grid_waveforms(
     # Configure all axes
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
 
-    # Remove xticklabels for all but the last subplot
-    # for ax in axes[:-1]:
-    #     ax.set_xticklabels([])
-    # ax3.set_xlabel("Time (s)")
-
     # Add axis labels
     if pu_vals:
         ax1.set_ylabel("Voltage (p.u.)")
