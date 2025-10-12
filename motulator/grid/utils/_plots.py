@@ -190,7 +190,7 @@ def plot_control_signals(
         t_lims = (0, res.mdl.t[-1])
 
     # Create figure
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(width, height))
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(width, height), sharex=True)
     axes = [ax1, ax2, ax3]
 
     # Plot subplots
@@ -200,11 +200,6 @@ def plot_control_signals(
 
     # Configure all axes
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
-
-    # Remove xticklabels for all but the last subplot
-    for ax in axes[:-1]:
-        ax.set_xticklabels([])
-    ax3.set_xlabel("Time (s)")
 
     # Add axis labels
     if pu_vals:
@@ -216,6 +211,7 @@ def plot_control_signals(
         ax2.set_ylabel("Current (A)")
         ax3.set_ylabel("Voltage (V)")
     fig.align_ylabels()
+    axes[-1].set_xlabel("Time (s)")
 
     save_and_show(save_path, **savefig_kwargs)
 
@@ -325,7 +321,7 @@ def plot_grid_waveforms(
         t_lims = (0, res.mdl.t[-1])
 
     # Create figure
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(width, height))
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(width, height), sharex=True)
     axes = [ax1, ax2, ax3]
 
     # Plot subplots
@@ -337,9 +333,9 @@ def plot_grid_waveforms(
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
 
     # Remove xticklabels for all but the last subplot
-    for ax in axes[:-1]:
-        ax.set_xticklabels([])
-    ax3.set_xlabel("Time (s)")
+    # for ax in axes[:-1]:
+    #     ax.set_xticklabels([])
+    # ax3.set_xlabel("Time (s)")
 
     # Add axis labels
     if pu_vals:
@@ -350,6 +346,7 @@ def plot_grid_waveforms(
         ax2.set_ylabel("Current (A)")
     ax3.set_ylabel("Angle (deg)")
     fig.align_ylabels()
+    axes[-1].set_xlabel("Time (s)")
 
     save_and_show(save_path, **savefig_kwargs)
 
