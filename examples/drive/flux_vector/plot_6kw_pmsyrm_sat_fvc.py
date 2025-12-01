@@ -104,7 +104,35 @@ utils.plot_map(
 # Configure the system model.
 
 meas_curr_map = meas_flux_map.invert()
-par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.63, i_s_dq_fcn=meas_curr_map)
+# par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.63, i_s_dq_fcn=meas_curr_map)
+
+
+###### FOR TESTING SPATIALLY SATURATED MACHINE MODEL ######
+def meas_curr_map_with_angle(
+    psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
+) -> complex | np.ndarray:
+    """Angle-dependent wrapper, simply ignores exp_j_theta_m."""
+    return meas_curr_map(psi_s_dq)
+
+
+def sinusoidal_tau_ripple(
+    psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
+) -> float | np.ndarray:
+    """Dummy sinusoidal torque ripple as a function of electrical angle."""
+    k = 6  # Harmonic order
+    phi = 0.0  # Phase shift
+    a_k = 0.05 * nom.tau * np.exp(1j * phi)
+    return np.imag(a_k * exp_j_theta_m**k)
+
+
+par = model.SpatialSaturatedSynchronousMachinePars(
+    n_p=2,
+    R_s=0.63,
+    i_s_dq_fcn=meas_curr_map_with_angle,
+    tau_M_ripple_fcn=sinusoidal_tau_ripple,
+)
+################################################################
+
 machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.05)
 converter = model.VoltageSourceConverter(u_dc=540)
@@ -122,7 +150,7 @@ est_par = control.SaturatedSynchronousMachinePars(
 cfg = control.FluxVectorControllerCfg(
     i_s_max=2 * base.i, J=0.05, alpha_i=0, alpha_o=2 * np.pi * 8
 )
-vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=False)
 speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 

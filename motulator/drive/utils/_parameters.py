@@ -6,6 +6,8 @@ from typing import Callable, Literal, Protocol
 import numpy as np
 from scipy.optimize import root, root_scalar
 
+EPS: float = 1e-6  # Finite-difference step for numerical derivatives
+
 
 # %%
 class BaseSynchronousMachinePars(Protocol):
@@ -14,26 +16,107 @@ class BaseSynchronousMachinePars(Protocol):
     n_p: int
     R_s: float
 
-    def i_s_dq(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
-        """Current (A) as a function of the flux linkage (Vs)."""
+    def i_s_dq(
+        self,
+        psi_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> complex | np.ndarray:
+        """
+        Current as a function of flux linkage and rotor angle.
+
+        Parameters
+        ----------
+        psi_s_dq : complex | ndarray
+            Stator flux linkage (Vs) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray, optional
+            Complex exponential of the electrical rotor angle.
+
+        Returns
+        -------
+        complex | ndarray
+            Stator current in rotor coordinates (A).
+
+        """
         ...
 
-    def psi_s_dq(self, i_s_dq: complex | np.ndarray) -> complex | np.ndarray:
-        """Flux linkage (Vs) as a function of the current (A)."""
+    def tau_M(
+        self,
+        psi_s_dq: complex | np.ndarray,
+        i_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> float | np.ndarray:
+        """
+        Electromagnetic torque.
+
+        Parameters
+        ----------
+        psi_s_dq : complex | ndarray
+            Stator flux linkage (Vs) in rotor coordinates.
+        i_s_dq : complex | ndarray
+            Stator current (A) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray, optional
+            Complex exponential of the electrical rotor angle.
+
+        Returns
+        -------
+        float | ndarray
+            Electromagnetic torque (Nm).
+
+        Notes
+        -----
+        The default implementation assumes no spatial harmonics. This method can be
+        overridden in subclasses to model machines with spatial harmonics.
+
+        """
+        tau_M = 1.5 * self.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
+        return tau_M
+
+    def inv_incr_ind_mat(
+        self,
+        psi_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> np.ndarray:
+        """
+        Inverse of the incremental inductance matrix.
+
+        Parameters
+        ----------
+        psi_s_dq : complex | ndarray
+            Stator flux linkage (Vs) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray, optional
+            Complex exponential of the electrical rotor angle.
+
+        Returns
+        -------
+        ndarray
+            Inverse of the incremental inductance matrix (1/H).
+
+        """
         ...
 
-    def inv_incr_ind_mat(self, psi_s_dq: complex | np.ndarray) -> np.ndarray:
-        """Inverse of the incremental inductance matrix (1/H)."""
-        ...
+    def aux_current(
+        self,
+        psi_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> complex | np.ndarray:
+        """
+        Auxiliary current as a function of flux linkage.
 
-    def incr_ind_mat(self, i_s_dq: complex | np.ndarray) -> np.ndarray:
-        """Incremental inductance matrix (H)."""
-        ...
+        Parameters
+        ----------
+        psi_s_dq : complex | ndarray
+            Stator flux linkage (Vs) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray, optional
+            Complex exponential of the electrical rotor angle.
 
-    def aux_current(self, psi_s_dq: complex | np.ndarray) -> complex:
-        """Auxiliary current (A) as function of the flux linkage (Vs)."""
+        Returns
+        -------
+        complex | ndarray
+            Auxiliary current (A).
+
+        """
         # This form is valid in the saturated case as well
-        inv_L_s = self.inv_incr_ind_mat(psi_s_dq)
+        inv_L_s = self.inv_incr_ind_mat(psi_s_dq, exp_j_theta_m)
         G_dd = inv_L_s[0, 0]
         G_dq = inv_L_s[0, 1]
         G_qq = inv_L_s[1, 1]
@@ -43,10 +126,75 @@ class BaseSynchronousMachinePars(Protocol):
             - self.i_s_dq(psi_s_dq)
         )
 
-    def aux_flux(self, i_s_dq: complex | np.ndarray) -> complex:
-        """Auxiliary flux linkage (Vs) as function of the current (A)."""
+    def psi_s_dq(
+        self,
+        i_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> complex | np.ndarray:
+        """
+        Flux linkage as a function of the current and rotor angle.
+
+        Parameters
+        ----------
+        i_s_dq : complex | ndarray
+            Stator current (A) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray, optional
+            Complex exponential of the electrical rotor angle.
+
+        Returns
+        -------
+        complex | ndarray
+            Stator flux linkage in rotor coordinates (Vs).
+
+        """
+        ...
+
+    def incr_ind_mat(
+        self,
+        i_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> np.ndarray:
+        """
+        Incremental inductance matrix.
+
+        Parameters
+        ----------
+        i_s_dq : complex | ndarray
+            Stator current (A) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray, optional
+            Complex exponential of the electrical rotor angle.
+
+        Returns
+        -------
+        ndarray
+            Incremental inductance matrix (H).
+
+        """
+        ...
+
+    def aux_flux(
+        self,
+        i_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> complex | np.ndarray:
+        """
+        Auxiliary flux linkage as a function of current.
+
+        Parameters
+        ----------
+        i_s_dq : complex | ndarray
+            Stator current (A) in rotor coordinates.
+        exp_j_theta_m : complex | np.ndarray, optional
+            Complex exponential of the electrical rotor angle.
+
+        Returns
+        -------
+        complex | ndarray
+            Auxiliary flux linkage (Vs).
+
+        """
         # This form is valid in the saturated case as well
-        L_s = self.incr_ind_mat(i_s_dq)
+        L_s = self.incr_ind_mat(i_s_dq, exp_j_theta_m)
         L_dd = L_s[0, 0]
         L_dq = L_s[0, 1]
         L_qq = L_s[1, 1]
@@ -89,25 +237,33 @@ class SynchronousMachinePars(BaseSynchronousMachinePars):
     psi_f: float
     kind: Literal["pm", "rel"] = "pm"
 
-    def i_s_dq(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
+    def i_s_dq(
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> complex | np.ndarray:
         """Current (A) as a function of the flux linkage (Vs)."""
         i_s_dq = (np.real(psi_s_dq) - self.psi_f) / self.L_d + 1j * np.imag(
             psi_s_dq
         ) / self.L_q
         return i_s_dq
 
-    def psi_s_dq(self, i_s_dq: complex | np.ndarray) -> complex | np.ndarray:
+    def psi_s_dq(
+        self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> complex | np.ndarray:
         """Flux linkage (Vs) as a function of the stator current (A)."""
         psi_s_dq = (
             self.L_d * np.real(i_s_dq) + 1j * self.L_q * np.imag(i_s_dq) + self.psi_f
         )
         return psi_s_dq
 
-    def inv_incr_ind_mat(self, psi_s_dq: complex | np.ndarray) -> np.ndarray:
+    def inv_incr_ind_mat(
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> np.ndarray:
         """Inverse of the incremental inductance matrix (1/H)."""
         return np.array([[1 / self.L_d, 0], [0, 1 / self.L_q]])
 
-    def incr_ind_mat(self, i_s_dq: complex | np.ndarray) -> np.ndarray:
+    def incr_ind_mat(
+        self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> np.ndarray:
         """Incremental inductance matrix (H)."""
         return np.array([[self.L_d, 0], [0, self.L_q]])
 
@@ -174,8 +330,10 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         else:
             raise ValueError("Either i_s_dq_fcn or psi_s_dq_fcn must be provided")
 
-    def i_s_dq(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
-        """Current as a function of the flux linkage."""
+    def i_s_dq(
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> complex | np.ndarray:
+        """Current (A) as a function of the flux linkage (Vs)."""
         if self.i_s_dq_fcn is not None:
             return self.i_s_dq_fcn(psi_s_dq)
         elif self.psi_s_dq_fcn is not None and self.max_iter is not None:
@@ -183,7 +341,9 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         else:
             raise ValueError("Either i_s_dq_fcn or psi_s_dq_fcn must be provided")
 
-    def psi_s_dq(self, i_s_dq: complex | np.ndarray) -> complex | np.ndarray:
+    def psi_s_dq(
+        self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> complex | np.ndarray:
         """Flux linkage as a function of the stator current."""
         if self.psi_s_dq_fcn is not None:
             return self.psi_s_dq_fcn(i_s_dq)
@@ -192,37 +352,39 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         else:
             raise ValueError("Either i_s_dq_fcn or psi_s_dq_fcn must be provided")
 
-    def inv_incr_ind_mat(self, psi_s_dq: complex | np.ndarray) -> np.ndarray:
+    def inv_incr_ind_mat(
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> np.ndarray:
         """Inverse incremental inductance matrix vs. flux linkage."""
-        eps = float(np.finfo(np.float16).eps)
         G_dd = (
-            np.real(self.i_s_dq(psi_s_dq + eps)) - np.real(self.i_s_dq(psi_s_dq - eps))
-        ) / (2 * eps)
+            np.real(self.i_s_dq(psi_s_dq + EPS)) - np.real(self.i_s_dq(psi_s_dq - EPS))
+        ) / (2 * EPS)
         G_qq = (
-            np.imag(self.i_s_dq(psi_s_dq + 1j * eps))
-            - np.imag(self.i_s_dq(psi_s_dq - 1j * eps))
-        ) / (2 * eps)
+            np.imag(self.i_s_dq(psi_s_dq + 1j * EPS))
+            - np.imag(self.i_s_dq(psi_s_dq - 1j * EPS))
+        ) / (2 * EPS)
         G_dq = (
-            np.real(self.i_s_dq(psi_s_dq + 1j * eps))
-            - np.real(self.i_s_dq(psi_s_dq - 1j * eps))
-        ) / (2 * eps)
+            np.real(self.i_s_dq(psi_s_dq + 1j * EPS))
+            - np.real(self.i_s_dq(psi_s_dq - 1j * EPS))
+        ) / (2 * EPS)
 
         return np.array([[G_dd, G_dq], [G_dq, G_qq]])
 
-    def incr_ind_mat(self, i_s_dq: complex | np.ndarray) -> np.ndarray:
+    def incr_ind_mat(
+        self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> np.ndarray:
         """Incremental inductance matrix vs. current."""
-        eps = float(np.finfo(np.float16).eps)
         L_dd = (
-            np.real(self.psi_s_dq(i_s_dq + eps)) - np.real(self.psi_s_dq(i_s_dq - eps))
-        ) / (2 * eps)
+            np.real(self.psi_s_dq(i_s_dq + EPS)) - np.real(self.psi_s_dq(i_s_dq - EPS))
+        ) / (2 * EPS)
         L_qq = (
-            np.imag(self.psi_s_dq(i_s_dq + 1j * eps))
-            - np.imag(self.psi_s_dq(i_s_dq - 1j * eps))
-        ) / (2 * eps)
+            np.imag(self.psi_s_dq(i_s_dq + 1j * EPS))
+            - np.imag(self.psi_s_dq(i_s_dq - 1j * EPS))
+        ) / (2 * EPS)
         L_dq = (
-            np.real(self.psi_s_dq(i_s_dq + 1j * eps))
-            - np.real(self.psi_s_dq(i_s_dq - 1j * eps))
-        ) / (2 * eps)
+            np.real(self.psi_s_dq(i_s_dq + 1j * EPS))
+            - np.real(self.psi_s_dq(i_s_dq - 1j * EPS))
+        ) / (2 * EPS)
         return np.array([[L_dd, L_dq], [L_dq, L_qq]])
 
     def _solve_inverse(
@@ -295,6 +457,118 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         result = root(error_fcn, x0, method="hybr", options={"maxfev": self.max_iter})
 
         return complex(result.x[0], result.x[1])
+
+
+# %%
+@dataclass
+class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
+    """
+    Parameters of a saturated synchronous machine with spatial harmonics.
+
+    This saturation model contains spatial harmonics in addition to the saturation
+    effects. This version is intended as a high-fidelity machine model for simulation
+    purposes, while most control methods do not support spatial harmonics.
+
+    Parameters
+    ----------
+    n_p : int
+        Number of pole pairs.
+    R_s : float
+        Stator resistance (Ω).
+    i_s_dq_fcn : Callable[[complex], complex]
+        Stator current (A) as a function of the stator flux linkage (Vs) and the complex
+        exponential of the rotor angle.
+    tau_M_ripple_fcn : Callable[[complex], float]
+        Torque ripple (Nm) as a function of the stator flux linkage (Vs) and the complex
+        exponential of the rotor angle.
+    kind : str, optional
+        Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
+        "rel" (reluctance).
+
+    """
+
+    n_p: int
+    R_s: float
+    i_s_dq_fcn: Callable[
+        [complex | np.ndarray, complex | np.ndarray], complex | np.ndarray
+    ]
+    tau_M_ripple_fcn: Callable[
+        [complex | np.ndarray, complex | np.ndarray], float | np.ndarray
+    ]
+    kind: Literal["pm", "rel"] = "pm"
+    psi_f: float = field(init=False, default=0.0)
+
+    def __post_init__(self) -> None:
+        psi_f = root_scalar(
+            lambda psi_d: np.real(self.i_s_dq(psi_d, 1.0)), x0=0, method="newton"
+        ).root
+        self.psi_f = float(psi_f)
+
+    def i_s_dq(
+        self,
+        psi_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> complex | np.ndarray:
+        """
+        Current as a function of flux linkage and rotor angle.
+
+        Parameters
+        ----------
+        psi_s_dq : complex | ndarray
+            Stator flux linkage (Vs) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray
+            Complex exponential of electrical rotor angle.
+
+        """
+        if exp_j_theta_m is None:
+            raise ValueError("exp_j_theta_m must be provided")
+        if self.i_s_dq_fcn is None:
+            raise ValueError("i_s_dq_fcn must be provided")
+        return self.i_s_dq_fcn(psi_s_dq, exp_j_theta_m)
+
+    def tau_M(
+        self,
+        psi_s_dq: complex | np.ndarray,
+        i_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> float | np.ndarray:
+        """
+        Torque as a function of flux linkage and rotor angle.
+
+        Parameters
+        ----------
+        psi_s_dq : complex | ndarray
+            Stator flux linkage (Vs) in rotor coordinates.
+        i_s_dq : complex | ndarray
+            Stator current (A) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray
+            Complex exponential of electrical rotor angle.
+
+        """
+        if exp_j_theta_m is None:
+            raise ValueError("exp_j_theta_m must be provided")
+        if self.tau_M_ripple_fcn is None:
+            raise ValueError("tau_M_ripple_fcn must be provided")
+
+        tau_M_ripple = 1.5 * self.n_p * self.tau_M_ripple_fcn(psi_s_dq, exp_j_theta_m)
+        return 1.5 * self.n_p * np.imag(i_s_dq * np.conj(psi_s_dq)) - tau_M_ripple
+
+    def psi_s_dq(
+        self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> complex | np.ndarray:
+        raise NotImplementedError("Flux map is not implemented")
+
+    def inv_incr_ind_mat(
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> np.ndarray:
+        raise NotImplementedError(
+            "Inverse incremental inductance matrix is not implemented"
+        )
+
+    def incr_ind_mat(
+        self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
+    ) -> np.ndarray:
+        raise NotImplementedError("Incremental inductance matrix is not implemented")
 
 
 # %%
