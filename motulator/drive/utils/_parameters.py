@@ -429,7 +429,7 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
             raise ValueError("tau_M_ripple_fcn must be provided")
 
         tau_M_ripple = self.tau_M_ripple_fcn(psi_s_dq, exp_j_theta_m)
-        return 1.5 * np.imag(i_s_dq * np.conj(psi_s_dq)) + tau_M_ripple
+        return 1.5 * self.n_p * np.imag(i_s_dq * np.conj(psi_s_dq)) + tau_M_ripple
 
     def psi_s_dq(
         self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
