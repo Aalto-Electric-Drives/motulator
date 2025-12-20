@@ -57,7 +57,7 @@ mdl = model.Drive(machine, mechanics, converter)
 # `CurrentVectorControllerCfg`, the mechanical-model-based speed observer is used.
 
 est_par = control.SaturatedSynchronousMachinePars(
-    n_p=2, R_s=0.2, i_s_dq_fcn=fem_curr_map, psi_s_dq_fcn=fem_flux_map
+    n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map, use_iterative_current=True
 )
 cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042)
 vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)

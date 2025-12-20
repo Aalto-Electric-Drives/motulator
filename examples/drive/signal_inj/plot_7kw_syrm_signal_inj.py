@@ -29,9 +29,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 curr_map = utils.SaturationModelSyRM(
     a_d0=17.4, a_dd=373, S=5, a_q0=52.1, a_qq=658, T=1, a_dq=1120, U=1, V=0
 )
-par = model.SaturatedSynchronousMachinePars(
-    n_p=2, R_s=0.54, i_s_dq_fcn=curr_map, kind="rel"
-)
+par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.54, i_s_dq_fcn=curr_map)
 machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.015)
 converter = model.VoltageSourceConverter(u_dc=540)
@@ -48,7 +46,7 @@ flux_map = curr_map.invert()
 
 # Parameter estimates, stator resistance not needed
 est_par = model.SaturatedSynchronousMachinePars(
-    n_p=2, R_s=0, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map, kind="rel"
+    n_p=2, R_s=0, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map
 )
 cfg = control.CurrentVectorControllerCfg(
     i_s_max=2 * base.i, psi_s_min=0.5 * base.psi, alpha_o=2 * np.pi * 40

@@ -217,7 +217,8 @@ class SynchronousMachine(Subsystem):
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars \
+        | SpatialSaturatedSynchronousMachinePars
         Machine parameters. The magnetic saturation can be modeled by providing a
         nonlinear current map par.i_s_dq (callable).
 

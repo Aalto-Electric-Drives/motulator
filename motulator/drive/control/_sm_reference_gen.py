@@ -39,8 +39,6 @@ class ReferenceGenerator:
         Voltage utilization factor, defaults to 1.
     k_mtpv : float, optional
         MTPV margin, defaults to 1.
-    max_iter : int, optional
-        Max number of iterations for the current reference computation, defaults to 6.
 
     References
     ----------
@@ -62,12 +60,10 @@ class ReferenceGenerator:
         psi_s_max: float = inf,
         k_u: float = 1.0,
         k_mtpv: float = 1.0,
-        max_iter: int = 6,
     ) -> None:
         self.par = par
         self.k_u = k_u
         self.k_mtpv = k_mtpv
-        self.max_iter = max_iter
 
         # Set limits
         psi_s_min = par.psi_f if psi_s_min is None else psi_s_min
@@ -78,34 +74,37 @@ class ReferenceGenerator:
 
         # MTPA locus
         mtpa = loci.compute_mtpa_locus(i_s_max)
-        self.mtpa_i_s = mtpa.i_s_dq_vs_tau_M
+        self.i_s_mtpa = mtpa.i_s_dq_vs_tau_M
 
-        # MTPV limit
-        mtpv = loci.compute_mtpv_locus(abs(mtpa.psi_s_dq[-1]))
-        self.psi_s_mtpv = mtpv.psi_s_dq_vs_psi_s_abs
+        # MTPV limit up to the maximum torque of MTPA locus
+        i_s_mtpv_max = loci.solve_current_for_mtpv_torque(mtpa.tau_M[-1], i_s_max)
+        if not i_s_mtpv_max > 0:  # No MTPV limit found
+            i_s_mtpv_max = 3 * i_s_max
+        mtpv = loci.compute_mtpv_locus(i_s_mtpv_max)
+        self.i_s_mtpv = mtpv.i_s_dq_vs_psi_s_abs
 
         # Current limit
-        gamma1 = phase(loci.compute_mtpv_current(i_s_max))
-        gamma2 = phase(mtpa.i_s_dq[-1])
+        gamma1 = loci.compute_mtpv_current_angle(i_s_max)
+        gamma2 = loci.compute_mtpa_current_angle(i_s_max)
         cl = loci.compute_const_current_locus(i_s_max, (gamma1, gamma2))
         self.i_s_cl = cl.i_s_dq_vs_psi_s_abs
 
     def _get_mtpa_flux(self, tau_M_ref: float) -> complex:
         """Get the maximum-torque-per-ampere (MTPA) flux linkage."""
-        i_s = self.mtpa_i_s(abs(tau_M_ref))
+        i_s = self.i_s_mtpa(abs(tau_M_ref))
         psi_s = complex(self.par.psi_s_dq(i_s))
         return psi_s
 
-    def _get_mtpv_flux_and_torque(self, psi_s_ref: float) -> tuple[complex, float]:
+    def _get_mtpv_flux_and_torque(self, psi_s_abs_ref: float) -> tuple[complex, float]:
         """Get the maximum-torque-per-volt (MTPV) references."""
-        psi_s = self.psi_s_mtpv(psi_s_ref)
-        i_s = complex(self.par.i_s_dq(psi_s))
+        i_s = self.i_s_mtpv(psi_s_abs_ref)
+        psi_s = complex(self.par.psi_s_dq(i_s))
         tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
         return psi_s, tau_M
 
-    def _get_current_limit_torque(self, psi_s_ref: float) -> float:
+    def _get_current_limit_torque(self, psi_s_abs_ref: float) -> float:
         """Get torque corresponding to the current limit."""
-        i_s = self.i_s_cl(psi_s_ref)
+        i_s = self.i_s_cl(psi_s_abs_ref)
         psi_s = complex(self.par.psi_s_dq(i_s))
         tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
         return tau_M
@@ -121,32 +120,39 @@ class ReferenceGenerator:
     ) -> tuple[float, float]:
         """Compute the flux and torque reference signals."""
         # MTPA flux
-        psi_s_mtpa = self._get_mtpa_flux(tau_M_ref)
-        psi_s_ref = clip(abs(psi_s_mtpa), *self.psi_s_limits)
+        psi_s_abs_mtpa = self._get_mtpa_flux(tau_M_ref)
+        psi_s_abs_ref = clip(abs(psi_s_abs_mtpa), *self.psi_s_limits)
 
         # Maximum flux (field weakening)
         psi_s_max = self._get_max_flux(w_m, u_dc)
-        psi_s_ref = min(psi_s_ref, psi_s_max)
-
-        # MTPV limit
-        psi_s_mtpv, tau_M_mtpv = self._get_mtpv_flux_and_torque(psi_s_ref)
-        tau_M_ref = min(self.k_mtpv * tau_M_mtpv, abs(tau_M_ref)) * sign(tau_M_ref)
+        psi_s_abs_ref = min(psi_s_abs_ref, psi_s_max)
 
         # Current limit
-        tau_M_cl = self._get_current_limit_torque(psi_s_ref)
+        tau_M_cl = self._get_current_limit_torque(psi_s_abs_ref)
         tau_M_ref = min(tau_M_cl, abs(tau_M_ref)) * sign(tau_M_ref)
 
-        # Store for the current reference computation
+        # MTPV limit
+        psi_s_mtpv, tau_M_mtpv = self._get_mtpv_flux_and_torque(psi_s_abs_ref)
+        if tau_M_mtpv > 0:
+            tau_M_ref = min(self.k_mtpv * tau_M_mtpv, abs(tau_M_ref)) * sign(tau_M_ref)
+
+        # Store for the current vector reference computation
         self._psi_s_mtpv = psi_s_mtpv
 
-        return psi_s_ref, tau_M_ref
+        return psi_s_abs_ref, tau_M_ref
 
-    def compute_current_ref(self, psi_s_ref: float, tau_M_ref: float) -> complex:
-        """Compute the current reference."""
+    def compute_current_ref(self, psi_s_abs_ref: float, tau_M_ref: float) -> complex:
+        """
+        Compute the current reference.
+
+        This method is needed only for current-vector control. The current maps are
+        needed.
+
+        """
         delta_range = (0, phase(self._psi_s_mtpv))
 
         def error(delta: float) -> float:
-            psi_s = psi_s_ref * exp(1j * delta)
+            psi_s = psi_s_abs_ref * exp(1j * delta)
             i_s = complex(self.par.i_s_dq(psi_s))
             tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
             return abs(tau_M_ref) - tau_M
@@ -155,12 +161,16 @@ class ReferenceGenerator:
             delta = 0.0
         else:
             delta = root_scalar(
-                error, bracket=delta_range, method="brentq", maxiter=self.max_iter
+                error, bracket=delta_range, method="brentq", maxiter=20
             ).root
 
-        psi_s = psi_s_ref * exp(1j * delta)
-        i_s = complex(self.par.i_s_dq(psi_s))
+        # Compute flux reference
+        psi_s_ref = psi_s_abs_ref * exp(1j * delta)
 
-        i_s_ref = i_s if tau_M_ref > 0 else i_s.conjugate()  # Set direction
+        # Set direction
+        psi_s_ref = psi_s_ref if tau_M_ref > 0 else psi_s_ref.conjugate()
+
+        # Map to current reference
+        i_s_ref = complex(self.par.i_s_dq(psi_s_ref))
 
         return i_s_ref

@@ -107,11 +107,8 @@ class MachineCharacteristics:
         )
 
         # MTPV locus
-        mtpv_i_s_dq_max = self._loci.compute_mtpv_current(i_s_vals[-1])
-        if not np.isnan(mtpv_i_s_dq_max):
-            # MTPV exists within the current range
-            mtpv_psi_s_max = float(abs(self.par.psi_s_dq(mtpv_i_s_dq_max)))
-            mtpv = self._loci.compute_mtpv_locus(mtpv_psi_s_max, num)
+        mtpv = self._loci.compute_mtpv_locus(i_s_vals[-1], num)
+        if np.any(np.isfinite(mtpv.i_s_dq)):
             ax.plot(
                 mtpv.psi_s_dq.real / base.psi,
                 mtpv.psi_s_dq.imag / base.psi,
@@ -126,7 +123,7 @@ class MachineCharacteristics:
         )
 
         for i_s_abs in i_s_vals:
-            gamma_min = np.angle(self._loci.compute_mtpv_current(i_s_abs))
+            gamma_min = self._loci.compute_mtpv_current_angle(i_s_abs)
             gamma_max = self._loci.compute_mtpa_current_angle(i_s_abs)
             gamma_range = (gamma_min, gamma_max)
             current_lim = self._loci.compute_const_current_locus(
@@ -210,10 +207,8 @@ class MachineCharacteristics:
         )
 
         # MTPV locus
-        mtpv_i_s_dq_max = self._loci.compute_mtpv_current(i_s_vals[-1])
-        if not np.isnan(mtpv_i_s_dq_max):  # MTPV exists within the current range
-            mtpv_psi_s_max = float(abs(self.par.psi_s_dq(mtpv_i_s_dq_max)))
-            mtpv = self._loci.compute_mtpv_locus(mtpv_psi_s_max, num)
+        mtpv = self._loci.compute_mtpv_locus(i_s_vals[-1], num)
+        if np.any(np.isfinite(mtpv.i_s_dq)):
             ax.plot(
                 mtpv.i_s_dq.real / base.i,
                 mtpv.i_s_dq.imag / base.i,
@@ -228,7 +223,7 @@ class MachineCharacteristics:
         )
 
         for i_s_abs in i_s_vals:
-            gamma_min = np.angle(self._loci.compute_mtpv_current(i_s_abs))
+            gamma_min = self._loci.compute_mtpv_current_angle(i_s_abs)
             gamma_max = self._loci.compute_mtpa_current_angle(i_s_abs)
             gamma_range = (gamma_min, gamma_max)
             const_current = self._loci.compute_const_current_locus(
@@ -253,11 +248,10 @@ class MachineCharacteristics:
             ax.set_xlabel(r"$i_\mathrm{d}$ (A)")
             ax.set_ylabel(r"$i_\mathrm{q}$ (A)")
 
-        match self.par.kind:
-            case "rel":
-                ax.axis((0, i_s_vals[-1] / base.i, 0, i_s_vals[-1] / base.i))
-            case "pm":
-                ax.axis((-i_s_vals[-1] / base.i, 0, 0, i_s_vals[-1] / base.i))
+        if self.par.psi_f == 0:
+            ax.axis((0, i_s_vals[-1] / base.i, 0, i_s_vals[-1] / base.i))
+        else:
+            ax.axis((-i_s_vals[-1] / base.i, 0, 0, i_s_vals[-1] / base.i))
 
         ax.set_aspect("equal")
 
@@ -308,10 +302,8 @@ class MachineCharacteristics:
         )
 
         # MTPV locus
-        mtpv_i_s_dq_max = self._loci.compute_mtpv_current(i_s_vals[-1])
-        if not np.isnan(mtpv_i_s_dq_max):  # MTPV exists within the current range
-            mtpv_psi_s_max = float(abs(self.par.psi_s_dq(mtpv_i_s_dq_max)))
-            mtpv = self._loci.compute_mtpv_locus(mtpv_psi_s_max, num)
+        mtpv = self._loci.compute_mtpv_locus(i_s_vals[-1], num)
+        if np.any(np.isfinite(mtpv.i_s_dq)):
             ax.plot(
                 mtpv.tau_M / base.tau,
                 np.abs(mtpv.psi_s_dq) / base.psi,
@@ -326,7 +318,7 @@ class MachineCharacteristics:
         )
 
         for i_s_abs in i_s_vals:
-            gamma_min = np.angle(self._loci.compute_mtpv_current(i_s_abs))
+            gamma_min = self._loci.compute_mtpv_current_angle(i_s_abs)
             gamma_max = self._loci.compute_mtpa_current_angle(i_s_abs)
             gamma_range = (gamma_min, gamma_max)
             const_current = self._loci.compute_const_current_locus(
@@ -413,11 +405,8 @@ class MachineCharacteristics:
         )
 
         # MTPV locus
-        mtpv_i_s_dq_max = self._loci.compute_mtpv_current(i_s_vals[-1])
-        if not np.isnan(mtpv_i_s_dq_max):  # MTPV exists within the current range
-            mtpv_psi_s_max = float(abs(self.par.psi_s_dq(mtpv_i_s_dq_max)))
-            mtpv = self._loci.compute_mtpv_locus(mtpv_psi_s_max, num)
-
+        mtpv = self._loci.compute_mtpv_locus(i_s_vals[-1], num)
+        if np.any(np.isfinite(mtpv.i_s_dq)):
             ax1.plot(
                 mtpv.tau_M / base.tau,
                 mtpv.i_s_dq.real / base.i,
@@ -442,7 +431,7 @@ class MachineCharacteristics:
         ax2.set_prop_cycle(cycle)
 
         for i_s_abs in i_s_vals:
-            gamma_min = np.angle(self._loci.compute_mtpv_current(i_s_abs))
+            gamma_min = self._loci.compute_mtpv_current_angle(i_s_abs)
             gamma_max = self._loci.compute_mtpa_current_angle(i_s_abs)
             gamma_range = (gamma_min, gamma_max)
             const_current = self._loci.compute_const_current_locus(
@@ -472,13 +461,12 @@ class MachineCharacteristics:
         ax1.set_xlim(0, mtpa.tau_M[-1] / base.tau)
         ax2.set_xlim(0, mtpa.tau_M[-1] / base.tau)
 
-        match self.par.kind:
-            case "rel":
-                ax1.set_ylim(0, mtpa.i_s_dq.real[-1] / base.i)
-                ax2.set_ylim(0, i_s_vals[-1] / base.i)
-            case "pm":
-                ax1.set_ylim(-i_s_vals[-1] / base.i, 0)
-                ax2.set_ylim(0, mtpa.i_s_dq.imag[-1] / base.i)
+        if self.par.psi_f == 0:
+            ax1.set_ylim(0, mtpa.i_s_dq.real[-1] / base.i)
+            ax2.set_ylim(0, i_s_vals[-1] / base.i)
+        else:
+            ax1.set_ylim(-i_s_vals[-1] / base.i, 0)
+            ax2.set_ylim(0, mtpa.i_s_dq.imag[-1] / base.i)
 
         if pu_vals:
             ax1.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
