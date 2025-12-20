@@ -17,6 +17,7 @@ from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
     SaturatedSynchronousMachinePars,
+    SpatialSaturatedSynchronousMachinePars,
     SynchronousMachinePars,
 )
 
@@ -187,7 +188,11 @@ class SynchronousMachineOutputs:
 class SynchronousMachineStates:
     """State variables."""
 
-    par: InitVar[SynchronousMachinePars | SaturatedSynchronousMachinePars]
+    par: InitVar[
+        SynchronousMachinePars
+        | SaturatedSynchronousMachinePars
+        | SpatialSaturatedSynchronousMachinePars
+    ]
     psi_s_dq: complex = 0j
     exp_j_theta_m: complex = complex(1)
 
@@ -212,14 +217,18 @@ class SynchronousMachine(Subsystem):
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars \
+        | SpatialSaturatedSynchronousMachinePars
         Machine parameters. The magnetic saturation can be modeled by providing a
         nonlinear current map par.i_s_dq (callable).
 
     """
 
     def __init__(
-        self, par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+        self,
+        par: SynchronousMachinePars
+        | SaturatedSynchronousMachinePars
+        | SpatialSaturatedSynchronousMachinePars,
     ) -> None:
         self.par = par
         self.inp: SynchronousMachineInputs = SynchronousMachineInputs()
@@ -232,9 +241,9 @@ class SynchronousMachine(Subsystem):
 
     def compute_outputs(self, state: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
-        i_s_dq = self.par.i_s_dq(state.psi_s_dq)
+        i_s_dq = self.par.i_s_dq(state.psi_s_dq, state.exp_j_theta_m)
         i_s_ab = i_s_dq * state.exp_j_theta_m
-        tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(state.psi_s_dq))
+        tau_M = self.par.tau_M(state.psi_s_dq, i_s_dq, state.exp_j_theta_m)
         return i_s_dq, i_s_ab, tau_M
 
     def set_outputs(self, t: float) -> None:

@@ -322,8 +322,8 @@ def create_sensorless_observer(
 
     """
     # Poles at zero speed are located s = 0 and s = -2*sigma0
-    inv_L_s0 = par.inv_incr_ind_mat(par.psi_f)
-    sigma0 = 0.25 * par.R_s * (inv_L_s0[0, 0] + inv_L_s0[1, 1])
+    L_s0 = par.incr_ind_mat(0)
+    sigma0 = 0.25 * par.R_s * (1 / L_s0[0, 0] + 1 / L_s0[1, 1])
 
     k_o = (lambda w_m: sigma0 + 0.2 * abs(w_m)) if k_o is None else k_o
     k_f = (lambda w_m: 0) if k_f is None else k_f
@@ -356,8 +356,8 @@ def create_vhz_observer(
         Sensorless observer without speed estimation.
 
     """
-    inv_L_s0 = par.inv_incr_ind_mat(par.psi_f)
-    sigma0 = 0.25 * par.R_s * (inv_L_s0[0, 0] + inv_L_s0[1, 1])
+    L_s0 = par.incr_ind_mat(0)
+    sigma0 = 0.25 * par.R_s * (1 / L_s0[0, 0] + 1 / L_s0[1, 1])
 
     k_o = (lambda w_m: sigma0 + 0.2 * abs(w_m)) if k_o is None else k_o
 

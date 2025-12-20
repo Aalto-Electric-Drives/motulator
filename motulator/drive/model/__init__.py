@@ -14,6 +14,7 @@ from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
     SaturatedSynchronousMachinePars,
+    SpatialSaturatedSynchronousMachinePars,
     SynchronousMachinePars,
 )
 
@@ -28,6 +29,7 @@ __all__ = [
     "MechanicalSystem",
     "SaturatedSynchronousMachinePars",
     "Simulation",
+    "SpatialSaturatedSynchronousMachinePars",
     "MechanicalSystem",
     "SynchronousMachine",
     "SynchronousMachinePars",

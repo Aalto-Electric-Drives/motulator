@@ -82,7 +82,7 @@ class FluxTorqueController:
         gain = self.gain
 
         # Auxiliary current and torque-production factor
-        i_a = complex(par.aux_current(fbk.psi_s))
+        i_a = complex(par.aux_current(fbk.i_s))
         c_tau = 1.5 * par.n_p * (i_a * fbk.psi_s.conjugate()).real
 
         # Directions
@@ -149,7 +149,7 @@ class FluxVectorControllerCfg:
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
     k_mtpv : float, optional
-        MTPV margin, defaults to 0.9.
+        MTPV margin, defaults to 0.85.
     J : float, optional
         Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
         used in speed estimation.
@@ -166,7 +166,7 @@ class FluxVectorControllerCfg:
     psi_s_min: float | None = None
     psi_s_max: float = inf
     k_u: float = 0.9
-    k_mtpv: float = 0.9
+    k_mtpv: float = 0.85
     J: float | None = None
 
     def __post_init__(self) -> None:
@@ -259,8 +259,8 @@ class FluxVectorController:
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
-        # Current references are not used, but they are computed for plotting
-        ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
+        # Current references are not used, but they could be computed for plotting
+        # ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 
