@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>5.1-kW saturated PM-SyRM, FVC &#8212; motulator 0.7.2 documentation</title>
+    <title>5.1-kW saturated PM-SyRM, FVC &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -528,7 +528,7 @@ mechanical-model-based speed observer.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the flux and current maps for the control system</span>
 <span class="n">fem_curr_map</span> <span class="o">=</span> <span class="n">fem_flux_map</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
 <span class="n">est_par</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">SaturatedSynchronousMachinePars</span></a><span class="p">(</span>
-    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">i_s_dq_fcn</span><span class="o">=</span><span class="n">fem_curr_map</span><span class="p">,</span> <span class="n">psi_s_dq_fcn</span><span class="o">=</span><span class="n">fem_flux_map</span>
+    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">psi_s_dq_fcn</span><span class="o">=</span><span class="n">fem_flux_map</span>
 <span class="p">)</span>
 <span class="c1"># Since the inertia `J` is provided, the mechanical-model-based speed observer is used</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">FluxVectorControllerCfg</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">J</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="mf">0.0042</span><span class="p">,</span> <span class="n">alpha_i</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -547,7 +547,7 @@ mechanical-model-based speed observer.</p>
 <span class="n">utils</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_004.png" srcset="../../_images/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_004.png" alt="plot 5kw pmsyrm thor sat fvc" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 30.415 seconds)</p>
+<img src="../../_images/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_004.png" srcset="../../_images/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_004.png" alt="plot 5kw pmsyrm thor sat fvc" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 24.663 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-flux-vector-plot-5kw-pmsyrm-thor-sat-fvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a7fe613133eca02a6c4d7c9d2a3e3ac1/plot_5kw_pmsyrm_thor_sat_fvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_5kw_pmsyrm_thor_sat_fvc.ipynb</span></code></a></p>

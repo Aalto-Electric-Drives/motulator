@@ -30,7 +30,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_ovhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_im_ovhz`
 
 .. raw:: html
 
@@ -47,7 +47,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_ipmsm_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_ovhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_ipmsm_ovhz`
 
 .. raw:: html
 
@@ -64,7 +64,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_diode_vhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_diode_vhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_im_diode_vhz`
 
 .. raw:: html
 
@@ -81,7 +81,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_7kw_syrm_sat_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_7kw_syrm_sat_ovhz.py`
+  :doc:`/drive_examples/vhz/plot_7kw_syrm_sat_ovhz`
 
 .. raw:: html
 
@@ -98,7 +98,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_lc_vhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_lc_vhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_im_lc_vhz`
 
 .. raw:: html
 
@@ -115,7 +115,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_ipmsm_2mass_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz`
 
 .. raw:: html
 

@@ -182,8 +182,8 @@ Package Contents
 
    This class computes optimal control loci for synchronous machines, including the
    maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limit
-   loci [#Mor1994]_. The magnetic saturation is taken into account. The methods
-   can be used to precompute lookup tables for control and to analyze the machine
+   loci [#Mor1994]_. The magnetic saturation is taken into account. The methods can be
+   used to precompute lookup tables for control and to analyze the machine
    characteristics.
 
    :param par: Machine model parameters.
@@ -233,7 +233,7 @@ Package Contents
       :type i_s_max: float
       :param gamma_range: Range of the current angle (electrical rad), defaults to (pi, pi/2).
       :type gamma_range: tuple, optional
-      :param num: Amount of points, defaults to 16.
+      :param num: Number of points, defaults to 16.
       :type num: int, optional
 
       :returns: Constant current locus data.
@@ -260,7 +260,7 @@ Package Contents
    .. py:method:: compute_mtpa_current_angle(i_s_abs)
 
       
-      MTPA current angle (rad) for a given current magnitude.
+      MTPA current angle (rad) at given current magnitude (A).
 
 
 
@@ -288,7 +288,7 @@ Package Contents
 
       :param i_s_max: Maximum current magnitude (A) at which the locus is computed.
       :type i_s_max: float
-      :param num: Amount of points, defaults to 16.
+      :param num: Number of points, defaults to 16.
       :type num: int, optional
 
       :returns: MTPA locus data.
@@ -312,39 +312,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_mtpv_current(i_s_abs)
+   .. py:method:: compute_mtpv_current_angle(i_s_abs)
 
       
-      MTPV current at given current magnitude.
-
-      :param i_s_abs: Current magnitude (A).
-      :type i_s_abs: float
-
-      :returns: MTPV current (A). If no MTPV exists, returns np.nan.
-      :rtype: complex
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: compute_mtpv_flux_angle(psi_s_abs)
-
-      
-      MTPV flux angle (rad) for a given flux magnitude (Vs).
+      MTPV current angle (rad) at given current magnitude (A).
 
 
 
@@ -365,18 +336,49 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_mtpv_locus(psi_s_max, num = 16)
+   .. py:method:: compute_mtpv_locus(i_s_max, num = 16)
 
       
       Compute the MTPV locus.
 
-      :param psi_s_max: Maximum flux magnitude (Vs) at which the locus is computed.
-      :type psi_s_max: float
-      :param num: Amount of points, defaults to 16.
+      :param i_s_max: Maximum current (A) at which the locus is computed.
+      :type i_s_max: float
+      :param num: Number of points, defaults to 16.
       :type num: int, optional
 
       :returns: MTPV locus data.
       :rtype: MTPVLocus
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: solve_current_for_mtpv_torque(tau_M, i_s_abs0)
+
+      
+      Solve for the current yielding the given MTPV torque.
+
+      :param tau_M: Target torque (Nm).
+      :type tau_M: float
+      :param i_s_abs0: Initial guess for the current magnitude (A).
+      :type i_s_abs0: float
+
+      :returns: Stator current magnitude (A) that yields the target torque.
+      :rtype: float
 
 
 

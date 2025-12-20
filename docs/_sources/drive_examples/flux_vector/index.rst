@@ -34,7 +34,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_ipmsm_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_2kw_ipmsm_fvc`
 
 .. raw:: html
 
@@ -51,7 +51,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_im_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_im_sat_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_2kw_im_sat_fvc`
 
 .. raw:: html
 
@@ -68,7 +68,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_7kw_syrm_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_7kw_syrm_sat_fvc`
 
 .. raw:: html
 
@@ -85,7 +85,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc`
 
 .. raw:: html
 
@@ -102,7 +102,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_6kw_pmsyrm_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`
 
 .. raw:: html
 

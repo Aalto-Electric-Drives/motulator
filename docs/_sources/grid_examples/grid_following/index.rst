@@ -24,7 +24,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
   .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_lcl_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_lcl_gfl.py`
+  :doc:`/grid_examples/grid_following/plot_10kva_lcl_gfl`
 
 .. raw:: html
 
@@ -41,7 +41,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
   .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_dc_bus_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_dc_bus_gfl.py`
+  :doc:`/grid_examples/grid_following/plot_10kva_dc_bus_gfl`
 
 .. raw:: html
 
@@ -58,7 +58,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
   .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_gfl.py`
+  :doc:`/grid_examples/grid_following/plot_10kva_gfl`
 
 .. raw:: html
 

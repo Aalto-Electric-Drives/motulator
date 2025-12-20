@@ -24,7 +24,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_7kw_syrm_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_7kw_syrm_cvc.py`
+  :doc:`/drive_examples/current_vector/plot_7kw_syrm_cvc`
 
 .. raw:: html
 
@@ -41,7 +41,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_cvc_tq_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_cvc_tq.py`
+  :doc:`/drive_examples/current_vector/plot_2kw_im_cvc_tq`
 
 .. raw:: html
 
@@ -58,7 +58,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_diode_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py`
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc`
 
 .. raw:: html
 
@@ -75,7 +75,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py`
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt`
 
 .. raw:: html
 
@@ -92,7 +92,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_sat_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_sat_cvc.py`
+  :doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`
 
 .. raw:: html
 
@@ -109,7 +109,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py`
+  :doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`
 
 .. raw:: html
 

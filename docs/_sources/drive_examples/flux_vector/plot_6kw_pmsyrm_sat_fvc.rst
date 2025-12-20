@@ -232,13 +232,13 @@ Configure the control system. Since the inertia estimate `J` is provided in
 action in flux-vector control is not needed (`alpha_i = 0`) since the speed observer's
 load-torque disturbance estimation provides integral action.
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-130
+.. GENERATED FROM PYTHON SOURCE LINES 118-129
 
 .. code-block:: Python
 
 
     est_par = control.SaturatedSynchronousMachinePars(
-        n_p=2, R_s=0.63, i_s_dq_fcn=est_curr_map, psi_s_dq_fcn=est_flux_map
+        n_p=2, R_s=0.63, psi_s_dq_fcn=est_flux_map
     )
     cfg = control.FluxVectorControllerCfg(
         i_s_max=2 * base.i, J=0.05, alpha_i=0, alpha_o=2 * np.pi * 8
@@ -254,12 +254,11 @@ load-torque disturbance estimation provides integral action.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 131-132
+.. GENERATED FROM PYTHON SOURCE LINES 130-131
 
 Visualize the control loci.
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-140
+.. GENERATED FROM PYTHON SOURCE LINES 131-139
 
 .. code-block:: Python
 
@@ -309,17 +308,17 @@ Visualize the control loci.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-142
+.. GENERATED FROM PYTHON SOURCE LINES 140-141
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-146
+.. GENERATED FROM PYTHON SOURCE LINES 141-145
 
 .. code-block:: Python
 
 
     ctrl.set_speed_ref(lambda t: (t > 0.2) * 2 * base.w_M)
-    mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > 1.25) * 0.7 * nom.tau)
 
 
 
@@ -328,17 +327,17 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-148
+.. GENERATED FROM PYTHON SOURCE LINES 146-147
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-153
+.. GENERATED FROM PYTHON SOURCE LINES 147-152
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
-    res = sim.simulate(t_stop=1.4)
+    res = sim.simulate(t_stop=2)
     utils.plot(res, base)
 
 
@@ -353,7 +352,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-163
+.. GENERATED FROM PYTHON SOURCE LINES 153-162
 
 .. rubric:: References
 
@@ -368,7 +367,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 26.223 seconds)
+   **Total running time of the script:** (0 minutes 31.891 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:

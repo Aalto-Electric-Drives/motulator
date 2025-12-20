@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._sm_flux_vector &#8212; motulator 0.7.2 documentation</title>
+    <title>motulator.drive.control._sm_flux_vector &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -488,7 +488,7 @@ document.write(`
         <span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain</span>
 
         <span class="c1"># Auxiliary current and torque-production factor</span>
-        <span class="n">i_a</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">aux_current</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">))</span>
+        <span class="n">i_a</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">aux_current</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
         <span class="n">c_tau</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">i_a</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
 
         <span class="c1"># Directions</span>
@@ -557,7 +557,7 @@ document.write(`
 <span class="sd">    k_u : float, optional</span>
 <span class="sd">        Voltage utilization factor, defaults to 0.9.</span>
 <span class="sd">    k_mtpv : float, optional</span>
-<span class="sd">        MTPV margin, defaults to 0.9.</span>
+<span class="sd">        MTPV margin, defaults to 0.85.</span>
 <span class="sd">    J : float, optional</span>
 <span class="sd">        Inertia (kgm²). Defaults to None, meaning the mechanical system model is not</span>
 <span class="sd">        used in speed estimation.</span>
@@ -574,7 +574,7 @@ document.write(`
     <span class="n">psi_s_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">psi_s_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span>
     <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
-    <span class="n">k_mtpv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
+    <span class="n">k_mtpv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.85</span>
     <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -675,8 +675,8 @@ document.write(`
         <span class="n">ref</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span><span class="o">.</span><span class="n">compute_flux_and_torque_refs</span><span class="p">(</span>
             <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_m</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span>
         <span class="p">)</span>
-        <span class="c1"># Current references are not used, but they are computed for plotting</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span><span class="o">.</span><span class="n">compute_current_ref</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">)</span>
+        <span class="c1"># Current references are not used, but they could be computed for plotting</span>
+        <span class="c1"># ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ref</span></div>
 

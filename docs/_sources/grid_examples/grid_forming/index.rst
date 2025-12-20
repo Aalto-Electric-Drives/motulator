@@ -30,7 +30,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
   .. image:: /grid_examples/grid_forming/images/thumb/sphx_glr_plot_13kva_rfpsc_gfm_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_rfpsc_gfm.py`
+  :doc:`/grid_examples/grid_forming/plot_13kva_rfpsc_gfm`
 
 .. raw:: html
 
@@ -47,7 +47,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
   .. image:: /grid_examples/grid_forming/images/thumb/sphx_glr_plot_13kva_do_gfm_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_do_gfm.py`
+  :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`
 
 .. raw:: html
 

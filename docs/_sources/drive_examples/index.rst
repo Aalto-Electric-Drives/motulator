@@ -51,7 +51,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_ipmsm_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_2kw_ipmsm_fvc`
 
 .. raw:: html
 
@@ -68,7 +68,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_im_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_im_sat_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_2kw_im_sat_fvc`
 
 .. raw:: html
 
@@ -85,7 +85,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_7kw_syrm_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_7kw_syrm_sat_fvc`
 
 .. raw:: html
 
@@ -102,7 +102,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc`
 
 .. raw:: html
 
@@ -119,7 +119,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
   .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_6kw_pmsyrm_sat_fvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py`
+  :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`
 
 .. raw:: html
 
@@ -155,7 +155,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_7kw_syrm_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_7kw_syrm_cvc.py`
+  :doc:`/drive_examples/current_vector/plot_7kw_syrm_cvc`
 
 .. raw:: html
 
@@ -172,7 +172,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_cvc_tq_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_cvc_tq.py`
+  :doc:`/drive_examples/current_vector/plot_2kw_im_cvc_tq`
 
 .. raw:: html
 
@@ -189,7 +189,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_diode_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py`
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc`
 
 .. raw:: html
 
@@ -206,7 +206,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py`
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt`
 
 .. raw:: html
 
@@ -223,7 +223,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_sat_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_sat_cvc.py`
+  :doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`
 
 .. raw:: html
 
@@ -240,7 +240,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
   .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_cvc_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py`
+  :doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`
 
 .. raw:: html
 
@@ -282,7 +282,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_ovhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_im_ovhz`
 
 .. raw:: html
 
@@ -299,7 +299,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_ipmsm_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_ovhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_ipmsm_ovhz`
 
 .. raw:: html
 
@@ -316,7 +316,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_diode_vhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_diode_vhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_im_diode_vhz`
 
 .. raw:: html
 
@@ -333,7 +333,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_7kw_syrm_sat_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_7kw_syrm_sat_ovhz.py`
+  :doc:`/drive_examples/vhz/plot_7kw_syrm_sat_ovhz`
 
 .. raw:: html
 
@@ -350,7 +350,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_lc_vhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_lc_vhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_im_lc_vhz`
 
 .. raw:: html
 
@@ -367,7 +367,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
   .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_ipmsm_2mass_ovhz_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py`
+  :doc:`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz`
 
 .. raw:: html
 
@@ -409,7 +409,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
   .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_2kw_ipmsm_signal_inj_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_signal_inj_plot_2kw_ipmsm_signal_inj.py`
+  :doc:`/drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj`
 
 .. raw:: html
 
@@ -426,7 +426,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
   .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_7kw_syrm_signal_inj_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py`
+  :doc:`/drive_examples/signal_inj/plot_7kw_syrm_signal_inj`
 
 .. raw:: html
 

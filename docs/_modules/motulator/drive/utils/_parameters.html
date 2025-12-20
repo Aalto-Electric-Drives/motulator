@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.utils._parameters &#8212; motulator 0.7.2 documentation</title>
+    <title>motulator.drive.utils._parameters &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -407,10 +407,12 @@ document.write(`
 <span></span><span class="sd">&quot;&quot;&quot;Common dataclasses usable in models and control of machine drives.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Protocol</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">root</span><span class="p">,</span> <span class="n">root_scalar</span>
+
+<span class="n">EPS</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>
 
 
 <span class="c1"># %%</span>
@@ -420,47 +422,173 @@ document.write(`
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current (A) as a function of the flux linkage (Vs).&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Current as a function of flux linkage and rotor angle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s_dq : complex | ndarray</span>
+<span class="sd">            Stator flux linkage (Vs) in rotor coordinates.</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
+<span class="sd">            Complex exponential of the electrical rotor angle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex | ndarray</span>
+<span class="sd">            Stator current in rotor coordinates (A).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Flux linkage (Vs) as a function of the current (A).&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tau_M</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Electromagnetic torque.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s_dq : complex | ndarray</span>
+<span class="sd">            Stator flux linkage (Vs) in rotor coordinates.</span>
+<span class="sd">        i_s_dq : complex | ndarray</span>
+<span class="sd">            Stator current (A) in rotor coordinates.</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
+<span class="sd">            Complex exponential of the electrical rotor angle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float | ndarray</span>
+<span class="sd">            Electromagnetic torque (Nm).</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The default implementation assumes no spatial harmonics. This method can be</span>
+<span class="sd">        overridden in subclasses to model machines with spatial harmonics.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">tau_M</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Flux linkage as a function of the current and rotor angle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_dq : complex | ndarray</span>
+<span class="sd">            Stator current (A) in rotor coordinates.</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
+<span class="sd">            Complex exponential of the electrical rotor angle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex | ndarray</span>
+<span class="sd">            Stator flux linkage in rotor coordinates (Vs).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">inv_incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inverse of the incremental inductance matrix (1/H).&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Incremental inductance matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_dq : complex | ndarray</span>
+<span class="sd">            Stator current (A) in rotor coordinates.</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
+<span class="sd">            Complex exponential of the electrical rotor angle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ndarray</span>
+<span class="sd">            Incremental inductance matrix (H).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Incremental inductance matrix (H).&quot;&quot;&quot;</span>
-        <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">aux_flux</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Auxiliary flux linkage as a function of current.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">aux_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Auxiliary current (A) as function of the flux linkage (Vs).&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_dq : complex | ndarray</span>
+<span class="sd">            Stator current (A) in rotor coordinates.</span>
+<span class="sd">        exp_j_theta_m : complex | np.ndarray, optional</span>
+<span class="sd">            Complex exponential of the electrical rotor angle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex | ndarray</span>
+<span class="sd">            Auxiliary flux linkage (Vs).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># This form is valid in the saturated case as well</span>
-        <span class="n">inv_L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv_incr_ind_mat</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-        <span class="n">G_dd</span> <span class="o">=</span> <span class="n">inv_L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">G_dq</span> <span class="o">=</span> <span class="n">inv_L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">G_qq</span> <span class="o">=</span> <span class="n">inv_L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">G_qq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">G_dd</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
-            <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">G_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">aux_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Auxiliary flux linkage (Vs) as function of the current (A).&quot;&quot;&quot;</span>
-        <span class="c1"># This form is valid in the saturated case as well</span>
-        <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
+        <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="n">L_dd</span> <span class="o">=</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">L_dq</span> <span class="o">=</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">L_qq</span> <span class="o">=</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
+        <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">psi_s_dq</span>
             <span class="o">-</span> <span class="n">L_qq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
             <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_dd</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
             <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">aux_current</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Auxiliary current as a function of current.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_s_dq : complex | ndarray</span>
+<span class="sd">            Stator current (A) in rotor coordinates.</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
+<span class="sd">            Complex exponential of the electrical rotor angle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex | ndarray</span>
+<span class="sd">            Auxiliary current (A).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># This form is valid in the saturated case as well</span>
+        <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
+        <span class="n">inv_L_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">L_s</span><span class="p">)</span>
+        <span class="n">G_dd</span> <span class="o">=</span> <span class="n">inv_L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">G_dq</span> <span class="o">=</span> <span class="n">inv_L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">G_qq</span> <span class="o">=</span> <span class="n">inv_L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">G_qq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">G_dd</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">G_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
+            <span class="o">-</span> <span class="n">i_s_dq</span>
         <span class="p">)</span>
 
 
@@ -484,9 +612,6 @@ document.write(`
 <span class="sd">        q-axis inductance (H).</span>
 <span class="sd">    psi_f : float</span>
 <span class="sd">        Permanent-magnet flux linkage (Vs).</span>
-<span class="sd">    kind : str, optional</span>
-<span class="sd">        Machine type, defaults to &quot;pm&quot;. Allowed values are &quot;pm&quot; (permanent magnet) and</span>
-<span class="sd">        &quot;rel&quot; (reluctance).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -495,11 +620,12 @@ document.write(`
     <span class="n">L_d</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_q</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;pm&quot;</span><span class="p">,</span> <span class="s2">&quot;rel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;pm&quot;</span>
 
 <div class="viewcode-block" id="SynchronousMachinePars.i_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars.i_s_dq">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Current (A) as a function of the flux linkage (Vs).&quot;&quot;&quot;</span>
         <span class="n">i_s_dq</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span>
             <span class="n">psi_s_dq</span>
@@ -509,7 +635,9 @@ document.write(`
 
 <div class="viewcode-block" id="SynchronousMachinePars.psi_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars.psi_s_dq">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Flux linkage (Vs) as a function of the stator current (A).&quot;&quot;&quot;</span>
         <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span>
@@ -517,16 +645,11 @@ document.write(`
         <span class="k">return</span> <span class="n">psi_s_dq</span></div>
 
 
-<div class="viewcode-block" id="SynchronousMachinePars.inv_incr_ind_mat">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars.inv_incr_ind_mat">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">inv_incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inverse of the incremental inductance matrix (1/H).&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">]])</span></div>
-
-
 <div class="viewcode-block" id="SynchronousMachinePars.incr_ind_mat">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars.incr_ind_mat">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Incremental inductance matrix (H).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">]])</span></div>
 </div>
@@ -544,8 +667,8 @@ document.write(`
 <span class="sd">    The saturation model is specified as a current map (current as a function of the</span>
 <span class="sd">    flux linkage). Optionally, to be used only in control systems, a flux map (flux</span>
 <span class="sd">    linkage as a function of the current) can be provided. For convenience, this class</span>
-<span class="sd">    also provides the incremental inductance matrix and its inverse, which can be used</span>
-<span class="sd">    in control systems and optimal reference generation.</span>
+<span class="sd">    also provides the incremental inductance matrix, which can be used in control and</span>
+<span class="sd">    optimal reference generation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -554,27 +677,17 @@ document.write(`
 <span class="sd">    R_s : float</span>
 <span class="sd">        Stator resistance (Ω).</span>
 <span class="sd">    i_s_dq_fcn : Callable[[complex], complex], optional</span>
-<span class="sd">        Stator current (A) as a function of the stator flux linkage (Vs). This function</span>
-<span class="sd">        should be differentiable, if inverse incremental inductances are used. Needed</span>
-<span class="sd">        in the system model and in some control methods.</span>
+<span class="sd">        Stator current (A) as a function of the stator flux linkage (Vs). Needed in the</span>
+<span class="sd">        system model and in some control methods.</span>
 <span class="sd">    psi_s_dq_fcn : Callable[[complex], complex], optional</span>
 <span class="sd">        Stator flux linkage (Vs) as a function of the stator current (A). This function</span>
 <span class="sd">        should be differentiable, if incremental inductances are used. Needed only for</span>
-<span class="sd">        some control methods, not in the system model.</span>
-<span class="sd">    kind : str, optional</span>
-<span class="sd">        Machine type, defaults to &quot;pm&quot;. Allowed values are &quot;pm&quot; (permanent magnet) and</span>
-<span class="sd">        &quot;rel&quot; (reluctance).</span>
-<span class="sd">    max_iter : int, optional</span>
-<span class="sd">        Maximum number of iterations, defaults to None. Value around 20 typically</span>
-<span class="sd">        suffices. Note that the iterative method is intended for development purposes.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The class allows providing either `i_s_dq_fcn` or `psi_s_dq_fcn`. If only one of</span>
-<span class="sd">    them is provided and `max_iter` is given, the other one is computed iteratively.</span>
-<span class="sd">    This feature is intended for development purposes. It can be used in control</span>
-<span class="sd">    systems, but iteration increases the simulations time and may not be computationally</span>
-<span class="sd">    practical in real-time control.</span>
+<span class="sd">        control methods and optimal reference loci, not used in the system model.</span>
+<span class="sd">    use_iterative_current : bool, optional</span>
+<span class="sd">        If `i_s_dq_fcn` is not provided, the current is computed iteratively from the</span>
+<span class="sd">        flux map using a root-finding algorithm. This is less efficient, but may be</span>
+<span class="sd">        convenient to parametrize some control methods if only the flux map is</span>
+<span class="sd">        available. Defaults to `False`.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -582,154 +695,195 @@ document.write(`
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">i_s_dq_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">psi_s_dq_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;pm&quot;</span><span class="p">,</span> <span class="s2">&quot;rel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;pm&quot;</span>
+    <span class="n">use_iterative_current</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-    <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">L_d0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">L_q0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">psi_f</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
                 <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span>
             <span class="p">)</span><span class="o">.</span><span class="n">root</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">psi_f</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+            <span class="c1"># Following are needed only for iterative current computation, if used</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">L_d0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">L_q0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either i_s_dq_fcn or psi_s_dq_fcn must be provided&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">:</span>  <span class="c1"># No permanent magnets</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 <div class="viewcode-block" id="SaturatedSynchronousMachinePars.i_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars.i_s_dq">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current as a function of the flux linkage.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current (A) as a function of the flux linkage (Vs).&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solve_inverse</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solve_current_single</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_iterative_current</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_current</span><span class="p">(</span><span class="nb">complex</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either i_s_dq_fcn or psi_s_dq_fcn must be provided&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;i_s_dq_fcn must be provided&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SaturatedSynchronousMachinePars.psi_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars.psi_s_dq">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Flux linkage as a function of the stator current.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solve_inverse</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solve_flux_single</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either i_s_dq_fcn or psi_s_dq_fcn must be provided&quot;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="SaturatedSynchronousMachinePars.inv_incr_ind_mat">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars.inv_incr_ind_mat">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">inv_incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inverse incremental inductance matrix vs. flux linkage.&quot;&quot;&quot;</span>
-        <span class="n">eps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
-        <span class="n">G_dd</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span> <span class="o">-</span> <span class="n">eps</span><span class="p">))</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
-        <span class="n">G_qq</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
-            <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
-        <span class="n">G_dq</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
-            <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">G_dd</span><span class="p">,</span> <span class="n">G_dq</span><span class="p">],</span> <span class="p">[</span><span class="n">G_dq</span><span class="p">,</span> <span class="n">G_qq</span><span class="p">]])</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;psi_s_dq_fcn must be provided&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SaturatedSynchronousMachinePars.incr_ind_mat">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars.incr_ind_mat">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Incremental inductance matrix vs. current.&quot;&quot;&quot;</span>
-        <span class="n">eps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
-        <span class="n">L_dd</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">-</span> <span class="n">eps</span><span class="p">))</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
-        <span class="n">L_qq</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
-            <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
-        <span class="n">L_dq</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
-            <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Incremental inductance matrix at given current.&quot;&quot;&quot;</span>
+        <span class="n">psi_dev_d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="n">EPS</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">-</span> <span class="n">EPS</span><span class="p">)</span>
+        <span class="n">psi_dev_q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">EPS</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">EPS</span><span class="p">)</span>
+        <span class="n">L_dd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_dev_d</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">EPS</span><span class="p">)</span>
+        <span class="n">L_qq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">psi_dev_q</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">EPS</span><span class="p">)</span>
+        <span class="n">L_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_dev_q</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">EPS</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">L_dd</span><span class="p">,</span> <span class="n">L_dq</span><span class="p">],</span> <span class="p">[</span><span class="n">L_dq</span><span class="p">,</span> <span class="n">L_qq</span><span class="p">]])</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_solve_inverse</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the current from the flux linkage using root finding.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+            <span class="n">i_s</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s</span><span class="p">))</span> <span class="o">-</span> <span class="n">psi_s</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">err</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">imag</span><span class="p">]</span>
+
+        <span class="n">i_s0</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d0</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q0</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">root</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="p">[</span><span class="n">i_s0</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">i_s0</span><span class="o">.</span><span class="n">imag</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;lm&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;maxiter&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span>
+        <span class="n">i_s</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">sol</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">i_s</span></div>
+
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpatialSaturatedSynchronousMachinePars</span><span class="p">(</span><span class="n">BaseSynchronousMachinePars</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters of a saturated synchronous machine with spatial harmonics.</span>
+
+<span class="sd">    This saturation model contains spatial harmonics in addition to the saturation</span>
+<span class="sd">    effects. This version is intended to parametrize high-fidelity machine models for</span>
+<span class="sd">    simulation purposes, while control methods do not support spatial harmonics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_p : int</span>
+<span class="sd">        Number of pole pairs.</span>
+<span class="sd">    R_s : float</span>
+<span class="sd">        Stator resistance (Ω).</span>
+<span class="sd">    i_s_dq_fcn : Callable[[complex, complex], complex]</span>
+<span class="sd">        Stator current (A) as a function of the stator flux linkage (Vs) and the complex</span>
+<span class="sd">        exponential of the electrical rotor angle.</span>
+<span class="sd">    tau_M_ripple_fcn : Callable[[complex, complex], float]</span>
+<span class="sd">        Torque ripple (Nm) as a function of the stator flux linkage (Vs) and the complex</span>
+<span class="sd">        exponential of the electrical rotor angle.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">i_s_dq_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">]</span>
+    <span class="n">tau_M_ripple_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">]</span>
+    <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">:</span>  <span class="c1"># No permanent magnets</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.i_s_dq">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.i_s_dq">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">input_val</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">solve_single</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
+        <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle both array and scalar inputs for iterative solving.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_val</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">input_val</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">input_val</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
-                <span class="n">result</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">solve_single</span><span class="p">(</span><span class="nb">complex</span><span class="p">(</span><span class="n">input_val</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
-            <span class="k">return</span> <span class="n">result</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">solve_single</span><span class="p">(</span><span class="n">input_val</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_solve_current_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve for current given flux linkage.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;psi_s_dq_fcn must be provided&quot;</span><span class="p">)</span>
-        <span class="c1"># Initial guess using incremental inductance at zero current</span>
-        <span class="n">L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)</span>
-        <span class="n">G_d</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">G_q</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">i_s_dq_init</span> <span class="o">=</span> <span class="n">G_d</span> <span class="o">*</span> <span class="p">(</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">G_q</span> <span class="o">*</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solve_x</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span><span class="p">,</span> <span class="n">i_s_dq_init</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_solve_flux_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve for flux linkage given current.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;i_s_dq_fcn must be provided&quot;</span><span class="p">)</span>
-        <span class="c1"># Initial guess using inverse incremental inductance at psi_f</span>
-        <span class="n">G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv_incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span>
-        <span class="n">L_d</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">G</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">L_q</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">G</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">psi_s_dq_init</span> <span class="o">=</span> <span class="n">L_d</span> <span class="o">*</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_q</span> <span class="o">*</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solve_x</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span><span class="p">,</span> <span class="n">psi_s_dq_init</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_solve_x</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">y</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
-        <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-        <span class="n">x_init</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Solve for x in y = f(x).</span>
+<span class="sd">        Current as a function of flux linkage and rotor angle.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        y : complex</span>
-<span class="sd">            Target quantity.</span>
-<span class="sd">        f : Callable[[complex], complex]</span>
-<span class="sd">            Function that maps x to y.</span>
-<span class="sd">        x_init : complex</span>
-<span class="sd">            Initial guess.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        complex</span>
-<span class="sd">            x that produces y.</span>
+<span class="sd">        psi_s_dq : complex | ndarray</span>
+<span class="sd">            Stator flux linkage (Vs) in rotor coordinates.</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray</span>
+<span class="sd">            Complex exponential of electrical rotor angle.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">exp_j_theta_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;exp_j_theta_m must be provided&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;i_s_dq_fcn must be provided&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span></div>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">error_fcn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">y_eval</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">y_eval</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">y_eval</span><span class="o">.</span><span class="n">imag</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">imag</span><span class="p">]</span>
 
-        <span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_init</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">x_init</span><span class="o">.</span><span class="n">imag</span><span class="p">]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">root</span><span class="p">(</span><span class="n">error_fcn</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;hybr&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;maxfev&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">})</span>
+<div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.tau_M">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.tau_M">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tau_M</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Torque as a function of flux linkage and rotor angle.</span>
 
-        <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s_dq : complex | ndarray</span>
+<span class="sd">            Stator flux linkage (Vs) in rotor coordinates.</span>
+<span class="sd">        i_s_dq : complex | ndarray</span>
+<span class="sd">            Stator current (A) in rotor coordinates.</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray</span>
+<span class="sd">            Complex exponential of electrical rotor angle.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">exp_j_theta_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;exp_j_theta_m must be provided&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_ripple_fcn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;tau_M_ripple_fcn must be provided&quot;</span><span class="p">)</span>
+
+        <span class="n">tau_M_ripple</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_ripple_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span> <span class="o">+</span> <span class="n">tau_M_ripple</span></div>
+
+
+<div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.psi_s_dq">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.psi_s_dq">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Flux map is not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.incr_ind_mat">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.incr_ind_mat">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Incremental inductance matrix is not implemented&quot;</span><span class="p">)</span></div>
+</div>
 
 
 

@@ -63,7 +63,7 @@ Compute base values based on the nominal values (just for figures).
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-36
+.. GENERATED FROM PYTHON SOURCE LINES 24-34
 
 .. code-block:: Python
 
@@ -71,9 +71,7 @@ Configure the system model.
     curr_map = utils.SaturationModelSyRM(
         a_d0=17.4, a_dd=373, S=5, a_q0=52.1, a_qq=658, T=1, a_dq=1120, U=1, V=0
     )
-    par = model.SaturatedSynchronousMachinePars(
-        n_p=2, R_s=0.54, i_s_dq_fcn=curr_map, kind="rel"
-    )
+    par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.54, i_s_dq_fcn=curr_map)
     machine = model.SynchronousMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
     converter = model.VoltageSourceConverter(u_dc=540)
@@ -86,11 +84,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Configure the control system, including the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-59
+.. GENERATED FROM PYTHON SOURCE LINES 36-57
 
 .. code-block:: Python
 
@@ -106,7 +104,7 @@ Configure the control system, including the saturation model.
 
     # Parameter estimates
     est_par = control.SaturatedSynchronousMachinePars(
-        n_p=2, R_s=0.54, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map, kind="rel"
+        n_p=2, R_s=0.54, psi_s_dq_fcn=flux_map
     )
 
     # Configure the controller
@@ -139,11 +137,11 @@ Configure the control system, including the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
 Plot control characteristics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-70
+.. GENERATED FROM PYTHON SOURCE LINES 59-68
 
 .. code-block:: Python
 
@@ -194,11 +192,11 @@ Plot control characteristics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 69-70
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 70-74
 
 .. code-block:: Python
 
@@ -213,11 +211,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 75-76
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-82
+.. GENERATED FROM PYTHON SOURCE LINES 76-80
 
 .. code-block:: Python
 
@@ -240,7 +238,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.276 seconds)
+   **Total running time of the script:** (0 minutes 21.229 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py:

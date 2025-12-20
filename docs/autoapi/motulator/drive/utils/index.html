@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.utils &#8212; motulator 0.7.2 documentation</title>
+    <title>motulator.drive.utils &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -462,9 +462,9 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_const_current_locus()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_current_angle()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_locus()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_flux_angle()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current_angle()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_locus()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque"><code class="docutils literal notranslate"><span class="pre">ControlLoci.solve_current_for_mtpv_torque()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics</span></code></a><ul class="nav section-nav flex-column">
@@ -669,8 +669,8 @@ factor and efficiency being less than unity.</p>
 <dd><p>Compute MTPA and MTPV loci based on the machine parameters.</p>
 <p>This class computes optimal control loci for synchronous machines, including the
 maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limit
-loci <a class="footnote-reference brackets" href="#mor1994" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The magnetic saturation is taken into account. The methods
-can be used to precompute lookup tables for control and to analyze the machine
+loci <a class="footnote-reference brackets" href="#mor1994" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The magnetic saturation is taken into account. The methods can be
+used to precompute lookup tables for control and to analyze the machine
 characteristics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -708,7 +708,7 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Current limit (A).</p></li>
 <li><p><strong>gamma_range</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range of the current angle (electrical rad), defaults to (pi, pi/2).</p></li>
-<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points, defaults to 16.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points, defaults to 16.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -723,7 +723,7 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpa_current_angle">
 <span class="sig-name descname"><span class="pre">compute_mtpa_current_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpa_current_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle" title="Link to this definition">#</a></dt>
-<dd><p>MTPA current angle (rad) for a given current magnitude.</p>
+<dd><p>MTPA current angle (rad) at given current magnitude (A).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>i_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
@@ -742,7 +742,7 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum current magnitude (A) at which the locus is computed.</p></li>
-<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points, defaults to 16.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points, defaults to 16.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -755,29 +755,12 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_current">
-<span class="sig-name descname"><span class="pre">compute_mtpv_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current" title="Link to this definition">#</a></dt>
-<dd><p>MTPV current at given current magnitude.</p>
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_current_angle">
+<span class="sig-name descname"><span class="pre">compute_mtpv_current_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_current_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current_angle" title="Link to this definition">#</a></dt>
+<dd><p>MTPV current angle (rad) at given current magnitude (A).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Current magnitude (A).</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>MTPV current (A). If no MTPV exists, returns np.nan.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)">complex</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle">
-<span class="sig-name descname"><span class="pre">compute_mtpv_flux_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_flux_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle" title="Link to this definition">#</a></dt>
-<dd><p>MTPV flux angle (rad) for a given flux magnitude (Vs).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>psi_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+<dd class="field-odd"><p><strong>i_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
@@ -787,13 +770,13 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_locus">
-<span class="sig-name descname"><span class="pre">compute_mtpv_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_mtpv_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus" title="Link to this definition">#</a></dt>
 <dd><p>Compute the MTPV locus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum flux magnitude (Vs) at which the locus is computed.</p></li>
-<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of points, defaults to 16.</p></li>
+<li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum current (A) at which the locus is computed.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points, defaults to 16.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -801,6 +784,26 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>MTPVLocus</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque">
+<span class="sig-name descname"><span class="pre">solve_current_for_mtpv_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_abs0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.solve_current_for_mtpv_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque" title="Link to this definition">#</a></dt>
+<dd><p>Solve for the current yielding the given MTPV torque.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Target torque (Nm).</p></li>
+<li><p><strong>i_s_abs0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Initial guess for the current magnitude (A).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stator current magnitude (A) that yields the target torque.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1508,9 +1511,9 @@ installation, defaults to False.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_const_current_locus()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_current_angle()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_locus()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_flux_angle()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current_angle()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_locus()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque"><code class="docutils literal notranslate"><span class="pre">ControlLoci.solve_current_for_mtpv_torque()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics</span></code></a><ul class="nav section-nav flex-column">

@@ -22,9 +22,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # %%
 # Configure the system model.
 
-par = model.SynchronousMachinePars(
-    n_p=2, R_s=0.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0, kind="rel"
-)
+par = model.SynchronousMachinePars(n_p=2, R_s=0.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0)
 machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.015)
 converter = model.VoltageSourceConverter(u_dc=540)

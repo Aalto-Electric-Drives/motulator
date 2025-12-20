@@ -573,7 +573,7 @@ Module Contents
    :type psi_s_max: float, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
    :type k_u: float, optional
-   :param k_mtpv: MTPV margin, defaults to 0.9.
+   :param k_mtpv: MTPV margin, defaults to 0.85.
    :type k_mtpv: float, optional
    :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
              used in speed estimation.
@@ -898,7 +898,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, max_iter = 6)
+.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0)
 
    
    Optimal reference generator for synchronous machines.
@@ -922,8 +922,6 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 1.
    :type k_mtpv: float, optional
-   :param max_iter: Max number of iterations for the current reference computation, defaults to 6.
-   :type max_iter: int, optional
 
    .. rubric:: References
 
@@ -952,11 +950,13 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_current_ref(psi_s_ref, tau_M_ref)
+   .. py:method:: compute_current_ref(psi_s_abs_ref, tau_M_ref)
 
       
       Compute the current reference.
 
+      This method is needed only for current-vector control. The current maps are
+      needed.
 
 
 
@@ -1011,35 +1011,25 @@ Module Contents
    The saturation model is specified as a current map (current as a function of the
    flux linkage). Optionally, to be used only in control systems, a flux map (flux
    linkage as a function of the current) can be provided. For convenience, this class
-   also provides the incremental inductance matrix and its inverse, which can be used
-   in control systems and optimal reference generation.
+   also provides the incremental inductance matrix, which can be used in control and
+   optimal reference generation.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). This function
-                      should be differentiable, if inverse incremental inductances are used. Needed
-                      in the system model and in some control methods.
+   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). Needed in the
+                      system model and in some control methods.
    :type i_s_dq_fcn: Callable[[complex], complex], optional
    :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A). This function
                         should be differentiable, if incremental inductances are used. Needed only for
-                        some control methods, not in the system model.
+                        control methods and optimal reference loci, not used in the system model.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
-   :param kind: Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
-                "rel" (reluctance).
-   :type kind: str, optional
-   :param max_iter: Maximum number of iterations, defaults to None. Value around 20 typically
-                    suffices. Note that the iterative method is intended for development purposes.
-   :type max_iter: int, optional
-
-   .. rubric:: Notes
-
-   The class allows providing either `i_s_dq_fcn` or `psi_s_dq_fcn`. If only one of
-   them is provided and `max_iter` is given, the other one is computed iteratively.
-   This feature is intended for development purposes. It can be used in control
-   systems, but iteration increases the simulations time and may not be computationally
-   practical in real-time control.
+   :param use_iterative_current: If `i_s_dq_fcn` is not provided, the current is computed iteratively from the
+                                 flux map using a root-finding algorithm. This is less efficient, but may be
+                                 convenient to parametrize some control methods if only the flux map is
+                                 available. Defaults to `False`.
+   :type use_iterative_current: bool, optional
 
 
 
@@ -1058,10 +1048,10 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq)
+   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m=None)
 
       
-      Current as a function of the flux linkage.
+      Current (A) as a function of the flux linkage (Vs).
 
 
 
@@ -1082,10 +1072,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq)
+   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
 
       
-      Incremental inductance matrix vs. current.
+      Incremental inductance matrix at given current.
 
 
 
@@ -1106,31 +1096,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: inv_incr_ind_mat(psi_s_dq)
-
-      
-      Inverse incremental inductance matrix vs. flux linkage.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: psi_s_dq(i_s_dq)
+   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
 
       
       Flux linkage as a function of the stator current.
@@ -1497,9 +1463,6 @@ Module Contents
    :type L_q: float
    :param psi_f: Permanent-magnet flux linkage (Vs).
    :type psi_f: float
-   :param kind: Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
-                "rel" (reluctance).
-   :type kind: str, optional
 
 
 
@@ -1518,7 +1481,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq)
+   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m=None)
 
       
       Current (A) as a function of the flux linkage (Vs).
@@ -1542,7 +1505,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq)
+   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
 
       
       Incremental inductance matrix (H).
@@ -1566,31 +1529,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: inv_incr_ind_mat(psi_s_dq)
-
-      
-      Inverse of the incremental inductance matrix (1/H).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: psi_s_dq(i_s_dq)
+   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
 
       
       Flux linkage (Vs) as a function of the stator current (A).

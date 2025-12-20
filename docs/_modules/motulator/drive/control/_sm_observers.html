@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._sm_observers &#8212; motulator 0.7.2 documentation</title>
+    <title>motulator.drive.control._sm_observers &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -749,8 +749,8 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Poles at zero speed are located s = 0 and s = -2*sigma0</span>
-    <span class="n">inv_L_s0</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">inv_incr_ind_mat</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span>
-    <span class="n">sigma0</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="p">(</span><span class="n">inv_L_s0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">inv_L_s0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">L_s0</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">sigma0</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">L_s0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">L_s0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
     <span class="n">k_o</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="n">sigma0</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">))</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
     <span class="n">k_f</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">k_f</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_f</span>
@@ -783,8 +783,8 @@ document.write(`
 <span class="sd">        Sensorless observer without speed estimation.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">inv_L_s0</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">inv_incr_ind_mat</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span>
-    <span class="n">sigma0</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="p">(</span><span class="n">inv_L_s0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">inv_L_s0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">L_s0</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">sigma0</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">L_s0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">L_s0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
     <span class="n">k_o</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="n">sigma0</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">))</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
 

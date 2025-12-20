@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.model._machine &#8212; motulator 0.7.2 documentation</title>
+    <title>motulator.drive.model._machine &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -423,6 +423,7 @@ document.write(`
     <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
     <span class="n">InductionMachinePars</span><span class="p">,</span>
     <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
+    <span class="n">SpatialSaturatedSynchronousMachinePars</span><span class="p">,</span>
     <span class="n">SynchronousMachinePars</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -611,7 +612,11 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">SynchronousMachineStates</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;State variables.&quot;&quot;&quot;</span>
 
-    <span class="n">par</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">]</span>
+    <span class="n">par</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span>
+        <span class="n">SynchronousMachinePars</span>
+        <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span>
+        <span class="o">|</span> <span class="n">SpatialSaturatedSynchronousMachinePars</span>
+    <span class="p">]</span>
     <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -638,14 +643,18 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars</span>
+<span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars \</span>
+<span class="sd">        | SpatialSaturatedSynchronousMachinePars</span>
 <span class="sd">        Machine parameters. The magnetic saturation can be modeled by providing a</span>
 <span class="sd">        nonlinear current map par.i_s_dq (callable).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span>
+        <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span>
+        <span class="o">|</span> <span class="n">SpatialSaturatedSynchronousMachinePars</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">SynchronousMachineInputs</span> <span class="o">=</span> <span class="n">SynchronousMachineInputs</span><span class="p">()</span>
@@ -660,9 +669,9 @@ document.write(`
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.compute_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute output variables.&quot;&quot;&quot;</span>
-        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span>
+        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_m</span>
-        <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">))</span>
+        <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">tau_M</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">tau_M</span></div>
 
 

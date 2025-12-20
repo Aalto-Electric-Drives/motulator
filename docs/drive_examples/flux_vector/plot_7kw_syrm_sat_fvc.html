@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>6.7-kW saturated SyRM, FVC &#8212; motulator 0.7.2 documentation</title>
+    <title>6.7-kW saturated SyRM, FVC &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -476,9 +476,7 @@ synchronous reluctance machine (SyRM) drive.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">curr_map</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SaturationModelSyRM</span><span class="p">(</span>
     <span class="n">a_d0</span><span class="o">=</span><span class="mf">17.4</span><span class="p">,</span> <span class="n">a_dd</span><span class="o">=</span><span class="mi">373</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">a_q0</span><span class="o">=</span><span class="mf">52.1</span><span class="p">,</span> <span class="n">a_qq</span><span class="o">=</span><span class="mi">658</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a_dq</span><span class="o">=</span><span class="mi">1120</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="mi">0</span>
 <span class="p">)</span>
-<span class="n">par</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">SaturatedSynchronousMachinePars</span></a><span class="p">(</span>
-    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">0.54</span><span class="p">,</span> <span class="n">i_s_dq_fcn</span><span class="o">=</span><span class="n">curr_map</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;rel&quot;</span>
-<span class="p">)</span>
+<span class="n">par</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">SaturatedSynchronousMachinePars</span></a><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">0.54</span><span class="p">,</span> <span class="n">i_s_dq_fcn</span><span class="o">=</span><span class="n">curr_map</span><span class="p">)</span>
 <span class="n">machine</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">SynchronousMachine</span></a><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 <span class="n">mechanics</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">MechanicalSystem</span></a><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.015</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">VoltageSourceConverter</span></a><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span>
@@ -497,7 +495,7 @@ synchronous reluctance machine (SyRM) drive.</p>
 
 <span class="c1"># Parameter estimates</span>
 <span class="n">est_par</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">SaturatedSynchronousMachinePars</span></a><span class="p">(</span>
-    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">0.54</span><span class="p">,</span> <span class="n">i_s_dq_fcn</span><span class="o">=</span><span class="n">curr_map</span><span class="p">,</span> <span class="n">psi_s_dq_fcn</span><span class="o">=</span><span class="n">flux_map</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;rel&quot;</span>
+    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">0.54</span><span class="p">,</span> <span class="n">psi_s_dq_fcn</span><span class="o">=</span><span class="n">flux_map</span>
 <span class="p">)</span>
 
 <span class="c1"># Configure the controller</span>
@@ -538,7 +536,7 @@ synchronous reluctance machine (SyRM) drive.</p>
 <span class="n">utils</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_7kw_syrm_sat_fvc_007.png" srcset="../../_images/sphx_glr_plot_7kw_syrm_sat_fvc_007.png" alt="plot 7kw syrm sat fvc" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 22.276 seconds)</p>
+<img src="../../_images/sphx_glr_plot_7kw_syrm_sat_fvc_007.png" srcset="../../_images/sphx_glr_plot_7kw_syrm_sat_fvc_007.png" alt="plot 7kw syrm sat fvc" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 21.229 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-flux-vector-plot-7kw-syrm-sat-fvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9cbf13eddd07fe96c1c6a2ec0325d510/plot_7kw_syrm_sat_fvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_7kw_syrm_sat_fvc.ipynb</span></code></a></p>

@@ -198,7 +198,7 @@ Configure the control system.
     # Create the flux and current maps for the control system
     fem_curr_map = fem_flux_map.invert()
     est_par = control.SaturatedSynchronousMachinePars(
-        n_p=2, R_s=0.2, i_s_dq_fcn=fem_curr_map, psi_s_dq_fcn=fem_flux_map
+        n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map
     )
     # Since the inertia `J` is provided, the mechanical-model-based speed observer is used
     cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042, alpha_i=0)
@@ -258,7 +258,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 30.415 seconds)
+   **Total running time of the script:** (0 minutes 24.663 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py:

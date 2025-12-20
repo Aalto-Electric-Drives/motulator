@@ -42,6 +42,7 @@ Classes
    motulator.drive.model.MechanicalSystem
    motulator.drive.model.SaturatedSynchronousMachinePars
    motulator.drive.model.Simulation
+   motulator.drive.model.SpatialSaturatedSynchronousMachinePars
    motulator.drive.model.SynchronousMachine
    motulator.drive.model.SynchronousMachinePars
    motulator.drive.model.TwoMassMechanicalSystem
@@ -1226,35 +1227,25 @@ Package Contents
    The saturation model is specified as a current map (current as a function of the
    flux linkage). Optionally, to be used only in control systems, a flux map (flux
    linkage as a function of the current) can be provided. For convenience, this class
-   also provides the incremental inductance matrix and its inverse, which can be used
-   in control systems and optimal reference generation.
+   also provides the incremental inductance matrix, which can be used in control and
+   optimal reference generation.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). This function
-                      should be differentiable, if inverse incremental inductances are used. Needed
-                      in the system model and in some control methods.
+   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). Needed in the
+                      system model and in some control methods.
    :type i_s_dq_fcn: Callable[[complex], complex], optional
    :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A). This function
                         should be differentiable, if incremental inductances are used. Needed only for
-                        some control methods, not in the system model.
+                        control methods and optimal reference loci, not used in the system model.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
-   :param kind: Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
-                "rel" (reluctance).
-   :type kind: str, optional
-   :param max_iter: Maximum number of iterations, defaults to None. Value around 20 typically
-                    suffices. Note that the iterative method is intended for development purposes.
-   :type max_iter: int, optional
-
-   .. rubric:: Notes
-
-   The class allows providing either `i_s_dq_fcn` or `psi_s_dq_fcn`. If only one of
-   them is provided and `max_iter` is given, the other one is computed iteratively.
-   This feature is intended for development purposes. It can be used in control
-   systems, but iteration increases the simulations time and may not be computationally
-   practical in real-time control.
+   :param use_iterative_current: If `i_s_dq_fcn` is not provided, the current is computed iteratively from the
+                                 flux map using a root-finding algorithm. This is less efficient, but may be
+                                 convenient to parametrize some control methods if only the flux map is
+                                 available. Defaults to `False`.
+   :type use_iterative_current: bool, optional
 
 
 
@@ -1273,10 +1264,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq)
+   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m=None)
 
       
-      Current as a function of the flux linkage.
+      Current (A) as a function of the flux linkage (Vs).
 
 
 
@@ -1297,10 +1288,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq)
+   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
 
       
-      Incremental inductance matrix vs. current.
+      Incremental inductance matrix at given current.
 
 
 
@@ -1321,31 +1312,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: inv_incr_ind_mat(psi_s_dq)
-
-      
-      Inverse incremental inductance matrix vs. flux linkage.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: psi_s_dq(i_s_dq)
+   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
 
       
       Flux linkage as a function of the stator current.
@@ -1426,6 +1393,170 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: SpatialSaturatedSynchronousMachinePars
+
+   Bases: :py:obj:`BaseSynchronousMachinePars`
+
+
+   
+   Parameters of a saturated synchronous machine with spatial harmonics.
+
+   This saturation model contains spatial harmonics in addition to the saturation
+   effects. This version is intended to parametrize high-fidelity machine models for
+   simulation purposes, while control methods do not support spatial harmonics.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs) and the complex
+                      exponential of the electrical rotor angle.
+   :type i_s_dq_fcn: Callable[[complex, complex], complex]
+   :param tau_M_ripple_fcn: Torque ripple (Nm) as a function of the stator flux linkage (Vs) and the complex
+                            exponential of the electrical rotor angle.
+   :type tau_M_ripple_fcn: Callable[[complex, complex], float]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m = None)
+
+      
+      Current as a function of flux linkage and rotor angle.
+
+      :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
+      :type psi_s_dq: complex | ndarray
+      :param exp_j_theta_m: Complex exponential of electrical rotor angle.
+      :type exp_j_theta_m: complex | ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
+      :abstractmethod:
+
+
+      
+      Incremental inductance matrix.
+
+      :param i_s_dq: Stator current (A) in rotor coordinates.
+      :type i_s_dq: complex | ndarray
+      :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
+      :type exp_j_theta_m: complex | ndarray, optional
+
+      :returns: Incremental inductance matrix (H).
+      :rtype: ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
+      :abstractmethod:
+
+
+      
+      Flux linkage as a function of the current and rotor angle.
+
+      :param i_s_dq: Stator current (A) in rotor coordinates.
+      :type i_s_dq: complex | ndarray
+      :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
+      :type exp_j_theta_m: complex | ndarray, optional
+
+      :returns: Stator flux linkage in rotor coordinates (Vs).
+      :rtype: complex | ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: tau_M(psi_s_dq, i_s_dq, exp_j_theta_m = None)
+
+      
+      Torque as a function of flux linkage and rotor angle.
+
+      :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
+      :type psi_s_dq: complex | ndarray
+      :param i_s_dq: Stator current (A) in rotor coordinates.
+      :type i_s_dq: complex | ndarray
+      :param exp_j_theta_m: Complex exponential of electrical rotor angle.
+      :type exp_j_theta_m: complex | ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: SynchronousMachine(par)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
@@ -1439,7 +1570,7 @@ Package Contents
 
    :param par: Machine parameters. The magnetic saturation can be modeled by providing a
                nonlinear current map par.i_s_dq (callable).
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars         | SpatialSaturatedSynchronousMachinePars
 
 
 
@@ -1596,9 +1727,6 @@ Package Contents
    :type L_q: float
    :param psi_f: Permanent-magnet flux linkage (Vs).
    :type psi_f: float
-   :param kind: Machine type, defaults to "pm". Allowed values are "pm" (permanent magnet) and
-                "rel" (reluctance).
-   :type kind: str, optional
 
 
 
@@ -1617,7 +1745,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq)
+   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m=None)
 
       
       Current (A) as a function of the flux linkage (Vs).
@@ -1641,7 +1769,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq)
+   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
 
       
       Incremental inductance matrix (H).
@@ -1665,31 +1793,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: inv_incr_ind_mat(psi_s_dq)
-
-      
-      Inverse of the incremental inductance matrix (1/H).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: psi_s_dq(i_s_dq)
+   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
 
       
       Flux linkage (Vs) as a function of the stator current (A).

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.control.sm &#8212; motulator 0.7.2 documentation</title>
+    <title>motulator.drive.control.sm &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../../../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -141,7 +141,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -499,7 +499,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.incr_ind_mat()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.inv_incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.inv_incr_ind_mat()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>
@@ -522,7 +521,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.incr_ind_mat()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.inv_incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.inv_incr_ind_mat()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>
@@ -992,7 +990,7 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 <li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite>.</p></li>
 <li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum stator flux (Vs), defaults to <cite>inf</cite>.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.9.</p></li>
-<li><p><strong>k_mtpv</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – MTPV margin, defaults to 0.9.</p></li>
+<li><p><strong>k_mtpv</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – MTPV margin, defaults to 0.85.</p></li>
 <li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
 used in speed estimation.</p></li>
 </ul>
@@ -1177,7 +1175,7 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.ReferenceGenerator">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ReferenceGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_mtpv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_reference_gen.html#ReferenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ReferenceGenerator" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ReferenceGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_mtpv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_reference_gen.html#ReferenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ReferenceGenerator" title="Link to this definition">#</a></dt>
 <dd><p>Optimal reference generator for synchronous machines.</p>
 <p>This class computes the optimal flux, limited torque, and current references from a
 given torque reference. The MTPA locus as well as the current, voltage and MTPV
@@ -1194,7 +1192,6 @@ root-finding algorithm (needed only for current-vector control).</p>
 <li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum stator flux (Vs), defaults to <cite>inf</cite>.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 1.</p></li>
 <li><p><strong>k_mtpv</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – MTPV margin, defaults to 1.</p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Max number of iterations for the current reference computation, defaults to 6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1215,12 +1212,14 @@ saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
 </aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.ReferenceGenerator.compute_current_ref">
-<span class="sig-name descname"><span class="pre">compute_current_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_reference_gen.html#ReferenceGenerator.compute_current_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ReferenceGenerator.compute_current_ref" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_current_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_abs_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_reference_gen.html#ReferenceGenerator.compute_current_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ReferenceGenerator.compute_current_ref" title="Link to this definition">#</a></dt>
 <dd><p>Compute the current reference.</p>
+<p>This method is needed only for current-vector control. The current maps are
+needed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>psi_s_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>psi_s_abs_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 <li><p><strong>tau_M_ref</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
@@ -1258,36 +1257,29 @@ saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
 <p>The saturation model is specified as a current map (current as a function of the
 flux linkage). Optionally, to be used only in control systems, a flux map (flux
 linkage as a function of the current) can be provided. For convenience, this class
-also provides the incremental inductance matrix and its inverse, which can be used
-in control systems and optimal reference generation.</p>
+also provides the incremental inductance matrix, which can be used in control and
+optimal reference generation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of pole pairs.</p></li>
 <li><p><strong>R_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Stator resistance (Ω).</p></li>
-<li><p><strong>i_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Stator current (A) as a function of the stator flux linkage (Vs). This function
-should be differentiable, if inverse incremental inductances are used. Needed
-in the system model and in some control methods.</p></li>
+<li><p><strong>i_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Stator current (A) as a function of the stator flux linkage (Vs). Needed in the
+system model and in some control methods.</p></li>
 <li><p><strong>psi_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Stator flux linkage (Vs) as a function of the stator current (A). This function
 should be differentiable, if incremental inductances are used. Needed only for
-some control methods, not in the system model.</p></li>
-<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Machine type, defaults to “pm”. Allowed values are “pm” (permanent magnet) and
-“rel” (reluctance).</p></li>
-<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Maximum number of iterations, defaults to None. Value around 20 typically
-suffices. Note that the iterative method is intended for development purposes.</p></li>
+control methods and optimal reference loci, not used in the system model.</p></li>
+<li><p><strong>use_iterative_current</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <cite>i_s_dq_fcn</cite> is not provided, the current is computed iteratively from the
+flux map using a root-finding algorithm. This is less efficient, but may be
+convenient to parametrize some control methods if only the flux map is
+available. Defaults to <cite>False</cite>.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The class allows providing either <cite>i_s_dq_fcn</cite> or <cite>psi_s_dq_fcn</cite>. If only one of
-them is provided and <cite>max_iter</cite> is given, the other one is computed iteratively.
-This feature is intended for development purposes. It can be used in control
-systems, but iteration increases the simulations time and may not be computationally
-practical in real-time control.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq">
-<span class="sig-name descname"><span class="pre">i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq" title="Link to this definition">#</a></dt>
-<dd><p>Current as a function of the flux linkage.</p>
+<span class="sig-name descname"><span class="pre">i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq" title="Link to this definition">#</a></dt>
+<dd><p>Current (A) as a function of the flux linkage (Vs).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p>
@@ -1300,8 +1292,8 @@ practical in real-time control.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SaturatedSynchronousMachinePars.incr_ind_mat">
-<span class="sig-name descname"><span class="pre">incr_ind_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.incr_ind_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.incr_ind_mat" title="Link to this definition">#</a></dt>
-<dd><p>Incremental inductance matrix vs. current.</p>
+<span class="sig-name descname"><span class="pre">incr_ind_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.incr_ind_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.incr_ind_mat" title="Link to this definition">#</a></dt>
+<dd><p>Incremental inductance matrix at given current.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>i_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p>
@@ -1313,22 +1305,8 @@ practical in real-time control.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.sm.SaturatedSynchronousMachinePars.inv_incr_ind_mat">
-<span class="sig-name descname"><span class="pre">inv_incr_ind_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.inv_incr_ind_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.inv_incr_ind_mat" title="Link to this definition">#</a></dt>
-<dd><p>Inverse incremental inductance matrix vs. flux linkage.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SaturatedSynchronousMachinePars.psi_s_dq">
-<span class="sig-name descname"><span class="pre">psi_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.psi_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.psi_s_dq" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">psi_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.psi_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.psi_s_dq" title="Link to this definition">#</a></dt>
 <dd><p>Flux linkage as a function of the stator current.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1568,14 +1546,12 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <li><p><strong>L_d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – d-axis inductance (H).</p></li>
 <li><p><strong>L_q</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – q-axis inductance (H).</p></li>
 <li><p><strong>psi_f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Permanent-magnet flux linkage (Vs).</p></li>
-<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Machine type, defaults to “pm”. Allowed values are “pm” (permanent magnet) and
-“rel” (reluctance).</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SynchronousMachinePars.i_s_dq">
-<span class="sig-name descname"><span class="pre">i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars.i_s_dq" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars.i_s_dq" title="Link to this definition">#</a></dt>
 <dd><p>Current (A) as a function of the flux linkage (Vs).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1589,7 +1565,7 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SynchronousMachinePars.incr_ind_mat">
-<span class="sig-name descname"><span class="pre">incr_ind_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.incr_ind_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars.incr_ind_mat" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">incr_ind_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.incr_ind_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars.incr_ind_mat" title="Link to this definition">#</a></dt>
 <dd><p>Incremental inductance matrix (H).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1602,22 +1578,8 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.sm.SynchronousMachinePars.inv_incr_ind_mat">
-<span class="sig-name descname"><span class="pre">inv_incr_ind_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.inv_incr_ind_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars.inv_incr_ind_mat" title="Link to this definition">#</a></dt>
-<dd><p>Inverse of the incremental inductance matrix (1/H).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SynchronousMachinePars.psi_s_dq">
-<span class="sig-name descname"><span class="pre">psi_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.psi_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars.psi_s_dq" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">psi_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.psi_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars.psi_s_dq" title="Link to this definition">#</a></dt>
 <dd><p>Flux linkage (Vs) as a function of the stator current (A).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1943,7 +1905,6 @@ and flux-vector control).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.incr_ind_mat()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.inv_incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.inv_incr_ind_mat()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>
@@ -1966,7 +1927,6 @@ and flux-vector control).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.incr_ind_mat()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.inv_incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.inv_incr_ind_mat()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>

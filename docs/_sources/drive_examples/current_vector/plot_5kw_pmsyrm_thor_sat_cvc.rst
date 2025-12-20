@@ -146,7 +146,7 @@ Configure the control system. Since the inertia estimate `J` is provided in
 
 
     est_par = control.SaturatedSynchronousMachinePars(
-        n_p=2, R_s=0.2, i_s_dq_fcn=fem_curr_map, psi_s_dq_fcn=fem_flux_map
+        n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map, use_iterative_current=True
     )
     cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042)
     vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)
@@ -271,7 +271,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 37.604 seconds)
+   **Total running time of the script:** (2 minutes 38.739 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py:

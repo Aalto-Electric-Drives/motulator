@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.utils._sm_plot_control_loci &#8212; motulator 0.7.2 documentation</title>
+    <title>motulator.drive.utils._sm_plot_control_loci &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -517,11 +517,8 @@ document.write(`
         <span class="p">)</span>
 
         <span class="c1"># MTPV locus</span>
-        <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>
-            <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">)):</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
                 <span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
                 <span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
@@ -536,7 +533,7 @@ document.write(`
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="n">i_s_vals</span><span class="p">:</span>
-            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
+            <span class="n">gamma_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
             <span class="n">gamma_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
             <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">)</span>
             <span class="n">current_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
@@ -623,10 +620,8 @@ document.write(`
         <span class="p">)</span>
 
         <span class="c1"># MTPV locus</span>
-        <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>  <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">)):</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
                 <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
                 <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
@@ -641,7 +636,7 @@ document.write(`
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="n">i_s_vals</span><span class="p">:</span>
-            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
+            <span class="n">gamma_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
             <span class="n">gamma_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
             <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">)</span>
             <span class="n">const_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
@@ -666,11 +661,10 @@ document.write(`
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
 
-        <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">kind</span><span class="p">:</span>
-            <span class="k">case</span> <span class="s2">&quot;rel&quot;</span><span class="p">:</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">))</span>
-            <span class="k">case</span> <span class="s2">&quot;pm&quot;</span><span class="p">:</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">((</span><span class="o">-</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">((</span><span class="o">-</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">))</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
 
@@ -724,10 +718,8 @@ document.write(`
         <span class="p">)</span>
 
         <span class="c1"># MTPV locus</span>
-        <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>  <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">)):</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
                 <span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
@@ -742,7 +734,7 @@ document.write(`
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="n">i_s_vals</span><span class="p">:</span>
-            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
+            <span class="n">gamma_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
             <span class="n">gamma_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
             <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">)</span>
             <span class="n">const_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
@@ -832,11 +824,8 @@ document.write(`
         <span class="p">)</span>
 
         <span class="c1"># MTPV locus</span>
-        <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>  <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
-
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">)):</span>
             <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
                 <span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
                 <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
@@ -861,7 +850,7 @@ document.write(`
         <span class="n">ax2</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="n">i_s_vals</span><span class="p">:</span>
-            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
+            <span class="n">gamma_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
             <span class="n">gamma_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
             <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">)</span>
             <span class="n">const_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
@@ -891,13 +880,12 @@ document.write(`
         <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
         <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
 
-        <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">kind</span><span class="p">:</span>
-            <span class="k">case</span> <span class="s2">&quot;rel&quot;</span><span class="p">:</span>
-                <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
-                <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
-            <span class="k">case</span> <span class="s2">&quot;pm&quot;</span><span class="p">:</span>
-                <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-                <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
             <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>

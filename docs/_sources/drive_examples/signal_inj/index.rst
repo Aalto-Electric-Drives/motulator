@@ -30,7 +30,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
   .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_2kw_ipmsm_signal_inj_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_signal_inj_plot_2kw_ipmsm_signal_inj.py`
+  :doc:`/drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj`
 
 .. raw:: html
 
@@ -47,7 +47,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
   .. image:: /drive_examples/signal_inj/images/thumb/sphx_glr_plot_7kw_syrm_signal_inj_thumb.png
     :alt:
 
-  :ref:`sphx_glr_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py`
+  :doc:`/drive_examples/signal_inj/plot_7kw_syrm_signal_inj`
 
 .. raw:: html
 

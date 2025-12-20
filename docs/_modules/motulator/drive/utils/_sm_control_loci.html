@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.utils._sm_control_loci &#8212; motulator 0.7.2 documentation</title>
+    <title>motulator.drive.utils._sm_control_loci &#8212; motulator 0.7.3 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=6aa4cbdb"></script>
+    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -140,7 +140,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.2 documentation</p>
+    <p class="title logo__title">motulator 0.7.3 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -417,6 +417,8 @@ document.write(`
     <span class="n">SynchronousMachinePars</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="n">EPS</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>
+
 
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
@@ -437,7 +439,7 @@ document.write(`
     <span class="n">i_s_dq</span><span class="p">:</span> <span class="n">Any</span>
     <span class="n">tau_M</span><span class="p">:</span> <span class="n">Any</span>
     <span class="n">tau_M_vs_psi_s_abs</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
-    <span class="n">psi_s_dq_vs_psi_s_abs</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">]</span>
+    <span class="n">i_s_dq_vs_psi_s_abs</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">]</span>
 
 
 <span class="nd">@dataclass</span>
@@ -459,8 +461,8 @@ document.write(`
 
 <span class="sd">    This class computes optimal control loci for synchronous machines, including the</span>
 <span class="sd">    maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limit</span>
-<span class="sd">    loci [#Mor1994]_. The magnetic saturation is taken into account. The methods</span>
-<span class="sd">    can be used to precompute lookup tables for control and to analyze the machine</span>
+<span class="sd">    loci [#Mor1994]_. The magnetic saturation is taken into account. The methods can be</span>
+<span class="sd">    used to precompute lookup tables for control and to analyze the machine</span>
 <span class="sd">    characteristics.</span>
 
 <span class="sd">    Parameters</span>
@@ -496,47 +498,21 @@ document.write(`
 <div class="viewcode-block" id="ControlLoci.compute_mtpa_current_angle">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_mtpa_current_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_abs</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;MTPA current angle (rad) for a given current magnitude.&quot;&quot;&quot;</span>
-        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;MTPA current angle (rad) at given current magnitude (A).&quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">mtpa_cond</span><span class="p">(</span><span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
             <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">i_s_abs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">gamma</span><span class="p">)</span>
             <span class="n">psi_a_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">aux_flux</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_a_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">))</span>
 
-        <span class="k">match</span> <span class="n">par</span><span class="o">.</span><span class="n">kind</span><span class="p">:</span>
-            <span class="k">case</span> <span class="s2">&quot;rel&quot;</span><span class="p">:</span>
-                <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-            <span class="k">case</span> <span class="s2">&quot;pm&quot;</span><span class="p">:</span>
-                <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">mtpa_cond</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">mtpa_cond</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mf">0.0</span>
-        <span class="n">delta</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">mtpa_cond</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="n">gamma_range</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;brentq&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">root</span>
-        <span class="k">return</span> <span class="n">delta</span></div>
-
-
-<div class="viewcode-block" id="ControlLoci.compute_mtpv_flux_angle">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_mtpv_flux_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_abs</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;MTPV flux angle (rad) for a given flux magnitude (Vs).&quot;&quot;&quot;</span>
-        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">mtpv_cond</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-            <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">psi_s_abs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">delta</span><span class="p">)</span>
-            <span class="n">i_a_dq</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">aux_current</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_a_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
-
-        <span class="k">match</span> <span class="n">par</span><span class="o">.</span><span class="n">kind</span><span class="p">:</span>
-            <span class="k">case</span> <span class="s2">&quot;rel&quot;</span><span class="p">:</span>
-                <span class="n">delta_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-            <span class="k">case</span> <span class="s2">&quot;pm&quot;</span><span class="p">:</span>
-                <span class="n">delta_range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">mtpv_cond</span><span class="p">(</span><span class="n">delta_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">mtpv_cond</span><span class="p">(</span><span class="n">delta_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mf">0.0</span>
-        <span class="n">gamma</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">mtpv_cond</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="n">delta_range</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;brentq&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">root</span>
-        <span class="k">return</span> <span class="n">gamma</span></div>
+            <span class="k">return</span> <span class="mf">0.0</span>  <span class="c1"># No root in the range</span>
+        <span class="k">return</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">mtpa_cond</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="n">gamma_range</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;brentq&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">root</span></div>
 
 
 <div class="viewcode-block" id="ControlLoci.compute_mtpa_locus">
@@ -550,7 +526,7 @@ document.write(`
 <span class="sd">        i_s_max : float</span>
 <span class="sd">            Maximum current magnitude (A) at which the locus is computed.</span>
 <span class="sd">        num : int, optional</span>
-<span class="sd">            Amount of points, defaults to 16.</span>
+<span class="sd">            Number of points, defaults to 16.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -578,18 +554,76 @@ document.write(`
         <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="ControlLoci.compute_mtpv_current_angle">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci.compute_mtpv_current_angle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_mtpv_current_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_abs</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;MTPV current angle (rad) at given current magnitude (A).&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">mtpv_cond</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">i_s_abs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">delta</span><span class="p">)</span>
+            <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
+            <span class="n">i_a_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">aux_current</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_a_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">delta_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">delta_range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mtpv_cond</span><span class="p">(</span><span class="n">delta_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">mtpv_cond</span><span class="p">(</span><span class="n">delta_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>  <span class="c1"># No root in the range</span>
+        <span class="k">return</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">mtpv_cond</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="n">delta_range</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;brentq&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">root</span></div>
+
+
+<div class="viewcode-block" id="ControlLoci.solve_current_for_mtpv_torque">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve_current_for_mtpv_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">i_s_abs0</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Solve for the current yielding the given MTPV torque.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tau_M : float</span>
+<span class="sd">            Target torque (Nm).</span>
+<span class="sd">        i_s_abs0 : float</span>
+<span class="sd">            Initial guess for the current magnitude (A).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Stator current magnitude (A) that yields the target torque.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Solve for the current yielding the target torque</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">torque_error</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mtpv_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
+            <span class="n">i_s</span> <span class="o">=</span> <span class="n">i_s_abs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">angle</span><span class="p">)</span>
+            <span class="n">psi_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">tau_M</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">i_s</span> <span class="o">*</span> <span class="n">psi_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">imag</span>
+
+        <span class="c1"># Find MTPV starting point</span>
+        <span class="n">i_d_mtpv</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">i_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_d</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">if</span> <span class="n">i_s_abs0</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i_d_mtpv</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="k">return</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">torque_error</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">i_s_abs0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">root</span></div>
+
+
 <div class="viewcode-block" id="ControlLoci.compute_mtpv_locus">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci.compute_mtpv_locus">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_mtpv_locus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MTPVLocus</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_mtpv_locus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MTPVLocus</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the MTPV locus.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        psi_s_max : float</span>
-<span class="sd">            Maximum flux magnitude (Vs) at which the locus is computed.</span>
+<span class="sd">        i_s_max : float</span>
+<span class="sd">            Maximum current (A) at which the locus is computed.</span>
 <span class="sd">        num : int, optional</span>
-<span class="sd">            Amount of points, defaults to 16.</span>
+<span class="sd">            Number of points, defaults to 16.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -597,16 +631,31 @@ document.write(`
 <span class="sd">            MTPV locus data.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">flux_magnitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="c1"># Find MTPV starting point</span>
+        <span class="n">i_d_mtpv</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">i_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_d</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">root</span>
+        <span class="n">i_d0</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i_d_mtpv</span><span class="p">)</span> <span class="o">+</span> <span class="n">EPS</span>
+
+        <span class="c1"># Check if MTPV exists</span>
+        <span class="k">if</span> <span class="n">i_d0</span> <span class="o">&gt;=</span> <span class="n">i_s_max</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MTPVLocus</span><span class="p">(</span>
+                <span class="n">psi_s_dq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]),</span>
+                <span class="n">i_s_dq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]),</span>
+                <span class="n">tau_M</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]),</span>
+                <span class="n">tau_M_vs_psi_s_abs</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">i_s_dq_vs_psi_s_abs</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="c1"># Calculate MTPV points iteratively for each current magnitude</span>
-        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">flux_magnitudes</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">psi_s_abs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">flux_magnitudes</span><span class="p">):</span>
-            <span class="n">delta</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mtpv_flux_angle</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">psi_s_abs</span><span class="p">))</span>
+        <span class="n">current_magnitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">i_d0</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">current_magnitudes</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">current_magnitudes</span><span class="p">):</span>
+            <span class="n">delta</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mtpv_current_angle</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
 
         <span class="c1"># MTPV locus expressed with different quantities</span>
-        <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">flux_magnitudes</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">delta</span><span class="p">)</span>
-        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
+        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">current_magnitudes</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">delta</span><span class="p">)</span>
+        <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
         <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">MTPVLocus</span><span class="p">(</span>
@@ -614,7 +663,7 @@ document.write(`
             <span class="n">i_s_dq</span><span class="o">=</span><span class="n">i_s_dq</span><span class="p">,</span>
             <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
             <span class="n">tau_M_vs_psi_s_abs</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">),</span> <span class="n">tau_M</span><span class="p">),</span>
-            <span class="n">psi_s_dq_vs_psi_s_abs</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">),</span> <span class="n">psi_s_dq</span><span class="p">),</span>
+            <span class="n">i_s_dq_vs_psi_s_abs</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">),</span> <span class="n">i_s_dq</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 
@@ -636,7 +685,7 @@ document.write(`
 <span class="sd">        gamma_range : tuple, optional</span>
 <span class="sd">            Range of the current angle (electrical rad), defaults to (pi, pi/2).</span>
 <span class="sd">        num : int, optional</span>
-<span class="sd">            Amount of points, defaults to 16.</span>
+<span class="sd">            Number of points, defaults to 16.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -658,46 +707,8 @@ document.write(`
             <span class="n">psi_s_dq</span><span class="o">=</span><span class="n">psi_s_dq</span><span class="p">,</span>
             <span class="n">i_s_dq</span><span class="o">=</span><span class="n">i_s_dq</span><span class="p">,</span>
             <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
-            <span class="n">i_s_dq_vs_psi_s_abs</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">),</span> <span class="n">i_s_dq</span><span class="p">),</span>
+            <span class="n">i_s_dq_vs_psi_s_abs</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">),</span> <span class="n">i_s_dq</span><span class="p">),</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ControlLoci.compute_mtpv_current">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci.compute_mtpv_current">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_mtpv_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_abs</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        MTPV current at given current magnitude.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        i_s_abs : float</span>
-<span class="sd">            Current magnitude (A).</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        complex</span>
-<span class="sd">            MTPV current (A). If no MTPV exists, returns np.nan.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">mtpv_cond</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-            <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">i_s_abs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">delta</span><span class="p">)</span>
-            <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
-            <span class="n">i_a_dq</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">aux_current</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_a_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
-
-        <span class="k">match</span> <span class="n">par</span><span class="o">.</span><span class="n">kind</span><span class="p">:</span>
-            <span class="k">case</span> <span class="s2">&quot;rel&quot;</span><span class="p">:</span>
-                <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-            <span class="k">case</span> <span class="s2">&quot;pm&quot;</span><span class="p">:</span>
-                <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">mtpv_cond</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">mtpv_cond</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>  <span class="c1"># No MTPV for this current</span>
-        <span class="n">gamma</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">mtpv_cond</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="n">gamma_range</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;brentq&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">root</span>
-
-        <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="n">i_s_abs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">gamma</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

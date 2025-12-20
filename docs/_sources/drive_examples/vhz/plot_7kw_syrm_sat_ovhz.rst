@@ -64,7 +64,7 @@ Compute base values based on the nominal values (just for figures).
 
 Configure the system model. The saturation model is based on [#Hin2017]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-37
+.. GENERATED FROM PYTHON SOURCE LINES 25-35
 
 .. code-block:: Python
 
@@ -72,9 +72,7 @@ Configure the system model. The saturation model is based on [#Hin2017]_.
     i_s_dq_fcn = utils.SaturationModelSyRM(
         a_d0=17.4, a_dd=373, S=5, a_q0=52.1, a_qq=658, T=1, a_dq=1120, U=1, V=0
     )
-    par = model.SaturatedSynchronousMachinePars(
-        n_p=2, R_s=0.54, i_s_dq_fcn=i_s_dq_fcn, kind="rel"
-    )
+    par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.54, i_s_dq_fcn=i_s_dq_fcn)
     machine = model.SynchronousMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
     converter = model.VoltageSourceConverter(u_dc=540)
@@ -87,17 +85,17 @@ Configure the system model. The saturation model is based on [#Hin2017]_.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-49
+.. GENERATED FROM PYTHON SOURCE LINES 37-47
 
 .. code-block:: Python
 
 
     est_par = control.SynchronousMachinePars(
-        n_p=2, R_s=0.54, L_d=37e-3, L_q=6.2e-3, psi_f=0, kind="rel"
+        n_p=2, R_s=0.54, L_d=37e-3, L_q=6.2e-3, psi_f=0
     )
     cfg = control.ObserverBasedVHzControllerCfg(
         i_s_max=2 * base.i, psi_s_min=base.psi, psi_s_max=base.psi
@@ -112,11 +110,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-61
+.. GENERATED FROM PYTHON SOURCE LINES 49-59
 
 .. code-block:: Python
 
@@ -137,11 +135,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-68
+.. GENERATED FROM PYTHON SOURCE LINES 61-66
 
 .. code-block:: Python
 
@@ -162,7 +160,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-74
+.. GENERATED FROM PYTHON SOURCE LINES 67-72
 
 .. rubric:: References
 
@@ -173,7 +171,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.962 seconds)
+   **Total running time of the script:** (0 minutes 22.481 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_7kw_syrm_sat_ovhz.py:

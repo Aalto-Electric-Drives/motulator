@@ -26,9 +26,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 i_s_dq_fcn = utils.SaturationModelSyRM(
     a_d0=17.4, a_dd=373, S=5, a_q0=52.1, a_qq=658, T=1, a_dq=1120, U=1, V=0
 )
-par = model.SaturatedSynchronousMachinePars(
-    n_p=2, R_s=0.54, i_s_dq_fcn=i_s_dq_fcn, kind="rel"
-)
+par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.54, i_s_dq_fcn=i_s_dq_fcn)
 machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.015)
 converter = model.VoltageSourceConverter(u_dc=540)
@@ -38,7 +36,7 @@ mdl = model.Drive(machine, mechanics, converter)
 # Configure the control system.
 
 est_par = control.SynchronousMachinePars(
-    n_p=2, R_s=0.54, L_d=37e-3, L_q=6.2e-3, psi_f=0, kind="rel"
+    n_p=2, R_s=0.54, L_d=37e-3, L_q=6.2e-3, psi_f=0
 )
 cfg = control.ObserverBasedVHzControllerCfg(
     i_s_max=2 * base.i, psi_s_min=base.psi, psi_s_max=base.psi

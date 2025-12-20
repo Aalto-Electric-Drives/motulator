@@ -41,7 +41,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
   .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_lcl_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_lcl_gfl.py`
+  :doc:`/grid_examples/grid_following/plot_10kva_lcl_gfl`
 
 .. raw:: html
 
@@ -58,7 +58,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
   .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_dc_bus_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_dc_bus_gfl.py`
+  :doc:`/grid_examples/grid_following/plot_10kva_dc_bus_gfl`
 
 .. raw:: html
 
@@ -75,7 +75,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
   .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_gfl_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_following_plot_10kva_gfl.py`
+  :doc:`/grid_examples/grid_following/plot_10kva_gfl`
 
 .. raw:: html
 
@@ -117,7 +117,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
   .. image:: /grid_examples/grid_forming/images/thumb/sphx_glr_plot_13kva_rfpsc_gfm_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_rfpsc_gfm.py`
+  :doc:`/grid_examples/grid_forming/plot_13kva_rfpsc_gfm`
 
 .. raw:: html
 
@@ -134,7 +134,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
   .. image:: /grid_examples/grid_forming/images/thumb/sphx_glr_plot_13kva_do_gfm_thumb.png
     :alt:
 
-  :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_do_gfm.py`
+  :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`
 
 .. raw:: html
 
