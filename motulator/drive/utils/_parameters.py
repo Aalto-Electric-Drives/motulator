@@ -1,7 +1,7 @@
 """Common dataclasses usable in models and control of machine drives."""
 
 from dataclasses import dataclass, field
-from typing import Callable, Protocol
+from typing import Callable, Protocol, Tuple
 
 import numpy as np
 from scipy.optimize import root, root_scalar
@@ -16,13 +16,43 @@ class BaseSynchronousMachinePars(Protocol):
     n_p: int
     R_s: float
 
+    def magnetic_map(
+        self,
+        psi_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> Tuple[complex | np.ndarray, float | np.ndarray]:
+        """
+        Magnetic map as a function of flux linkage and electrical rotor angle.
+
+        This method returns the stator current and the electromagnetic torque per pole
+        pair as functions of the stator flux linkage and, optionally, the rotor angle.
+        The allows a unified interface for the system model.
+
+        Parameters
+        ----------
+        psi_s_dq : complex | ndarray
+            Stator flux linkage (Vs) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray, optional
+            Complex exponential of the electrical rotor angle.
+
+        Returns
+        -------
+        Tuple [complex | ndarray, float | ndarray]
+            Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per
+            pole pair.
+
+        """
+        i_s_dq = self.i_s_dq(psi_s_dq, exp_j_theta_m)
+        tau_m = 1.5 * np.imag(i_s_dq * np.conj(psi_s_dq))
+        return i_s_dq, tau_m
+
     def i_s_dq(
         self,
         psi_s_dq: complex | np.ndarray,
         exp_j_theta_m: complex | np.ndarray | None = None,
     ) -> complex | np.ndarray:
         """
-        Current as a function of flux linkage and rotor angle.
+        Current as a function of flux linkage and electrical rotor angle.
 
         Parameters
         ----------
@@ -34,42 +64,10 @@ class BaseSynchronousMachinePars(Protocol):
         Returns
         -------
         complex | ndarray
-            Stator current in rotor coordinates (A).
+            Stator current (A) in rotor coordinates.
 
         """
         ...
-
-    def tau_M(
-        self,
-        psi_s_dq: complex | np.ndarray,
-        i_s_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
-    ) -> float | np.ndarray:
-        """
-        Electromagnetic torque.
-
-        Parameters
-        ----------
-        psi_s_dq : complex | ndarray
-            Stator flux linkage (Vs) in rotor coordinates.
-        i_s_dq : complex | ndarray
-            Stator current (A) in rotor coordinates.
-        exp_j_theta_m : complex | ndarray, optional
-            Complex exponential of the electrical rotor angle.
-
-        Returns
-        -------
-        float | ndarray
-            Electromagnetic torque (Nm).
-
-        Notes
-        -----
-        The default implementation assumes no spatial harmonics. This method can be
-        overridden in subclasses to model machines with spatial harmonics.
-
-        """
-        tau_M = 1.5 * self.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
-        return tau_M
 
     def psi_s_dq(
         self,
@@ -77,7 +75,7 @@ class BaseSynchronousMachinePars(Protocol):
         exp_j_theta_m: complex | np.ndarray | None = None,
     ) -> complex | np.ndarray:
         """
-        Flux linkage as a function of the current and rotor angle.
+        Flux linkage as a function of current and electrical rotor angle.
 
         Parameters
         ----------
@@ -217,18 +215,18 @@ class SynchronousMachinePars(BaseSynchronousMachinePars):
         self, psi_s_dq: complex | np.ndarray, exp_j_theta_m=None
     ) -> complex | np.ndarray:
         """Current (A) as a function of the flux linkage (Vs)."""
-        i_s_dq = (np.real(psi_s_dq) - self.psi_f) / self.L_d + 1j * np.imag(
-            psi_s_dq
-        ) / self.L_q
+        i_d = (np.real(psi_s_dq) - self.psi_f) / self.L_d
+        i_q = np.imag(psi_s_dq) / self.L_q
+        i_s_dq = i_d + 1j * i_q
         return i_s_dq
 
     def psi_s_dq(
         self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
     ) -> complex | np.ndarray:
         """Flux linkage (Vs) as a function of the stator current (A)."""
-        psi_s_dq = (
-            self.L_d * np.real(i_s_dq) + 1j * self.L_q * np.imag(i_s_dq) + self.psi_f
-        )
+        psi_d = self.L_d * np.real(i_s_dq) + self.psi_f
+        psi_q = self.L_q * np.imag(i_s_dq)
+        psi_s_dq = psi_d + 1j * psi_q
         return psi_s_dq
 
     def incr_ind_mat(
@@ -356,22 +354,18 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         Number of pole pairs.
     R_s : float
         Stator resistance (Ω).
-    i_s_dq_fcn : Callable[[complex, complex], complex]
-        Stator current (A) as a function of the stator flux linkage (Vs) and the complex
-        exponential of the electrical rotor angle.
-    tau_M_ripple_fcn : Callable[[complex, complex], float]
-        Torque ripple (Nm) as a function of the stator flux linkage (Vs) and the complex
-        exponential of the electrical rotor angle.
+    magnetic_map_fcn : Callable[[complex, complex], Tuple[complex, float]]
+        Stator current (A) and electromagnetic torque (Nm) per pole pair as functions of
+        the stator flux linkage (Vs) and the complex exponential of the electrical rotor
+        angle.
 
     """
 
     n_p: int
     R_s: float
-    i_s_dq_fcn: Callable[
-        [complex | np.ndarray, complex | np.ndarray], complex | np.ndarray
-    ]
-    tau_M_ripple_fcn: Callable[
-        [complex | np.ndarray, complex | np.ndarray], float | np.ndarray
+    magnetic_map_fcn: Callable[
+        [complex | np.ndarray, complex | np.ndarray],
+        Tuple[complex | np.ndarray, float | np.ndarray],
     ]
     psi_f: float = field(init=False, default=0.0)
 
@@ -382,54 +376,43 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         if self.psi_f < EPS:  # No permanent magnets
             self.psi_f = 0.0
 
+    def magnetic_map(
+        self,
+        psi_s_dq: complex | np.ndarray,
+        exp_j_theta_m: complex | np.ndarray | None = None,
+    ) -> Tuple[complex | np.ndarray, float | np.ndarray]:
+        """
+        Magnetic map.
+
+        Parameters
+        ----------
+        psi_s_dq : complex | ndarray
+            Stator flux linkage (Vs) in rotor coordinates.
+        exp_j_theta_m : complex | ndarray
+            Complex exponential of electrical rotor angle.
+
+        Returns
+        -------
+        Tuple [complex | ndarray, float | ndarray]
+            Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per
+            pole pair.
+
+        """
+        if exp_j_theta_m is None:
+            raise ValueError("exp_j_theta_m must be provided")
+        if self.magnetic_map_fcn is None:
+            raise ValueError("magnetic_map_fcn must be provided")
+        return self.magnetic_map_fcn(psi_s_dq, exp_j_theta_m)
+
     def i_s_dq(
         self,
         psi_s_dq: complex | np.ndarray,
         exp_j_theta_m: complex | np.ndarray | None = None,
     ) -> complex | np.ndarray:
-        """
-        Current as a function of flux linkage and rotor angle.
-
-        Parameters
-        ----------
-        psi_s_dq : complex | ndarray
-            Stator flux linkage (Vs) in rotor coordinates.
-        exp_j_theta_m : complex | ndarray
-            Complex exponential of electrical rotor angle.
-
-        """
+        """Current (A) as a function of flux linkage (Vs) and rotor angle."""
         if exp_j_theta_m is None:
             raise ValueError("exp_j_theta_m must be provided")
-        if self.i_s_dq_fcn is None:
-            raise ValueError("i_s_dq_fcn must be provided")
-        return self.i_s_dq_fcn(psi_s_dq, exp_j_theta_m)
-
-    def tau_M(
-        self,
-        psi_s_dq: complex | np.ndarray,
-        i_s_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
-    ) -> float | np.ndarray:
-        """
-        Torque as a function of flux linkage and rotor angle.
-
-        Parameters
-        ----------
-        psi_s_dq : complex | ndarray
-            Stator flux linkage (Vs) in rotor coordinates.
-        i_s_dq : complex | ndarray
-            Stator current (A) in rotor coordinates.
-        exp_j_theta_m : complex | ndarray
-            Complex exponential of electrical rotor angle.
-
-        """
-        if exp_j_theta_m is None:
-            raise ValueError("exp_j_theta_m must be provided")
-        if self.tau_M_ripple_fcn is None:
-            raise ValueError("tau_M_ripple_fcn must be provided")
-
-        tau_M_ripple = self.tau_M_ripple_fcn(psi_s_dq, exp_j_theta_m)
-        return 1.5 * self.n_p * np.imag(i_s_dq * np.conj(psi_s_dq)) + tau_M_ripple
+        return self.magnetic_map_fcn(psi_s_dq, exp_j_theta_m)[0]
 
     def psi_s_dq(
         self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None

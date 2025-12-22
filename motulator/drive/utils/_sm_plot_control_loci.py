@@ -19,10 +19,6 @@ from motulator.drive.utils._parameters import (
 )
 from motulator.drive.utils._sm_control_loci import ControlLoci
 
-# LaTeX symbol definition for easier configuration. When per-unit values are used,
-# sometimes subscript m is preferred instead of M.
-M = r"\mathrm{M}"
-
 
 # %%
 def _setup_plot(
@@ -336,10 +332,10 @@ class MachineCharacteristics:
 
         ax.legend()
         if pu_vals:
-            ax.set_xlabel(rf"$\tau_{M}$ (p.u.)")
+            ax.set_xlabel(r"$\tau_\mathrm{m}$ (p.u.)")
             ax.set_ylabel(r"$\psi_\mathrm{s}$ (p.u.)")
         else:
-            ax.set_xlabel(rf"$\tau_{M}$ (Nm)")
+            ax.set_xlabel(r"$\tau_\mathrm{M}$ (Nm)")
             ax.set_ylabel(r"$\psi_\mathrm{s}$ (Vs)")
 
         ax.set_xlim(0, mtpa.tau_M[-1] / base.tau)
@@ -471,10 +467,10 @@ class MachineCharacteristics:
         if pu_vals:
             ax1.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
             ax2.set_ylabel(r"$i_\mathrm{q}$ (p.u.)")
-            ax2.set_xlabel(rf"$\tau_{M}$ (p.u.)")
+            ax2.set_xlabel(r"$\tau_\mathrm{m}$ (p.u.)")
         else:
             ax1.set_ylabel(r"$i_\mathrm{d}$ (A)")
             ax2.set_ylabel(r"$i_\mathrm{q}$ (A)")
-            ax2.set_xlabel(rf"$\tau_{M}$ (Nm)")
+            ax2.set_xlabel(r"$\tau_\mathrm{M}$ (Nm)")
 
         save_and_show(save_path, **savefig_kwargs)

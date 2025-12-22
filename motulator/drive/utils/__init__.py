@@ -14,6 +14,7 @@ from motulator.drive.utils._plots import (
 from motulator.drive.utils._sm_control_loci import ControlLoci
 from motulator.drive.utils._sm_flux_maps import (
     MagneticModel,
+    SaturationModelBase,
     SaturationModelPMSyRM,
     SaturationModelSyRM,
     import_syre_data,
@@ -35,6 +36,7 @@ __all__ = [
     "plot_map",
     "SaturationModelPMSyRM",
     "SaturationModelSyRM",
+    "SaturationModelBase",
     "SequenceGenerator",
     "Step",
 ]

@@ -43,6 +43,7 @@ dev = [
     "pre-commit",
     "pyright",
     "pip-audit",
+    "torch",
 ]
 doc = [
     "numpydoc",
