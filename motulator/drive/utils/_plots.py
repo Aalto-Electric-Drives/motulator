@@ -15,10 +15,6 @@ from motulator.common.utils._plotting import (
 )
 from motulator.common.utils._utils import BaseValues, complex2abc
 
-# LaTeX symbol definition for easier configuration. When per-unit values are used,
-# sometimes subscript m is preferred instead of M.
-M = r"\mathrm{M}"
-
 
 # %%
 def _setup_plot(latex: bool) -> tuple[float, float]:
@@ -64,7 +60,7 @@ def _plot_torques(ax, ctrl, mdl, base: BaseValues) -> None:
             ds="steps-post",
         )
     ax.plot(mdl.t, mdl.machine.tau_M / base.tau, label=rf"$\tau_{M}$")
-    # Plot torque estimated only if it is nonzero
+    # Plot estimated torque only if it is nonzero
     if hasattr(ctrl.fbk, "tau_M") and np.any(ctrl.fbk.tau_M):
         ax.plot(
             ctrl.t,
@@ -163,6 +159,7 @@ def _plot_flux_linkages(ax, ctrl, mdl, base: BaseValues) -> None:
 def plot(
     res: SimulationResults,
     base: BaseValues | None = None,
+    subplots: list[str] | None = None,
     t_lims: tuple[float, float] | None = None,
     t_ticks: ArrayLike | None = None,
     y_lims: list[tuple[float, float] | None] | None = None,
@@ -172,7 +169,7 @@ def plot(
     **savefig_kwargs,
 ) -> None:
     """
-    Plot example figures.
+    Plot example figures with selectable subplots.
 
     Parameters
     ----------
@@ -181,6 +178,9 @@ def plot(
     base : BaseValues, optional
         Base values for scaling the waveforms. If not given, the waveforms are plotted
         in SI units.
+    subplots : list[str], optional
+        List of subplot names to include. Valid names: "speed", "torque", "current",
+        "voltage", "flux". Defaults to all.
     t_lims : tuple[float, float], optional
         Time axis limits. If None, uses full time range.
     t_ticks : ArrayLike, optional
@@ -198,49 +198,61 @@ def plot(
         Additional keyword arguments passed to plt.savefig().
 
     """
-    # Setup plot style and dimensions
-    width, height = _setup_plot(latex)
-
-    # Process base values
+    # Process base values and set LaTeX subscript for M
+    global M  # noqa: PLW0603
     if base is None:
         pu_vals = False
         base = BaseValues.unity()
+        M = r"\mathrm{M}"
     else:
         pu_vals = True
+        M = r"\mathrm{m}"
+
+    # Setup plot style and dimensions
+    width, height = _setup_plot(latex)
 
     # Set time limits
     if t_lims is None:
         t_lims = (0, res.mdl.t[-1])
 
-    # Create figure
-    fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(
-        5, 1, figsize=(width, height), sharex=True
-    )
-    axes = [ax1, ax2, ax3, ax4, ax5]
+    # Subplot mapping: name -> (function, SI label, p.u. label)
+    subplot_map = {
+        "speed": (_plot_speeds, "Speed (rad/s)", "Speed (p.u.)"),
+        "torque": (_plot_torques, "Torque (Nm)", "Torque (p.u.)"),
+        "current": (_plot_currents, "Current (A)", "Current (p.u.)"),
+        "voltage": (_plot_voltages, "Voltage (V)", "Voltage (p.u.)"),
+        "flux": (_plot_flux_linkages, "Flux linkage (Vs)", "Flux linkage (p.u.)"),
+    }
 
-    # Plot subplots
-    _plot_speeds(ax1, res.ctrl, res.mdl, base)
-    _plot_torques(ax2, res.ctrl, res.mdl, base)
-    _plot_currents(ax3, res.ctrl, base)
-    _plot_voltages(ax4, res.ctrl, base)
-    _plot_flux_linkages(ax5, res.ctrl, res.mdl, base)
+    if subplots is None:
+        subplots = ["speed", "torque", "current", "voltage", "flux"]
+
+    # Validate subplot names
+    for name in subplots:
+        if name not in subplot_map:
+            raise ValueError(f"Unknown subplot name: {name}")
+
+    n_subplots = len(subplots)
+    base_height = height
+    height = base_height * n_subplots / 5
+    fig, axes = plt.subplots(n_subplots, 1, figsize=(width, height), sharex=True)
+    if n_subplots == 1:
+        axes = [axes]
+
+    # Plot selected subplots
+    for ax, name in zip(axes, subplots, strict=True):
+        plot_func, label_si, label_pu = subplot_map[name]
+        if name in ["speed", "torque", "flux"]:
+            plot_func(ax, res.ctrl, res.mdl, base)
+        elif name == "current":
+            plot_func(ax, res.ctrl, base)
+        elif name == "voltage":
+            plot_func(ax, res.ctrl, base)
+        ax.set_ylabel(label_pu if pu_vals else label_si)
 
     # Configure all axes
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
 
-    # Add axis labels
-    if pu_vals:
-        ax1.set_ylabel("Speed (p.u.)")
-        ax2.set_ylabel("Torque (p.u.)")
-        ax3.set_ylabel("Current (p.u.)")
-        ax4.set_ylabel("Voltage (p.u.)")
-        ax5.set_ylabel("Flux linkage (p.u.)")
-    else:
-        ax1.set_ylabel("Speed (rad/s)")
-        ax2.set_ylabel("Torque (Nm)")
-        ax3.set_ylabel("Current (A)")
-        ax4.set_ylabel("Voltage (V)")
-        ax5.set_ylabel("Flux linkage (Vs)")
     fig.align_ylabels()
     axes[-1].set_xlabel("Time (s)")
 

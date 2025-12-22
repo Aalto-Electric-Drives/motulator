@@ -241,9 +241,9 @@ class SynchronousMachine(Subsystem):
 
     def compute_outputs(self, state: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
-        i_s_dq = self.par.i_s_dq(state.psi_s_dq, state.exp_j_theta_m)
+        i_s_dq, tau_m = self.par.magnetic_map(state.psi_s_dq, state.exp_j_theta_m)
         i_s_ab = i_s_dq * state.exp_j_theta_m
-        tau_M = self.par.tau_M(state.psi_s_dq, i_s_dq, state.exp_j_theta_m)
+        tau_M = self.par.n_p * tau_m
         return i_s_dq, i_s_ab, tau_M
 
     def set_outputs(self, t: float) -> None:

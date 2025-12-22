@@ -1,4 +1,4 @@
-"""Manipulate flux linkage and current maps of synchronous machines."""
+"""Manipulate flux linkage and current lookup tables of synchronous machines."""
 
 from dataclasses import dataclass
 from typing import Callable, Literal, cast
@@ -233,7 +233,8 @@ class MagneticModel:
 
 
 # %%
-@dataclass
+
+
 class SaturationModelBase:
     """
     Base class for analytical saturation models.
@@ -244,12 +245,17 @@ class SaturationModelBase:
 
     """
 
+    def __init__(
+        self, current_map: Callable[[complex | np.ndarray], complex | np.ndarray]
+    ) -> None:
+        self._current_map = current_map
+
     def __call__(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
         """
         Calculate the stator current from flux linkage (psi_s_dq → i_s_dq).
 
         This is equivalent to the lookup_fcn of a current map MagneticModel. Must be
-        implemented by subclasses.
+        implemented by subclasses or provided as current_map.
 
         Parameters
         ----------
@@ -262,7 +268,11 @@ class SaturationModelBase:
             Stator current (A) in complex form (d + j*q).
 
         """
-        raise NotImplementedError
+        if self._current_map is not None:
+            return self._current_map(psi_s_dq)
+        raise NotImplementedError(
+            "Either provide current_map or override __call__ in a subclass."
+        )
 
     def as_magnetic_model(
         self, d_range: np.ndarray, q_range: np.ndarray, n_p: int | None = None
