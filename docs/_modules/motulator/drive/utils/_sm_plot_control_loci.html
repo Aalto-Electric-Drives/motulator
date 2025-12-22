@@ -425,10 +425,6 @@ document.write(`
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._sm_control_loci</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlLoci</span>
 
-<span class="c1"># LaTeX symbol definition for easier configuration. When per-unit values are used,</span>
-<span class="c1"># sometimes subscript m is preferred instead of M.</span>
-<span class="n">M</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\mathrm</span><span class="si">{M}</span><span class="s2">&quot;</span>
-
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot</span><span class="p">(</span>
@@ -752,10 +748,10 @@ document.write(`
 
         <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{m}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$ (Nm)&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (Nm)&quot;</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$ (Vs)&quot;</span><span class="p">)</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
@@ -890,11 +886,11 @@ document.write(`
         <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
             <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
             <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{m}</span><span class="s2">$ (p.u.)&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
             <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)&quot;</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$ (Nm)&quot;</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (Nm)&quot;</span><span class="p">)</span>
 
         <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 </div>

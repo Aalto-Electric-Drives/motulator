@@ -530,8 +530,8 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.incr_ind_mat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.magnetic_map()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.psi_s_dq()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.tau_M"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.tau_M()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a><ul class="nav section-nav flex-column">
@@ -1499,22 +1499,21 @@ simulation purposes, while control methods do not support spatial harmonics.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of pole pairs.</p></li>
 <li><p><strong>R_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Stator resistance (Ω).</p></li>
-<li><p><strong>i_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em>) – Stator current (A) as a function of the stator flux linkage (Vs) and the complex
-exponential of the electrical rotor angle.</p></li>
-<li><p><strong>tau_M_ripple_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Torque ripple (Nm) as a function of the stator flux linkage (Vs) and the complex
-exponential of the electrical rotor angle.</p></li>
+<li><p><strong>magnetic_map_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>]</em>) – Stator current (A) and electromagnetic torque (Nm) per pole pair as functions of
+the stator flux linkage (Vs) and the complex exponential of the electrical rotor
+angle.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SpatialSaturatedSynchronousMachinePars.i_s_dq">
 <span class="sig-name descname"><span class="pre">i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SpatialSaturatedSynchronousMachinePars.i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.i_s_dq" title="Link to this definition">#</a></dt>
-<dd><p>Current as a function of flux linkage and rotor angle.</p>
+<dd><p>Current (A) as a function of flux linkage (Vs) and rotor angle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em>) – Stator flux linkage (Vs) in rotor coordinates.</p></li>
-<li><p><strong>exp_j_theta_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em>) – Complex exponential of electrical rotor angle.</p></li>
+<li><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p></li>
+<li><p><strong>exp_j_theta_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1544,9 +1543,30 @@ exponential of the electrical rotor angle.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map">
+<span class="sig-name descname"><span class="pre">magnetic_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SpatialSaturatedSynchronousMachinePars.magnetic_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map" title="Link to this definition">#</a></dt>
+<dd><p>Magnetic map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em>) – Stator flux linkage (Vs) in rotor coordinates.</p></li>
+<li><p><strong>exp_j_theta_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em>) – Complex exponential of electrical rotor angle.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per
+pole pair.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple [<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)">complex</a> | ndarray, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a> | ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SpatialSaturatedSynchronousMachinePars.psi_s_dq">
 <em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">psi_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SpatialSaturatedSynchronousMachinePars.psi_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.psi_s_dq" title="Link to this definition">#</a></dt>
-<dd><p>Flux linkage as a function of the current and rotor angle.</p>
+<dd><p>Flux linkage as a function of current and electrical rotor angle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1559,24 +1579,6 @@ exponential of the electrical rotor angle.</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)">complex</a> | ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.SpatialSaturatedSynchronousMachinePars.tau_M">
-<span class="sig-name descname"><span class="pre">tau_M</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SpatialSaturatedSynchronousMachinePars.tau_M"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.tau_M" title="Link to this definition">#</a></dt>
-<dd><p>Torque as a function of flux linkage and rotor angle.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em>) – Stator flux linkage (Vs) in rotor coordinates.</p></li>
-<li><p><strong>i_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em>) – Stator current (A) in rotor coordinates.</p></li>
-<li><p><strong>exp_j_theta_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em>) – Complex exponential of electrical rotor angle.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a> | numpy.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2095,8 +2097,8 @@ The default is <code class="docutils literal notranslate"><span class="pre">B_L<
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.incr_ind_mat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.magnetic_map()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.psi_s_dq()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.tau_M"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.tau_M()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a><ul class="nav section-nav flex-column">

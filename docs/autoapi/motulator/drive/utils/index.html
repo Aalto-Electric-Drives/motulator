@@ -488,6 +488,10 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelBase"><code class="docutils literal notranslate"><span class="pre">SaturationModelBase</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelBase.as_magnetic_model"><code class="docutils literal notranslate"><span class="pre">SaturationModelBase.as_magnetic_model()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.psi_n"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.psi_n</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.a_b"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.a_b</span></code></a></li>
@@ -551,16 +555,19 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
 <td><p>Nominal values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.SaturationModelPMSyRM" title="motulator.drive.utils.SaturationModelPMSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelPMSyRM</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.SaturationModelBase" title="motulator.drive.utils.SaturationModelBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelBase</span></code></a></p></td>
+<td><p>Base class for analytical saturation models.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.SaturationModelPMSyRM" title="motulator.drive.utils.SaturationModelPMSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelPMSyRM</span></code></a></p></td>
 <td><p>Saturation model for PM synchronous reluctance machines.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.SaturationModelSyRM" title="motulator.drive.utils.SaturationModelSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelSyRM</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.SaturationModelSyRM" title="motulator.drive.utils.SaturationModelSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelSyRM</span></code></a></p></td>
 <td><p>Saturation model for synchronous reluctance machines.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.SequenceGenerator" title="motulator.drive.utils.SequenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.SequenceGenerator" title="motulator.drive.utils.SequenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></p></td>
 <td><p>Sequence generator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.Step" title="motulator.drive.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.Step" title="motulator.drive.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
 <td><p>Step function.</p></td>
 </tr>
 </tbody>
@@ -574,8 +581,8 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.import_syre_data" title="motulator.drive.utils.import_syre_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_syre_data</span></code></a>(fname[, add_negative_q_axis])</p></td>
 <td><p>Import a flux map from the MATLAB data file in the SyR-e format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.plot" title="motulator.drive.utils.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(res[, base, t_lims, t_ticks, y_lims, y_ticks, ...])</p></td>
-<td><p>Plot example figures.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.utils.plot" title="motulator.drive.utils.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(res[, base, subplots, t_lims, t_ticks, y_lims, ...])</p></td>
+<td><p>Plot example figures with selectable subplots.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.utils.plot_dc_bus_waveforms" title="motulator.drive.utils.plot_dc_bus_waveforms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_dc_bus_waveforms</span></code></a>(res[, base, t_lims, t_ticks, ...])</p></td>
 <td><p>Plot DC bus and grid-side waveforms.</p></td>
@@ -1072,14 +1079,54 @@ original map to preserve resolution, defaults to None.</p></li>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelBase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelBase" title="Link to this definition">#</a></dt>
+<dd><p>Base class for analytical saturation models.</p>
+<p>This class implements a callable interface that maps flux linkage to current,
+matching the interface of MagneticModel.lookup_fcn for current maps. It can be used
+directly as a lookup function for a MagneticModel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>current_map</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelBase.as_magnetic_model">
+<span class="sig-name descname"><span class="pre">as_magnetic_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelBase.as_magnetic_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelBase.as_magnetic_model" title="Link to this definition">#</a></dt>
+<dd><p>Create a magnetic model that uses this analytical model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d_range</strong> (<em>ndarray</em>) – Range for the d-axis flux linkage (Vs).</p></li>
+<li><p><strong>q_range</strong> (<em>ndarray</em>) – Range for the q-axis flux linkage (Vs).</p></li>
+<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of pole pairs. If provided, the torque is included.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Current map that uses this saturation model as its lookup_fcn.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel">MagneticModel</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelPMSyRM</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelPMSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelPMSyRM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelPMSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.drive.utils.SaturationModelSyRM" title="motulator.drive.utils.SaturationModelSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelSyRM</span></code></a></p>
 <p>Saturation model for PM synchronous reluctance machines.</p>
 <p>This model takes into account the bridge saturation in addition to the self- and
 cross-saturation effects of the d- and q-axis <a class="footnote-reference brackets" href="#lel2024" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The bridge saturation
 model is based on a nonlinear reluctance element in parallel with the Norton-
 equivalent PM model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>current_map</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em>)</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM.psi_n">
 <span class="sig-name descname"><span class="pre">psi_n</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM.psi_n" title="Link to this definition">#</a></dt>
@@ -1148,11 +1195,16 @@ ICEM, 2024, <a class="reference external" href="https://doi.org/10.1109/ICEM6080
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelSyRM</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelBase</span></code></p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelSyRM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.utils.SaturationModelBase" title="motulator.drive.utils.SaturationModelBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelBase</span></code></a></p>
 <p>Saturation model for synchronous reluctance machines.</p>
 <p>This model takes into account the self- and cross-saturation effects of the d- and
 q-axis <a class="footnote-reference brackets" href="#hin2017" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>current_map</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em>)</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM.a_d0">
 <span class="sig-name descname"><span class="pre">a_d0</span></span><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM.a_d0" title="Link to this definition">#</a></dt>
@@ -1326,14 +1378,16 @@ licensed under the Apache License, Version 2.0.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="motulator.drive.utils.plot">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_plots.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot" title="Link to this definition">#</a></dt>
-<dd><p>Plot example figures.</p>
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subplots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_plots.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot example figures with selectable subplots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>res</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><em>SimulationResults</em></a>) – Simulation results.</p></li>
 <li><p><strong>base</strong> (<a class="reference internal" href="#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em>, </em><em>optional</em>) – Base values for scaling the waveforms. If not given, the waveforms are plotted
 in SI units.</p></li>
+<li><p><strong>subplots</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – List of subplot names to include. Valid names: “speed”, “torque”, “current”,
+“voltage”, “flux”. Defaults to all.</p></li>
 <li><p><strong>t_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Time axis limits. If None, uses full time range.</p></li>
 <li><p><strong>t_ticks</strong> (<em>ArrayLike</em><em>, </em><em>optional</em>) – Time axis tick locations.</p></li>
 <li><p><strong>y_lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – y-axis limits for each subplot.</p></li>
@@ -1537,6 +1591,10 @@ installation, defaults to False.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelBase"><code class="docutils literal notranslate"><span class="pre">SaturationModelBase</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelBase.as_magnetic_model"><code class="docutils literal notranslate"><span class="pre">SaturationModelBase.as_magnetic_model()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.psi_n"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.psi_n</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.SaturationModelPMSyRM.a_b"><code class="docutils literal notranslate"><span class="pre">SaturationModelPMSyRM.a_b</span></code></a></li>

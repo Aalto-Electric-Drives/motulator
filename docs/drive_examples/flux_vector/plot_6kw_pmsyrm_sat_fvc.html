@@ -503,7 +503,7 @@ data is used to parametrize the machine model.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_6kw_pmsyrm_sat_fvc_001.png" srcset="../../_images/sphx_glr_plot_6kw_pmsyrm_sat_fvc_001.png" alt="plot 6kw pmsyrm sat fvc" class = "sphx-glr-single-img"/><p>Create a saturation model, which will be used in the control system.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">i_s_dq_fcn</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SaturationModelPMSyRM</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est_current_map</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">SaturationModelPMSyRM</span><span class="p">(</span>
     <span class="n">a_d0</span><span class="o">=</span><span class="mf">3.96</span><span class="p">,</span>
     <span class="n">a_dd</span><span class="o">=</span><span class="mf">28.5</span><span class="p">,</span>
     <span class="n">S</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
@@ -523,11 +523,11 @@ data is used to parametrize the machine model.</p>
 </div>
 <p>Compare the saturation model with the measured data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate the flux map using the saturation model</span>
-<span class="n">est_curr_map</span> <span class="o">=</span> <span class="n">i_s_dq_fcn</span><span class="o">.</span><span class="n">as_magnetic_model</span><span class="p">(</span>
+<span class="n">est_current_map</span> <span class="o">=</span> <span class="n">est_current_map</span><span class="o">.</span><span class="n">as_magnetic_model</span><span class="p">(</span>
     <span class="n">d_range</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
     <span class="n">q_range</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.4</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mf">1.4</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">est_flux_map</span> <span class="o">=</span> <span class="n">est_curr_map</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
+<span class="n">est_flux_map</span> <span class="o">=</span> <span class="n">est_current_map</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
 
 <span class="c1"># Plot the saturation model (surface) and the measured data (points)</span>
 <span class="n">utils</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span>
@@ -617,7 +617,7 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <a class="reference external" href="https://doi.org/10.1109/28.85485">https://doi.org/10.1109/28.85485</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 31.891 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 32.269 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-flux-vector-plot-6kw-pmsyrm-sat-fvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/c96122ab6bb6895821bf1f02385c8e8c/plot_6kw_pmsyrm_sat_fvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_6kw_pmsyrm_sat_fvc.ipynb</span></code></a></p>

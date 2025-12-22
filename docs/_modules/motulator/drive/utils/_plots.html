@@ -421,10 +421,6 @@ document.write(`
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">complex2abc</span>
 
-<span class="c1"># LaTeX symbol definition for easier configuration. When per-unit values are used,</span>
-<span class="c1"># sometimes subscript m is preferred instead of M.</span>
-<span class="n">M</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\mathrm</span><span class="si">{M}</span><span class="s2">&quot;</span>
-
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
@@ -470,7 +466,7 @@ document.write(`
             <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$\tau_</span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
-    <span class="c1"># Plot torque estimated only if it is nonzero</span>
+    <span class="c1"># Plot estimated torque only if it is nonzero</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
@@ -571,6 +567,7 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="n">res</span><span class="p">:</span> <span class="n">SimulationResults</span><span class="p">,</span>
     <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">subplots</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_ticks</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">y_lims</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -580,7 +577,7 @@ document.write(`
     <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot example figures.</span>
+<span class="sd">    Plot example figures with selectable subplots.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -589,6 +586,9 @@ document.write(`
 <span class="sd">    base : BaseValues, optional</span>
 <span class="sd">        Base values for scaling the waveforms. If not given, the waveforms are plotted</span>
 <span class="sd">        in SI units.</span>
+<span class="sd">    subplots : list[str], optional</span>
+<span class="sd">        List of subplot names to include. Valid names: &quot;speed&quot;, &quot;torque&quot;, &quot;current&quot;,</span>
+<span class="sd">        &quot;voltage&quot;, &quot;flux&quot;. Defaults to all.</span>
 <span class="sd">    t_lims : tuple[float, float], optional</span>
 <span class="sd">        Time axis limits. If None, uses full time range.</span>
 <span class="sd">    t_ticks : ArrayLike, optional</span>
@@ -606,49 +606,61 @@ document.write(`
 <span class="sd">        Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Setup plot style and dimensions</span>
-    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
-
-    <span class="c1"># Process base values</span>
+    <span class="c1"># Process base values and set LaTeX subscript for M</span>
+    <span class="k">global</span> <span class="n">M</span>  <span class="c1"># noqa: PLW0603</span>
     <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\mathrm</span><span class="si">{M}</span><span class="s2">&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pu_vals</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\mathrm</span><span class="si">{m}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Setup plot style and dimensions</span>
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
 
     <span class="c1"># Set time limits</span>
     <span class="k">if</span> <span class="n">t_lims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">t_lims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="c1"># Create figure</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
-        <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">]</span>
+    <span class="c1"># Subplot mapping: name -&gt; (function, SI label, p.u. label)</span>
+    <span class="n">subplot_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;speed&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">_plot_speeds</span><span class="p">,</span> <span class="s2">&quot;Speed (rad/s)&quot;</span><span class="p">,</span> <span class="s2">&quot;Speed (p.u.)&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;torque&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">_plot_torques</span><span class="p">,</span> <span class="s2">&quot;Torque (Nm)&quot;</span><span class="p">,</span> <span class="s2">&quot;Torque (p.u.)&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;current&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">_plot_currents</span><span class="p">,</span> <span class="s2">&quot;Current (A)&quot;</span><span class="p">,</span> <span class="s2">&quot;Current (p.u.)&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;voltage&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">_plot_voltages</span><span class="p">,</span> <span class="s2">&quot;Voltage (V)&quot;</span><span class="p">,</span> <span class="s2">&quot;Voltage (p.u.)&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;flux&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">_plot_flux_linkages</span><span class="p">,</span> <span class="s2">&quot;Flux linkage (Vs)&quot;</span><span class="p">,</span> <span class="s2">&quot;Flux linkage (p.u.)&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
 
-    <span class="c1"># Plot subplots</span>
-    <span class="n">_plot_speeds</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-    <span class="n">_plot_torques</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-    <span class="n">_plot_currents</span><span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-    <span class="n">_plot_voltages</span><span class="p">(</span><span class="n">ax4</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-    <span class="n">_plot_flux_linkages</span><span class="p">(</span><span class="n">ax5</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">subplots</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;speed&quot;</span><span class="p">,</span> <span class="s2">&quot;torque&quot;</span><span class="p">,</span> <span class="s2">&quot;current&quot;</span><span class="p">,</span> <span class="s2">&quot;voltage&quot;</span><span class="p">,</span> <span class="s2">&quot;flux&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Validate subplot names</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">subplots</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subplot_map</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown subplot name: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">n_subplots</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">subplots</span><span class="p">)</span>
+    <span class="n">base_height</span> <span class="o">=</span> <span class="n">height</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">base_height</span> <span class="o">*</span> <span class="n">n_subplots</span> <span class="o">/</span> <span class="mi">5</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_subplots</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_subplots</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes</span><span class="p">]</span>
+
+    <span class="c1"># Plot selected subplots</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">subplots</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">plot_func</span><span class="p">,</span> <span class="n">label_si</span><span class="p">,</span> <span class="n">label_pu</span> <span class="o">=</span> <span class="n">subplot_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;speed&quot;</span><span class="p">,</span> <span class="s2">&quot;torque&quot;</span><span class="p">,</span> <span class="s2">&quot;flux&quot;</span><span class="p">]:</span>
+            <span class="n">plot_func</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;current&quot;</span><span class="p">:</span>
+            <span class="n">plot_func</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;voltage&quot;</span><span class="p">:</span>
+            <span class="n">plot_func</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">label_pu</span> <span class="k">if</span> <span class="n">pu_vals</span> <span class="k">else</span> <span class="n">label_si</span><span class="p">)</span>
 
     <span class="c1"># Configure all axes</span>
     <span class="n">configure_axes</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">t_lims</span><span class="p">,</span> <span class="n">t_ticks</span><span class="p">,</span> <span class="n">y_lims</span><span class="p">,</span> <span class="n">y_ticks</span><span class="p">)</span>
 
-    <span class="c1"># Add axis labels</span>
-    <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Speed (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Torque (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax4</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax5</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux linkage (p.u.)&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Speed (rad/s)&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Torque (Nm)&quot;</span><span class="p">)</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
-        <span class="n">ax4</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
-        <span class="n">ax5</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux linkage (Vs)&quot;</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
     <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
 

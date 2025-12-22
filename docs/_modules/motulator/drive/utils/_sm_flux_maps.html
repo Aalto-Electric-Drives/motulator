@@ -404,7 +404,7 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for motulator.drive.utils._sm_flux_maps</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Manipulate flux linkage and current maps of synchronous machines.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Manipulate flux linkage and current lookup tables of synchronous machines.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">cast</span>
@@ -657,7 +657,10 @@ document.write(`
 
 
 <span class="c1"># %%</span>
-<span class="nd">@dataclass</span>
+
+
+<div class="viewcode-block" id="SaturationModelBase">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.SaturationModelBase">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SaturationModelBase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for analytical saturation models.</span>
@@ -668,12 +671,17 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">current_map</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_map</span> <span class="o">=</span> <span class="n">current_map</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the stator current from flux linkage (psi_s_dq → i_s_dq).</span>
 
 <span class="sd">        This is equivalent to the lookup_fcn of a current map MagneticModel. Must be</span>
-<span class="sd">        implemented by subclasses.</span>
+<span class="sd">        implemented by subclasses or provided as current_map.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -686,8 +694,14 @@ document.write(`
 <span class="sd">            Stator current (A) in complex form (d + j*q).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_map</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Either provide current_map or override __call__ in a subclass.&quot;</span>
+        <span class="p">)</span>
 
+<div class="viewcode-block" id="SaturationModelBase.as_magnetic_model">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.SaturationModelBase.as_magnetic_model">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">as_magnetic_model</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">d_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MagneticModel</span><span class="p">:</span>
@@ -728,7 +742,9 @@ document.write(`
             <span class="n">lookup_fcn</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>  <span class="c1"># Use the model&#39;s __call__ directly</span>
             <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;current_map&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="SaturationModelSyRM">

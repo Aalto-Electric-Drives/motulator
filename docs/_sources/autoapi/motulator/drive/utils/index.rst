@@ -37,6 +37,7 @@ Classes
    motulator.drive.utils.MachineCharacteristics
    motulator.drive.utils.MagneticModel
    motulator.drive.utils.NominalValues
+   motulator.drive.utils.SaturationModelBase
    motulator.drive.utils.SaturationModelPMSyRM
    motulator.drive.utils.SaturationModelSyRM
    motulator.drive.utils.SequenceGenerator
@@ -801,7 +802,66 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SaturationModelPMSyRM
+.. py:class:: SaturationModelBase(current_map)
+
+   
+   Base class for analytical saturation models.
+
+   This class implements a callable interface that maps flux linkage to current,
+   matching the interface of MagneticModel.lookup_fcn for current maps. It can be used
+   directly as a lookup function for a MagneticModel.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: as_magnetic_model(d_range, q_range, n_p = None)
+
+      
+      Create a magnetic model that uses this analytical model.
+
+      :param d_range: Range for the d-axis flux linkage (Vs).
+      :type d_range: ndarray
+      :param q_range: Range for the q-axis flux linkage (Vs).
+      :type q_range: ndarray
+      :param n_p: Number of pole pairs. If provided, the torque is included.
+      :type n_p: int, optional
+
+      :returns: Current map that uses this saturation model as its lookup_fcn.
+      :rtype: MagneticModel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SaturationModelPMSyRM(current_map)
 
    Bases: :py:obj:`SaturationModelSyRM`
 
@@ -867,7 +927,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SaturationModelSyRM
+.. py:class:: SaturationModelSyRM(current_map)
 
    Bases: :py:obj:`SaturationModelBase`
 
@@ -1058,16 +1118,19 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot(res, base = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
+.. py:function:: plot(res, base = None, subplots = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
 
    
-   Plot example figures.
+   Plot example figures with selectable subplots.
 
    :param res: Simulation results.
    :type res: SimulationResults
    :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
    :type base: BaseValues, optional
+   :param subplots: List of subplot names to include. Valid names: "speed", "torque", "current",
+                    "voltage", "flux". Defaults to all.
+   :type subplots: list[str], optional
    :param t_lims: Time axis limits. If None, uses full time range.
    :type t_lims: tuple[float, float], optional
    :param t_ticks: Time axis tick locations.

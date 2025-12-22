@@ -1409,12 +1409,10 @@ Package Contents
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs) and the complex
-                      exponential of the electrical rotor angle.
-   :type i_s_dq_fcn: Callable[[complex, complex], complex]
-   :param tau_M_ripple_fcn: Torque ripple (Nm) as a function of the stator flux linkage (Vs) and the complex
-                            exponential of the electrical rotor angle.
-   :type tau_M_ripple_fcn: Callable[[complex, complex], float]
+   :param magnetic_map_fcn: Stator current (A) and electromagnetic torque (Nm) per pole pair as functions of
+                            the stator flux linkage (Vs) and the complex exponential of the electrical rotor
+                            angle.
+   :type magnetic_map_fcn: Callable[[complex, complex], Tuple[complex, float]]
 
 
 
@@ -1436,12 +1434,8 @@ Package Contents
    .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m = None)
 
       
-      Current as a function of flux linkage and rotor angle.
+      Current (A) as a function of flux linkage (Vs) and rotor angle.
 
-      :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
-      :type psi_s_dq: complex | ndarray
-      :param exp_j_theta_m: Complex exponential of electrical rotor angle.
-      :type exp_j_theta_m: complex | ndarray
 
 
 
@@ -1494,20 +1488,19 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
-      :abstractmethod:
-
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
 
       
-      Flux linkage as a function of the current and rotor angle.
+      Magnetic map.
 
-      :param i_s_dq: Stator current (A) in rotor coordinates.
-      :type i_s_dq: complex | ndarray
-      :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
-      :type exp_j_theta_m: complex | ndarray, optional
+      :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
+      :type psi_s_dq: complex | ndarray
+      :param exp_j_theta_m: Complex exponential of electrical rotor angle.
+      :type exp_j_theta_m: complex | ndarray
 
-      :returns: Stator flux linkage in rotor coordinates (Vs).
-      :rtype: complex | ndarray
+      :returns: Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per
+                pole pair.
+      :rtype: Tuple [complex | ndarray, float | ndarray]
 
 
 
@@ -1527,17 +1520,20 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: tau_M(psi_s_dq, i_s_dq, exp_j_theta_m = None)
+   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
+      :abstractmethod:
+
 
       
-      Torque as a function of flux linkage and rotor angle.
+      Flux linkage as a function of current and electrical rotor angle.
 
-      :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
-      :type psi_s_dq: complex | ndarray
       :param i_s_dq: Stator current (A) in rotor coordinates.
       :type i_s_dq: complex | ndarray
-      :param exp_j_theta_m: Complex exponential of electrical rotor angle.
-      :type exp_j_theta_m: complex | ndarray
+      :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
+      :type exp_j_theta_m: complex | ndarray, optional
+
+      :returns: Stator flux linkage in rotor coordinates (Vs).
+      :rtype: complex | ndarray
 
 
 

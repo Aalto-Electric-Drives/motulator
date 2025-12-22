@@ -120,7 +120,7 @@ Create a saturation model, which will be used in the control system.
 .. code-block:: Python
 
 
-    i_s_dq_fcn = utils.SaturationModelPMSyRM(
+    est_current_map = utils.SaturationModelPMSyRM(
         a_d0=3.96,
         a_dd=28.5,
         S=4,
@@ -154,11 +154,11 @@ Compare the saturation model with the measured data.
 
 
     # Generate the flux map using the saturation model
-    est_curr_map = i_s_dq_fcn.as_magnetic_model(
+    est_current_map = est_current_map.as_magnetic_model(
         d_range=np.linspace(-0.1 * base.psi, base.psi, 256),
         q_range=np.linspace(-1.4 * base.psi, 1.4 * base.psi, 256),
     )
-    est_flux_map = est_curr_map.invert()
+    est_flux_map = est_current_map.invert()
 
     # Plot the saturation model (surface) and the measured data (points)
     utils.plot_map(
@@ -367,7 +367,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 31.891 seconds)
+   **Total running time of the script:** (0 minutes 32.269 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:
