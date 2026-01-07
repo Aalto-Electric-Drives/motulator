@@ -6,7 +6,7 @@ from typing import Callable, Protocol, Tuple
 import numpy as np
 from scipy.optimize import root, root_scalar
 
-EPS: float = 1e-6
+EPS: float = 1e-3
 
 
 # %%
