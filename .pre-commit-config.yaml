@@ -8,7 +8,7 @@ repos:
       name: pip-audit
       description: "Audits Python environments and dependency trees for known vulnerabilities"
       entry: pip-audit
-      args: [--ignore-vuln, GHSA-4xh5-x5gv-qwph, --ignore-vuln, CVE-2026-21441]  
+      args: [--ignore-vuln, GHSA-4xh5-x5gv-qwph, --ignore-vuln, CVE-2026-21441]
       pass_filenames: false
       language: python
 
