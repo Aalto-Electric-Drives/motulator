@@ -22,7 +22,6 @@ limited due to the comparatively large q-axis inductance.
 from pathlib import Path
 
 import numpy as np
-from scipy.io import loadmat
 
 import motulator.drive.control.sm as control
 from motulator.drive import model, utils
@@ -37,15 +36,15 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # Plot the saturation model (surfaces) and the measured flux map data (points). This
 # data is used to parametrize the machine model.
 
-# Load the measured data from the MATLAB file
+# Load the measured data
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-meas_data = loadmat(p / "ABB_400rpm_map.mat")
+meas_data = np.load(p / "ABB_400rpm_map.npz")
+i_s_dq_map = meas_data["i_s_dq"]
+psi_s_dq_map = meas_data["psi_s_dq"]
 
 # Create the flux map from the measured data
 meas_flux_map = utils.MagneticModel(
-    i_s_dq=meas_data["id_map"] + 1j * meas_data["iq_map"],
-    psi_s_dq=meas_data["psid_map"] + 1j * meas_data["psiq_map"],
-    type="flux_map",
+    i_s_dq=i_s_dq_map, psi_s_dq=psi_s_dq_map, type="flux_map"
 )
 
 # Plot the measured data

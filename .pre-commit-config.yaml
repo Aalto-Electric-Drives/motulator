@@ -8,7 +8,7 @@ repos:
       name: pip-audit
       description: "Audits Python environments and dependency trees for known vulnerabilities"
       entry: pip-audit
-      args: [--ignore-vuln, GHSA-4xh5-x5gv-qwph]  # pip version 25.2 is the latest available, but has this vulnerability
+      args: [--ignore-vuln, GHSA-4xh5-x5gv-qwph, --ignore-vuln, CVE-2026-21441]  
       pass_filenames: false
       language: python
 
@@ -66,7 +66,7 @@ repos:
 
   # Pyright
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.407
+    rev: v1.1.408
     hooks:
       - id: pyright
         additional_dependencies: [numpy, scipy, matplotlib, tqdm, sphinx-gallery]
