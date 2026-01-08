@@ -35,7 +35,7 @@ speed-control bandwidth. Using the mechanical-model-based speed observer is part
 useful in the case of PM-SyRMs, where the speed-estimation bandwidth otherwise would be
 limited due to the comparatively large q-axis inductance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-30
+.. GENERATED FROM PYTHON SOURCE LINES 21-29
 
 .. code-block:: Python
 
@@ -43,7 +43,6 @@ limited due to the comparatively large q-axis inductance.
     from pathlib import Path
 
     import numpy as np
-    from scipy.io import loadmat
 
     import motulator.drive.control.sm as control
     from motulator.drive import model, utils
@@ -55,11 +54,11 @@ limited due to the comparatively large q-axis inductance.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Compute base values based on the nominal values (just for figures).
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-36
+.. GENERATED FROM PYTHON SOURCE LINES 31-35
 
 .. code-block:: Python
 
@@ -74,25 +73,25 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-39
+.. GENERATED FROM PYTHON SOURCE LINES 36-38
 
 Plot the saturation model (surfaces) and the measured flux map data (points). This
 data is used to parametrize the machine model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-55
+.. GENERATED FROM PYTHON SOURCE LINES 38-54
 
 .. code-block:: Python
 
 
-    # Load the measured data from the MATLAB file
+    # Load the measured data
     p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-    meas_data = loadmat(p / "ABB_400rpm_map.mat")
+    meas_data = np.load(p / "ABB_400rpm_map.npz")
+    i_s_dq_map = meas_data["i_s_dq"]
+    psi_s_dq_map = meas_data["psi_s_dq"]
 
     # Create the flux map from the measured data
     meas_flux_map = utils.MagneticModel(
-        i_s_dq=meas_data["id_map"] + 1j * meas_data["iq_map"],
-        psi_s_dq=meas_data["psid_map"] + 1j * meas_data["psiq_map"],
-        type="flux_map",
+        i_s_dq=i_s_dq_map, psi_s_dq=psi_s_dq_map, type="flux_map"
     )
 
     # Plot the measured data
@@ -111,11 +110,11 @@ data is used to parametrize the machine model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-57
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Create a saturation model, which will be used in the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-75
+.. GENERATED FROM PYTHON SOURCE LINES 56-74
 
 .. code-block:: Python
 
@@ -144,11 +143,11 @@ Create a saturation model, which will be used in the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 75-76
 
 Compare the saturation model with the measured data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-103
+.. GENERATED FROM PYTHON SOURCE LINES 76-102
 
 .. code-block:: Python
 
@@ -202,11 +201,11 @@ Compare the saturation model with the measured data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-105
+.. GENERATED FROM PYTHON SOURCE LINES 103-104
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-113
+.. GENERATED FROM PYTHON SOURCE LINES 104-112
 
 .. code-block:: Python
 
@@ -225,14 +224,14 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-118
+.. GENERATED FROM PYTHON SOURCE LINES 113-117
 
 Configure the control system. Since the inertia estimate `J` is provided in
 `FluxVectorControllerCfg`, the mechanical-model-based speed observer is used. Integral
 action in flux-vector control is not needed (`alpha_i = 0`) since the speed observer's
 load-torque disturbance estimation provides integral action.
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-129
+.. GENERATED FROM PYTHON SOURCE LINES 117-128
 
 .. code-block:: Python
 
@@ -254,11 +253,11 @@ load-torque disturbance estimation provides integral action.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-131
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
 Visualize the control loci.
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-139
+.. GENERATED FROM PYTHON SOURCE LINES 130-138
 
 .. code-block:: Python
 
@@ -308,11 +307,11 @@ Visualize the control loci.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-141
+.. GENERATED FROM PYTHON SOURCE LINES 139-140
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-145
+.. GENERATED FROM PYTHON SOURCE LINES 140-144
 
 .. code-block:: Python
 
@@ -327,11 +326,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-147
+.. GENERATED FROM PYTHON SOURCE LINES 145-146
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-152
+.. GENERATED FROM PYTHON SOURCE LINES 146-151
 
 .. code-block:: Python
 
@@ -352,7 +351,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-162
+.. GENERATED FROM PYTHON SOURCE LINES 152-161
 
 .. rubric:: References
 
@@ -367,7 +366,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 31.688 seconds)
+   **Total running time of the script:** (0 minutes 32.227 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:
