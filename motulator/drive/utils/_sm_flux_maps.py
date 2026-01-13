@@ -1,6 +1,7 @@
 """Manipulate flux linkage and current lookup tables of synchronous machines."""
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable, Literal, cast
 
 import numpy as np
@@ -127,10 +128,16 @@ class MagneticModel:
             new_type = "current_map" if self.is_flux_map() else "flux_map"
 
         # Auto-determine ranges if not provided
-        d_min = np.max(np.min(np.real(inp), axis=0))
-        d_max = np.min(np.max(np.real(inp), axis=0))
-        q_min = np.max(np.min(np.imag(inp), axis=1))
-        q_max = np.min(np.max(np.imag(inp), axis=1))
+        if inp.ndim == 2:
+            d_min = np.max(np.min(np.real(inp), axis=0))
+            d_max = np.min(np.max(np.real(inp), axis=0))
+            q_min = np.max(np.min(np.imag(inp), axis=1))
+            q_max = np.min(np.max(np.imag(inp), axis=1))
+        else:
+            d_min = np.min(np.real(inp))
+            d_max = np.max(np.real(inp))
+            q_min = np.min(np.imag(inp))
+            q_max = np.max(np.imag(inp))
 
         if d_range is None:
             d_range = np.linspace(d_min, d_max, num)
@@ -233,46 +240,48 @@ class MagneticModel:
 
 
 # %%
-
-
 class SaturationModelBase:
     """
     Base class for analytical saturation models.
 
-    This class implements a callable interface that maps flux linkage to current,
-    matching the interface of MagneticModel.lookup_fcn for current maps. It can be used
-    directly as a lookup function for a MagneticModel.
+    This class implements a callable interface, matching the interface of
+    MagneticModel.lookup_fcn for current maps. It can be used directly as a lookup
+    function for a MagneticModel.
 
     """
 
     def __init__(
-        self, current_map: Callable[[complex | np.ndarray], complex | np.ndarray]
+        self,
+        map_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None,
+        map_type: Literal["current_map", "flux_map"] = "current_map",
     ) -> None:
-        self._current_map = current_map
-
-    def __call__(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
-        """
-        Calculate the stator current from flux linkage (psi_s_dq → i_s_dq).
-
-        This is equivalent to the lookup_fcn of a current map MagneticModel. Must be
-        implemented by subclasses or provided as current_map.
+        """Initialize the saturation model wrapper.
 
         Parameters
         ----------
-        psi_s_dq : complex | np.ndarray
-            Stator flux linkage (Vs) in complex form (d + j*q).
-
-        Returns
-        -------
-        complex | np.ndarray
-            Stator current (A) in complex form (d + j*q).
+        map_fcn : Callable, optional
+            Callable implementing either a current map (psi_s -> i_s) or a flux map
+            (i_s -> psi_s). If not provided, subclasses are expected to override
+            `__call__`.
+        map_type : {"current_map", "flux_map"}, optional
+            Declares what the model represents, defaults to "current_map".
 
         """
-        if self._current_map is not None:
-            return self._current_map(psi_s_dq)
-        raise NotImplementedError(
-            "Either provide current_map or override __call__ in a subclass."
-        )
+        self._map_fcn = map_fcn
+        self._type: Literal["current_map", "flux_map"] = map_type
+
+    def __call__(self, input_dq: complex | np.ndarray) -> complex | np.ndarray:
+        """Evaluate the underlying map.
+
+        For a current map, the input is flux linkage and the output is current. For a
+        flux map, the input is current and the output is flux linkage.
+
+        """
+        if self._map_fcn is None:
+            raise NotImplementedError(
+                "Provide map_fcn or override __call__ in subclass."
+            )
+        return self._map_fcn(input_dq)
 
     def as_magnetic_model(
         self, d_range: np.ndarray, q_range: np.ndarray, n_p: int | None = None
@@ -283,37 +292,45 @@ class SaturationModelBase:
         Parameters
         ----------
         d_range : ndarray
-            Range for the d-axis flux linkage (Vs).
+            Range for the d-axis input. For current maps, this is psi_d (Vs). For flux
+            maps, this is i_d (A).
         q_range : ndarray
-            Range for the q-axis flux linkage (Vs).
+            Range for the q-axis input. For current maps, this is psi_q (Vs). For flux
+            maps, this is i_q (A).
         n_p : int, optional
             Number of pole pairs. If provided, the torque is included.
 
         Returns
         -------
         MagneticModel
-            Current map that uses this saturation model as its lookup_fcn.
+            Magnetic model using this object as its `lookup_fcn`.
 
         """
-        # Create grid of flux values
-        psi_d_grid, psi_q_grid = np.meshgrid(d_range, q_range, indexing="ij")
-        psi_s_dq = psi_d_grid + 1j * psi_q_grid
+        # Create grid of inputs and evaluate the map
+        d_grid, q_grid = np.meshgrid(d_range, q_range, indexing="ij")
+        inp_dq = d_grid + 1j * q_grid
 
-        # Calculate corresponding currents
-        i_s_dq = cast(np.ndarray, self(psi_s_dq))
+        if self._type == "current_map":
+            psi_s_dq = inp_dq
+            i_s_dq = cast(np.ndarray, self(psi_s_dq))
+            model_type: Literal["current_map", "flux_map"] = "current_map"
+        else:
+            i_s_dq = inp_dq
+            psi_s_dq = cast(np.ndarray, self(i_s_dq))
+            model_type = "flux_map"
 
         # Calculate torque if needed
         tau_M = None
         if n_p is not None:
             tau_M = 1.5 * n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
 
-        # Magnetic model with this saturation model as the lookup function
+        # Magnetic model with this model as the lookup function
         return MagneticModel(
-            psi_s_dq=psi_s_dq,
             i_s_dq=i_s_dq,
+            psi_s_dq=psi_s_dq,
             lookup_fcn=self,  # Use the model's __call__ directly
             tau_M=tau_M,
-            type="current_map",
+            type=model_type,
         )
 
 
@@ -363,6 +380,9 @@ class SaturationModelSyRM(SaturationModelBase):
     T: float
     U: float
     V: float
+
+    def __post_init__(self) -> None:
+        super().__init__(map_type="current_map")
 
     def __call__(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
         """Calculate the stator current for SyRMs."""
@@ -444,7 +464,9 @@ class SaturationModelPMSyRM(SaturationModelSyRM):
 
 
 # %%
-def import_syre_data(fname: str, add_negative_q_axis: bool = True) -> MagneticModel:
+def import_syre_data(
+    fname: Path | str, add_negative_q_axis: bool = True
+) -> MagneticModel:
     """
     Import a flux map from the MATLAB data file in the SyR-e format.
 

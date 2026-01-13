@@ -34,16 +34,22 @@ def _setup_plot_style(latex: bool) -> tuple[tuple[float, float], bool]:
 # %%
 def _filter_and_plot_raw_data(
     ax,
-    raw_data: MagneticModel,
+    raw_data: MagneticModel | tuple[np.ndarray, np.ndarray],
     base: BaseValues,
     data_type: str,
     component: str,
     x_lims: tuple[float, float],
     y_lims: tuple[float, float],
+    marker: str,
+    color: str,
 ) -> None:
     """Filter and plot raw data as scatter points."""
-    raw_i_s_dq = raw_data.i_s_dq / base.i
-    raw_psi_s_dq = raw_data.psi_s_dq / base.psi
+    if isinstance(raw_data, tuple):
+        raw_i_s_dq = raw_data[0] / base.i
+        raw_psi_s_dq = raw_data[1] / base.psi
+    else:
+        raw_i_s_dq = raw_data.i_s_dq / base.i
+        raw_psi_s_dq = raw_data.psi_s_dq / base.psi
 
     if data_type == "flux_map":
         mask = (
@@ -66,7 +72,7 @@ def _filter_and_plot_raw_data(
         x_scatter, y_scatter = raw_psi_s_dq[mask].real, raw_psi_s_dq[mask].imag
         z_scatter = raw_i_s_dq[mask].real if component == "d" else raw_i_s_dq[mask].imag
 
-    ax.scatter(x_scatter, y_scatter, z_scatter, marker=".", color="r")
+    ax.scatter(x_scatter, y_scatter, z_scatter, marker=marker, color=color)
 
 
 def _get_labels(data_type: str, component: str, pu_vals: bool) -> tuple[str, str, str]:
@@ -149,8 +155,13 @@ def plot_map(
     base: BaseValues | None = None,
     lims: dict[str, tuple[float, float]] | None = None,
     ticks: dict[str, ArrayLike] | None = None,
-    raw_data: MagneticModel | None = None,
+    raw_data: MagneticModel
+    | list[MagneticModel | tuple[np.ndarray, np.ndarray]]
+    | None = None,
+    raw_marker: str | list[str] | None = None,
+    raw_color: str | list[str] | None = None,
     axlim_clip: bool = True,
+    surface_cmap: str = "viridis",
     latex: bool = False,
     save_path: str | Path | None = None,
     **savefig_kwargs,
@@ -171,10 +182,16 @@ def plot_map(
         Axis limits. Keys should be 'x', 'y', 'z'.
     ticks : dict[str, ArrayLike], optional
         Axis tick locations. Keys should be 'x', 'y', 'z'.
-    raw_data : MagneticModel, optional
+    raw_data : MagneticModel | list[MagneticModel], optional
         Raw data for comparison (shown as scatter points).
+    raw_marker : str | list[str], optional
+        Marker style for raw data.
+    raw_color : str | list[str], optional
+        Marker color for raw data.
     axlim_clip : bool, optional
         Whether to clip the axes limits to the data limits, defaults to True.
+    surface_cmap : str, optional
+        Colormap for the surface plot, defaults to "viridis".
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
         installation, defaults to False.
@@ -210,13 +227,43 @@ def plot_map(
 
     # Plot raw data if provided
     if raw_data is not None:
-        _filter_and_plot_raw_data(
-            ax, raw_data, base, data.type, component, x_lims, y_lims
-        )
+        if isinstance(raw_data, list):
+            datas = raw_data
+            def_markers = [".", "."]
+            def_colors = ["b", "r"]
+        else:
+            datas = [raw_data]
+            def_markers = ["."]
+            def_colors = ["b"]
+
+        markers = raw_marker if raw_marker is not None else def_markers
+        colors = raw_color if raw_color is not None else def_colors
+
+        # Ensure markers and colors are lists
+        if isinstance(markers, str):
+            markers = [markers] * len(datas)
+        if isinstance(colors, str):
+            colors = [colors] * len(datas)
+
+        # Plot each raw dataset
+        for i, raw_d in enumerate(datas):
+            m = markers[i % len(markers)]
+            c = colors[i % len(colors)]
+            _filter_and_plot_raw_data(
+                ax,
+                raw_d,
+                base,
+                data.type,
+                component,
+                x_lims,
+                y_lims,
+                marker=str(m),
+                color=str(c),
+            )
 
     # Plot a transparent surface
     ax.plot_surface(  # type: ignore
-        x, y, z, cmap="viridis", alpha=0.5, axlim_clip=axlim_clip
+        x, y, z, cmap=surface_cmap, alpha=0.5, axlim_clip=axlim_clip
     )
     # Add wireframe on top
     ax.plot_wireframe(  # type: ignore

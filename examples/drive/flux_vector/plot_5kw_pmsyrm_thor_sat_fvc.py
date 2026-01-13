@@ -37,7 +37,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # Get the path of the MATLAB file and load the FEM data
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-fem_flux_map = utils.import_syre_data(str(p / "THOR.mat"))
+fem_flux_map = utils.import_syre_data(p / "thor.mat")
 
 # %%
 # Plot the maps in per-unit values.
