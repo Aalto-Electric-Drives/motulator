@@ -499,6 +499,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.incr_ind_mat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.iterate_i_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.iterate_i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>
@@ -521,6 +522,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.incr_ind_mat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.iterate_i_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.iterate_i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>
@@ -1269,10 +1271,6 @@ system model and in some control methods.</p></li>
 <li><p><strong>psi_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Stator flux linkage (Vs) as a function of the stator current (A). This function
 should be differentiable, if incremental inductances are used. Needed only for
 control methods and optimal reference loci, not used in the system model.</p></li>
-<li><p><strong>use_iterative_current</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If <cite>i_s_dq_fcn</cite> is not provided, the current is computed iteratively from the
-flux map using a root-finding algorithm. This is less efficient, but may be
-convenient to parametrize some control methods if only the flux map is
-available. Defaults to <cite>False</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1300,6 +1298,22 @@ available. Defaults to <cite>False</cite>.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.SaturatedSynchronousMachinePars.iterate_i_s_dq">
+<span class="sig-name descname"><span class="pre">iterate_i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.iterate_i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.iterate_i_s_dq" title="Link to this definition">#</a></dt>
+<dd><p>Compute the current from the flux linkage using root finding.</p>
+<p>The current is computed iteratively from the flux map using a root-finding
+algorithm. This is less efficient, but may be convenient in some special cases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)">complex</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1573,6 +1587,20 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.SynchronousMachinePars.iterate_i_s_dq">
+<span class="sig-name descname"><span class="pre">iterate_i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.iterate_i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars.iterate_i_s_dq" title="Link to this definition">#</a></dt>
+<dd><p>Compute the current from the flux linkage using root finding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)">complex</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1905,6 +1933,7 @@ and flux-vector control).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.incr_ind_mat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.iterate_i_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.iterate_i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>
@@ -1927,6 +1956,7 @@ and flux-vector control).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.incr_ind_mat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.iterate_i_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.iterate_i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SynchronousMachinePars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>

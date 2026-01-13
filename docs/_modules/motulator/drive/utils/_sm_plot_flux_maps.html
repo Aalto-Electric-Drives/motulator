@@ -440,16 +440,22 @@ document.write(`
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_filter_and_plot_raw_data</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
-    <span class="n">raw_data</span><span class="p">:</span> <span class="n">MagneticModel</span><span class="p">,</span>
+    <span class="n">raw_data</span><span class="p">:</span> <span class="n">MagneticModel</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">,</span>
     <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">x_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
     <span class="n">y_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">color</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter and plot raw data as scatter points.&quot;&quot;&quot;</span>
-    <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-    <span class="n">raw_psi_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
+        <span class="n">raw_psi_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
+        <span class="n">raw_psi_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
 
     <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s2">&quot;flux_map&quot;</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span>
@@ -472,7 +478,7 @@ document.write(`
         <span class="n">x_scatter</span><span class="p">,</span> <span class="n">y_scatter</span> <span class="o">=</span> <span class="n">raw_psi_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">raw_psi_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">imag</span>
         <span class="n">z_scatter</span> <span class="o">=</span> <span class="n">raw_i_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">real</span> <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">&quot;d&quot;</span> <span class="k">else</span> <span class="n">raw_i_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">imag</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_scatter</span><span class="p">,</span> <span class="n">y_scatter</span><span class="p">,</span> <span class="n">z_scatter</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_scatter</span><span class="p">,</span> <span class="n">y_scatter</span><span class="p">,</span> <span class="n">z_scatter</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_labels</span><span class="p">(</span><span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -557,8 +563,13 @@ document.write(`
     <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">lims</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ticks</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">raw_data</span><span class="p">:</span> <span class="n">MagneticModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">raw_data</span><span class="p">:</span> <span class="n">MagneticModel</span>
+    <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">MagneticModel</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span>
+    <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">raw_marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">raw_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axlim_clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">surface_cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;viridis&quot;</span><span class="p">,</span>
     <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
@@ -579,10 +590,16 @@ document.write(`
 <span class="sd">        Axis limits. Keys should be &#39;x&#39;, &#39;y&#39;, &#39;z&#39;.</span>
 <span class="sd">    ticks : dict[str, ArrayLike], optional</span>
 <span class="sd">        Axis tick locations. Keys should be &#39;x&#39;, &#39;y&#39;, &#39;z&#39;.</span>
-<span class="sd">    raw_data : MagneticModel, optional</span>
+<span class="sd">    raw_data : MagneticModel | list[MagneticModel], optional</span>
 <span class="sd">        Raw data for comparison (shown as scatter points).</span>
+<span class="sd">    raw_marker : str | list[str], optional</span>
+<span class="sd">        Marker style for raw data.</span>
+<span class="sd">    raw_color : str | list[str], optional</span>
+<span class="sd">        Marker color for raw data.</span>
 <span class="sd">    axlim_clip : bool, optional</span>
 <span class="sd">        Whether to clip the axes limits to the data limits, defaults to True.</span>
+<span class="sd">    surface_cmap : str, optional</span>
+<span class="sd">        Colormap for the surface plot, defaults to &quot;viridis&quot;.</span>
 <span class="sd">    latex : bool, optional</span>
 <span class="sd">        Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX</span>
 <span class="sd">        installation, defaults to False.</span>
@@ -618,13 +635,43 @@ document.write(`
 
     <span class="c1"># Plot raw data if provided</span>
     <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_filter_and_plot_raw_data</span><span class="p">(</span>
-            <span class="n">ax</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">datas</span> <span class="o">=</span> <span class="n">raw_data</span>
+            <span class="n">def_markers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">]</span>
+            <span class="n">def_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">datas</span> <span class="o">=</span> <span class="p">[</span><span class="n">raw_data</span><span class="p">]</span>
+            <span class="n">def_markers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="p">]</span>
+            <span class="n">def_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]</span>
+
+        <span class="n">markers</span> <span class="o">=</span> <span class="n">raw_marker</span> <span class="k">if</span> <span class="n">raw_marker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">def_markers</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">raw_color</span> <span class="k">if</span> <span class="n">raw_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">def_colors</span>
+
+        <span class="c1"># Ensure markers and colors are lists</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">markers</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">markers</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">datas</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">datas</span><span class="p">)</span>
+
+        <span class="c1"># Plot each raw dataset</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">raw_d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datas</span><span class="p">):</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">markers</span><span class="p">)]</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)]</span>
+            <span class="n">_filter_and_plot_raw_data</span><span class="p">(</span>
+                <span class="n">ax</span><span class="p">,</span>
+                <span class="n">raw_d</span><span class="p">,</span>
+                <span class="n">base</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                <span class="n">component</span><span class="p">,</span>
+                <span class="n">x_lims</span><span class="p">,</span>
+                <span class="n">y_lims</span><span class="p">,</span>
+                <span class="n">marker</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">),</span>
+                <span class="n">color</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">),</span>
+            <span class="p">)</span>
 
     <span class="c1"># Plot a transparent surface</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">surface_cmap</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span>
     <span class="p">)</span>
     <span class="c1"># Add wireframe on top</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot_wireframe</span><span class="p">(</span>  <span class="c1"># type: ignore</span>

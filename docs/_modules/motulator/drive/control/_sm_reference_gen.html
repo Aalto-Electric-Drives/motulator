@@ -484,16 +484,13 @@ document.write(`
         <span class="n">mtpa</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpa_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_mtpa</span> <span class="o">=</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq_vs_tau_M</span>
 
-        <span class="c1"># MTPV limit up to the maximum torque of MTPA locus</span>
-        <span class="n">i_s_mtpv_max</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">solve_current_for_mtpv_torque</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">i_s_max</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">i_s_mtpv_max</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># No MTPV limit found</span>
-            <span class="n">i_s_mtpv_max</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">i_s_max</span>
-        <span class="n">mtpv</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">i_s_mtpv_max</span><span class="p">)</span>
+        <span class="c1"># MTPV limit</span>
+        <span class="n">mtpv</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_mtpv</span> <span class="o">=</span> <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq_vs_psi_s_abs</span>
 
         <span class="c1"># Current limit</span>
-        <span class="n">gamma1</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpv_current_angle</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">)</span>
-        <span class="n">gamma2</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">)</span>
+        <span class="n">gamma1</span> <span class="o">=</span> <span class="n">phase</span><span class="p">(</span><span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">))</span>
+        <span class="n">gamma2</span> <span class="o">=</span> <span class="n">phase</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">cl</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">,</span> <span class="p">(</span><span class="n">gamma1</span><span class="p">,</span> <span class="n">gamma2</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_cl</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">i_s_dq_vs_psi_s_abs</span>
 

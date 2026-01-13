@@ -462,9 +462,9 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_const_current_locus()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_current_angle()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_locus()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current_angle()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_flux_angle()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_locus()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque"><code class="docutils literal notranslate"><span class="pre">ControlLoci.solve_current_for_mtpv_torque()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics</span></code></a><ul class="nav section-nav flex-column">
@@ -708,14 +708,14 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 </aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_const_current_locus">
-<span class="sig-name descname"><span class="pre">compute_const_current_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(np.pi,</span> <span class="pre">0.5</span> <span class="pre">*</span> <span class="pre">np.pi)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_const_current_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_const_current_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(np.pi,</span> <span class="pre">0.5</span> <span class="pre">*</span> <span class="pre">np.pi)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NUM</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_const_current_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus" title="Link to this definition">#</a></dt>
 <dd><p>Compute the constant current locus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Current limit (A).</p></li>
 <li><p><strong>gamma_range</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Range of the current angle (electrical rad), defaults to (pi, pi/2).</p></li>
-<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points, defaults to 16.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -743,13 +743,13 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpa_locus">
-<span class="sig-name descname"><span class="pre">compute_mtpa_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpa_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_mtpa_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NUM</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpa_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus" title="Link to this definition">#</a></dt>
 <dd><p>Compute the MTPA locus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum current magnitude (A) at which the locus is computed.</p></li>
-<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points, defaults to 16.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -762,12 +762,29 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_current_angle">
-<span class="sig-name descname"><span class="pre">compute_mtpv_current_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_current_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current_angle" title="Link to this definition">#</a></dt>
-<dd><p>MTPV current angle (rad) at given current magnitude (A).</p>
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_current">
+<span class="sig-name descname"><span class="pre">compute_mtpv_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current" title="Link to this definition">#</a></dt>
+<dd><p>MTPV current at given current magnitude.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+<dd class="field-odd"><p><strong>i_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Current magnitude (A).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>MTPV current (A). If no MTPV exists, returns np.nan.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)">complex</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle">
+<span class="sig-name descname"><span class="pre">compute_mtpv_flux_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_abs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_flux_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle" title="Link to this definition">#</a></dt>
+<dd><p>MTPV flux angle (rad) at given flux magnitude (Vs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>psi_s_abs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
@@ -777,13 +794,13 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.compute_mtpv_locus">
-<span class="sig-name descname"><span class="pre">compute_mtpv_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_mtpv_locus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NUM</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.compute_mtpv_locus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus" title="Link to this definition">#</a></dt>
 <dd><p>Compute the MTPV locus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum current (A) at which the locus is computed.</p></li>
-<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points, defaults to 16.</p></li>
+<li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum flux linkage (Vs) at which the locus is computed.</p></li>
+<li><p><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -791,26 +808,6 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>MTPVLocus</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque">
-<span class="sig-name descname"><span class="pre">solve_current_for_mtpv_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_abs0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_control_loci.html#ControlLoci.solve_current_for_mtpv_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque" title="Link to this definition">#</a></dt>
-<dd><p>Solve for the current yielding the given MTPV torque.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tau_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Target torque (Nm).</p></li>
-<li><p><strong>i_s_abs0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Initial guess for the current magnitude (A).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Stator current magnitude (A) that yields the target torque.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1080,14 +1077,17 @@ original map to preserve resolution, defaults to None.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelBase">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelBase" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_fcn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'current_map'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelBase" title="Link to this definition">#</a></dt>
 <dd><p>Base class for analytical saturation models.</p>
-<p>This class implements a callable interface that maps flux linkage to current,
-matching the interface of MagneticModel.lookup_fcn for current maps. It can be used
-directly as a lookup function for a MagneticModel.</p>
+<p>This class implements a callable interface, matching the interface of
+MagneticModel.lookup_fcn for current maps. It can be used directly as a lookup
+function for a MagneticModel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>current_map</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>map_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>map_type</strong> (<em>Literal</em><em>[</em><em>'current_map'</em><em>, </em><em>'flux_map'</em><em>]</em>)</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
@@ -1097,13 +1097,15 @@ directly as a lookup function for a MagneticModel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>d_range</strong> (<em>ndarray</em>) – Range for the d-axis flux linkage (Vs).</p></li>
-<li><p><strong>q_range</strong> (<em>ndarray</em>) – Range for the q-axis flux linkage (Vs).</p></li>
+<li><p><strong>d_range</strong> (<em>ndarray</em>) – Range for the d-axis input. For current maps, this is psi_d (Vs). For flux
+maps, this is i_d (A).</p></li>
+<li><p><strong>q_range</strong> (<em>ndarray</em>) – Range for the q-axis input. For current maps, this is psi_q (Vs). For flux
+maps, this is i_q (A).</p></li>
 <li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of pole pairs. If provided, the torque is included.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Current map that uses this saturation model as its lookup_fcn.</p>
+<dd class="field-even"><p>Magnetic model using this object as its <cite>lookup_fcn</cite>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel">MagneticModel</a></p>
@@ -1115,7 +1117,7 @@ directly as a lookup function for a MagneticModel.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelPMSyRM">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelPMSyRM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelPMSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelPMSyRM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_fcn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'current_map'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelPMSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelPMSyRM" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.drive.utils.SaturationModelSyRM" title="motulator.drive.utils.SaturationModelSyRM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelSyRM</span></code></a></p>
 <p>Saturation model for PM synchronous reluctance machines.</p>
 <p>This model takes into account the bridge saturation in addition to the self- and
@@ -1124,7 +1126,10 @@ model is based on a nonlinear reluctance element in parallel with the Norton-
 equivalent PM model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>current_map</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>map_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>map_type</strong> (<em>Literal</em><em>[</em><em>'current_map'</em><em>, </em><em>'flux_map'</em><em>]</em>)</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -1195,14 +1200,17 @@ ICEM, 2024, <a class="reference external" href="https://doi.org/10.1109/ICEM6080
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.utils.SaturationModelSyRM">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelSyRM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">SaturationModelSyRM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_fcn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'current_map'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_flux_maps.html#SaturationModelSyRM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.SaturationModelSyRM" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.drive.utils.SaturationModelBase" title="motulator.drive.utils.SaturationModelBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturationModelBase</span></code></a></p>
 <p>Saturation model for synchronous reluctance machines.</p>
 <p>This model takes into account the self- and cross-saturation effects of the d- and
 q-axis <a class="footnote-reference brackets" href="#hin2017" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>current_map</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>map_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>map_type</strong> (<em>Literal</em><em>[</em><em>'current_map'</em><em>, </em><em>'flux_map'</em><em>]</em>)</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -1456,7 +1464,7 @@ installation, defaults to False.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="motulator.drive.utils.plot_map">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axlim_clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_plot_flux_maps.html#plot_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_map" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.utils.</span></span><span class="sig-name descname"><span class="pre">plot_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axlim_clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_sm_plot_flux_maps.html#plot_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.utils.plot_map" title="Link to this definition">#</a></dt>
 <dd><p>Plot component (d or q) of flux linkage or current maps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1467,8 +1475,11 @@ installation, defaults to False.</p></li>
 in SI units.</p></li>
 <li><p><strong>lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – Axis limits. Keys should be ‘x’, ‘y’, ‘z’.</p></li>
 <li><p><strong>ticks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>ArrayLike</em><em>]</em><em>, </em><em>optional</em>) – Axis tick locations. Keys should be ‘x’, ‘y’, ‘z’.</p></li>
-<li><p><strong>raw_data</strong> (<a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><em>MagneticModel</em></a><em>, </em><em>optional</em>) – Raw data for comparison (shown as scatter points).</p></li>
+<li><p><strong>raw_data</strong> (<a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><em>MagneticModel</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><em>MagneticModel</em></a><em>]</em><em>, </em><em>optional</em>) – Raw data for comparison (shown as scatter points).</p></li>
+<li><p><strong>raw_marker</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – Marker style for raw data.</p></li>
+<li><p><strong>raw_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – Marker color for raw data.</p></li>
 <li><p><strong>axlim_clip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to clip the axes limits to the data limits, defaults to True.</p></li>
+<li><p><strong>surface_cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Colormap for the surface plot, defaults to “viridis”.</p></li>
 <li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
 installation, defaults to False.</p></li>
 <li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>Path</em><em>, </em><em>optional</em>) – Path to save the figure. If None, the figure is not saved.</p></li>
@@ -1565,9 +1576,9 @@ installation, defaults to False.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_const_current_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_const_current_locus()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_current_angle()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpa_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpa_locus()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current_angle()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_current"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_flux_angle"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_flux_angle()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.compute_mtpv_locus"><code class="docutils literal notranslate"><span class="pre">ControlLoci.compute_mtpv_locus()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.ControlLoci.solve_current_for_mtpv_torque"><code class="docutils literal notranslate"><span class="pre">ControlLoci.solve_current_for_mtpv_torque()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.utils.MachineCharacteristics"><code class="docutils literal notranslate"><span class="pre">MachineCharacteristics</span></code></a><ul class="nav section-nav flex-column">

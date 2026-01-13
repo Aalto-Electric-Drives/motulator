@@ -82,7 +82,7 @@ Load and plot the flux maps.
 
     # Get the path of the MATLAB file and load the FEM data
     p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-    fem_flux_map = utils.import_syre_data(str(p / "THOR.mat"))
+    fem_flux_map = utils.import_syre_data(p / "thor.mat")
     utils.plot_map(fem_flux_map, "d", base, lims={"x": (-2, 2), "y": (-2, 2)})
     utils.plot_map(fem_flux_map, "q", base, lims={"x": (-2, 2), "y": (-2, 2)})
 
@@ -146,7 +146,7 @@ Configure the control system. Since the inertia estimate `J` is provided in
 
 
     est_par = control.SaturatedSynchronousMachinePars(
-        n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map, use_iterative_current=True
+        n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map, i_s_dq_fcn=fem_curr_map
     )
     cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042)
     vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)
@@ -271,7 +271,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (2 minutes 43.234 seconds)
+   **Total running time of the script:** (0 minutes 38.936 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py:

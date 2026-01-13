@@ -1025,11 +1025,6 @@ Module Contents
                         should be differentiable, if incremental inductances are used. Needed only for
                         control methods and optimal reference loci, not used in the system model.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
-   :param use_iterative_current: If `i_s_dq_fcn` is not provided, the current is computed iteratively from the
-                                 flux map using a root-finding algorithm. This is less efficient, but may be
-                                 convenient to parametrize some control methods if only the flux map is
-                                 available. Defaults to `False`.
-   :type use_iterative_current: bool, optional
 
 
 
@@ -1077,6 +1072,32 @@ Module Contents
       
       Incremental inductance matrix at given current.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: iterate_i_s_dq(psi_s_dq)
+
+      
+      Compute the current from the flux linkage using root finding.
+
+      The current is computed iteratively from the flux map using a root-finding
+      algorithm. This is less efficient, but may be convenient in some special cases.
 
 
 
@@ -1509,6 +1530,30 @@ Module Contents
 
       
       Incremental inductance matrix (H).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: iterate_i_s_dq(psi_s_dq)
+
+      
+      Compute the current from the flux linkage using root finding.
 
 
 

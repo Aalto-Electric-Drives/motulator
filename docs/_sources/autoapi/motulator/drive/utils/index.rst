@@ -225,7 +225,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_const_current_locus(i_s_max, gamma_range = (np.pi, 0.5 * np.pi), num = 16)
+   .. py:method:: compute_const_current_locus(i_s_max, gamma_range = (np.pi, 0.5 * np.pi), num = NUM)
 
       
       Compute the constant current locus.
@@ -234,7 +234,7 @@ Package Contents
       :type i_s_max: float
       :param gamma_range: Range of the current angle (electrical rad), defaults to (pi, pi/2).
       :type gamma_range: tuple, optional
-      :param num: Number of points, defaults to 16.
+      :param num: Number of points.
       :type num: int, optional
 
       :returns: Constant current locus data.
@@ -282,14 +282,14 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_mtpa_locus(i_s_max, num = 16)
+   .. py:method:: compute_mtpa_locus(i_s_max, num = NUM)
 
       
       Compute the MTPA locus.
 
       :param i_s_max: Maximum current magnitude (A) at which the locus is computed.
       :type i_s_max: float
-      :param num: Number of points, defaults to 16.
+      :param num: Number of points.
       :type num: int, optional
 
       :returns: MTPA locus data.
@@ -313,10 +313,39 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_mtpv_current_angle(i_s_abs)
+   .. py:method:: compute_mtpv_current(i_s_abs)
 
       
-      MTPV current angle (rad) at given current magnitude (A).
+      MTPV current at given current magnitude.
+
+      :param i_s_abs: Current magnitude (A).
+      :type i_s_abs: float
+
+      :returns: MTPV current (A). If no MTPV exists, returns np.nan.
+      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_mtpv_flux_angle(psi_s_abs)
+
+      
+      MTPV flux angle (rad) at given flux magnitude (Vs).
 
 
 
@@ -337,49 +366,18 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_mtpv_locus(i_s_max, num = 16)
+   .. py:method:: compute_mtpv_locus(psi_s_max, num = NUM)
 
       
       Compute the MTPV locus.
 
-      :param i_s_max: Maximum current (A) at which the locus is computed.
-      :type i_s_max: float
-      :param num: Number of points, defaults to 16.
+      :param psi_s_max: Maximum flux linkage (Vs) at which the locus is computed.
+      :type psi_s_max: float
+      :param num: Number of points.
       :type num: int, optional
 
       :returns: MTPV locus data.
       :rtype: MTPVLocus
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: solve_current_for_mtpv_torque(tau_M, i_s_abs0)
-
-      
-      Solve for the current yielding the given MTPV torque.
-
-      :param tau_M: Target torque (Nm).
-      :type tau_M: float
-      :param i_s_abs0: Initial guess for the current magnitude (A).
-      :type i_s_abs0: float
-
-      :returns: Stator current magnitude (A) that yields the target torque.
-      :rtype: float
 
 
 
@@ -802,14 +800,14 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SaturationModelBase(current_map)
+.. py:class:: SaturationModelBase(map_fcn = None, map_type = 'current_map')
 
    
    Base class for analytical saturation models.
 
-   This class implements a callable interface that maps flux linkage to current,
-   matching the interface of MagneticModel.lookup_fcn for current maps. It can be used
-   directly as a lookup function for a MagneticModel.
+   This class implements a callable interface, matching the interface of
+   MagneticModel.lookup_fcn for current maps. It can be used directly as a lookup
+   function for a MagneticModel.
 
 
 
@@ -833,14 +831,16 @@ Package Contents
       
       Create a magnetic model that uses this analytical model.
 
-      :param d_range: Range for the d-axis flux linkage (Vs).
+      :param d_range: Range for the d-axis input. For current maps, this is psi_d (Vs). For flux
+                      maps, this is i_d (A).
       :type d_range: ndarray
-      :param q_range: Range for the q-axis flux linkage (Vs).
+      :param q_range: Range for the q-axis input. For current maps, this is psi_q (Vs). For flux
+                      maps, this is i_q (A).
       :type q_range: ndarray
       :param n_p: Number of pole pairs. If provided, the torque is included.
       :type n_p: int, optional
 
-      :returns: Current map that uses this saturation model as its lookup_fcn.
+      :returns: Magnetic model using this object as its `lookup_fcn`.
       :rtype: MagneticModel
 
 
@@ -861,7 +861,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SaturationModelPMSyRM(current_map)
+.. py:class:: SaturationModelPMSyRM(map_fcn = None, map_type = 'current_map')
 
    Bases: :py:obj:`SaturationModelSyRM`
 
@@ -927,7 +927,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SaturationModelSyRM(current_map)
+.. py:class:: SaturationModelSyRM(map_fcn = None, map_type = 'current_map')
 
    Bases: :py:obj:`SaturationModelBase`
 
@@ -1245,7 +1245,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_map(data, component, base = None, lims = None, ticks = None, raw_data = None, axlim_clip = True, latex = False, save_path = None, **savefig_kwargs)
+.. py:function:: plot_map(data, component, base = None, lims = None, ticks = None, raw_data = None, raw_marker = None, raw_color = None, axlim_clip = True, surface_cmap = 'viridis', latex = False, save_path = None, **savefig_kwargs)
 
    
    Plot component (d or q) of flux linkage or current maps.
@@ -1262,9 +1262,15 @@ Package Contents
    :param ticks: Axis tick locations. Keys should be 'x', 'y', 'z'.
    :type ticks: dict[str, ArrayLike], optional
    :param raw_data: Raw data for comparison (shown as scatter points).
-   :type raw_data: MagneticModel, optional
+   :type raw_data: MagneticModel | list[MagneticModel], optional
+   :param raw_marker: Marker style for raw data.
+   :type raw_marker: str | list[str], optional
+   :param raw_color: Marker color for raw data.
+   :type raw_color: str | list[str], optional
    :param axlim_clip: Whether to clip the axes limits to the data limits, defaults to True.
    :type axlim_clip: bool, optional
+   :param surface_cmap: Colormap for the surface plot, defaults to "viridis".
+   :type surface_cmap: str, optional
    :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
                  installation, defaults to False.
    :type latex: bool, optional
