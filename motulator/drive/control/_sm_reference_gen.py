@@ -76,16 +76,13 @@ class ReferenceGenerator:
         mtpa = loci.compute_mtpa_locus(i_s_max)
         self.i_s_mtpa = mtpa.i_s_dq_vs_tau_M
 
-        # MTPV limit up to the maximum torque of MTPA locus
-        i_s_mtpv_max = loci.solve_current_for_mtpv_torque(mtpa.tau_M[-1], i_s_max)
-        if not i_s_mtpv_max > 0:  # No MTPV limit found
-            i_s_mtpv_max = 3 * i_s_max
-        mtpv = loci.compute_mtpv_locus(i_s_mtpv_max)
+        # MTPV limit
+        mtpv = loci.compute_mtpv_locus(abs(mtpa.psi_s_dq[-1]))
         self.i_s_mtpv = mtpv.i_s_dq_vs_psi_s_abs
 
         # Current limit
-        gamma1 = loci.compute_mtpv_current_angle(i_s_max)
-        gamma2 = loci.compute_mtpa_current_angle(i_s_max)
+        gamma1 = phase(loci.compute_mtpv_current(i_s_max))
+        gamma2 = phase(mtpa.i_s_dq[-1])
         cl = loci.compute_const_current_locus(i_s_max, (gamma1, gamma2))
         self.i_s_cl = cl.i_s_dq_vs_psi_s_abs
 

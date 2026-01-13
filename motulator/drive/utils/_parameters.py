@@ -183,6 +183,10 @@ class BaseSynchronousMachinePars(Protocol):
             - i_s_dq
         )
 
+    def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
+        """Solve for the current given the flux linkage using root finding."""
+        ...
+
 
 # %%
 @dataclass
@@ -235,6 +239,10 @@ class SynchronousMachinePars(BaseSynchronousMachinePars):
         """Incremental inductance matrix (H)."""
         return np.array([[self.L_d, 0], [0, self.L_q]])
 
+    def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
+        """Compute the current from the flux linkage using root finding."""
+        return complex(self.i_s_dq(psi_s_dq))
+
 
 # %%
 @dataclass
@@ -261,11 +269,6 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         Stator flux linkage (Vs) as a function of the stator current (A). This function
         should be differentiable, if incremental inductances are used. Needed only for
         control methods and optimal reference loci, not used in the system model.
-    use_iterative_current : bool, optional
-        If `i_s_dq_fcn` is not provided, the current is computed iteratively from the
-        flux map using a root-finding algorithm. This is less efficient, but may be
-        convenient to parametrize some control methods if only the flux map is
-        available. Defaults to `False`.
 
     """
 
@@ -273,7 +276,6 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     R_s: float
     i_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None
     psi_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None
-    use_iterative_current: bool = field(init=True, default=False)
     psi_f: float = field(init=False, default=0.0)
     L_d0: float = field(init=False)
     L_q0: float = field(init=False)
@@ -299,8 +301,6 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         """Current (A) as a function of the flux linkage (Vs)."""
         if self.i_s_dq_fcn is not None:
             return self.i_s_dq_fcn(psi_s_dq)
-        elif self.use_iterative_current:
-            return self._compute_current(complex(psi_s_dq))
         else:
             raise ValueError("i_s_dq_fcn must be provided")
 
@@ -324,18 +324,25 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         L_dq = np.real(psi_dev_q) / (2 * EPS)
         return np.array([[L_dd, L_dq], [L_dq, L_qq]])
 
-    def _compute_current(self, psi_s: complex) -> complex:
-        """Compute the current from the flux linkage using root finding."""
+    def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
+        """
+        Compute the current from the flux linkage using root finding.
+
+        The current is computed iteratively from the flux map using a root-finding
+        algorithm. This is less efficient, but may be convenient in some special cases.
+
+        """
+        if self.i_s_dq_fcn is not None:
+            return complex(self.i_s_dq(psi_s_dq))
 
         def error(x: list[float]) -> list[float]:
             i_s = x[0] + 1j * x[1]
-            err = complex(self.psi_s_dq(i_s)) - psi_s
+            err = complex(self.psi_s_dq(i_s)) - psi_s_dq
             return [err.real, err.imag]
 
-        i_s0 = (psi_s.real - self.psi_f) / self.L_d0 + 1j * psi_s.imag / self.L_q0
-        sol = root(error, [i_s0.real, i_s0.imag], method="lm", options={"maxiter": 20})
-        i_s = sol.x[0] + 1j * sol.x[1]
-        return i_s
+        i_s0 = (psi_s_dq.real - self.psi_f) / self.L_d0 + 1j * psi_s_dq.imag / self.L_q0
+        sol = root(error, [i_s0.real, i_s0.imag], method="hybr", options={"maxfev": 50})
+        return sol.x[0] + 1j * sol.x[1]
 
 
 # %%
@@ -423,6 +430,9 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
     ) -> np.ndarray:
         raise NotImplementedError("Incremental inductance matrix is not implemented")
+
+    def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
+        raise NotImplementedError("This method is not implemented")
 
 
 # %%
