@@ -8,14 +8,7 @@ grid-following (GFL) converter.
 """
 
 # %%
-
 from motulator.grid import control, model, utils
-from motulator.grid.utils._identification import (
-    IdentificationCfg,
-    plot_identification,
-    plot_vector_diagram,
-    run_identification,
-)
 
 # %%
 # Compute base values based on the nominal values.
@@ -26,7 +19,7 @@ base = utils.BaseValues.from_nominal(nom)
 # %%
 # Configure the identification.
 
-identification_cfg = IdentificationCfg(
+identification_cfg = utils.IdentificationCfg(
     abs_u_e=0.01 * base.u,
     f_start=1,
     f_stop=10e3,
@@ -60,7 +53,6 @@ ctrl.set_reactive_power_ref(0.5 * base.p)
 # %%
 # Run the identification and plot results.
 
-if __name__ == "__main__":
-    res = run_identification(identification_cfg, mdl, ctrl)
-    plot_identification(res, plot_style="re_im")
-    plot_vector_diagram(res, base)
+res = utils.run_identification(identification_cfg, mdl, ctrl)
+utils.plot_identification(res, plot_style="re_im")
+utils.plot_vector_identification(res, base)

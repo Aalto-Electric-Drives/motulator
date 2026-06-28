@@ -450,12 +450,16 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.BaseValues.unity"><code class="docutils literal notranslate"><span class="pre">BaseValues.unity()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.IdentificationCfg"><code class="docutils literal notranslate"><span class="pre">IdentificationCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_control_signals"><code class="docutils literal notranslate"><span class="pre">plot_control_signals()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_grid_waveforms"><code class="docutils literal notranslate"><span class="pre">plot_grid_waveforms()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_identification"><code class="docutils literal notranslate"><span class="pre">plot_identification()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_vector_identification"><code class="docutils literal notranslate"><span class="pre">plot_vector_identification()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_voltage_vector"><code class="docutils literal notranslate"><span class="pre">plot_voltage_vector()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.run_identification"><code class="docutils literal notranslate"><span class="pre">run_identification()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -479,13 +483,16 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
 <td><p>Base values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.NominalValues" title="motulator.grid.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.IdentificationCfg" title="motulator.grid.utils.IdentificationCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IdentificationCfg</span></code></a></p></td>
+<td><p>Configuration parameters for converter output admittance identification.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.NominalValues" title="motulator.grid.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
 <td><p>Nominal values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.SequenceGenerator" title="motulator.grid.utils.SequenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.SequenceGenerator" title="motulator.grid.utils.SequenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></p></td>
 <td><p>Sequence generator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.Step" title="motulator.grid.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.Step" title="motulator.grid.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
 <td><p>Step function.</p></td>
 </tr>
 </tbody>
@@ -502,8 +509,17 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_grid_waveforms" title="motulator.grid.utils.plot_grid_waveforms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_grid_waveforms</span></code></a>(res[, base, t_lims, t_ticks, ...])</p></td>
 <td><p>Plot grid waveforms and phase angles.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_identification" title="motulator.grid.utils.plot_identification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_identification</span></code></a>(res[, plot_style, ...])</p></td>
+<td><p>Plot the identification results</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_vector_identification" title="motulator.grid.utils.plot_vector_identification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vector_identification</span></code></a>(res, base[, latex])</p></td>
+<td><p>Plot the converter voltage, PCC voltage, grid voltage, and grid current vectors in</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.plot_voltage_vector" title="motulator.grid.utils.plot_voltage_vector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_voltage_vector</span></code></a>(res[, base, save_path])</p></td>
 <td><p>Plot locus of the grid voltage vector.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.run_identification" title="motulator.grid.utils.run_identification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_identification</span></code></a>(cfg, mdl, ctrl)</p></td>
+<td><p>Run the identification.</p></td>
 </tr>
 </tbody>
 </table>
@@ -577,6 +593,57 @@ factor and efficiency being less than unity.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.utils.IdentificationCfg">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">IdentificationCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_identification.html#IdentificationCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.IdentificationCfg" title="Link to this definition">#</a></dt>
+<dd><p>Configuration parameters for converter output admittance identification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>abs_u_e</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Magnitude of the voltage excitation (V).</p></li>
+<li><p><strong>f_start</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Starting frequency of the voltage excitation (Hz, in dq-coordinates), defaults
+to 1.</p></li>
+<li><p><strong>f_stop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – End frequency of the voltage excitation (Hz, in dq-coordinates), defaults to
+10e3.</p></li>
+<li><p><strong>n_freqs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of frequencies for measurement, defaults to 100.</p></li>
+<li><p><strong>spacing</strong> (<em>Literal</em><em>[</em><em>&quot;log&quot;</em><em>, </em><em>&quot;lin&quot;</em><em>]</em><em>, </em><em>optional</em>) – The spacing used for creating the array of measurement frequencies, defaults to
+“log”. Valid options are:
+- “log”: logarithmic spacing
+- “lin”: linear spacing</p></li>
+<li><p><strong>manual_freqs</strong> (<em>ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Manually specified array of frequencies (Hz) to measure admittance at. If set to
+None, f_start, f_stop and n_freqs parameters are used to create the array of
+frequencies. Defaults to None.</p></li>
+<li><p><strong>t0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Stop time for initial simulating to the operating point (s), defaults to 1.0.
+Should be set large enough to reach steady-state.</p></li>
+<li><p><strong>t1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Additional simulation time for reaching sinusoidal steady-state during signal
+injection (s), defaults to 0.05.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period of the control system (s), defaults to 125e-6.</p></li>
+<li><p><strong>N_eval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of evenly spaced data points the solver should return for each controller
+sampling period, defaults to 10.</p></li>
+<li><p><strong>n_periods_excitation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of excitation signal periods used in calculating the DFT, defaults to 4.</p></li>
+<li><p><strong>n_periods_init</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of fundamental periods to include for calculating operating-point
+vectors, defaults to 1.</p></li>
+<li><p><strong>multiprocess</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If set to True, multiprocessing.Pool() is used to run the identification using
+all available CPU cores in the system. Defaults to True.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – If given, the identification result is saved in <a href="#id1"><span class="problematic" id="id2">*</span></a>/data/{date}_{time}_{filename}
+where * is the project root directory, defaults to None. The file format is set
+by the <cite>filetype</cite> parameter.</p></li>
+<li><p><strong>filetype</strong> (<em>Literal</em><em>[</em><em>&quot;csv&quot;</em><em>, </em><em>&quot;mat&quot;</em><em>]</em><em>, </em><em>optional</em>) – The filetype for saving identification results, defaults to “csv”. Valid options
+are:
+- “csv”: save results in .csv-format
+- “mat”: save results in MATLAB .mat-format</p></li>
+<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of samples for modeling the computational delay, defaults to 1.</p></li>
+<li><p><strong>use_window</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use window function for calculating DFT, defaults to True.</p></li>
+<li><p><strong>variable_amplitude</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to increase the excitation signal amplitude with the frequency, defaults
+to True.</p></li>
+<li><p><strong>amplitude_multiplier</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Gain value to set how much the excitation signal amplitude is increased at the
+highest frequency compared to the lowest if <cite>variable_amplitude</cite> is set to True.
+Defaults to 5.0.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -683,6 +750,47 @@ Otherwise, plot the grid voltage waveforms, defaults to True.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="motulator.grid.utils.plot_identification">
+<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'re_im'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_passivity_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_identification.html#plot_identification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot_identification" title="Link to this definition">#</a></dt>
+<dd><p>Plot the identification results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong> (<em>IdentificationResults</em>) – Should contain the results from the identification.</p></li>
+<li><p><strong>plot_style</strong> (<em>Literal</em><em>[</em><em>&quot;polar&quot;</em><em>, </em><em>&quot;re_im&quot;</em><em>]</em><em>, </em><em>optional</em>) – Style for plotting of identification results, defaults to “re_im”. Options are:
+- “polar”: plot magnitude and phase
+- “re_im”: plot real and imaginary parts</p></li>
+<li><p><strong>plot_passivity_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Plot input feedforward passivity index calculated from the identification
+results, defaults to True.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Use latex for plots, defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.grid.utils.plot_vector_identification">
+<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot_vector_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_identification.html#plot_vector_identification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot_vector_identification" title="Link to this definition">#</a></dt>
+<dd><p>Plot the converter voltage, PCC voltage, grid voltage, and grid current vectors in
+the operating point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong> (<em>IdentificationResults</em>) – Should contain the results from the identification.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><em>BaseValues</em></a>) – Base values for per-unit conversion.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Use latex for plots, defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="motulator.grid.utils.plot_voltage_vector">
 <span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">plot_voltage_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_plots.html#plot_voltage_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.plot_voltage_vector" title="Link to this definition">#</a></dt>
 <dd><p>Plot locus of the grid voltage vector.</p>
@@ -698,6 +806,28 @@ in SI units.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.grid.utils.run_identification">
+<span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">run_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_identification.html#run_identification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.run_identification" title="Link to this definition">#</a></dt>
+<dd><p>Run the identification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.utils.IdentificationCfg" title="motulator.grid.utils.IdentificationCfg"><em>IdentificationCfg</em></a>) – Dataclass object containing the identification configuration.</p></li>
+<li><p><strong>mdl</strong> (<a class="reference internal" href="../model/index.html#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><em>GridConverterSystem</em></a>) – Continuous-time system model object.</p></li>
+<li><p><strong>ctrl</strong> (<a class="reference internal" href="../control/index.html#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><em>GridConverterControlSystem</em></a>) – Discrete-time control system object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>res</strong> – Dataclass object containing the results from the identification, along with
+information about the operating point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>IdentificationResults</p>
 </dd>
 </dl>
 </dd></dl>
@@ -760,12 +890,16 @@ in SI units.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.BaseValues.unity"><code class="docutils literal notranslate"><span class="pre">BaseValues.unity()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.IdentificationCfg"><code class="docutils literal notranslate"><span class="pre">IdentificationCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_control_signals"><code class="docutils literal notranslate"><span class="pre">plot_control_signals()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_grid_waveforms"><code class="docutils literal notranslate"><span class="pre">plot_grid_waveforms()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_identification"><code class="docutils literal notranslate"><span class="pre">plot_identification()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_vector_identification"><code class="docutils literal notranslate"><span class="pre">plot_vector_identification()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.plot_voltage_vector"><code class="docutils literal notranslate"><span class="pre">plot_voltage_vector()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.run_identification"><code class="docutils literal notranslate"><span class="pre">run_identification()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -792,7 +926,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2025, Aalto Electric Drives.
+      © Copyright 2026, Aalto Electric Drives.
       <br/>
     
   </p>

@@ -454,12 +454,6 @@ to download the full example code.</p>
 <p>This example demonstrates converter output admittance identification using a 12.5-kVA
 disturbance-observer-based grid-forming (DO-GFM) converter.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">control</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.utils._identification</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">IdentificationCfg</span><span class="p">,</span>
-    <span class="n">plot_identification</span><span class="p">,</span>
-    <span class="n">plot_vector_diagram</span><span class="p">,</span>
-    <span class="n">run_identification</span><span class="p">,</span>
-<span class="p">)</span>
 </pre></div>
 </div>
 <p>Compute base values based on the nominal values.</p>
@@ -468,7 +462,7 @@ disturbance-observer-based grid-forming (DO-GFM) converter.</p>
 </pre></div>
 </div>
 <p>Configure the identification.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">identification_cfg</span> <span class="o">=</span> <span class="n">IdentificationCfg</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">identification_cfg</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">IdentificationCfg</span><span class="p">(</span>
     <span class="n">abs_u_e</span><span class="o">=</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
     <span class="n">f_start</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">f_stop</span><span class="o">=</span><span class="mf">10e3</span><span class="p">,</span>
@@ -504,10 +498,9 @@ disturbance-observer-based grid-forming (DO-GFM) converter.</p>
 </pre></div>
 </div>
 <p>Run the identification and plot results.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">run_identification</span><span class="p">(</span><span class="n">identification_cfg</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
-    <span class="n">plot_identification</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">plot_style</span><span class="o">=</span><span class="s2">&quot;re_im&quot;</span><span class="p">)</span>
-    <span class="n">plot_vector_diagram</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">run_identification</span><span class="p">(</span><span class="n">identification_cfg</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_identification</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">plot_style</span><span class="o">=</span><span class="s2">&quot;re_im&quot;</span><span class="p">)</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot_vector_identification</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
@@ -515,7 +508,7 @@ disturbance-observer-based grid-forming (DO-GFM) converter.</p>
 <li><img src="../../_images/sphx_glr_plot_13kva_do_gfm_identification_002.png" srcset="../../_images/sphx_glr_plot_13kva_do_gfm_identification_002.png" alt="plot 13kva do gfm identification" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_13kva_do_gfm_identification_003.png" srcset="../../_images/sphx_glr_plot_13kva_do_gfm_identification_003.png" alt="plot 13kva do gfm identification" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (4 minutes 54.866 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (5 minutes 29.133 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-identification-plot-13kva-do-gfm-identification-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/520bb5cd851c33806567c577d9615a28/plot_13kva_do_gfm_identification.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_13kva_do_gfm_identification.ipynb</span></code></a></p>
@@ -585,7 +578,7 @@ By Aalto Electric Drives
 
   <p class="copyright">
     
-      © Copyright 2025, Aalto Electric Drives.
+      © Copyright 2026, Aalto Electric Drives.
       <br/>
     
   </p>

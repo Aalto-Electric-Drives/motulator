@@ -24,17 +24,11 @@
 This example demonstrates converter output admittance identification using a 12.5-kVA
 disturbance-observer-based grid-forming (DO-GFM) converter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-19
+.. GENERATED FROM PYTHON SOURCE LINES 11-13
 
 .. code-block:: Python
 
     from motulator.grid import control, model, utils
-    from motulator.grid.utils._identification import (
-        IdentificationCfg,
-        plot_identification,
-        plot_vector_diagram,
-        run_identification,
-    )
 
 
 
@@ -43,11 +37,11 @@ disturbance-observer-based grid-forming (DO-GFM) converter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 14-15
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-25
+.. GENERATED FROM PYTHON SOURCE LINES 15-19
 
 .. code-block:: Python
 
@@ -62,16 +56,16 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Configure the identification.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-39
+.. GENERATED FROM PYTHON SOURCE LINES 21-33
 
 .. code-block:: Python
 
 
-    identification_cfg = IdentificationCfg(
+    identification_cfg = utils.IdentificationCfg(
         abs_u_e=0.01 * base.u,
         f_start=1,
         f_stop=10e3,
@@ -89,11 +83,11 @@ Configure the identification.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-47
+.. GENERATED FROM PYTHON SOURCE LINES 35-41
 
 .. code-block:: Python
 
@@ -110,11 +104,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-64
+.. GENERATED FROM PYTHON SOURCE LINES 43-58
 
 .. code-block:: Python
 
@@ -140,19 +134,18 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Run the identification and plot results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-71
+.. GENERATED FROM PYTHON SOURCE LINES 60-64
 
 .. code-block:: Python
 
 
-    if __name__ == "__main__":
-        res = run_identification(identification_cfg, mdl, ctrl)
-        plot_identification(res, plot_style="re_im")
-        plot_vector_diagram(res, base)
+    res = utils.run_identification(identification_cfg, mdl, ctrl)
+    utils.plot_identification(res, plot_style="re_im")
+    utils.plot_vector_identification(res, base)
 
 
 
@@ -187,7 +180,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (4 minutes 54.866 seconds)
+   **Total running time of the script:** (5 minutes 29.133 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_13kva_do_gfm_identification.py:
