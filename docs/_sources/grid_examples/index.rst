@@ -6,6 +6,10 @@ Grid Converters
 A collection of example scripts for grid converters.
 
 
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
+
 
 .. raw:: html
 
@@ -24,6 +28,10 @@ Grid-Following Control
 
 These examples demonstrate grid-following (GFL) control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass-filtered grid voltage.
 
+
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
 
 
 .. raw:: html
@@ -101,6 +109,10 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer, "IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
+
 
 .. raw:: html
 
@@ -148,6 +160,63 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
     </div>
 
+Output Admittance Identification
+--------------------------------
+
+These examples demonstrate numerical identification of grid converter output admittance.
+
+
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 10-kVA grid-following (GFL) converter.">
+
+.. only:: html
+
+  .. image:: /grid_examples/identification/images/thumb/sphx_glr_plot_10kva_gfl_identification_thumb.png
+    :alt:
+
+  :doc:`/grid_examples/identification/plot_10kva_gfl_identification`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">10-kVA, GFL, converter output admittance identification</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter.">
+
+.. only:: html
+
+  .. image:: /grid_examples/identification/images/thumb/sphx_glr_plot_13kva_do_gfm_identification_thumb.png
+    :alt:
+
+  :doc:`/grid_examples/identification/plot_13kva_do_gfm_identification`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM, converter output admittance identification</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
 
 .. toctree::
    :hidden:
@@ -156,6 +225,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
    /grid_examples/grid_following/index.rst
    /grid_examples/grid_forming/index.rst
+   /grid_examples/identification/index.rst
 
 
 .. only:: html

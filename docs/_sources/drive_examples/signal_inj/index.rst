@@ -14,6 +14,10 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 .. [#You2018] Yousefi-Talouki, Pescetto, Pellegrino, Boldea, "Combined active flux and high-frequency injection methods for sensorless direct-flux vector control of synchronous reluctance machines," IEEE Trans. Power Electron., 2018, https://doi.org/10.1109/TPEL.2017.2697209
 
 
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
+
 
 .. raw:: html
 

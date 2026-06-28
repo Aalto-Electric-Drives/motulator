@@ -38,6 +38,7 @@ Classes
    motulator.grid.model.LFilter
    motulator.grid.model.Simulation
    motulator.grid.model.ThreePhaseSource
+   motulator.grid.model.ThreePhaseSourceWithSignalInjection
    motulator.grid.model.VoltageSourceConverter
 
 
@@ -183,7 +184,7 @@ Package Contents
    :param ac_filter: AC filter model.
    :type ac_filter: LFilter | LCLFilter
    :param ac_source: Three-phase voltage source.
-   :type ac_source: ThreePhaseSource
+   :type ac_source: ThreePhaseSource | ThreePhaseSourceWithSignalInjection
    :param pwm: Enable PWM model, defaults to False.
    :type pwm: bool, optional
    :param delay: Computational delay (samples), defaults to 1.
@@ -658,13 +659,17 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: simulate(t_stop = 1.0)
+   .. py:method:: simulate(t_stop = 1.0, N_eval = 0)
 
       
       Solve continuous-time system model and call control system.
 
       :param t_stop: Simulation stop time, defaults to 1.
       :type t_stop: float, optional
+      :param N_eval: Number of evenly spaced data points to be returned by the solver for each
+                     sampling period. Defaults to 0, in which case the number and spacing of
+                     points is selected by the solver.
+      :type N_eval: int | None, optional
 
 
 
@@ -754,6 +759,148 @@ Package Contents
 
 
    .. py:method:: generate_space_vector(t, exp_j_theta_g)
+
+      
+      Generate the space vector in stationary coordinates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Compute the state derivative.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ThreePhaseSourceWithSignalInjection(w_g = 2 * pi * 50, e_g = sqrt(2 / 3) * 400, phi = 0.0, u_ed = 0.0, u_eq = 0.0, f_e = 0.0)
+
+   Bases: :py:obj:`motulator.common.model.Subsystem`
+
+
+   
+   Three-phase source model with additional signal injection in dq-coordinates.
+
+   This class implements a three-phase voltage source model with signal injection
+   capabilities, intended for use in converter output admittance identification. The
+   excitation signal is added to the output voltage of the source. The zero-sequence
+   component is not included in this model.
+
+   :param w_g: Angular frequency (rad/s), defaults to 2*pi*50.
+   :type w_g: float, optional
+   :param e_g: Peak-valued magnitude of positive-sequence component, defaults to sqrt(2/3)*400.
+   :type e_g: float, optional
+   :param phi: Phase shift (rad) of positive-sequence component, defaults to 0.
+   :type phi: float, optional
+   :param u_ed: Magnitude of d-axis excitation signal (V), defaults to 0.
+   :type u_ed: float, optional
+   :param u_eq: Magnitude of q-axis excitation signal (V), defaults to 0.
+   :type u_eq: float, optional
+
+   .. rubric:: Notes
+
+   This model is typically used to represent a voltage source, but it can be configured
+   to represent, e.g., a current source as well.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: generate_space_vector(t, exp_j_theta_g, exp_j_theta_e)
 
       
       Generate the space vector in stationary coordinates.

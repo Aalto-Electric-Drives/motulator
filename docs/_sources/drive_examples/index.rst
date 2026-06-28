@@ -6,6 +6,10 @@ Drives
 A collection of example scripts for machine drives.
 
 
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
+
 
 .. raw:: html
 
@@ -34,6 +38,10 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. [#Tii2025b] Tiitinen, Hinkkanen, Harnefors, "Sensorless flux-vector control framework: An extension for induction machines," IEEE Trans. Ind. Electron., 2025, https://doi.org/10.1109/TIE.2025.3559958
 
+
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
 
 
 .. raw:: html
@@ -138,6 +146,10 @@ Current-Vector Control
 
 These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`).
 
+
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
 
 
 .. raw:: html
@@ -266,6 +278,10 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
 .. [#Tii2025bb] Tiitinen, Hinkkanen, Harnefors, "Sensorless flux-vector control framework: An extension for induction machines," IEEE Trans. Ind. Electron., 2025, https://doi.org/10.1109/TIE.2025.3559958
 
 
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
+
 
 .. raw:: html
 
@@ -392,6 +408,10 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 
 .. [#You2018] Yousefi-Talouki, Pescetto, Pellegrino, Boldea, "Combined active flux and high-frequency injection methods for sensorless direct-flux vector control of synchronous reluctance machines," IEEE Trans. Power Electron., 2018, https://doi.org/10.1109/TPEL.2017.2697209
 
+
+.. raw:: html
+
+  <div id='sg-tag-list' class='sphx-glr-tag-list'></div>
 
 
 .. raw:: html
