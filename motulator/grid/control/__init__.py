@@ -13,8 +13,8 @@ from motulator.grid.control._gfm_psc import PowerSynchronizationController
 __all__ = [
     "CurrentController",
     "CurrentLimiter",
-    "DCBusVoltageController",
     "CurrentVectorController",
+    "DCBusVoltageController",
     "GridConverterControlSystem",
     "ObserverBasedGridFormingController",
     "PLL",

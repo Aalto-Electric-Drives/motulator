@@ -137,6 +137,7 @@ class IdentificationResults:
     admittance matrix `[Y_dd, Y_qd; Y_dq, Y_qq]`, and the following operating-point
     vectors (in synchronous coordinates aligned with the PCC voltage): grid current
     `i_g0`, grid voltage `e_g0`, PCC voltage `u_g0` and converter voltage `u_c0`.
+
     """
 
     f_e: np.ndarray = field(default_factory=empty_array)
@@ -153,7 +154,6 @@ class IdentificationResults:
 # %%
 def save_csv(data: IdentificationResults, filename: str) -> None:
     """Save the identification results in a .csv-file."""
-
     try:
         # Create the data directory if it doesn't exist
         makedirs("data", exist_ok=True)
@@ -195,7 +195,6 @@ def save_csv(data: IdentificationResults, filename: str) -> None:
 
 def save_mat(data: IdentificationResults, filename: str) -> None:
     """Save the identification results in a .mat-file."""
-
     try:
         # Create the data directory if it doesn't exist
         makedirs("data", exist_ok=True)
@@ -229,21 +228,19 @@ def dft(
     """
     n_periods = cfg.n_periods_init if initial_simulation else cfg.n_periods_excitation
     n = int(n_periods * cfg.N_eval / (f * cfg.T_s))
+
     if cfg.use_window and not initial_simulation:
         u = u[-n:] * blackman(n, False)
     else:
         u = u[-n:]
-    y = (
-        2
-        / n
-        * np.sum(u * np.exp(-2j * np.pi * f * cfg.T_s / cfg.N_eval * np.arange(n)))
-    )
+
+    w = 2 * np.pi * f
+    y = 2 / n * np.sum(u * np.exp(-1j * w * cfg.T_s / cfg.N_eval * np.arange(n)))
     return y
 
 
 def copy_state(sim: model.Simulation) -> tuple[Any, Any]:
     """Make a copy of the simulation state."""
-
     mdl = deepcopy(sim.mdl)
     ctrl = deepcopy(sim.ctrl)
     return mdl, ctrl
@@ -255,7 +252,6 @@ def pre_process(
     ctrl: control.GridConverterControlSystem,
 ) -> tuple[model.Simulation, list[Any]]:
     """Simulate the system to the desired operating point."""
-
     # Create Simulation object and simulate
     w_g = get_value(mdl.ac_source.w_g, 0)
     T_nom = 2 * np.pi / w_g
@@ -299,7 +295,6 @@ def identify(
     cfg: IdentificationCfg, sim: model.Simulation, i: int, f_e: float
 ) -> list[Any]:
     """Calculate the output admittance at a single frequency."""
-
     # 1: d-axis injection
     mdl, ctrl = copy_state(sim)
     mdl.ac_source.f_e = f_e
@@ -337,7 +332,7 @@ def identify(
     I = np.array([[i_gd1, i_gd2], [i_gq1, i_gq2]])  # noqa: E741
     U = np.array([[u_gd1, u_gd2], [u_gq1, u_gq2]])
     inv_U = np.linalg.inv(U)
-    Y_c = -1 * I @ inv_U
+    Y_c = -I @ inv_U
 
     Y_dd = Y_c[0, 0]
     Y_qd = Y_c[0, 1]
@@ -448,7 +443,7 @@ def run_identification(
 # %%
 def plot_identification(
     res: IdentificationResults,
-    plot_style: Literal["bode", "re_im"] = "re_im",
+    plot_style: Literal["polar", "re_im"] = "re_im",
     plot_passivity_index: bool = True,
     latex: bool = False,
 ) -> None:
@@ -459,10 +454,10 @@ def plot_identification(
     ----------
     res : IdentificationResults
         Should contain the results from the identification.
-    plot_style : Literal["bode", "re_im"], optional
+    plot_style : Literal["polar", "re_im"], optional
         Style for plotting of identification results, defaults to "re_im". Options are:
-        - "bode": plot magnitude (in dB) and phase (in degrees) of output admittance
-        - "re_im": plot real and imaginary parts of output admittance
+        - "polar": plot magnitude and phase
+        - "re_im": plot real and imaginary parts
     plot_passivity_index : bool, optional
         Plot input feedforward passivity index calculated from the identification
         results, defaults to True.
@@ -477,35 +472,35 @@ def plot_identification(
         set_screen_style()
 
     # First figure: elements of output admittance matrix
-    if plot_style == "bode":
+    if plot_style == "polar":
         fig, ((ax1, ax5), (ax2, ax6), (ax3, ax7), (ax4, ax8)) = plt.subplots(
             4, 2, sharey="row"
         )
 
-        ax1.semilogx(res.f_e, 20 * np.log10(np.abs(res.Y_dd)))
+        ax1.loglog(res.f_e, np.abs(res.Y_dd))
         ax2.semilogx(
             res.f_e, np.unwrap(np.angle(res.Y_dd, deg=True), discont=180, period=360)
         )
-        ax3.semilogx(res.f_e, 20 * np.log10(np.abs(res.Y_dq)))
+        ax3.loglog(res.f_e, np.abs(res.Y_dq))
         ax4.semilogx(
             res.f_e, np.unwrap(np.angle(res.Y_dq, deg=True), discont=180, period=360)
         )
-        ax5.semilogx(res.f_e, 20 * np.log10(np.abs(res.Y_qd)))
+        ax5.loglog(res.f_e, np.abs(res.Y_qd))
         ax6.semilogx(
             res.f_e, np.unwrap(np.angle(res.Y_qd, deg=True), discont=180, period=360)
         )
-        ax7.semilogx(res.f_e, 20 * np.log10(np.abs(res.Y_qq)))
+        ax7.loglog(res.f_e, np.abs(res.Y_qq))
         ax8.semilogx(
             res.f_e, np.unwrap(np.angle(res.Y_qq, deg=True), discont=180, period=360)
         )
 
-        ax1.set_ylabel(r"$|Y_\mathrm{dd}|\ (\mathrm{dB})$")
+        ax1.set_ylabel(r"$|Y_\mathrm{dd}|\ (\mathrm{S})$")
         ax2.set_ylabel(r"$\angle Y_\mathrm{dd}\ (\mathrm{deg})$")
-        ax3.set_ylabel(r"$|Y_\mathrm{dq}|\ (\mathrm{dB})$")
+        ax3.set_ylabel(r"$|Y_\mathrm{dq}|\ (\mathrm{S})$")
         ax4.set_ylabel(r"$\angle Y_\mathrm{dq}\ (\mathrm{deg})$")
-        ax5.set_ylabel(r"$|Y_\mathrm{qd}|\ (\mathrm{dB})$")
+        ax5.set_ylabel(r"$|Y_\mathrm{qd}|\ (\mathrm{S})$")
         ax6.set_ylabel(r"$\angle Y_\mathrm{qd}\ (\mathrm{deg})$")
-        ax7.set_ylabel(r"$|Y_\mathrm{qq}|\ (\mathrm{dB})$")
+        ax7.set_ylabel(r"$|Y_\mathrm{qq}|\ (\mathrm{S})$")
         ax8.set_ylabel(r"$\angle Y_\mathrm{qq}\ (\mathrm{deg})$")
 
         ax5.tick_params(axis="y", labelleft=True)
@@ -575,10 +570,10 @@ def plot_identification(
 
         Y_c = np.array([[res.Y_dd, res.Y_qd], [res.Y_dq, res.Y_qq]])
         Y_c = np.moveaxis(Y_c, -1, 0)
-        v_F = 0.5 * np.min(np.linalg.eigvals(Y_c + np.matrix_transpose(Y_c.conj())), 1)
+        nu_F = 0.5 * np.min(np.linalg.eigvals(Y_c + np.matrix_transpose(Y_c.conj())), 1)
 
         ax1.axhline(0, linestyle="--", color="k", linewidth="1")
-        ax1.semilogx(res.f_e, v_F.real)
+        ax1.semilogx(res.f_e, nu_F.real)
         ax1.set_xlabel("Frequency (Hz)")
         ax1.set_ylabel("Passivity index")
         ax1.margins(x=0)
@@ -586,9 +581,9 @@ def plot_identification(
         plt.show()
 
 
-def plot_vector_diagram(
+def plot_vector_identification(
     res: IdentificationResults, base: utils.BaseValues, latex: bool = False
-):
+) -> None:
     """
     Plot the converter voltage, PCC voltage, grid voltage, and grid current vectors in
     the operating point.
@@ -597,9 +592,12 @@ def plot_vector_diagram(
     ----------
     res : IdentificationResults
         Should contain the results from the identification.
+    base : BaseValues
+        Base values for per-unit conversion.
+    latex : bool, optional
+        Use latex for plots, defaults to False.
 
     """
-
     if latex:
         set_latex_style()
     else:
@@ -660,8 +658,8 @@ def plot_vector_diagram(
     )
     ticks = [-1, -0.5, 0, 0.5, 1]
 
-    ax.set_xlabel(r"$d\ \mathrm{(p.u.)}$")
-    ax.set_ylabel(r"$q\ \mathrm{(p.u.)}$")
+    ax.set_xlabel("d (p.u.)")
+    ax.set_ylabel("q (p.u.)")
     ax.set_xticks(ticks)
     ax.set_yticks(ticks)
     ax.set_xlim(-1.2, 1.2)

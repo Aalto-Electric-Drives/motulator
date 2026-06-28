@@ -12,6 +12,7 @@ from motulator.grid.model._converter_system import (
 )
 
 __all__ = [
+    "CapacitiveDCBusConverter",
     "GridConverterSystem",
     "LCLFilter",
     "LFilter",
@@ -19,5 +20,4 @@ __all__ = [
     "ThreePhaseSourceWithSignalInjection",
     "Simulation",
     "VoltageSourceConverter",
-    "CapacitiveDCBusConverter",
 ]

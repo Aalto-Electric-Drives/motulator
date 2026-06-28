@@ -141,8 +141,8 @@ class MachineCharacteristics:
         ax.legend()
 
         # Find centers and ranges
-        x_data = ax.get_lines()[0].get_xdata()
-        y_data = ax.get_lines()[0].get_ydata()
+        x_data = np.asarray(ax.get_lines()[0].get_xdata())
+        y_data = np.asarray(ax.get_lines()[0].get_ydata())
         x_center = 0.5 * (np.max(x_data) + np.min(x_data))
         x_range = np.max(x_data) - np.min(x_data)
         y_max = np.max(y_data)

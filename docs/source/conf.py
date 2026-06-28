@@ -22,7 +22,7 @@ os.environ["BUILDING_DOCS"] = "1"
 # -- Project information ---------------------------------------------------------------
 
 project = "motulator"
-copyright = "2025, Aalto Electric Drives"
+copyright = "2026, Aalto Electric Drives"
 author = "Aalto Electric Drives"
 
 # The full version, including alpha/beta/rc tags
